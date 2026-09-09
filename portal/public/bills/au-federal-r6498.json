@@ -1,0 +1,231 @@
+{
+ "key": "au-federal-r6498",
+ "title": "Superannuation Amendment (PSSAP Membership) Bill 2020",
+ "short_title": "Superannuation Amendment (PSSAP Membership) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2020-09-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6498_ems_28be39f8-31d4-4963-98b2-bd6e315f78a7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6498%22",
+   "document_date": "2020-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00086",
+   "document_date": "2020-09-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-13",
+  "sentences": [
+   "The bill would allow more people to use or open a Public Sector Superannuation Accumulation Plan account for non-Commonwealth employment.",
+   "It expands the definition of eligible members and creates new categories in the Superannuation Act 2005.",
+   "A person must have been a Commonwealth employee for at least 12 months to qualify under the new arrangements."
+  ],
+  "changes": [
+   "Extends PSSAP membership to former contributory members for non-Commonwealth employment regardless of superannuation guarantee obligations.",
+   "Allows existing PSSAP members to use their account for contributions from concurrent non-Commonwealth employment.",
+   "Lets CSS eligible employees or PSS members establish a PSSAP account for concessional contributions from non-Commonwealth employment.",
+   "Repeals the old term 'former Commonwealth ordinary employer-sponsored member' and replaces it with 'eligible PSSAP member'.",
+   "Inserts new subsection 18(8A) to create a fifth sub-category of ordinary employer-sponsored member.",
+   "Removes the employer's obligation to make contributions under the PSSAP Trust Deed for eligible PSSAP members and eligible CSS/PSS members."
+  ],
+  "affected": "Former and current Commonwealth employees who are members of the Public Sector Superannuation Accumulation Plan, the Commonwealth Superannuation Scheme, or the Public Sector Superannuation scheme, and their employers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:17Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6480",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "question": "Matt Thistlethwaite The Liberals are undertaking a double-barrelled attack on superannuation in Australia. Firstly, they're encouraging Australians to raid their superannuation savings, to raid their retirement savings, and take that money out, and we've seen evidence of people doing that in circumstances where they haven't had reductions in their income. Unfortunately, the evidence has indicated that in some respects the money's being wasted. We know people are spending it on gambling. We know people are spending it on alcohol. The comeback from those opposite is: 'It's their money.' It is their money, but it was established to ensure that they had dignity in retirement, not to waste on gambling during their working years. And that's the problem with what this government's implemented when it comes to the early release scheme. The second barrel of the attack on superannuation is that it appears government backbenchers are being encouraged by members of the executive to say that the government shouldn't meet the commitment they delivered to the Australian people prior to last election—an iron-clad promise they made to increase the minimum contribution to superannuation from 9½ per cent to 12 per cent. This represents a breach of trust with the Australian people. They committed to that superannuation increase and now they're beginning the process of moving away from it and dumping it. Those opposite will say: 'It should go into wages. During a pandemic, during this period, it should go into people's wages so that they can save for their own home and the like.' As we've seen in the past, the problem with that philosophy is that, when you stall or you cut out increases in compulsory superannuation, the money doesn't go into people's wages at all. It goes into the pockets of businesses and into profits for big companies. That's where the money goes—it doesn't go to increasing the incomes of Australian workers. That's why the government are wrong about what we anticipate",
+   "stage": "Second reading",
+   "ayes": 45,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 6,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 75,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-08-25/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-388135",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The Superannuation Amendment (PSSAP Membership) Bill 2020 extends Public Sector Superannuation Accumulation Plan membership to more current and former Commonwealth employees, allowing them to use a single account for contributions from any employment and avoid multiple fees, and also lets certain defined-benefit scheme members open a PSSap account."
+  },
+  {
+   "slug": "speech-393604",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the Superannuation Amendment (PSSAP Membership) Bill, arguing the government should honour its promise to increase compulsory superannuation contributions and criticising the opposition for opposing the scheme and for the early release of superannuation, which led to fraud and misuse."
+  },
+  {
+   "slug": "speech-393722",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Superannuation Amendment (PSSAP Membership) Bill 2020, which allows greater flexibility for contributions to the Public Sector Superannuation accumulation plan and benefits around 10,000 people. They also argued for the second reading amendment calling on the government to keep its election promise to increase the superannuation guarantee from 9.5% to 12% as legislated, and opposed further extensions of the early release scheme, which had already seen $31 billion withdrawn."
+  },
+  {
+   "slug": "speech-393723",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government is laying groundwork to cut the legislated superannuation guarantee, which would cut workers' pay and worsen retirement, and criticised the government for allowing over 560,000 Australians to withdraw retirement savings, costing a 25-year-old $233,000 in lost interest by retirement."
+  },
+  {
+   "slug": "speech-393725",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-08-25",
+   "stage_hint": null,
+   "brief": "The Superannuation Amendment (PSSAP Membership) Bill 2020 extends Public Sector Superannuation accumulation plan membership to certain current and former Commonwealth employees, allowing them to avoid multiple fees and use existing accounts for non-Commonwealth or self-employment. The government also noted that since 2013, pensions have increased by $135.90 per fortnight for singles and $204.80 for couples, with pensioners receiving two $750 coronavirus support payments."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Superannuation Amendment (PSSAP Membership) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00086",
+   "assent_date": "2020-09-07"
+  }
+ ]
+}

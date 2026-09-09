@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1232",
+ "title": "Family Law (Self-Assessment) Bill 2019",
+ "short_title": "Family Law (Self-Assessment) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-12",
+ "originating_house": "senate",
+ "sponsor": "HANSON, Sen Pauline",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10280",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1232%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1232%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1232%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1232_ems_6aa397b5-c15d-4e6d-a7b0-f022a8fac231%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1232%22",
+   "document_date": "2019-09-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-12",
+  "sentences": [
+   "The bill would require separating couples to work out their own property and parenting arrangements within a fixed period set by law.",
+   "Couples would have to use an online portal to declare their assets and debts, with a default rule that each spouse gets at least 35% of the family home's net value unless a court would order less due to ill health or special circumstances.",
+   "The explanatory memorandum says the bill would affect about 350,000 voters and could be implemented in weeks without spending public money."
+  ],
+  "changes": [
+   "Makes compliance with the Family Law Act 1975 mandatory, not optional or deferred.",
+   "Requires a financially disadvantaged spouse (usually the female) to receive at least half of the couple's relationship property within 60 days.",
+   "Creates a system of parental self-assessment for shared parenting disputes, requiring a residential parent to explain why they are not allowing standard contact hours by the other parent."
+  ],
+  "affected": "Separating couples, including de facto couples, and particularly financially disadvantaged spouses and non-residential parents.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,162 @@
+{
+ "key": "au-federal-r6382",
+ "title": "Australian Broadcasting Corporation Amendment (Rural and Regional Measures) Bill 2019",
+ "short_title": "Australian Broadcasting Corporation Amendment (Rural and Regional Measures) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications, Cyber Safety and the Arts",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6382%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6382%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6382%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6382%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6382_ems_c52d9bfe-849e-4ae3-893f-dbc05c9ec260%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6382%22",
+   "document_date": "2019-07-31",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-31",
+  "sentences": [
+   "The bill would require the ABC to better serve rural and regional Australia through changes to its charter, board, and reporting.",
+   "It would amend the ABC Act to add two board members with regional experience and create a Regional Advisory Council.",
+   "The ABC Board would have to report annually on regional and metropolitan staff numbers and the ratio of journalists to support staff."
+  ],
+  "changes": [
+   "Amends the ABC's charter to require programs to reflect regional identity and geographic diversity.",
+   "Requires the ABC Board to include two members with substantial regional connection or experience.",
+   "Establishes a Regional Advisory Council to advise the Board on changes affecting regional audiences.",
+   "Requires annual reporting on regional and metropolitan employment numbers and journalist-to-support-staff ratios."
+  ],
+  "affected": "The Australian Broadcasting Corporation and its audiences in rural and regional Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-379225",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The bill amends the ABC Act to require the ABC Charter to reference regional and geographic diversity, establish a Regional Advisory Council, ensure at least two board members have regional experience, and introduce annual reporting on regional staff and local news hours."
+  },
+  {
+   "slug": "speech-381245",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's bill is a recycled, pointless measure that will do nothing for rural and regional Australia, and that the government's $366 million in ABC funding cuts and 800 job losses contradict any claim of support. Labor opposed the bill, citing the ACCC's recommendation for stable ABC funding, and moved an amendment calling on the government to ensure adequate funding for the ABC to enhance rural and regional services."
+  },
+  {
+   "slug": "speech-381247",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Broadcasting Corporation Amendment (Rural and Regional Measures) Bill 2019, arguing the ABC is opaque, over‑centralised in Sydney, and neglects rural and regional Australia. The bill would establish a regional advisory council, require two non‑executive directors with regional experience, and mandate annual disclosure of employee locations and top earners' salaries."
+  },
+  {
+   "slug": "speech-381248",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Liberal-National government's $366 million in ABC cuts since 2013 have disproportionately harmed Western Australia, leaving Perth without a dedicated Landline reporter, resources reporter, arts reporter, or outside broadcast van, and forcing talent to move east. They condemned the Rural and Regional Measures Bill as a \"fig-leaf\" that does nothing to address the real crisis, calling instead for stable funding to restore local news production."
+  },
+  {
+   "slug": "speech-381249",
+   "speaker": "John McVeigh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Broadcasting Corporation Amendment (Rural and Regional Measures) Bill 2019 would strengthen the ABC’s focus on rural and regional Australia by broadening its mandate to include regional and geographic diversity, establishing a regional advisory council, requiring regional representation on the ABC board, and imposing annual reporting obligations on regional employment and content. The speaker cited Georgie Somerset as an example of existing regional board representation and praised ABC Southern Queensland staff Belinda Sanders and David Iliffe."
+  },
+  {
+   "slug": "speech-381250",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Australian Broadcasting Corporation Amendment (Rural and Regional Measures) Bill 2019, arguing it is unnecessary red tape that does not address the real problem of $366 million in funding cuts to the ABC since 2013, which have closed regional offices and reduced local news services. The speaker noted the ABC already meets its charter obligations for regional areas and called for restored funding instead of duplicative measures like a new regional advisory council."
+  },
+  {
+   "slug": "speech-381252",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Australian Broadcasting Corporation Amendment (Rural and Regional Measures) Bill, arguing it is a political stunt that will do nothing for rural and regional Australia, and criticised the Morrison government for cutting $366 million from the ABC since 2013 and forcing 800 job losses. The speaker stated Labor opposes the bill because it duplicates existing ABC structures, adds bureaucratic costs, and fails to address the need for stable and adequate funding for the ABC."
+  },
+  {
+   "slug": "speech-381254",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the ABC Amendment (Rural and Regional Measures) Bill 2019 is redundant and unnecessary, as the ABC already provides excellent regional coverage, and called the bill political cover for $254 million in government cuts to the ABC, with an additional $84 million in cuts planned. Labor opposes the bill, insisting that the government should restore funding rather than impose new requirements."
+  },
+  {
+   "slug": "speech-381255",
+   "speaker": "Gavin Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Broadcasting Corporation Amendment (Rural and Regional Measures) Bill 2019 is essential to ensure the ABC continues to serve isolated communities, where it is often the only media source, by mandating regional representation on the ABC board and establishing a regional advisory council."
+  }
+ ],
+ "acts": []
+}

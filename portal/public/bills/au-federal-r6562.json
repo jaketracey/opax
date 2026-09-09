@@ -1,0 +1,153 @@
+{
+ "key": "au-federal-r6562",
+ "title": "Treasury Laws Amendment (2020 Measures No. 3) Bill 2020",
+ "short_title": "Treasury Laws Amendment (2020 Measures No. 3) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6562%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6562%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6562%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6562%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6562%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6562%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6562%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6562%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6562%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6562%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6562%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6562_ems_3d857d2d-f9d9-41e6-a15b-c3a5f5d7631c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6562%22",
+   "document_date": "2020-06-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00061",
+   "document_date": "2020-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-12",
+  "sentences": [
+   "The bill would allow the Minister to sign an agreement with the International Monetary Fund for Australia to lend money to the IMF.",
+   "It would create a standing legal framework and a permanent appropriation to fund loan payments without needing future legislative changes.",
+   "The Treasurer could also update the definition of the New Arrangements to Borrow by legislative instrument to reflect a specific IMF Executive Board decision from January 2020."
+  ],
+  "changes": [
+   "Authorises the Minister to enter into a loan agreement with the IMF.",
+   "Introduces a standing appropriation to fund Australia's loan payments to the IMF.",
+   "Allows the Treasurer to amend or renew the New Arrangements to Borrow by legislative instrument.",
+   "Updates the definition of the New Arrangements to Borrow to include a specific IMF Executive Board decision."
+  ],
+  "affected": "The Australian Government, the Minister, the Treasurer, and the International Monetary Fund.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-393041",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill, which includes measures on IMF funding, instant asset write-offs, and tax deductibility for the Friends of Myall Creek Memorial, and urged the government to provide more certainty on programs like JobKeeper."
+  },
+  {
+   "slug": "speech-393042",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-18",
+   "stage_hint": null,
+   "brief": "The Morrison government extended the $150,000 instant asset write-off for six months to 31 December 2020 for businesses with turnover under $500 million, and the bill also amended IMF loan agreements, added deductible gift recipients including Toy Libraries Australia, the Samuel Griffith Society, and Friends of Myall Creek Memorial, suspended indexation of tax instalments, and clarified cash-flow boost credits."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2020 Measures No. 3) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00061",
+   "assent_date": "2020-06-19"
+  }
+ ]
+}

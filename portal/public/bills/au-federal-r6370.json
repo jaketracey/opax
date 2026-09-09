@@ -1,0 +1,185 @@
+{
+ "key": "au-federal-r6370",
+ "title": "Treasury Laws Amendment (Consumer Data Right) Bill 2019",
+ "short_title": "Treasury Laws Amendment (Consumer Data Right) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-08-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6370_ems_ce513d68-7222-49f4-a2fe-67e1c2b32fed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6370%22",
+   "document_date": "2019-07-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00063",
+   "document_date": "2019-08-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-24",
+  "sentences": [
+   "The bill would establish a Consumer Data Right giving people and businesses the right to access and share their data held by businesses with accredited third parties.",
+   "It would require businesses to make public information about specified products and impose offences or civil penalties for non-compliance with the regime.",
+   "The explanatory memorandum does not specify the exact data types, accreditation details, or the commencement date."
+  ],
+  "changes": [
+   "Creates a right for individuals and businesses to access and authorize secure sharing of their data.",
+   "Requires businesses to publicly disclose information about specified products.",
+   "Establishes offences and civil penalties for failing to meet obligations under the regime."
+  ],
+  "affected": "Individuals, businesses, and accredited third parties.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-379043",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-30",
+   "stage_hint": null,
+   "brief": "The speaker moved a second reading amendment to the Treasury Laws Amendment (Consumer Data Right) Bill 2019, arguing that consumers must have secure data control including the right to request deletion, prevention of screen-scraping technology, and consideration of vulnerable consumers. The speaker supported the bill, noting that 65% of respondents were unlikely to switch home loans and 83% had not switched banks in three years, and cited multiple inquiries backing the reform."
+  },
+  {
+   "slug": "speech-379164",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-30",
+   "stage_hint": null,
+   "brief": "The Parliamentary Joint Committee on Human Rights tabled report 3 of 2019, noting 61 bills raised no human rights concerns and reiterating previous views on bills including the Treasury Laws Amendment (Consumer Data Right) Bill, the ASIO Amendment (Sunsetting of Special Powers Relating to Terrorism Offences) Bill, the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill, and the Royal Commissions Amendment (Private Sessions) Bill. The committee is seeking further information on the Fisheries Management Regulations 2019 over privacy concerns and the risk that data could be disclosed to countries where the death penalty or torture is used."
+  },
+  {
+   "slug": "speech-379165",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-30",
+   "stage_hint": null,
+   "brief": "Labor supported the Consumer Data Right Bill 2019 as a necessary first step but argued it is not comprehensive, calling for further privacy reforms including a right to delete, court actions for privacy violations, higher penalties, stronger consent requirements, and a ban on unfair contracts, as well as regulation of screen-scraping technologies and protections for vulnerable consumers."
+  },
+  {
+   "slug": "speech-379166",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Consumer Data Right) Bill 2019, which creates an open banking regime to allow consumers to control and transfer their data, initially in banking then expanding to energy and telecommunications. The speaker argued the government rushed the legislation, leaving unresolved concerns about privacy, consumer education, and the risk that vulnerable Australians could be locked out of financial services due to discriminatory data use."
+  },
+  {
+   "slug": "speech-379169",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-30",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Consumer Data Right) Bill 2019 introduces a consumer data right and open banking, giving individuals and businesses control over their data to drive competition and innovation. The government committed to applying the right to banking, energy, telecommunications, and the broader economy, with privacy protections enforced by the ACCC and the Office of the Australian Information Commissioner."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Consumer Data Right) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00063",
+   "assent_date": "2019-08-12"
+  }
+ ]
+}

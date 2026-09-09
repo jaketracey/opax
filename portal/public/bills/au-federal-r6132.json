@@ -1,0 +1,124 @@
+{
+ "key": "au-federal-r6132",
+ "title": "Inspector-General of Animal Welfare and Live Animal Exports Bill 2018",
+ "short_title": "Inspector-General of Animal Welfare and Live Animal Exports Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-18",
+ "originating_house": "representatives",
+ "sponsor": "FITZGIBBON, Joel, MP",
+ "sponsor_party": "Australian Labor Party",
+ "sponsor_person_id": "10230",
+ "portfolio": "(s) FITZGIBBON, Joel, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6132%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6132%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6132_ems_b74d7122-d07c-4bf7-a83b-b4bcbcaeb8ec%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6132%22",
+   "document_date": "2018-06-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-364262",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The speaker argued for the establishment of an independent Inspector-General of Animal Welfare and Live Animal Exports to oversee Commonwealth animal welfare regulation, and announced that a future Labor government would end the northern summer live sheep trade within five years, with a transition period and increased penalties for breaches."
+  },
+  {
+   "slug": "speech-370387",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Inspector-General of Animal Welfare and Live Animal Exports Bill 2018, which would reinstate a position lapsed in 2013, and supported Labor’s pledge to phase out the northern live sheep trade within five years, citing footage of animal cruelty on voyages to the Middle East."
+  },
+  {
+   "slug": "speech-370388",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that 99.7% of exported sheep arrive in better or the same condition, and that closing the live export industry would devastate regional towns and Indigenous communities, citing the previous ban on live cattle exports as a disaster. He accused the Labor Party of wanting to shut down the industry, which would reduce incomes in regional areas and risk losing Islamic trading partners like Saudi Arabia, Qatar and Kuwait."
+  },
+  {
+   "slug": "speech-370389",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued for the re-establishment of an independent Inspector-General of Animal Welfare and Live Animal Exports, criticising the government for scrapping the previous office and committees, and noting that while 99.7% of animals arrive in the same or better state, the remaining 0.3% has caused public outrage."
+  },
+  {
+   "slug": "speech-370390",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Inspector-General of Animal Welfare and Live Animal Exports Bill 2018, defending the live export trade as a necessary safety valve for farmers. He cited the loss of 40 per cent of Australia's chilled meat market in Bahrain after disruptions to live sheep exports."
+  },
+  {
+   "slug": "speech-370391",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued for re-establishing an independent inspector-general for live export animal welfare and announced Labor's plan to end the northern summer live sheep trade within five years, citing the Awassi Express incident and community concerns."
+  },
+  {
+   "slug": "speech-370392",
+   "speaker": "Michelle Landry",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued the Inspector-General of Animal Welfare and Live Animal Exports Bill 2018 would harm the economy and rural communities, citing 99.29% of 1.7 million exported sheep delivered in good health in 2017. They defended the government’s acceptance of all 23 recommendations from Dr Michael McCarthy’s review, opposed Labor’s past live cattle trade suspension to Indonesia, and urged rejection of the bill to protect a $1.4 billion industry."
+  }
+ ],
+ "acts": []
+}

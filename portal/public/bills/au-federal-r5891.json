@@ -1,0 +1,160 @@
+{
+ "key": "au-federal-r5891",
+ "title": "Treasury Laws Amendment (Foreign Resident Capital Gains Withholding Payments) Bill 2017",
+ "short_title": "Treasury Laws Amendment (Foreign Resident Capital Gains Withholding Payments) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5891%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5891%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5891%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5891%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5891%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5891%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5891%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5891%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5891%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5891%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5891%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5891_ems_789c5a0f-5beb-4a6a-991c-d4f0454b92a2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5891%22",
+   "document_date": "2017-06-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00057",
+   "document_date": "2017-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-349051",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "Labor supported the bill but argued it only tinkers around the edges of housing affordability, noting home ownership is at a 60-year low and household debt at historic highs. The opposition called for action on negative gearing and capital gains tax discounts, citing support from the IMF, OECD, and former Reserve Bank governor Glenn Stevens, and proposed restricting negative gearing to newly-built homes."
+  },
+  {
+   "slug": "speech-349055",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued the Treasury Laws Amendment (Foreign Resident Capital Gains Withholding Payments) Bill 2017 is an integrity measure, not a housing affordability measure, and criticised the government for failing to deliver meaningful housing policies, noting home ownership rates for 25-34 year olds fell from 60% to under 40% in 30 years, median house prices in Melbourne rose 90% in 10 years, and over 100,000 people are homeless. They also opposed the government's super savings scheme as regressive and ineffective."
+  },
+  {
+   "slug": "speech-349057",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the coalition government's 2017 budget and the Treasury Laws Amendment (Foreign Resident Capital Gains Withholding Payments) Bill 2017 will improve housing affordability and reduce Labor's legacy deficits, citing measures including a 12.5 per cent withholding rate, a $750,000 threshold for foreign resident capital gains tax, removal of the main residence exemption for foreign residents, and a vacant property charge."
+  },
+  {
+   "slug": "speech-349058",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's housing affordability measures, including increasing the foreign resident capital gains withholding rate from 10% to 12.5% and lowering the threshold from $2 million to $750,000, are inadequate, noting that home ownership rates have fallen from 68–70% (1971–2001) to below 50% in 2017 and that first-home buyers in Sydney need 40 years of savings for a deposit. The speaker supported the bill but criticised the government's record, including closing the National Rental Affordability Scheme, cutting emergency accommodation funding, and proposing early access to superannuation for housing, while highlighting the Queensland state government's plan to build 5,000 social housing homes."
+  },
+  {
+   "slug": "speech-349059",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The government increased the foreign resident capital gains withholding rate from 10% to 12.5% and lowered the property value threshold from $2 million to $750,000, effective 1 July 2017, with the changes expected to raise $570 million over the forward estimates to improve housing affordability and tax compliance."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Foreign Resident Capital Gains Withholding Payments) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00057",
+   "assent_date": "2017-06-22"
+  }
+ ]
+}

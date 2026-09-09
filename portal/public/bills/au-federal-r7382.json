@@ -1,0 +1,227 @@
+{
+ "key": "au-federal-r7382",
+ "title": "Criminal Code Amendment (State Sponsors of Terrorism) Bill 2025",
+ "short_title": "Criminal Code Amendment (State Sponsors of Terrorism) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2025-11-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7382_ems_fdf600ec-bd19-45c7-b8cb-1a10e2f3082e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7382_ems_ed03fb9f-4df1-401f-b053-9c9fe9fc36c1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7382%22",
+   "document_date": "2025-10-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00060",
+   "document_date": "2025-11-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-08",
+  "sentences": [
+   "The bill would create a new framework to list foreign state entities that Australia considers sponsors of terrorism.",
+   "The Governor-General would add entities to the list on the recommendation of the Australian Federal Police Minister, with the Foreign Affairs Minister's agreement.",
+   "New offences would target dealings with listed entities and financing state terrorist acts, with defences for lawful contact."
+  ],
+  "changes": [
+   "Creates a new Part 5.3A in the Criminal Code for state sponsors of terrorism.",
+   "Allows the Governor-General to prescribe foreign state entities as state sponsors of terrorism by regulation.",
+   "Criminalises conducting a state terrorist act, supporting or preparing such an act, and dealings with a listed entity.",
+   "Extends existing counter-terrorism orders under Part 5.3 to the new framework.",
+   "Amends other Commonwealth Acts to apply law enforcement powers to the new provisions."
+  ],
+  "affected": "Foreign state entities that engage in terrorist acts targeting Australia, and persons who deal with or support them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9803",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7382_amend_9c3bfff3-1ec9-475e-85a4-e3c4c89b684e%22;rec=0) introduced by Fisher MP [Andrew Wallace](https://theyvoteforyou.org.au/people/representatives/fisher/andrew_wallace) (LNP), which means it failed. ### Amendment text > *(1) Schedule 3, page 53 (after line 20), after item 60, insert:* > >> *60A Paragraph 29(1)(baa)* >> >>> *Omit \"under Part 5.3\", substitute \"in relation to Parts 5.3 and 5.3A\".* >> >> *60B Paragraph 29(1)(bab)* >> >>> *Omit \"under Part 5.3\", substitute \"in relation to Parts 5.3 and 5.3A\".*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 49,
+   "noes": 88,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 88
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-10-29/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1197657",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2025-10-28",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Criminal Code Amendment (State Sponsors of Terrorism) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00060",
+   "assent_date": "2025-11-06"
+  }
+ ]
+}

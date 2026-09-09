@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-r6170",
+ "title": "Customs Amendment (Peru-Australia Free Trade Agreement Implementation) Bill 2018",
+ "short_title": "Customs Amendment (Peru-Australia Free Trade Agreement Implementation) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6170%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6170%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6170%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6170_ems_e66718e9-c3ad-4f05-ac4f-9b6c66414385%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6170%22",
+   "document_date": "2018-09-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-19",
+  "sentences": [
+   "This bill changes the Customs Act 1901 to bring into force Australia's trade deal with Peru.",
+   "It sets out how to decide which goods from Peru qualify for lower customs taxes when entering Australia.",
+   "The 2018-19 Budget estimated that implementing the deal would cost revenue a negligible amount over the forward estimates."
+  ],
+  "changes": [
+   "The bill creates rules for determining Peruvian originating goods eligible for preferential customs duty rates.",
+   "It places obligations on exporters of eligible goods to Peru who claim a preferential duty rate, and on those who produce such goods.",
+   "It provides for complementary amendments to the Customs Tariff Act 1995 to give effect to preferential customs duty treatment under the agreement."
+  ],
+  "affected": "Exporters and producers of eligible goods to Peru, importers of Peruvian goods into Australia, and the Department of Home Affairs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-369865",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker moved the Customs Amendment (Peru-Australia Free Trade Agreement Implementation) Bill 2018 to implement PAFTA, which will eliminate nearly all Peruvian customs duties within four years and provide new tariff‑free quotas for Australian sugar, dairy, rice and sorghum—addressing Peru’s average 5% GDP growth and high trade barriers. The agreement also opens Peruvian government procurement and services markets for Australian providers, levels the playing field with competitors that already have deals, and is intended to enter into force before the end of 2018."
+  },
+  {
+   "slug": "speech-369866",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The member moved the second reading of the bill, reiterating previous remarks on the Customs Amendment (Peru-Australia Free Trade Agreement Implementation) Bill 2018."
+  }
+ ],
+ "acts": []
+}

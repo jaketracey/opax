@@ -1,0 +1,226 @@
+{
+ "key": "au-federal-r6393",
+ "title": "National Health Amendment (Safety Net Thresholds) Bill 2019",
+ "short_title": "National Health Amendment (Safety Net Thresholds) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2019-11-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6393_ems_05608066-c8e2-42d1-b9d0-a04cf7ed6949%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6393%22",
+   "document_date": "2019-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00106",
+   "document_date": "2019-11-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-380398",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The bill reduces PBS safety net thresholds from 1 January 2020, lowering the concessional threshold to an estimated $316.80 and the general threshold to $1,486.80, benefiting about 1.6 million concessional and 129,000 general patients with savings of up to $100 per year."
+  },
+  {
+   "slug": "speech-382376",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "Labor supported the National Health Amendment (Safety Net Thresholds) Bill 2019 to reduce PBS safety net thresholds from 1 January 2020, but criticised the government for delaying PBS listings (over 60 drugs, including Symdeko for cystic fibrosis) and for a $155 million PBS underspend, noting 961,000 Australians skip prescriptions due to cost and out-of-pocket costs reached a record $30 billion."
+  },
+  {
+   "slug": "speech-382377",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the National Health Amendment (Safety Net Thresholds) Bill 2019, which reduces PBS safety net thresholds to allow concession card holders and general patients to reach the safety net sooner, saving up to $100 per year. The speaker also claimed the government has listed over 2,000 new or amended PBS drugs since 2013, contrasting this with Labor's record of stopping listings, and emphasised that strong economic management enables these healthcare investments."
+  },
+  {
+   "slug": "speech-382378",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "Labor will support the National Health Amendment (Safety Net Thresholds) Bill, which reduces the PBS safety net threshold from 1 January 2020, but argues it does not fix the broader affordability crisis in medicines. The speaker criticised the government for delisting Panadol Osteo from the PBS in 2016, cited 961,000 Australians delaying or avoiding prescriptions due to cost, and called for urgent listing of over 60 drugs, including Symdeko for cystic fibrosis, and extension of continuous glucose monitor access beyond age 21."
+  },
+  {
+   "slug": "speech-382379",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Health Amendment (Safety Net Thresholds) Bill 2019, which lowers the PBS safety net threshold by 12 scripts for concessional patients and two for general patients, benefiting 1.6 million concessional and 129,000 general patients with average out-of-pocket savings of $80 per year."
+  },
+  {
+   "slug": "speech-382380",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "Labor supported the National Health Amendment (Safety Net Thresholds) Bill 2019, which reduces PBS safety net thresholds from 1 January 2020. The speaker criticised the government for delaying PBS listings, citing over 60 drugs awaiting listing, including the cystic fibrosis drug Symdeko, and accused the health minister of self-serving behaviour and failing to address medicines affordability, with 961,000 Australians annually delaying or avoiding prescriptions due to cost."
+  },
+  {
+   "slug": "speech-382381",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the National Health Amendment (Safety Net Thresholds) Bill 2019, stating it benefits Australian health consumers and taxpayers by providing affordable medicines."
+  },
+  {
+   "slug": "speech-382384",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the National Health Amendment (Safety Net Thresholds) Bill 2019, which reduces the safety net threshold from 1 January 2020 to make medicines more affordable. The speaker also highlighted Labor’s previous election commitments, including a $2.3 billion cancer package, a $2.8 billion Better Hospitals Fund, and a Pensioner Dental Plan providing $1,000 in free dental care every two years for pensioners and seniors card holders."
+  },
+  {
+   "slug": "speech-382386",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The speaker argued the National Health Amendment (Safety Net Thresholds) Bill 2019 will lower PBS safety net thresholds from 1 January 2020, reducing out-of-pocket costs for up to 1.6 million concessional and 129,000 general patients at a cost of $328.8 million, fulfilling a 2019 election commitment."
+  },
+  {
+   "slug": "speech-382387",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Health Amendment (Safety Net Thresholds) Bill 2019 but argued the government had failed to list 60 Pharmaceutical Benefits Advisory Committee‑recommended drugs, including Symdeko for cystic fibrosis, and flash glucose monitoring for type 1 diabetes, while 961,000 Australians delay or avoid medication due to cost, and GP and specialist visit costs have risen 36% and 58% respectively since 2013."
+  },
+  {
+   "slug": "speech-382388",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Health Amendment (Safety Net Thresholds) Bill 2019 as a narrow, uncontroversial measure that will reduce thresholds in 2020, but noted it fails to address broader health policy gaps, citing $9.4 billion spent on non-PBS medicines in 2017–18, 961,000 people per year delaying or avoiding prescriptions due to cost (with rates twice as high in disadvantaged areas), and a mental health budget at 6.5% of total health spending versus a 14% burden of disease."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Health Amendment (Safety Net Thresholds) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00106",
+   "assent_date": "2019-11-28"
+  }
+ ]
+}

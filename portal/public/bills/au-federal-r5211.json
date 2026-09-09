@@ -1,0 +1,181 @@
+{
+ "key": "au-federal-r5211",
+ "title": "Migration Amendment (Offshore Resources Activity) Repeal Bill 2014",
+ "short_title": "Migration Amendment (Offshore Resources Activity) Repeal Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5211%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5211%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5211%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5211%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5211%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5211%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5211%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5211%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5211_ems_f6a085e0-eebb-4802-a362-3a7ed635953c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5211%22",
+   "document_date": "2014-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3208",
+   "date": "2014-05-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/debate/?id=2014-05-26.124.1) to read the bill for a second time.(Read more about the stages that a bill must pass through when becoming law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) This means that the majority agree with the main idea of the bill and that the House can now discuss it in more detail. However, in this case, there was no further discussion and the House immediately agreed to a [motion](http://www.openaustralia.org/debates/?id=2014-05-26.126.1) to read the bill for a third time without further division.(Read more about why decisions such as this are made without formal division in our [FAQ Section](http://publicwhip-rails.openaustraliafoundation.org.au/faq.php#division-occur). ) _Background to the bill_ The bill was introduced to repeal the [_Migration Amendment (Offshore Resources Activity) Act 2013_](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5086) ('ORA Act') to remove the requirement for foreign workers to hold a visa when they participate in, or support, offshore resource activities taken to be in the [migration zone](http://en.wikipedia.org/wiki/Australian_migration_zone).(Read more about this latest bill, the Migration Amendment (Offshore Resources Activity) Repeal Bill 2014, in its [bills digest](http://parlinfo.aph.gov.au/parlInfo/download/legislation/billsdgs/3182181/upload_binary/3182181.pdf;fileType=application/pdf) (651 KB). Its explanatory memorandum is available [here](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5211).) Unless it is successfully repealed, this requirement will come into effect on 30 June 2014. The ORA Act was the Labor Government’s response to the Federal Court decision _ [Allseas Construction SA v Minister for Immigration and Citizenship](http://www.austlii.edu.au/cgi-bin/sinodisp/au/cases/cth/FCA/2012/529.html?query",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-05-26/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-288674",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288675",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288677",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288678",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288680",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288681",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,169 @@
+{
+ "key": "au-federal-r5881",
+ "title": "Industrial Chemicals (Consequential Amendments and Transitional Provisions) Bill 2017",
+ "short_title": "Industrial Chemicals (Consequential Amendments and Transitional Provisions) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2019-03-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5881_ems_831eddde-63d7-4abf-bf44-c7e9689a3b9d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5881_ems_912fb10f-1c5f-4f3e-8d96-1a029a068daa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5881_ems_a1233965-fb46-49e1-9ede-ae53fb1aecb1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5881%22",
+   "document_date": "2017-06-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00013",
+   "document_date": "2019-03-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-348093",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals (Consequential Amendments and Transitional Provisions) Bill 2017 was introduced as a companion to the Industrial Chemicals Bill 2017, to repeal the 1989 Act and related charges acts from 1 July 2018, transition existing authorisations and inventory listings to the new Australian Industrial Chemicals Introduction Scheme (AICIS), and allow a 12-month transition period for low-volume or low-concentration chemical introductions."
+  },
+  {
+   "slug": "speech-354885",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the Industrial Chemicals Bill 2017 but will move amendments to require annual post‑introduction reports for chemicals in the exempted introductions category and to close loopholes in the ban on using new animal test data for cosmetics."
+  },
+  {
+   "slug": "speech-355036",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The bills create a new Australian Industrial Chemicals Introduction Scheme, adopting a risk‑based regulatory approach that includes a ban on animal testing for cosmetics consistent with the European Union, while the speaker argued opposition amendments would create loopholes and place Australian industry at a disadvantage by blocking necessary animal test data for multi‑use chemicals."
+  },
+  {
+   "slug": "speech-355066",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "Presented addenda to the explanatory memoranda for the Industrial Chemicals Bill 2017 and four related bills."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Industrial Chemicals (Consequential Amendments and Transitional Provisions) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00013",
+   "assent_date": "2019-03-12"
+  }
+ ]
+}

@@ -1,0 +1,175 @@
+{
+ "key": "au-federal-r6993",
+ "title": "Customs Tariff Amendment (Incorporation of Proposals) Bill 2023",
+ "short_title": "Customs Tariff Amendment (Incorporation of Proposals) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2023-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6993_ems_f50d1c38-08d9-4402-b1ab-abd8edea816c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6993%22",
+   "document_date": "2023-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00034",
+   "document_date": "2023-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-22",
+  "sentences": [
+   "The bill would amend the Customs Tariff Act 1995 to incorporate several customs tariff proposals from 2022.",
+   "It would create temporary duty increases on Russian and Belarusian goods and a free rate for Ukrainian goods, extend medical product concessions, and adjust vehicle classifications.",
+   "The changes would apply from dates between 25 April 2022 and 24 October 2023, with financial impacts ranging from -55 million to 6 million dollars across 2021-22 to 2025-26."
+  ],
+  "changes": [
+   "Insert a new section to impose a 35% additional duty on goods from Russia and Belarus imported between 25 April 2022 and 24 October 2023.",
+   "Insert a new section to provide a free rate of duty for goods from Ukraine imported during the 12 months starting 4 July 2022.",
+   "Permanently extend the free rate of duty for medical and hygiene products used against COVID-19 and expand it to other contexts from 1 July 2022.",
+   "Amend vehicle tariff classifications to separately cover certain electric and low emission vehicles imported from 1 July 2022.",
+   "Correct tariff references for blood-grouping reagents and herbicides following earlier reclassification."
+  ],
+  "affected": "Importers of goods from Russia, Belarus, and Ukraine, as well as importers of medical products, hygiene products, and certain electric or low emission vehicles.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:49Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-828795",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (Incorporation of Proposals) Bill 2023 imposes a 35% additional duty on goods from Russia and Belarus in response to the invasion of Ukraine, grants a temporary duty-free rate for Ukrainian goods, makes permanent a tariff concession for hygiene and medical products, provides duty-free entry for electric, hydrogen fuel cell, and plug-in hybrid vehicles, and corrects tariff references for blood-grouping reagents and herbicides under the Regional Comprehensive Economic Partnership Agreement."
+  },
+  {
+   "slug": "speech-829307",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-28",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Prescribed Dental Patients and Other Measures) Bill 2023, Customs Tariff Amendment (Incorporation of Proposals) Bill 2023, Special Recreational Vessels Amendment Bill 2023, Veterans' Affairs Legislation Amendment (Miscellaneous Measures) Bill 2023, and Treasury Laws Amendment (Refining and Improving Our Tax System) Bill 2023 were referred to the Federation Chamber for further consideration at the adjournment of the second reading debate."
+  },
+  {
+   "slug": "speech-829383",
+   "speaker": "Libby Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-28",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (Incorporation of Proposals) Bill 2023 imposes a 35% additional duty on goods from Russia and Belarus, provides a free rate for goods from Ukraine, extends free tariffs on COVID-19 medical and hygiene products, and reduces tariffs on electric, hydrogen, and plug-in hybrid vehicles. The bill also corrects tariff references and was"
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Incorporation of Proposals) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00034",
+   "assent_date": "2023-06-28"
+  }
+ ]
+}

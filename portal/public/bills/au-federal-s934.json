@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s934",
+ "title": "Commonwealth Electoral Amendment (Above the Line Voting) Bill 2013",
+ "short_title": "Commonwealth Electoral Amendment (Above the Line Voting) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-13",
+ "originating_house": "senate",
+ "sponsor": "XENOPHON, Sen Nick",
+ "sponsor_party": "Independent Member",
+ "sponsor_person_id": "10717",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s934%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s934%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s934%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s934_ems_e012583d-d792-4d67-941a-0db72bec04ed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/3205015%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s934%22",
+   "document_date": "2013-11-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-825475",
+   "speaker": "Nick Xenophon",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": "The speaker introduced the Commonwealth Electoral Amendment (Above the Line Voting) Bill 2013 to amend the Commonwealth Electoral Act 1918. The bill was agreed to and read a first time."
+  },
+  {
+   "slug": "speech-825486",
+   "speaker": "Nick Xenophon",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": "Two bills were introduced: the Parliamentary Proceedings Broadcasting Amendment Bill 2013 and the Commonwealth Electoral Amendment (Above the Line Voting) Bill 2013, with explanatory memoranda tabled."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6855",
+ "title": "Crimes Legislation Amendment (Ransomware Action Plan) Bill 2022",
+ "short_title": "Crimes Legislation Amendment (Ransomware Action Plan) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6855%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6855%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6855%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6855_ems_7cbdfce4-3da3-475d-8a39-c05b47f32a8c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6855%22",
+   "document_date": "2022-02-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-17",
+  "sentences": [
+   "The bill would update criminal laws to address the threat of ransomware.",
+   "It would change the Criminal Code Act 1995, the Crimes Act 1914 and the Proceeds of Crime Act 2002 to create new offences and procedures.",
+   "The government says the bill is part of a plan announced on 13 October 2021 to protect Australians and strengthen responses to ransomware attacks."
+  ],
+  "changes": [
+   "The bill creates new criminal offences for ransomware-related activities.",
+   "It updates procedures for investigating and prosecuting ransomware cases.",
+   "The bill targets data theft, encryption, cyber extortion and ransomware-as-a-service."
+  ],
+  "affected": "Individuals and crime syndicates that carry out ransomware attacks, and the Australian government agencies that respond to them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

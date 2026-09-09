@@ -1,0 +1,238 @@
+{
+ "key": "au-federal-s1118",
+ "title": "Security of Critical Infrastructure Bill 2018",
+ "short_title": "Security of Critical Infrastructure Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-07",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1118_ems_ae794959-7a94-4ea8-bea3-f76203eb6598%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1118_ems_523b3dd4-3ce6-434a-b50b-47bc828fc3cc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1118_ems_c9b2c309-b077-4bc8-9821-3c0a68562bdd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1118_ems_85ba75df-db29-48bd-a5e4-6a735585afe5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1118%22",
+   "document_date": "2017-12-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00029",
+   "document_date": "2018-04-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2017-12-07",
+  "sentences": [
+   "This bill would give the government stronger tools to counter foreign spying, sabotage, and pressure on Australia's critical infrastructure.",
+   "It would apply to certain electricity, water, port, and gas facilities that officials have judged most exposed to these threats.",
+   "The amendments also add a requirement for a parliamentary committee to check the law's operation within three years of it becoming law."
+  ],
+  "changes": [
+   "The bill would broaden the definition of direct interest holder and add definitions for influence or control and associates, so that the register captures all entities that might steer the asset or its direct holder.",
+   "It would exempt moneylenders from reporting when their loan agreement does not let them, or their related entities, steer the asset.",
+   "It would require that a person facing an adverse security assessment receive a non-classified explanation of the reasons when a direction is issued.",
+   "It would refine the definition of critical water asset to cover utilities or systems serving more than 100,000 connections.",
+   "It would make the definition of protected information include documents as well as information."
+  ],
+  "affected": "Owners and operators of critical infrastructure in the electricity, water, port, and gas sectors, along with their direct interest holders and lenders, would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:41:36Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-361687",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The government introduced the Security of Critical Infrastructure Bill 2017 to establish a register of around 106 critical infrastructure assets in electricity, water, gas and ports, requiring owners and operators to provide ownership and beneficial owner information, and granting the Minister for Home Affairs a last-resort directions power to mitigate national security risks from foreign involvement, subject to safeguards including ASIO assessments, consultation and judicial review."
+  },
+  {
+   "slug": "speech-361688",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "Labor supported the Security of Critical Infrastructure Bill 2018, arguing it appropriately balances national security risks with minor regulatory requirements for critical infrastructure in electricity, gas, ports and water. The bill, modelled on telecommunications sector reforms, applies to around 140 assets and the speaker noted nine Parliamentary Joint Committee recommendations were implemented."
+  },
+  {
+   "slug": "speech-361689",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The Security of Critical Infrastructure Bill 2018 establishes a register of critical infrastructure assets and gives the minister powers to direct owners to mitigate national security risks. The speech highlights growing foreign ownership of Australian infrastructure—including ports, energy, and water—and argues that risks from nations like China require stronger protections, citing examples such as Chinese ownership of the Port of Darwin and Port of Newcastle, and foreign control of LNG projects."
+  },
+  {
+   "slug": "speech-361690",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "Labor supported the Security of Critical Infrastructure Bill 2018, which establishes a non-public register of critical infrastructure assets and gives the minister powers to direct operators to mitigate security risks. The speech also highlighted amendments from Parliamentary Joint Committee on Intelligence and Security recommendations, including notice and merits review of adverse security assessments and Home Affairs guidelines for reporting entities."
+  },
+  {
+   "slug": "speech-361691",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Security of Critical Infrastructure Bill 2018, which received unanimous bipartisan support, establishes a register of critical infrastructure assets and a ministerial directions power to address risks from foreign ownership, espionage, and cyberattacks, and noted Australia's fuel stocks of about 47 days as of November 2017, recommending a review of the fuel supply chain."
+  },
+  {
+   "slug": "speech-361692",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Security of Critical Infrastructure Bill 2018, citing threats from state-sponsored cyberattacks (including Vladimir Putin’s Russia) and deficiencies in the Foreign Investment Review Board process (Port of Darwin, Ausgrid, Global Switch). He urged improving energy security by setting a target to end oil dependence, pointing to health costs (3,000 Australian deaths per year from vehicle emissions) and parallel international bans on petrol and diesel."
+  },
+  {
+   "slug": "speech-361693",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The Security of Critical Infrastructure Bill 2018 is a necessary first step but should be expanded to include cybersecurity protections, all eight critical infrastructure sectors (not just four), and supply chain security, given that over 80% of Australia's critical infrastructure is privately owned and cyber incidents occur more than twice a day on these systems."
+  },
+  {
+   "slug": "speech-361694",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The government argued that the Security of Critical Infrastructure Bill 2018 is essential for protecting Australia from sabotage, espionage and coercion by foreign actors, and announced it incorporates all nine recommendations from the Parliamentary Joint Committee on Intelligence and Security."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Security of Critical Infrastructure Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00029",
+   "assent_date": "2018-04-11"
+  }
+ ]
+}

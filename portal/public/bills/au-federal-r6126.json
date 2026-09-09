@@ -1,0 +1,226 @@
+{
+ "key": "au-federal-r6126",
+ "title": "Treasury Laws Amendment (2018 Superannuation Measures No. 1) Bill 2018",
+ "short_title": "Treasury Laws Amendment (2018 Superannuation Measures No. 1) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6126%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6126%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6126%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6126%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6126%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6126_ems_0a58b2ab-9152-4243-8646-e76a51c229c9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6126%22",
+   "document_date": "2018-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5234",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2018-06-20.12.2) introduced by Labor MP [Chris Bowen](https://theyvoteforyou.org.au/people/representatives/mcmahon/chris_bowen), which means it failed. The motion would have amended the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), which is \"That the bill be read a second time\". Reading the bill for a second time is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give the bill a second reading, the House notes:* > *(1) that Labor created Australia’s superannuation system and will always defend it;* > *(2) that an amnesty for employers who have not complied with their Superannuation Guarantee obligations;* >> *(a) was a complete surprise and announced without any consultation;* >> *(b) was not recommended by the Senate’s inquiry into the Superannuation Guarantee; and* >> *(c) should not be supported, with increased penalties the preferred option to urge compliance with Superannuation Guarantee contributions; and* > *(3) the Opposition’s announced policy to prohibit limited recourse borrowing arrangements as recommended by the 2014 Financial System Inquiry.\"*",
+   "stage": "Second reading",
+   "ayes": 56,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 54,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-06-20/1"
+  },
+  {
+   "key": "federal-representatives-5235",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2018-06-20.21.1) introduced by Labor MP [Chris Bowen](https://theyvoteforyou.org.au/people/representatives/mcmahon/chris_bowen), which means it failed. Mr Bowen [explained that](https://www.openaustralia.org.au/debates/?id=2018-06-20.21.1): > *These amendments remove from the bill the outrageous schedule which provides an amnesty for nonpayment of superannuation guarantee, an outrageous schedule which should be removed and should not be the law of the land. What is the law of the land is that employers should pay superannuation to their employees. It's part of their conditions, it is part of their wages and it should be paid.* Read more about [the bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6126) and what it does in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd128).",
+   "stage": "Consideration in detail",
+   "ayes": 56,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 54,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-06-20/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-364790",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-19",
+   "stage_hint": null,
+   "brief": "The speaker supported three of the four measures in the bill but strongly opposed the superannuation guarantee amnesty, arguing it amounts to a penalty holiday for employers who have committed wages theft by not paying employees' superannuation for up to 25 years."
+  },
+  {
+   "slug": "speech-364795",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-19",
+   "stage_hint": null,
+   "brief": "The speaker opposed the superannuation guarantee amnesty in the bill, arguing it lets employers who have not paid super for up to 25 years avoid prosecution, while supporting the other three measures. They noted that unpaid super affects 2.4 million workers losing $5.6 billion annually."
+  },
+  {
+   "slug": "speech-364870",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill's 12-month amnesty for employers who failed to pay superannuation since 1992 amounts to protecting \"dodgy bosses\" and making the superannuation guarantee charge tax deductible, which they called a \"tax break for doing the wrong thing.\" They moved an amendment to remove the amnesty provision, citing estimates that 2.4 million workers lose $5.6 billion annually in unpaid super, and noting the government opposed universal compulsory super, froze the super guarantee, and tried to weaken penalties for non-payment."
+  },
+  {
+   "slug": "speech-364872",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Treasury Laws Amendment Bill’s 12‑month amnesty for unpaid superannuation, calling it an amnesty for wage theft, and supported Labor’s amendment; they noted $2.85 billion in unpaid super in 2014‑15 and that 2.76 million workers miss out on some or all super entitlements."
+  },
+  {
+   "slug": "speech-364873",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The bill was opposed due to its 12-month superannuation guarantee amnesty, which was characterised as rewarding employers who steal wages. Citing Industry Super Australia figures of 2.4 million workers missing $5.6 billion annually (about $2,000 each), the amnesty was criticised for granting tax deductions and a 25-year penalty holiday while disadvantaging compliant businesses and increasing pressure on the age pension."
+  },
+  {
+   "slug": "speech-364878",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (2018 Superannuation Measures No. 1) Bill 2018 strengthens superannuation guarantee integrity, including near-real-time reporting, up to 12 months jail for non-compliant employers, and a 12-month amnesty expected to recover $230 million in entitlements for around 50,000 employees. The bill also prevents use of limited recourse borrowing arrangements to circumvent contribution caps."
+  }
+ ],
+ "acts": []
+}

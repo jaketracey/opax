@@ -1,0 +1,200 @@
+{
+ "key": "au-federal-r6638",
+ "title": "Industrial Chemicals Environmental Management (Register) Bill 2020",
+ "short_title": "Industrial Chemicals Environmental Management (Register) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "passed",
+ "status_as_of": "2021-03-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6638%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6638%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6638%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6638%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6638%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6638%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6638%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6638%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6638%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6638%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6638_ems_85faa2c2-beba-41bf-9fb3-13ceee9fcc3b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6638_ems_704b758e-337b-4f65-a4d4-d6f0723c5079%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6638%22",
+   "document_date": "2020-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00027",
+   "document_date": "2021-03-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-03",
+  "sentences": [
+   "This bill creates a nationwide system for overseeing how industrial chemicals are used, handled, and thrown away, aiming to cut environmental harm and reduce human exposure.",
+   "The environment minister would set rules for sorting chemicals by risk, make decisions on which controls apply, and keep a public list of those decisions, with advice from a new expert panel.",
+   "The list itself would not directly force anyone to follow the controls; instead, other laws at national, state, or territory level would have to adopt it to make the rules enforceable."
+  ],
+  "changes": [
+   "Establishes a national framework for managing industrial chemicals' lifecycle.",
+   "Allows the minister to create decision-making principles for categorizing chemicals by environmental risk.",
+   "Lets the minister make scheduling decisions that can restrict or ban chemical use or disposal.",
+   "Creates a register to record all scheduling decisions.",
+   "Sets up an advisory body to counsel the minister on scheduling and the register.",
+   "Adds mechanisms for sharing and protecting information, and allows delegation of the minister's powers."
+  ],
+  "affected": "Businesses that manufacture, import, use, or dispose of industrial chemicals, as well as the general public and state and territory governments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-399721",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The Morrison government introduced the Industrial Chemicals Environmental Management (Register) Bill 2020 to establish a national standard and public register for managing environmental risks from over 40,000 industrial chemicals, with stronger controls for higher-risk substances, in coordination with state and territory governments."
+  },
+  {
+   "slug": "speech-399722",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals Legislation Amendment Bill 2020 enables collection of a scheduling charge alongside the existing registration charge under the Industrial Chemicals Act 2019, reduces administrative burden on business, clarifies payment management, and corrects a drafting error in delegation powers."
+  },
+  {
+   "slug": "speech-399723",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals Environmental Management (Register) Bill 2020 establishes a national framework for managing environmental risks from industrial chemicals, with cost recovery charges to be set by regulations after consultation and not exceeding the cost of delivering the activity."
+  },
+  {
+   "slug": "speech-399724",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals Environmental Management (Register) Charge (Customs) Bill 2020 was moved for second reading as part of a framework to recover costs for administering the Industrial Chemicals Environmental Management (Register) Bill 2020, imposing customs duty charges with amounts, liable persons, and exemptions to be set in regulations."
+  },
+  {
+   "slug": "speech-399725",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals Environmental Management (Register) Charge (Excise) Bill 2020 was moved for second reading as the final bill to enable cost recovery for administering the principal bill, with charges imposed only as excise duties and amounts set by regulations."
+  },
+  {
+   "slug": "speech-404423",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment noting the Coalition Government’s consistent delays, while affirming Labor’s support for the Industrial Chemicals Environmental Management (Register) Bill 2020 and related bills to establish a national standard for managing industrial chemicals like PFAS. They cited specific failures: less than one percent of the 450 gigalitres of Murray-Darling Basin Plan environmental water delivered and unspent bushfire recovery funds in the Blue Mountains."
+  },
+  {
+   "slug": "speech-404426",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals Environmental Management (Register) Bill 2020 and related bills were supported to create a national framework for classifying and managing industrial chemicals based on risk, with joint implementation by states and territories. The speech highlighted PFAS contamination in Wodonga from the Bandiana Military Area, referencing a $212.5 million settlement in Katherine, NT, and called for consistent national regulation to prevent future harm."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Industrial Chemicals Environmental Management (Register) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00027",
+   "assent_date": "2021-03-26"
+  }
+ ]
+}

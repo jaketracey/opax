@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s1403",
+ "title": "Customs Amendment (Preventing Child Labour) Bill 2023",
+ "short_title": "Customs Amendment (Preventing Child Labour) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-29",
+ "originating_house": "senate",
+ "sponsor": "ROBERTS, Sen Malcolm",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10856",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1403%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1403%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1403%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1403_ems_9c8841f2-dbf9-4d63-aab8-f004f5fe50f3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1403%22",
+   "document_date": "2023-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-29",
+  "sentences": [
+   "The bill would make importers who ignore notices about goods suspected of involving child labour subject to civil penalties or a ban on bringing those goods into Australia.",
+   "An authorised officer in the Australian Border Force could issue a notice requiring information or action if they reasonably suspect or believe goods involve child labour, with the definition of child labour based on the ILO Convention and the child's education status.",
+   "The bill would start six months after Royal Assent, and penalties range from 10% of the goods' value or 200 penalty units for non-compliance under 24 months to 33% or 500 penalty units for non-compliance between 24 and 48 months."
+  ],
+  "changes": [
+   "Creates a new civil penalty and import prohibition regime for importers who fail to comply with notices about goods involving child labour.",
+   "Defines child labour as work by someone under 14 years old, considering compulsory schooling age in the foreign country.",
+   "Exempts packaging from the requirements.",
+   "Sets a sliding scale of penalties that escalates to a ban after 48 months of non-compliance with a notice."
+  ],
+  "affected": "Importers of goods into Australia, particularly those whose supply chains may involve child labour in foreign countries.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:57Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

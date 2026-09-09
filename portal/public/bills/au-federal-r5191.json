@@ -1,0 +1,194 @@
+{
+ "key": "au-federal-r5191",
+ "title": "Classification (Publications, Films and Computer Games) Amendment (Classification Tools and Other Measures) Bill 2014",
+ "short_title": "Classification (Publications, Films and Computer Games) Amendment (Classification Tools and Other Measures) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2014-09-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5191_ems_7dfe98a7-3d3b-4a39-9adc-13f3be278345%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5191_ems_73a72150-2457-4f0c-ad00-af132e873917%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5191%22",
+   "document_date": "2014-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00099",
+   "document_date": "2014-09-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-19",
+  "sentences": [
+   "This bill would update Australia's national classification system for publications, films and computer games based on initial recommendations from a law reform review.",
+   "It would allow automated classification tools, require classification markings on all rated content, and let the Attorney-General's Department alert police about potentially refused-classification material without a prior decision.",
+   "The bill also makes minor amendments, including giving the minister explicit power to set rules for displaying consumer advice and replacing the requirement for Senior Classifiers with a discretion to appoint them."
+  ],
+  "changes": [
+   "Expands exemptions for films shown at festivals and cultural institutions.",
+   "Permits classification via automated tools like online questionnaires.",
+   "Makes classification markings mandatory on all classified content.",
+   "Broadens exceptions so modified films and games do not need re-classification.",
+   "Lets the Attorney-General's Department notify law enforcement of potential refused-classification content before formal classification.",
+   "Gives the minister power to determine consumer advice display rules."
+  ],
+  "affected": "Consumers, film and computer game distributors, festivals, cultural institutions, the Classification Board, the Attorney-General's Department, and law enforcement authorities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:46:17Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-286932",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286934",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286935",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286936",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286998",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Classification (Publications, Films and Computer Games) Amendment (Classification Tools and Other Measures) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00099",
+   "assent_date": "2014-09-11"
+  }
+ ]
+}

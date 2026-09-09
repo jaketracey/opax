@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-r7441",
+ "title": "Australian Centre for Disease Control Amendment (Gambling as a Public Health Issue) Bill 2026",
+ "short_title": "Australian Centre for Disease Control Amendment (Gambling as a Public Health Issue) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-02",
+ "originating_house": "representatives",
+ "sponsor": "RYAN, Monique, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10987",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-03-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7441%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7441_ems_3591b8fe-b0ea-48f8-98cb-08445a2d3cc0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7441%22",
+   "document_date": "2026-03-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-02",
+  "sentences": [
+   "This bill would add gambling harms to the list of public health issues the Australian Centre for Disease Control can address.",
+   "The change would let the agency's head create and share information about gambling's health effects and give advice to governments and other groups.",
+   "The bill does not set a start date or list other amendments to the Act."
+  ],
+  "changes": [
+   "Expands the legal definition of public health matters to cover gambling harm and addiction.",
+   "Gives the agency's director the power to produce and distribute advice on gambling's health impacts.",
+   "Allows the director to advise federal and state governments, international bodies and health professional groups."
+  ],
+  "affected": "The Australian Centre for Disease Control, its director, and the people and communities affected by gambling harm.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1415",
+ "title": "Treasury Laws Amendment (Extending the FBT Exemption for Plug-In Hybrid Electric Vehicles) Bill 2024",
+ "short_title": "Treasury Laws Amendment (Extending the FBT Exemption for Plug-In Hybrid Electric Vehicles) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-05-15",
+ "originating_house": "senate",
+ "sponsor": "VAN, Sen David",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10957",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1415%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1415%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1415%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1415_ems_55778759-2dc7-4f12-bc49-9eca20a1c3f5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1415%22",
+   "document_date": "2024-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-05-15",
+  "sentences": [
+   "The bill would extend an existing tax break for plug-in hybrid electric vehicles to 1 April 2030.",
+   "It keeps the current fringe benefits tax concession for these vehicles, which otherwise would expire soon.",
+   "The government says the extension supports national goals for cutting greenhouse gas emissions and addresses ongoing barriers to adopting lower-emission vehicles."
+  ],
+  "changes": [
+   "Extends the fringe benefits tax concession for plug-in hybrid electric vehicles until 1 April 2030.",
+   "Maintains the existing tax incentive, rather than introducing new measures.",
+   "Aligns the concession with national emission reduction goals."
+  ],
+  "affected": "Employers and employees who use plug-in hybrid electric vehicles for work-related purposes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

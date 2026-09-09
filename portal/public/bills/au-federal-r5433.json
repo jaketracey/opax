@@ -1,0 +1,247 @@
+{
+ "key": "au-federal-r5433",
+ "title": "Tax and Superannuation Laws Amendment (Employee Share Schemes) Bill 2015",
+ "short_title": "Tax and Superannuation Laws Amendment (Employee Share Schemes) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5433_ems_c295599e-b735-49ad-b0ea-0971c972c039%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5433%22",
+   "document_date": "2015-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00105",
+   "document_date": "2015-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-310812",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker moved to amend the motion to condemn the government's cuts to innovation and science capacity while supporting the bill, which extends employee share scheme tax deferral from 7 to 15 years and introduces new concessions for startups under 10 years old with turnover under $50 million and discounts no greater than 15%."
+  },
+  {
+   "slug": "speech-310815",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "Labor supported the Employee Share Schemes Bill 2015 for balancing tax evasion prevention with start-up incentives, while criticising the government for cutting $312 million from innovation precincts, slashing science and research funding by 17%, and undermining the automotive and clean energy sectors, which it argued harms jobs and economic growth."
+  },
+  {
+   "slug": "speech-310818",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "Labor supported the Tax and Superannuation Laws Amendment (Employee Share Schemes) Bill 2015, arguing it would help start-ups attract employees by changing the taxation point for share and option schemes, while noting their own amendment criticised the government for cutting $3 billion from science, research and innovation."
+  },
+  {
+   "slug": "speech-310820",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Tax and Superannuation Laws Amendment (Employee Share Schemes) Bill 2015, citing unintended consequences for start-ups. They criticised the government’s innovation approach, noting Australia ranked 81st out of 143 in global innovation efficiency, and called for more active government intervention—including reversing cuts to CSIRO (800 scientists) and Cooperative Research Centres—and for agencies like ARENA to fund early-stage commercialisation."
+  },
+  {
+   "slug": "speech-310821",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The bill amends Labor's 2009 employee share scheme laws, which required tax up front on options, leaving Australian start-ups at a disadvantage with valuations costing $50,000 compared to $2,000–$5,000 in the US. The amendments restore capital gains tax concessions within a reasonable timeframe and give the tax commissioner flexibility, while criticising earlier Labor interventions in the insulation industry, live exports, and green cars."
+  },
+  {
+   "slug": "speech-310827",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that employee share ownership schemes can help combat inequality and boost economic growth by giving workers access to capital returns, citing studies showing productivity gains of up to 4% and sales increases of 2.3% per employee. The speaker supported the bill as a sensible refinement to boost innovation while preventing tax evasion."
+  },
+  {
+   "slug": "speech-310831",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Employee Share Schemes Bill 2015 will support Australia's transition from the mining boom by deferring tax on employee options and providing concessions for eligible start-ups (turnover under $50 million, unlisted, under 10 years old), with the potential to add over $100 billion and 500,000 jobs by 2033. He noted success stories like Cochlear, Seek, Atlassian and Freelancer, and expressed concern that only one per cent of Australian start-ups are in South Australia."
+  },
+  {
+   "slug": "speech-310972",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tax and Superannuation Laws Amendment (Employee Share Schemes) Bill 2015, which removes upfront tax bills and provides a 15% income tax deduction for start-up employees exercising options after three years, but argued it fails to protect minimum wages and conditions for genuine employees and noted that Australia’s R&D spending at 2.2% of GDP is at a 30-year low, calling for a target of 3% of GDP."
+  },
+  {
+   "slug": "speech-310973",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Tax and Superannuation Laws Amendment (Employee Share Schemes) Bill 2015 reverses the 2009 Labor government’s changes, which taxed employee share options before they could be realised, stifling innovation and harming start-ups."
+  },
+  {
+   "slug": "speech-310976",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The Tax and Superannuation Laws Amendment (Employee Share Schemes) Bill 2015 was argued to support small business and innovation by allowing employees to defer tax on options until they are exercised and enabling eligible start-ups to issue discounted shares with tax exemptions or deferrals. The speaker also highlighted budget measures including a 1.5% company tax cut, a 5% tax discount for unincorporated businesses, and a $20,000 instant asset write-off, and advocated for an expedited NBN rollout in Geelong suburbs."
+  },
+  {
+   "slug": "speech-310977",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The Tax and Superannuation Laws Amendment (Employee Share Schemes) Bill 2015 will allow employees to defer tax on options until they are exercised, increase the deferral period from seven to 15 years, and double the individual ownership limit from five to 10 percent, while eligible start-ups (incorporated less than 10 years, unlisted, turnover under $50 million) can issue shares or options with a tax exemption or further deferral. The bill aims to reverse the 2009 Labor government changes that effectively blocked employee share schemes and to help Australian start-ups attract and retain talent."
+  },
+  {
+   "slug": "speech-310979",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The Tax and Superannuation Laws Amendment (Employee Share Schemes) Bill 2015 was argued to be an overdue reform benefiting employers and employees by allowing businesses to incentivise staff with shares or options, aligning their interests with business growth and profit. The speaker criticised the 2009 amendments by the previous government for disadvantaging Australian firms internationally, and specifically blamed the member for Lingiari and the failed mining tax for scrapping a 1.5 per cent small business tax deduction."
+  },
+  {
+   "slug": "speech-310983",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The Tax and Superannuation Laws Amendment (Employee Share Schemes) Bill 2015 would allow employees to defer tax on options until exercise, increase the maximum deferral period from 7 to 15 years, and double the individual ownership limit from 5% to 10%, with start-ups receiving additional concessions. The speaker opposed the amendment."
+  },
+  {
+   "slug": "speech-310984",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Tax and Superannuation Laws Amendment (Employee Share Schemes) Bill 2015 reverses Labor's 2009 tax changes, introduces new concessions for start-ups, and streamlines valuation methods, claiming Labor's policies caused a 50% decline in business start-ups from 325,000 in 2003-04 to around 100,000 fewer by 2012-13."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (Employee Share Schemes) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00105",
+   "assent_date": "2015-06-30"
+  }
+ ]
+}

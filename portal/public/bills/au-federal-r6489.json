@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r6489",
+ "title": "Liability for Climate Change Damage (Make the Polluters Pay) Bill 2020",
+ "short_title": "Liability for Climate Change Damage (Make the Polluters Pay) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-24",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-11-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6489%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6489%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6489%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6489_ems_3163d0cd-2e7e-427e-b261-e32acc0b4eb6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6489%22",
+   "document_date": "2020-02-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-24",
+  "sentences": [
+   "This bill would make fossil fuel companies legally responsible for damage caused by climate change.",
+   "It would allow victims, the Commonwealth Attorney-General, or a state or territory attorney-general to sue major emitters in the Federal Court for injunctions or damages.",
+   "A major emitter is defined as a company that produces fossil fuels or operates coal-fired power stations and emits over 1 million tonnes of greenhouse gases in any 12-month period starting on or after 1 September 1990."
+  ],
+  "changes": [
+   "Creates a new right for victims of climate change damage to sue fossil fuel companies.",
+   "Defines major emitters as those emitting over 1 million tonnes of greenhouse gases in a 12-month period since 1 September 1990.",
+   "Allows the court to assume a major emitter's share of damage is at least proportional to its share of global emissions.",
+   "Gives the Federal Court power to grant injunctions requiring emitters to reduce or cease activities causing future damage.",
+   "Applies the Act retrospectively from 1 July 2019.",
+   "Makes liability apply even if the production or operation was authorised by law."
+  ],
+  "affected": "Fossil fuel companies, including thermal coal, oil and gas producers and owners or operators of coal-fired power stations, and victims of climate change damage such as bushfire survivors.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

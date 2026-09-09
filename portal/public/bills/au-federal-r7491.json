@@ -1,0 +1,204 @@
+{
+ "key": "au-federal-r7491",
+ "title": "Health Insurance Amendment (Incentive Payments and Other Measures) Bill 2026",
+ "short_title": "Health Insurance Amendment (Incentive Payments and Other Measures) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "before_parliament",
+ "status_as_of": "2026-07-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7491%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7491%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7491%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7491_ems_5a8733a7-9215-41ac-8cdf-4404d2477d9f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7491%22",
+   "document_date": "2026-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-27",
+  "sentences": [
+   "The bill would create a legal basis in the Health Insurance Act 1973 for federal health incentive payment programs.",
+   "It would let the government make payments to approved participants under rules that set eligibility, payment types and amounts, and compliance obligations.",
+   "The short title of the principal Act would become Medicare Act 1973, with that change starting 24 months after Royal Assent or earlier if proclaimed."
+  ],
+  "changes": [
+   "Creates a new statutory framework for health incentive payment programs.",
+   "Allows the government to make payments to approved participants under prescribed rules.",
+   "Introduces civil penalties for false claims of program participation and record-keeping failures.",
+   "Establishes a merits review pathway including internal review and appeal to the Administrative Review Tribunal.",
+   "Permits automated decision-making by computer programs with safeguards.",
+   "Renames the Health Insurance Act 1973 to the Medicare Act 1973."
+  ],
+  "affected": "Healthcare providers and participants in Commonwealth health incentive payment programs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10574",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7491_amend_1fd2b016-3b94-4269-85ed-331850bf2000%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This amendment was introduced by Lindsay MP [Melissa McIntosh](https://theyvoteforyou.org.au/people/representatives/lindsay/melissa_mcintosh) (Liberal). ### Amendment text > *That all words after “That” be omitted with a view to substituting the following words:* > >> *“whilst not declining to give the bill a second reading, the House:* >> >> *(1) notes:* >> >>> *(a) during the 2025 election, the Prime Minister promised on countless occasions that all Australians needed to see their GP was their Medicare card, not their credit card;* >>> >>> *(b) the latest bulk-billing rate still sits well below the 88 per cent rate reached under the Coalition;* >>> >>> *(c) the latest Medicare data shows average out-of-pocket costs have risen to a record $50.77 per visit, up more than 20 per cent in two years;* >>> >>> *(d) the total number of GP attendances dropped by 1.8 million visits in the past year;* >>> >>> *(e) these delayed or permanently deferred GP attendances result in Australians getting sicker and ending up in our overcrowded emergency departments; and* >>> >>> *(f) the Government is pushing family GPs towards bulk billing, despite the Department of Health’s own modelling showing nearly one in three GPs would be worse off if they switched to fully bulk billing; and* >> >> *(2) criticises the Government for misleading the public and breaking its promises on primary health care”.*",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 92,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 89
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-02/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1203145",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204188",
+   "speaker": "Melissa McIntosh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204534",
+   "speaker": "Zaneta Mascarenhas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-07-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204536",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-07-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204665",
+   "speaker": "Alice Jordan-Baird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-07-02",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

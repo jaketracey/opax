@@ -1,0 +1,194 @@
+{
+ "key": "au-federal-r6425",
+ "title": "Communications Legislation Amendment (Deregulation and Other Measures) Bill 2019",
+ "short_title": "Communications Legislation Amendment (Deregulation and Other Measures) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2019-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6425_ems_9d960903-c851-43b4-aee1-c04c2bec3cd7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6425_ems_d1b530c6-fd65-4144-ba03-45ea850f514d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6425%22",
+   "document_date": "2019-10-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00120",
+   "document_date": "2019-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-16",
+  "sentences": [
+   "The bill would cut red tape in broadcasting and telecommunications while keeping consumer protections.",
+   "It would change reporting rules, classification standards, and numbering management, and let the minister pick an industry body to run numbering instead of the ACMA.",
+   "The bill would also let NBN companies sell surplus non-communications goods to anyone and remove NBN Co's power to issue fibre installation statements."
+  ],
+  "changes": [
+   "Remove duplicate reporting requirements for licensees and controllers to the ACMA.",
+   "Let the minister appoint an industry-based numbering manager instead of the ACMA.",
+   "Stop the ACCC from issuing tariff filing directions to carriers and service providers.",
+   "Allow NBN companies to sell surplus non-communications goods to any person.",
+   "Repeal NBN Co's ability to issue statements about not installing fibre in new developments.",
+   "Abolish the ACMA's requirement to consult an advisory committee before declaring submarine cable protection zones."
+  ],
+  "affected": "Broadcasters, telecommunications carriers, service providers, NBN companies, the ACMA, the ACCC, and the minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-382811",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The bill reduces regulatory burdens on broadcasting and telecommunications, corrects a payment error for Network Investments Pty Ltd (increasing transitional support from $632,000 to $819,000 per year plus an additional $187,000 annually for five years), and allows the minister to appoint an industry body to manage telephone numbering instead of the Australian Communications and Media Authority."
+  },
+  {
+   "slug": "speech-384471",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the Communications Legislation Amendment (Deregulation and Other Measures) Bill 2019, but moved a second reading amendment criticising the government for presenting a \"do-nothing\" bill originally drafted in 2015 and failing to deliver outcomes from a spectrum reform process started over four years ago."
+  },
+  {
+   "slug": "speech-384472",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Communications Legislation Amendment (Deregulation and Other Measures) Bill 2019, arguing it is a minor deregulation exercise that does little to address major media challenges such as declining local news, 106 newspaper closures from 2008-2018, and a $3.7 billion advertising revenue shift to digital platforms. The speaker called attention to the government's inaction on regional media decline, NBN failures, $366 million in ABC funding cuts, and warned that weakened local journalism threatens democratic engagement."
+  },
+  {
+   "slug": "speech-384473",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the deregulation bill as a minor housekeeping measure but argued it fails to address major communications challenges, criticising the government for cutting $366 million from the ABC and lacking a plan for the digital economy and independent media viability."
+  },
+  {
+   "slug": "speech-384474",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The Communications Legislation Amendment (Deregulation and Other Measures) Bill 2019 reduces regulatory burden on broadcasting and telecommunications industries, including increased transitional support payments for network investments, a single classification scheme for free-to-air TV, removal of duplicative notification requirements, and repeal of over 50 spent acts, while maintaining consumer and competition safeguards."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Communications Legislation Amendment (Deregulation and Other Measures) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00120",
+   "assent_date": "2019-12-12"
+  }
+ ]
+}

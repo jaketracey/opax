@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6403",
+ "title": "Commonwealth Electoral Amendment (Real Time Disclosure of Political Donations) Bill 2019",
+ "short_title": "Commonwealth Electoral Amendment (Real Time Disclosure of Political Donations) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-16",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-03-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6403%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6403%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6403%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6403_ems_4226d0da-e07a-42c3-8ba8-fd06636cf80c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6403%22",
+   "document_date": "2019-09-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-16",
+  "sentences": [
+   "This bill would make political donation reporting happen faster.",
+   "Party officials would have to tell the Australian Electoral Commission about donations of $13,800 or more within five business days of receiving them.",
+   "The bill does not change the $13,800 threshold or alter election or by-election rules."
+  ],
+  "changes": [
+   "The bill requires agents or financial controllers to report donations that meet or exceed the disclosure threshold.",
+   "The bill sets a five-business-day deadline for reporting each donation.",
+   "The bill does not change the disclosure threshold or election arrangements."
+  ],
+  "affected": "Political parties, their branches, and campaigners who receive donations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

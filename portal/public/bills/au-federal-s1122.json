@@ -1,0 +1,60 @@
+{
+ "key": "au-federal-s1122",
+ "title": "Commonwealth Inscribed Stock Amendment (Debt Ceiling) Bill 2018",
+ "short_title": "Commonwealth Inscribed Stock Amendment (Debt Ceiling) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-06",
+ "originating_house": "senate",
+ "sponsor": "BERNARDI, Sen Cory",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10038",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2018-08-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1122%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1122%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1122%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1122%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1122_ems_5a96a771-8d19-4a5c-892a-9583b645e612%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1122%22",
+   "document_date": "2018-02-06",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

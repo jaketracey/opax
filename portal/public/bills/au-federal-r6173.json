@@ -1,0 +1,170 @@
+{
+ "key": "au-federal-r6173",
+ "title": "Higher Education Support (Charges) Bill 2018",
+ "short_title": "Higher Education Support (Charges) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6173%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6173%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6173_ems_e2d2df48-9c9a-48ab-a43b-46d2fad272e1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6173%22",
+   "document_date": "2018-09-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-19",
+  "sentences": [
+   "The bill would charge higher education providers an annual tax to fund the student loan scheme.",
+   "Providers whose students get HECS-HELP or FEE-HELP must pay the charge, with the amount set later by regulation.",
+   "The annual charge will cover the government's costs of running the loan program, including administration, data and compliance."
+  ],
+  "changes": [
+   "Imposes an annual charge on all higher education providers with students using HECS-HELP or FEE-HELP.",
+   "Funds the Higher Education Loans Program and related Commonwealth costs.",
+   "Leaves the charge amount to be prescribed by regulations."
+  ],
+  "affected": "Higher education providers whose students receive HECS-HELP or FEE-HELP",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-369863",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The Higher Education Support Amendment (Cost Recovery) Bill 2018 and associated charges bill introduce an application fee and annual charge on higher education providers from 1 January 2019, recovering HELP program administration costs and saving $14.1 million over 2018–19 to 2021–22."
+  },
+  {
+   "slug": "speech-369864",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The bill introduces an annual charge on higher education providers whose students use HECS-HELP or FEE-HELP, to partially recover Commonwealth administrative costs; the charge amount will be set by regulations based on enrolment size, commencing 1 January 2019 with invoices issued in 2020."
+  },
+  {
+   "slug": "speech-373885",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": "Labor did not oppose the Higher Education Support (Charges) Bill 2018 and related bill, which introduce small cost‑recovery charges on higher education providers, but moved an amendment criticising the government for cutting billions from universities and vocational education over five years. Labor argued the charges should be absorbed by institutions, not passed to students, and announced its own plan to restore demand‑driven funding, invest $174 million in equity programs, and deliver over $10 billion in additional university funding over a decade."
+  },
+  {
+   "slug": "speech-373888",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the Higher Education Support (Charges) Bill 2018 while voicing concerns about costs being passed to students, and outlined Labor's alternative policies including restoring demand‑driven funding, $10 billion in additional university funding over a decade, $174 million for equity and pathways, a $300 million universities future fund, and $20 million for an agri‑technology centre at Western Sydney University's Hawkesbury campus."
+  },
+  {
+   "slug": "speech-373890",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": "The MP argued in cautious support of the Higher Education Support (Charges) Bill 2018, which imposes an annual charge on higher education providers to save $14.1 million, while criticising the government’s funding cuts — including a $2.2 billion cut and loss of 10,000 undergraduate places — and announcing Labor’s proposed $10 billion investment to create 200,000 additional university places."
+  },
+  {
+   "slug": "speech-373891",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Higher Education Support (Charges) Bill 2018 must not pass costs on to students, announced Labor would refer it to a Senate committee for inquiry, and highlighted Labor's commitments of $174 million for equity and pathways, $10 billion to restore demand-driven funding, and $300 million for a universities futures fund."
+  },
+  {
+   "slug": "speech-373892",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": "Labor supports the two higher education bills but will refer them to a Senate committee for inquiry, expressing concern that the proposed charges could be passed on to students and citing the government's record of $2.2 billion in university cuts. The speaker also highlighted the importance of the HELP scheme for access, particularly for low-socioeconomic and refugee communities, and criticised the government's broader education funding record."
+  },
+  {
+   "slug": "speech-373893",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": "Labor supported the Higher Education Support bills while noting an amendment criticising the government's $2.2 billion in cuts to universities, listing specific cuts to Western Australian universities (Curtin $86m, Edith Cowan $49m, Murdoch $35m, UWA $38m), and announced Labor's $174 million equity funding and $300 million universities future fund. The speaker also criticised the minister for blocking Australian Research Council grants."
+  },
+  {
+   "slug": "speech-373894",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Higher Education Support (Charges) Bill 2018 and the Higher Education Support Amendment (Cost Recovery) Bill 2018 would shift the cost of administering HELP loans to universities, reducing funds for teaching, research, and students. They stated the government had already cut $2.2 billion from higher education by freezing Commonwealth funding, and criticised the lack of Senate hearings and unspecified charges determined by regulation."
+  },
+  {
+   "slug": "speech-373895",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,319 @@
+{
+ "key": "au-federal-r5209",
+ "title": "Paid Parental Leave Amendment Bill 2014",
+ "short_title": "Paid Parental Leave Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Small Business",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5209%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5209%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5209%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5209%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5209%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5209%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5209%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5209%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5209%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5209_ems_600fdd77-c5e0-4ae2-9f85-ae117f884bb0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5209_ems_8e051d5e-2e23-478b-b84a-0fee1c5caca8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5209_ems_9691f8f2-d06e-46da-9ae8-c56e73322519%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5209%22",
+   "document_date": "2014-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-289548",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289549",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289550",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289551",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289552",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289553",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289772",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289847",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289849",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289855",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289856",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289981",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289982",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289985",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289995",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289997",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289998",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289999",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290000",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290002",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290003",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290004",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290005",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290007",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-02",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

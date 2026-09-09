@@ -1,0 +1,228 @@
+{
+ "key": "au-federal-r6436",
+ "title": "Farm Household Support Amendment (Relief Measures) Bill (No. 1) 2019",
+ "short_title": "Farm Household Support Amendment (Relief Measures) Bill (No. 1) 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2019-11-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6436_ems_e5dded01-faf9-4bf1-89d3-0d884cb6b15f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6436%22",
+   "document_date": "2019-10-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00104",
+   "document_date": "2019-11-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-17",
+  "sentences": [
+   "This bill changes how farmers and their partners receive support under the Farm Household Allowance program.",
+   "It would raise the income offset limit and let people get support for four years in every ten-year period, rather than just once in their lifetime.",
+   "A one-time payment of $7,500 for singles or $6,500 for couples would go to those who have used up their allowance by June 30, 2020."
+  ],
+  "changes": [
+   "The bill increases the maximum off-farm income offset from $80,000 to $100,000 per couple per year.",
+   "It extends the maximum time on the allowance from a lifetime limit to four years in each ten-year period.",
+   "It introduces a lump sum payment for recipients who have used 1,460 days by July 1, 2020.",
+   "It lets the Minister define who gets future relief payments and their amounts."
+  ],
+  "affected": "Eligible farmers and their partners who receive the Farm Household Allowance.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-383059",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "The bill amends the Farm Household Allowance to allow deduction of up to $100,000 in farm losses, extend eligibility to four years in every ten, and provide drought relief payments of $13,000 for couples and $7,500 for singles who have exhausted their payments."
+  },
+  {
+   "slug": "speech-383870",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The speaker moved a second reading amendment criticising the government for cutting off drought-affected farming families from the Farm Household Allowance, arguing the drought is severe and ongoing. They stated 600 families have already been cut off and 500 more are to be cut by Christmas, and called for the removal of the time cap on the allowance until the drought ends."
+  },
+  {
+   "slug": "speech-383879",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The member supported the bill to extend farm household assistance from four to ten years, raise the off-farm income threshold to $100,000, and count agistment income as farm income. He also detailed broader drought measures including $3,000 cash payments, low-interest loans with two years interest-free, $2,500 crop insurance grants, and a $3.9 billion Drought Future Fund, arguing Australia already has a comprehensive national drought policy."
+  },
+  {
+   "slug": "speech-383881",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment (Relief Measures) Bill (No. 1) 2019 was supported, with changes including raising the asset limit to $5 million, increasing non-farm income offset to $100,000, reducing paperwork, extending the allowance to four years out of ten, and adding a relief payment of $13,000 for couples who have used four years of support."
+  },
+  {
+   "slug": "speech-383882",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government lacks a comprehensive climate change policy and has failed farmers, despite extending farm household support to 4.5 years with lump-sum payments of $7,500 for singles or $6,500 for couples. They noted that over 10,000 farmers have been assisted since 2014, but criticised the termination of payments to around 1,100 recipients during worsening drought, and called for a national drought strategy."
+  },
+  {
+   "slug": "speech-383884",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Farm Household Support Amendment Bill as necessary but insufficient, arguing that only $100 million per year from the government's claimed $7 billion drought package is actually being spent, with $5 billion locked in a fund for 10 years and $2 billion in loans. They criticised the Prime Minister for refusing to release the Coordinator-General for Drought report and called for a bipartisan drought cabinet and longer-term planning, while highlighting local volunteer groups like Hawkesbury Hay Runners and City Slickers Appeal."
+  },
+  {
+   "slug": "speech-383885",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The member supported the Farm Household Support Amendment Bill but argued its measures are insufficient and unsustainable, and criticised the government's $7 billion drought fund for not providing direct aid to farmers. He also reiterated the opposition's offer to form a joint 'drought war cabinet' with the government."
+  },
+  {
+   "slug": "speech-384024",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the Farm Household Support Amendment (Relief Measures) Bill (No. 1) 2019 but criticised the government for bungling the farm household allowance, noting 600 families had been removed from the allowance and over 500 more faced a one-off $13,000 payment instead of ongoing support. The speaker argued the government failed to extend similar support to farm workers, contractors, small businesses, and regional councils, and lacked a long-term drought plan, citing arbitrary funding criteria and the need for immediate action."
+  },
+  {
+   "slug": "speech-384026",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the early introduction of a mandatory code of conduct for dairy farmers and outlined changes to the Farm Household Allowance scheme: a maximum of four years' support in any ten-year period, an increase in the income offset to $100,000, and a once-off lump sum of $7,500 for single farmers or $13,000 for couples. They cited ABARES data showing average dairy farm debt in South Australia at $1.3 million and a predicted 42% national decline in farm cash income to $93,000, and called for a national strategy on agriculture and climate change."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Farm Household Support Amendment (Relief Measures) Act (No. 1) 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00104",
+   "assent_date": "2019-11-28"
+  }
+ ]
+}

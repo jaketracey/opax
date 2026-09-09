@@ -1,0 +1,151 @@
+{
+ "key": "au-federal-r7043",
+ "title": "Intellectual Property Laws Amendment (Regulator Performance) Bill 2023",
+ "short_title": "Intellectual Property Laws Amendment (Regulator Performance) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry and Science",
+ "status": "passed",
+ "status_as_of": "2023-11-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7043_ems_1da8763b-87b3-417b-93fe-4a2e5ccd1642%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7043%22",
+   "document_date": "2023-06-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00091",
+   "document_date": "2023-11-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-22",
+  "sentences": [
+   "The bill would make targeted fixes to Australia's intellectual property laws so they work as originally intended.",
+   "It would amend the Olympic Insignia Protection Act 1987, the Trade Marks Act and the Patents Act to clear up unclear language, fix small errors and give users more modern ways to manage their IP.",
+   "The six parts of the bill cover trade marks that include Olympic symbols, how registrations are renewed, revoked and restored, the official journal and outdated provisions."
+  ],
+  "changes": [
+   "The bill would increase legal certainty by correcting minor inconsistencies in IP legislation.",
+   "It would allow users to interact with the IP system in more modern and flexible ways.",
+   "The bill would amend the Olympic Insignia Protection Act 1987, the Trade Marks Act and the Patents Act."
+  ],
+  "affected": "Users of Australia's intellectual property system, including trade mark owners and applicants.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:41Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Intellectual Property Laws Amendment (Regulator Performance) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00091",
+   "assent_date": "2023-11-17"
+  }
+ ]
+}

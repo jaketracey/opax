@@ -1,0 +1,522 @@
+{
+ "key": "au-federal-r6916",
+ "title": "Anti-Discrimination and Human Rights Legislation Amendment (Respect at Work) Bill 2022",
+ "short_title": "Anti-Discrimination and Human Rights Legislation Amendment (Respect at Work) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2022-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6916_ems_6a941119-e2b2-41c6-88ca-e4ce581e5244%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6916_ems_2e5284d3-2d35-4983-80aa-0cfca9f4b277%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6916_ems_fbfad150-95ff-4210-bbdf-141a16ff5099%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6916%22",
+   "document_date": "2022-09-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00085",
+   "document_date": "2022-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2022-09-27",
+  "sentences": [
+   "This bill would implement seven remaining recommendations from the 2020 Respect@Work report on sexual harassment.",
+   "It would create a positive duty on employers to take reasonable measures to eliminate discrimination and give the Australian Human Rights Commission new powers to monitor and enforce compliance.",
+   "The bill would also require Commonwealth public sector agencies to report annually to the Workplace Gender Equality Agency on six gender equality indicators, matching existing private sector obligations."
+  ],
+  "changes": [
+   "Amends the object clause of the Sex Discrimination Act to include achieving substantive equality between men and women.",
+   "Removes the requirement that sex-based harassment be 'seriously' demeaning to lower the threshold for a finding of harassment.",
+   "Prohibits subjecting a person to a hostile workplace environment on the ground of sex.",
+   "Introduces a positive duty on employers to eliminate certain discriminatory conduct including sexual harassment.",
+   "Gives the Australian Human Rights Commission inquiry functions into systemic unlawful discrimination.",
+   "Adds a cost protection provision where each party generally bears its own costs in unlawful discrimination proceedings."
+  ],
+  "affected": "Employers, persons conducting a business or undertaking, Commonwealth public sector agencies, and individuals who may experience sex discrimination or harassment.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:37:22Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7816",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debates/?id=2022-11-07.35.1) introduced by Berowra MP [Julian Leeser](https://theyvoteforyou.org.au/people/representatives/berowra/julian_leeser) (Liberal), which means they failed. ### Amendment text > *(1) Schedule 1, item 5, page 4 (line 9), after \"conduct\", insert \"in relation to the second person\".* > > *(2) Schedule 1, item 5, page 4 (lines 11 and 12), omit \"or after\".* > > *(3) Schedule 2, item 8, page 7 (line 7), omit \"possible\", substitute \"reasonably practicable\".* > > *(5) Schedule 2, item 8, page 7 (line 16), omit \"possible\", substitute \"reasonably practicable\".* ### What did the amendments do? Mr Leeser [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-07.35.2): > *The principle we're adopting with all of our amendments is to make it easier for businesses to comply with and achieve the intention behind this bill. We're not seeking to see boxes ticked, we're not seeking to burden workplaces unnecessarily, but we are seeking to ensure that workplaces are safe place for all Australians. If employers can't easily fulfil the obligation this legislation places on them and an undue additional regulatory burden is imposed, we will create more problems than we solve. We must take a path that's achievable and will lead to tangible change.*",
+   "stage": "Consideration in detail",
+   "ayes": 81,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-07/1"
+  },
+  {
+   "key": "federal-representatives-7817",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2022-11-07.37.1) introduced by Berowra MP [Julian Leeser](https://theyvoteforyou.org.au/people/representatives/berowra/julian_leeser) (Liberal), which means they failed. ### What did the amendments do? Mr Leeser [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-07.37.1): > *these amendments seek to replicate exactly the same powers that this bill gives to the Australian Human Rights Commission in relation to enforcement and systemic inquiries, and gives those powers to the experienced Fair Work Ombudsman.*",
+   "stage": "Consideration in detail",
+   "ayes": 86,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-07/2"
+  },
+  {
+   "key": "federal-representatives-7818",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2022-11-07.40.1) introduced by Berowra MP [Julian Leeser](https://theyvoteforyou.org.au/people/representatives/berowra/julian_leeser) (Liberal), which means they failed. ### Amendment text > *(9) Schedule 4, page 22 (line 1) to page 25 (line 12), omit the Schedule.* > > *(10) Schedule 5, page 26 (line 1) to page 28 (line 28), omit the Schedule.* ### What did the amendments do? Regarding amendment (9), Mr Leeser [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-07.40.1): > *These amendments deal with representative actions and costs orders. Schedule 4 of the bill seeks to amend the Human Rights Commission Act to make it easier for unions and other representative groups to bring representative claims in the Federal Court. The amendments would allow bodies to commence legal proceedings on behalf of other parties rather than the aggrieved person taking the matter for themselves. The Australian Chamber of Commerce and Industry has explained why this provision is not necessary. The ACCI has argued that representative groups are not prohibited from providing financial or legal support to parties pursuing a representative proceeding in the courts. Rather, they're simply prevented from commencing the proceedings on their behalf. It's not clear how allowing trade unions to commence legal proceedings on behalf of aggrieved persons would lead to better outcomes for these persons, especially in light of support that representative groups can already provide.* > > *Fundamentally, litigants in representative actions need to be aggrieved persons, not bodies that represent or merely purport to represent their interest. This is how the existing avenue for class actions rightly operates. The interests of representative bodies do not always align with those they represent. Allowing these bodies to commence and run representative actions on their behalf could le",
+   "stage": "Consideration in detail",
+   "ayes": 84,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-07/3"
+  },
+  {
+   "key": "federal-representatives-7819",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2022-11-07.43.1) introduced by Berowra MP [Julian Leeser](https://theyvoteforyou.org.au/people/representatives/berowra/julian_leeser) (Liberal), which means it failed. ### Amendment text > *(11) Schedule 8, item 2, page 44 (lines 9 and 10), omit the item.* ### What did the amendments do? Mr Leeser [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-07.43.1): > *Amendment 11 seeks to retain the principle of equality of opportunity, which is a fundamental principle for those of us on this side of the House, in the objects act. We believe equality of opportunity should be retained, because equality of opportunity offers a state of fairness in which individuals are treated equally, and it's a fundamental principle of the Sex Discrimination Act. The circumstances of an individual's birth should not determine their future status. It's the application of effort and competition that's key. Equal opportunity implies that people should be judged on their merits and not discriminated against on the basis of sex in employment or access to public services. Equality of opportunity is the principle that people should be given the same opportunity to exercise their talents and abilities but that it's up to the individual to apply themselves to that opportunity as to what they will ultimately achieve. And we think this principle should remain in the act.*",
+   "stage": "Consideration in detail",
+   "ayes": 87,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-07/4"
+  },
+  {
+   "key": "federal-representatives-7821",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "question": "Anti-Discrimination and Human Rights Legislation Amendment (Respect at Work) Bill 2022 - Consideration in Detail - Extending protection",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 53,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 84
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-07/6"
+  },
+  {
+   "key": "federal-representatives-7822",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2022-11-07.120.1) introduced by Kooyong MP [Monique Ryan](https://theyvoteforyou.org.au/people/representatives/kooyong/monique_ryan) (Independent), which means they failed and won't be included in the bill. ### What did the amendments do? Dr Ryan [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-07.120.1): > *The Respect@Work report proposed that costs might be ordered against the applicant only where the court was satisfied that the party instituted the proceedings vexatiously or without cause. That model has not been adopted in this bill. Instead, this bill proposes a cost-neutrality approach in which litigants bear their own costs unless the court orders otherwise. The bill does set out various factors that the court must have regard to in making costs orders. Superficially, the cost-neutral arrangement represents an improvement on the status quo. In effect, however, its design and the uncertainty around its operation will serve to undermine access to justice by limiting the ability of applicants to secure legal representation. Taking a cost-neutrality approach to a relationship characterised by systemic inequality only serves to entrench that inequality.* > > *The amendment I have proposed offers an alternative: an equal-access approach. Under this proposal, each party will bear its own costs, except when the applicant is unsuccessful—that is, when the court has found that the respondent has engaged in discriminatory conduct, in which case the respondent will be liable to pay the applicant's costs, as they should. You should not be excused from bearing costs when you have broken the law. People and organisations found to have engaged in discrimination or harassment in breach of the law should have to pay the legal costs of the applicant. This will act as an incentive to change workplace cultures that permit discriminatory treatment. This",
+   "stage": "Consideration in detail",
+   "ayes": 84,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 92
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-07/7"
+  },
+  {
+   "key": "federal-representatives-7823",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "question": "Anti-Discrimination and Human Rights Legislation Amendment (Respect at Work) Bill 2022 - Consideration in Detail - Objects of bill",
+   "stage": "Consideration in detail",
+   "ayes": 64,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 47,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-07/8"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Anti-Discrimination and Human Rights Legislation Amendment (Respect at Work) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00085",
+   "assent_date": "2022-12-12"
+  }
+ ]
+}

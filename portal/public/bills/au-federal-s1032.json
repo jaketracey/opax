@@ -1,0 +1,100 @@
+{
+ "key": "au-federal-s1032",
+ "title": "Fair Work Amendment (Protecting Australian Workers) Bill 2016",
+ "short_title": "Fair Work Amendment (Protecting Australian Workers) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-03-15",
+ "originating_house": "senate",
+ "sponsor": "CAMERON, Sen Doug",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10706",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1032%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1032%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1032%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1032%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1032%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1032%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1032%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1032_ems_fef0f33c-3e39-42c0-aaeb-cc985e1dee31%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1032%22",
+   "document_date": "2016-03-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-15",
+  "sentences": [
+   "The bill would create new criminal offences and higher civil penalties for employers who break workplace laws, aiming to protect vulnerable workers.",
+   "It would give courts the power to order company directors to pay unpaid wages when a company is phoenixed, and to disqualify people from managing corporations for certain workplace law breaches.",
+   "New criminal offences for using coercion or threats related to slavery-like conditions would carry a maximum penalty of two years imprisonment or 240 penalty units or both."
+  ],
+  "changes": [
+   "The bill would make the Fair Work Act 2009 apply to all employees regardless of their migration status.",
+   "It would require the Fair Work Ombudsman to publish a Fair Work Information Statement about employee rights and remedies for overseas workers.",
+   "It would protect employees from adverse action for questioning whether a workplace right exists or their employment status.",
+   "It would introduce a 'reasonable person' test for sham contracting cases.",
+   "It would increase maximum penalties for certain breaches based on business size, management sophistication, and existing duties.",
+   "It would introduce criminal offences for coercion or threats related to slavery-like conditions, punishable by up to two years imprisonment or 240 penalty units or both."
+  ],
+  "affected": "Vulnerable employees, temporary overseas workers, employers, company directors, and the Fair Work Ombudsman would be affected by the bill.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

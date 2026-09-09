@@ -1,0 +1,188 @@
+{
+ "key": "au-federal-r5151",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment Bill 2013",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "passed",
+ "status_as_of": "2013-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5151_ems_5cc5811a-52da-4680-863f-b11a28c399d5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5151%22",
+   "document_date": "2013-11-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00142",
+   "document_date": "2013-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-20",
+  "sentences": [
+   "This bill would let a government body collect an annual fee from companies that hold certain offshore oil and gas permits.",
+   "It changes an existing law to cover permits obtained through a cash bidding system, where companies pay a lump sum for the right to explore.",
+   "The bill aims to recover the full cost of the administrator's work, and the government says it will not affect the budget."
+  ],
+  "changes": [
+   "Adds cash bid petroleum exploration permits to the list of titles subject to the annual administration levy.",
+   "Allows the National Offshore Petroleum Titles Administrator to collect that levy for those permits.",
+   "Makes consequential amendments to support full cost recovery for the administrator."
+  ],
+  "affected": "Companies holding cash bid petroleum exploration permits in Australia's offshore oil and gas areas.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:03Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-280213",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280464",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280466",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280471",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00142",
+   "assent_date": "2013-12-13"
+  }
+ ]
+}

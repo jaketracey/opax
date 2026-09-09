@@ -1,0 +1,309 @@
+{
+ "key": "au-federal-r6561",
+ "title": "Education Legislation Amendment (2020 Measures No. 1) Bill 2020",
+ "short_title": "Education Legislation Amendment (2020 Measures No. 1) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2020-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6561_ems_dfbe6c67-529f-4905-9d84-670f27c3f69f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6561%22",
+   "document_date": "2020-06-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00062",
+   "document_date": "2020-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-11",
+  "sentences": [
+   "This bill would change several rules for university and vocational student loans.",
+   "It would require new students from 2021 and all students from 2023 to have a unique student identifier to get Commonwealth help.",
+   "The bill would also temporarily waive the 25% loan fee for undergraduate FEE-HELP students with census dates between 1 April and 30 September 2020."
+  ],
+  "changes": [
+   "Extends the unique student identifier requirement to all higher education students.",
+   "Gives the department secretary power to identify students with multiple CHESSNs who have exceeded the HELP loan limit and let them repay excess debt through the tax system.",
+   "Clarifies that a student's HELP balance is reduced right after the census date for HECS-HELP, FEE-HELP and VET FEE-HELP, and after the census day for VSL.",
+   "Exempts undergraduate students from the 25% loan fee for FEE-HELP loans with census dates from 1 April to 30 September 2020.",
+   "Amends the definition of 'course of study in aviation' to include approved VET courses, so the higher HELP loan limit applies to VET aviation courses as well."
+  ],
+  "affected": "Higher education students, vocational education students, and higher education providers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6429",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of a motion to keep the wording of the original second reading motion unchanged. In parliamentary jargon, they voted \"*that the words proposed to be omitted stand as part of the question.*\" The usual second reading is \"*that the bill be read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*,\" which is the same as agreeing with the main idea of the bill. This vote was put after the MP for Sydney [Tanya Plibersek](https://theyvoteforyou.org.au/people/representatives/sydney/tanya_plibersek) (Labor) introduced the following amendment to the usual second reading motion: > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the Government has damaged the quality of Australia's world-class post-secondary education system by:* > > *(1) cutting billions from universities, slashing research funding and locking students out of tertiary education;* > > *(2) cutting billions from TAFEs and training, presiding over a dramatic decline in students undertaking vocational education; and* > > *(3) failing to develop a long-term policy for the Australian post-secondary education system\".*",
+   "stage": "Second reading",
+   "ayes": 61,
+   "noes": 47,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 107
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-17/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-391776",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The bill extends the Unique Student Identifier to all higher education students from 2021, mandatory by 2023, and validates loans for 475 students with multiple CHESSNs. It also removes the FEE‑HELP loan fee for undergraduate students from 1 April to 30 September 2020 as part of the COVID‑19 Higher Education Relief Package."
+  },
+  {
+   "slug": "speech-392819",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "Labor supported the bill's technical changes and six-month loan fee waiver for full-fee students, but argued the government's response to the COVID-19 crisis in higher education and vocational training is inadequate, citing 21,000 university jobs at risk, $3 billion cut from TAFE, and 475 students affected by a HELP loan overpayment error. Labor moved an amendment condemning the government's cuts and failure to develop a long-term policy for post-secondary education."
+  },
+  {
+   "slug": "speech-392822",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The government's failure to extend JobKeeper to public universities and its inadequate COVID-19 response have severely damaged Australia's $37 billion international education sector, with university revenue losses anticipated at $10–19 billion and 21,000 jobs at risk; the speaker also called for urgent financial support for the Australian Consortium for 'In-Country' Indonesian Studies (ACICIS) and for diversifying education export markets, notably to India and Indonesia."
+  },
+  {
+   "slug": "speech-392823",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The speaker argued the temporary removal of the FEE-HELP loan fee was welcome but insufficient, particularly for regional universities like La Trobe (facing $400–520 million revenue loss) and Charles Sturt, and called for implementing the Napthine review recommendations, including uncapped regional university places and new VET offerings."
+  },
+  {
+   "slug": "speech-392824",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The bill was criticised as lacking meaningful reform, with the government accused of cutting $2.2 billion from universities, capping undergraduate places, and failing to extend JobKeeper, which will disproportionately harm disadvantaged students and smaller regional universities."
+  },
+  {
+   "slug": "speech-392826",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The member for Oxley criticised the government's cuts to TAFE and university funding, noting a 47% drop (1,707 fewer apprentices) in the Oxley electorate, and condemned the lack of support for international students and the failure to develop a long-term post-secondary education policy."
+  },
+  {
+   "slug": "speech-392827",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Education Legislation Amendment (2020 Measures No. 1) Bill 2020, which includes measures to allow 475 students with $5.9 million in excess HELP debt to repay via the tax system, waive the 25% loan fee from April to September 2020 potentially benefiting up to 50,000 students, and expand the Unique Student Identifier regime from 2021. The speaker criticised the government for cutting $2.2 billion from universities in 2017, leaving 200,000 students without places, and for causing 140,000 fewer apprentices and trainees, arguing the government has neglected higher education and vocational training."
+  },
+  {
+   "slug": "speech-392828",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The Labor member supported the Education Legislation Amendment (2020 Measures No. 1) Bill 2020 but argued the government had neglected higher education, cutting $2.2 billion from universities and $3 billion from TAFE, with 200,000 students potentially missing out and 140,000 fewer apprentices and trainees. He called for genuine reform, citing Western Sydney University vice-chancellor Professor Barney Glover's call to lift the cap on Commonwealth funded places."
+  },
+  {
+   "slug": "speech-392829",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The member supported the bill and the amendment, noting 475 students exceeded HELP loan limits by $5.9 million and welcoming the USI extension and COVID-19 FEE-HELP fee relief, but criticised the government for providing no university rescue package and denying universities access to JobKeeper, citing predicted job losses and redundancies at Deakin University."
+  },
+  {
+   "slug": "speech-392830",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill, which requires new students to have a Unique Student Identifier for Commonwealth assistance, resolves debt collection errors, and provides a 25% FEE-HELP loan fee exemption from April to September 2020 due to COVID-19, but called for broader reforms to reduce tertiary education costs, improve digital skills training, and better integrate vocational and university education to address skill shortages and post-pandemic economic challenges."
+  },
+  {
+   "slug": "speech-392832",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The opposition supports the Education Legislation Amendment (2020 Measures No. 1) Bill 2020, but argues that tertiary education requires greater investment to enrich human capital, not less."
+  },
+  {
+   "slug": "speech-392977",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "Labor indicated it would not oppose the bill, which includes a six-month 25% loan fee waiver for full-fee-paying students and extends the unique student identifier regime. The speaker also criticised Western Sydney University for failing to expand into north-west Sydney and called for greater investment in skills, particularly in the tech sector, and for the university to demonstrate commitment to the region."
+  },
+  {
+   "slug": "speech-392980",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The bill removes the FEE-HELP loan fee for undergraduate students from 1 April to 30 September 2020 as part of the COVID-19 relief package, extends the Unique Student Identifier (USI) to all higher education students, and introduces measures to validate loans for students with multiple Commonwealth higher education student support numbers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education Legislation Amendment (2020 Measures No. 1) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00062",
+   "assent_date": "2020-06-19"
+  }
+ ]
+}

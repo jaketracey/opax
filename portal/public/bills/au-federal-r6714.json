@@ -1,0 +1,233 @@
+{
+ "key": "au-federal-r6714",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Titles Administration and Other Measures) Bill 2021",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Titles Administration and Other Measures) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science, Energy and Resources",
+ "status": "passed",
+ "status_as_of": "2021-09-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6714_ems_5ba5fb41-5846-4206-9ba6-aa84ed2e6281%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6714%22",
+   "document_date": "2021-05-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00096",
+   "document_date": "2021-09-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-26",
+  "sentences": [
+   "This bill is part of a package that tightens rules for offshore oil and gas projects so that companies, not taxpayers, pay for cleaning up infrastructure at the end of a project.",
+   "The package would give the government more power to check whether companies are fit to hold titles, including by reviewing changes in company control and by requiring former titleholders to decommission infrastructure if the current holder cannot.",
+   "The package also allows electronic lodgement of applications and makes other minor and technical changes to the Offshore Petroleum and Greenhouse Gas Storage Act 2006."
+  ],
+  "changes": [
+   "The package would let the government oversee changes in control of titleholders, such as through corporate mergers.",
+   "The package would expand the government's power to require former titleholders to decommission infrastructure and clean up the marine environment if the current or most recent titleholder cannot do so.",
+   "The package would set specific criteria and give the government more power to gather information to assess whether entities are suitable to enter or progress through the regulatory system.",
+   "The package would allow electronic lodgement of applications and other documents.",
+   "The package would repeal redundant and spent amendment Acts.",
+   "The package would make minor and technical amendments to improve how the Offshore Petroleum and Greenhouse Gas Storage Act 2006 works."
+  ],
+  "affected": "Companies that hold or have held offshore petroleum or greenhouse gas titles, and their related persons, would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:37Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-406894",
+   "speaker": "Keith Pitt",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum and Greenhouse Gas Storage Amendment (Titles Administration and Other Measures) Bill 2021 amends the Offshore Petroleum and Greenhouse Gas Storage Act 2006 to strengthen regulatory oversight of decommissioning, including by expanding directions powers to former titleholders (trailing liability) and requiring government approval for changes of control via mergers or takeovers. The bill responds to the Walker review into the liquidation of Northern Oil and Gas Australia and aims to protect taxpayers, workers and the environment from an estimated $60 billion in decommissioning liabilities over the next 30 years."
+  },
+  {
+   "slug": "speech-406907",
+   "speaker": "Keith Pitt",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment Bill 2021 amends the 2003 Act to enable the National Offshore Petroleum Safety and Environmental Management Authority to expand cost recovery arrangements to former titleholders and related persons when a direction is issued."
+  },
+  {
+   "slug": "speech-410641",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "Support was voiced for the two 2021 offshore petroleum bills, including a second reading amendment criticising the government's delayed decommissioning reform that allowed the Northern Endeavour fiasco to cost taxpayers over $210 million. The speech detailed the need for trailing liabilities to hold former titleholders like Woodside and Talisman (TSOGA) responsible, referenced $60 billion in expected decommissioning costs, and called for full asset removal to remain the default and NOPSEMA to be adequately resourced."
+  },
+  {
+   "slug": "speech-410642",
+   "speaker": "Vince Connelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Offshore Petroleum and Greenhouse Gas Storage Amendment Bill 2021, arguing it strengthens regulation, reduces risks, and ensures decommissioning liabilities remain with industry, while highlighting natural gas as a transition fuel and citing projects such as the $10 billion Scarborough gas project (3,200 jobs), the Dorado oil project, and the $4.6 billion Barossa LNG project (600 jobs), as well as over $300 million in carbon capture investment and $270 billion in defence spending."
+  },
+  {
+   "slug": "speech-410643",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Offshore Petroleum and Greenhouse Gas Storage Amendment Bill 2021 fixes regulatory gaps exposed by the Northern Endeavour fiasco, where Woodside sold the platform to an inexperienced company, costing taxpayers $230 million and rising, and that the trailing liability provision is a necessary step but further work is needed on infrastructure audits and company funding transparency."
+  },
+  {
+   "slug": "speech-410644",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum and Greenhouse Gas Storage Amendment (Titles Administration and Other Measures) Bill 2021 and associated bill were supported as measures to strengthen the offshore decommissioning regime, prevent costs falling to taxpayers, and introduce trailing liability and suitability assessments in response to the Northern Oil and Gas Australia failure. Esso's Bass Strait decommissioning progress was cited, including almost $500 million already spent, a $300 million campaign on the Blackback, Whiting, Seahorse, Tarwhine and Mackerel wells, and a $160 million campaign on Kingfish B, Fortescue and Mackerel platform conductors."
+  },
+  {
+   "slug": "speech-410645",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Offshore Petroleum and Greenhouse Gas Storage Amendment Bill 2021 and its cognate bill, arguing that a permanent decommissioning levy—not just the temporary 38c per barrel levy for the Northern Endeavour—is needed to prevent the $60 billion decommissioning liability from falling on taxpayers. The speaker also called for a national climate disaster levy on oil and gas companies, the cancellation of the PEP-11 exploration permit off the coast from Newcastle to Manly, and an end to new offshore petroleum acreage releases."
+  },
+  {
+   "slug": "speech-410646",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum and Greenhouse Gas Storage Amendment (Titles Administration and Other Measures) Bill 2021 and related bill strengthen Australia's offshore oil and gas regulatory regime to ensure decommissioning costs are borne by industry, not taxpayers, with measures including government oversight of title-holder changes, expanded information requests, a trading liability regime, and the ability to call back former title holders for remediation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Titles Administration and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00096",
+   "assent_date": "2021-09-02"
+  }
+ ]
+}

@@ -1,0 +1,498 @@
+{
+ "key": "au-federal-r5142",
+ "title": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2013",
+ "short_title": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2014-03-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5142_ems_417ea31c-4c01-4b30-aa4d-32c76196e5f9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5142%22",
+   "document_date": "2013-11-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3020",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 88,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129,
+    "earliest": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-11-20/1"
+  },
+  {
+   "key": "federal-representatives-3021",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 - Consideration in Detail - Agree to the bill",
+   "stage": "Consideration in detail",
+   "ayes": 86,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 128,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-11-20/2"
+  },
+  {
+   "key": "federal-senate-3187",
+   "date": "2014-03-25",
+   "house": "senate",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 - Second Reading - Share mining boom benefits",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 48,
+   "outcome": "negative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-03-25/1"
+  },
+  {
+   "key": "federal-senate-3188",
+   "date": "2014-03-25",
+   "house": "senate",
+   "question": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 60,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-03-25/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-278985",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279010",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279014",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279016",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279017",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825704",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279034",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279035",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279037",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279044",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279045",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279047",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279048",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279049",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279050",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279055",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279057",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279240",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279241",
+   "speaker": "Bruce Scott",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279243",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279298",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825766",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

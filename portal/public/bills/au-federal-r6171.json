@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6171",
+ "title": "Customs Tariff Amendment (Peru-Australia Free Trade Agreement Implementation) Bill 2018",
+ "short_title": "Customs Tariff Amendment (Peru-Australia Free Trade Agreement Implementation) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6171%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6171%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6171%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6171_ems_f1848814-c159-423e-baff-b89cf114312f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6171%22",
+   "document_date": "2018-09-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-19",
+  "sentences": [
+   "This bill would change the Customs Tariff Act 1995 to put the Peru-Australia Free Trade Agreement into effect.",
+   "It would set lower customs duty rates for goods from Peru that meet new origin rules, and add a new schedule for excise-equivalent rates on alcohol, tobacco, fuel and petroleum products.",
+   "The 2018-19 Budget estimated the cost to revenue over the forward estimates would be negligible, rounded to zero."
+  ],
+  "changes": [
+   "Provides preferential customs duty rates for Peruvian originating goods.",
+   "Inserts new Schedule 6A for excise-equivalent rates on certain alcohol, tobacco, fuel and petroleum products.",
+   "Amends concessional items in Schedule 4 to maintain duty rates in line with PAFTA."
+  ],
+  "affected": "Importers of goods from Peru and the Department of Home Affairs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

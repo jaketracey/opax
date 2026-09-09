@@ -1,0 +1,197 @@
+{
+ "key": "au-federal-r6284",
+ "title": "Treatment Benefits (Special Access) Bill 2019",
+ "short_title": "Treatment Benefits (Special Access) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6284_ems_14819c77-3348-4cc0-9071-b685e03594f5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/6583449%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6284%22",
+   "document_date": "2019-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00041",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "This bill would give medical treatment, travel payments and a medicine supplement to Australian surgical-medical team members who served in Vietnam.",
+   "The Repatriation Commission would arrange or reimburse treatments and travel, following rules similar to those in the BNT BCOF Act and the VE Act.",
+   "The bill would start on 1 July 2019, and eligible persons would get a fortnightly pharmaceutical supplement of $6.20."
+  ],
+  "changes": [
+   "The bill would provide medical treatment and travel expenses to eligible Australian surgical-medical team members.",
+   "The bill would pay a pharmaceutical supplement of $6.20 per fortnight.",
+   "The bill would allow the Repatriation Commission to modify treatment principles with ministerial approval."
+  ],
+  "affected": "Australian surgical-medical team members who worked in Vietnam under the SEATO aid program between October 1964 and December 1972 and are Australian residents.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:20:21Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375094",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "The Treatment Benefits (Special Access) Bill 2019 was introduced to provide medical treatment via a DVA gold card to approximately 200 surviving Australian civilian surgical and medical team members who served in South Vietnam from October 1964 to December 1972, with the measure brought forward to 1 July 2019 in response to health concerns from the ageing group."
+  },
+  {
+   "slug": "speech-375935",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Treatment Benefits (Special Access) Bill 2019, which extends gold card health coverage to approximately 240 doctors, 210 nurses, and other civilian medical staff who served in Vietnam from 1964 to 1972, and urged the government to reject the Productivity Commission's recommendation to dismantle the Department of Veterans' Affairs."
+  },
+  {
+   "slug": "speech-376162",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The Treatment Benefits (Special Access) Bill 2019 and related bill extend Department of Veterans' Affairs gold card health benefits to surviving civilian surgical and medical team members who served in Vietnam alongside the ADF, benefiting about 200 people from 1 July 2019. The speaker highlighted the service of nurses like Helen Taplin and Betty Lockwood, and noted the legislation provides recognition and medical treatment for any condition, including mental health support."
+  },
+  {
+   "slug": "speech-376164",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The Treatment Benefits (Special Access) Bill 2019 extends full health coverage via a DVA gold card to Australian civilian surgical and medical teams who served in Vietnam between 1964 and 1972, with the start date brought forward from 1 July 2020."
+  },
+  {
+   "slug": "speech-376167",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treatment Benefits (Special Access) Bill 2019, which grants veterans' entitlements to approximately 450 civilian nurses, doctors and allied health personnel who served in Vietnam under SEATO from 1964 to 1972. The speech highlighted their war-related illnesses such as PTSD and cancers, and the long campaign for recognition led by nurse Dot Angell."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treatment Benefits (Special Access) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00041",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

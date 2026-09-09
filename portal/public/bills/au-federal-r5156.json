@@ -1,0 +1,280 @@
+{
+ "key": "au-federal-r5156",
+ "title": "Therapeutic Goods Amendment (2013 Measures No. 1) Bill 2013",
+ "short_title": "Therapeutic Goods Amendment (2013 Measures No. 1) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-12-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2014-02-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-02-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5156_ems_f915855a-c867-4589-bdcd-90cf78b4bdd1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5156%22",
+   "document_date": "2013-12-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00004",
+   "document_date": "2014-02-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-12",
+  "sentences": [
+   "The bill would change the Therapeutic Goods Act 1989 in several areas, aiming to cut red tape, improve clarity, reduce health risks and increase transparency.",
+   "It would let the Minister declare by legislative instrument that certain goods are not therapeutic goods for the Act's purposes, and allow the Secretary to set a longer period than the current 20 working days to decide whether to audit applications for some medical devices.",
+   "The longer audit period is intended to manage the high number of Class III applications expected before the 1 July 2014 deadline for hip, knee and shoulder joint implants."
+  ],
+  "changes": [
+   "Introduces a power for the Minister to determine that specified goods are not therapeutic goods.",
+   "Allows the Secretary to prescribe an alternative number of days for deciding whether to audit certain medical device applications.",
+   "Requires the Secretary to publish details when a regulatory decision overturned on review.",
+   "Clarifies that references to advertising requirements in the Act include the Therapeutic Goods Advertising Code.",
+   "Clarifies the process for approving registered medicines under section 25 and the source of the Secretary's power to approve product information under section 25AA."
+  ],
+  "affected": "Sponsors of medical devices, particularly joint implant manufacturers, and businesses marketing products that may be considered therapeutic goods.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:05:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3126",
+   "date": "2014-02-11",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](http://www.openaustralia.org/debate/?id=2014-02-11.88.2) introduced by [Melissa Parke](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Melissa_Parke&mpc=Fremantle&house=representatives). Ms Parke explains that her amendment would have expanded the scope of the [Therapeutic Goods Administration](http://en.wikipedia.org/wiki/Therapeutic_Goods_Administration)'s oversight and protective function in relation to three categories: - therapeutic goods; - biologicals, i.e. a product involving human cells or human tissue; and - medical devices.(Read Ms Parke's full explanation and the related debates [here](http://www.openaustralia.org/debates/?id=2014-02-11.88.1).) Because the majority voted against the amendment, it was unsuccessful. _Background to the bill_ The bill was introduced to to strengthen regulation and improve the operation of the _Therapeutic Goods Act 1989_.(Read more about the regulation of therapeutic goods more generally [here](http://en.wikipedia.org/wiki/Regulation_of_therapeutic_goods). ) For example, the bill: - enables the minister to specify products that are taken not to be therapeutic goods; - enables the secretary to remove products that are not therapeutic goods from the Australian Register of Therapeutic Goods; and - clarifies the secretary’s powers to approve product information for medicines accepted for registration in the register.(Read more about the bill in its [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1314a/14bd042). See [here](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5156) to read a summary of what the bill does and its explanatory memorandum.)",
+   "stage": "Consideration in detail",
+   "ayes": 51,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 70
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-02-11/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-281802",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826736",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282205",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282206",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282207",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282208",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282209",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282211",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282212",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282213",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Therapeutic Goods Amendment (2013 Measures No. 1) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00004",
+   "assent_date": "2014-02-28"
+  }
+ ]
+}

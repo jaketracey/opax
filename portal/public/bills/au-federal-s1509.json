@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-s1509",
+ "title": "Broadcasting Services Amendment (Register of Media Interests) Bill 2026",
+ "short_title": "Broadcasting Services Amendment (Register of Media Interests) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-18",
+ "originating_house": "senate",
+ "sponsor": "ANTIC, Sen Alex",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10954",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1509%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1509_ems_992cb02d-bb83-4e0c-8908-f04733236168%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1509%22",
+   "document_date": "2026-08-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-18",
+  "sentences": [
+   "The bill would set up a public register of media interests to increase transparency about conflicts of interest in Australian news organisations.",
+   "The Australian Communications and Media Authority would create and run the register, and media entities, along with their staff and associates, would have to declare any interests that could affect their reporting.",
+   "Disclosures must be made within 30 days, and failing to comply could lead to a civil penalty of 250 penalty units or suspension or cancellation of a licence."
+  ],
+  "changes": [
+   "Establishes a Register of Media Interests administered by the Australian Communications and Media Authority.",
+   "Requires disclosure entities to report interests that could conflict with or bias their news output.",
+   "Makes compliance a condition of licence for broadcasters and applies civil penalties of 250 penalty units for non-compliance."
+  ],
+  "affected": "Media entities covered by the Broadcasting Services Act 1992, including licensees, regulated print media entities, and the ABC and SBS, along with their staff and connected individuals.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-04T23:59:30Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,325 @@
+{
+ "key": "au-federal-r5800",
+ "title": "Appropriation Bill (No. 3) 2016-2017",
+ "short_title": "Appropriation Bill (No. 3) 2016-2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2017-04-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-04-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5800_ems_7e73f23d-edf1-4467-8b5e-fa4f8ffe1597%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5800%22",
+   "document_date": "2017-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00029",
+   "document_date": "2017-04-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-340615",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-09",
+   "stage_hint": null,
+   "brief": "The government introduced Appropriation Bill (No. 3) and (No. 4) for 2016–2017, seeking just under $2 billion in additional funding, including $810 million for Defence (with $36 million for Operation Highroad), nearly $200 million for Immigration and Border Protection (including $64 million for border protection and refugee resettlement), $156 million for Human Services, and over $143 million for Health (including $28 million for mental health and $10 million for childhood cancer research)."
+  },
+  {
+   "slug": "speech-340616",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-09",
+   "stage_hint": null,
+   "brief": "Appropriation Bill (No. 4) 2016-2017 seeks $284 million from the Consolidated Revenue Fund, including $119 million for the Department of Infrastructure and Regional Development (with $81 million in equity for Australian Rail Track Corporation network upgrades), $79 million for the Department of Human Services (including $41 million for IT systems), and $11 million for the Environment and Energy portfolio (for foreign exchange movements to the Bureau of Meteorology and the department)."
+  },
+  {
+   "slug": "speech-343920",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "After the member for Rankin's speech on Appropriation Bill (No. 3) 2016-17, both Appropriation Bill (No. 3) 2016-17 and Appropriation Bill (No. 4) 2016-17 were referred to the Federation Chamber, with a remark about new standing orders directed to the member for Grayndler."
+  },
+  {
+   "slug": "speech-344014",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The government broke promises to not cut Medicare, pensions, ABC, and SBS; gave superannuation tax concessions to Australians with over $2 million in super while removing the low-income superannuation tax offset; proposed raising the pension age to 70; and tripled the budget deficit. Labor negotiated $6.3 billion in budget savings and protected the Australian Renewable Energy Agency."
+  },
+  {
+   "slug": "speech-344016",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker announced $5.5 million for the Emerald Discovery Centre at Puffing Billy, $500 million for the Monash Freeway from leftover East West Link funds, $4.2 million for Dandenong Ranges environmental grants, $10 million for Bunjil Place, $3.835 million for the Belgrave health hub, $1.5 million for the Emerald community hub, and $1 million for the Cockatoo-Gembrook walk, along with funding for biological control of wandering trad and ivy."
+  },
+  {
+   "slug": "speech-344017",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speech focuses on appropriations for the Department of Environment and Energy under outcome 2, arguing for action on climate change by citing that 2016 was the hottest year since records began in 1880 and that Australia's summer broke 205 temperature records."
+  },
+  {
+   "slug": "speech-344019",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the appropriation bills, announcing $810 million for the Department of Defence, $10 million for a national childhood cancer research network, and funding to expand welfare fraud prevention, while also advocating for the IDEAS Van to address Indigenous eye health and calling for Australia Post to review postcode allocations affecting the Ryan electorate."
+  },
+  {
+   "slug": "speech-344020",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker argued the Turnbull government is in disarray and failing Australian workers, citing 1.1 million underemployed, record low wages growth, and 128,000 apprenticeships lost under the Liberals. He announced Labor’s commitment to a ‘buy Australian first’ policy and a bill to prevent the Fair Work Commission from cutting workers’ take-home pay, including penalty rates affecting 11,900 people in his electorate of Griffith."
+  },
+  {
+   "slug": "speech-344021",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "Supported the appropriation bills and argued that cutting company tax rates leads to increased government revenue, citing historical Australian and Irish examples, and announced funding for local infrastructure projects including the Ballina marine rescue tower, Lismore Quadrangle, and Pacific Highway upgrades."
+  },
+  {
+   "slug": "speech-344022",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "Labor supported the supply bills but criticised the government for tripling the deficit to $36.5 billion and increasing net debt to $317 billion, while continuing to pursue $50 billion in corporate tax cuts and cuts to pensions, Newstart, and parental leave."
+  },
+  {
+   "slug": "speech-344023",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker opposed using superannuation for first home purchases, arguing it would drive up house prices and deplete national savings, and criticised the government's internal debate on the idea. They noted that Australia's superannuation system manages over $2 trillion, with industry funds holding $500 billion and the Retail Employees Superannuation Trust holding $39 billion for two million members."
+  },
+  {
+   "slug": "speech-344230",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued for greater joined-up, cross-government coordination to address complex needs, citing economic stagnation, rising inequality, and service navigation failures. They highlighted the Armadale Youth Intervention Partnership as a proof of concept, criticised the Howard government’s 1996 legal aid cuts and the current government’s 20% funding cuts to community legal centres, and urged all levels of government to fund coordinated, tailored services."
+  },
+  {
+   "slug": "speech-344231",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's budget cuts unfairly target low- and middle-income families and vulnerable Australians, citing a $1.4 billion freeze on family tax benefits affecting 1.5 million families, $30 million cuts to community legal centres, and a $26 million relocation of the Australian Pesticides and Veterinary Medicines Authority to Armidale with no benefit. The speaker announced Labor would continue to oppose these measures and campaign for fair budget repair."
+  },
+  {
+   "slug": "speech-344233",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The MP argued the government's appropriation bills contain unfair cuts, including raising the pension age to 70, abolishing the energy supplement, cutting family payments and education funding, and giving $50 billion in tax cuts to big business, while calling for restored indexation of financial assistance grants and fairer road funding for South Australia, particularly an urgent upgrade of West Beach Road."
+  },
+  {
+   "slug": "speech-344808",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "Labor will not block the $2.2 billion in additional appropriations but criticised the government for tripling the deficit and increasing net debt by over $100 billion since 2013, and argued the Department of Immigration and Border Protection is the worst performing department, citing citizenship delays and a proposed $250 million headquarters."
+  },
+  {
+   "slug": "speech-344810",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The MP welcomed constituents Eliza, BJ and Pauline from Glenrowan, then argued that the $81 million in equity funding to the Australian Rail Track Corporation (ARTC) must be used to fix the Melbourne–Albury-Wodonga line, where only 61.7% of services ran on time in February 2017, and called for the Victorian and Commonwealth governments to work with industry and communities to improve passenger services alongside freight upgrades."
+  },
+  {
+   "slug": "speech-344812",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The speaker argued the government failed to adequately fund Rape and Domestic Violence Services Australia for the 1800RESPECT hotline, instead paying Medibank Health Solutions $3.5 million for a triage service, and criticised cuts to homelessness and housing programs, including $44 million annually in emergency accommodation funding leading to a $132 million shortfall."
+  },
+  {
+   "slug": "speech-344813",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for prioritising $50 billion in company tax cuts and neglecting rising inequality, citing a 75-year high in inequality, record low wages growth, and a deficit tripled to $36.5 billion since 2013. Labor supports the appropriation bills to maintain government functions, proposing alternative savings measures including capital gains tax discount and negative gearing reforms worth $32 billion over ten years."
+  },
+  {
+   "slug": "speech-344814",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The deficit has trebled to $36.5 billion and national debt risen by almost $100 billion to $317 billion under the Turnbull government, which lacks a coherent economic strategy and has failed to manage the budget, energy policy, or free trade agreements, while gas companies shift profits overseas and avoid paying expected taxes."
+  },
+  {
+   "slug": "speech-344816",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for cutting $166,000 from the Illawarra Legal Centre, forcing it to turn away 500 locals, and for pension cuts affecting 4,000 pensioners and 1,500 losing their pension entirely. He called for reinstated funding for community legal centres and opposed cuts to pensioner energy supplements."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 3) 2016-2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00029",
+   "assent_date": "2017-04-12"
+  }
+ ]
+}

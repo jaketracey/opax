@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-r6895",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Climate Trigger) Bill 2022",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Climate Trigger) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-05",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-03-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6895%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6895%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6895%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6895_ems_ae550498-d12b-45f2-9a3c-cd2356d81af1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6895%22",
+   "document_date": "2022-09-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-05",
+  "sentences": [
+   "This bill is part of a package that would create a new climate trigger under the EPBC Act for assessing greenhouse gas emissions from projects.",
+   "It would set two emission thresholds: a significant impact level for emissions between 25,000 and 100,000 tonnes of carbon dioxide equivalent per year, requiring ministerial consideration, and a prohibited impact level above 100,000 tonnes, forcing the minister to reject approval.",
+   "The bill would also require the Climate Change Authority to produce a national carbon budget to 2050 and update it annually, against which the minister must assess projects."
+  ],
+  "changes": [
+   "Establishes a new class of controlled action for greenhouse gas emissions.",
+   "Creates two emission thresholds—25,000 to 100,000 tonnes (significant impact) and above 100,000 tonnes (prohibited impact).",
+   "Requires the Climate Change Authority to develop and annually update a national carbon budget to 2050.",
+   "Bans the minister from using alternative approval processes for actions with a significant impact on emissions, except for limited exceptions."
+  ],
+  "affected": "Proponents of emissions-intensive projects and the Minister for the Environment would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:10:57Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,154 @@
+{
+ "key": "au-federal-r5607",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment Bill 2016",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation and Science",
+ "status": "passed",
+ "status_as_of": "2016-02-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5607_ems_1319c128-a1f3-48ae-9fc2-42bfb8705d10%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5607%22",
+   "document_date": "2016-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00013",
+   "document_date": "2016-02-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-328523",
+   "speaker": "Ian Macfarlane",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum and Greenhouse Gas Storage Amendment Bill 2016 corrects an administrative oversight where petroleum titles were renewed without the Minister for the Environment’s consent since 2008, retrospectively validating those decisions to maintain investor and community confidence."
+  },
+  {
+   "slug": "speech-328524",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum and Greenhouse Gas Storage Amendment Bill 2016 validates past joint authority decisions on petroleum title renewals and extensions that lacked the required written consent from the environment minister. The speaker apologised for the administrative oversight, which was known since 2011 but not addressed, and stated that no environmental or safety standards were compromised."
+  },
+  {
+   "slug": "speech-328525",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum and Greenhouse Gas Storage Amendment Bill 2016 validates petroleum title extensions and renewals made since 2008 without the Environment Minister's consent, as required under the EPBC Act, to eliminate legal risks for titleholders who acted in good faith."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00013",
+   "assent_date": "2016-02-29"
+  }
+ ]
+}

@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r5775",
+ "title": "Air Services Amendment Bill 2016",
+ "short_title": "Air Services Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-28",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "&#34;Australian Greens&#34;",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-08-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5775%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5775%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5775%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5775_ems_0a7562f4-b414-469a-bd55-3d7b7bd108d8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5775%22",
+   "document_date": "2016-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-338746",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The Air Services Amendment Bill 2016 was introduced to strengthen community representation and protection from aircraft noise, requiring Airservices Australia to consult residents, appoint an independent Community Aviation Advocate and Aircraft Noise Ombudsman, add environmental and community representatives to its board, and ban helicopters and fixed-wing aircraft below 2,000 metres within five kilometres of central Melbourne."
+  }
+ ],
+ "acts": []
+}

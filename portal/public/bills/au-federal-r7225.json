@@ -1,0 +1,121 @@
+{
+ "key": "au-federal-r7225",
+ "title": "Treasury Laws Amendment (Build to Rent) Bill 2024",
+ "short_title": "Treasury Laws Amendment (Build to Rent) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-06-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2024-11-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7225%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7225%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7225%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7225%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7225%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7225%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7225%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/9809000%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7225%22",
+   "document_date": "2024-06-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2024-06-05",
+  "sentences": [
+   "The bill would change tax rules to encourage construction of 150,000 new build-to-rent homes over 10 years.",
+   "It would give eligible developments a faster capital works deduction and cut the withholding tax for foreign investors, while creating a misuse tax to recover improperly claimed concessions.",
+   "A development must have at least 50 dwellings, keep 10% as affordable housing with rent capped at 74.9% of market value, and stay active for 15 years to qualify for the concessions."
+  ],
+  "changes": [
+   "The capital works deduction rate for eligible build-to-rent developments would rise from 2.5% to 4%, shortening the depreciation period from 40 to 25 years.",
+   "The managed investment trust withholding tax rate for non-resident investors would fall from 30% to 15%.",
+   "A build-to-rent development misuse tax, set at 1.5% of the misuse amount, would let the ATO claw back concessions claimed during the 15-year compliance period."
+  ],
+  "affected": "Developers and investors in build-to-rent housing, the Australian Taxation Office, and non-resident investors in managed investment trusts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

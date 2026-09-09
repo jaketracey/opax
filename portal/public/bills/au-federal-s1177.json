@@ -1,0 +1,152 @@
+{
+ "key": "au-federal-s1177",
+ "title": "Treasury Laws Amendment (Mutual Reforms) Bill 2019",
+ "short_title": "Treasury Laws Amendment (Mutual Reforms) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-13",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1177%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1177%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1177%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1177%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1177%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1177%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1177_ems_6bc3258d-8eeb-476a-905b-fb12cf7df501%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1177%22",
+   "document_date": "2019-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00037",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "The bill would change how mutual organisations are treated under company law.",
+   "It would create a legal definition of a mutual entity and allow them to issue shares without losing their mutual status.",
+   "The changes would start the day after the bill receives royal assent."
+  ],
+  "changes": [
+   "Introduces a definition of a mutual entity into the Corporations Act.",
+   "Removes uncertainty for transferring financial institutions and friendly societies regarding demutualisation provisions.",
+   "Permits mutual entities to issue equity capital while preserving their mutual structure."
+  ],
+  "affected": "Mutual entities, including transferring financial institutions and friendly societies, registered under the Corporations Act.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:20:21Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-376931",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-04-04",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Mutual Reforms) Bill 2019 amends the Corporations Act to allow mutual and cooperative firms, particularly mutually owned financial institutions, to raise capital through new mutual capital instruments, adopting all 11 recommendations from the Hammond report commissioned by then-Treasurer Scott Morrison. The bill introduces a legal definition of 'mutual entity' and standardises constitutional amendments to help mutuals compete with shareholder-owned companies."
+  },
+  {
+   "slug": "speech-376932",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-04",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Mutual Reforms) Bill 2019 introduces a definition of mutual entity into the Corporations Act, permits mutuals to issue equity capital without losing their status, and clarifies demutualisation provisions. Labor supports the bill, noting mutuals account for 7–8% of GDP and 54,000 direct jobs, and criticises the Coalition for taking over two years to adopt Labor’s 2016 policy."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Mutual Reforms) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00037",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

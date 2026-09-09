@@ -1,0 +1,105 @@
+{
+ "key": "au-federal-r6159",
+ "title": "Restoring Territory Rights Bill 2018",
+ "short_title": "Restoring Territory Rights Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-08-20",
+ "originating_house": "representatives",
+ "sponsor": "LEIGH, Andrew, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10746",
+ "portfolio": "(s) LEIGH, Andrew, MPGOSLING, Luke, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6159%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6159%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6159%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6159_ems_f3ff3dda-6d16-47ab-a696-fcb299dbb058%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6159%22",
+   "document_date": "2018-08-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-08-20",
+  "sentences": [
+   "This bill would undo a 1997 Commonwealth restriction that limited what laws the Australian Capital Territory and Northern Territory could make.",
+   "It would end a unique limitation on the territories' elected lawmakers that no other part of Australia faces.",
+   "The bill says the Northern Territory's old euthanasia law would not automatically come back; each territory could later decide on that topic in its own time."
+  ],
+  "changes": [
+   "Removes Commonwealth constraints on the legislative powers of the ACT and Northern Territory.",
+   "Restores the democratic rights of territory citizens to have their elected representatives debate and legislate on complex issues.",
+   "Ensures the Rights of the Terminally Ill Act (NT) is not automatically revived.",
+   "Allows the Northern Territory and ACT parliaments to examine euthanasia legislation at a time of their choosing."
+  ],
+  "affected": "Citizens and elected representatives of the Australian Capital Territory and Northern Territory.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-367539",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Restoring Territory Rights Bill 2018 is about ending discrimination against Australians living in territories, not about euthanasia, and called on the Prime Minister to allow a House debate to restore territories' right to legislate on matters already permitted for states."
+  },
+  {
+   "slug": "speech-368599",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-10",
+   "stage_hint": null,
+   "brief": "The Restoring Territory Rights Bill 2018 proposed removing 1997 Commonwealth constraints on ACT and Northern Territory legislative powers, arguing the issue is about democratic equality rather than euthanasia and citing Victoria's 2017 assisted dying legislation. The Senate's refusal to restore these rights was denounced as treating territorians as second-class citizens, and members for Canberra, Fenner, and Solomon, plus Senator Malarndirri McCarthy, were acknowledged."
+  }
+ ],
+ "acts": []
+}

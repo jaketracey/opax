@@ -1,0 +1,239 @@
+{
+ "key": "au-federal-r7371",
+ "title": "Freedom of Information Amendment Bill 2025",
+ "short_title": "Freedom of Information Amendment Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-09-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2026-03-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7371_ems_02b3ac9b-1b64-474b-949e-de526e0f7e26%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7371_ems_ce8ba80b-f24a-4991-aee4-ef97c1e2c100%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7371_ems_43489702-ff24-4c77-baf6-3450ea08fad7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7371%22",
+   "document_date": "2025-09-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2025-09-03",
+  "sentences": [
+   "The bill would update the Freedom of Information Act to balance transparency with protecting personal privacy and government efficiency.",
+   "It would give agencies new powers to refuse vexatious or repeated requests, require requesters to identify themselves, and cap processing time at 40 hours before a fee can be charged.",
+   "The changes would start on a day fixed by proclamation or six months after the bill receives royal assent."
+  ],
+  "changes": [
+   "Amend the objects clause to weigh competing public interests.",
+   "Exclude staff personal and non-work-related information from the definition of a document of an agency.",
+   "Modernise submission requirements for requests and applications to the Information Commissioner.",
+   "Allow agencies to decline repeat, vexatious or abusive requests.",
+   "Ban anonymous or pseudonymous requests and require declaration of third-party requests.",
+   "Introduce a discretionary 40-hour processing cap for requests."
+  ],
+  "affected": "Agencies, ministers, their staff, and people who make Freedom of Information requests",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1198111",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198112",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-11-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198113",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2025-11-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198290",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198296",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198300",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198381",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-11-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200907",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-05",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

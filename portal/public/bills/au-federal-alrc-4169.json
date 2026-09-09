@@ -1,0 +1,87 @@
+{
+ "key": "au-federal-alrc-4169",
+ "title": "Competition and Consumer Amendment (Strengthening Rules About Misuse of Market Power) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-06-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "(s) OAKESHOTT, Rob, MP",
+ "status": "lapsed",
+ "status_as_of": "2013-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-24",
+   "house": "representatives",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-275797",
+   "speaker": "Robert Oakeshott",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824186",
+   "speaker": "Robert Oakeshott",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276642",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824521",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277284",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

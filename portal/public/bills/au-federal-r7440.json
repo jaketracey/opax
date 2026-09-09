@@ -1,0 +1,70 @@
+{
+ "key": "au-federal-r7440",
+ "title": "Transparent and Quality Public Appointments Bill 2026",
+ "short_title": "Transparent and Quality Public Appointments Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-02",
+ "originating_house": "representatives",
+ "sponsor": "SCAMPS, Sophie, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10989",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-03-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7440%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7440_ems_49009ff2-4fbd-4fb1-95be-57d89292ca21%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7440%22",
+   "document_date": "2026-03-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-02",
+  "sentences": [
+   "The bill would replace the current informal system for filling top federal jobs with a legally binding process.",
+   "It would create independent panels and a new commissioner to run merit-based selections, with the minister setting job criteria by legislative instrument.",
+   "The bill also bans panels from putting forward recent politicians or political staff for roles, consistent with a 2025 review."
+  ],
+  "changes": [
+   "Sets up an Independent Selection Panel for each department to handle competitive recruitment.",
+   "Requires the minister to publish selection criteria as a legislative instrument.",
+   "Forces panels to exclude recent politicians or political staff from shortlists.",
+   "Allows appointments only from candidates the panel puts forward.",
+   "Creates the Office of the Public Appointments Commissioner to oversee the system.",
+   "Sets up a parliamentary committee to check certain integrity appointments."
+  ],
+  "affected": "Federal government departments, ministers, job applicants, and integrity officers would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:20Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

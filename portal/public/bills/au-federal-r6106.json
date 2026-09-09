@@ -1,0 +1,227 @@
+{
+ "key": "au-federal-r6106",
+ "title": "Appropriation Bill (No. 5) 2017-2018",
+ "short_title": "Appropriation Bill (No. 5) 2017-2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2018-06-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-05-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6106_ems_a9c8ad00-38f5-4c45-bab4-b9dc3aa564f8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6106%22",
+   "document_date": "2018-05-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00048",
+   "document_date": "2018-06-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-08",
+  "sentences": [
+   "This bill would provide extra money from the Consolidated Revenue Fund for the government's everyday running costs.",
+   "It would add to the amounts already given under two earlier appropriation Acts for the 2017-2018 financial year.",
+   "The bill is one of a pair, with a separate bill covering other annual spending that is not for ordinary services."
+  ],
+  "changes": [
+   "The bill would appropriate additional funds for ordinary annual services of the Government.",
+   "The funds would come from the Consolidated Revenue Fund.",
+   "The bill would supplement appropriations made by the Appropriation Act (No. 1) 2017-2018 and the Appropriation Act (No. 3) 2017-2018."
+  ],
+  "affected": "The government and its departments and agencies that receive ordinary annual services funding.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:38Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-361941",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-08",
+   "stage_hint": null,
+   "brief": "The government introduced the Appropriation Bill (No. 5) 2017-2018 and Appropriation Bill (No. 6) 2017-2018, seeking approximately $1.7 billion in additional funding, including $948 million for Defence capability projects, $435 million for the Great Barrier Reef sustainability plan, and over $167 million for education and research infrastructure."
+  },
+  {
+   "slug": "speech-361942",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-08",
+   "stage_hint": null,
+   "brief": "Appropriation Bill (No. 6) 2017-2018 seeks just over $6.2 billion, including $6 billion for the Department of the Environment and Energy to purchase the New South Wales and Victorian governments' shares in Snowy Hydro Limited, and $94 million for the Department of Home Affairs to upgrade risk assessment and identity management ICT capabilities."
+  },
+  {
+   "slug": "speech-362517",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The speaker announced that unless otherwise ordered, five appropriation bills would be referred to the Federation Chamber for further consideration at the adjournment of the House."
+  },
+  {
+   "slug": "speech-362672",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The budget delivers tax relief for over 75,000 people in Brisbane, a record $75 billion national infrastructure pipeline with over $20 billion for Queensland projects including the Brisbane Metro, and $1.3 billion for a National Health and Medical Industry Growth Plan, while contrasting Labor’s commitment to retaining a 49 per cent top marginal tax rate."
+  },
+  {
+   "slug": "speech-363913",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker announced total appropriations of just under $108.5 billion for the 2018-19 financial year and just under $8 billion in supplementary appropriations, including $6.5 billion for the Department of the Environment and Energy—$6 billion for purchasing New South Wales and Victorian government shares in Snowy Hydro Limited and under $435 million for the Reef 2050 Long Term Sustainability Plan."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 5) 2017-2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00048",
+   "assent_date": "2018-06-27"
+  }
+ ]
+}

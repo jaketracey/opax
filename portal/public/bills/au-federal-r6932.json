@@ -1,0 +1,154 @@
+{
+ "key": "au-federal-r6932",
+ "title": "Education Legislation Amendment (2022 Measures No. 1) Bill 2022",
+ "short_title": "Education Legislation Amendment (2022 Measures No. 1) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-10-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2022-11-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6932_ems_585e8804-89e3-40db-8046-d1265d33f34f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6932%22",
+   "document_date": "2022-10-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00064",
+   "document_date": "2022-11-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-10-27",
+  "sentences": [
+   "This bill would change the rules for Commonwealth higher education funding and student loans.",
+   "It would require students to provide a unique student identifier to their university and the government to be eligible for financial help.",
+   "The bill would also remove a 10 per cent discount for upfront HECS-HELP payments and exempt FEE-HELP loan fees for units studied in 2022."
+  ],
+  "changes": [
+   "Require students to have and give a unique student identifier to their provider and the Secretary to get Commonwealth assistance.",
+   "Clarify that enabling course units do not count towards a student's lifetime limit on Commonwealth support.",
+   "Make domestic students in microcredential courses eligible for FEE-HELP.",
+   "Reduce FEE-HELP debt by exempting the loan fee for units studied in 2022.",
+   "Limit HECS-HELP and FEE-HELP eligibility for New Zealand citizens to those resident in Australia for the unit's duration.",
+   "Remove the 10 per cent discount for upfront HECS-HELP payments."
+  ],
+  "affected": "Higher education students, providers, and New Zealand citizens studying in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Education Legislation Amendment (2022 Measures No. 1) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00064",
+   "assent_date": "2022-11-29"
+  }
+ ]
+}

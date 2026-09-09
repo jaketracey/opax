@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r5817",
+ "title": "Protection of the Sea (Prevention of Pollution from Ships) Amendment (Polar Code) Bill 2017",
+ "short_title": "Protection of the Sea (Prevention of Pollution from Ships) Amendment (Polar Code) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "passed",
+ "status_as_of": "2017-05-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-05-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5817_ems_763f275b-5033-4062-ac4e-c6bb2d6f20cb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5817%22",
+   "document_date": "2017-02-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00040",
+   "document_date": "2017-05-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-341771",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-02-16",
+   "stage_hint": null,
+   "brief": "The Protection of the Sea (Prevention of Pollution from Ships) Amendment (Polar Code) Bill 2017 was moved to amend the POTS Act, implementing stricter discharge requirements for oil, noxious liquid substances, sewage and garbage for ships in polar waters, consistent with Australia’s international obligations and the Polar Code developed through the International Maritime Organization."
+  },
+  {
+   "slug": "speech-344750",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Protection of the Sea (Prevention of Pollution from Ships) Amendment (Polar Code) Bill, which implements the International Polar Code into Australian law to improve ship safety and reduce pollution in polar waters. The bill introduces mandatory requirements for ship design, operation, and crewing, bans heavy fuel oil in the Arctic, and requires polar certificates for vessels over 500 gross tonnes, though the speaker noted the code could be strengthened further, particularly regarding ice-strengthening, fishing vessels, and climate change risks."
+  },
+  {
+   "slug": "speech-344753",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The Protection of the Sea (Prevention of Pollution from Ships) Amendment (Polar Code) Bill 2017 amends the 1983 Act to implement the International Polar Code, prohibiting sewage discharge in Antarctic and Arctic waters with penalties of up to 2,000 penalty units for reckless or negligent discharge and 500 penalty units for strict liability of ship masters and owners."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Protection of the Sea (Prevention of Pollution from Ships) Amendment (Polar Code) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00040",
+   "assent_date": "2017-05-19"
+  }
+ ]
+}

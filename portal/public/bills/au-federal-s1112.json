@@ -1,0 +1,222 @@
+{
+ "key": "au-federal-s1112",
+ "title": "Aboriginal Land Rights (Northern Territory) Amendment Bill 2018",
+ "short_title": "Aboriginal Land Rights (Northern Territory) Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-06",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Indigenous Affairs",
+ "status": "passed",
+ "status_as_of": "2019-03-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1112_ems_e9fb7453-5a70-4e06-99d4-648c70f5b0b7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1112_ems_3d042c65-0869-49ea-954b-ad5357bbe292%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1112_ems_43d9de4a-72db-451c-8f03-f40e62980872%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1112%22",
+   "document_date": "2017-12-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00009",
+   "document_date": "2019-03-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-12-06",
+  "sentences": [
+   "This bill would add several areas in the Northern Territory to a schedule of the Aboriginal Land Rights (Northern Territory) Act 1976 so they can be granted as Aboriginal land.",
+   "It would also require the Kakadu Land to be leased back to the Director of National Parks after the grant.",
+   "The areas covered are Kakadu Land, Urapunga Land and Anthony Lagoon Land."
+  ],
+  "changes": [
+   "Adds Kakadu Land to Schedule 1 of the Land Rights Act.",
+   "Adds Urapunga Land to Schedule 1 of the Land Rights Act.",
+   "Adds Anthony Lagoon Land to Schedule 1 of the Land Rights Act.",
+   "Provides for leaseback of Kakadu Land to the Director of National Parks."
+  ],
+  "affected": "Traditional land claimants in the Kakadu region, the town of Urapunga, and the Anthony Lagoon area in the Northern Territory, as well as the Director of National Parks.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375832",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The Aboriginal Land Rights (Northern Territory) Amendment Bill 2018 adds four unresolved land claims in the Kakadu region, a native title area in the Roper River region, and the Anthony Lagoon claim to the Aboriginal Land Rights Act, enabling grant as Aboriginal land with leaseback to the director of national parks."
+  },
+  {
+   "slug": "speech-375833",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment criticising the 12-month delay in progressing the Aboriginal Land Rights (Northern Territory) Amendment Bill 2018 despite bipartisan support, and urged the government to also debate the related land scheduling bill for Ammaroo. The bill adds parcels of land in Kakadu, Urapunga, and Anthony Lagoon to schedule 1 for grant as Aboriginal land."
+  },
+  {
+   "slug": "speech-375835",
+   "speaker": "Warren Entsch",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The Aboriginal Land Rights (Northern Territory) Amendment Bill 2018 was supported, adding approximately 973,300 hectares in Kakadu, 73 hectares in Urapunga, and 603 hectares in Anthony Lagoon to schedule 1 of the Act for grant as Aboriginal land, with a leaseback of Kakadu land to the Director of National Parks. The government also highlighted over $20 million for prescribed body corporates capacity-building, plus $110,000 for Hope Vale Congress Aboriginal Corporation, $685,000 for the Mt Isa region, and $288,000 for Batchelor Aboriginal Corporation on Fraser Island."
+  },
+  {
+   "slug": "speech-375837",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aboriginal Land Rights (Northern Territory) Amendment Bill 2018 represents a sensible compromise and cooperation in Indigenous relations. He also raised concerns about community land title preventing individual home ownership in remote Indigenous communities, citing Noel Pearson's views and noting that the APY lands in South Australia, held in freehold by the community, have not achieved expected economic outcomes."
+  },
+  {
+   "slug": "speech-375838",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aboriginal Land Rights (Northern Territory) Amendment Bill 2018 and its second reading amendment, arguing it is essential for handing back significant land parcels—including Kakadu, Urapunga, and Anthony Lagoon—to Aboriginal communities, often through lease-back arrangements for joint management."
+  },
+  {
+   "slug": "speech-375840",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aboriginal Land Rights (Northern Territory) Amendment Bill 2018, which adds land in Kakadu National Park, Urapunga and Anthony Lagoon Station to schedule 1 for Aboriginal grant, with Kakadu grants requiring leaseback to the Director of National Parks. They also announced a $220 million Labor commitment for Kakadu infrastructure, including $100 million for road upgrades, $44 million for park upgrades, and $25 million for a visitor centre."
+  },
+  {
+   "slug": "speech-375841",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The Aboriginal Land Rights (Northern Territory) Amendment Bill 2018 adds land from four traditional land claims in the Kakadu region, a native title settlement in the Roper River region (Urapunga Indigenous Land Use Agreement), and the Anthony Lagoon area land claim to schedule 1 of the Aboriginal Land Rights (Northern Territory) Act 1976, enabling grant as Aboriginal land with leaseback to the Director of National Parks and repeal of redundant provisions, finalising five land claims and one native title settlement."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aboriginal Land Rights (Northern Territory) Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00009",
+   "assent_date": "2019-03-12"
+  }
+ ]
+}

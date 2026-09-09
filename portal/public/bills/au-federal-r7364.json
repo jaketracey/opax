@@ -1,0 +1,77 @@
+{
+ "key": "au-federal-r7364",
+ "title": "Road Vehicle Standards Amendment (Safer E-Bikes) Bill 2025",
+ "short_title": "Road Vehicle Standards Amendment (Safer E-Bikes) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-09-01",
+ "originating_house": "representatives",
+ "sponsor": "SCAMPS, Sophie, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10989",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-09-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7364%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7364%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7364_ems_b901cff7-d97e-498c-8df4-7211a077d168%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7364%22",
+   "document_date": "2025-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-09-01",
+  "sentences": [
+   "This bill would bring e-bikes under the Road Vehicle Standards Act 2018 and set national safety standards for them.",
+   "The Minister would be required to create road vehicle standards for electrically power-assisted cycles and powerful e-bikes, covering design features like anti-tampering protections and speed capability.",
+   "Vehicles that meet the standard, are designed for people with disability, or are intended for off-road use would be exempt from the regulations."
+  ],
+  "changes": [
+   "Classifies electrically power-assisted cycles as road vehicles.",
+   "Creates a new vehicle class for powerful e-bikes.",
+   "Requires the Minister to set national road vehicle standards for both types of e-bikes."
+  ],
+  "affected": "Manufacturers, importers, and users of e-bikes in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1196714",
+   "speaker": "Sophie Scamps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-09-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

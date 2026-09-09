@@ -1,0 +1,254 @@
+{
+ "key": "au-federal-s1334",
+ "title": "Parliamentary Workplace Reform (Set the Standard Measures No. 1) Bill 2022",
+ "short_title": "Parliamentary Workplace Reform (Set the Standard Measures No. 1) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-09",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "passed",
+ "status_as_of": "2022-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1334_ems_0db66a90-7a4e-4ad8-98ef-53a6fb8c9899%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1334_ems_5cdc3d15-13c8-47e5-8904-d42235c23332%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1334%22",
+   "document_date": "2022-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00007",
+   "document_date": "2022-02-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-09",
+  "sentences": [
+   "This bill would put into law several changes from the Jenkins Report on workplace culture in federal politics.",
+   "It would require written reasons when a politician dismisses a staff member and confirm that safety laws apply to politicians.",
+   "The bill would also extend age and disability discrimination protections to parliamentary staff employed under the Members of Parliament (Staff) Act 1984."
+  ],
+  "changes": [
+   "Require written reasons for termination of employment under the Members of Parliament (Staff) Act 1984.",
+   "Clarify that parliamentarians have work health and safety duties as 'officers' under the Work Health and Safety Act 2011.",
+   "Extend the Age Discrimination Act 2004 and the Disability Discrimination Act 1992 to cover staff employed under the Members of Parliament (Staff) Act 1984."
+  ],
+  "affected": "Federal politicians and their staff employed under the Members of Parliament (Staff) Act 1984.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-418509",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "The speaker introduced the Parliamentary Workplace Reform (Set the Standard Measures No. 1) Bill 2022 to implement recommendations 17 and 24 of the Jenkins report, amending four laws to clarify that Fair Work Act protections, work health and safety duties, and age and disability discrimination protections apply to parliamentary staff employed under the Members of Parliament (Staff) Act 1984."
+  },
+  {
+   "slug": "speech-418510",
+   "speaker": "Graham Douglas Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued the Parliamentary Workplace Reform Bill implements recommendations 17 and 24 of the Set the Standard report, amending the Members of Parliament (Staff) Act 1984 and anti-discrimination laws to improve job security and clarify employer obligations. The speaker also referenced the historic settlement for three women sexually harassed by former High Court judge Dyson Heydon and commended advocates including Grace Tame, Brittany Higgins, Chanel Contos and Saxon Mullins."
+  },
+  {
+   "slug": "speech-418516",
+   "speaker": "Nicolle Jane Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Parliamentary Workplace Reform Bill to implement recommendations 17 and 24 of the Jenkins report, clarifying that the Fair Work Act, Age Discrimination Act, and Disability Discrimination Act apply to staff employed under the Members of Parliament (Staff) Act, and argued for ongoing cultural change to improve safety and address abuse in parliamentary workplaces."
+  },
+  {
+   "slug": "speech-418517",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "Labor supported the Parliamentary Workplace Reform Bill 2022 to implement Jenkins review recommendations, including clarifying that unfair dismissal protections under the Fair Work Act apply to MPs' staff, requiring written termination notices with specific reasons, and extending work health and safety and anti-discrimination laws to parliamentary staff."
+  },
+  {
+   "slug": "speech-418518",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Parliamentary Workplace Reform (Set the Standard Measures No. 1) Bill 2022, which implements recommendations 17 and 24 of the Jenkins report by amending the Members of Parliament (Staff) Act 1984, the Fair Work Act 2009, the Work Health and Safety Act, the Age Discrimination Act 2004, and the Disability Discrimination Act 1992 to clarify employment protections, require reasons for dismissal, and extend anti-discrimination laws to parliamentary staff."
+  },
+  {
+   "slug": "speech-418520",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Parliamentary Workplace Reform Bill implements recommendations 17 and 24 of the Jenkins review, clarifying that the Fair Work Act and anti-discrimination laws apply to parliamentary staff, and expressed disappointment that contributors to the review were not invited to the statement of acknowledgment, stressing that words alone are insufficient and decisive action is needed."
+  },
+  {
+   "slug": "speech-418717",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Parliamentary Workplace Reform (Set the Standard Measures No. 1) Bill 2022, which implements recommendations from the Jenkins review to improve protections for Commonwealth parliamentary staff. They criticised the former Morrison government’s disrespectful attitude towards harassment survivors, condemned the Attorney-General’s 2018 threats to publicly name female Labor staffers, and called for cultural reform to ensure safe workplaces, noting that young women like their staffer Maddie face apprehension in entering politics."
+  },
+  {
+   "slug": "speech-418719",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Parliamentary Workplace Reform (Set the Standard Measures No. 1) Bill 2022, which implements recommendations 17 and 24 from the Jenkins review to improve job security and safety for parliamentary staff. They noted that one in three parliamentary workers have faced sexual harassment and 84% did not seek support, and argued that the lack of independent HR structures enables bad behaviour."
+  },
+  {
+   "slug": "speech-418722",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Parliamentary Workplace Reform Bill 2022, which implements recommendations 17 and 24 of the Jenkins review to clarify that parliamentary staff are protected under the Fair Work, Work Health and Safety, Age Discrimination, and Disability Discrimination Acts. They apologised to survivor advocates like Dhanya Mani who could not attend the earlier statement of acknowledgment, and called for full implementation of all 28 recommendations, including a positive duty on employers."
+  },
+  {
+   "slug": "speech-418723",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "The parliamentary workplace reform bill, implementing the Jenkins review recommendations, ensures unfair dismissal, anti-discrimination and workplace health and safety laws apply to Parliament. The speaker also called for full implementation of all recommendations, particularly a code of conduct and an independent parliamentary standards commissioner as outlined in recommendations 21 and 22."
+  },
+  {
+   "slug": "speech-418724",
+   "speaker": "Adam Paul Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "The Greens supported the bill as a small step but argued that full implementation of the Set"
+  },
+  {
+   "slug": "speech-418725",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "The bill implements Jenkins report recommendations 17 and 24, amending four laws to strengthen employment protections for MOP(S) Act employees—including requiring written reasons for dismissal and clarifying Fair Work Act coverage—and to explicitly recognise parliamentarians as officers under work health and safety law while extending age and disability discrimination protections. A leadership task force chaired by Kerri Hartland has been established to drive implementation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Parliamentary Workplace Reform (Set the Standard Measures No. 1) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00007",
+   "assent_date": "2022-02-22"
+  }
+ ]
+}

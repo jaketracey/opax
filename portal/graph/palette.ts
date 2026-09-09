@@ -16,6 +16,8 @@ export const SURFACE = '#FAF9F6'
 export const ACCENT = '#C28E0E'
 /** The grantor node and its flows: public money, a teal no industry uses. */
 export const GRANTOR_COLOUR = '#2A7F76'
+/** The Commonwealth contracts hub: the second public-money source. */
+export const CONTRACTOR_COLOUR = '#1F6E8C'
 
 /**
  * Cluster order fixes palette slots AND the legend order. Largest clusters

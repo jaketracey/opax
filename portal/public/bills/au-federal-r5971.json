@@ -1,0 +1,332 @@
+{
+ "key": "au-federal-r5971",
+ "title": "Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017",
+ "short_title": "Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5971%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5971%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5971%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5971%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5971%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5971_ems_32fb71c4-65b9-4c64-a2c0-be0f28484c96%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5971_ems_a4c1a39e-1ca0-43c0-9583-e73594fa6ddc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5971%22",
+   "document_date": "2017-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-13",
+  "sentences": [
+   "This bill would let the Minister ban items like drugs, phones and child pornography from immigration detention centres.",
+   "It would create new powers for officers to search facilities and people without a warrant, and to use detector dogs.",
+   "The government says the changes are needed because more high-risk detainees, including sex offenders and gang members, are being held."
+  ],
+  "changes": [
+   "Allows the Minister to declare certain things as prohibited in immigration detention facilities.",
+   "Strengthens search and seizure powers, including warrantless searches of Commonwealth-run facilities.",
+   "Permits the use of detector dogs to screen detainees and visitors."
+  ],
+  "affected": "Detainees, visitors, and staff in immigration detention facilities, as well as authorised officers and the Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:33:38Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5093",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "question": "Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017 - Second Reading - Don't read the bill a second time",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-07/1"
+  },
+  {
+   "key": "federal-representatives-5094",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "question": "Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017 - Second Reading - Main idea of the bill",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-07/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-358325",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": "Labor opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017, arguing it grants the minister overly broad, unchecked powers, is poorly drafted, and lacks evidence; 80 of 82 submissions to a Senate inquiry raised concerns. The speaker moved a second reading amendment to decline the bill."
+  },
+  {
+   "slug": "speech-358328",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-02-06",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017, arguing it would grant Minister Peter Dutton unchecked power to ban items like mobile phones, expand warrantless searches, and increase secrecy and cruelty in detention, while calling for an end to mandatory detention and offshore processing."
+  },
+  {
+   "slug": "speech-358397",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017, arguing it is too broad, ineffective, and gives excessive power to Minister Dutton, while noting that 80 of 82 Senate inquiry submissions raised significant concerns about the bill."
+  },
+  {
+   "slug": "speech-358398",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017, citing concerns that it bans mobile phones, treats all detainees as criminals despite 25 percent being noncriminal, gives excessive ministerial power, uses detector dogs, and renames transition centres as detention facilities, with specific examples from constituent Freida Andrews about visiting restrictions at Melbourne Immigration Transit Accommodation in Broadmeadows."
+  },
+  {
+   "slug": "speech-358399",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017 for granting unchecked powers to the Minister for Home Affairs and failing to consider individual circumstances, and supported Labor amendments that would narrow prohibited items, protect access to phones and medications, and limit searches to reasonable suspicion."
+  },
+  {
+   "slug": "speech-358400",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017, arguing it gives Minister Peter Dutton unchecked powers without safeguards, and cited 80 of 82 Senate inquiry submissions raising concerns. They proposed amendments to narrowly define prohibited items, limit searches to reasonable suspicion, and restrict sniffer dog use on detainees, while noting the coronial inquest into Robert Elan Peihopa's death at Villawood and the wrongful detention of two Australian citizens for 97 and 13 days."
+  },
+  {
+   "slug": "speech-358401",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017, arguing it grants the minister excessively broad powers to ban items, conduct searches, and change rules without adequate oversight, while the government failed to justify applying these measures to all detainees—over 60% of whom are asylum seekers without criminal convictions. Concerns were raised about strip searches, mobile phone bans, medication restrictions, and the use of sniffer dogs on detainees, with the bill criticised as disproportionate and harmful to vulnerable people."
+  },
+  {
+   "slug": "speech-358402",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017, arguing it grants excessive ministerial power to ban legal items like mobile phones, which would silence detainees such as Kurdish journalist Behrouz Boochani and reduce transparency on Manus and Nauru. They supported prohibiting illegal items under Australian or local law but insisted detainees are not prisoners and should retain access to legal items."
+  },
+  {
+   "slug": "speech-358403",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017 gives the minister unchecked power to ban items such as mobile phones and medications, imposes strip searches and dog searches on all detainees, and removes parliamentary oversight, making it a punitive measure that violates human rights and unfairly penalises asylum seekers, including those who have committed no crime."
+  },
+  {
+   "slug": "speech-358404",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017, arguing it would give the immigration minister unchecked power to prohibit items via non-disallowable legislative instruments, risking punitive treatment of asylum seekers who have not committed crimes. They also criticised current detention policies as arbitrary and called for compassionate processing, citing examples of limits on visits and food gifts."
+  },
+  {
+   "slug": "speech-358405",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017 would let the minister ban items in immigration detention centres and expand search-and-seizure powers to include strip searches, warrantless searches and detector dog screening of detainees and visitors. The member announced he would vote against the bill and refer his concerns to the International Criminal Court, citing UNHCR figures of 65.6 million forcibly displaced people worldwide and five UN criticisms of Australia in the past year."
+  },
+  {
+   "slug": "speech-358406",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017, arguing it grants the minister unchecked power to prohibit undefined \"things\" without proper review. The speaker noted that 80 of 82 submissions to a Senate inquiry opposed the bill, citing organisations including the Law Council of Australia and the Australian Human Rights Commission."
+  },
+  {
+   "slug": "speech-358526",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2017, which strengthens search and seizure powers to ban items such as mobile phones, narcotics, and child pornography in detention facilities. He noted that since 2014, the government has cancelled visas of over 3,300 foreign criminals, including 60 murderers, 228 child sex offenders, and 160 organised crime figures, resulting in a high-risk detention population."
+  }
+ ],
+ "acts": []
+}

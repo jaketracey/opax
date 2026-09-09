@@ -1,0 +1,70 @@
+{
+ "key": "au-federal-r5157",
+ "title": "High Speed Rail Planning Authority Bill 2013",
+ "short_title": "High Speed Rail Planning Authority Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-12-09",
+ "originating_house": "representatives",
+ "sponsor": "ALBANESE, Anthony, MP",
+ "sponsor_party": "&#34;Australian Labor Party&#34;",
+ "sponsor_person_id": "10007",
+ "portfolio": "(s) ALBANESE, Anthony, MP",
+ "status": "lapsed",
+ "status_as_of": "2015-02-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5157%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5157%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5157%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5157%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5157_ems_ac218dc2-0a0a-435c-b957-59d06e06c82c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5157%22",
+   "document_date": "2013-12-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-292690",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

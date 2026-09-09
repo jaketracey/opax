@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r5668",
+ "title": "Supply (Parliamentary Departments) Bill (No. 1) 2016-2017",
+ "short_title": "Supply (Parliamentary Departments) Bill (No. 1) 2016-2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-05-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2016-05-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5668_ems_d99709ea-a148-40f0-a4cb-3e34f053b073%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5668%22",
+   "document_date": "2016-05-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00038",
+   "document_date": "2016-05-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-05-02",
+  "sentences": [
+   "This bill would take money from the Consolidated Revenue Fund to run the Parliamentary Departments for part of the 2016-2017 financial year.",
+   "It would provide about five-twelfths of the estimated annual funding for those departments, excluding new budget measures.",
+   "The remaining seven-twelfths of the annual funding, plus full-year budget measures, would be covered by a separate bill to be passed later."
+  ],
+  "changes": [
+   "The bill appropriates money from the Consolidated Revenue Fund for Parliamentary Departments.",
+   "It funds the first part of the 2016-2017 financial year.",
+   "It allows the next Parliament to pass a similar bill for the rest of the year if needed."
+  ],
+  "affected": "Parliamentary Departments",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-331564",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The Supply Bill (No. 1) 2016-2017 seeks $35 billion in appropriations for interim government funding from 1 July 2016, covering ordinary annual services until November 2016, with special provision for the Australian Electoral Commission."
+  },
+  {
+   "slug": "speech-331566",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The Supply Bill (No. 2) 2016-2017 seeks approval for just over $6 billion in appropriations from the Consolidated Revenue Fund for non-ordinary annual services, including capital works and payments to states, territories, and local governments, to ensure funding continuity from 1 July 2016. It also sets debit limits for the Nation-building Funds, the Building Australia Fund, the Education Investment Fund, and general purpose financial assistance and national partnership payments."
+  },
+  {
+   "slug": "speech-331567",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The Supply (Parliamentary Departments) Bill (No. 1) 2016-2017 was moved to provide interim funding of just over $97 million for the Department of the Senate, Department of the House of Representatives, Department of Parliamentary Services, and the Parliamentary Budget Office, covering parliamentary expenditure from 1 July 2016 until approximately the end of November 2016."
+  },
+  {
+   "slug": "speech-332075",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-03",
+   "stage_hint": null,
+   "brief": "The Appropriation (Parliamentary Departments) Bill (No. 1) 2016-2017 seeks just over $147 million for the operations of the Department of the Senate, the Department of the House of Representatives, the Department of Parliamentary Services, and the Parliamentary Budget Office, including over $25 million for Parliament House maintenance."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Supply (Parliamentary Departments) Act (No. 1) 2016-2017",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00038",
+   "assent_date": "2016-05-04"
+  }
+ ]
+}

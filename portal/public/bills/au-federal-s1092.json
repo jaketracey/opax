@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-s1092",
+ "title": "Marriage Law Survey (Additional Safeguards) Bill 2017",
+ "short_title": "Marriage Law Survey (Additional Safeguards) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-13",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2017-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1092_ems_566eae3f-e186-412c-bb23-9c0eb23425fe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1092%22",
+   "document_date": "2017-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00096",
+   "document_date": "2017-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-13",
+  "sentences": [
+   "The bill would add extra protections to the national survey asking Australians about same-sex marriage.",
+   "Communications about the survey would need authorisations, and broadcasters showing one view would have to give equal time to the opposite view.",
+   "The bill does not set a start date or specify a financial impact."
+  ],
+  "changes": [
+   "Create authorisation requirements for all marriage law survey communications, including printed, voice, text and online material.",
+   "Give the Electoral Commissioner powers to gather information and make rules about these requirements.",
+   "Apply broadcasting laws to ensure opposing views on the survey get reasonable broadcast opportunities.",
+   "Set offences for bribery and threats related to survey responses.",
+   "Provide civil penalties for vilification, interference, discrimination and misleading publications about the survey.",
+   "Allow injunctive relief for the statistical collection process."
+  ],
+  "affected": "Australian voters, broadcasters, the Australian Bureau of Statistics and the Electoral Commissioner.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:33:38Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-353929",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "Labor supported the Marriage Law Survey (Additional Safeguards) Bill 2017 as a way to protect LGBTI Australians from vilification during the postal survey, while reiterating opposition to the unnecessary $122 million survey and urging Prime Minister Turnbull to call out dishonest statements from the 'no' campaign."
+  },
+  {
+   "slug": "speech-353930",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's marriage survey is inherently discriminatory and exclusionary toward LGBTI people, but announced Labor supports the Marriage Law Survey (Additional Safeguards) Bill 2017 to impose minimal protections such as authorisation requirements and anti-vilification measures."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Marriage Law Survey (Additional Safeguards) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00096",
+   "assent_date": "2017-09-13"
+  }
+ ]
+}

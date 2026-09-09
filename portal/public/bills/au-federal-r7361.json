@@ -1,0 +1,173 @@
+{
+ "key": "au-federal-r7361",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Board of Management Functions) Bill 2025",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Board of Management Functions) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-08-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "passed",
+ "status_as_of": "2025-10-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7361_ems_9424cc5f-a13a-478c-9df4-9e45804c35f0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7361%22",
+   "document_date": "2025-08-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00051",
+   "document_date": "2025-10-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-08-27",
+  "sentences": [
+   "The bill would let boards of management for jointly managed Commonwealth reserves on Indigenous land keep making decisions after a management plan expires.",
+   "Decisions made during the gap would have to follow the most recent expired management plan until a new plan takes effect.",
+   "Management plans expire after 10 years, and the bill aims to prevent a gap in board decision-making when a replacement plan is not ready."
+  ],
+  "changes": [
+   "Allows boards to continue decision-making after a management plan expires.",
+   "Requires board decisions during the gap to be consistent with the most recent expired management plan.",
+   "Ensures Indigenous participation in reserve management continues without interruption."
+  ],
+  "affected": "Traditional Owners and boards of management for Kakadu, Uluṟu-Kata Tjuṯa, and Booderee National Parks.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1197097",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2025-09-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197100",
+   "speaker": "Monique Ryan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-09-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197319",
+   "speaker": "Lisa Darmanin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Environment Protection and Biodiversity Conservation Amendment (Board of Management Functions) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00051",
+   "assent_date": "2025-10-30"
+  }
+ ]
+}

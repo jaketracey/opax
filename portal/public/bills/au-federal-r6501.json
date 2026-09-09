@@ -1,0 +1,500 @@
+{
+ "key": "au-federal-r6501",
+ "title": "Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020",
+ "short_title": "Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2020-12-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6501_ems_c9cdce94-e56a-4b8d-87dc-0b650aa24137%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6501%22",
+   "document_date": "2020-02-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00124",
+   "document_date": "2020-12-15",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-27",
+  "sentences": [
+   "The bill would change how the government pays home care subsidies to approved providers.",
+   "Instead of receiving payment before delivering care, providers would be paid after the care period ends.",
+   "The change aligns home care subsidy payments with other government programs and is the first part of reforms announced in the 2019-20 Budget."
+  ],
+  "changes": [
+   "Moves home care subsidy payments from advance to arrears.",
+   "Aligns payment arrangements with other government programs.",
+   "Amends the Aged Care Act 1997 and the Aged Care (Transitional Provisions) Act 1997."
+  ],
+  "affected": "Approved providers of home care packages are affected, but consumer eligibility and subsidy amounts are not changed.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6304",
+   "date": "2020-03-05",
+   "house": "representatives",
+   "question": "Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020 - Second Reading - Stop Ms Bell from speaking",
+   "stage": "Second reading",
+   "ayes": 62,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Labor": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-05/1"
+  },
+  {
+   "key": "federal-representatives-6305",
+   "date": "2020-03-05",
+   "house": "representatives",
+   "question": "Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020 - Second Reading - Stop Mr Young from speaking",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-05/2"
+  },
+  {
+   "key": "federal-representatives-6682",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2020-10-28.17.3) to keep unchanged the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is *that the bill be read a second time*. To read a bill for a second time is to agree with the bill's main idea. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd093): > *The purpose of the Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020 (the Bill) is ... to change the payment of Australian Government subsidies for home care packages from payment in advance to payment in arrears.*",
+   "stage": "Second reading",
+   "ayes": 53,
+   "noes": 44,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 96
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-28/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-390306",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Legislation Amendment Bill 2020 shifts home-care subsidies from advance to arrears payments, raising concerns about financial viability for small and rural providers, and criticised the government’s piecemeal reform approach, noting 120,000 older Australians waiting for home care and $750 million in unspent funds."
+  },
+  {
+   "slug": "speech-390308",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-03-05",
+   "stage_hint": null,
+   "brief": "The Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020 would change home-care providers to receive monthly subsidies after lodging claims, rather than in advance, to reduce unspent funds. The government cited aged-care funding rising from $13.3 billion in 2012-13 to an estimated $25.4 billion in 2022-23, and 44,000 new home-care packages since the 2018-19 budget, while criticising Labor's proposed $387 billion in taxes."
+  },
+  {
+   "slug": "speech-390310",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-05",
+   "stage_hint": null,
+   "brief": "The speaker condemned the coalition government’s handling of aged care, citing over 100,000 older Australians waiting for approved home-care packages and a 2018 death toll of approximately 44 people per day due to undelivered packages. They called on the Prime Minister and Minister for Aged Care to fix the system, and criticised the government for attempting to privatise ACAT assessments and for failing to act on royal commission recommendations."
+  },
+  {
+   "slug": "speech-390311",
+   "speaker": "Terry Young",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-03-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020, noting the Morrison government increased the age pension by $117.80 per fortnight for singles and $177.40 for couples in Longman, benefiting 21,433 aged pensioners, with further increases scheduled for March and September each year."
+  },
+  {
+   "slug": "speech-390314",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-05",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020, citing concerns that legislative changes should wait until the Royal Commission into Aged Care Quality and Safety delivers its final report in November 2020. The speaker stated that over 100,000 older Australians are waiting for approved home-care packages, nearly 30,000 have died while waiting in the past two years, and the government’s reforms have failed to address the growing waiting list."
+  },
+  {
+   "slug": "speech-390315",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020 but criticised the government's aged care record, citing over 100,000 older Australians waiting for home care packages, nearly 30,000 deaths while waiting, and 25,000 premature entries into residential care over two years."
+  },
+  {
+   "slug": "speech-390318",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the Aged Care Legislation Amendment Bill, arguing the government’s change to pay home-care providers in arrears is a budget-saving measure that will save $250–350 million but harm smaller providers, especially in regional areas, while 120,000 Australians wait up to three years for home-care packages."
+  },
+  {
+   "slug": "speech-390320",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-05",
+   "stage_hint": null,
+   "brief": "The speaker argued the Aged Care Legislation Amendment (Improved Home Care Payment Administration No.1) Bill 2020 could harm smaller rural and regional providers by moving payments to arrears, citing an NDIS provider owed $270,000. Labor moved to refer the bill to a Senate committee, while also criticising the government’s aged‑care record, including a failed plan to privatise ACAT teams, lack of transparency, and 110,000 people waiting for home care packages."
+  },
+  {
+   "slug": "speech-390321",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government has failed older Australians, citing over 100,000 people waiting for home care packages, 30,000 deaths while waiting, and unacceptable delays. They called for urgent action on royal commission findings, an end to ACAT privatisation, and proper staffing and funding for aged care."
+  },
+  {
+   "slug": "speech-390322",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to shift home care subsidy payments from advance to arrears but warned the June 2020 timeline could hurt smaller providers, especially in regional areas. They criticised the government for releasing only 5,000 home care packages while over 120,000 older Australians wait, noting 30,000 have died waiting and $1.2 billion was cut from aged care funding under the current Prime Minister as Treasurer."
+  },
+  {
+   "slug": "speech-390323",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-05",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for failing to address the aged care crisis, noting that over 100,000 Australians are waiting for approved home care packages and 30,000 have died while waiting in the past two years. They also highlighted that median wait times for residential aged care have increased from just over a month to five months under the Liberal-National government."
+  },
+  {
+   "slug": "speech-397331",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker announced the Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020, which will pay home-care providers in arrears after services are delivered from February 2021, and argued that government funding for aged care has grown from $13.3 billion in 2012-13 to $23.8 billion in 2021, with 73,000 additional home-care packages added since 2018-19."
+  },
+  {
+   "slug": "speech-397332",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020 will not reduce waiting times or improve affordability of home-care packages, but will change subsidy payments from advance to arrears. They expressed concern that the transition could burden small providers in rural areas, noted unspent funds may reach $900 million, and called for reinvestment of those funds to address the 100,000 people awaiting packages."
+  },
+  {
+   "slug": "speech-397333",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The bill changes home-care provider payments to arrears, aligning with standard government and private sector practice to reduce unspent funds, while the government has tripled home-care packages to 185,000 with $4.6 billion in investment and notes Australia’s aged-care COVID‑19 fatality rate of 0.1% is among the world’s lowest."
+  },
+  {
+   "slug": "speech-397334",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020, arguing the aged‑care sector is in crisis due to underfunding, profit‑driven operators, and government inaction. They cited 683 COVID‑19 deaths in aged care, 103,000 people waiting for home‑care packages, 274,409 self‑reported instances of substandard care over five years, and warned that moving to payments in arrears could threaten the viability of smaller and regional providers."
+  },
+  {
+   "slug": "speech-397335",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-397336",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment Bill 2020 to reallocate nearly $800 million in unspent home-care packages, noting that over 100,000 people are waiting for packages and 28,000 died while on the waiting list in two years. They urged the government to resolve provider cash flow issues, improve respite options for carers, and address the NDIS age cutoff that discriminates against those over 65."
+  },
+  {
+   "slug": "speech-397338",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill's shift to payment in arrears risks financial viability for small providers, and criticised the government's piecemeal aged‑care reform, highlighting that 103,000 older Australians—including 2,000 in Tasmania—are waiting for home‑care packages, with only 23,000 new packages announced in the budget. Labor proposes an eight‑point plan including minimum staffing levels, reducing the waiting list, and independent reporting."
+  },
+  {
+   "slug": "speech-397339",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the Aged Care Legislation Amendment Bill only makes administrative changes, failing to address the home-care crisis, and highlighted that of 23,000 promised home-care packages, only 300 are new, while over 102,000 older Australians wait years for care—citing constituents like Aunty Joyce, Warren, and Adriana."
+  },
+  {
+   "slug": "speech-397340",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that government inaction on previous aged care reviews caused preventable suffering, citing 30,000 deaths while waiting for care, 100,000 waiting for home-care packages, and 50 weekly sexual assaults in residential care. They also highlighted chemical restraint issues through the case of Monica Proy and called for the government to report on restraint use by 1 December."
+  },
+  {
+   "slug": "speech-397341",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020 as a positive but minor reform, while arguing that the home-care system is deeply broken—over 103,000 Australians are waiting for packages, 30,000 have died while waiting, and the budget delivered only 23,000 new packages against a need for 60,000. The speaker also highlighted systemic failures including assessment delays, inflexible package levels, and confusing letters that cause cancellations, quoting constituents' tragic stories of neglect and death."
+  },
+  {
+   "slug": "speech-397399",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-28",
+   "stage_hint": null,
+   "brief": "The bill shifts home-care subsidies to an after-payment model but fails to address the 102,000 Australians waiting for home-care packages, the 30,000 who have died while waiting, and the systemic problems identified by the royal commission, including workforce shortages, lack of transparency, and inadequate COVID-19 responses."
+  },
+  {
+   "slug": "speech-397400",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-28",
+   "stage_hint": null,
+   "brief": "The speaker argued the Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020 should be postponed until after the royal commission’s final report in February 2021, calling the bill a premature tweak to a failing system. They criticised the government’s aged care record, citing cuts to the dementia supplement, 100,000 Australians waiting for home-care packages, and 500,000 living with dementia."
+  },
+  {
+   "slug": "speech-397401",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-28",
+   "stage_hint": null,
+   "brief": "The Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Bill 2020 replaces advance payments to home‑care providers with monthly subsidies paid after claims are lodged, and a companion bill allows providers to draw down unspent subsidies for future services."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care Legislation Amendment (Improved Home Care Payment Administration No. 1) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00124",
+   "assent_date": "2020-12-15"
+  }
+ ]
+}

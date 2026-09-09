@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r6212",
+ "title": "National Consumer Credit Protection Amendment (Small Amount Credit Contract and Consumer Lease Reforms) Bill 2018 [No. 2]",
+ "short_title": "National Consumer Credit Protection Amendment (Small Amount Credit Contract and Consumer Lease Reforms) Bill 2018 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-10-22",
+ "originating_house": "representatives",
+ "sponsor": "MCGOWAN, Cathy, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10798",
+ "portfolio": "(s) MCGOWAN, Cathy, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6212%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6212%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6212_ems_4df5efc2-987c-4953-a5eb-f11ea338f1a5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6212%22",
+   "document_date": "2018-10-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-10-22",
+  "sentences": [
+   "This bill would implement recommendations from a 2016 review of small amount credit contract laws.",
+   "It would cap total payments under consumer leases, require equal repayments for small loans, ban door-to-door selling of leases at homes, and introduce anti-avoidance rules.",
+   "The bill also allows regulations to set a protected earnings amount for consumers of small loans and leases, preventing contracts that require too much of a person's income."
+  ],
+  "changes": [
+   "Imposes a cap on total payments under consumer leases, which currently have no such cap.",
+   "Requires small amount credit contracts to have equal repayments and equal payment intervals.",
+   "Removes the ability for lenders to charge monthly fees on the remaining loan term when a consumer repays early.",
+   "Prevents lessors and credit assistance providers from selling leases door-to-door at homes.",
+   "Introduces broad anti-avoidance protections to stop providers from getting around the Credit Act and Code.",
+   "Strengthens penalties to encourage compliance by lenders and lessors."
+  ],
+  "affected": "Vulnerable Australians who use small amount credit contracts or consumer leases, as well as lenders and lessors in those industries.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

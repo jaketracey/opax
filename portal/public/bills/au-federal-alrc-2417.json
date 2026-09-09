@@ -1,0 +1,357 @@
+{
+ "key": "au-federal-alrc-2417",
+ "title": "Parliamentary Service Amendment (Freedom of Information) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Leader of the House",
+ "status": "passed",
+ "status_as_of": "2013-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00097",
+   "document_date": "2013-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-2940",
+   "date": "2013-06-18",
+   "house": "senate",
+   "question": "Parliamentary Service Amendment (Freedom of Information) Bill 2013 — In Committee — Freedom of certain information",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "earliest": 2,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-18/9"
+  },
+  {
+   "key": "federal-senate-2941",
+   "date": "2013-06-18",
+   "house": "senate",
+   "question": "Parliamentary Service Amendment (Freedom of Information) Bill 2013 - In Committee - Freedom of information for administrative matters",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "earliest": 2,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-18/10"
+  },
+  {
+   "key": "federal-senate-2942",
+   "date": "2013-06-18",
+   "house": "senate",
+   "question": "Parliamentary Service Amendment (Freedom of Information) Bill 2013 - In Committee - Report individial expenditure",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "earliest": 2,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-18/11"
+  },
+  {
+   "key": "federal-senate-2943",
+   "date": "2013-06-18",
+   "house": "senate",
+   "question": "Parliamentary Service Amendment (Freedom of Information) Bill 2013 — Third Reading — Read a third time",
+   "stage": "Third reading",
+   "ayes": 26,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "earliest": 2,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-18/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-273396",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273397",
+   "speaker": "Bronwyn Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273398",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823684",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824454",
+   "speaker": "Scott Ryan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Parliamentary Service Amendment (Freedom of Information) Bill 2013, arguing it would undermine transparency by restoring FOI exemptions for three parliamentary departments, and proposed amendments to keep them subject to FOI for administrative matters and MPs' pay and expenditure."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Parliamentary Service Amendment (Freedom of Information) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00097",
+   "assent_date": "2013-06-28"
+  }
+ ]
+}

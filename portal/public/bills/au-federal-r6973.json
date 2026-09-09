@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6973",
+ "title": "Commonwealth Electoral Amendment (Cleaning up Political Donations) Bill 2023",
+ "short_title": "Commonwealth Electoral Amendment (Cleaning up Political Donations) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-13",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-09-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6973%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6973%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6973%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6973_ems_1aa68310-c641-4968-b6bf-c52f80e62260%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6973%22",
+   "document_date": "2023-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-02-13",
+  "sentences": [
+   "This bill would tighten rules on political donations by lowering the disclosure threshold, capping donations, and banning contributions from certain industries.",
+   "Donors would be limited to $50,000 per electoral cycle, and recipients must report gifts over $1,000 to the Australian Electoral Commission within two business days.",
+   "The changes would start on the first day of the financial year after the 28th day following Royal Assent."
+  ],
+  "changes": [
+   "Lowers the donation disclosure threshold to $1,000 and requires aggregation of multiple gifts from the same source.",
+   "Expands the definition of a gift to include electoral spending, gifts-in-kind, and payments for fundraisers.",
+   "Introduces a $50,000 cap on total donations per donor during an electoral cycle.",
+   "Requires real-time disclosure of donations exceeding the threshold within two business days.",
+   "Prohibits donations from fossil fuel, gambling, liquor, and tobacco industry entities.",
+   "Increases penalties for corporations that break the law."
+  ],
+  "affected": "Political donors, recipients including parties, candidates, and associated entities, and the Australian Electoral Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:01Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-827505",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2023-02-13",
+   "stage_hint": null,
+   "brief": "The member for Clark reintroduced the Commonwealth Electoral Amendment (Cleaning up Political Donations) Bill 2023, proposing to lower the donation disclosure threshold to $1,000, require real-time disclosure within two business days, ban donations from fossil fuel, gambling, liquor and tobacco companies, cap individual donations at $50,000 per electoral cycle, and cap campaign spending. The bill was seconded by the member for Mayo, who argued political donations must be reformed to improve public trust."
+  }
+ ],
+ "acts": []
+}

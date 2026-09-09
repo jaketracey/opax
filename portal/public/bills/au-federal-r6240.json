@@ -1,0 +1,209 @@
+{
+ "key": "au-federal-r6240",
+ "title": "Electoral Legislation Amendment (Modernisation and Other Measures) Bill 2018",
+ "short_title": "Electoral Legislation Amendment (Modernisation and Other Measures) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-11-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Special Minister of State",
+ "status": "passed",
+ "status_as_of": "2019-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6240_ems_ad937bda-8f8a-4076-a265-984c439c68a9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6240_ems_7c0d8a25-5aab-4353-8aee-d257b67cab4c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6240%22",
+   "document_date": "2018-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00002",
+   "document_date": "2019-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2018-11-29",
+  "sentences": [
+   "The bill would remove several measures from Schedule 2 and delete Schedule 3 entirely.",
+   "Only measures the Australian Electoral Commission considers critical for the next federal election would be kept.",
+   "The deleted measures could be considered by a future parliament."
+  ],
+  "changes": [
+   "Removes measures from Schedule 2 that relate to voting and scrutiny processes.",
+   "Deletes Schedule 3, which dealt with a Redistribution Committee for the Australian Capital Territory.",
+   "Retains measures identified by the Australian Electoral Commission as critical to the next federal election."
+  ],
+  "affected": "The Australian Electoral Commission and voters.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-373211",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-29",
+   "stage_hint": null,
+   "brief": "The bill amends the Commonwealth Electoral Act 1918 and Referendum Act 1984 to modernise AEC operations, including mandatory candidate eligibility checklists under section 44, opening declaration vote boxes at polling places, allowing non-pencil voting methods, extending the six-metre polling booth exclusion zone to prepoll centres, and changing the ACT Redistribution Committee's composition."
+  },
+  {
+   "slug": "speech-374513",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-12",
+   "stage_hint": null,
+   "brief": "The bill makes a compulsory nomination checklist for federal candidates to address section 44 eligibility issues, with penalties of up to 12 months imprisonment or a $12,600 fine for false information. Labor supports the first schedule and amendments to reduce the bill to the checklist and administrative changes for the next election."
+  },
+  {
+   "slug": "speech-374514",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Electoral Legislation Amendment (Modernisation and Other Measures) Bill 2018, particularly its compulsory candidate checklist to address section 44 constitutional disqualifications, and called for further bipartisan work on restoring electoral trust while criticising the lack of government members contributing to the debate."
+  },
+  {
+   "slug": "speech-374515",
+   "speaker": "Michael Danby",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Electoral Legislation Amendment Bill 2018, agreeing to changes including six-metre exclusion zones, processing of declaration votes, and other electoral micromanagement measures, and highlighted that two million more Australians have been added to the electoral roll due to Electoral Commission address-update reforms."
+  },
+  {
+   "slug": "speech-374652",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government deliberately cut funding to the Australian Electoral Commission, preventing enrolment and education campaigns in remote communities, resulting in 26,377 Territorians (84% enrolment vs 96% nationally) being denied the vote, particularly Aboriginal people in the seat of Lingiari."
+  },
+  {
+   "slug": "speech-374653",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Electoral Legislation Amendment (Modernisation and Other Measures) Bill 2018, particularly the mandatory section 44 eligibility checklist for candidates, and argued that the government’s funding cuts to the Australian Electoral Commission demonstrate a lack of commitment to democracy. They also noted that bipartisan Senate amendments would proceed, with other sections of the bill deferred for later debate."
+  },
+  {
+   "slug": "speech-374654",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-12",
+   "stage_hint": null,
+   "brief": "The government argued for the Electoral Legislation Amendment (Modernisation and Other Measures) Bill 2018 with bipartisan support, introducing a mandatory qualification checklist for candidates under section 44 of the Constitution, streamlining voting and counting processes, and extending the six-metre exclusion zone to pre-poll centres, while deferring less urgent amendments until after the 2019 federal election."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral Legislation Amendment (Modernisation and Other Measures) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00002",
+   "assent_date": "2019-03-01"
+  }
+ ]
+}

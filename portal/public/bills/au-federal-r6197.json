@@ -1,0 +1,245 @@
+{
+ "key": "au-federal-r6197",
+ "title": "Higher Education Support Amendment (VET FEE-HELP Student Protection) Bill 2018",
+ "short_title": "Higher Education Support Amendment (VET FEE-HELP Student Protection) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2018-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6197_ems_720e4ef5-d162-4246-843a-36065a724544%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6197_ems_0ccf5bd7-9b5e-4d02-b9d8-8e850ba6c857%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6197%22",
+   "document_date": "2018-09-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00160",
+   "document_date": "2018-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 8,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-20",
+  "sentences": [
+   "This bill would help people who took out VET FEE-HELP loans and ended up with debts because training providers or their agents behaved badly.",
+   "The person in charge of the relevant department could restore a borrower's FEE-HELP balance and cancel the associated loan, but only if the borrower did not finish the unit and it is likely the provider acted wrongly.",
+   "The government says it cannot put a cost on the measure because it does not know how many students were affected and each case differs."
+  ],
+  "changes": [
+   "It lets the department head cancel a student's VET FEE-HELP debt if the provider's misconduct caused it.",
+   "It allows the Commonwealth to try to recover the cancelled amount from the provider in some cases.",
+   "It updates the Ombudsman Act 1976 so the VET Student Loans Ombudsman has a role under the new rules."
+  ],
+  "affected": "Students who incurred VET FEE-HELP debts due to inappropriate conduct by training providers or their agents, and the training providers that may have to repay the Commonwealth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:50:42Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-370142",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The government opposed suspending standing orders, citing important business including the bipartisan passage of strawberry industry legislation, and listed several bills for introduction, such as the Higher Education Support Amendment (VET FEE-HELP Student Protection) Bill 2018 and the Treasury Laws Amendment (Making Sure Foreign Investors Pay Their Fair Share of Tax in Australia and Other Measures) Bill 2018."
+  },
+  {
+   "slug": "speech-370152",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The bill introduces a discretionary power for the Secretary of the Department of Education and Training to re-credit FEE-HELP balances for students who incurred VET FEE-HELP debts due to inappropriate conduct by providers or their agents, and allows the Commonwealth to recover equivalent amounts from those providers. The speech cites the case of Gabrielle, a student with bipolar disorder who incurred over $20,000 in debts after being misled by a provider."
+  },
+  {
+   "slug": "speech-372990",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to cancel unfair VET FEE-HELP debts from unscrupulous providers, criticised the Liberal government for allowing $6 billion in loans over three years and 140,000 fewer apprentices, and proposed Labor’s plan to direct at least two-thirds of VET funding to TAFE, create a 10% apprentice quota on major projects, and establish a national post-secondary education inquiry."
+  },
+  {
+   "slug": "speech-372994",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Higher Education Support Amendment (VET FEE-HELP Student Protection) Bill 2018, arguing it provides a remedy for thousands of Australians who incurred debts due to unscrupulous providers. The speaker criticised the government for cutting $3 billion from vocational education and training, leading to over 140,000 fewer apprentices and TAFE closures, and called for real investment in TAFE, apprenticeships, and traineeships."
+  },
+  {
+   "slug": "speech-372995",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coalition government's cuts to TAFE and deregulation of VET FEE-HELP led to a surge in dodgy private providers, leaving thousands of students with unpayable debts, and that the bill before the House is an attempt to clean up that mess by recrediting those debts. They also announced Labor's plans to reverse the cuts, guarantee at least two-thirds of public VET funding goes to TAFE, and set a target of one in ten apprenticeships on Commonwealth projects, citing figures such as $6 billion in VET FEE-HELP loans from 2014–2016, 130,000 fewer apprentices nationally, and a 46% decline in apprenticeships in the Herbert electorate."
+  },
+  {
+   "slug": "speech-372996",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The speech supported the VET FEE-HELP Student Protection Bill 2018, which will recredit debts of students defrauded by unscrupulous for-profit providers, and criticised the government for cutting $3 billion from TAFE and presiding over 140,000 fewer apprentices. It announced Labor policies including scrapping up-front fees for 100,000 TAFE students, investing $100 million in modernising TAFE facilities, guaranteeing at least two-thirds of training dollars go to TAFE, and creating 10,000 pre-apprenticeships and 20,000 adult apprentice programs."
+  },
+  {
+   "slug": "speech-372997",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The bill allows recrediting of VET FEE-HELP debts when providers engaged in inappropriate conduct, and Labor committed to directing at least two-thirds of vocational education funding to TAFE, establishing a comprehensive postsecondary inquiry, and addressing the $6 billion rorting scheme and $3 billion stripped from the sector."
+  },
+  {
+   "slug": "speech-372998",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Higher Education Support Amendment (VET FEE-HELP Student Protection) Bill and Labor’s amendment, criticizing the Liberal government’s record on vocational education and referencing the VET FEE-HELP scandal where students were signed up for non-existent or unsuitable courses."
+  },
+  {
+   "slug": "speech-373129",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Higher Education Support Amendment (VET FEE-HELP Student Protection) Bill 2018, which provides discretionary powers to recredit VET FEE-HELP debts for students who incurred them due to inappropriate conduct by providers, and criticised the coalition government for allowing the rorts to continue for years, cutting over $3 billion from TAFE, and acting too late; Labor pledged to restore public TAFE as the major vocational education provider if elected."
+  },
+  {
+   "slug": "speech-373130",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Higher Education Support Amendment (VET FEE-HELP Student Protection) Bill 2018 should provide debt relief to students exploited by unscrupulous for-profit providers, citing over 6,000 complaints and $6 billion in loans from 2014–2016 under the Coalition government. They also criticised Coalition cuts of more than $3 billion from TAFE and a 30% drop in apprenticeships, and called for restoring public TAFE as the major vocational education provider."
+  },
+  {
+   "slug": "speech-373133",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The bill amends the Higher Education Support Act 2003 and the Ombudsman Act 1976 to allow the secretary of the Department of Education and Training to remit VET FEE-HELP debts for students whose providers engaged in inappropriate conduct, and an addendum to the explanatory memorandum was presented to explain why delegated legislation will define such conduct."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Support Amendment (VET FEE-HELP Student Protection) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00160",
+   "assent_date": "2018-12-10"
+  }
+ ]
+}

@@ -1,0 +1,159 @@
+{
+ "key": "au-federal-s1110",
+ "title": "Great Barrier Reef Marine Park Amendment (Authority Governance and Other Matters) Bill 2017",
+ "short_title": "Great Barrier Reef Marine Park Amendment (Authority Governance and Other Matters) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-06",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Energy",
+ "status": "passed",
+ "status_as_of": "2018-03-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1110_ems_2301a3cd-25e7-4450-9918-be9f7aaa1a52%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1110%22",
+   "document_date": "2017-12-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00012",
+   "document_date": "2018-03-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-12-06",
+  "sentences": [
+   "The bill would change how the Great Barrier Reef Marine Park Authority is run, including its board size and membership rules.",
+   "It would replace the full-time chairperson role with a part-time chairperson and a new full-time chief executive officer, who would become the agency's accountable authority.",
+   "The changes follow a 2017 government review that found the current governance lacked strategic leadership and that the chairperson's workload was too large for one person."
+  ],
+  "changes": [
+   "Replace the full-time chairperson with a part-time chairperson and a full-time chief executive officer.",
+   "Add one part-time member, increasing the Authority's total membership to seven.",
+   "Strengthen appointment and termination rules by specifying required skills, limiting consecutive terms, allowing termination for underperformance, and reducing conflicts of interest.",
+   "Clarify the relationship between the Authority's governing legislation through a minor technical amendment."
+  ],
+  "affected": "The Great Barrier Reef Marine Park Authority and its members.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359208",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-13",
+   "stage_hint": null,
+   "brief": "Labor will support the Great Barrier Reef Marine Park Amendment (Authority Governance and Other Matters) Bill 2017, which implements 24 recommendations from an independent review led by Dr Wendy Craik. The bill separates the chairperson and CEO roles, strengthens board appointment and termination requirements, and makes minor technical amendments to improve the authority's governance."
+  },
+  {
+   "slug": "speech-359337",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-13",
+   "stage_hint": null,
+   "brief": "The Great Barrier Reef Marine Park Amendment Bill 2017 replaces the full-time chairperson with a part-time chairperson and full-time chief executive officer, adds one part-time member, and strengthens appointment and termination requirements to improve the authority's strategic capability."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Great Barrier Reef Marine Park Amendment (Authority Governance and Other Matters) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00012",
+   "assent_date": "2018-03-05"
+  }
+ ]
+}

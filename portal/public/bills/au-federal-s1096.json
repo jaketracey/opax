@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s1096",
+ "title": "Australian Broadcasting Corporation Amendment (Rural and Regional Measures) Bill 2017",
+ "short_title": "Australian Broadcasting Corporation Amendment (Rural and Regional Measures) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-10-18",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1096%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1096%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1096%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1096_ems_b6e41acb-0ba5-4c17-8d79-c105f4db6685%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1096%22",
+   "document_date": "2017-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-18",
+  "sentences": [
+   "The bill would change the ABC's legal duties to better serve people in rural and regional Australia.",
+   "It would add two regional-experience requirements to the ABC Board and create a new advisory body for regional views.",
+   "The ABC would have to publish an annual report comparing its regional and city workforce numbers and the ratio of journalists to support staff."
+  ],
+  "changes": [
+   "The ABC's Charter would be amended to require its programs to strengthen regional identity and reflect geographic diversity.",
+   "The ABC Board must include two members with strong regional ties through business, industry or community work.",
+   "A Regional Advisory Council would be set up to advise the Board on changes affecting regional audiences.",
+   "The ABC Board would have to report each year on the number of staff in regional areas and in cities, and the ratio of journalists to support staff."
+  ],
+  "affected": "The Australian Broadcasting Corporation, its Board, regional audiences and employees.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:32:27Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

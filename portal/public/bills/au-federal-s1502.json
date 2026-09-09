@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-s1502",
+ "title": "Superannuation Legislation Amendment (Fair Super for Young Workers) Bill 2026",
+ "short_title": "Superannuation Legislation Amendment (Fair Super for Young Workers) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-12",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen Barbara",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "11008",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1502%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1502%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1502%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1502_ems_5f3fe2bc-2687-4caf-b227-95d9f6959cad%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1502%22",
+   "document_date": "2026-08-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-08-20",
+  "sentences": [
+   "This bill would remove the age-based exemption that currently keeps many employees under eighteen outside compulsory employer superannuation.",
+   "Young employees would no longer have to work more than thirty hours in a week to overcome that exemption.",
+   "The changes would commence on the day after Royal Assent."
+  ],
+  "changes": [
+   "Removes the power to exclude under-eighteen employees, their work or their earnings through the relevant regulations.",
+   "Repeals the regulation exempting under-eighteen employees who work thirty hours or less a week.",
+   "Applies the change from the day after assent rather than introducing a staged commencement."
+  ],
+  "affected": "Employees under eighteen and employers responsible for their superannuation contributions are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.379144+00:00"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1205900",
+   "speaker": "Barbara Pocock",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205951",
+   "speaker": "Deborah O'Neill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

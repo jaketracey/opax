@@ -1,0 +1,180 @@
+{
+ "key": "au-federal-r5642",
+ "title": "National Disability Insurance Scheme Savings Fund Special Account Bill 2016",
+ "short_title": "National Disability Insurance Scheme Savings Fund Special Account Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5642%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5642%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5642%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5642%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5642%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5642%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5642%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5642%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5642%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5642%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5642_ems_71417a1d-7e28-4ba3-87c6-4e6fd5469d92%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5642%22",
+   "document_date": "2016-03-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-16",
+  "sentences": [
+   "This bill is part of a package that creates a dedicated account to help the government pay for the National Disability Insurance Scheme.",
+   "The Social Services Minister would decide what money goes into the account, and the account would be reviewed before July 2027.",
+   "The account's credits would come from underspends and savings from the NDIS and other areas, and any extra money beyond a shortfall would go back to general revenue."
+  ],
+  "changes": [
+   "Establishes a special account for NDIS funding.",
+   "Lets the Minister decide credits and debits to the account.",
+   "Requires a review of the account before July 2027.",
+   "Sets rules for returning excess balance to the Consolidated Revenue Fund."
+  ],
+  "affected": "The Commonwealth government and the National Disability Insurance Scheme are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:31:00Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-331690",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The mover proposed resuming proceedings on five lapsed bills: the Tax Laws Amendment (Tax Incentives for Innovation) Bill 2016, Financial System Legislation Amendment (Resilience and Collateral Protection) Bill 2016, National Disability Insurance Scheme Amendment Bill 2016, National Disability Insurance Scheme Savings Fund Special Account Bill 2016, and Omnibus Repeal Day (Autumn 2015) Bill 2015."
+  },
+  {
+   "slug": "speech-331908",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-05-03",
+   "stage_hint": null,
+   "brief": "The National Disability Insurance Scheme is already funded through 2013 budget measures that the coalition supported, and this bill is a political smokescreen for cuts. Labor will not oppose the bill in the House but will seek a Senate inquiry to get answers about the government's use of NDIS funds."
+  },
+  {
+   "slug": "speech-331909",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-03",
+   "stage_hint": null,
+   "brief": "The National Disability Insurance Scheme Savings Fund Special Account Bill 2016 was argued as necessary to quarantine funds for the NDIS, with the opposition criticized for leaving the scheme improperly funded and requiring an additional $5 billion; the bill would establish a special account to secure savings and underspends for the scheme’s financial stability."
+  },
+  {
+   "slug": "speech-331910",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-05-03",
+   "stage_hint": null,
+   "brief": "The speaker argued the National Disability Insurance Scheme Savings Fund Special Account Bill 2016 should go to a Senate inquiry to test the government’s funding claims, citing the 2013 10-year funding plan and the five per cent Medicare levy increase, and criticised coalition MPs for not being present when the NDIS was introduced. She also raised concerns that the NDIS “efficient price” is set too low, noted the rollout in her electorate from 1 May, and said the government’s past Medicare cuts justify public scepticism."
+  },
+  {
+   "slug": "speech-331911",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Disability Insurance Scheme (NDIS) requires $22 billion annually, with the Medicare levy covering only $3.3 billion (15%), and criticised Labor for claiming full funding. They opposed Labor’s proposed 50% capital gains tax increase and negative gearing abolition, stating these policies harm wealth creators needed to fund the NDIS."
+  },
+  {
+   "slug": "speech-332066",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-05-03",
+   "stage_hint": null,
+   "brief": "The speaker argued the Turnbull government has failed to support the most disadvantaged, citing cuts to family payments, pensioner concessions, and attempts to alter pension indexation and Medicare co-payments. He asserted the government's claim of a $5 billion shortfall in NDIS funding is dishonest, insisting the scheme was fully funded by Labor through measures including a Medicare levy increase and tax changes."
+  },
+  {
+   "slug": "speech-332067",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-03",
+   "stage_hint": null,
+   "brief": "The government argued the National Disability Insurance Scheme Savings Fund Special Account Bill 2016 is needed to create a dedicated savings fund to cover a $5 billion funding gap for the NDIS in 2019-20, criticising Labor for claiming unverified \"other long-term savings\" of $2.4 billion. The bill would redirect savings from existing programs to secure funding for the scheme's 460,000 participants."
+  }
+ ],
+ "acts": []
+}

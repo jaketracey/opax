@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7200",
+ "title": "Commission of Inquiry into Antisemitism at Australian Universities Bill 2024",
+ "short_title": "Commission of Inquiry into Antisemitism at Australian Universities Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-06-03",
+ "originating_house": "representatives",
+ "sponsor": "LEESER, Julian, MP",
+ "sponsor_party": "monarchist",
+ "sponsor_person_id": "10888",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7200%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7200%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7200%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7200_ems_c58bc646-e573-4f01-8da9-649bbab5542f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7200%22",
+   "document_date": "2024-06-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-03",
+  "sentences": [
+   "The bill would create a federal inquiry into anti-Jewish hatred on Australian university campuses.",
+   "The inquiry would have the same legal powers as a Royal Commission, including the ability to grant protections and hear evidence confidentially.",
+   "The inquiry would be led by an independent senior judge and would not examine other parts of Australian society unless they relate to campus antisemitism."
+  ],
+  "changes": [
+   "Establishes a commission of inquiry with Royal Commission powers.",
+   "Limits the inquiry's scope to antisemitism at Australian universities only.",
+   "Requires the inquiry to be led by an independent jurist."
+  ],
+  "affected": "Australian universities, their Jewish students and staff, and university authorities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

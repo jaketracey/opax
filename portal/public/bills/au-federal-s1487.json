@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-s1487",
+ "title": "Online Safety Amendment (Broadening Adult Cyber Abuse Protections) Bill 2026",
+ "short_title": "Online Safety Amendment (Broadening Adult Cyber Abuse Protections) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-03",
+ "originating_house": "senate",
+ "sponsor": "PAYMAN, Sen Fatima",
+ "sponsor_party": "Australia&#39;s Voice",
+ "sponsor_person_id": "11007",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-03-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1487%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1487_ems_0e9e9913-4c83-4507-bb11-458e1573bddd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1487%22",
+   "document_date": "2026-03-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-03",
+  "sentences": [
+   "This bill would make it easier for the eSafety Commissioner to order the removal of online material targeting an adult.",
+   "It would lower the threshold so that a reasonable person need only think material was likely intended to affect an Australian adult, while raising the offensiveness standard to 'seriously offensive'.",
+   "The changes would apply to material provided on or after the day after Royal Assent, including material already accessible before that date."
+  ],
+  "changes": [
+   "Replaces the existing 'serious harm' test with a lower 'effect' test for adult cyber abuse material.",
+   "Raises the offensiveness requirement from 'offensive' to 'seriously offensive'.",
+   "Requires material to represent a 'significant departure' from accepted standards of morality, decency and propriety."
+  ],
+  "affected": "Adult Australians who experience online abuse, the eSafety Commissioner, and providers of online material.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:04Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,182 @@
+{
+ "key": "au-federal-r6095",
+ "title": "Underwater Cultural Heritage Bill 2018",
+ "short_title": "Underwater Cultural Heritage Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Energy",
+ "status": "passed",
+ "status_as_of": "2018-08-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6095_ems_603b0427-5576-4e67-90fa-d78302d30a52%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6095_ems_dfdc3165-d791-43f1-a203-f2673808dfc6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6095%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00085",
+   "document_date": "2018-08-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "This bill is part of a package that also includes the Underwater Cultural Heritage (Consequential and Transitional Provisions) Bill 2018, and together they aim to safeguard Australia's underwater cultural heritage.",
+   "The package would set up a system where investigators have the authority to check compliance and take enforcement action, with a tiered approach using infringement notices, enforceable undertakings, and injunctions.",
+   "The package would also help Australia meet its national and international maritime heritage duties and encourage public engagement with and appreciation of underwater heritage, though the source does not specify particular sites or start dates."
+  ],
+  "changes": [
+   "The package would protect and conserve Australia's underwater cultural heritage.",
+   "It would give investigators delegated powers to ensure people comply with the bill, investigate non-compliance, and carry out enforcement activities.",
+   "It would apply standard regulatory powers for investigation and enforcement, aligning with government compliance policy."
+  ],
+  "affected": "People and organisations involved with Australia's underwater cultural heritage, as well as the public who would benefit from increased awareness and appropriate use of this heritage.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-361546",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The member moved the second reading of the Underwater Cultural Heritage Bill 2018, which ensures a smooth administrative transition from the Historic Shipwrecks Act 1976 regarding declared sites, relics, permits, and the register."
+  },
+  {
+   "slug": "speech-366184",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "Labor supported the Underwater Cultural Heritage Bill 2018, which replaces the Historic Shipwrecks Act 1976 and expands automatic protection to cover Australia’s underwater cultural heritage, including historic shipwrecks, submerged aircraft, human remains, and associated relics, while also implementing international maritime law obligations. The speaker opposed the government’s proposed marine parks plan that would remove around 50 percent of marine national parks in the Coral Sea, arguing it would open areas to longlining and midwater trawling."
+  },
+  {
+   "slug": "speech-366185",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The Underwater Cultural Heritage Bill 2018 updates the Historic Shipwrecks Act 1976, extending protection to human remains, sunken aircraft, and sites outside jurisdictional waters, while strengthening enforcement powers and public awareness. It covers approximately 7,500 historic shipwrecks and other underwater cultural heritage sites in Australian and Commonwealth waters."
+  },
+  {
+   "slug": "speech-367303",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "An addendum to the explanatory memorandum for the Underwater Cultural Heritage Bill 2018 and related bill was presented, responding to concerns raised by the Senate Standing Committee for the Scrutiny of Bills."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Underwater Cultural Heritage Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00085",
+   "assent_date": "2018-08-24"
+  }
+ ]
+}

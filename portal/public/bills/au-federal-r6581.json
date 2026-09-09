@@ -1,0 +1,251 @@
+{
+ "key": "au-federal-r6581",
+ "title": "Clean Energy Finance Corporation Amendment (Grid Reliability Fund) Bill 2020",
+ "short_title": "Clean Energy Finance Corporation Amendment (Grid Reliability Fund) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science, Energy and Resources",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6581%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6581%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6581%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6581%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6581%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6581_ems_aa4238fe-3dd8-48bc-affb-d97f40f466b8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6581%22",
+   "document_date": "2020-08-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-27",
+  "sentences": [
+   "This bill would create a $1 billion Grid Reliability Fund to be run by the Clean Energy Finance Corporation.",
+   "The fund would be held in a new Special Account and used for investments in energy generation, storage, transmission and grid-stabilising technologies.",
+   "Investments from the fund would be exempt from the usual requirement that at least half of the corporation's funds go to renewable energy projects."
+  ],
+  "changes": [
+   "Establishes a $1 billion Grid Reliability Fund through a new Special Account.",
+   "Creates a new investment category for the fund.",
+   "Expands the definition of low-emissions technologies to cover those announced for the fund.",
+   "Allows regulations to prescribe additional investment types for the fund.",
+   "Gives the Clean Energy Finance Corporation new functions to assist Commonwealth agencies with grid reliability policies.",
+   "Exempts fund investments from the 50 per cent renewable energy investment requirement."
+  ],
+  "affected": "The Clean Energy Finance Corporation and energy market participants, including new and smaller generators.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:57Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-393999",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The Morrison government's $1 billion Grid Reliability Fund was introduced to support private investment in energy generation, storage and transmission, aiming to lower electricity prices, reduce emissions and create jobs. The fund will back projects including pumped hydro, batteries and gas-fired generation, but not coal, and builds on Australia's record 6.3 gigawatts of new renewable capacity installed in 2019."
+  },
+  {
+   "slug": "speech-401983",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-15",
+   "stage_hint": null,
+   "brief": "The Labor Party argued the Clean Energy Finance Corporation Amendment (Grid Reliability Fund) Bill 2020 would undermine the CEFC's independence, allow ministerial direction, classify gas as low-emissions technology, and remove the requirement for positive returns. They announced they would move amendments to protect these principles and would only support the bill if those amendments are accepted, noting the CEFC has deployed $6 billion, leveraged $27.3 billion in private investment, and funded 18,000 projects."
+  },
+  {
+   "slug": "speech-401993",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-15",
+   "stage_hint": null,
+   "brief": "The Morrison government announced a $1 billion Grid Reliability Fund, administered by the Clean Energy Finance Corporation, to support investments in new energy generation, storage and transmission, and outlined five stretch goals for low-emission technology including clean hydrogen under $2 per kilogram and energy storage under $100 per megawatt hour."
+  },
+  {
+   "slug": "speech-401994",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Clean Energy Finance Corporation Amendment (Grid Reliability Fund) Bill 2020, arguing it removes clean energy and financial return requirements, gives the minister power to override CEFC decisions, and enables gas investments. Labor will not support the bill unless its amendments to preserve the CEFC's independence and low-emissions criteria are passed."
+  },
+  {
+   "slug": "speech-401995",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Clean Energy Finance Corporation Amendment (Grid Reliability Fund) Bill 2020, citing Australia's record 7 gigawatts of new renewable capacity in 2020, 2.2 million homes with solar, and $7.7 billion invested in renewables. They announced the $1 billion Grid Reliability Fund to support storage, transmission, and dispatchable generation, including gas projects, to ensure grid reliability during the energy transition."
+  },
+  {
+   "slug": "speech-401998",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-02-15",
+   "stage_hint": null,
+   "brief": "The bill would open up $10 billion from the Clean Energy Finance Corporation to big gas corporations by redefining clean energy to include gas, diverting funds from renewables to fossil fuels and subsidising companies that pay no tax."
+  },
+  {
+   "slug": "speech-402136",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Clean Energy Finance Corporation (CEFC) has been a highly successful clean energy bank, generating $718 million in returns and supporting over 18,000 projects, but the Morrison government's bill would turn it into a \"slush fund\" for fossil fuel projects overseen by Minister Angus Taylor. They announced Labor will vote against the bill unless amendments are accepted to protect the CEFC's independence and its focus on renewable energy investments."
+  },
+  {
+   "slug": "speech-402137",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-16",
+   "stage_hint": null,
+   "brief": "The speech supported the $1 billion Grid Reliability Fund to invest in electricity storage, transmission, and grid stabilisation, arguing that renewable capacity factors (30% wind, 20–22% solar) are far lower than baseload (95%), and that 4 GW of baseload has retired while net available capacity is insufficient, warning the transition will be more expensive and unreliable without such investments."
+  },
+  {
+   "slug": "speech-402138",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Clean Energy Finance Corporation Amendment (Grid Reliability Fund) Bill 2020 unless amendments are made, objecting to provisions that would allow the minister to override CEFC investment decisions, define gas as a low-emissions technology, and remove the requirement for positive returns. The speaker supported expanding the CEFC's role in grid upgrades and noted its track record of leveraging $27 billion in private investment and returning $718 million to taxpayers."
+  },
+  {
+   "slug": "speech-402142",
+   "speaker": "Bridget Archer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the $1 billion Grid Reliability Fund will support renewable energy integration and jobs, highlighting the Marinus Link and Battery of the Nation projects in Tasmania, and announced a $70 million hydrogen hub at Bell Bay and a $100,000 grant for green hydrogen research."
+  },
+  {
+   "slug": "speech-402143",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government is attempting to undermine the Clean Energy Finance Corporation (CEFC) by changing its investment mandate to allow funding for gas and coal projects that increase carbon pollution, despite the CEFC having driven $27.3 billion in private investment, returned $718 million to taxpayers, and reduced emissions by 20 million tonnes."
+  },
+  {
+   "slug": "speech-402257",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-16",
+   "stage_hint": null,
+   "brief": "The member supported the Clean Energy Finance Corporation Amendment (Grid Reliability Fund) Bill 2020, citing the September 2016 blackout in South Australia where the entire state lost power for four hours due to wind farm exit and the closure of the Northern Power Station."
+  },
+  {
+   "slug": "speech-402261",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that affordable energy and emissions reduction are complementary, and announced the $1 billion Grid Reliability Fund to support renewable energy integration, storage, and dispatchable generation, citing a $4.5 billion project pipeline expected to create 1,075 jobs. They criticised Labor for opposing the bill, which they said would secure reliable power and drive a technology-led transition to a low-emissions economy."
+  },
+  {
+   "slug": "speech-402262",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Clean Energy Finance Corporation Amendment (Grid Reliability Fund) Bill 2020, arguing it would allow public funding of fossil fuel projects, and noted the CEFC has returned $718 million to government, deployed $8.2 billion, leveraged $27.8 billion in private investment, and funded around 18,000 projects."
+  },
+  {
+   "slug": "speech-402263",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Clean Energy Finance Corporation Amendment (Grid Reliability Fund) Bill 2020, which establishes a $1 billion Grid Reliability Fund to improve Australia's electricity network for renewable energy, potentially supporting $4.5 billion in investments and over a thousand jobs. The bill aims to fund storage, transmission, and grid-stabilising technologies without diverting the CEFC's existing $10 billion allocation, and the speaker highlighted local projects including Star Scientific's hydrogen technology, ReCarbon's biohydrogen cluster, and Licella's biocrude pilot plant."
+  },
+  {
+   "slug": "speech-402265",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-16",
+   "stage_hint": null,
+   "brief": "Fiona Phillips, the member for Gilmore, opposed the bill because it would let Minister Angus Taylor direct CEFC funds to gas projects and remove the positive-return requirement; she supported Labor amendments to preserve the CEFC's renewable-energy mandate. She cited the CEFC leveraging $27 billion in private investment and returning $718 million to taxpayers, plus a projected 11,000 renewable-energy jobs lost under current policy."
+  },
+  {
+   "slug": "speech-402267",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-02-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Clean Energy Finance Corporation Amendment (Grid Reliability Fund) Bill 2020, arguing it would dilute the CEFC's clean energy mandate by enabling investment in gas and fossil fuels, and called for a cohesive national climate policy to achieve net zero by 2050. The speaker noted the CEFC had leveraged $27.3 billion in private capital, financed over 18,000 small-scale projects and abated 260 megatonnes of CO2, and announced plans to amend the bill to remove a prohibition on CEFC payments to ARENA."
+  },
+  {
+   "slug": "speech-402268",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the $1 billion Grid Reliability Fund, arguing it would lower electricity prices and improve grid reliability by backing storage and transmission projects like the SA–NSW interconnector, and referenced the 2016 South Australian blackout as a consequence of over-reliance on intermittent renewables."
+  }
+ ],
+ "acts": []
+}

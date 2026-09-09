@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7018",
+ "title": "Commonwealth Electoral Amendment (Real Time Disclosure of Political Donations) Bill 2023",
+ "short_title": "Commonwealth Electoral Amendment (Real Time Disclosure of Political Donations) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-04",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-03-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7018%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7018%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7018_ems_91978fab-d69c-4048-bbbb-7026b563727a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7018%22",
+   "document_date": "2023-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-09-04",
+  "sentences": [
+   "The bill would require more frequent public reporting of large political donations.",
+   "Agents of political parties, their state branches, significant third parties, or candidates must tell the Australian Electoral Commission about any gifts that exceed the disclosure threshold within five business days.",
+   "The disclosure threshold remains at $13,800 (indexed to $16,300 for the 2023-2024 financial year), and the bill does not change election-related reporting arrangements."
+  ],
+  "changes": [
+   "Requires donors' identities, gift amounts, descriptions, receipt dates, and recipients' names and addresses to be included in notifications.",
+   "Requires an annual return for gifts totalling more than the disclosure threshold from a single person to the same party, branch, or campaigner in a financial year.",
+   "Amends the Commonwealth Electoral Act 1918 to introduce the new notification requirement."
+  ],
+  "affected": "Agents of registered political parties, state branches of such parties, significant third parties (campaigners), and candidates.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

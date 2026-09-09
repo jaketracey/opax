@@ -14,7 +14,7 @@
 
 OPAX puts the parliamentary record in front of the reader and lets them question it. Every answer is written only from retrieved passages and cites them; if the record is thin, the answer says so.
 
-- **Ask the record.** Grounded, cited answers over Hansard from the Commonwealth, New South Wales, Victoria, South Australia and Queensland, plus Senate committee hearings and news coverage. Filter by speaker, party, state, topic or years. Answers stream in as they are written.
+- **Ask the record.** Grounded, cited answers over Hansard from the Commonwealth, New South Wales, Victoria, South Australia and Queensland, plus Senate committee hearings, bills and official government statements. Filter by speaker, party, state, topic or years. Answers stream in as they are written.
 - **Search.** Hybrid keyword and semantic search with the same filters, a per-search answer rail, and exports (CSV, BibTeX, RIS).
 - **Encyclopedia.** An entry for every parliamentarian, party, donor and topic: quick facts, portrait, voting record, declared interests, expenses, and the money map isolated on that entity.
 - **Money map.** A 3D map of the largest donors, ringed by industry around the parties they gave to, with the words layer showing who speaks on each industry's debates. Federal, Queensland and Victorian disclosures.
@@ -30,7 +30,7 @@ Browser (static SPA, hash router)
 Cloudflare Worker  portal/src/index.ts     /api/search  /api/ask (JSON or SSE)  /api/resource  /api/topic ...
    │
    ▼
-Progress Agentic RAG knowledge box         speeches, news, division records; topic labels and summaries from enrichment tasks
+Progress Agentic RAG knowledge box         speeches, bills, official statements, division records; topic labels and summaries from enrichment tasks
 ```
 
 There is no live database behind the site. Structured data (donations, votes, expenses, interests, grants, contracts) stays relational in a SQLite corpus on the data box and reaches the site as static JSON exported by `scripts/export_*.py`.
@@ -77,10 +77,14 @@ The corpus lives in `~/.cache/autoresearch/parli.db` on the data box. Python too
 
 ```bash
 uv sync
-uv run python -m parli.ingest.arag_sync --tables speeches,news_articles --full   # push to the knowledge box
+uv run python -m parli.ingest.arag_sync --tables speeches --full   # push to the knowledge box
 uv run python scripts/generate_reports.py                                          # regenerate the six reports
 uv run python scripts/ask_harness.py                                               # 24 grounded questions against production
 ```
+
+Reports retrieve original records across the corpus, with date windows rather than a Hansard-only topic filter. Each report includes a dedicated non-speech evidence question. Generated summaries and bill registry cards are excluded; original bill text, explanatory memoranda and other primary records remain eligible. Speech counts and charts use the current topic-labelled speech catalog; the financial charts retain the separately audited `scripts/report_stats.json` snapshot.
+
+Set `REPORT_STRUCTURED_WRITER=codex` to use the installed Codex CLI for structured figures, party positions and introductions. Narratives still use the knowledge box’s configured writer. Run `uv run python scripts/validate_reports.py` before publishing to check citations against the live corpus.
 
 Environment variables are documented in `.env.example`. Never commit `.env` or `portal/.dev.vars`.
 
@@ -91,11 +95,12 @@ Environment variables are documented in `.env.example`. Never commit `.env` or `
 | Federal Hansard (House via Zenodo, Senate and recent House via OpenAustralia) | speeches since 1998 |
 | Senate committee hearings | transcripts |
 | NSW, Victorian, SA and Queensland parliaments | Hansard speeches |
+| PM&C and NSW Government | Prime Minister transcripts and ministerial releases |
 | TheyVoteForYou and state Hansard | recorded divisions, per-member voting records |
 | AEC, ECQ and VEC disclosures | donations, classified across 27 industries |
 | IPEA | parliamentary expenses |
 | Registers of interests, lobbyist registers, ministerial diaries | declared interests and access |
-| Guardian Australia and ABC | news coverage |
+| Guardian Australia and ABC | external headline links only; never ingested into the corpus |
 
 Licensing and coverage per source are recorded in the `docs/` notes and the `*_DATA_SOURCES.md` surveys.
 

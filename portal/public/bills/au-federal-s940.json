@@ -1,0 +1,123 @@
+{
+ "key": "au-federal-s940",
+ "title": "Landholders’ Right to Refuse (Gas and Coal) Bill 2013",
+ "short_title": "Landholders’ Right to Refuse (Gas and Coal) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-12-09",
+ "originating_house": "senate",
+ "sponsor": "WATERS, Sen Larissa",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10764",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2014-03-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s940%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s940%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s940_ems_4e642d7a-9ece-4b8a-a4e8-489fec87c989%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s940%22",
+   "document_date": "2013-12-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-3164",
+   "date": "2014-03-06",
+   "house": "senate",
+   "question": "Landholders' Right to Refuse (Gas and Coal) Bill 2013 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 3,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-03-06/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-826474",
+   "speaker": "Larissa Waters",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": "Introduced the Landholders' Right to Refuse (Gas and Coal) Bill 2013, which would give Australian landholders the right to refuse gas and coal mining on their land without prior written authorisation."
+  },
+  {
+   "slug": "speech-826475",
+   "speaker": "Larissa Waters",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": "The Landholders' Right to Refuse (Gas and Coal) Bill 2013 would give landholders the right to refuse gas and coal mining on food-producing land, requiring corporations to obtain written authorisation from all ownership interest holders before entry, with penalties and injunctions for unlawful entry. The bill applies to land that produced food in the previous 10 years, does not alter resource ownership, and leaves existing compulsory acquisition laws intact."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,264 @@
+{
+ "key": "au-federal-r6630",
+ "title": "Financial Sector Reform (Hayne Royal Commission Response) Bill 2020",
+ "short_title": "Financial Sector Reform (Hayne Royal Commission Response) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-11-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6630_ems_4c5698fa-a114-4687-9843-595e795a64cf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6630%22",
+   "document_date": "2020-11-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00135",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6832",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2020-12-09.32.2) introduced by the MP Kingsford Smith [Matt Thistlethwaite](https://theyvoteforyou.org.au/people/representatives/kingsford_smith/matt_thistlethwaite), which means it failed. ### Amendment text > *(1) Schedule 3, page 36 (after line 14), at the end of section 12DX, add:* > > *Pre-condition for making regulations* > > *(3) Before making regulations for the purposes of subsection (1), the Governor-General must ensure the Minister is satisfied that the class of add-on insurance products has historically been good value.* ### Wording of section 12DX > *12DX Exemption by regulations* > > *Regulations may exempt a class of products* > > *(1) The regulations may exempt a class of add-on insurance products from sections 12DQ, 12DR and 12DS.* > > *Conditions on exemptions* > > *(2) An exemption under subsection (1) may be subject to conditions specified in the regulations.* > > *Note: A person who contravenes a condition may commit an offence (see section 12DZA).*",
+   "stage": "Consideration in detail",
+   "ayes": 66,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-09/2"
+  },
+  {
+   "key": "federal-representatives-6833",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2020-12-09.41.1) introduced by MP for Whitlam [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor), which means it failed. ### Amendment text > *(1) Schedule 9, item 66, page 106 (lines 29 to 33), omit paragraphs (a) and (b), substitute,* > >> *(a) liabilities imposed on or after 1 January 2022; and* >> >> *(b) amounts that become payable under infringement notices (however described) given on or after 1 January 2022.* ### Original wording > *66 Application and transitional—indemnification* > > *The amendments of sections 56 and 57 of the Superannuation Industry (Supervision) Act 1993 made by items 63 and 64 of this Schedule apply in relation to:* > >> *(a) liabilities imposed on or after the commencement of those items; and* >> >> *(b) amounts that become payable under infringement notices (however described) given on or after the commencement of those items.*",
+   "stage": "Consideration in detail",
+   "ayes": 66,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-09/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-398757",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The government moved the Financial Sector Reform (Hayne Royal Commission Response) Bill 2020, implementing 21 commitments from the royal commission, including enforceable code provisions, a four-day deferred sales model for add-on insurance, a ban on hawking superannuation and insurance, and expanded ASIC enforcement powers, including breach reporting and remediation requirements for financial advisers and mortgage brokers."
+  },
+  {
+   "slug": "speech-400597",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Financial Sector Reform Bill 2020 and related bill, which implement Hayne royal commission recommendations, and highlighted schedule 2 replacing consumers' duty of disclosure with a duty to take reasonable care not to misrepresent, requiring insurers to ask for further information at application time. This gives effect to recommendations 4.5 and 4.6 and aims to prevent insurers from denying claims for unrelated omissions unless there is deliberate misrepresentation."
+  },
+  {
+   "slug": "speech-400603",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The Financial Sector Reform (Hayne Royal Commission Response) Bill 2020 and Corporations (Fees) Amendment (Hayne Royal Commission Response) Bill 2020 deliver 21 government commitments from the Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, framed as critical to restoring trust and confidence in the financial system."
+  },
+  {
+   "slug": "speech-400609",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The speaker supported an amendment requiring that any exemption from the deferred sales model for add-on insurance must apply only to high-value products, citing travel insurance as a possible exception due to the serious risks of going uninsured."
+  },
+  {
+   "slug": "speech-400610",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that travel insurance should not receive a blanket exemption from the deferred sales model for add-on insurance products, and supported an amendment by the member for Kingsford Smith requiring the minister to ensure any exempted class has historically been good value."
+  },
+  {
+   "slug": "speech-400613",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "Commissioner Ken Hayne recommended a deferred-sales model and a cap on commissions for add-on insurance, citing poor consumer value and higher commissions than claims. The speaker argued that any government exemption from this rule should require the product to demonstrably provide good value to consumers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Financial Sector Reform (Hayne Royal Commission Response) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00135",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

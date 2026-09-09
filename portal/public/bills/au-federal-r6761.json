@@ -1,0 +1,226 @@
+{
+ "key": "au-federal-r6761",
+ "title": "Paid Parental Leave Amendment (COVID-19 Work Test) Bill 2021",
+ "short_title": "Paid Parental Leave Amendment (COVID-19 Work Test) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2021-09-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6761_ems_57f1335b-13ba-4ec9-9e1d-efe2d6c77727%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6761_ems_35fc933c-ac5f-4d98-8202-14523a31c7d8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6761_ems_70e6823b-a2fa-470c-ba49-3aba287ae876%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6761%22",
+   "document_date": "2021-08-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00099",
+   "document_date": "2021-09-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-412594",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The speaker moved a second reading amendment criticising the government's slow response on paid parental leave rules during COVID-19, noting that changes to count COVID-19 disaster payment toward the work test took three months and that families may have incurred Commonwealth debts. The amendment calls on the government to ensure families relying on paid parental leave are not left worse off."
+  },
+  {
+   "slug": "speech-412597",
+   "speaker": "Gladys Liu",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The bill amends the Paid Parental Leave Act to allow periods of receiving the COVID-19 disaster payment to count toward the work test for parental leave pay, supporting at least 14,000 individuals in New South Wales and others in Victoria and the ACT."
+  },
+  {
+   "slug": "speech-412598",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (COVID-19 Work Test) Bill 2021 and an amendment to exempt victims of domestic or family violence from the work test, citing the case of Amani Haydar, who was denied paid parental leave after her mother's murder. The speaker called on the government to amend the Paid Parental Leave Act to include this exemption, noting the minister had previously refused."
+  },
+  {
+   "slug": "speech-412599",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Paid Parental Leave Amendment (COVID-19 Work Test) Bill 2021 extends relaxed work test rules from the JobSeeker period to other government programs, preventing future adjustments. They noted current paid parental leave pays $772.55 a week for 18 weeks, and cited record high women’s workforce participation and a record low gender pay gap of 14.2% for average full-time earnings."
+  },
+  {
+   "slug": "speech-412602",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The Paid Parental Leave Amendment (COVID-19 Work Test) Bill 2021 is supported, as it counts COVID disaster payment receipt toward the paid parental leave work test, preventing families who lost work hours due to lockdowns from being excluded. The government is criticised for delaying this change, for lacking recognition of extra border-community impacts, and for women bearing the greatest economic burden during the pandemic."
+  },
+  {
+   "slug": "speech-412603",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (COVID-19 Work Test) Bill 2021, which allows people receiving the COVID-19 disaster payment to count that period toward the paid parental leave work test. The change was predicted to support at least 14,000 Australians in lockdown areas of New South Wales to remain eligible for parental leave pay or dad-and-partner pay."
+  },
+  {
+   "slug": "speech-412604",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The Paid Parental Leave Amendment Bill is supported to ensure up to 14,000 families affected by lockdowns remain eligible for payments, with amendments covering COVID disaster payment recipients and business owners with state grants. Broader reform is also needed to address gender inequality in Australia’s parental leave system, where 99.5% of leave is taken by women and gendered language on the Services Australia website persists."
+  },
+  {
+   "slug": "speech-412605",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (COVID-19 Work Test) Bill 2021, which allows COVID-19 disaster payments to count toward the work test for parental leave, but criticised the Morrison government for delaying it and failing to include an exemption for victims of family violence. Labor proposed an amendment to add that exemption, and the speaker also noted the government has not fully accepted the 55 recommendations of the Respect@Work report, while the gender pay gap has risen to 14.2%, with women earning $261.50 less per week than men."
+  },
+  {
+   "slug": "speech-412606",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The Paid Parental Leave Amendment (COVID-19 Work Test) Bill 2021 allows parents receiving the COVID-19 disaster payment to count those periods as qualifying work for the Paid Parental Leave work test from 1 July 2021, ensuring continued access for workers affected by Commonwealth-declared COVID-19 hotspots."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Paid Parental Leave Amendment (COVID-19 Work Test) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00099",
+   "assent_date": "2021-09-03"
+  }
+ ]
+}

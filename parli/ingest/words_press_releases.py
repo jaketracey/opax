@@ -686,6 +686,7 @@ def map_press_release(row) -> dict:
         },
         "extra": {
             "metadata": {
+                "headline": title,
                 "role": row["role"], "speaker_raw": row["speaker_raw"],
                 "subjects": row["subjects"], "document_url": row["document_url"],
                 "licence": row["licence"], "date": date, **extra,

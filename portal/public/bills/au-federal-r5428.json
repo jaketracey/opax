@@ -1,0 +1,262 @@
+{
+ "key": "au-federal-r5428",
+ "title": "Statute Law Revision Bill (No. 2) 2015",
+ "short_title": "Statute Law Revision Bill (No. 2) 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2015-11-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5428_ems_6b3d3d54-4430-433a-8ad4-b419a821c20f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5428%22",
+   "document_date": "2015-03-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00145",
+   "document_date": "2015-11-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-307990",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The Statute Law Revision Bill (No. 2) 2015 repeals spent or redundant legislation and corrects minor errors, including removing references to defunct bodies like the Australian Honey Board and the G20 (Safety and Security) Complementary Act 2014. It also updates indexation terminology to 'index preference period', removes gender-specific language, and clarifies that the Crown in right of the Australian Capital Territory and Northern Territory is bound by Commonwealth acts."
+  },
+  {
+   "slug": "speech-318620",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Omnibus Repeal Day (Autumn 2015) Bill 2015, arguing the government had delivered $2.45 billion in total deregulatory savings, repealed over 10,000 legislative instruments and 1,800 acts, and criticised the previous Labor government for introducing 21,000 additional regulations costing $65 billion annually. Specific measures included PAYG instalment changes, 457 visa program reforms, ATO website improvements, myGov enhancements, online NAPLAN delivery, and alignment of stock and pet food registration requirements."
+  },
+  {
+   "slug": "speech-318631",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's deregulation bills are propaganda rather than genuine reform, noting that Labor repealed more regulations without fanfare and that the government's cuts—such as to Commercialisation Australia, the National Workforce Development Fund, and apprenticeship programs—actually removed assistance for small business and workers, not red tape. The speaker also contrasted Labor's COAG reforms, which saved $4 billion annually, with the government's focus on removing redundant pages while unemployment and the deficit increased."
+  },
+  {
+   "slug": "speech-318632",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Omnibus Repeal Day (Autumn 2015) Bill and cognate bills, arguing they would cut unnecessary regulations and reduce the $65 billion regulatory cost (4.2% of GDP) imposed by the previous Labor government, which introduced 21,000 new regulations including the carbon tax (18 acts, 1,100 pages)."
+  },
+  {
+   "slug": "speech-318639",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speaker criticised government members for not addressing the actual content of the three bills during debate, noting that none of the five or six government speakers so far had discussed the bills themselves. They also pointed out that 30 government and 10 opposition speakers were scheduled, amounting to eight to ten hours of debate."
+  },
+  {
+   "slug": "speech-318998",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The speaker criticised the new Prime Minister for continuing the same policies as the deposed member for Warringah, including unfair budget cuts, no free vote on marriage equality, and failed climate policy. They argued that two government bills—the Amending Acts 1980 to 1989 Repeal Bill and the Statute Law Revision Bill (No. 2) 2015—are stunts with no real legal effect or meaningful deregulation, merely correcting minor errors like spelling and cross-references."
+  },
+  {
+   "slug": "speech-319023",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The coalition's deregulatory agenda has saved $2.45 billion since September 2013, and the speaker claimed that New South Wales created 122,000 full-time jobs in 2015 while Victoria lost 4,800 jobs due to its left-wing government's red tape. He also argued that the carbon tax increased air pollution in Western Sydney by driving residents to burn wood for heat."
+  },
+  {
+   "slug": "speech-319379",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-17",
+   "stage_hint": null,
+   "brief": "The government's three repeal days have removed $2.45 billion in regulatory costs, after the previous Labor government added 22,000 regulations; Australia ranked 124th out of 148 countries in the World Economic Forum's burden of government regulation index."
+  },
+  {
+   "slug": "speech-319382",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Omnibus Repeal Day (Autumn 2015) Bill and associated bills, which repeal over 890 Commonwealth acts to cut red tape, citing $2.1 billion in red tape reduction decisions and a target of $1 billion per year in deregulatory savings. Specific examples include removing tail tags for cattle producers (saving $1 million annually) and streamlining international education regulation (saving $76 million per year)."
+  },
+  {
+   "slug": "speech-319391",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the new coalition agreement after the leadership change will benefit regional Australia, and announced three bills—the Omnibus Repeal Day (Autumn 2015) Bill 2015, the Amending Acts 1980 to 1989 Repeal Bill 2015, and the Statute Law Revision Bill (No. 2) 2015—to reduce red tape and repeal outdated legislation, with a total deregulatory saving of $2.45 billion since September 2013."
+  },
+  {
+   "slug": "speech-319668",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker announced the formation of 112 Squadron, a new Australian Air Force cadet squadron in Weipa, one of only a few new squadrons created in Australia in the past decade."
+  },
+  {
+   "slug": "speech-319670",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker noted that the Melbourne Marathon will take place this Sunday and that both they and the member for Gippsland will participate, describing their different training regimens."
+  },
+  {
+   "slug": "speech-319676",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The Assistant Minister for Productivity announced three bills repealing 890 Commonwealth acts, including measures to simplify compensation claims for 50,000 recipients (saving $41.4 million) and remove redundant legislation. The government reported $476 million in red tape reductions for Autumn 2015, totaling $2.45 billion since September 2013, and noted Australia's climb from 124th to 80th in the World Economic Forum's regulatory burden ranking."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Statute Law Revision Act (No. 2) 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00145",
+   "assent_date": "2015-11-12"
+  }
+ ]
+}

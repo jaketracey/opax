@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-r7112",
+ "title": "Migration Amendment (Limits on Immigration Detention) Bill 2023",
+ "short_title": "Migration Amendment (Limits on Immigration Detention) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-27",
+ "originating_house": "representatives",
+ "sponsor": "TINK, Kylea, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10992",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-08-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7112%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7112%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7112%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7112_ems_a5921f48-96c5-4e69-a59e-72d1575cffa5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7112%22",
+   "document_date": "2023-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-27",
+  "sentences": [
+   "This bill would change the Migration Act 1958 to better meet Australia's human rights commitments on immigration detention.",
+   "It would cap immigration detention at 90 days, with the Minister able to extend that period only if international law principles require it as a last resort, and any extension could be reviewed by the Administrative Appeals Tribunal.",
+   "The bill would also ban the detention of minors."
+  ],
+  "changes": [
+   "Introduces a 90-day limit on immigration detention.",
+   "Allows the Minister to extend detention beyond 90 days only when necessary, reasonable, and proportionate under international law.",
+   "Makes ministerial extensions of detention reviewable by the Administrative Appeals Tribunal.",
+   "Prohibits the detention of minors."
+  ],
+  "affected": "Non-citizens in Australia without a valid visa, including minors, and the Minister and the Administrative Appeals Tribunal.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,191 @@
+{
+ "key": "au-federal-s985",
+ "title": "Defence Legislation Amendment (Military Justice Enhancements—Inspector-General ADF) Bill 2014",
+ "short_title": "Defence Legislation Amendment (Military Justice Enhancements—Inspector-General ADF) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-12-03",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2015-05-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-05-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s985_ems_226bf98d-bbaf-4711-8e44-ec32ff07630c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s985_ems_1c845348-99ad-4d1a-b193-7317492f540b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s985_ems_98239003-1bc2-4043-b604-ec0b966cb016%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s985%22",
+   "document_date": "2014-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00046",
+   "document_date": "2015-05-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-12-03",
+  "sentences": [
+   "This bill would change how the Australian Defence Force handles internal reviews and complaints.",
+   "It would give the Inspector-General ADF more independence and clearer legal powers to conduct investigations and inquiries.",
+   "Witnesses giving evidence to the Inspector-General ADF would be protected from having that evidence used against them, except in perjury cases."
+  ],
+  "changes": [
+   "Clarifies that the Inspector-General ADF operates independently from the chain of command.",
+   "Allows the minister to order the Inspector-General ADF to look into a Defence Force matter.",
+   "Creates a legal basis for regulations that remove a witness's right to refuse to answer questions on self-incrimination grounds, with a ban on using that evidence against the witness.",
+   "Requires the Inspector-General ADF to produce an annual report for Parliament.",
+   "Lets the Inspector-General ADF stop an inquiry or investigation ordered by the Chief of the Defence Force if it is no longer warranted.",
+   "Gives the Inspector-General ADF a statutory role in managing how service-related deaths are investigated and how grievances are handled."
+  ],
+  "affected": "Australian Defence Force members and witnesses appearing before the Inspector-General ADF.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:32:50Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-309939",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-14",
+   "stage_hint": null,
+   "brief": "The Defence Legislation Amendment (Military Justice Enhancements-Inspector-General ADF) Bill 2014 was introduced to strengthen the independence of the Inspector-General of the Australian Defence Force and reform redress of grievance, investigation and inquiry processes. Key changes include preventing witness evidence obtained by abrogating self-incrimination privilege from being used in service tribunals or civilian courts, and removing the automatic requirement for a statutory inquiry into all service-related deaths, instead referring them to the Inspector-General for review."
+  },
+  {
+   "slug": "speech-309940",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-14",
+   "stage_hint": null,
+   "brief": "The speaker announced Labour's support for the Defence Legislation Amendment (Military Justice Enhancements-Inspector-General ADF) Bill 2014, which enhances the independence of the Inspector-General of the Australian Defence Force by separating it from the military chain of command, expands investigative powers, requires annual reports tabled in parliament, and includes protections against self-incrimination for witnesses."
+  },
+  {
+   "slug": "speech-309941",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-14",
+   "stage_hint": null,
+   "brief": "Labor supported the Defence Legislation Amendment (Military Justice Enhancements-Inspector-General ADF) Bill 2014, arguing it strengthens the Inspector-General's independence, powers, and accountability. The speech noted that in 2013–14 the Inspector-General received 60 inquiry submissions, conducted 49 unit audits, and made 714 recommendations."
+  },
+  {
+   "slug": "speech-309942",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Defence Legislation Amendment (Military Justice Enhancements-Inspector-General ADF) Bill 2014 expands and strengthens the independence of the Inspector-General of the Australian Defence Force, consolidating functions and ensuring direct reporting to parliament. The bill addresses the redress of grievance process, grants the Inspector-General powers to compel witness testimony with use immunity, and implements recommendations from 17 reviews since 1994, including those following the 2011 ADFA Skype incident."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence Legislation Amendment (Military Justice Enhancements—Inspector-General ADF) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00046",
+   "assent_date": "2015-05-20"
+  }
+ ]
+}

@@ -1,0 +1,356 @@
+{
+ "key": "au-federal-r5949",
+ "title": "Medicare Levy Amendment (National Disability Insurance Scheme Funding) Bill 2017",
+ "short_title": "Medicare Levy Amendment (National Disability Insurance Scheme Funding) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5949%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5949%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5949%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5949%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5949%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5949%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5949%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5949%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5949%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5949%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5949%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5949_ems_417c6e5a-aa9c-49ec-bba1-58eaa56f0f50%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5949%22",
+   "document_date": "2017-08-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4959",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "question": "Medicare Levy Amendment (National Disability Insurance Scheme Funding) Bill 2017 - Second Reading - Disagree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-25/1"
+  },
+  {
+   "key": "federal-representatives-4960",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "question": "Medicare Levy Amendment (National Disability Insurance Scheme Funding) Bill 2017 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-25/2"
+  },
+  {
+   "key": "federal-representatives-4961",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "question": "The majority voted against [Labor amendments](http://www.openaustralia.org.au/debates/?id=2017-10-25.16.1), which means they were unsuccessful. The amendments concerned people who earn less than $87,000 per year and would have lessened the Medicare Levy they have to pay under these bills. ### What do these bills do? This package of bills will fund the Commonwealth’s contribution to the National Disability Insurance Scheme by, for example, increasing the Medicare levy from 2 per cent to 2.5 per cent of a person’s taxable income. Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd046).",
+   "stage": "Consideration in detail",
+   "ayes": 67,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-25/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-355604",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Medicare levy increase for Australians earning under $87,000, arguing it would raise taxes on over seven million low- and middle-income workers while the government cuts corporate taxes. They proposed the increase should apply only to those earning above $87,000 and stated the NDIS is fully funded without needing the levy."
+  },
+  {
+   "slug": "speech-355706",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the coalition government is fully funding the National Disability Insurance Scheme (NDIS) through a Medicare levy increase of 0.5% to 2.5% from 1 July 2019, expected to raise $3.6 billion in 2019-20 and $4.3 billion in 2020-21. The speaker stated that low-income earners remain exempt, the levy is about $1 per day for average earners, and the previous Labor government left a $4 billion annual funding gap."
+  },
+  {
+   "slug": "speech-355710",
+   "speaker": "Ann Sudmalis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued for passing the Medicare Levy Amendment (NDIS Funding) Bill 2017, which would increase the Medicare levy by 0.5% to fund the National Disability Insurance Scheme. They named local disability champions including Brad Rossiter, Lauren Ball, Jackie Kay, Luke Stojanovic, and Brent Peter Kelly, and cited that the NDIS will support 460,000 Australians under 65 with permanent disability, with an estimated extra $3.4 billion in services needed."
+  },
+  {
+   "slug": "speech-355712",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Medicare Levy Amendment (National Disability Insurance Scheme Funding) Bill 2017, which raises the Medicare levy from 2% to 2.5% from 1 July 2019 to fully fund the NDIS, citing projected Commonwealth expenditure of $10.8 billion by 2019-20 and a claimed $55.7 billion funding shortfall left by Labor. The speaker noted exemptions for low-income earners and urged Labor to back the measure."
+  },
+  {
+   "slug": "speech-355714",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Medicare levy increase from 2% to 2.5% in 2019 is necessary to fully fund the NDIS, criticised Labor for repeatedly changing their funding position and leaving a $55.7 billion shortfall, and highlighted Youngcare and clients like Nick and Shevaune as examples of why secure funding is needed."
+  },
+  {
+   "slug": "speech-355716",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Medicare Levy Amendment (National Disability Insurance Scheme Funding) Bill 2017, which increases the Medicare levy from 2% to 2.5% from July 2019 to fully fund the NDIS, criticising the opposition for failing to fund the scheme while in government. They noted the scheme covers 460,000 Australians with disabilities and highlighted the $60 billion annual contribution of 2.7 million unpaid carers."
+  },
+  {
+   "slug": "speech-355719",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Medicare Levy Amendment (National Disability Insurance Scheme Funding) Bill 2017 is a necessary extension of Labor's own 2013 policy, citing that the NDIS currently costs $5.3 billion and is projected to reach $10.8 billion by 2019–20, with a $55 billion funding gap confirmed by Treasury. They criticised Labor for opposing the bill despite previously supporting a 0.5% Medicare levy increase to fund the scheme, and rejected Labor's claim that the NDIS was fully funded when they left government."
+  },
+  {
+   "slug": "speech-355728",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-355729",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "Labor argued that the government's claims Labor did not fully fund the NDIS are false, proposing instead a fairer funding model that raises the Medicare levy only for individuals earning over $87,000 annually and retains the deficit levy for those earning over $180,000, contrasting this with the government's plan which would increase levies on middle- and low-income earners."
+  },
+  {
+   "slug": "speech-355730",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor created and will fully fund the National Disability Insurance Scheme, while criticising the government's proposed Medicare levy increase as unfair to low- and middle-income earners and falsely presented as a locked box for NDIS funding. They noted the government’s $65 billion company tax cut and stated Labor’s alternative would raise $4 billion more by increasing the levy on incomes over $87,000 and keeping the deficit levy on incomes over $180,000."
+  },
+  {
+   "slug": "speech-355732",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The government's proposed 0.5% Medicare levy increase for all incomes above $21,000 unfairly burdens low-income Australians, while the government could instead fund the NDIS by forgoing $65 billion in corporate tax cuts. Labor would only apply the increase to incomes above $87,000, and the speaker accused the coalition of economic incompetence, citing deficits of $38 billion and $29 billion and national debt of half a trillion dollars."
+  },
+  {
+   "slug": "speech-355733",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Medicare levy increase from 2% to 2.5% to fund the NDIS, arguing it unfairly taxes workers earning under $87,000 per year. They proposed Labor's alternative of raising the levy only for those earning over $87,000 and reinstating the deficit levy for incomes over $180,000."
+  },
+  {
+   "slug": "speech-356057",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Medicare Levy Amendment (NDIS Funding) Bill 2017, arguing it would increase taxes for over seven million workers earning less than $87,000 while giving a $65 billion tax cut to big business, and cited cuts of $37.1 million to James Cook University and $30.1 million to Central Queensland University. They supported Labor’s alternative plan to raise more than $4 billion by increasing the Medicare levy only for those earning over $87,000 and keeping the deficit levy on incomes over $180,000."
+  },
+  {
+   "slug": "speech-356058",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Medicare Levy Amendment (NDIS Funding) Bill 2017, arguing it unfairly raised taxes on low- and middle-income Australians—such as $275 extra for a worker earning $55,000 or a hike for those on $21,000—while cutting taxes for millionaires and big business. They called the NDIS already fully funded and accused the government of undermining Medicare, citing the Medicare freeze and $122 million wasted on a postal survey."
+  },
+  {
+   "slug": "speech-356059",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's proposed increase to the Medicare levy on workers earning under $87,000 is unfair and should be rejected, proposing instead to raise the levy only on the top two tax brackets and make the deficit levy permanent—a plan that would raise $4 billion more over 10 years than the government's. The speaker also stated that the NDIS is fully funded from existing savings and accused the government of cutting taxes for millionaires ($16,400 each) and corporations ($80 billion) while forcing low-income Australians to pay more."
+  },
+  {
+   "slug": "speech-356060",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Medicare Levy Amendment (National Disability Insurance Scheme Funding) Bill 2017, arguing it is a tax increase that unfairly hits low-income earners while giving a tax break to those earning over $180,000, and proposed amendments to exempt those earning under $87,000 from the levy increase and retain the deficit levy for high earners."
+  },
+  {
+   "slug": "speech-356061",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill raises taxes on middle-income Australians—7 million workers earning under $87,000, including $275 extra for those on $55,000 and $400 for those on $80,000—to fund tax cuts for high earners and corporations, including a $65 billion handout to multinationals and a $16,400 cut for millionaires, while the NDIS is already fully funded. The speaker opposed the bill and supported the amendment moved by the member for McMahon."
+  }
+ ],
+ "acts": []
+}

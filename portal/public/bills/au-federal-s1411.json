@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1411",
+ "title": "Fair Work (Registered Organisations) Amendment (Protecting Vulnerable Workers) Bill 2024",
+ "short_title": "Fair Work (Registered Organisations) Amendment (Protecting Vulnerable Workers) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-02-27",
+ "originating_house": "senate",
+ "sponsor": "LAMBIE, Sen Jacqui",
+ "sponsor_party": "Jacqui Lambie Network",
+ "sponsor_person_id": "10830",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1411%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1411%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1411%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1411_ems_211d2dd4-4d71-4112-ac47-efdce3ff9d12%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1411%22",
+   "document_date": "2024-02-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-27",
+  "sentences": [
+   "The bill would let vulnerable workers in the Manufacturing Division of the CFMEU vote to leave the union.",
+   "It adds a new schedule to the Fair Work (Registered Organisations) Act 2009 allowing the Manufacturing Division to hold a secret ballot on de-merger.",
+   "The application for the ballot must be made before 1 September 2024."
+  ],
+  "changes": [
+   "The bill enables the Manufacturing Division within the CFMEU to hold a secret ballot to de-merge.",
+   "The bill adds Schedule 3 to the Fair Work (Registered Organisations) Act 2009.",
+   "The bill sets a deadline of 1 September 2024 for the application."
+  ],
+  "affected": "Vulnerable workers in the Manufacturing Division, including the Textile, Clothing and Footwear Sector, who are members of the CFMEU.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

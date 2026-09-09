@@ -1,0 +1,85 @@
+{
+ "key": "au-federal-s1425",
+ "title": "Building and Construction Industry (Restoring Integrity and Reducing Building Costs) Bill 2024 (No. 2)",
+ "short_title": "Building and Construction Industry (Restoring Integrity and Reducing Building Costs) Bill 2024 (No. 2)",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-08-21",
+ "originating_house": "senate",
+ "sponsor": "CASH, Sen Michaelia",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10707",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1425%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1425%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1425%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1425_ems_8f91133a-6143-4986-b1fc-909cf34e5eb8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1425%22",
+   "document_date": "2024-08-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-08-21",
+  "sentences": [
+   "This bill would re-establish the Australian Building and Construction Commission (ABCC) to regulate the building and construction industry.",
+   "The ABCC would have strong powers similar to those it held under the Building and Construction Industry Improvement Act 2005, including higher penalties for unlawful actions and coercion.",
+   "The explanatory memorandum does not specify a start date or the exact penalty amounts."
+  ],
+  "changes": [
+   "Re-establishes the Australian Building and Construction Commission (ABCC).",
+   "Restores higher penalties for contraventions in the building industry.",
+   "Targets unlawful actions and coercion in the sector."
+  ],
+  "affected": "The building and construction industry, including workers, employers, unions, and consumers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

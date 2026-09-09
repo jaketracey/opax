@@ -1,0 +1,82 @@
+{
+ "key": "au-federal-r5830",
+ "title": "Communications Legislation Amendment (SBS Advertising Flexibility) Bill 2017",
+ "short_title": "Communications Legislation Amendment (SBS Advertising Flexibility) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "lapsed",
+ "status_as_of": "2017-08-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5830%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5830%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5830%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5830_ems_fa71e41c-0f94-47e1-b240-b9c7b6822687%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5830%22",
+   "document_date": "2017-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-343777",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The bill amends the SBS Act to allow up to 10 minutes of advertising per hour (capped at 120 minutes daily) and clarify rules for product placement, projected to raise $27.4 million over four years. The changes aim to increase SBS's commercial revenue and reduce its reliance on government funding without materially affecting commercial broadcasters."
+  },
+  {
+   "slug": "speech-350970",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-350971",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The government decided not to proceed with the SBS Advertising Flexibility Bill, and instead provided SBS with an additional $8.8 million in the 2017‑18 budget, bringing total investment to over $280 million for that year."
+  }
+ ],
+ "acts": []
+}

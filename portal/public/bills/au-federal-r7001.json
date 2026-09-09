@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7001",
+ "title": "Online Safety Amendment (Breaking Online Notoriety) Bill 2023",
+ "short_title": "Online Safety Amendment (Breaking Online Notoriety) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-27",
+ "originating_house": "representatives",
+ "sponsor": "HAMILTON, Garth, MP",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10963",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-11-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7001%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7001%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7001%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7001_ems_8b123799-ac10-49b8-afb7-a2e2af3db800%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7001%22",
+   "document_date": "2023-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-27",
+  "sentences": [
+   "The bill would give the e-Safety Commissioner new powers to handle online content that shows criminal activity.",
+   "It would let the Commissioner investigate complaints and issue removal notices to online services or people who post such material.",
+   "The bill defines criminal activity material as content hosted on social media or other online services that depicts conduct that could be a criminal offence."
+  ],
+  "changes": [
+   "Extends the e-Safety Commissioner's functions to include a complaints system for criminal activity material.",
+   "Gives the Commissioner power to investigate complaints about criminal activity material.",
+   "Allows the Commissioner to issue removal notices to service providers or individuals who post or host criminal activity material."
+  ],
+  "affected": "The e-Safety Commissioner, providers of social media and other online services, and people who post or host criminal activity material.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:57Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

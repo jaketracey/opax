@@ -1,0 +1,103 @@
+{
+ "key": "au-federal-s1060",
+ "title": "Fair Work Amendment (Protecting Take-Home Pay) Bill 2017",
+ "short_title": "Fair Work Amendment (Protecting Take-Home Pay) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-21",
+ "originating_house": "senate",
+ "sponsor": "CAMERON, Sen Doug",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10706",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1060%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1060%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1060%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1060%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1060_ems_51f4ae2d-008e-442e-835d-0841454937bf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1060%22",
+   "document_date": "2017-03-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-21",
+  "sentences": [
+   "The bill would stop modern awards from being changed to reduce employees' take-home pay, including cuts to penalty rates or the hours they apply to.",
+   "It would amend the Fair Work Act 2009 to prevent the Fair Work Commission from varying a modern award if the change would likely reduce any employee's take-home pay.",
+   "The bill would also invalidate any determination from the Fair Work Commission's decision AM2014/305 that would cut take-home pay, and it would take effect the day after Royal Assent."
+  ],
+  "changes": [
+   "Prevents the Fair Work Commission from varying modern awards to reduce take-home pay.",
+   "Invalidates any determination from decision AM2014/305 that would cut take-home pay.",
+   "Defines take-home pay to include wages, incentive payments, allowances, and overtime, and ensures employees receive the full benefit of minimum wage increases."
+  ],
+  "affected": "Employees covered by modern awards, including prospective employees, and the Fair Work Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:14:36Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

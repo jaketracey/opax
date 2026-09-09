@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r5663",
+ "title": "National Cancer Screening Register (Consequential and Transitional Provisions) Bill 2016",
+ "short_title": "National Cancer Screening Register (Consequential and Transitional Provisions) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-05-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-05-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5663%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5663%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5663%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5663_ems_54a9fe65-4e9c-4b88-bee4-395e041b57e2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5663%22",
+   "document_date": "2016-05-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-05-05",
+  "sentences": [
+   "This bill makes amendments to other laws and provides transitional rules needed for the new National Cancer Screening Register.",
+   "It would allow the disclosure of information from the Australian Immunisation Register, the Australian Institute of Health and Welfare, and Medicare records to the new Register.",
+   "State and territory cervical screening data could also be transferred to the Register, and the bill would take effect at the same time as the main National Cancer Screening Register Bill 2016."
+  ],
+  "changes": [
+   "Authorises disclosure of specified information from the Australian Immunisation Register, the Australian Institute of Health and Welfare, and Medicare to the Register.",
+   "Allows participating states and territories to transfer data from their cervical screening registers to the Register.",
+   "Provides that the bill's provisions commence at the same time as the National Cancer Screening Register Bill 2016."
+  ],
+  "affected": "The states and territories that participate, and the agencies holding the data (Australian Immunisation Register, Australian Institute of Health and Welfare, Medicare).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:47:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-332328",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-05",
+   "stage_hint": null,
+   "brief": "The bill establishes the National Cancer Screening Register for cervical and bowel cancer, authorising data collection, migration from state and territory registers, and amendments to the Australian Immunisation Register Act 2015, Australian Institute of Health and Welfare Act 1987, and Health Insurance Act 1973 to share Medicare, HPV vaccination, and death index data. Civil penalties for mandatory reporting non-compliance commence 1 May 2018, with a 12-month grace period."
+  }
+ ],
+ "acts": []
+}

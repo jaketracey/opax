@@ -1,0 +1,85 @@
+{
+ "key": "au-federal-r6659",
+ "title": "Migration and Citizenship Legislation Amendment (Strengthening Information Provisions) Bill 2020",
+ "short_title": "Migration and Citizenship Legislation Amendment (Strengthening Information Provisions) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6659%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6659%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6659%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6659_ems_9fedeae4-1782-41a6-b60f-6b6bc4ceb488%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6659%22",
+   "document_date": "2020-12-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-10",
+  "sentences": [
+   "The bill would protect confidential intelligence and law enforcement information used in visa and citizenship decisions from being disclosed in court.",
+   "It would allow federal courts to order the minister to produce such information only if they decide it is protected and needed for proceedings, and let the courts weigh the public interest before any disclosure.",
+   "The bill would also create new offences for officials who disclose protected information outside permitted circumstances and extend similar protections to citizenship decisions."
+  ],
+  "changes": [
+   "Introduces a Protected Information framework in the Migration Act.",
+   "Amends the Citizenship Act to apply similar protections to citizenship decisions.",
+   "Creates new offences for disclosing protected information.",
+   "Gives the Secretary of Home Affairs a power to delegate functions under the Citizenship Act.",
+   "Makes consequential amendments to the Freedom of Information Act and the Inspector of Transport Security Act."
+  ],
+  "affected": "People whose visas or citizenship are refused or cancelled on character grounds, the Minister for Immigration, the Department of Home Affairs, and the High Court, Federal Court and Federal Circuit Court.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:17Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-400882",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-10",
+   "stage_hint": null,
+   "brief": "The bill amends the Migration Act 1958 and the Australian Citizenship Act 2007 to protect confidential information from law enforcement and intelligence agencies used in character-based visa and citizenship decisions, including creating an offence for unauthorised disclosure and allowing courts to consider the information while protecting the public interest."
+  }
+ ],
+ "acts": []
+}

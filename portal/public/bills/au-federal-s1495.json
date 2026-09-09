@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1495",
+ "title": "Customs Amendment (Safeguard Inquiries) Bill 2026",
+ "short_title": "Customs Amendment (Safeguard Inquiries) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-24",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science and Resources",
+ "status": "before_parliament",
+ "status_as_of": "2026-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1495%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1495%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1495_ems_311a5732-6b69-4df5-be67-2c868c7ad660%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1495%22",
+   "document_date": "2026-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-24",
+  "sentences": [
+   "This bill shifts the job of running safeguard inquiries from the Productivity Commission to a body that will be called the Australian Trade Remedies Commission.",
+   "The renamed commission, led by its Commissioner, would take on the inquiry role when the Minister sends a matter to it, and would report back in writing to the Minister, with that report going to Parliament.",
+   "The inquiry process would largely copy the Productivity Commission's current rules, but with updates, and the existing Commission would finish any inquiry it has already started under the old law."
+  ],
+  "changes": [
+   "The bill renames the Anti-Dumping Commission as the Australian Trade Remedies Commission and its head as the Commissioner.",
+   "The bill gives the Commissioner the job of conducting safeguard inquiries referred by the Minister.",
+   "The bill sets rules for hearings, timelines, reporting, and recommendations in safeguard inquiries.",
+   "The bill lets the Minister make regulations about how safeguard inquiries are run.",
+   "The bill updates references in the Customs Act 1901 and the Customs Tariff (Anti-Dumping) Act 1975 to match the new name."
+  ],
+  "affected": "Australian industry, manufacturers, consumers, and the Productivity Commission are the groups mentioned as affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:12:54Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1203976",
+   "speaker": "Tim Ayres",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-r6858",
+ "title": "Higher Education Support Amendment (Australia’s Economic Accelerator) Bill 2022",
+ "short_title": "Higher Education Support Amendment (Australia’s Economic Accelerator) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6858%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6858%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6858%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6858_ems_71a8bd17-01f6-4114-bdff-0e9daab97b64%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6858%22",
+   "document_date": "2022-02-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-17",
+  "sentences": [
+   "This bill would let the Minister fund programs that increase industry-led postgraduate research and help universities develop technologies for commercial investment.",
+   "It creates a new program called Australia's Economic Accelerator, governed by an advisory board appointed by the Minister and supported by priority managers engaged by the Secretary.",
+   "The advisory board would have up to eight members and must develop a research commercialisation strategy every five years, with the first one due as soon as possible after the amendments start."
+  ],
+  "changes": [
+   "Allows the Minister to make grants for industry-led postgraduate research.",
+   "Creates the Australia's Economic Accelerator program with a new governance framework including an advisory board and priority managers.",
+   "Sets up information management rules for how program data is handled.",
+   "Requires an annual report from the advisory board to the Minister for Parliament on program performance and commercialisation barriers."
+  ],
+  "affected": "Higher education providers, postgraduate researchers, and the Australia's Economic Accelerator Advisory Board members and priority managers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-419151",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The minister moved the Higher Education Support Amendment (Australia's Economic Accelerator) Bill 2022, which creates the Australia's Economic Accelerator program to fund commercialisation of university research in six national priority areas. The bill establishes an advisory board of up to eight experts and new industry-linked PhD scholarships."
+  }
+ ],
+ "acts": []
+}

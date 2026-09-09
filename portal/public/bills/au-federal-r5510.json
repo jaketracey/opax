@@ -1,0 +1,255 @@
+{
+ "key": "au-federal-r5510",
+ "title": "Banking Laws Amendment (Unclaimed Money) Bill 2015",
+ "short_title": "Banking Laws Amendment (Unclaimed Money) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-08-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-09-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-09-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5510_ems_87059459-712e-463e-a726-f98f75facf19%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5510%22",
+   "document_date": "2015-08-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00129",
+   "document_date": "2015-09-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-08-13",
+  "sentences": [
+   "This bill would change how long bank and life insurance accounts must be untouched before their money can be taken by the government.",
+   "The waiting period would increase from three years to seven years, and accounts for children or held in foreign currency would be exempt.",
+   "The bill would also stop the corporate watchdog from publishing lists of unclaimed money and would block freedom of information requests for that data."
+  ],
+  "changes": [
+   "Extends the inactivity period from three years to seven years before funds can be transferred to the Commonwealth.",
+   "Exempts accounts for children and foreign-currency accounts from the unclaimed money rules.",
+   "Prevents the Australian Securities and Investments Commission from publishing unclaimed money details in the annual Unclaimed Moneys Gazette.",
+   "Introduces a secrecy provision to block access to unclaimed money information under the Freedom of Information Act 1982."
+  ],
+  "affected": "Authorised deposit-taking institutions, life insurance providers, and individuals with accounts or life insurance amounts that could be considered unclaimed money.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:53:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-317313",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "Labor supported the Banking Laws Amendment (Unclaimed Money) Bill 2015, extending the inactive period for bank accounts and life insurance policies from three to seven years, and argued the Abbott government had broken promises on the GST, presided over rising unemployment from 5.7% to 6.3%, and seen annual growth fall from nearly 3% to below 2%."
+  },
+  {
+   "slug": "speech-317317",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The Banking Laws Amendment (Unclaimed Money) Bill 2015 reverses the former Labor government's 2012 changes that lowered the threshold for transferring unclaimed funds to ASIC from seven years to three years. The speech criticises Labor's lack of consultation and cites opposition from the Australian Bankers Association, the Commonwealth Bank of Australia and the Association of Financial Advisers to the shortened timeframe."
+  },
+  {
+   "slug": "speech-317418",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor's 2012 unclaimed money changes were a desperate cash grab that caused financial hardship, and announced the coalition's bill restores the seven-year inactivity threshold, exempts children's and foreign currency accounts, and removes ASIC's public gazette to prevent fraud. Unclaimed funds transferred to ASIC rose from $70 million in 2011–12 to $550 million in 2012–13; the bill costs $285 million over four years but saves $36 million annually in red-tape costs."
+  },
+  {
+   "slug": "speech-317419",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Banking Laws Amendment (Unclaimed Money) Bill 2015 reverses the previous Labor government's reduction of the inactivity period for bank accounts and life insurance policies from seven years to three years, which had caused $550 million in funds to be transferred to the Commonwealth in 2012-13. The bill restores the seven-year inactivity threshold effective 31 December 2015, introduces secrecy provisions to protect account holder data, exempts foreign currency accounts and accounts held by minors, and allows account holders to prevent transfer by notifying their financial institution."
+  },
+  {
+   "slug": "speech-317420",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Banking Laws Amendment (Unclaimed Money) Bill 2015, which extends the inactivity period before unclaimed bank and life insurance funds are transferred to ASIC from three years back to seven years, effective 31 December 2015. The bill also exempts children's and foreign currency accounts, removes ASIC's requirement to publish account details, and restricts FOI access to protect privacy and prevent exploitation."
+  },
+  {
+   "slug": "speech-317421",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 2012 Labor government's reduction of the inactivity period for unclaimed bank accounts from seven to three years caused $550 million to be transferred in 2013 and harmed account holders, and that the 2015 bill restores the seven-year period, exempts children's accounts, and will reduce regulatory burden by $36 million annually, with no funds transferred until 2020."
+  },
+  {
+   "slug": "speech-317429",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Banking Laws Amendment (Unclaimed Money) Bill 2015 corrects a previous Labor government policy that seized $550 million from 156,000 inactive bank accounts—including those of pensioners and children—after just 36 months. He claimed the new law will prevent future government raids and allow affected citizens to reclaim their money via an online portal."
+  },
+  {
+   "slug": "speech-317430",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The Banking Laws Amendment (Unclaimed Money) Bill 2015 restores the period after which bank accounts are deemed inactive from three years back to seven, reversing a 2012 Labor change that took $550 million in the first year from accounts owners considered active, and costing the government $285 million over four years. The bill also exempts children's accounts and foreign currency accounts, and stops public listing of unclaimed money."
+  },
+  {
+   "slug": "speech-317432",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Banking Laws Amendment (Unclaimed Money) Bill 2015, which reverses Labor's 2012 change that reduced the dormant account period from seven to three years, restoring it to seven years and exempting accounts of minors. The bill also introduces privacy protections and allows account holders to keep accounts active by actions such as checking their balance online."
+  },
+  {
+   "slug": "speech-317433",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The Banking Laws Amendment (Unclaimed Money) Bill 2015 reverses the previous Labor government's changes to unclaimed money provisions, implementing measures from the 2015-16 budget, and the speaker argued the earlier changes caused confusion and distress among Australians."
+  },
+  {
+   "slug": "speech-317440",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Banking Laws Amendment (Unclaimed Money) Bill 2015 corrects a \"wrong\" by the former Labor government under Kevin Rudd, Julia Gillard, and Wayne Swan, which transferred over $500 million from 156,000 inactive bank accounts into government funds. The bill restores the seven-year inactivity threshold, exempts children’s and older Australians’ accounts, and counts online or phone inquiries as activity to prevent funds from being taken."
+  },
+  {
+   "slug": "speech-317441",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued the Banking Laws Amendment (Unclaimed Money) Bill 2015 returns the inactivity period before funds transfer to ASIC from three to seven years, exempts children's and foreign currency accounts, and introduces secrecy provisions to protect personal details from exploitation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Banking Laws Amendment (Unclaimed Money) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00129",
+   "assent_date": "2015-09-16"
+  }
+ ]
+}

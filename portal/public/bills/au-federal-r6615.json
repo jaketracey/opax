@@ -1,0 +1,195 @@
+{
+ "key": "au-federal-r6615",
+ "title": "Immigration (Education) Amendment (Expanding Access to English Tuition) Bill 2020",
+ "short_title": "Immigration (Education) Amendment (Expanding Access to English Tuition) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6615_ems_ed4d5b83-99b6-49ba-8808-810feb560a8c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6615%22",
+   "document_date": "2020-10-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00139",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-29",
+  "sentences": [
+   "This bill would let more migrants get government-funded English lessons.",
+   "It would remove the limit on tuition hours, raise the English level required to stop qualifying, and scrap deadlines for some people who were in Australia before October 2020.",
+   "Migrants outside Australia who hold or apply for certain visas could also receive tuition to prepare for moving here."
+  ],
+  "changes": [
+   "Remove the statutory cap on tuition hours per person.",
+   "Raise the qualifying English level to vocational English.",
+   "Drop time limits for starting and finishing English classes for certain people onshore before 1 October 2020.",
+   "Allow English tuition for some visa holders or applicants overseas."
+  ],
+  "affected": "Migrants with low English proficiency who are currently ineligible or have used up their tuition hours.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-397635",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-29",
+   "stage_hint": null,
+   "brief": "The bill expands free English tuition for migrants by removing the 510-hour limit, raising the proficiency target to vocational English, eliminating time limits for enrolment, and allowing overseas course delivery. The speaker cited that only 13% of migrants with no English skills are employed versus 62% who speak English well, and that the number of residents not speaking English well rose from 560,000 in 2006 to 820,000 in 2016, now likely near one million."
+  },
+  {
+   "slug": "speech-400495",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the bill to expand English tuition access but criticised the Morrison government for poor program administration, funding cuts, and a proposed English test for partner visa applicants. The speaker moved a second reading amendment calling for the government to address structural issues and abandon the partner visa English language requirement."
+  },
+  {
+   "slug": "speech-400497",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's increase to the 510-hour English tuition limit but argued that eligibility and the gap between functional English (ASLPR2) and the level needed for higher education or vocational training remain unresolved, suggesting extra hours be used for scaffolded learning in courses like aged care or child care. They also backed the shadow minister's amendment and urged the government to consult AMEP service providers, noting the program had been neglected for years."
+  },
+  {
+   "slug": "speech-400499",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government has neglected the Adult Migrant English Program and supported the bill to remove the 510-hour cap and time limits, extending free English tuition to help migrants achieve higher proficiency and participate in Australian life."
+  },
+  {
+   "slug": "speech-400500",
+   "speaker": "Maria Vamvakinou",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Immigration (Education) Amendment Bill 2020's changes to the Adult Migrant English Program—including removing the 510-hour cap, extending eligibility and time limits, and allowing offshore tuition—but expressed concern that without additional funding the quality of services may decline, citing widespread dissatisfaction from 2017 reforms. They named local AMEP providers in Calwell: Melbourne Polytechnic, Kangan Institute, Hume Global Learning Centre, Newbury community centre, and Meadow Heights Education Centre."
+  },
+  {
+   "slug": "speech-400501",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The Immigration (Education) Amendment (Expanding Access to English Tuition) Bill 2020 expands free English tuition for migrants by removing limits on tuition hours, raising the Adult Migrant English Program eligibility upper limit to vocational English, and extending overseas course delivery to permanent and specified temporary visa holders."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Immigration (Education) Amendment (Expanding Access to English Tuition) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00139",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

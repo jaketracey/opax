@@ -1,0 +1,239 @@
+{
+ "key": "au-federal-r6384",
+ "title": "New Skilled Regional Visas (Consequential Amendments) Bill 2019",
+ "short_title": "New Skilled Regional Visas (Consequential Amendments) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration, Citizenship, Migrant Services and Multicultural Affairs",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6384%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6384%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6384%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6384%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6384%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6384%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6384%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6384%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6384%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6384%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6384_ems_5d1fed56-38a7-4252-9ab1-595402ef71e0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/6916439%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6384%22",
+   "document_date": "2019-07-31",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5893",
+   "date": "2019-10-14",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual [second reading motion](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is \"*that the bill be now read a second time*\". This is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the House notes the Government's failure to:* > > *(1) adequately fund settlement services; and* > > *(2) explain what extra services will be made available to support regional communities and the settlement of migrants under this scheme\".*",
+   "stage": "Second reading",
+   "ayes": 61,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-10-14/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-379227",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The New Skilled Regional Visas (Consequential Amendments) Bill 2019 amends several acts to give holders of the new Subclass 491 and 494 provisional skilled regional visas access to government services equivalent to permanent skilled visa holders, as part of a policy that reduces the annual migration ceiling to 160,000 places with 23,000 allocated to these regional visas and requires three years of regional residence before permanent residency."
+  },
+  {
+   "slug": "speech-382236",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "Labor supported the New Skilled Regional Visas Bill but raised concerns about poor drafting, lack of planning for regional settlement services, and the government's failure to release the Shergold report on integration. The bill creates provisional skilled regional visas (subclasses 491 and 494) requiring three years in regional areas, with 23,000 places under a 160,000 permanent migration cap."
+  },
+  {
+   "slug": "speech-382238",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The speaker argued the New Skilled Regional Visas Bill 2019 would create two visa categories requiring three years in a regional area for permanent residency, aiming to boost population growth in low-growth regions like South Australia (growing at 0.9% vs 1.6% nationally) while easing pressure on major cities. They cited specific infrastructure projects in Sturt (Magill/Portrush, Glen Osmond/Fullarton, Fullarton/Cross Road intersections) and the $90 billion naval shipbuilding program and Australian Space Agency in Adelaide as drivers for skilled migration."
+  },
+  {
+   "slug": "speech-382239",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The speech argued in favour of the New Skilled Regional Visas (Consequential Amendments) Bill 2019, which reduces the migration cap by 15%, simplifies the definition of regional Australia to exclude major metro areas, and offers priority processing, extra visa points, and additional post-study work rights for regional graduates to boost skilled migration to rural areas."
+  },
+  {
+   "slug": "speech-382240",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment but criticised the government for cutting $3 billion from TAFE and reducing apprenticeships by 150,000, while noting South Australia’s 7.3% unemployment rate and warning that the new skilled regional visas could lead to worker exploitation and fail to address skills shortages without training Australians."
+  },
+  {
+   "slug": "speech-382241",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the New Skilled Regional Visas (Consequential Amendments) Bill 2019 is essential to address severe labour shortages in regional Australia, citing 60,000 unfilled jobs and specific examples like MATelec Australia in Shepparton. They noted the coalition's plan to reduce the annual migration ceiling to 160,000, set aside 23,000 places for regional visas, and expand working holiday-maker programs for countries including Malaysia, Argentina, Singapore, Portugal, Greece and Ecuador."
+  },
+  {
+   "slug": "speech-382366",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The bill is criticised as a marketing strategy lacking resources, programs, and settlement services for regional migrants, while the government's claim that it will reduce congestion is dismissed as inadequate without real infrastructure investment."
+  },
+  {
+   "slug": "speech-382369",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's reduction of the permanent migration ceiling from 190,000 to 160,000 reflects Australia's declining attractiveness to skilled migrants, and criticised the new regional visas as poorly planned, noting that excluding the Gold Coast from regional definitions will harm Griffith University."
+  },
+  {
+   "slug": "speech-382371",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The New Skilled Regional Visas Bill 2019 reduces the permanent migration ceiling to 160,000 and introduces two provisional regional visas (subclass 491 and 494), but the speaker argued the government's \"industrial model\" is too simplistic, failing to address the lack of services, community, and support in regional areas, which will lead to exploitation, family separation, and underutilisation of skilled migrants already in cities like Parramatta. Labor reserved final judgment until after the Senate inquiry."
+  },
+  {
+   "slug": "speech-382372",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The New Skilled Regional Visas (Consequential Amendments) Bill 2019 gives holders of new provisional skilled regional visas (subclass 491 and 494) access to government services consistent with permanent skilled visa holders, as part of a plan to reduce the annual migration ceiling to 160,000 and allocate 23,000 places for regional visas requiring three years of regional residence before permanent residency."
+  }
+ ],
+ "acts": []
+}

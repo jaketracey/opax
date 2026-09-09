@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-r7016",
+ "title": "Broadcasting Services Amendment (Prohibition of Gambling Advertisements) Bill 2023",
+ "short_title": "Broadcasting Services Amendment (Prohibition of Gambling Advertisements) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-05-22",
+ "originating_house": "representatives",
+ "sponsor": "DANIEL, Zoe, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10979",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-11-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7016%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7016%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7016%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7016_ems_2a72a9e4-72fe-4eea-8777-fbd1f470ba12%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7016%22",
+   "document_date": "2023-05-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8140",
+   "date": "2023-06-14",
+   "house": "representatives",
+   "question": "Business - Rearrangement - Broadcasting Services Amendment (Prohibition of Gambling Advertisements) Bill 2023",
+   "stage": "Business motion",
+   "ayes": 43,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 57
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-06-14/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

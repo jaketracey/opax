@@ -1,0 +1,378 @@
+{
+ "key": "au-federal-r5682",
+ "title": "National Disability Insurance Scheme Savings Fund Special Account Bill 2016",
+ "short_title": "National Disability Insurance Scheme Savings Fund Special Account Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5682%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5682%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5682%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5682%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5682%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5682%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5682%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5682%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5682%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5682%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5682%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5682_ems_cec6fc60-0e2c-4f0c-b91a-56910c532097%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5682%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-08-31",
+  "sentences": [
+   "This bill is part of a package that creates a dedicated government fund to help cover future costs of the National Disability Insurance Scheme.",
+   "The Social Services Minister would decide what money goes into the fund, and could use it if existing disability funding is not enough to meet a shortfall.",
+   "A review of the fund is required before 1 July 2027, and from 2019-20 the fund's yearly closing balance must not exceed the estimated shortfall."
+  ],
+  "changes": [
+   "Establishes a new ongoing special account for NDIS funding.",
+   "Allows the Minister for Social Services to determine credits and manage the account.",
+   "Sets a maximum yearly closing balance from 2019-20.",
+   "Requires a review before 1 July 2027."
+  ],
+  "affected": "The Commonwealth and its obligations under the National Disability Insurance Scheme Act 2013.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:46:37Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4591",
+   "date": "2017-03-02",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/debate/?id=2017-02-15.45.2) introduced by Labor Party MP [Jenny Macklin](https://theyvoteforyou.org.au/people/representatives/jagajaga/jenny_macklin), which means it was unsuccessful. The motion called for the House of Representatives to not agree with the bill's main idea. In parliamentary jargon, the motion asked for the House to not give the bill a [second reading](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What is the bill's main idea? The bill creates a special account to fund the [National Disability Insurance Scheme](https://en.wikipedia.org/wiki/National_Disability_Insurance_Scheme) (NDIS). According to [ABC News](http://www.abc.net.au/news/2016-05-03/disability-support-crackdown-to-help-fund-ndis/7380828), part of the $2.1 billion expected to fill the special account will come from a \"*crack down on the Disability Support Pension and cut[ting] off carbon tax compensation for all new welfare recipients*\". The Government argued that this special account is necessary because the NDIS is currently [only partially funded](http://www.abc.net.au/news/2017-02-15/ndis-funding-explainer/8271996). But the [Opposition disagrees](http://www.openaustralia.org.au/debates/?id=2017-03-02.8.2), arguing that the NDIS is in fact fully funded and so this special account is unnecessary. They also questioned the Government's motivation for creating the account at all. Read more about the bill in its [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd001) and on [ABC News](http://www.abc.net.au/news/2016-05-03/budget-2016/7380832). ### Motion text > *That all the words after \"That\" be omitted with a view to substituting the following words:* > *\"the House declines to give the bill a second reading because:* >> *(1) the National Disability Insurance Scheme was fully funded when Labor left office;* >> *(2) this bill is nothing more than an attempt b",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-02/1"
+  },
+  {
+   "key": "federal-representatives-4592",
+   "date": "2017-03-02",
+   "house": "representatives",
+   "question": "The majority voted to agree to the [bill's](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5682) main idea, which means they can now discuss it in greater detail. In parliamentary jargon, they voted to read the bill [for a second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What is the bill's main idea? The bill creates a special account to fund the [National Disability Insurance Scheme](https://en.wikipedia.org/wiki/National_Disability_Insurance_Scheme) (NDIS). According to [ABC News](http://www.abc.net.au/news/2016-05-03/disability-support-crackdown-to-help-fund-ndis/7380828), part of the $2.1 billion expected to fill the special account will come from a \"*crack down on the Disability Support Pension and cut[ting] off carbon tax compensation for all new welfare recipients*\". The Government argued that this special account is necessary because the NDIS is currently [only partially funded](http://www.abc.net.au/news/2017-02-15/ndis-funding-explainer/8271996). But the [Opposition disagrees](http://www.openaustralia.org.au/debates/?id=2017-03-02.8.2), arguing that the NDIS is in fact fully funded and so this special account is unnecessary. They also questioned the Government's motivation for creating the account at all. Read more about the bill in its [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd001) and on [ABC News](http://www.abc.net.au/news/2016-05-03/budget-2016/7380832).",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-02/2"
+  },
+  {
+   "key": "federal-representatives-4593",
+   "date": "2017-03-02",
+   "house": "representatives",
+   "question": "The majority voted to pass the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5682) in the House of Representatives, which means it will now go to the Senate for their consideration. In parliamentary jargon, they voted to read the bill [for a third time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What does this bill do? The bill creates a special account to fund the National Disability Insurance Scheme (NDIS). According to [ABC News](http://www.abc.net.au/news/2016-05-03/disability-support-crackdown-to-help-fund-ndis/7380828), part of the $2.1 billion expected to fill the special account will come from a \"*crack down on the Disability Support Pension and cut[ting] off carbon tax compensation for all new welfare recipients*\". The Government argued that this special account is necessary because the NDIS is currently [only partially funded](http://www.abc.net.au/news/2017-02-15/ndis-funding-explainer/8271996). But the [Opposition disagrees](http://www.openaustralia.org.au/debates/?id=2017-03-02.8.2), arguing that the NDIS is in fact fully funded and so this special account is unnecessary. They also questioned the Government's motivation for creating the account at all. Read more about the bill in its [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd001) and on [ABC News](http://www.abc.net.au/news/2016-05-03/budget-2016/7380832).",
+   "stage": "Third reading",
+   "ayes": 77,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-02/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-341540",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Disability Insurance Scheme Savings Fund Special Account Bill is essential to address a $4.1 billion annual funding gap left by Labor, and to secure the NDIS’s financial future. The coalition government is committed to fully funding the scheme for around 460,000 Australians, using identified savings and underspends rather than tax increases, borrowing, or a levy."
+  },
+  {
+   "slug": "speech-341689",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the NDIS Savings Fund Special Account Bill 2016, arguing it falsely implies Labor underfunded the NDIS and is a cover for further social services cuts. They cited a constituent's positive NDIS experience and criticised the Abbott-Turnbull government for service delivery failures and cuts harming vulnerable Australians."
+  },
+  {
+   "slug": "speech-341690",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the NDIS Savings Fund Special Account Bill 2016 is necessary to properly fund the NDIS, citing a $4.1 billion shortfall in the first year of full operation rising to $7 billion annually, and criticised the previous Labor government for announcing the program without securing its funding."
+  },
+  {
+   "slug": "speech-341694",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the NDIS must be funded through sustainable wealth creation, not borrowing, and rejected Labor's claim that the scheme was fully funded under their government, noting the NDIS will cost $22 billion in 2019-20 with 52% from the Commonwealth."
+  },
+  {
+   "slug": "speech-341701",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The government is using the NDIS as a political tool rather than for care and equality, and the member for Hughes gave a lecture on spending while the government has a $447 billion deficit."
+  },
+  {
+   "slug": "speech-341705",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Disability Insurance Scheme Savings Fund Special Account Bill 2016, noting that by 2019-20 around 460,000 Australians with disability would be supported. The speaker highlighted that in the Hinkler electorate, the NDIS would create over 1,650 jobs and significantly increase disability support in Bundaberg and Maryborough, while the special account would cover a $4.1 billion funding shortfall."
+  },
+  {
+   "slug": "speech-341710",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The coalition government inherited $274 billion in gross debt from Labor in 2013, with Labor having run $240 billion in consecutive budget deficits and leaving a $4.1 billion funding gap for the NDIS in 2019-20. The National Disability Insurance Scheme Savings Fund Special Account Bill establishes a dedicated fund starting with $2.1 billion from welfare reforms to guarantee NDIS funding, addressing Labor's failure to secure long-term financing for the scheme."
+  },
+  {
+   "slug": "speech-341712",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's NDIS Savings Fund Special Account Bill 2016 is a lie, as Labor had already fully funded the NDIS, and criticised the secret deal with Western Australia that shifts $140 million in administration costs and 75% of cost overruns to the state, while hiding evaluation results that would show whether Western Australians are worse off under the separate WA NDIS."
+  },
+  {
+   "slug": "speech-341713",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued the National Disability Insurance Scheme Savings Fund Special Account Bill 2016 is a political stunt, not about funding the NDIS, and claimed Labor fully funded the scheme through measures like the Medicare levy increase, while accusing the government of using the NDIS as a pretext for $5.6 billion in cuts to vulnerable Australians."
+  },
+  {
+   "slug": "speech-341714",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the NDIS Savings Fund Special Account Bill is unnecessary and that the government is using it to politicise the NDIS, causing distress to people with disabilities. They stated that Labor fully funded the NDIS for its first ten years in the 2013-14 budget, criticised the Treasurer's \"locked box\" claim as misleading, and accused the government of linking NDIS funding to cuts in other social spending."
+  },
+  {
+   "slug": "speech-341812",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the NDIS Savings Fund Special Account Bill 2016 is a politicised attempt to undermine bipartisan support for the NDIS, which is fully funded and life-changing for over 450,000 Australians, and called on the government to stop treating it as a fiscal irritant and instead support it genuinely."
+  },
+  {
+   "slug": "speech-342856",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull government is not genuinely committed to the National Disability Insurance Scheme (NDIS) and that this bill is a stunt to delay full funding and rollout, while Labor had fully funded the scheme for ten years. They cited a $4.1 billion funding shortfall claimed by the government, criticised tying NDIS funding to cuts in other welfare payments, and noted that 63,482 people were on the NDIS by June 2016, with 460,000 expected by 2019-20 at an annual cost of $22 billion."
+  },
+  {
+   "slug": "speech-342860",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The National Disability Insurance Scheme Savings Fund Special Account Bill 2016 was opposed as a political stunt that creates unnecessary uncertainty, with the NDIS fully funded for 10 years through Labor’s savings measures including $6.5 billion in private health insurance reforms, $6 billion in retirement income reforms, and $20.6 billion in other long-term savings."
+  },
+  {
+   "slug": "speech-342949",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the NDIS Savings Fund Special Account Bill 2016 is a \"smokescreen\" for cuts, claiming the NDIS was already fully funded by Labor's 2013-14 budget through measures including a Medicare levy increase and opposition from groups like ACOSS."
+  },
+  {
+   "slug": "speech-342950",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": "The government introduced the National Disability Insurance Scheme Savings Fund Special Account Bill 2016 to establish a special account that accumulates savings from existing programs to cover the Commonwealth’s future NDIS commitments, avoiding new taxes or borrowings for the $21.4 billion full-scheme cost in 2019–20, which will serve an estimated 460,000 participants."
+  }
+ ],
+ "acts": []
+}

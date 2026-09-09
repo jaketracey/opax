@@ -1,0 +1,164 @@
+{
+ "key": "au-federal-r7008",
+ "title": "Social Services Legislation Amendment (Child Support Measures) Bill 2023",
+ "short_title": "Social Services Legislation Amendment (Child Support Measures) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2023-06-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7008_ems_27b37e9e-1c1a-4e69-bc72-3334425237b4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7008%22",
+   "document_date": "2023-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00027",
+   "document_date": "2023-06-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-29",
+  "sentences": [
+   "The bill would change how child support is collected and calculated.",
+   "The Child Support Registrar could get more power to deduct money from pay, refuse to let a parent avoid paying unless they show they will pay what they owe, and set a standard income for parents who do not file a tax return.",
+   "The bill amends the Child Support (Assessment) Act 1989 and the Child Support (Registration and Collection) Act 1988."
+  ],
+  "changes": [
+   "Extend the Registrar's power to collect child support from employers.",
+   "Allow the Registrar to refuse a departure certificate unless satisfied the parent will make suitable payment arrangements.",
+   "Introduce a default income for parents who are not required to lodge a tax return."
+  ],
+  "affected": "Parents who pay or receive child support, and the Child Support Registrar.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:57Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-829843",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment (Child Support Measures) Bill 2023 was debated and supported by both the Coalition and the government. The bill expands employer withholding to collect child support debts after a case ends (including after a child turns 18), tightens departure prohibition order exemptions by allowing Services Australia to refuse travel for parents offering bonds, and improves income accuracy for around 150,000 low-income parents; it is expected to recover over $160 million in unpaid child support."
+  },
+  {
+   "slug": "speech-829919",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-10",
+   "stage_hint": null,
+   "brief": "The Albanese government introduced the Social Services Legislation Amendment (Child Support Measures) Bill 2023 to strengthen child support debt collection, close a loophole allowing parents with departure prohibition orders to travel by posting a refundable bond, and improve income accuracy for low-income parents by setting a default provisional income equal to the self-support amount ($27,508). The bill is expected to recover $164 million in unpaid child support from around 18,000 parents and benefit up to 150,000 low-income parents annually."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Child Support Measures) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00027",
+   "assent_date": "2023-06-23"
+  }
+ ]
+}

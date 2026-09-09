@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r5846",
+ "title": "Petroleum and Other Fuels Reporting (Consequential Amendments and Transitional Provisions) Bill 2017",
+ "short_title": "Petroleum and Other Fuels Reporting (Consequential Amendments and Transitional Provisions) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Energy",
+ "status": "passed",
+ "status_as_of": "2017-08-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5846_ems_b0b7e0df-90a5-4dce-8db7-4ddf3d501f22%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5846%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00091",
+   "document_date": "2017-08-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "This bill is part of a package that would make fuel companies report data on petroleum, biofuels and related products to the government.",
+   "The Minister for the Environment and Energy could order businesses to supply fuel information to the department secretary, with details set in ministerial rules.",
+   "The package would replace a voluntary survey that had falling participation, which weakened the reliability of fuel statistics used by agencies and international bodies."
+  ],
+  "changes": [
+   "The bill would create a mandatory reporting regime for fuel statistics.",
+   "It would empower the minister to require reporting from fuel businesses.",
+   "It would protect confidential information with penalties of up to two years imprisonment for unauthorised disclosure."
+  ],
+  "affected": "Businesses that deal in petroleum, biofuels and fuel-related products would be required to report.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-351524",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the mandatory reporting regime under the Petroleum and Other Fuels Reporting Bill is needed to improve data transparency, ensure energy security, and restore compliance with International Energy Agency oil stockholding obligations; he also criticised the Turnbull government for lacking a coherent national energy policy, citing doubled wholesale power prices."
+  },
+  {
+   "slug": "speech-351533",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Petroleum and Other Fuels Reporting Bill 2017 and its companion bill, which create mandatory reporting for petroleum and fuel products to improve statistics, monitor energy security, comply with International Energy Agency obligations, and implement a 2015 Senate committee recommendation."
+  },
+  {
+   "slug": "speech-351687",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-15",
+   "stage_hint": null,
+   "brief": "The Petroleum and Other Fuels Reporting Bill 2017 and related bill aim to improve the accuracy, reliability and timeliness of Australia’s fuel statistics to safeguard energy security, meet international oil stockholding obligations under the International Energy Program Treaty, and support market efficiency, with provisions for data sharing between agencies and flexible reporting requirements, plus an addendum clarifying the delegation of compliance-monitoring functions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Petroleum and Other Fuels Reporting (Consequential Amendments and Transitional Provisions) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00091",
+   "assent_date": "2017-08-23"
+  }
+ ]
+}

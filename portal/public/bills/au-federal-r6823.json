@@ -1,0 +1,275 @@
+{
+ "key": "au-federal-r6823",
+ "title": "Australian Research Council Amendment Bill 2021",
+ "short_title": "Australian Research Council Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-12-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6823%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6823%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6823%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6823%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6823%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6823%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6823%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6823%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6823%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6823%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6823%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6823_ems_c1e36682-ff12-4aa3-8ec3-8d477657f80f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6823%22",
+   "document_date": "2021-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00029",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-12-02",
+  "sentences": [
+   "The bill would update the Australian Research Council Act 2001 to adjust funding amounts for inflation and set a new spending limit for the 2024-25 financial year.",
+   "It would change three existing annual funding caps for the years starting 1 July 2021, 2022 and 2023, and add a new cap for the year starting 1 July 2024.",
+   "The government says the amendments would provide an extra $844 million in total for approved research programs from 2021-22 to 2024-25."
+  ],
+  "changes": [
+   "Alters three existing annual funding figures for indexation.",
+   "Adds a new funding cap for the financial year starting 1 July 2024.",
+   "Increases total special appropriations by $844 million for the period 2021-22 to 2024-25."
+  ],
+  "affected": "The Australian Research Council and researchers who receive funding through its National Competitive Grants Programs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:03Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7614",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an amendment to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). The usual second reading motion is \"*this bill be now read a second time,*\" which is parliamentary jargon for agreeing with the main idea of the bill. Because this vote was successful, the amendment failed and the second reading motion will remain unchanged. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the Government's mismanagement and politicisation of Australian Research Council grants and failure to adequately support Australia's universities during the pandemic are causing serious harm to our world-class researchers\".*",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 119
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-14/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-417087",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-02",
+   "stage_hint": null,
+   "brief": "The Australian Research Council Amendment Bill 2021 was introduced to update funding caps until 30 June 2025, increasing the cap for 2021-22 to just over $815 million. The bill supports ARC programs that have awarded over $13.5 billion since 2002, funding achievements such as the bionic ear and the 2016 detection of gravitational waves."
+  },
+  {
+   "slug": "speech-417924",
+   "speaker": "Graham Douglas Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-10",
+   "stage_hint": null,
+   "brief": "Labor will support the Australian Research Council Amendment Bill 2021, but the government's mismanagement and political interference in ARC grants, along with excluding universities from JobKeeper, have caused serious harm to researchers and led to 40,000 job losses across tertiary education."
+  },
+  {
+   "slug": "speech-417925",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Research Council Amendment Bill 2021, which adds over $840 million to research expenditure caps, and argued that this investment is vital for sovereign capability, defence industry, and commercialisation of research to drive economic outcomes and manufacturing jobs."
+  },
+  {
+   "slug": "speech-417926",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Research Council Amendment Bill 2021 but condemned the government's political interference in grant approvals, including last-minute delays and vetoes of recommended projects, and its neglect of universities during the pandemic—citing the exclusion of universities from JobKeeper, 40,000 job cuts, and a brain drain of researchers. They outlined Labor's alternative plan for 20,000 additional university places, a Future Made in Australia Skills Plan, and a $15 billion National Reconstruction Fund to translate research into jobs."
+  },
+  {
+   "slug": "speech-417927",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-02-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Research Council Amendment Bill 2021, which provides $10–12 billion per annum in appropriations, but argued Australia's R&D spending at 1.8% of GDP is insufficient and criticised the government for blocking six peer-reviewed grants and delaying announcements, calling for greater transparency."
+  },
+  {
+   "slug": "speech-417928",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Research Council Amendment Bill 2021 but condemned government delays and political vetoes of grants, citing interference by ministers including the member for Fadden, Tehan and Birmingham, and noting 7,000 research jobs and 40,000 university jobs lost. They promised a Labor government would respect peer review, invest in universities, and create 20,000 new places under the Future Made in Australia Skills Plan."
+  },
+  {
+   "slug": "speech-418363",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The speech supported the Australian Research Council Amendment Bill 2021, which applies indexation to approved research programs and inserts a funding year for 2024-25, while arguing for greater R&D investment and manufacturing self-sufficiency. It cited falling R&D spending from 2.11% to 1.79% of GDP, criticised coalition cuts including $550 million in 2014-15 and a $2 billion attempt in 2018-19, and outlined Labor's National Reconstruction Fund priorities across agriculture, resources, renewables, medicine, and innovation."
+  },
+  {
+   "slug": "speech-418364",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government has no commitment to research and development, citing Minister Robert's veto of six ARC humanities grants announced on Christmas Eve, a petition with 1,500 signatories, and a letter from 60 ARC laureate fellows criticising the intervention; they also noted that Australian R&D investment has fallen to 1.79% of GDP, well below the OECD average of 2.38%."
+  },
+  {
+   "slug": "speech-418365",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The Australian Research Council Amendment Bill 2021 provides an additional $844 million in funding to 2024-25. The speaker criticised the minister's veto of six ARC Discovery projects and noted a Senate inquiry into the minister's power to veto research funding."
+  },
+  {
+   "slug": "speech-418366",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "Labor supported the ARC Amendment Bill 2021 and the amendment moved by the member for Moreton, arguing that the government's mismanagement and politicisation of ARC grants and failure to support universities during the pandemic had harmed researchers; the acting education minister rejected six humanities grants on unsupported grounds, the longest notification delay in 30 years occurred, and 40,000 higher education jobs were lost."
+  },
+  {
+   "slug": "speech-418367",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The Australian Research Council Amendment Bill 2021 updates funding caps for the ARC, increasing the 2021–22 cap to $815 million and extending appropriations to 2024–25 to support university research and industry collaboration."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Research Council Amendment Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00029",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

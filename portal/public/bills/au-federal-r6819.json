@@ -1,0 +1,173 @@
+{
+ "key": "au-federal-r6819",
+ "title": "Religious Discrimination (Consequential Amendments) Bill 2021",
+ "short_title": "Religious Discrimination (Consequential Amendments) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-11-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6819%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6819%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6819%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6819%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6819%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6819_ems_81044739-0164-41bc-ad2e-02d28a25685f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6819%22",
+   "document_date": "2021-11-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-11-25",
+  "sentences": [
+   "This bill updates several federal laws to support the main Religious Discrimination Bill.",
+   "It would give the Australian Human Rights Commission new powers to handle complaints about religious discrimination, including investigating and conciliating them.",
+   "A new Religious Discrimination Commissioner would be created as a member of the Commission, with the same authority as existing commissioners."
+  ],
+  "changes": [
+   "Amends the Australian Human Rights Commission Act to let the Commission handle religious discrimination complaints.",
+   "Creates the Religious Discrimination Commissioner as a Commission member.",
+   "Requires the Commission to refer complaints about discriminatory industrial instruments to the Fair Work Commission.",
+   "Allows the Religious Discrimination Commissioner to make submissions to the Fair Work Commission on such instruments.",
+   "Recognises the Religious Discrimination Act as an anti-discrimination law for the Sea Installations Act and the Fair Work Act.",
+   "Provides that civil aviation regulations may override the Religious Discrimination Act for air safety."
+  ],
+  "affected": "People and organisations subject to federal anti-discrimination laws, the Australian Human Rights Commission, the Fair Work Commission, and intelligence agencies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-415919",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-25",
+   "stage_hint": null,
+   "brief": "The Religious Discrimination (Consequential Amendments) Bill 2021 makes amendments to support the Religious Discrimination Bill, implementing recommendations 15 and 19 of the Religious Freedom Review, establishing a Religious Discrimination Commissioner, and extending complaints-handling to the Australian Human Rights Commission and federal courts. It also amends the Fair Work Act to align with the new religious discrimination protections and includes a contingent amendment to prescribe the Victorian Equal Opportunity Act 2010 if certain Victorian amendments are enacted."
+  },
+  {
+   "slug": "speech-417128",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-02",
+   "stage_hint": null,
+   "brief": "Labor will not adopt a final position on the Religious Discrimination Bill 2021 until a parliamentary committee completes its inquiry and public consultation, arguing the bill is complex and needs careful scrutiny to avoid unintended consequences. The speaker criticised the Prime Minister for introducing the bill shortly before a vote without prior bipartisan consultation, and reiterated Labor’s principles: support for extending federal anti-discrimination protections to religious belief, while ensuring existing protections against other forms of discrimination are not removed."
+  },
+  {
+   "slug": "speech-417359",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued the Religious Discrimination Bill 2021 package is needed to fill a gap in Australia's human rights framework, protecting people of faith and non-believers from discrimination. Concrete positions included allowing religious schools to preference staff of the same religion, protecting statements of belief made in good faith, and noting that New South Wales and South Australia lack any religious discrimination laws."
+  },
+  {
+   "slug": "speech-417773",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Religious Discrimination Bill 2021, arguing it would legalise discrimination against vulnerable groups including LGBTQI people, women, and people with disability, and override existing anti-discrimination protections."
+  },
+  {
+   "slug": "speech-417774",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "A motion was moved to suspend standing orders to allow the consecutive consideration of six bills without intervening business: the Religious Discrimination Bill 2021, Religious Discrimination (Consequential Amendments) Bill 2021, Human Rights Legislation Amendment Bill 2021, Treasury Laws Amendment (Enhancing Superannuation Outcomes For Australians and Helping Australian Businesses Invest) Bill 2021, National Disability Insurance Scheme Amendment (Participant Service Guarantee and Other Measures) Bill 2021, and Corporate Collective Investment Vehicle Framework and Other Measures Bill 2021. After consideration, the House would adjourn until 9:30 am on Thursday, 10 February 2022, with any divisions deferred to that time and a quorum count scheduled."
+  },
+  {
+   "slug": "speech-417776",
+   "speaker": "The SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

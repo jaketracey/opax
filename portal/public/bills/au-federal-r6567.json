@@ -1,0 +1,173 @@
+{
+ "key": "au-federal-r6567",
+ "title": "Excise Levies Legislation Amendment (Sheep and Lamb) Bill 2020",
+ "short_title": "Excise Levies Legislation Amendment (Sheep and Lamb) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6567%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6567%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6567%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6567%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6567%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6567%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6567%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6567%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6567%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6567%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6567_ems_485f828a-451a-45cb-906e-9b87277244ac%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6567%22",
+   "document_date": "2020-06-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00145",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-17",
+  "sentences": [
+   "This bill is part of a package that aligns the definition of lamb used for imposing excise levies with the new definition used for export and by industry.",
+   "The bill would amend the Primary Industries (Excise) Levies Act 1999 to adopt the new definition of lamb as an ovine animal under 12 months of age or without permanent incisor teeth in wear.",
+   "The new definition took effect in July 2019 following industry consultation and is designed to bring Australia in line with international competitors."
+  ],
+  "changes": [
+   "Aligns the definition of lamb for excise levy purposes with the export and industry definition.",
+   "Adopts the definition of lamb as an ovine animal under 12 months of age or without permanent incisor teeth in wear.",
+   "Provides administrative clarity for levy payers and supports compliance with the levies scheme."
+  ],
+  "affected": "Sheep and lamb producers, processors, and exporters who pay excise levies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-392791",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The Excise Levies Legislation Amendment (Sheep and Lamb) Bill 2020 aligns the definition of lamb for levy purposes with the new export definition—an ovine animal under 12 months or without any permanent incisor teeth in wear—to improve compliance and clarity, with support from the Australian Meat Industry Council and Sheep Producers Australia."
+  },
+  {
+   "slug": "speech-400152",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The opposition supports the Excise Levies Legislation Amendment (Sheep and Lamb) Bill 2020, which aligns Australia's definition of 'lamb' with international standards, but condemns the government for taking over two years to implement industry-endorsed changes and for its broader failure to prioritise agriculture, including delayed assistance to drought-affected farmers. The speaker moved a second reading amendment condemning the government's failed record in assisting drought-affected farmers and communities."
+  },
+  {
+   "slug": "speech-400157",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-400161",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for taking two years to amend the definition of 'lamb' in the bills, and highlighted that a trade deal with Qatar for 1.2 million chilled fat lambs had just collapsed, with no response from the agriculture minister."
+  },
+  {
+   "slug": "speech-400162",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The Excise Levies Legislation Amendment (Sheep and Lamb) Bill 2020 updates the definition of lamb across four pieces of legislation to align with the July 2019 industry and export definition, following consultation with Sheep Producers Australia and the Australian Meat Industry Council, to reduce regulatory inconsistency and support levy compliance for the $4.5 billion sheep and lamb sector involving around 31,000 businesses."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Excise Levies Legislation Amendment (Sheep and Lamb) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00145",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

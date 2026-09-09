@@ -1,0 +1,277 @@
+{
+ "key": "au-federal-alrc-2388",
+ "title": "Tax Laws Amendment (2013 Measures No. 1) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00119",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-1093",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "question": "Tony Smith by leave—I move coalition amendments (1) and (2), as circulated in my name, together: (1) Clause 2, page 2 (table item 4), omit the table item. (2) Schedule 3, page 11 (lines 1 to 10), omit the Schedule. As I outlined in my speech on the second reading, the coalition is moving to excise schedule 3 from this bill. Amendments (1) and (2) give effect to that. Let me reiterate a couple of things for the benefit of the shadow Assistant Treasurer, and I will deal with some of the points he made. As he articulated, this legislation seeks to introduce a whole new general category. Currently, there is one provider nationally in Australia and that is Primary Ethics. We note that the explanatory memorandum to the bill provides that New South Wales example as the only one, with no reference to any other state or territory. As I previously stated, this one provider has sought a listing and it was rejected by the current government. As Senator Cormann outlined yesterday, the coalition has no philosophical objection to ethics classes but did not think it was appropriate that we have this whole new category created at this point without proper consideration of all the issues. I want to point out a few things to the Assistant Treasurer regarding what he said in his long speech of rebuttal to our position on this. He first said that Mathias Cormann, our shadow Assistant Treasurer, had confirmed that we have no philosophical objection and yet he accused him of having a philosophical objection. The Assistant Treasurer will, quite predictably, cast any aspersions on any scrutiny but, when it comes to his conduct of tax laws amendment bills, he is the Captain Chaos of Assistant Treasurers. We have seen time and time again—and I deal with a lot of these tax laws amendment bills— Mr Bradbury interjecting— I did interrupt you once or twice but, I think, on a tax laws amendment bill— Deborah O'Neill Order! Please speak through the chair and can we come to the amendments, in partic",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 71,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-05-29/1"
+  },
+  {
+   "key": "federal-senate-2432",
+   "date": "2013-06-28",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "Bill",
+   "ayes": 36,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "member": 3,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-28/7"
+  },
+  {
+   "key": "federal-senate-2433",
+   "date": "2013-06-28",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "Bill",
+   "ayes": 36,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "member": 3,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-28/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-273422",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273423",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax Laws Amendment (2013 Measures No. 1) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00119",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

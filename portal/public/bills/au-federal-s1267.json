@@ -1,0 +1,172 @@
+{
+ "key": "au-federal-s1267",
+ "title": "Family Law Amendment (Risk Screening Protections) Bill 2020",
+ "short_title": "Family Law Amendment (Risk Screening Protections) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-26",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2020-11-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1267_ems_b8f676fd-d5ae-4549-93ff-1aed763912fa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/7588054%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1267%22",
+   "document_date": "2020-08-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00098",
+   "document_date": "2020-11-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-398071",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The government introduced the Family Law Amendment (Risk Screening Protections) Bill 2020 to support a $13.5 million pilot of family safety risk screening and triage processes in the Brisbane, Parramatta and Adelaide family law court registries, including a specialist Evatt List for high-risk matters, with confidentiality and immunity protections for court officials."
+  },
+  {
+   "slug": "speech-398072",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Family Law Amendment (Risk Screening Protections) Bill 2020 should be passed to support the Lighthouse Project, a domestic violence risk‑screening pilot trialled in Adelaide, Brisbane and Parramatta, and criticised the Morrison government for delaying the legislation while calling for additional funding for frontline family violence services."
+  },
+  {
+   "slug": "speech-398074",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Family Law Amendment (Risk Screening Protections) Bill 2020, which makes risk-screening information inadmissible in legal proceedings except to protect children or prevent serious harm, enabling the $13.5 million Lighthouse Project pilot in Adelaide, Brisbane and Parramatta. The speech also cited $490 million in government funding for domestic violence measures, including $2.6 million for Coast2Bay emergency accommodation on the Sunshine Coast."
+  },
+  {
+   "slug": "speech-398075",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Family Law Amendment (Risk Screening Protections) Bill 2020 as a necessary step but criticised the government for years of delay and insufficient funding, noting that domestic violence is a factor in 79% of Legal Aid family law matters and that 8.2% of women experienced first-time physical violence during COVID-19. They also argued for removing the presumption of equal shared parental responsibility in custody cases and for increased resourcing of courts, legal services, and community organisations."
+  },
+  {
+   "slug": "speech-398076",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The bill supports the government-funded Lighthouse Project, piloted in the Adelaide, Brisbane and Parramatta federal family law court registries from 2020 to mid-2022 with $13.5 million in funding, by making risk screening information confidential and inadmissible with limited child-safety exceptions and granting court workers immunity. The government has invested over $1 billion in addressing family violence since 2013."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Family Law Amendment (Risk Screening Protections) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00098",
+   "assent_date": "2020-11-20"
+  }
+ ]
+}

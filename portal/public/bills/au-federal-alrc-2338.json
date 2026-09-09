@@ -1,0 +1,205 @@
+{
+ "key": "au-federal-alrc-2338",
+ "title": "Royal Commissions Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "passed",
+ "status_as_of": "2013-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-03-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-13",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-03-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-03-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00024",
+   "document_date": "2013-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-270252",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270253",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270255",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270256",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822300",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822426",
+   "speaker": "Mark Furner",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-13",
+   "stage_hint": null,
+   "brief": "Three bills—the Australian Capital Territory (Self-Government) Amendment Bill 2013, the Higher Education Support Amendment (Further Streamlining and Other Measures) Bill 2013, and the Royal Commissions Amendment Bill 2013—were introduced together, with a motion to proceed without formalities and be read a first time agreed to."
+  },
+  {
+   "slug": "speech-822766",
+   "speaker": "Jacinta Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": "A motion was moved and agreed to exempt five bills—including the ACT Self-Government Amendment Bill 2013 and the Higher Education Support Amendment Bill 2013—from certain parliamentary notice periods so they could be considered in the current sitting."
+  },
+  {
+   "slug": "speech-822767",
+   "speaker": "Jacinta Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": "A motion to postpone intervening business until after consideration of the Royal Commissions Amendment Bill 2013 was moved and agreed to."
+  },
+  {
+   "slug": "speech-271551",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822894",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Royal Commissions Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00024",
+   "assent_date": "2013-03-28"
+  }
+ ]
+}

@@ -1,0 +1,240 @@
+{
+ "key": "au-federal-r5466",
+ "title": "Tax Laws Amendment (Small Business Measures No. 2) Bill 2015",
+ "short_title": "Tax Laws Amendment (Small Business Measures No. 2) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5466_ems_1a477986-36c2-41e2-ba77-d263aff4b67b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5466%22",
+   "document_date": "2015-05-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00067",
+   "document_date": "2015-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3791",
+   "date": "2015-06-03",
+   "house": "representatives",
+   "question": "Jane Prentice As I was saying, following the budget the Treasurer and I visited one such business, Briki Espresso and Gelati Bar in the suburb of Ironside. There we met Sav Ermides, who told us that the depreciation changes in the budget will help him to expand his cafe and also buy a new oven so that he can serve more customers and grow his business. Mr Ermides is one of thousands of such stories among the 13,000 registered small businesses in my electorate and the hundreds of thousands more across Australia. This policy is already making a real difference to small businesses. These days it is a cliche to say that small business is the engine room of the economy, but nevertheless the numbers back it up. Small businesses produce more than $330 billion of our nation's economic output every year. Better yet, they employ more than 4.5 million Australians. Businesses such as Brookfield Gardens, a family-owned garden retailer in my electorate that now boasts a restaurant addition. Robin and Scott McLay have a passion for gardening and have built a successful local business that demonstrates their passion and expertise. They are a great small business success story. Then there is the French patisserie at the Cat and Fiddle shopping centre in Toowong. They have been a family run business since 1984, making delightful pastry desserts as well as quiches that are a weekend lunch staple for my family. And businesses such as Kenmore Gallery and Picture Framing, run by well-known Ryan local Liz Barker with more than 30 years of industry experience. As I speak to people across the electorate of Ryan, I am hearing more and more stories of new families investing in existing small businesses—a positive reaction to a recharged economy, where a more optimistic mood is encouraging people to take that step into their own business. Like Cave Coffee Espresso Bar at Keperra. It has always served great coffee and has been revitalised under new ownership. I am particularly looking forward to",
+   "stage": "Second reading",
+   "ayes": 47,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 47,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 124
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-06-03/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-311912",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-03",
+   "stage_hint": null,
+   "brief": "The speaker announced a tax cut for small businesses, reducing the company tax rate to 28.5% for incorporated businesses with turnover under $2 million from 1 July 2015, claiming it is the lowest rate since 1967 and the largest small business package in Australian history."
+  },
+  {
+   "slug": "speech-311925",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-03",
+   "stage_hint": null,
+   "brief": "The bills introduce a 28.5% tax rate for small businesses with turnover under $2 million and an immediate tax deduction for eligible assets under $20,000 each."
+  },
+  {
+   "slug": "speech-312103",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tax Laws Amendment (Small Business Measures No. 1 and 2) Bills 2015, which cut the company tax rate to 28.5% for small businesses and introduced $20,000 accelerated depreciation, but argued the government's public service job cuts had severely damaged Canberra’s economy, citing a 41% drop in building approvals and the lowest business confidence in Australia."
+  },
+  {
+   "slug": "speech-312105",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-03",
+   "stage_hint": null,
+   "brief": "Labor supported the two small business tax bills, including the 1.5 per cent company tax cut and $20,000 accelerated depreciation, but criticised the government for blocking Labor's immediate attempt to pass them despite urging urgency. The speaker referenced Bill Shorten's support and Tony Abbott's call to pass the bill straightaway."
+  },
+  {
+   "slug": "speech-312118",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-03",
+   "stage_hint": null,
+   "brief": "The coalition's $5.5 billion Growing Jobs and Small Business package reduces the company tax rate to 28.5% for businesses with turnover under $2 million and increases the instant asset write-off threshold to $20,000. It also provides accelerated depreciation for primary producers on fencing, water facilities, and fodder storage."
+  },
+  {
+   "slug": "speech-312120",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-03",
+   "stage_hint": null,
+   "brief": "The member for Lyne announced the bills deliver a 1.5 per cent company tax cut for incorporated small businesses with turnover under $2 million, applying retrospectively, and a five per cent tax benefit, arguing the measures provide concrete help to small businesses."
+  },
+  {
+   "slug": "speech-312195",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The speaker thanked 31 members (16 coalition, 15 opposition) for debating small business interests representing 300,000 small businesses. The bills lower the company tax rate to 28.5% for 780,000 small businesses, expand asset write-offs from $1,000 to $20,000, and allow farmers immediate deductions for fencing, water facilities, and fodder storage, effective from 12 May 2015."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax Laws Amendment (Small Business Measures No. 2) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00067",
+   "assent_date": "2015-06-22"
+  }
+ ]
+}

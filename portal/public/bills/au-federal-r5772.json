@@ -1,0 +1,175 @@
+{
+ "key": "au-federal-r5772",
+ "title": "National Health Amendment (Pharmaceutical Benefits) Bill 2016",
+ "short_title": "National Health Amendment (Pharmaceutical Benefits) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2017-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5772_ems_fad13554-e25d-4bf3-9363-602297ea6f10%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5772%22",
+   "document_date": "2016-11-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00016",
+   "document_date": "2017-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-338486",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-24",
+   "stage_hint": null,
+   "brief": "The bill amends the National Health Act 1953 to allow computerised decision-making for PBS administrative processes, reduce red tape for pharmacies after disasters by letting them use their existing approval number at alternative premises for up to six months with full payments, and correct concessional PBS entitlements to apply until midnight on the day of death, with retrospective backdating to April 2015."
+  },
+  {
+   "slug": "speech-343345",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-20",
+   "stage_hint": null,
+   "brief": "Labor supported the National Health Amendment (Pharmaceutical Benefits) Bill 2016, which allows automated PBS claims processing, temporary pharmacy relocation after disasters, and benefits on the day of death, but opposed the government's plan to increase medicine co-payments by up to $5 per script and cut $1.3 billion from the PBS."
+  },
+  {
+   "slug": "speech-343346",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-20",
+   "stage_hint": null,
+   "brief": "Labor supported the National Health Amendment (Pharmaceutical Benefits) Bill 2016 in principle, welcoming its technical changes to computerised processing, disaster supply and death-day benefits, but cautioned that the government’s history of bungled IT projects and its plan to raise medicine co-payments by $5 for general patients and 80c for concessional patients threatened access to affordable medicines."
+  },
+  {
+   "slug": "speech-343347",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-20",
+   "stage_hint": null,
+   "brief": "The speaker, a Labor MP and pharmacist, announced support for the National Health Amendment (Pharmaceutical Benefits) Bill, which makes three technical changes to the PBS: allowing online claims processing, improving disaster-affected pharmacy location rules, and ensuring concessional patients are covered until the day of death. The speaker also criticised the federal government for undermining Medicare and the PBS, and the NSW Liberal government for selling Wyong Hospital, citing over 15,000 Central Coast residents delaying GP visits and 30,000 delaying prescriptions due to cost."
+  },
+  {
+   "slug": "speech-343348",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-20",
+   "stage_hint": null,
+   "brief": "The National Health Amendment (Pharmaceutical Benefits) Bill 2016 was supported for improving PBS access via automated decision-making, post-disaster alternative premises, and extending coverage to the day of death. Criticism of the Turnbull government covered IT mismanagement and proposed co-payment increases of $5 (general) and 80c (concessional), which were presented as worsening health inequality, citing delayed-treatment rates of 16 per 100 in regional Australia against 7 in Wentworth, and 13–15 per 100 in Gilmore, New England, and Page."
+  },
+  {
+   "slug": "speech-343350",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-20",
+   "stage_hint": null,
+   "brief": "The National Health Amendment (Pharmaceutical Benefits) Bill 2016 introduces an automated online prescription system for the PBS, reducing monthly phone calls by up to 500,000. The bill is part of a broader health plan to 2030 that includes increased Medicare funding, $4.9 billion in new medicines listed, and commitments to hospitals, mental health, and medical research."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Health Amendment (Pharmaceutical Benefits) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00016",
+   "assent_date": "2017-03-28"
+  }
+ ]
+}

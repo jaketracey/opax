@@ -1,0 +1,169 @@
+{
+ "key": "au-federal-r6633",
+ "title": "Treasury Laws Amendment (2020 Measures No. 6) Bill 2020",
+ "short_title": "Treasury Laws Amendment (2020 Measures No. 6) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6633%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6633%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6633%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6633%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6633%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6633%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6633%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6633%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6633%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6633%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6633%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6633_ems_f36e0d9a-df55-49ac-90f8-d92aebf2dc13%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6633%22",
+   "document_date": "2020-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00141",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-399501",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The bill introduces an alternative test for temporary full expensing targeting businesses with under $5 billion in statutory and ordinary income in 2018-19 or 2019-20, amends the consumer data right for coordination and security, and removes basic religious charity status—along with associated tax concessions—from charities that fail to take reasonable steps to join the National Redress Scheme for institutional child sexual abuse."
+  },
+  {
+   "slug": "speech-400467",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker supported expanding temporary full expensing to businesses breaching the $5 billion income test due to foreign activities, but expressed concern that the government has not invested in skills and education, citing an MIT report on tax incentives for automation. The speaker also supported removing charitable status from charities that fail to join the National Redress Scheme for child sexual abuse survivors, and moved a second reading amendment calling for an early payment scheme for ill or elderly survivors, stopping indexation of prior payments, increasing the maximum payment to $200,000, and fixing the assessment matrix."
+  },
+  {
+   "slug": "speech-400472",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker criticised the bill for giving billions in subsidies to big corporations while cutting JobSeeker and JobKeeper, noting that 60% of national income now goes to profits—a 60-year high—and argued for a Green New Deal approach with investment in public housing, renewable energy, and guaranteed jobs to lift people out of poverty."
+  },
+  {
+   "slug": "speech-400473",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill’s $26.7 billion temporary full expensing measures, urging businesses to use them for green investments, and called on the government to amend cashflow boost eligibility for businesses affected by mergers or acquisitions, citing WOTSO and Elite Woodhams Relocation. They also questioned the unexplained transfer of consumer data rights administration from the ACCC to Treasury."
+  },
+  {
+   "slug": "speech-400474",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker supported schedule 3 of the bill, which excludes charities that have not joined the National Redress Scheme from the definition of a basic religious charity, and named Jehovah's Witnesses, Kenja Communication, Lakes Entrance Pony Club, and Fairbridge Restored Ltd as recalcitrant organisations. They also backed Labor's amendment calling for an early payment scheme for elderly or ill survivors, an end to indexing prior payments, a return to the $200,000 maximum payment, and a revised assessment matrix."
+  },
+  {
+   "slug": "speech-400475",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The bill expands temporary full expensing eligibility to businesses with under $5 billion in income and at least $100 million in depreciating assets, allows asset-by-asset opt-out, and amends laws to improve the consumer data right, encourage charities to join the National Redress Scheme for child sexual abuse, and make technical corrections."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2020 Measures No. 6) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00141",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

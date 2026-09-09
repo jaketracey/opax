@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-s1249",
+ "title": "Saving Australian Dairy Bill 2019",
+ "short_title": "Saving Australian Dairy Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-02",
+ "originating_house": "senate",
+ "sponsor": "HANSON, Sen Pauline",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10280",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1249%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1249%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1249%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1249_ems_7091088c-6d8d-442f-ae37-8b8b13a24f39%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1249%22",
+   "document_date": "2019-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-02",
+  "sentences": [
+   "The bill would create a minimum price for farm milk and regulate the dairy supply chain.",
+   "It would direct the Australian Competition and Consumer Commission to set a minimum farm-gate milk price by region and make it an offence for a processor to buy milk below that price.",
+   "The offence would carry a penalty of 2000 penalty units, and the bill would also require a Productivity Commission inquiry into the effectiveness of the price-setting amendments."
+  ],
+  "changes": [
+   "Tasks the ACCC with setting a minimum price for milk fat and protein content per region.",
+   "Creates an offence for paying less than the base price for milk.",
+   "Requires a mandatory code of conduct for the dairy industry supply chain.",
+   "Requires the minister to refer an inquiry to the Productivity Commission on the price amendments and possible divestiture orders.",
+   "Prevents the minister from ending the Productivity Commission inquiry before it reports."
+  ],
+  "affected": "Dairy farmers, milk processors, first purchasers of milk, and the dairy supply chain, as well as the Australian Competition and Consumer Commission and the Productivity Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

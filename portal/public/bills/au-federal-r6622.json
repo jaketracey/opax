@@ -1,0 +1,188 @@
+{
+ "key": "au-federal-r6622",
+ "title": "Education Services for Overseas Students Amendment (Refunds of Charges and Other Measures) Bill 2020",
+ "short_title": "Education Services for Overseas Students Amendment (Refunds of Charges and Other Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-11-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2021-03-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6622_ems_f80d88ba-f5fe-4491-a79d-35e5abfa4a26%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6622%22",
+   "document_date": "2020-11-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00018",
+   "document_date": "2021-03-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-11-11",
+  "sentences": [
+   "The bill would let the government refund registration charges to education providers for overseas students in special circumstances, such as the COVID-19 pandemic.",
+   "It would also narrow the definition of 'course' to align with existing national education frameworks and give the minister power to exempt certain courses from registration requirements.",
+   "The bill follows a temporary waiver of charges from 1 January 2020 to 30 June 2021, with over $10.9 million already refunded under existing provisions."
+  ],
+  "changes": [
+   "Enables the Secretary to refund all or part of registration charges in special circumstances.",
+   "Refines the definition of 'course' to capture only those leading to substantive qualifications or meeting quality frameworks.",
+   "Gives the minister power to include or exempt certain courses from the ESOS Act via legislative instrument."
+  ],
+  "affected": "Registered education providers for overseas students, and overseas students taking supplementary courses.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-398501",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-11",
+   "stage_hint": null,
+   "brief": "The bill amends the ESOS Act to allow refunds of CRICOS registration charges in special circumstances and to redefine 'course' so short supplementary courses (such as first aid or barista training) fall outside full ESOS regulation, while maintaining protections for substantive study. It aims to cut red tape, saving over $2 million annually, and support the international education sector after COVID-19 border measures."
+  },
+  {
+   "slug": "speech-402581",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "Labor moved an amendment supporting the bill but criticising the government for undermining its objective by neglecting universities and international students during COVID-19, citing Deakin University's $25 million support package, 17,300 university job losses, and $40 billion in education exports. The party called for public transparency on fee waivers and condemned the government's broader cuts to higher education, including billions removed from TAFE and training."
+  },
+  {
+   "slug": "speech-402584",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-402767",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "The bill removes regulatory barriers for short supplementary courses for overseas students, such as first aid and responsible service of alcohol, to support the education export industry—worth $1.6 billion to the Gold Coast economy before COVID—and the broader $5 billion tourism sector."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education Services for Overseas Students Amendment (Refunds of Charges and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00018",
+   "assent_date": "2021-03-02"
+  }
+ ]
+}

@@ -1,0 +1,138 @@
+{
+ "key": "au-federal-s1399",
+ "title": "Fair Work Legislation Amendment (First Responders) Bill 2023",
+ "short_title": "Fair Work Legislation Amendment (First Responders) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-06",
+ "originating_house": "senate",
+ "sponsor": "LAMBIE, Sen Jacqui",
+ "sponsor_party": "Jacqui Lambie Network",
+ "sponsor_person_id": "10830",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-11-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1399%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1399%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1399%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1399%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1399%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1399%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1399_ems_94ebceca-314b-4ab6-ab98-784fd36749b0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1399%22",
+   "document_date": "2023-11-06",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-06",
+  "sentences": [
+   "This bill changes the law so that certain emergency workers who develop post-traumatic stress disorder are automatically considered to have gotten it from their jobs, unless proven otherwise.",
+   "The change applies to people employed in roles such as police, firefighting, ambulance work, and emergency call-taking, and it covers both current and past workers who showed symptoms after the law takes effect.",
+   "The bill starts the day after it receives Royal Assent, and it only applies to PTSD that occurs after that date."
+  ],
+  "changes": [
+   "It adds a new rule to the Safety, Rehabilitation and Compensation Act 1988 that creates a rebuttable presumption in favor of first responders with PTSD.",
+   "It lets the Minister create a legal instrument that spells out the exact situations where PTSD is considered to have happened because of work.",
+   "It specifies that the presumption does not override older rules about other diseases and that workers can still prove their case even if they don't fit the new definition."
+  ],
+  "affected": "Australian Federal Police employees, firefighters, ambulance officers and paramedics, and emergency services communications operators in the ACT.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8437",
+   "date": "2023-11-13",
+   "house": "representatives",
+   "question": "Fair Work Legislation Amendment (First Responders) Bill 2023 - First Reading - Suspend the usual procedural rules",
+   "stage": "First Reading",
+   "ayes": 62,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 72
+    },
+    "Liberal": {
+     "ayes": 33,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-13/2"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

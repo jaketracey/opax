@@ -5,7 +5,8 @@ knowledge box. Resumable, backpressure-aware, cost-guarded.
 What migrates here is the TEXT corpus only:
   speeches         1.19M rows, ~4.4B chars   -> resource slug speech-{speech_id}
   legal_documents  232K rows,  ~9.2B chars   -> resource slug legal-{doc_id}
-  news_articles    ~4K rows                  -> resource slug news-{id}
+
+News articles are excluded from the corpus.
 
 Structured tables (votes, donations, contracts, members, ...) stay in
 Postgres/SQLite — they are relational analytics, not retrieval documents.
@@ -179,6 +180,12 @@ def map_speech(row: sqlite3.Row) -> dict:
             row["text"], row["source"] or "", row["topic"], row["speaker_name"]
         )
     title_bits = [b for b in (speaker, row["topic"], date) if b]
+    # Committee transcripts (parli.ingest.committee_witnesses): who the speaker
+    # is at the table. A witness is never a member; the label lets the portal
+    # say so, and the position and organisation come from the attendance list.
+    speaker_type = _optional_column(row, "speaker_type")
+    witness_position = _optional_column(row, "witness_position")
+    witness_organisation = _optional_column(row, "witness_organisation")
     return {
         "slug": f"speech-{row['speech_id']}",
         "title": (" — ".join(title_bits) or f"Speech {row['speech_id']}")[:2000],
@@ -196,6 +203,7 @@ def map_speech(row: sqlite3.Row) -> dict:
                 ("party", party),
                 ("chamber", row["chamber"]),
                 ("decade", decade),
+                ("speaker_type", speaker_type),
             ])
         },
         "extra": {
@@ -206,6 +214,8 @@ def map_speech(row: sqlite3.Row) -> dict:
                 "electorate": row["electorate"],
                 "word_count": row["word_count"],
                 "date": date,
+                **({"witness_position": witness_position} if witness_position else {}),
+                **({"witness_organisation": witness_organisation} if witness_organisation else {}),
             }
         },
     }
@@ -239,28 +249,6 @@ def map_legal(row: sqlite3.Row) -> dict:
     }
 
 
-def map_news(row: sqlite3.Row) -> dict:
-    # Schema (QA 2026-09-01): article_id TEXT PK, title, date ISO, section,
-    # url, body_text, source ('guardian'|'abc'). section is topic tags for
-    # abc only (guardian's is uniformly 'Australia news' — useless).
-    date = row["date"] or ""
-    labels: list[tuple[str, Optional[str]]] = [("kind", "news"), ("source", row["source"])]
-    if row["source"] == "abc" and row["section"]:
-        labels += [("topic", t.strip()) for t in row["section"].split(",")[:5] if t.strip()]
-    return {
-        "slug": f"news-{row['rowid']}",
-        "title": (row["title"] or f"Article {row['rowid']}")[:2000],
-        "texts": _texts(row["body_text"] or ""),
-        "origin": {
-            "source_id": "news",
-            **({"url": row["url"]} if row["url"] else {}),
-            **({"created": f"{date[:10]}T00:00:00Z"} if len(date) >= 10 else {}),
-        },
-        "usermetadata": {"classifications": _classifications(labels)},
-        "extra": {"metadata": {"article_id": row["article_id"], "date": date}},
-    }
-
-
 TABLES: dict[str, dict[str, Any]] = {
     "speeches": {
         "pk": "speech_id",
@@ -276,12 +264,7 @@ TABLES: dict[str, dict[str, Any]] = {
                   "ORDER BY doc_id LIMIT ?",
         "map": map_legal,
     },
-    "news_articles": {
-        "pk": "rowid",
-        "select": "SELECT rowid, * FROM news_articles WHERE rowid > ? "
-                  "AND LENGTH(body_text) >= 200 ORDER BY rowid LIMIT ?",
-        "map": map_news,
-    },
+
 }
 
 
@@ -640,7 +623,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--tables", default="speeches",
-                        help="comma-separated: speeches,legal_documents,news_articles")
+                        help="comma-separated: speeches,legal_documents (news is excluded)")
     parser.add_argument("--limit", type=int, default=SAFETY_LIMIT,
                         help=f"max rows per table this run (default {SAFETY_LIMIT})")
     parser.add_argument("--full", action="store_true",
@@ -663,6 +646,10 @@ def main() -> None:
 
     if args.repair_limit < 1 or args.repair_limit > MAX_SPEECH_REPAIRS_PER_RUN:
         parser.error(f"--repair-limit must be 1..{MAX_SPEECH_REPAIRS_PER_RUN}")
+
+    unknown = {name.strip() for name in args.tables.split(",")} - set(TABLES)
+    if unknown:
+        parser.error(f"Unsupported corpus tables: {sorted(unknown)}; news is excluded")
 
     load_dotenv()
     cfg = AragConfig.from_env()

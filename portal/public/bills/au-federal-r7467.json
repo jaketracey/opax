@@ -1,0 +1,291 @@
+{
+ "key": "au-federal-r7467",
+ "title": "Secrecy Provisions Amendment (Repealing Offences) Bill 2026",
+ "short_title": "Secrecy Provisions Amendment (Repealing Offences) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-04-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "before_parliament",
+ "status_as_of": "2026-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7467%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7467%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7467%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7467%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7467%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7467%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7467_ems_66c2e6c9-3f38-4ffd-a12e-8298d86911f8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/10834418%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7467%22",
+   "document_date": "2026-04-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 12,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2026-04-01",
+  "sentences": [
+   "This bill is part of a package that overhauls Commonwealth secrecy laws following several reviews.",
+   "It would create a new offence for officials who misuse information for personal gain or to cause harm, and remove criminal liability from over 300 existing secrecy provisions.",
+   "The Attorney-General would need to consent before prosecuting journalists or news media staff for secrecy offences, unless regulations say otherwise."
+  ],
+  "changes": [
+   "Introduces a new offence for improper use of information by Commonwealth officials or those connected to the Commonwealth to obtain a benefit or cause detriment.",
+   "Repeals or removes criminal liability from more than 300 secrecy provisions, including section 122.4 of the Criminal Code.",
+   "Requires Attorney-General consent for prosecuting journalists or news media administrative staff for secrecy offences, subject to regulations.",
+   "Amends Part 5.6 of the Criminal Code to implement government responses to recommendations 1, 5-12, and 14 of the INSLM Secrecy Review."
+  ],
+  "affected": "Commonwealth officials, persons with a relationship to the Commonwealth, journalists, and news media administrative staff.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:05:10Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10213",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2026-05-13.166.1) introduced by Clark MP [Andrew Wilkie](https://theyvoteforyou.org.au/people/representatives/clark/andrew_wilkie) (Independent), which means it failed. This amendment would have changed the text for the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes that:* > >> *(a) Australia has been described as 'the most secretive democracy in the world' due to the proliferation of national security, counter-terrorism and secrecy laws, and the lack of whistleblower and public interest journalism protections; and* >> >> *(b) despite the Labor party promising in its 2021 platform to overhaul and improve Australia's whistleblower protections, only small changes have been introduced to date, and protections remain patchwork and inadequate; and* > > *(2) calls on the government to:* > >> *(a) introduce comprehensive reforms to the Public Interest Disclosure Act and the Corporations Act to better protect whistleblowers;* >> >> *(b) introduce comprehensive reforms to the Crimes Act and Criminal Code Act and Evidence Act to better protect public interest journalism and media sources;* >> >> *(c) establish a Whistleblower Protection Authority to oversee public and private sector whistleblowing; and* >> >> *(d) establish a federal whistleblower rewards scheme encouraging whistleblowers to come forward and expose wrongdoing\".*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 10,
+   "noes": 71,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 70
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 81
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-05-14/2"
+  },
+  {
+   "key": "federal-representatives-10214",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2026-05-14.17.2) introduced by Curtin MP [Kate Chaney](https://theyvoteforyou.org.au/people/representatives/curtin/kate_chaney) (Independent), which means they failed. Ms Chaney [explained that](https://www.openaustralia.org.au/debates/?id=2026-05-14.17.1): > *My amendments (1) and (2) will ... replace the 'improper' test with a harm based threshold. The offence would only be committed where the communication harms, or the person intends to harm or is reckless as to harming, an essential public interest. The amendments define essential public interests as national security and defence, criminal justice integrity, public health and safety, financial system stability and the privacy of personal information held by the Commonwealth, while making clear that courts may recognise others as well. Critically, the amendments also make clear that a communication does not harm an essential public interest merely because it exposes wrongdoing, maladministration or a failure of public accountability, protecting the space for whistleblowing and public interest journalism without creating an unlimited defence.* > > *Amendment (3) addresses the Attorney-General consent mechanism for journalist prosecutions. I support this mechanism, but not without reservation. Politicians should not, as a matter of principle, be final arbiters in the functions of our criminal justice system. But in the absence of stronger protections, including a general public interest defence or effective whistleblower laws, this mechanism is desirable in practice and may safeguard against prosecutions that would otherwise proceed contrary to the public interest. Well-balanced secrecy laws would negate any need for the Attorney-General to act as the final safeguard at all. Amendment (3), therefore, requires a mandatory independent review every five years to assess whether this mechanism is working as intended and whether it remai",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 71
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 83
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-05-14/3"
+  },
+  {
+   "key": "federal-representatives-10215",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2026-05-14.20.1) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means it failed. Ms Spender [explained that](https://www.openaustralia.org.au/debate/?id=2026-05-14.20.1): > *My amendment creates that safety net. It inserts a new subsection, 122.5(4AA), which provides that, where a defendant cannot satisfy every technical requirement of the PID Act's external or emergency disclosure pathway, they may still access the defence if they can demonstrate that their disclosure was reasonable and genuinely in the public interest, having regard to all circumstances. If someone makes a disclosure and does not fulfil the technical requirements but it cannot be proven they were completing this disclosure for a reasonable public good, they will still be held liable under the secrecy provisions. This is seeking to protect those who are sharing for the genuine public interest.* ### Amendment text > *(1) Schedule 1, page 6 (after line 32), after item 8, insert:* > >> *8A After subsection 122.5(4) of the Criminal Code* >> >> *Insert:* >> >> *(4AA) Where a defendant seeks to rely on the defence at paragraph 122.5(4)(a), on the grounds that they have made an external or emergency disclosure in accordance with section 26 of the Public Interest Disclosure Act 2013, it is sufficient for the defendant to show:* >> >>> *(a) in the case of items 2 and 3 of the table in that section—all the further requirements set out in column 3 of the item are met; or* >>> >>> *(b) the disclosure is otherwise reasonable and in the public interest, having regard to all of the circumstances.*",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 69,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 78
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-05-14/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1202353",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202354",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202513",
+   "speaker": "Lisa Darmanin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202525",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202526",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-05-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202722",
+   "speaker": "Jo Briskey",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-13",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

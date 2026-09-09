@@ -1,0 +1,316 @@
+{
+ "key": "au-federal-r5878",
+ "title": "Social Services Legislation Amendment (Energy Assistance Payment and Pensioner Concession Card) Bill 2017",
+ "short_title": "Social Services Legislation Amendment (Energy Assistance Payment and Pensioner Concession Card) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2017-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5878_ems_3db8ae99-2c8c-4b99-b887-e668c8cfcacb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5878%22",
+   "document_date": "2017-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00046",
+   "document_date": "2017-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-347676",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The speaker condemned the government's pension cuts, noting a one-off $75 payment to single pensioners while permanently removing the $365 annual Energy Supplement for new pensioners, and called for the government to drop its plan to raise the pension age to 70."
+  },
+  {
+   "slug": "speech-347678",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill providing a one-off energy assistance payment of $75 for singles and $62.50 for couples to nearly 4 million welfare recipients, and reinstating the pensioner concession card for over 92,000 people. He blamed Labor and the Greens for high energy prices due to ideological opposition to coal and gas, while arguing Australia’s energy resources should make power cheap."
+  },
+  {
+   "slug": "speech-347679",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's bill replaces a $365 annual energy supplement with a one-off $75 payment, which will not cover a week's electricity costs for Tasmanian pensioners, and noted that low-income Tasmanians pay 8.5% of their income on electricity. The speaker also criticised the government for cutting the supplement, increasing disconnections by 12% in 2015-16, and failing to support Newstart recipients, while pledging Labor's continued opposition to the supplement's abolition."
+  },
+  {
+   "slug": "speech-347680",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The speech supported the bill, citing rising electricity costs in Hinkler, including canefarmer Dean Cayley’s 126 per cent increase since 2008, and outlined the one-off energy assistance payment of $75 for singles and $62.50 per couple for eligible pensioners. It also announced reinstatement of the pensioner concession card for around 92,300 former pension recipients, an ACCC review of retail power prices, and additional aged care places in Bundaberg."
+  },
+  {
+   "slug": "speech-347681",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's $75 one-off Energy Assistance Payment is inadequate—worth only 20c a day—contrasting it with Labor's $30 weekly pension increase and $16,000 annual tax cuts for millionaires, and criticised the exclusion of over half a million Newstart recipients."
+  },
+  {
+   "slug": "speech-347689",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill providing a one-off $75 energy assistance payment and restoring the pensioner concession card, but condemned the government for cutting the energy supplement by $365 per year for single pensioners and for past cuts totalling $2.43 billion affecting 330,000 age pensioners, while giving $65.3 billion in corporate tax cuts."
+  },
+  {
+   "slug": "speech-347702",
+   "speaker": "Bert van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The coalition's Social Services Legislation Amendment (Energy Assistance Payment and Pensioner Concession Card) Bill 2017 was supported, restoring energy assistance payments and pensioner concession cards for pensioners and low-income earners, benefiting 24,000 Forde constituents (15,000 age pensioners, 6,000 disability support pensioners) at a $3.1 million cost to reissue cards. The opposition was accused of defending large businesses, opposing multinational tax avoidance bills, and allowing wages and conditions to be traded away for Cleanevent, Coles, Woolies and KFC employees, while electricity prices were cited as rising 118% under Labor's carbon tax versus around 2.5% under the coalition."
+  },
+  {
+   "slug": "speech-347703",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill providing a one-off energy assistance payment of $75 for singles and $62.50 for couples, but argued the government was simultaneously planning to cut the ongoing energy supplement worth $365 per year, and noted that 92,000 pensioners lost their concession cards due to assets test changes, with 3,410 in the Paterson electorate affected."
+  },
+  {
+   "slug": "speech-347706",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The member for Lalor argued the bill cleans up a government-created mess from broken promises on pensioner concession cards, and criticised the one-off $75 energy payment while the government plans to cut the annual $365 energy supplement and raise the pension age to 70."
+  },
+  {
+   "slug": "speech-347707",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The bill provides a one-off energy assistance payment of $75 for singles and $125 for couples to 3.8 million Australians on low incomes, and reinstates the pensioner concession card for those affected by age pension test changes from 1 January 2017."
+  },
+  {
+   "slug": "speech-347754",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker supported a one-off $75 energy assistance payment for pensioners but condemned the government for simultaneously cutting the permanent energy supplement by $375 per year, arguing the bill was deceptive and unfair to seniors."
+  },
+  {
+   "slug": "speech-347755",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the one-off energy assistance payment of $75 for singles and $62.50 for couples but argued it was insufficient and a distraction from the government's lack of a long-term energy plan. They criticised the government for scrapping the energy supplement for new pensioners and for delaying the reinstatement of the pensioner concession card, which 92,000 pensioners lost due to asset test changes."
+  },
+  {
+   "slug": "speech-347756",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill but criticized the one-off $75 energy assistance payment as inadequate compared to the $365 annual energy supplement being removed from new pensioners, and condemned the government for cutting pensioner benefits while proposing a $65 billion tax cut for high-income earners. They noted that nearly 1,000 pensioners in their electorate of Hindmarsh would regain their concession cards through the bill."
+  },
+  {
+   "slug": "speech-347757",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker condemned the coalition's asset test changes that cut pensions for 330,000 elderly Australians, including 3,000 in his electorate, and the removal of the energy supplement, calling the $75 one-off energy assistance payment inadequate. He opposed raising the pension age to 70 and creating a two-tier pension system, advocating for an emissions intensity scheme to reduce electricity prices."
+  },
+  {
+   "slug": "speech-347759",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "Labor supported the bill, which reinstates pensioner concession cards for some former pensioners, but condemned the government’s one-off $75 energy assistance payment as a distraction from its separate cut to the energy supplement that leaves pensioners $365 a year worse off. The speaker also criticised the coalition’s record on pensions, including freezing superannuation at 9.5 per cent until 2021 and plans to raise the pension age to 70."
+  },
+  {
+   "slug": "speech-347760",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull government has treated pensioners more disgracefully than any recent government, breaking a 2013 promise of no pension cuts. The legislation provides a one-off $75 energy payment to single pensioners and $62.50 each for couples, plus restores the pensioner concession card, but the speaker noted this only restores a fraction of what was taken, including $2.4 billion from asset test changes affecting 330,000 pensioners, and criticized the government for simultaneously cutting the $365 annual energy supplement for new pensioners."
+  },
+  {
+   "slug": "speech-347761",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill’s $75 one-off payment for age pensioners is an inadequate political afterthought to offset $64 billion in business tax cuts and distract from a simultaneous $365 annual pension cut for new recipients, slashing the energy supplement for 1.7 million Australians. They also criticised the government’s 2015 broken promise to retain pensioner concession cards after asset test changes, and urged action on deeming rates and the planned pension age rise to 70."
+  },
+  {
+   "slug": "speech-347763",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill, arguing it would replace the $375 annual energy supplement for pensioners with a one-off $75 payment, and criticised the government's past cuts to veterans' pensions, including $65.1 million from veterans and widows and the scrapping of the $800 seniors supplement."
+  },
+  {
+   "slug": "speech-347764",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "Labor supported the bill's one-off $75 energy assistance payment to nearly four million pensioners and reinstatement of the pensioner concession card for 92,000 people who lost it due to asset test changes, but criticised the government for simultaneously removing the $365 annual energy supplement and prioritising $65 billion in business tax cuts over pensioner support."
+  },
+  {
+   "slug": "speech-347765",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Energy Assistance Payment and Pensioner Concession Card) Bill 2017, which provides a one-off energy assistance payment to approximately 3.8 million recipients of age pension, disability support pension, parenting payment single, and certain veterans' payments, and restores the pensioner concession card to those who lost it under the 2015 assets test changes. The speaker also criticised Labor for introducing a carbon tax and supporting renewable energy targets, arguing these policies raised energy costs for pensioners."
+  },
+  {
+   "slug": "speech-347774",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The bill provides a one-off energy assistance payment of $75 for singles and $62.50 per couple member to 3.8 million welfare recipients, and reinstates the pensioner concession card to 92,300 former pensioners affected by the pension assets test change. The government argued that Labor had adopted the same savings measures in their 2016 election costings and should support them now."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Energy Assistance Payment and Pensioner Concession Card) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00046",
+   "assent_date": "2017-06-19"
+  }
+ ]
+}

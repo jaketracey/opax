@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r5785",
+ "title": "Customs and Other Legislation Amendment Bill 2016",
+ "short_title": "Customs and Other Legislation Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2017-04-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-04-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5785_ems_3999551c-3337-4722-9046-fa2e3cd4c78d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5785%22",
+   "document_date": "2016-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00019",
+   "document_date": "2017-04-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-339320",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The Customs and Other Legislation Amendment Bill 2016 proposes amendments to allow the Defence Minister to revoke export permits for defence and strategic goods if they would prejudice national security, streamline the Australian Trusted Trader program by removing interim status agreements, exempt certain parties from import declaration processing charges, permit opening sealed duty-free bags for rescreening, remove the 25% factory cost test for manufacturers, extend the evidentiary window for made-to-order capital equipment from two to five years, and confirm Maritime Powers Act powers consistent with UNCLOS."
+  },
+  {
+   "slug": "speech-341100",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's support for the Customs and Other Legislation Amendment Bill 2016, which amends three acts to allow exemptions from import processing charges, enable duty-free bag screening at airports, remove the 25% factory cost test for tariff concession objections, extend the evidentiary window for made-to-order capital equipment from two to five years, and confirm maritime powers under UNCLOS."
+  },
+  {
+   "slug": "speech-341101",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The Customs and Other Legislation Amendment Bill 2016 amends the Customs Act, Commerce (Trade Descriptions) Act, and Maritime Powers Act, including allowing the defence minister to revoke export permits for security or international relations reasons, streamlining trusted trader accreditation, and clarifying maritime powers under the UN Convention on the Law of the Sea."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs and Other Legislation Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00019",
+   "assent_date": "2017-04-04"
+  }
+ ]
+}

@@ -1,0 +1,154 @@
+{
+ "key": "au-federal-r6780",
+ "title": "Climate Change (National Framework for Adaptation and Mitigation) Bill 2021",
+ "short_title": "Climate Change (National Framework for Adaptation and Mitigation) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-18",
+ "originating_house": "representatives",
+ "sponsor": "STEGGALL, Zali, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10941",
+ "portfolio": "(s) STEGGALL, Zali, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6780%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6780%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6780%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6780_ems_db1f5677-78d1-4f14-af88-b794d55109aa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6780%22",
+   "document_date": "2021-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-18",
+  "sentences": [
+   "This bill would create a national framework for Australia to plan for climate change adaptation and emissions reduction.",
+   "An independent Climate Change Commission would advise the government on targets, budgets and plans, and monitor progress.",
+   "The bill sets a target of net zero emissions by 2050 and an interim goal of a 60% reduction on 2005 levels by 2030."
+  ],
+  "changes": [
+   "Establishes a national framework for adaptation and mitigation plans.",
+   "Creates an independent Climate Change Commission to advise and monitor.",
+   "Sets a net zero emissions target for 2050.",
+   "Requires five-year national emissions budgets and adaptation plans.",
+   "Mandates annual national climate change risk assessments.",
+   "Ensures transparent reporting and accountability through the Commission."
+  ],
+  "affected": "The Australian government, the Climate Change Commission, and the private sector would be affected, along with rural and regional communities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7489",
+   "date": "2021-10-27",
+   "house": "representatives",
+   "question": "Business - Rearrangement - Climate Change (National Framework for Adaptation and Mitigation) Bill 2021",
+   "stage": "Business motion",
+   "ayes": 56,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 105
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-10-27/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-413015",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The speaker moved the Climate Change (National Framework for Adaptation and Mitigation) Bill 2021, arguing it provides a proven plan with a 60% emissions reduction target on 2005 levels by 2030, and called for its passage before COP26 to restore policy certainty for business and investment."
+  },
+  {
+   "slug": "speech-413016",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued for supporting the Climate Change (National Framework for Adaptation and Mitigation) Bill 2021, criticising the government's inaction and noting that Australia should lead globally in solar, battery uptake, and electric vehicles rather than lagging behind. They highlighted that coal jobs will disappear and called for transitioning regional communities now, citing examples from the electorates of Warringah and Indi."
+  },
+  {
+   "slug": "speech-413018",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The bill introduces mandatory climate risk disclosure for Commonwealth entities and establishes a Climate Change Commission to provide independent expert advice, replacing the Climate Change Authority. The speaker argued that the public sector is lagging behind private companies in reporting climate risks, citing legal precedents, international government actions, and the risk of higher lending costs and investment avoidance for Australia."
+  }
+ ],
+ "acts": []
+}

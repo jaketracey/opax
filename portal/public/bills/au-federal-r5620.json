@@ -1,0 +1,168 @@
+{
+ "key": "au-federal-r5620",
+ "title": "Parliamentary Entitlements Amendment (Injury Compensation Scheme) Bill 2016",
+ "short_title": "Parliamentary Entitlements Amendment (Injury Compensation Scheme) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2016-03-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5620_ems_1e3d1cc1-d946-4aa8-886f-6a72c888308f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5620%22",
+   "document_date": "2016-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00016",
+   "document_date": "2016-03-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-10",
+  "sentences": [
+   "This bill would create a legislative basis for a new compensation scheme for parliamentarians and the Prime Minister's spouse.",
+   "The scheme would be established through a ministerial instrument and administered by Comcare, mirroring the benefits available to Commonwealth public servants.",
+   "The scheme would also cover damage to medical equipment used by those covered, a detail not otherwise specified in the source."
+  ],
+  "changes": [
+   "Provides a legislative mechanism to establish the Parliamentary injury compensation scheme.",
+   "Extends injury compensation, rehabilitation support, and work health and safety measures to parliamentarians and the Prime Minister's spouse.",
+   "Allows the scheme to impose eligibility conditions and prevent or recover incorrect benefit payments.",
+   "Confers administration of the scheme on Comcare."
+  ],
+  "affected": "Parliamentarians and the spouse of the Prime Minister, with Comcare as the administrator.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:17:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-327583",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The government introduced the Parliamentary Entitlements Amendment (Injury Compensation Scheme) Bill 2016 to establish an injury compensation scheme for parliamentarians and the spouse of the Prime Minister, matching Commonwealth employee entitlements under the Safety, Rehabilitation and Compensation Act 1988, with coverage from 1 January 2016 and administration by Comcare and the Department of Finance."
+  },
+  {
+   "slug": "speech-328747",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The Parliamentary Entitlements Amendment (Injury Compensation Scheme) Bill 2016 creates a workers compensation scheme for parliamentarians, covering injuries, diseases, and funeral expenses, with retrospective effect from 1 January 2016. The bill fulfills commitments made over 15–20 years and addresses the lack of coverage for parliamentarians since 2002."
+  },
+  {
+   "slug": "speech-328748",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker thanked members for debating the Parliamentary Entitlements Amendment (Injury Compensation Scheme) Bill 2016, noting that parliamentarians have lacked workplace injury protection for 14 years. The bill provides the minister with power to create a legislative instrument for a parliamentary injury compensation scheme."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Parliamentary Entitlements Amendment (Injury Compensation Scheme) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00016",
+   "assent_date": "2016-03-08"
+  }
+ ]
+}

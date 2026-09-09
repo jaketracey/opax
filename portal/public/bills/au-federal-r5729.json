@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r5729",
+ "title": "Seafarers and Other Legislation Amendment Bill 2016",
+ "short_title": "Seafarers and Other Legislation Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5729%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5729%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5729%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5729_ems_0620aaf7-c4b5-4f04-95e9-b15117d74d79%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5729%22",
+   "document_date": "2016-10-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-13",
+  "sentences": [
+   "This bill updates the Seacare scheme, which covers workers' compensation and work health and safety for a small part of the Australian maritime industry.",
+   "It would clarify when vessels are covered, update compensation rules, repeal the old maritime safety law, and shift governance from the Seacare Authority to Comcare and the Safety, Rehabilitation and Compensation Commission.",
+   "The bill would also reduce the hearing loss impairment threshold for compensation from 10% to 5% and align Australia's compulsory insurance with the Maritime Labour Convention from 18 January 2017."
+  ],
+  "changes": [
+   "Clarifies the coverage test for vessels under the Seacare scheme.",
+   "Repeals the Occupational Health and Safety (Maritime Industry) Act 1993 and extends the Work Health and Safety Act 2011 to the scheme.",
+   "Abolishes the Seacare Authority and splits its functions between Comcare and the Safety, Rehabilitation and Compensation Commission.",
+   "Reduces the permanent impairment threshold for binaural hearing loss compensation from 10% to 5%.",
+   "Changes the contribution of employment to a disease injury from 'material' to 'significant' degree.",
+   "Excludes psychological injuries caused by 'reasonable administrative action taken in a reasonable manner' from coverage."
+  ],
+  "affected": "Employers, employees, and regulators in the Australian maritime industry covered by the Seacare scheme, including operators of Australian flagged vessels and foreign flagged vessels with Australian crew.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:37:19Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-335113",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The Seafarers and Other Legislation Amendment Bill 2016 was introduced to modernise the Seacare scheme by adopting harmonised work health and safety laws, clarifying coverage rules, and transferring functions from the Seacare Authority to the Safety, Rehabilitation and Compensation Commission."
+  }
+ ],
+ "acts": []
+}

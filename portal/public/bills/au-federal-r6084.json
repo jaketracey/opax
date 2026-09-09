@@ -1,0 +1,200 @@
+{
+ "key": "au-federal-r6084",
+ "title": "Aboriginal and Torres Strait Islander Amendment (Indigenous Land Corporation) Bill 2018",
+ "short_title": "Aboriginal and Torres Strait Islander Amendment (Indigenous Land Corporation) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Indigenous Affairs",
+ "status": "passed",
+ "status_as_of": "2018-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6084_ems_043cdccb-c6e2-4229-b7f1-28da887f862c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6084_ems_001099dc-ebab-4a65-9ecc-8cb46eae2407%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6084_ems_6f2e6f5d-d654-4df5-9f80-72654a5306ee%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/6136519%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6084%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00144",
+   "document_date": "2018-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill would expand the Indigenous Land Corporation's functions to include water-related rights and management activities on indigenous waters.",
+   "It would amend the ATSI Act to rename land acquisition and management functions as general acquisition and management functions, and explicitly include water-related rights and activities.",
+   "The bill would also allow the ILC to make grants, loans, and loan guarantees for management activities on indigenous-held land and waters."
+  ],
+  "changes": [
+   "Amends the description of acquisition functions to include water-related rights.",
+   "Amends the description of management functions to include management activities on indigenous waters.",
+   "Repeals and replaces paragraphs 191E(1)(d)-(f) to allow grants, loans, and loan guarantees for management activities on indigenous-held land and waters."
+  ],
+  "affected": "The Indigenous Land Corporation and Aboriginal and Torres Strait Islander people.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-361537",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The bill expands the Indigenous Land Corporation’s remit to include freshwater and sea country, renames it the Indigenous Land and Sea Corporation, and enables support for Aboriginal and Torres Strait Islander peoples to start businesses, obtain jobs, and manage marine environments through grants, loans, and guarantees."
+  },
+  {
+   "slug": "speech-372089",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aboriginal and Torres Strait Islander Amendment (Indigenous Land Corporation) Bill 2018, which expands the ILC's functions to include acquisition and management of water-related rights for Aboriginal and Torres Strait Islander peoples. He also noted that a social justice package promised alongside the land fund was never implemented."
+  },
+  {
+   "slug": "speech-372090",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The Aboriginal and Torres Strait Islander Amendment (Indigenous Land Corporation) Bill 2018 expands the Indigenous Land Corporation's remit to include freshwater and sea country, renaming it the Indigenous Land and Sea Corporation, and amends the Aboriginal and Torres Strait Islander Act 2005 to give the corporation water management functions consistent with its land management functions."
+  },
+  {
+   "slug": "speech-372093",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The government moved two amendments to the Aboriginal and Torres Strait Islander Amendment (Indigenous Land Corporation) Bill 2018: one to give the Indigenous Land Corporation management functions over water where it holds water-related rights, addressing a gap identified by the Senate Finance and Public Administration Legislation Committee, and a second technical amendment to update the definition of Indigenous waters."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aboriginal and Torres Strait Islander Amendment (Indigenous Land Corporation) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00144",
+   "assent_date": "2018-11-30"
+  }
+ ]
+}

@@ -1,0 +1,187 @@
+{
+ "key": "au-federal-r5226",
+ "title": "Major Sporting Events (Indicia and Images) Protection Bill 2014",
+ "short_title": "Major Sporting Events (Indicia and Images) Protection Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Sport",
+ "status": "passed",
+ "status_as_of": "2014-05-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-05-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5226_ems_1f26b408-f486-4edb-ae27-ed9d15b70e7c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5226%22",
+   "document_date": "2014-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00029",
+   "document_date": "2014-05-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-26",
+  "sentences": [
+   "This bill stops businesses from using event logos and images without permission for the Asian Cup 2015, Cricket World Cup 2015, and Commonwealth Games 2018.",
+   "It gives the Customs CEO power to seize infringing goods at the border, similar to existing trade mark and copyright laws.",
+   "The protection ends on 30 June 2015 for the Asian Cup, 31 March 2016 for the Cricket World Cup, and 31 December 2018 for the Commonwealth Games."
+  ],
+  "changes": [
+   "The bill bans unauthorised commercial use of protected indicia and images.",
+   "It allows the Customs CEO to seize infringing goods at the border.",
+   "It exempts use for information, criticism, or review.",
+   "It provides remedies like injunctions, damages, corrective advertising, and seizure of goods.",
+   "It protects existing contractual agreements between states, territories, and authorising bodies."
+  ],
+  "affected": "Event owners, sponsors, businesses, the public, and the Customs CEO.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-287920",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287939",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287943",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287946",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287947",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-14",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Major Sporting Events (Indicia and Images) Protection Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00029",
+   "assent_date": "2014-05-27"
+  }
+ ]
+}

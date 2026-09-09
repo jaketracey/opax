@@ -1,0 +1,169 @@
+{
+ "key": "au-federal-r6094",
+ "title": "Statute Update (Autumn 2018) Bill 2018",
+ "short_title": "Statute Update (Autumn 2018) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-05-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-05-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6094_ems_ec618e16-6e33-44e5-bca7-eea1a163ddb1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6094%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00041",
+   "document_date": "2018-05-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill fixes minor mistakes in federal laws that came from writing or copying errors.",
+   "It would repeal about 572 pages of outdated or no-longer-needed legal text and rename a professional accounting body.",
+   "The bill removes mentions of the British monarchy in relation to Norfolk Island and updates references linked to a 2015 reform act."
+  ],
+  "changes": [
+   "Corrects drafting and clerical errors in Acts.",
+   "Repeals spent and obsolete provisions totaling about 572 pages.",
+   "Updates the name of an accounting institute.",
+   "Removes mentions of the Crown concerning Norfolk Island.",
+   "Makes amendments related to the Acts and Instruments (Framework Reform) Act 2015."
+  ],
+  "affected": "The changes affect Commonwealth agencies and users of the statute book.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-361511",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The Statute Update (Autumn 2018) Bill 2018 makes minor and technical corrections to Commonwealth legislation, including correcting errors in five acts, updating references to the Institute of Chartered Accountants, and repealing 22 obsolete references to the Crown in right of Norfolk Island along with 40 spent amending acts."
+  },
+  {
+   "slug": "speech-362012",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "Labor supported the Statute Update (Autumn 2018) Bill 2018 as routine legislative housekeeping, correcting typographical errors and removing obsolete laws. The speaker criticised the Abbott and Turnbull governments for exaggerating similar bills as major deregulation, noting the claimed $1 billion to $2.1 billion in savings were \"fanciful and disingenuous.\""
+  },
+  {
+   "slug": "speech-362013",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The Statute Update (Autumn 2018) Bill 2018 makes minor and technical corrections to Commonwealth legislation, including fixing drafting and clerical errors, improving usability, and repealing spent acts, as part of the government's regulatory reform agenda. The bill was prepared by the Office of Parliamentary Counsel."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Statute Update (Autumn 2018) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00041",
+   "assent_date": "2018-05-22"
+  }
+ ]
+}

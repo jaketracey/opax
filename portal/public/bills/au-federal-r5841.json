@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5841",
+ "title": "Clean Energy Finance Corporation Amendment (Carbon Capture and Storage) Bill 2017",
+ "short_title": "Clean Energy Finance Corporation Amendment (Carbon Capture and Storage) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Energy",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5841%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5841%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5841%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5841_ems_dba0d143-21ac-44ba-8760-cb778d9c5a6b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5841%22",
+   "document_date": "2017-05-31",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-31",
+  "sentences": [
+   "This bill would let the Clean Energy Finance Corporation invest in carbon capture and storage technology.",
+   "It achieves this by deleting the existing ban on such investments from the Clean Energy Finance Corporation Act 2012.",
+   "The bill does not change any other restrictions on the CEFC's investments, such as the ban on nuclear technology."
+  ],
+  "changes": [
+   "The bill removes the prohibition on CEFC investments in carbon capture and storage.",
+   "It amends the Clean Energy Finance Corporation Act 2012 to allow this new category of investment.",
+   "The bill leaves other prohibited technologies, including nuclear power, unchanged."
+  ],
+  "affected": "The Clean Energy Finance Corporation and its investment activities are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:20Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

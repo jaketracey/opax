@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1240",
+ "title": "Governor-General Amendment (Cessation of Allowances in the Public Interest) Bill 2019",
+ "short_title": "Governor-General Amendment (Cessation of Allowances in the Public Interest) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-13",
+ "originating_house": "senate",
+ "sponsor": "SIEWERT, Sen Rachel",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10584",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1240%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1240%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1240%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1240_ems_bde09851-bbed-49c8-9e1d-ca1a31ed1035%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1240%22",
+   "document_date": "2019-11-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-13",
+  "sentences": [
+   "The bill would stop paying allowances to former Governors-General or their spouses who have engaged in serious misconduct.",
+   "The Minister could declare through a legislative instrument that payments cease, or a House of Parliament could pass a resolution to stop them.",
+   "The bill fills a gap in the Governor-General Act 1974, which currently requires allowances to be paid even after a criminal conviction."
+  ],
+  "changes": [
+   "Allowances can be stopped for serious misconduct via a ministerial legislative instrument.",
+   "Allowances can be stopped for serious misconduct via a resolution of a House of Parliament.",
+   "The bill adds a public interest test to the Governor-General Act 1974."
+  ],
+  "affected": "Former Governors-General and their spouses.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

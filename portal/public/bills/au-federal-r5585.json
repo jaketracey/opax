@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r5585",
+ "title": "Tax and Superannuation Laws Amendment (2015 Measures No. 6) Bill 2015",
+ "short_title": "Tax and Superannuation Laws Amendment (2015 Measures No. 6) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-02-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5585_ems_8f4187d8-4887-4ea4-9b40-074519a6f7af%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5585%22",
+   "document_date": "2015-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00010",
+   "document_date": "2016-02-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-03",
+  "sentences": [
+   "This bill would change how capital gains tax applies when businesses are sold with earnout arrangements, which are rights to future payments based on the asset's performance after sale.",
+   "It would ignore capital gains and losses from these arrangements, and instead treat the payments as adjustments to the sale price, affecting the proceeds and cost of the underlying asset.",
+   "The changes apply to deals made from 17 October 2007, but are optional and beneficial, so no taxpayer would be worse off due to the retrospective effect."
+  ],
+  "changes": [
+   "Disregard capital gains and losses from look-through earnout arrangements.",
+   "Treat earnout payments as adjustments to the proceeds and cost base of the underlying assets.",
+   "Apply the changes retrospectively to transactions from 17 October 2007."
+  ],
+  "affected": "Businesses and taxpayers involved in the sale and purchase of businesses with earnout arrangements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-326675",
+   "speaker": "Bert van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tax and Superannuation Laws Amendment (2015 Measures No. 6) Bill 2015, which clarifies capital gains tax treatment for earn-out arrangements and introduces a 10% withholding requirement on foreign residents selling Australian real property. The speaker also noted that the top 10% of income earners pay approximately 50% of all income tax."
+  },
+  {
+   "slug": "speech-326676",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's two capital gains tax measures—one affecting liability and another requiring a 10% withholding on property sales by foreign residents—while criticising the coalition government for large budget deficits, $80 billion in health and education cuts, and failing to address corporate tax avoidance, noting that 38% of Australia’s largest companies paid no tax in 2013-14."
+  },
+  {
+   "slug": "speech-326677",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-04",
+   "stage_hint": null,
+   "brief": "The bill amends capital gains tax rules for earn-out arrangements, effective from 23 April 2015, and introduces a 10% withholding tax on foreign residents disposing of Australian property valued over $2 million from 1 July 2016."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (2015 Measures No. 6) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00010",
+   "assent_date": "2016-02-25"
+  }
+ ]
+}

@@ -1,0 +1,320 @@
+{
+ "key": "au-federal-r5885",
+ "title": "Industrial Chemicals Bill 2017",
+ "short_title": "Industrial Chemicals Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2019-03-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5885_ems_bcd0c985-d9b6-4cbc-a457-015c9353d6b1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5885_ems_a2f9b7f2-9e60-4fc8-87fb-e79a5af536ed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5885_ems_7c90c80a-7421-46d0-baed-8535b26efd44%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5885%22",
+   "document_date": "2017-06-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00012",
+   "document_date": "2019-03-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "This bill creates the legal foundation for a new regulatory system, overseen by the Commonwealth, to manage how industrial chemicals are brought into Australia.",
+   "Under the new Australian Industrial Chemicals Introduction Scheme (AICIS), which replaces the old National Industrial Chemicals Notification and Assessment Scheme (NICNAS), the level of oversight will match the danger posed by each chemical, with fewer checks before lower-risk substances enter the market and more monitoring after they do.",
+   "The scheme also puts in place a 2016 election pledge to stop animal testing for new cosmetic ingredients, by disallowing fresh animal test results from being used to back such introductions."
+  ],
+  "changes": [
+   "It cuts the number of introduction categories to six, mostly relying on companies to classify their own chemicals.",
+   "It replaces the rigid post-market review process with a more adaptable evaluation method.",
+   "It requires those who bring in chemicals to register, and sets up a risk-based categorisation system.",
+   "It gives the Executive Director the authority to refuse a chemical's entry when dangers to people or the environment cannot be handled.",
+   "It allows businesses to request that their confidential commercial information be protected, while releasing more useful data to the public.",
+   "It bans reliance on new animal test data for cosmetic-only chemicals, pushing firms toward alternative testing."
+  ],
+  "affected": "The people and groups directly touched are industrial chemical importers, the new AICIS agency, its Executive Director, and the broader community, including consumers, workers, and the environment.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:20Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4827",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debates/?id=2017-10-17.93.1) introduced by Makin MP [Tony Zappia](https://theyvoteforyou.org.au/people/representatives/makin/tony_zappia) (Labor), which means they failed. ### Amendment text On sheet 1: > *(1) Clause 103, page 88 (line 4), omit \"for an end use solely in cosmetics\", substitute \"for an end use in cosmetics (whether or not that end use is the sole end use)\".* > > *(2) Clause 103, page 88 (line 5), omit \"may\", substitute \"must\".* > > *(3) Clause 103, page 88 (line 10), after \"2018\", insert \", in relation to the end use of the industrial chemical in cosmetics,\".* > > *(4) Clause 103, page 88 (after line 10), at the end of the clause, add:* > >> *(3) Subsection (2) does not limit section 100.* > > *(5) Clause 168, page 137 (line 3), omit \"for an end use solely in cosmetics\", substitute \"for an end use in cosmetics (whether or not that end use is the sole end use)\".* > > *(6) Clause 168, page 137 (line 5), omit \"requirement in subsection (2)\", substitute \"requirements in subsections (2) and (3)\".* > > *(7) Clause 168, page 137 (lines 6 to 9), omit subclause (2), substitute:* > >> *(2) If:* >> >>> *(a) the industrial chemical is to be introduced for an end use in cosmetics and one or more other end uses not in cosmetics; and* >>> >>> *(b) a single application under this Act relating to the introduction for each of those uses would include animal test data obtained from tests conducted on or after 1 July 2018;* >>> >>>> *it is a requirement that separate applications must be made in respect of:* >>> >>> *(c) the introduction of the chemical for the end use in cosmetics; and* >>> >>> *(d) the introduction of the chemical for the end uses not in cosmetics.* >> >> *(3) It is a requirement that an application for the introduction of an industrial chemical for an end use in cosmetics must not include animal test data obtained from tests conducted on or after 1 July 2018 in circumstances pres",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-17/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-348092",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals Bill 2017 was introduced to establish the Australian Industrial Chemicals Introduction Scheme (AICIS), replacing the current system with a risk-based approach that reduces industry costs by $23 million annually and bans cosmetic testing on animals from 1 July 2018."
+  },
+  {
+   "slug": "speech-348093",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals (Consequential Amendments and Transitional Provisions) Bill 2017 was introduced as a companion to the Industrial Chemicals Bill 2017, to repeal the 1989 Act and related charges acts from 1 July 2018, transition existing authorisations and inventory listings to the new Australian Industrial Chemicals Introduction Scheme (AICIS), and allow a 12-month transition period for low-volume or low-concentration chemical introductions."
+  },
+  {
+   "slug": "speech-348094",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals (Notification and Assessment) Amendment Bill 2017 was introduced to enable early commencement of certain reforms to industrial chemicals regulation, including aligning low-risk chemical definitions with international standards, exempting polymers of low concern from notification, and removing annual reporting requirements for permits and self-assessed certificates."
+  },
+  {
+   "slug": "speech-348095",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals Charges (General) Bill 2017 was introduced as part of a package to establish the Australian Industrial Chemicals Introduction Scheme (AICIS), replacing the 1997 registration charge act. It imposes an annual charge on registered chemical introducers, with amounts set in regulations and capped at the likely cost of regulatory activities, alongside two companion charges bills and a consultation process."
+  },
+  {
+   "slug": "speech-354885",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the Industrial Chemicals Bill 2017 but will move amendments to require annual post‑introduction reports for chemicals in the exempted introductions category and to close loopholes in the ban on using new animal test data for cosmetics."
+  },
+  {
+   "slug": "speech-354888",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The speaker announced the government's commitment to ban cosmetic testing on animals, with the Industrial Chemicals Bill 2017 prohibiting new animal testing for cosmetics and the sale of newly animal-tested products from 1 July 2018, covering over 99% of cosmetic ingredients. The ban aligns with EU regulations but will be implemented in one year rather than ten, and includes a safeguard for multipurpose chemicals where animal data may be used as a last resort for safety."
+  },
+  {
+   "slug": "speech-355031",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the industrial chemicals legislation prioritises cost reduction over health, environmental and animal welfare outcomes, and raised concerns about rushed consultation and loopholes in the cosmetics animal-testing ban. Labor will introduce amendments to close those loopholes and require annual post-introduction reporting for exempted chemicals."
+  },
+  {
+   "slug": "speech-355032",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Industrial Chemicals Bill 2017, associating themselves with the minister's second reading speech and commending the bill to the House, noting that industrial chemicals are essential but require regulation due to risks to health, safety, and the environment."
+  },
+  {
+   "slug": "speech-355034",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals Bill 2017 should include a mandatory register tracking where industrial chemicals are used, who uses them, and in what quantities, to enable future health and environmental monitoring—citing past failures with asbestos and firefighting foams at Adelaide Airport and RAAF bases. The speaker also flagged a loophole allowing animal testing for industrial chemicals, despite a ban for cosmetics, and called for regular health testing for exposed workers like firefighters."
+  },
+  {
+   "slug": "speech-355035",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The Greens welcomed the government's initial step on banning animal testing for cosmetics in the Industrial Chemicals Bill 2017 but criticised loopholes and the bundling of broader chemical regulation changes that could increase risks from harmful chemicals, citing firefighters' cancer risks from toxic smoke and PFOS/PFOA contamination at Defence bases and airports like Gold Coast Airport. The Greens will push in the Senate to close loopholes and prevent unrelated reforms from passing."
+  },
+  {
+   "slug": "speech-355036",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The bills create a new Australian Industrial Chemicals Introduction Scheme, adopting a risk‑based regulatory approach that includes a ban on animal testing for cosmetics consistent with the European Union, while the speaker argued opposition amendments would create loopholes and place Australian industry at a disadvantage by blocking necessary animal test data for multi‑use chemicals."
+  },
+  {
+   "slug": "speech-355066",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "Presented addenda to the explanatory memoranda for the Industrial Chemicals Bill 2017 and four related bills."
+  },
+  {
+   "slug": "speech-375507",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "Labor supported amendments to the Industrial Chemicals Bill after the government agreed to continue the IMAP assessment of unassessed chemicals, tighten rules on animal cosmetic testing, and require reporting of exempt chemicals to the national regulator."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Industrial Chemicals Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00012",
+   "assent_date": "2019-03-12"
+  }
+ ]
+}

@@ -1,0 +1,276 @@
+{
+ "key": "au-federal-r6626",
+ "title": "Corporations Amendment (Corporate Insolvency Reforms) Bill 2020",
+ "short_title": "Corporations Amendment (Corporate Insolvency Reforms) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-11-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-12-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6626_ems_d21b005e-bc0c-4d4c-a000-0ca07f2c32b6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6626%22",
+   "document_date": "2020-11-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00130",
+   "document_date": "2020-12-15",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6809",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debates/?id=2020-12-08.100.1) introduced by Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor), which means the amendments failed. [Jones explained](https://www.openaustralia.org.au/debates/?id=2020-12-08.100.1) that these amendments did two things: > *Firstly, they impose a requirement for a statutory review, which I understand to be something that the government will support. Secondly, they impose a requirement that the new provisions be [sunsetted](https://en.wikipedia.org/wiki/Sunset_provision). I understand that the government does not support that proposition. I just want to make clear that the sunset provision gives ample time for us to get through the crisis, for us to get through the stock of anticipated insolvencies, for a review to occur and for the emergency provisions to be sunsetted, unless they are altered by new provisions that may enjoy the agreement of both houses of this place.* ### Amendment text > *(1) Clause 2, page 2 (at the end of the table), add:* > >> *6. Schedule 5 The day after this Act receives the Royal Assent.* > > *(2) Page 104 (after line 16), at the end of the Bill, add:* > > *Schedule 5—Review of provisions and sunsetting* > > *1 Review of Act* > >> *(1) The Minister must cause a review to be undertaken of the operation of the amendments made by this Act.* >> >> *(2) Without limiting subitem (1), the review must consider the following:* >> >>> *(a) the efficacy of the amendments;* >>> >>> *(b) the appropriateness of the amendments as a permanent features of the insolvency regime;* >>> >>> *(c) any further amendments recommended to be made to the insolvency regime if the amendments made by this Act operated for a longer period of time or permanently;* >>> >>> *(d) the effect of the amendments made by this Act on unincorporated small business creditors such as sole traders and pa",
+   "stage": "Consideration in detail",
+   "ayes": 67,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-08/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-400168",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government rushed the Corporations Amendment (Corporate Insolvency Reforms) Bill 2020 with limited consultation, giving stakeholders only five days to review the exposure draft. They moved amendments for a statutory review and a sunset clause, noting that insolvencies were down 50-60% due to temporary relief measures, but warned of a future wave of insolvencies and criticised the Treasurer for failing to conduct a required independent review of safe harbour provisions by September 2019."
+  },
+  {
+   "slug": "speech-400171",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Corporate Insolvency Reforms) Bill 2020 introduces a new small‑business restructuring process with a debtor‑in‑possession model for businesses with liabilities under $1 million (covering 76% of insolvent businesses, 98% with fewer than 20 employees), a simplified liquidation pathway, and safeguards against misconduct, as part of the government’s economic recovery plan to keep businesses operating and protect jobs."
+  },
+  {
+   "slug": "speech-400172",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "Labor supports the Corporate Insolvency Reforms Bill in principle but will move amendments for a sunset clause and a review process, citing only five days of public consultation and concerns that sole traders and partnerships are excluded. The speaker also argued that the government should not cut JobKeeper prematurely, as hundreds of thousands of businesses still rely on it."
+  },
+  {
+   "slug": "speech-400173",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Corporations Amendment (Corporate Insolvency Reforms) Bill 2020, describing it as the most significant insolvency reform in three decades, aimed at helping small businesses restructure or wind up faster with new processes from 1 January 2021. The reforms include a debt restructuring process for businesses with liabilities under $1 million, a simplified liquidation pathway, and safeguards against illegal phoenix activity, covering roughly 76% of insolvent businesses, 98% of which have fewer than 20 employees."
+  },
+  {
+   "slug": "speech-400174",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment (Corporate Insolvency Reforms) Bill 2020 in principle but argued for a statutory review and sunset clause, citing concerns over rushed consultation (five days for submissions), risks of illegal phoenixing costing $1.1–3.1 billion, and unintended consequences in complex insolvency reforms described as the most significant in 30 years."
+  },
+  {
+   "slug": "speech-400175",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment (Corporate Insolvency Reforms) Bill, which introduces a US-style Chapter 11 restructuring process for small businesses with liabilities under $1 million, allowing debtor-in-possession management and a 20-working-day restructuring plan to help viable businesses affected by COVID-19 trade out of difficulty."
+  },
+  {
+   "slug": "speech-400314",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor's tradie pay guarantee, based on the Murray review, should be implemented to ensure prompt payment and security for subcontractors in construction. They criticised the government for rushing the insolvency reforms with insufficient consultation, and proposed amendments including a review and sunset clause to prevent adverse effects on small businesses."
+  },
+  {
+   "slug": "speech-400315",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The bill reduces burdens on small businesses by providing a differentiated insolvency framework, allowing those with debts under $1 million and fewer than 20 employees to restructure and trade through short-term financial distress, particularly due to COVID-19."
+  },
+  {
+   "slug": "speech-400316",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "Labor supported the Corporations Amendment (Corporate Insolvency Reforms) Bill 2020 and the amendment moved by the member for Whitlam, but criticised the government for rushing the reforms without consulting small business groups or insolvency experts, for excluding sole traders and partnerships from eligibility, and for prematurely cutting JobKeeper. Labor proposed a sunset clause by 31 December 2022 and a statutory review, with the clause to trigger if the minister fails to start the review by 31 December 2021."
+  },
+  {
+   "slug": "speech-400317",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's insolvency reforms fail to assist most small businesses, which are sole traders and partnerships not covered by the Corporations Act, and criticised inadequate consultation and rushed legislation. Labor will move amendments for a review and sunset clause, noting that only $1.8 billion of the $40 billion SME loan guarantee has been delivered and that phoenixing costs the economy $5 billion annually."
+  },
+  {
+   "slug": "speech-400318",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "Labor argued the government's corporate insolvency reforms are inadequate and could worsen illegal phoenixing, which costs the economy $5 billion annually. The party announced it will move amendments including a sunset clause and statutory review, and reiterated its support for cascading statutory trusts and a tradie litigation fund."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Corporations Amendment (Corporate Insolvency Reforms) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00130",
+   "assent_date": "2020-12-15"
+  }
+ ]
+}

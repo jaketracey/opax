@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6257",
+ "title": "National Consumer Credit Protection Amendment (Small Amount Credit Contract and Consumer Lease Reforms) Bill 2019",
+ "short_title": "National Consumer Credit Protection Amendment (Small Amount Credit Contract and Consumer Lease Reforms) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-18",
+ "originating_house": "representatives",
+ "sponsor": "KING, Madeleine, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10884",
+ "portfolio": "(s) KING, Madeleine, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6257%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6257%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6257%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6257_ems_c37f3da9-6a15-4b03-b6ec-c0e6145fc599%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6257%22",
+   "document_date": "2019-02-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-18",
+  "sentences": [
+   "This bill would reform payday loans and rent-to-buy schemes to protect low-income Australians.",
+   "It would cap total payments on consumer leases, require equal repayments on small loans, ban door-to-door selling of leases, and strengthen penalties.",
+   "The bill replicates the government's 2017 exposure draft and would also allow regulations to reduce the protected earnings limit for Centrelink recipients from 20% to 10% of net income."
+  ],
+  "changes": [
+   "Imposes a cap on total payments under a consumer lease.",
+   "Requires small amount credit contracts to have equal repayments and equal payment intervals.",
+   "Removes the ability for lenders to charge monthly fees on the residual term when a consumer repays a loan early.",
+   "Bans door-to-door selling of consumer leases at residential homes.",
+   "Introduces anti-avoidance protections to prevent circumvention of the Credit Act and the Code.",
+   "Strengthens penalties to encourage compliance."
+  ],
+  "affected": "Australians who use payday loans and consumer leases, particularly low-income citizens.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375337",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speaker urged the government to act on the National Consumer Credit Protection Amendment Bill 2019, noting that over 800,000 Australian households have been affected by predatory payday lending, 1,291 days had passed since the government announced a review, and only seven sitting days remained in the parliamentary term."
+  }
+ ],
+ "acts": []
+}

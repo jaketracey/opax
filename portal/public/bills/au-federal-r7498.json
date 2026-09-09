@@ -1,0 +1,158 @@
+{
+ "key": "au-federal-r7498",
+ "title": "Defence Legislation Amendment (RCDVS Implementation and Related Measures No. 2) Bill 2026",
+ "short_title": "Defence Legislation Amendment (RCDVS Implementation and Related Measures No. 2) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "before_parliament",
+ "status_as_of": "2026-07-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7498_ems_41c41bfa-05ac-41a4-913e-bca5f69e4643%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22",
+   "document_date": "2026-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-25",
+  "sentences": [
+   "This bill would implement reforms from the Royal Commission into Defence and Veteran Suicide to improve wellbeing and safety for ADF members, veterans and their families.",
+   "It would amend the Defence Act 1903 and the Military Rehabilitation and Compensation Act 2004 to expand health, data and transition support functions, and establish a legislative basis for Defence health services.",
+   "The bill includes mandatory discharge for ADF members convicted of sexual or other serious offences resulting in a prison sentence, and prevents those with such convictions from joining the ADF."
+  ],
+  "changes": [
+   "Adds a dedicated part to the Defence Act 1903 for health and wellbeing support.",
+   "Expands the Military Rehabilitation and Compensation Commission's functions to include prevention and early intervention services.",
+   "Allows better use of data for research on suicide and wellbeing.",
+   "Clarifies information sharing for transition support and claims processing.",
+   "Establishes a legislative framework for Defence health services with quality assurance activities.",
+   "Enables Defence to directly engage with families who provide contact details and to provide benefits to former partners after separation."
+  ],
+  "affected": "Australian Defence Force members, veterans, their families, the Department of Defence, the Department of Veterans' Affairs, and the Defence and Veterans' Service Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:28:47Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1203996",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204092",
+   "speaker": "Tony Sheldon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204472",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-07-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204474",
+   "speaker": "Phillip Thompson",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2026-07-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204565",
+   "speaker": "Jo Briskey",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-07-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

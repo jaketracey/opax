@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s1494",
+ "title": "Extended Producer Responsibility Scheme for Packaging (No Time to Waste) Bill 2026",
+ "short_title": "Extended Producer Responsibility Scheme for Packaging (No Time to Waste) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-05-13",
+ "originating_house": "senate",
+ "sponsor": "WHISH-WILSON, Sen Peter",
+ "sponsor_party": "independent candidate for the federal seat of Bass, Tas",
+ "sponsor_person_id": "10780",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1494%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1494_ems_3696a6ad-ad15-4f7a-b2a7-59b88a95f8f7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1494%22",
+   "document_date": "2026-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-13",
+  "sentences": [
+   "This bill would create a single national system requiring packaging businesses to manage their products after consumer use.",
+   "The Environment Minister would have three months after royal assent to set up the scheme through rules under the Recycling and Waste Reduction Act 2020, with mandatory targets and eco-design standards.",
+   "The first review of the scheme's performance must be completed within three years of its start, with later reviews every five years."
+  ],
+  "changes": [
+   "Producers, importers and distributors of packaging would be legally obliged to manage the end-of-life handling of their packaging.",
+   "Australia's National Packaging Targets would become mandatory and legally binding.",
+   "The scheme would require strict eco-design standards and minimum recycled content for packaging.",
+   "The Minister must make rules to establish the EPR scheme within three months of royal assent.",
+   "The first periodic review of the scheme must be done before three years after it takes effect, and later reviews before five years after the previous review.",
+   "Financial incentives to reduce packaging under the scheme must not amount to taxation."
+  ],
+  "affected": "Producers, importers and distributors of packaging in Australia, as well as the Minister for the Environment and the recycling industry.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

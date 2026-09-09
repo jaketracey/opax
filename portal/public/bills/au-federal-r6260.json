@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r6260",
+ "title": "Business Names Registration (Fees) Amendment (Registries Modernisation) Bill 2019",
+ "short_title": "Business Names Registration (Fees) Amendment (Registries Modernisation) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6260%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6260%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6260%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6261_ems_fa2e0932-8a97-48dd-bd6f-de42ba2fff9f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6260%22",
+   "document_date": "2019-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "This bill is part of a package that would modernise Commonwealth business registers and introduce a director identification number requirement.",
+   "The package would allow a minister to appoint an existing Commonwealth body as registrar, with functions and powers set out in existing laws and data standards made by the registrar.",
+   "Directors appointed under the Corporations Act or the CATSI Act would need to apply for a director identification number before their appointment, unless given extra time or an exemption."
+  ],
+  "changes": [
+   "Modernises Commonwealth business registers.",
+   "Introduces a director identification number requirement.",
+   "Allows the registrar to make data standards as disallowable instruments.",
+   "Creates offences for unauthorised disclosure of information held by the registrar.",
+   "Provides for review of registrar decisions by the Administrative Appeals Tribunal.",
+   "Sets civil and criminal penalties for directors who fail to apply for a director identification number on time."
+  ],
+  "affected": "Directors of bodies corporate registered under the Corporations Act or the CATSI Act, and officials handling registry information.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:14Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

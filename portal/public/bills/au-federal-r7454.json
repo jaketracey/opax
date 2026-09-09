@@ -1,0 +1,70 @@
+{
+ "key": "au-federal-r7454",
+ "title": "Australian Criminal Intelligence Commission Bill 2026",
+ "short_title": "Australian Criminal Intelligence Commission Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "before_parliament",
+ "status_as_of": "2026-03-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7454%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7454_ems_4ad03832-ba67-407a-b3a7-804d8bbcfdd7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7454%22",
+   "document_date": "2026-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-25",
+  "sentences": [
+   "The bill would replace the existing Australian Crime Commission Act to give the Australian Criminal Intelligence Commission a clearer focus on serious and organised crime.",
+   "It sets out the commission's functions, including gathering and sharing intelligence, and gives the minister power to issue directions and guidelines on handling personal information.",
+   "The explanatory memorandum says the bill was prompted by an independent review and will be accompanied by separate legislation on charging for background-check services."
+  ],
+  "changes": [
+   "The bill replaces the ACC Act with new legislation for the Australian Criminal Intelligence Commission.",
+   "It clarifies the commission's role as the national criminal intelligence agency and aligns its powers with that role.",
+   "It provides a framework for sharing intelligence with Commonwealth, state, territory and private-sector partners.",
+   "It allows the commission to continue administering national police information systems and national criminal history checking services.",
+   "It establishes a Director-General as the accountable authority for the commission.",
+   "It requires the minister to issue guidelines on how the commission handles personal information."
+  ],
+  "affected": "The Australian Criminal Intelligence Commission, partner law enforcement and intelligence agencies, and the private sector.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

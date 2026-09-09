@@ -1,0 +1,278 @@
+{
+ "key": "au-federal-r5498",
+ "title": "Australian Defence Force Superannuation Bill 2015",
+ "short_title": "Australian Defence Force Superannuation Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2015-09-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5498_ems_10a45c40-7254-4582-a2d9-60e29b1555ae%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4006258%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5498%22",
+   "document_date": "2015-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00119",
+   "document_date": "2015-09-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2015-06-25",
+  "sentences": [
+   "The bill would create a new superannuation scheme for Australian Defence Force members who join after 1 July 2016.",
+   "It would close the existing Military Superannuation and Benefits Scheme and establish the Australian Defence Force Superannuation Scheme.",
+   "The bill is part of a three-bill package that also separates incapacity and death cover into a separate bill consistent with current benefits."
+  ],
+  "changes": [
+   "Establishes the Australian Defence Force Superannuation Scheme for new ADF members.",
+   "Closes the existing Military Superannuation and Benefits Scheme.",
+   "Separates incapacity and death cover arrangements from the superannuation scheme into a separate bill."
+  ],
+  "affected": "Members of the Australian Defence Force who join after 1 July 2016.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:30Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-314871",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The Australian Defence Force Superannuation Bill 2015 establishes ADF Super, a modern accumulation scheme for members joining from 1 July 2016, with a 16.4% employer contribution, no compulsory employee contributions, and a new death and invalidity scheme (ADF Cover), while allowing current MSBS members to opt in but not compelling them."
+  },
+  {
+   "slug": "speech-316478",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-18",
+   "stage_hint": null,
+   "brief": "The speech supported the Australian Defence Force Superannuation Bill 2015, which closes the Military Superannuation and Benefits Scheme (MSBS) to new members from 1 July 2016, replaces it with an accumulation scheme offering a 16.4% employer contribution rate, and is projected to reduce unfunded liabilities by $126 billion by 2049-50."
+  },
+  {
+   "slug": "speech-316479",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-18",
+   "stage_hint": null,
+   "brief": "The speaker announced that the Australian Defence Force Superannuation Bill 2015 and related bills will introduce ADF Super from 1 July 2016, giving members a 16.4% contribution rate and the ability to choose their superannuation fund, along with ADF Cover for death and invalidity and new part-time work options; the existing Military Superannuation and Benefits Scheme will close to new members from that date."
+  },
+  {
+   "slug": "speech-316693",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-18",
+   "stage_hint": null,
+   "brief": "The speaker argued for the adoption of the Australian Defence Force Superannuation Scheme (ADF Super) with a flat 16.4% employer contribution rate, replacing the two-tiered system originally proposed, which was opposed by Chief of the Defence Force Air Chief Marshal Mark Binskin and the Defence Force Welfare Association. The new scheme, applying from 1 July 2016, increases flexibility and portability, removes compulsory employee contributions, and introduces ADF Cover for death and invalidity benefits, aiming to boost women’s participation and accommodate part-time service."
+  },
+  {
+   "slug": "speech-316694",
+   "speaker": "Ann Sudmalis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-18",
+   "stage_hint": null,
+   "brief": "The Australian Defence Force Superannuation Bill 2015 establishes ADF Super from 1 July 2016 with a 16.4% employer contribution rate, and the ADF Cover Bill creates a death and invalidity benefits scheme with pension classifications for capacity reductions of 60% or more, 30–60%, and less than 30%."
+  },
+  {
+   "slug": "speech-316695",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-08-18",
+   "stage_hint": null,
+   "brief": "The government is introducing ADF Super, a new military superannuation scheme, and ADF Cover, a new insurance scheme, along with flexible part-time service for ADF members, with the Australian Defence Force Superannuation Bill 2015 taking effect from 1 July 2016."
+  },
+  {
+   "slug": "speech-316715",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Australian Defence Force Superannuation Bill 2015 establishes ADF Super, a new accumulation scheme with a 16.4% employer contribution and no required employee contributions, closing the MSBS to new members from 1 July 2016. The associated ADF Cover and flexible service reforms provide death and invalidity cover and allow part-time service, with the government forecasting a reduction in unfunded liabilities of about $100 billion by 2050."
+  },
+  {
+   "slug": "speech-316717",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "Labor supported the Australian Defence Force Superannuation Bill 2015, the Australian Defence Force Cover Bill 2015, and the Defence Legislation Amendment (Superannuation and ADF Cover) Bill 2015, which establish the ADF Super scheme and standalone ADF Cover from 1 July 2016. The party endorsed the single 16.4% employer contribution rate, rejecting the government's original two-tier proposal, and argued the new scheme's flexibility would aid recruitment, particularly for women."
+  },
+  {
+   "slug": "speech-316718",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Abbott government introduced three bills to establish ADF Super, a new military superannuation scheme with a 16.4% employer contribution rate, ADF Cover for death and invalidity benefits, and part-time work options for full-time ADF members, effective from 1 July 2016. The reforms aim to improve flexibility and portability of superannuation, with 80% of personnel serving less than 15 years expected to benefit."
+  },
+  {
+   "slug": "speech-316720",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Australian Defence Force Superannuation Bill 2015, which replaces the current Military Super Scheme with a new fund offering flexible access, portability, and an employer contribution rate of 16.4 per cent. The bill has broad support from the Defence Welfare Association and the RSL."
+  },
+  {
+   "slug": "speech-316722",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The speaker announced legislation to establish ADF Super, a new military superannuation scheme from 1 July 2016, and ADF Cover for death and invalidity, also allowing part-time work for ADF members, addressing long-standing grievances over portability and flexibility, with stakeholders including the RSL and Defence Force Welfare Association supportive."
+  },
+  {
+   "slug": "speech-316723",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The speaker argued for bipartisan support of the Australian Defence Force Superannuation Bill 2015, which establishes ADF Super for new recruits from 1 July 2016 with a 16.4% employer contribution, and noted the Australian Defence Force Parliamentary Program and the hosting of Navy Captain Mona Shindy."
+  },
+  {
+   "slug": "speech-316724",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Defence Force Superannuation Bill 2015, which introduces a new scheme with a 16.4% employer contribution rate—higher than the general public sector rate—and allows ADF members to transfer their superannuation to new employment. He also highlighted the ADF Participation Program for educating parliamentarians about military service."
+  },
+  {
+   "slug": "speech-316726",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Defence Force Superannuation Bill 2015, which introduces ADF Super—a new accumulation scheme with a 16.4% employer contribution rate and member choice of fund—and ADF Cover for death and invalidity, alongside part-time work options for ADF members, with a forecast cost of $433 million to 2018–19 and $3.196 billion over a decade."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Defence Force Superannuation Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00119",
+   "assent_date": "2015-09-10"
+  }
+ ]
+}

@@ -1,0 +1,139 @@
+{
+ "key": "au-federal-r7346",
+ "title": "Repeal Net Zero Bill 2025",
+ "short_title": "Repeal Net Zero Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-28",
+ "originating_house": "representatives",
+ "sponsor": "JOYCE, Barnaby, MP",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10350",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2026-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7346%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7346%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7346_ems_5f1f0cdb-d2cd-4085-8d15-1db1c06c837b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7346%22",
+   "document_date": "2025-07-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195416",
+   "speaker": "Sally Sitou",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196033",
+   "speaker": "Llew O'Brien",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2025-08-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196715",
+   "speaker": "Colin Boyce",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2025-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197535",
+   "speaker": "Marion Scrymgour",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197932",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-11-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198709",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2025-11-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-r6813",
+ "title": "Customs Amendment (Controlled Trials) Bill 2021",
+ "short_title": "Customs Amendment (Controlled Trials) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-11-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6813%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6813%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6813%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6813_ems_f22a42dc-eddb-4fe0-9d4c-1ba1f2d4aa62%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6813%22",
+   "document_date": "2021-11-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-11-24",
+  "sentences": [
+   "The bill would allow the Australian Border Force to run time-limited trials of new trade practices with approved businesses in a controlled setting.",
+   "The Comptroller-General of Customs could make rules setting qualification criteria, trial periods, conditions and affected obligations under the Customs Act.",
+   "Trials could cover imports, exports, depots, warehouses, electronic communications, agents and customs brokers, and tariff concession orders, but not prohibited imports or exports."
+  ],
+  "changes": [
+   "Creates a new Part XB in the Customs Act for controlled trials.",
+   "Gives the Comptroller-General of Customs rule-making powers for controlled trials.",
+   "Limits trials to specific parts of the Customs Act and associated regulations.",
+   "Prevents the Comptroller-General of Customs from delegating the power to make rules for controlled trials."
+  ],
+  "affected": "Entities that are legal persons, natural persons or partnerships approved to participate in controlled trials, and the Australian Border Force.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-415649",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The Customs Amendment (Controlled Trials) Bill 2021 introduces a world-first regulatory sandbox for customs, enabling time-limited trials of trade and customs practices with approved entities in a controlled environment. The trials aim to test simplified processes and new technologies to inform deregulatory reform while maintaining Australia’s border security objectives."
+  }
+ ],
+ "acts": []
+}

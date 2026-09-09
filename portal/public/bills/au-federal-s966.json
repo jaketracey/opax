@@ -1,0 +1,87 @@
+{
+ "key": "au-federal-s966",
+ "title": "Aboriginal and Torres Strait Islander Amendment (A Stronger Land Account) Bill 2014",
+ "short_title": "Aboriginal and Torres Strait Islander Amendment (A Stronger Land Account) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-24",
+ "originating_house": "senate",
+ "sponsor": "SIEWERT, Sen Rachel",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10584",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s966%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s966%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s966%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s966%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s966%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s966_ems_0010d741-7563-4ce3-8d62-b6434d6dca9a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s966%22",
+   "document_date": "2014-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-24",
+  "sentences": [
+   "This bill would change the Aboriginal and Torres Strait Islander Act 2005 to give Indigenous people more control over a land fund and the corporation that manages it.",
+   "It would require the government to seek advice from a new Indigenous committee before appointing board members of the corporation and before changing laws about the fund.",
+   "The bill would also prevent the fund from being spent on anything except benefits tied to land for Indigenous Australians."
+  ],
+  "changes": [
+   "Introduces a clearer purpose for the land fund as a compensatory mechanism for past injustices.",
+   "Prevents the fund from being used for any purpose other than land-related benefits for Indigenous people.",
+   "Strengthens Indigenous control over the land fund and the corporation through new consultation requirements.",
+   "Introduces stronger corporate governance rules for the corporation, including merit-based appointments and a code of conduct.",
+   "Aims to ensure the fund grows over time to benefit future generations."
+  ],
+  "affected": "Aboriginal people and Torres Strait Islanders, the Indigenous Land Corporation, and the Commonwealth government.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:28Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

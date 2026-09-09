@@ -1,0 +1,93 @@
+{
+ "key": "au-federal-r6233",
+ "title": "National Integrity (Parliamentary Standards) Bill 2018",
+ "short_title": "National Integrity (Parliamentary Standards) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-03",
+ "originating_house": "representatives",
+ "sponsor": "MCGOWAN, Cathy, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10798",
+ "portfolio": "(s) MCGOWAN, Cathy, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6233%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6233%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6233%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6233_ems_8838558c-45e7-4e3e-ba0e-508b3201a856%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6233%22",
+   "document_date": "2018-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-12-03",
+  "sentences": [
+   "This bill aims to increase public trust in the Commonwealth Parliament by helping it prevent and resolve its own integrity problems.",
+   "It would create statutory codes of conduct for parliamentarians and their staff, establish a Parliamentary Integrity Advisor and a Parliamentary Standards Commissioner to handle alleged breaches.",
+   "The bill is part of a larger package that also includes the National Integrity Commission Bill 2018."
+  ],
+  "changes": [
+   "Creates statutory codes of conduct for members of each parliamentary house and their staff.",
+   "Establishes a Parliamentary Integrity Advisor to give independent advice on the codes.",
+   "Sets up a Parliamentary Standards Commissioner to assist in investigating and resolving code breaches.",
+   "Provides a statutory basis for parliamentarians' registers of interests."
+  ],
+  "affected": "Members of the Commonwealth Parliament and their staff.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-373387",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speaker moved the National Integrity (Parliamentary Standards) Bill 2018, which establishes a code of conduct for parliamentarians, a Parliamentary Integrity Adviser, and a Parliamentary Standards Commissioner, and urged the government to adopt the package of integrity reforms."
+  },
+  {
+   "slug": "speech-373388",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speaker seconded the National Integrity (Parliamentary Standards) Bill 2018, arguing that public distrust in parliament is driven by misconduct such as $38,000 internet expenses, free flights and gifts, and urged the government and opposition to support the bill to restore integrity."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6302",
+ "title": "National Sports Tribunal Bill 2019",
+ "short_title": "National Sports Tribunal Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Regional Services, Sport, Local Government and Decentralisation",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6302%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6302%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6302%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6302_ems_a10eddbf-e65f-4bfe-8a73-07b078d3c523%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6302%22",
+   "document_date": "2019-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "This bill is part of a two-bill package that would create the National Sports Tribunal to resolve sporting disputes.",
+   "The tribunal would handle cases through private arbitration, mediation, conciliation or case appraisal, and its jurisdiction would depend on agreements between the parties.",
+   "The bill sets a two-year time limit for making applications, unless the rules specify a longer period."
+  ],
+  "changes": [
+   "Establishes the National Sports Tribunal with several divisions, including an anti-doping division.",
+   "Allows for the appointment of tribunal members and a chief executive officer.",
+   "Sets out processes for applying to the tribunal for arbitration or alternative dispute resolution.",
+   "Gives the minister power to make rules by legislative instrument.",
+   "Imposes a two-year time limit on applications, extendable by rules.",
+   "Makes consequential amendments to the Australian Sports Anti-Doping Authority Act 2006."
+  ],
+  "affected": "The Australian sporting community, including athletes, sports organisations and anti-doping authorities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:20:21Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375078",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "The National Sports Tribunal (Consequential Amendments and Transitional Provisions) Bill 2019 was introduced as a companion to the National Sports Tribunal Bill 2019, covering transitional arrangements and transferring sports dispute resolution functions to the new tribunal. It amends the Australian Sports Anti-Doping Authority Act 2006, with the changes taking effect before the tribunal's establishment on 1 July 2019."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,182 @@
+{
+ "key": "au-federal-r6610",
+ "title": "Treasury Laws Amendment (A Tax Plan for the COVID-19 Economic Recovery) Bill 2020",
+ "short_title": "Treasury Laws Amendment (A Tax Plan for the COVID-19 Economic Recovery) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-10-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-10-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-10-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6610_ems_5f05ae4e-49e9-4981-b96a-1220116461ab%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6610%22",
+   "document_date": "2020-10-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00092",
+   "document_date": "2020-10-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-07",
+  "sentences": [
+   "The bill would cut income tax for individuals to help the economy recover from the coronavirus pandemic.",
+   "It would bring forward planned tax threshold changes and replace the existing low income tax offset with a new one, starting from the 2020-21 income year.",
+   "The low and middle income tax offset would stay for 2020-21 but end after the 2021-22 income year."
+  ],
+  "changes": [
+   "Brings forward tax threshold changes to the 2020-21 income year.",
+   "Replaces the existing low income tax offset with a new one from 2020-21.",
+   "Extends the low and middle income tax offset for one more year."
+  ],
+  "affected": "Taxpaying individuals.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-395688",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "Labor supported the five tax measures in the omnibus bill, including bringing forward stage 2 tax cuts, increasing the small business threshold to $50 million, and the temporary loss carry-back, but expressed reservations about the research and development tax incentive and temporary full expensing due to limited time to consider them."
+  },
+  {
+   "slug": "speech-395690",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The bill accelerates stage 2 personal income tax cuts to 1 July 2020, retains the low- and middle-income tax offset for 2020–21, and provides $17.8 billion in tax relief for 11.6 million individuals, with singles receiving up to $2,745 and dual-income families up to $5,490. It also introduces temporary loss carry back for companies with turnover up to $5 billion, expands small business tax concessions to a $50 million turnover threshold, reforms the R&D tax incentive, and allows full expensing of eligible depreciable assets for businesses with turnover under $5 billion until 30 June 2022."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (A Tax Plan for the COVID-19 Economic Recovery) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00092",
+   "assent_date": "2020-10-14"
+  }
+ ]
+}

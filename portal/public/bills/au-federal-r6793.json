@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r6793",
+ "title": "Coal Prohibition (Quit Coal) Bill 2021",
+ "short_title": "Coal Prohibition (Quit Coal) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-25",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6793%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6793%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6793%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6793_ems_07c6e45c-96fd-4d1e-ba5d-ea7a9b949ba3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6793%22",
+   "document_date": "2021-10-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-25",
+  "sentences": [
+   "This bill would stop the digging up, use, selling abroad, and bringing in of coal used for power generation in Australia.",
+   "New coal mines and power stations could not start, and existing ones could not grow, from the day the bill becomes law, with exports wound down by 2030 and all mining and burning banned after that date.",
+   "Bringing in thermal coal would be banned except for scientific study or historical preservation, and breaking the rules could lead to jail time of up to seven years."
+  ],
+  "changes": [
+   "The bill would forbid starting new coal mines or coal-fired power stations and expanding existing ones from the day it receives royal assent.",
+   "The bill would end the exporting of thermal coal by the year 2030.",
+   "The bill would make mining and burning coal illegal after 1 January 2030.",
+   "The bill would ban importing thermal coal unless it is for research or heritage reasons.",
+   "The bill would create strong fines and possible imprisonment for violations."
+  ],
+  "affected": "Companies and individuals involved in mining, exporting, importing, or burning thermal coal in Australia, as well as those planning new coal mines or power stations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

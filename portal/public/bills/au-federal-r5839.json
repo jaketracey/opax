@@ -1,0 +1,244 @@
+{
+ "key": "au-federal-r5839",
+ "title": "Veterans’ Affairs Legislation Amendment (Omnibus) Bill 2017",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Omnibus) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "passed",
+ "status_as_of": "2017-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5839_ems_26795162-ed26-4ff0-88bb-a41e0d8da3c6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5839_ems_47fd69a2-a1de-4d2e-9245-583bb44ffa19%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5839_ems_f8c46400-2f55-4549-99b9-87aa462254e9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5839%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00128",
+   "document_date": "2017-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-345188",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Omnibus) Bill 2017 was moved for second reading, containing eight schedules that amend veterans legislation to clarify, improve, or streamline operations—including modernising the Veterans' Review Board, broadening international agreements for allied veterans, improving information sharing with the Commonwealth Superannuation Corporation, and repealing redundant provisions."
+  },
+  {
+   "slug": "speech-356349",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's support for the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2017, but argued that the provision in schedule 1 allowing the Veterans' Review Board principal member to dismiss applications should be removed, and welcomed the government's intent to move that amendment."
+  },
+  {
+   "slug": "speech-356352",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued for strong bipartisan support in the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2017, noting the government and opposition worked together to amend schedule 1 in response to veterans community concerns. He also criticised the member for Stirling (Minister for Justice) for divisive behaviour and called for tracking veterans after discharge and preserving the Department of Veterans' Affairs as a standalone agency."
+  },
+  {
+   "slug": "speech-356353",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2017, highlighting bipartisan cooperation and amendments to modernise the Veterans' Review Board, streamline appointments to the Specialist Medical Review Council, and improve information sharing between agencies. The speaker noted Labor's concern over a provision allowing dismissal of claims, which was removed, and emphasised the need for a fair, just, and efficient system for veterans."
+  },
+  {
+   "slug": "speech-356354",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2017, arguing it would streamline Department of Veterans' Affairs processes, improve the Veterans' Review Board, simplify Specialist Medical Review Council appointments, extend international agreements, legislate employer wage subsidies for injured veterans, enable information sharing between agencies, and repeal redundant provisions. The speaker expressed concern about giving the Veterans' Review Board principal member power to dismiss applications, but welcomed a government amendment to remove that section."
+  },
+  {
+   "slug": "speech-356355",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2017, noting it streamlines processes for veterans, but expressed concern about section 6 of schedule 1, which allowed the principal member of the Veterans' Review Board to dismiss applications; Labor had sought amendments to remove that section, and the government later agreed to changes."
+  },
+  {
+   "slug": "speech-356432",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2017, welcoming the government's acceptance of all recommendations from the Senate inquiry into veteran suicide and the removal of a provision that would have allowed dismissal of veterans' review applications. The bill includes measures to streamline processes, such as electronic lodgement, financial assistance for hearings, reciprocal agreements with foreign governments, and information sharing between the Commonwealth Superannuation Corporation and the Department of Veterans' Affairs to reduce duplicate medical assessments."
+  },
+  {
+   "slug": "speech-356433",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2017, welcoming bipartisan cooperation and the removal of a proposed subsection that would have allowed dismissal of applications as frivolous or vexatious. They noted that the Department of Veterans' Affairs supports around 291,000 clients, over 1,400 ADF members separated involuntarily in the past year, and 1,700 personnel are deployed to the Middle East."
+  },
+  {
+   "slug": "speech-356435",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Minister for Veterans' Affairs has too many responsibilities and needs additional portfolio support, welcomed the removal of the principal member process from the bill, and criticised the closure of Veterans' Access Networks and the shift of veterans' services into Centrelink, citing Tony Cullinan's case and concerns about rural service cuts."
+  },
+  {
+   "slug": "speech-356436",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2017, arguing it would improve and streamline veterans' entitlements, and highlighted that over 3,000 veterans are homeless, 325 took their own lives between 2001 and 2015, and that the Department of Veterans' Affairs supports around 291,000 people, including 203,000 over 65 and 23,000 under 40."
+  },
+  {
+   "slug": "speech-356437",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Omnibus) Bill 2017 was presented, containing nine schedules of amendments to clarify, improve or streamline veterans legislation, including modernising the Veterans' Review Board, enabling international agreements with more countries, and improving information sharing between DVA and the Commonwealth Superannuation Corporation to reduce claim processing times and avoid retraumatising veterans."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans’ Affairs Legislation Amendment (Omnibus) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00128",
+   "assent_date": "2017-11-30"
+  }
+ ]
+}

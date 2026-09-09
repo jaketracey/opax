@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r6430",
+ "title": "Telecommunications (Interception and Access) Amendment (Assistance and Access Amendments Review) Bill 2019",
+ "short_title": "Telecommunications (Interception and Access) Amendment (Assistance and Access Amendments Review) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6430_ems_33acf74a-dd3f-4aed-a83b-f189252c451b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6430%22",
+   "document_date": "2019-10-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00124",
+   "document_date": "2019-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-384465",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The Labor spokesperson argued the government mishandled the Telecommunications (Interception and Access) Amendment Bill by failing to consult oversight bodies and small businesses, and breaking a promise to fix it within a year, harming Australia’s tech sector which could employ 800,000 by 2022. They noted Australia ranks second-last among OECD countries for tech sector size and called for better support to grow the digital economy."
+  },
+  {
+   "slug": "speech-384467",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The government's sudden push for consultation on the encryption bill is not genuine, as it previously ignored 15,000 submissions, broke a deal with Labor, and rushed flawed laws that weaken national security and jeopardise Australia's compliance with the US CLOUD Act. The speaker also criticised the Home Affairs Minister for politicking and urged US lawmakers to reject Australia's law as non-compliant."
+  },
+  {
+   "slug": "speech-384468",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The member argued for the timely passage of the bill to extend the review periods for the PJCIS and INSLM regarding the 2018 Assistance and Access Act, noting bipartisan PJCIS support and INSLM backing."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications (Interception and Access) Amendment (Assistance and Access Amendments Review) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00124",
+   "assent_date": "2019-12-12"
+  }
+ ]
+}

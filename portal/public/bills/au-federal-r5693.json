@@ -1,0 +1,232 @@
+{
+ "key": "au-federal-r5693",
+ "title": "Appropriation Bill (No. 2) 2016-2017",
+ "short_title": "Appropriation Bill (No. 2) 2016-2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2016-11-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5693_ems_afacf96d-28a5-47cd-a9b0-e8917c20a617%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4884062%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5693%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00070",
+   "document_date": "2016-11-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-332750",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The motion was moved to pass Appropriation Bills (No. 1, No. 2, and Parliamentary Departments) for 2016‑2017, providing just over $49 billion in funding, including nearly $18 billion for Defence, $1.3 billion for Education and Training, $781 million for Infrastructure and Regional Development, and $610 million for the ABC and $168 million for SBS."
+  },
+  {
+   "slug": "speech-332751",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "Appropriation Bill (No. 2) 2016-2017 was moved to provide almost $9 billion in non-ordinary annual services funding, including $4.9 billion for NBN Co., $1.4 billion for Defence, $544 million for Infrastructure and Regional Development, and over $310 million for Agriculture and Water Resources. The bill also covers debit limits for the Nation-building Funds, general purpose financial assistance, and national partnership payments."
+  },
+  {
+   "slug": "speech-334443",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The speaker announced that unless otherwise ordered at adjournment, three appropriation bills for 2016-2017 are referred to the Federation Chamber for further consideration."
+  },
+  {
+   "slug": "speech-334460",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor would not block supply but criticized the Turnbull government's budget repair, citing increased taxes, a tripled deficit, and higher unemployment. They defended Labor's alternative package, including superannuation and negative gearing reforms, and opposed government measures like the $50 billion business tax cut and raising the pension age to 70."
+  },
+  {
+   "slug": "speech-334476",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's trickle-down economics has failed, neglecting families and favouring big business. They cited the GP Super Clinics program, specifically a clinic in Wallan that conservative health ministers refused to open rather than admit the program was a success."
+  },
+  {
+   "slug": "speech-335286",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The coalition government's $100 billion budget was endorsed by voters, with the speaker criticising Labor for not delivering a surplus since 1989 and for underfunding the NDIS, while announcing a $29.9 billion increase in defence spending over ten years."
+  },
+  {
+   "slug": "speech-335287",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The speaker argued for the passage of three appropriation bills for 2016-17, seeking over $58 billion in total: $49 billion for ordinary annual services, $9 billion for non-ordinary services including capital works and payments to states and territories, and $147 million for parliamentary departments."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 2) 2016-2017",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00070",
+   "assent_date": "2016-11-10"
+  }
+ ]
+}

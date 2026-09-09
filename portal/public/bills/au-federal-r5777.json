@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5777",
+ "title": "Charter of Budget Honesty Amendment (Regional Australia Statements) Bill 2016",
+ "short_title": "Charter of Budget Honesty Amendment (Regional Australia Statements) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-28",
+ "originating_house": "representatives",
+ "sponsor": "MCGOWAN, Cathy, MP",
+ "sponsor_party": "&#34;Independent Members&#34;",
+ "sponsor_person_id": "10798",
+ "portfolio": "(s) MCGOWAN, Cathy, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-08-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5777%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5777%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5777%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5777_ems_6e242550-4c3f-4ae5-9316-d92c046048e1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5777%22",
+   "document_date": "2016-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-338748",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The Charter of Budget Honesty Amendment (Regional Australia Statements) Bill 2016 would require the Treasurer to publicly release and table regional impact statements with each budget and Mid-Year Economic and Fiscal Outlook report, providing data on economic, social, cultural and environmental impacts on regional Australia, including effects of infrastructure gaps such as mobile phone coverage and public transport."
+  },
+  {
+   "slug": "speech-338821",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The member introduced the Charter of Budget Honesty Amendment (Regional Australia Statements) Bill 2016, which would require the government to release statements with each budget or MYEFO outlining the impact of fiscal policy on regional and rural Australia, and asked the Prime Minister to assure the House the bill would be considered."
+  }
+ ],
+ "acts": []
+}

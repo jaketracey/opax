@@ -1,0 +1,70 @@
+{
+ "key": "au-federal-s1498",
+ "title": "Trade and Investment Agreements (Consultation) Bill 2026",
+ "short_title": "Trade and Investment Agreements (Consultation) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-07-01",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "before_parliament",
+ "status_as_of": "2026-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1498%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1498_ems_2e4d594f-96c2-4a75-93c6-0b31f935ecf1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1498%22",
+   "document_date": "2026-07-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-07-01",
+  "sentences": [
+   "The bill would set up a framework for how Australia consults on and reviews its free trade agreements and bilateral investment treaties.",
+   "A new Trade Advisory Group of seven to eight members, including employer, union and non-government representatives, would advise the minister and receive confidential information about negotiations.",
+   "The bill would require independent analysis and a five-year review of covered agreements, and would ban investor-state dispute settlement clauses in bilateral investment treaties."
+  ],
+  "changes": [
+   "Establishes a Trade Advisory Group to represent diverse community views and advise on trade negotiations.",
+   "Requires the minister to announce negotiations, publish objectives, and obtain independent analysis before signing covered free trade agreements.",
+   "Bans signing bilateral investment treaties that include investor-state dispute settlement.",
+   "Requires independent five-year reviews of covered free trade agreements after they enter into force.",
+   "Applies different requirements depending on whether negotiations began before or after the bill commences.",
+   "Excludes sectoral agreements, agreements connected with multilateral organisations, and non-binding instruments from coverage."
+  ],
+  "affected": "The Department of Foreign Affairs and Trade, the minister, the Trade Advisory Group, and the Australian public would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,4 +1,4 @@
-import{B as Ee,E as we,H as xe,M as he,b as V,c as se,d as D,f as le,g as x,h as ce,i as U,j as K,l as ye,m as Q,n as I,o as $,p as W,q as _,r as ne,t as X,u as de,v as j,w as pe,x as be,y as ae,z as ee}from"./chunks/chunk-B7Y5A6LG.js";var ue=(h,i,e=`${i}s`)=>`${h.toLocaleString()} ${h===1?i:e}`,ve="opax-explain-style",A=1998,C=2025,He=1e3/30,te=["Who gives","How much, and when","Where it lands","What parliament said"],J=h=>String(h||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/['’]/g,"").replace(/[^a-z0-9]+/g," ").trim(),ke=h=>import(h),me=()=>ke("/wombat.js");function Ae(){if(document.getElementById(ve))return;let h=document.createElement("style");h.id=ve,h.textContent=`
+import{B as Ee,E as we,H as xe,N as he,b as V,c as se,d as D,f as le,g as x,h as ce,i as U,j as K,l as ye,m as Q,n as I,o as $,p as W,q as _,r as ne,t as X,u as de,v as j,w as pe,x as be,y as ae,z as ee}from"./chunks/chunk-NIWGLDGC.js";var ue=(h,i,e=`${i}s`)=>`${h.toLocaleString()} ${h===1?i:e}`,ve="opax-explain-style",A=1998,C=2025,He=1e3/30,te=["Who gives","How much, and when","Where it lands","What parliament said"],J=h=>String(h||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/['’]/g,"").replace(/[^a-z0-9]+/g," ").trim(),ke=h=>import(h),me=()=>ke("/wombat.js");function Ae(){if(document.getElementById(ve))return;let h=document.createElement("style");h.id=ve,h.textContent=`
 .explain-dialog { width:min(1180px,calc(100vw - 1rem)); max-height:calc(100dvh - 1rem); }
 .explain-dialog .game-dialog-head { border-bottom:1px solid var(--line); }
 .explain-dialog-body { padding:0!important; }
@@ -42,7 +42,7 @@ import{B as Ee,E as we,H as xe,M as he,b as V,c as se,d as D,f as le,g as x,h as
 .explain-sources [data-scene-citation]:hover,.explain-sources [data-scene-citation]:focus-within {
   background:var(--bronze-wash); }
 .explain-narrative { --explain-pad:clamp(1.1rem,3vw,2.2rem); min-width:0; overflow:auto; overflow-x:hidden; padding:var(--explain-pad); }
-.explain-title { margin:0; font:700 clamp(1.7rem,3.2vw,2.45rem)/1.12 var(--serif); letter-spacing:-.018em; }
+.explain-title { margin:0 0 .85rem; font:700 clamp(1.7rem,3.2vw,2.45rem)/1.12 var(--serif); letter-spacing:-.018em; } /* air before the step heading */
 .explain-deck { margin:.55rem 0 1.25rem; color:var(--ink-soft); font:400 .93rem/1.55 var(--serif); }
 .explain-steps { display:flex; gap:.25rem; overflow:auto; margin:0 0 1.35rem; padding:0 0 .45rem;
   list-style:none; border-bottom:1px solid var(--bronze-rule); scrollbar-width:thin; }

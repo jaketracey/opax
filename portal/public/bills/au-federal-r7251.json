@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7251",
+ "title": "Help to Buy (Consequential Provisions) Bill 2023 [No. 2]",
+ "short_title": "Help to Buy (Consequential Provisions) Bill 2023 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-10-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7251%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7251%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7251%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7254_ems_cec1bc90-33c5-4d8f-94b8-5f974e6f191d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7251%22",
+   "document_date": "2024-10-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-10-09",
+  "sentences": [
+   "This bill is part of a package that would create a shared equity program called Help to Buy, which would help low- to middle-income earners buy homes with a government contribution.",
+   "Housing Australia would run and oversee the program in states that have referred power or adopted the Commonwealth law, and in the territories.",
+   "The package would support 40,000 households and start the day after the bill receives Royal Assent."
+  ],
+  "changes": [
+   "Establishes the Help to Buy shared equity program for low- to middle-income earners.",
+   "Gives Housing Australia responsibility for administering and monitoring the program.",
+   "Makes amendments to existing Commonwealth legislation through the Consequential Provisions Bill."
+  ],
+  "affected": "Low- to middle-income earners, Housing Australia, and states and territories that participate in the program.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

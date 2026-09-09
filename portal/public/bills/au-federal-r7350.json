@@ -1,0 +1,161 @@
+{
+ "key": "au-federal-r7350",
+ "title": "Strengthening Oversight of the National Intelligence Community Bill 2025",
+ "short_title": "Strengthening Oversight of the National Intelligence Community Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2025-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7350_ems_383f05ee-5440-45ca-b5e1-836838ea6ef4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7350_ems_ae0767de-384e-44c4-966d-74ccc4c7b279%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7350_ems_7c1ccd81-6a4d-422d-80d0-c34df30451e3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7350%22",
+   "document_date": "2025-07-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00075",
+   "document_date": "2025-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2025-07-30",
+  "sentences": [
+   "The bill would add new rules for consulting and notifying others before making regulations that define 'intelligence function' for the Department of Home Affairs.",
+   "It would also make minor technical changes to the Intelligence Services Act to clarify the Committee's role, modernise procedures, and improve how the Commonwealth Ombudsman and the Inspector-General jointly oversee Home Affairs.",
+   "The Inspector-General would have to tell the Committee if they decide not to investigate a matter the Committee referred to them."
+  ],
+  "changes": [
+   "Adds consultation and notification requirements for regulations defining 'intelligence function' for the Department of Home Affairs.",
+   "Makes minor technical amendments to the Intelligence Services Act to clarify the Committee's functions and modernise procedural provisions.",
+   "Requires the Inspector-General to advise the Committee when they decline to inquire into a referred matter."
+  ],
+  "affected": "The Inspector-General of Intelligence and Security, the Parliamentary Joint Committee on Intelligence and Security, and the Department of Home Affairs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1198917",
+   "speaker": "Jess Walsh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Strengthening Oversight of the National Intelligence Community Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00075",
+   "assent_date": "2025-12-04"
+  }
+ ]
+}

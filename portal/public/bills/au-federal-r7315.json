@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-r7315",
+ "title": "Wellbeing of Future Generations Bill 2025",
+ "short_title": "Wellbeing of Future Generations Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-02-10",
+ "originating_house": "representatives",
+ "sponsor": "SCAMPS, Sophie, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10989",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7315%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7315%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7315_ems_3f329c78-4231-4b5a-9d5e-1128c8e7e7f3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7315%22",
+   "document_date": "2025-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-10",
+  "sentences": [
+   "This bill sets up a national framework to protect the interests of people not yet born from being overshadowed by short-term political cycles.",
+   "It would oblige government agencies to weigh the long-term effects of their choices and create an independent watchdog to speak for future Australians, along with a public consultation process.",
+   "The bill's explanatory memorandum does not specify how the public consultation would be run or when the framework would take effect."
+  ],
+  "changes": [
+   "Introduces a federal framework for future generations' wellbeing.",
+   "Imposes a duty on public bodies to consider long-term impacts and collaborate more effectively.",
+   "Establishes an independent Commissioner for Future Generations.",
+   "Requires a public consultation led by the Commissioner to shape Australia's long-term vision."
+  ],
+  "affected": "Public bodies, the Commissioner, and the Australian public would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-422793",
+   "speaker": "Sophie Scamps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-02-10",
+   "stage_hint": null,
+   "brief": "The prime minister agreed on intergenerational equity and announced a $177 billion reduction in forecast debt, a 20% cut to student debt benefiting three million Australians by an average of $5,000, and investments in education, housing, jobs, and climate action. He committed to reviewing the Wellbeing of Future Generations Bill."
+  }
+ ],
+ "acts": []
+}

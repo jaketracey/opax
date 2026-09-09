@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-s1448",
+ "title": "Migration Amendment (Restoring Medevac) Bill 2025",
+ "short_title": "Migration Amendment (Restoring Medevac) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-02-12",
+ "originating_house": "senate",
+ "sponsor": "SHOEBRIDGE, Sen David",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "11010",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1448%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1448%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1448_ems_e7f8b942-675b-4e72-bb3a-cbd3a8df1081%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1448%22",
+   "document_date": "2025-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-12",
+  "sentences": [
+   "The bill would allow certain asylum seekers held in Papua New Guinea and Nauru to be transferred to Australia if two or more doctors say they need medical care.",
+   "It would give eligible people, called transitory persons, an offer to come to Australia for treatment, matching the earlier Medevac scheme.",
+   "The source notes that when the previous Medevac law operated, 192 people were moved to Australia and got urgent medical treatment."
+  ],
+  "changes": [
+   "The bill would let people assessed by two or more treating doctors be transferred to Australia for medical treatment.",
+   "It would give an offer to come to Australia to transitory persons who meet the bill's requirements.",
+   "The bill would replicate the intent of the 2018 Medevac legislation."
+  ],
+  "affected": "People who sought asylum by sea and are held in Papua New Guinea or Nauru, transitory persons, and their families.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:05Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1194503",
+   "speaker": "David Shoebridge",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r6353",
+ "title": "Water Amendment (Indigenous Authority Member) Bill 2019",
+ "short_title": "Water Amendment (Indigenous Authority Member) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Water Resources, Drought, Rural Finance, Natural Disaster and Emergency Management",
+ "status": "passed",
+ "status_as_of": "2019-10-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6353_ems_dee9d0ac-333c-4702-b0a5-30f66a1c2bd0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6353%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00080",
+   "document_date": "2019-10-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would create a permanent seat on the Murray-Darling Basin Authority for an Indigenous member.",
+   "The member would be chosen for their expertise in Indigenous water matters, not as a regional representative, and would face the same appointment rules as other part-time members.",
+   "The Authority's size would grow from six to seven members, and the member must meet the Water Act's definition of an Indigenous person."
+  ],
+  "changes": [
+   "The bill adds a standing Indigenous member to the Murray-Darling Basin Authority.",
+   "It sets eligibility criteria for the role, requiring a high level of expertise in Indigenous matters related to Basin water resources.",
+   "It applies the same appointment process and conditions to the new member as to other part-time Authority members."
+  ],
+  "affected": "The Murray-Darling Basin Authority and Aboriginal and Torres Strait Islander people.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-377411",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The government moved the Water Amendment (Indigenous Authority Member) Bill 2019 to establish a standing Indigenous member position on the Murray-Darling Basin Authority, appointed based on expertise in Indigenous water matters. The bill builds on prior measures including a $40 million Aboriginal Water Entitlements Program and 2016 Water Act amendments to improve Indigenous engagement in basin water management."
+  },
+  {
+   "slug": "speech-380611",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Water Amendment (Indigenous Authority Member) Bill 2019, which creates a standing Indigenous member position on the Murray-Darling Basin Authority board, calling it a minimum first step toward deeper First Nations engagement. They noted the bill increases board membership from six to seven, acknowledged concerns about conflict-of-interest provisions potentially limiting candidates, and referenced the South Australian royal commission’s recommendation for at least two Aboriginal representatives."
+  },
+  {
+   "slug": "speech-380613",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Water Amendment (Indigenous Authority Member) Bill 2019, arguing that Indigenous knowledge would improve Murray‑Darling Basin management, and criticised current water practices for causing environmental damage, forcing farmers off land due to water prices reaching $800 per megalitre, and wasting $60 million in environmental flows."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Water Amendment (Indigenous Authority Member) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00080",
+   "assent_date": "2019-10-02"
+  }
+ ]
+}

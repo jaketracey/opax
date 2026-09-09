@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5570",
+ "title": "Credit Repayment (Protecting Vulnerable Borrowers) Bill 2015",
+ "short_title": "Credit Repayment (Protecting Vulnerable Borrowers) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-11-23",
+ "originating_house": "representatives",
+ "sponsor": "KATTER, Bob, Jnr, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10352",
+ "portfolio": "(s) KATTER, Bob, Jnr, MP",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5570%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5570%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5570%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5570_ems_10e3e688-b8cb-4ffe-a9f9-ee63e7ead35a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5570%22",
+   "document_date": "2015-11-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-11-23",
+  "sentences": [
+   "The bill would protect borrowers from unfair practices by financial institutions when they default on credit agreements secured by Australian land.",
+   "It would ban fire sales of land and prevent confidentiality clauses in settlement agreements, and give borrowers two years to market their property before a sale can happen.",
+   "The bill applies to credit agreements secured by a primary production business property, a residential premises, or an owner-operator business premises."
+  ],
+  "changes": [
+   "Prevents financial institutions from selling land provided as security within two years of a default notice, unless the borrower stops making interest payments.",
+   "Stops financial institutions from imposing default or penalty interest rates or extra charges that were not in place before the default.",
+   "Bans confidentiality clauses in settlement agreements for repaying credit."
+  ],
+  "affected": "vulnerable borrowers who are in default of credit agreements secured by Australian land used for primary production, residential purposes, or owner-operator businesses",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,121 @@
+{
+ "key": "au-federal-r5975",
+ "title": "Treasury Laws Amendment (Improving Accountability and Member Outcomes in Superannuation Measures No. 2) Bill 2017",
+ "short_title": "Treasury Laws Amendment (Improving Accountability and Member Outcomes in Superannuation Measures No. 2) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5975%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5975%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5975%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5975%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5975%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5975%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5975%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5975%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5975_ems_b65ec5cc-8db5-4919-ab9a-84fc2eb32483%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5975%22",
+   "document_date": "2017-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-355597",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Improving Accountability and Member Outcomes in Superannuation Measures No. 2) Bill 2017 was not opposed by Labor in the House, with support for closing the salary sacrifice loophole and a reserved position on choice of fund until the Senate Economics Legislation Committee reports. The speaker noted that unpaid superannuation affects 2.4 million workers, costing them $5.6 billion annually."
+  },
+  {
+   "slug": "speech-355599",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Improving Accountability and Member Outcomes in Superannuation Measures No. 2) Bill 2017, which includes two measures from their own private member's bill: closing a loophole that allowed employers to count salary sacrifice contributions as employer contributions, and giving employees the choice of super fund in workplace determinations and enterprise agreements. The speaker argued the bill does not go far enough, called for employees to have a direct right of action to recover unpaid superannuation rather than relying on the Australian Taxation Office, and urged the government to adopt further provisions from their private member's bill."
+  },
+  {
+   "slug": "speech-355600",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's two main provisions: giving employees the right to choose their superannuation fund, ending forced default funds under enterprise agreements, and closing loopholes that allow employers to reduce super guarantee contributions based on salary sacrifice amounts. They also argued for requiring superannuation fund boards to have at least one-third independent directors, including an independent chair, to improve governance."
+  },
+  {
+   "slug": "speech-355601",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Improving Accountability and Member Outcomes in Superannuation Measures No. 2) Bill 2017 extends choice of superannuation fund to over one million Australians covered by federal enterprise bargaining agreements and closes a loophole preventing employers from using salary sacrifice contributions to reduce their superannuation guarantee obligations."
+  }
+ ],
+ "acts": []
+}

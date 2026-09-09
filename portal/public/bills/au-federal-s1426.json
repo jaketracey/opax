@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1426",
+ "title": "Fair Work (Registered Organisations) Amendment (Removing Criminals from Worksites) Bill 2024 (No. 2)",
+ "short_title": "Fair Work (Registered Organisations) Amendment (Removing Criminals from Worksites) Bill 2024 (No. 2)",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-08-21",
+ "originating_house": "senate",
+ "sponsor": "CASH, Sen Michaelia",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10707",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1426%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1426%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1426%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1426%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1426_ems_c8accb2b-1e52-41bb-b859-97eb28e4570f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1426%22",
+   "document_date": "2024-08-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-08-21",
+  "sentences": [
+   "The bill would stop people with criminal records from leading registered employee organisations.",
+   "It would let a court cancel an organisation's registration or ban specific officers when the organisation breaks workplace laws.",
+   "People who take office while disqualified could face jail or fines, and organisations ignoring court orders could lose their registration."
+  ],
+  "changes": [
+   "Introduces disqualification from office for individuals found guilty of certain offences, covering both criminal and civil findings and applying to national and branch positions.",
+   "Allows cancellation of an organisation's registration or alternative court orders such as disqualifying officers, excluding members, or suspending rights.",
+   "Creates penalties including fines and imprisonment for disqualified individuals who try to hold office, and allows registration cancellation for organisations that ignore court orders or engage in obstructive industrial action."
+  ],
+  "affected": "Individuals who hold or seek office in registered organisations, and the organisations themselves.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

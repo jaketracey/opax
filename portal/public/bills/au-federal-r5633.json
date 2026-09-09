@@ -1,0 +1,158 @@
+{
+ "key": "au-federal-r5633",
+ "title": "Social Services Legislation Amendment (Interest Charge) Bill 2016",
+ "short_title": "Social Services Legislation Amendment (Interest Charge) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5633%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5633%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5633%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5633%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5633%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5633%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5633%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5633%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5633_ems_d76642bb-7cac-47b8-b920-801f64a26223%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5633%22",
+   "document_date": "2016-03-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-02",
+  "sentences": [
+   "This bill would impose an annual interest charge on unpaid debts of former welfare recipients who have not made acceptable repayment arrangements.",
+   "The charge would apply to debts from social security, family assistance, child care, paid parental leave, and student assistance payments.",
+   "The interest rate would be about nine per cent, based on the 90-day Bank Accepted Bill rate plus an extra seven per cent, and the measure is intended to start on 1 July 2016."
+  ],
+  "changes": [
+   "Introduces a general interest charge for debts of former social security and family assistance recipients.",
+   "Applies the charge to outstanding debts where the debtor has not entered into or complied with a repayment arrangement.",
+   "Sets the interest rate at approximately nine per cent, using the same formula as the Australian Taxation Office under the Taxation Administration Act 1953."
+  ],
+  "affected": "Former recipients of social security, family assistance, paid parental leave, and student assistance payments who owe outstanding debts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-330856",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": "The speaker announced that Labor will not oppose the Social Services Legislation Amendment (Interest Charge) Bill 2016 in the House, but will reserve a final position until after the Senate committee reports on 20 June 2016. The bill applies a new interest charge of approximately nine per cent on outstanding debts for former recipients of social security, family assistance, paid parental leave, and student assistance who have not entered a repayment plan, with exemptions for current payment recipients, and is expected to save $24.4 million fiscally and $416.5 million in cash over four years."
+  },
+  {
+   "slug": "speech-330859",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the coalition government's policies have reduced unemployment to 5.8% and created 300,000 jobs, contrasting with 7,200 under Labor, and that the Social Services Legislation Amendment (Interest Charge) Bill 2016 is needed to impose an interest charge on overdue social security debts—currently $3 billion total, with $870 million owed by 270 former recipients—to encourage repayment and reduce the $13 billion annual interest on Labor's inherited debt."
+  },
+  {
+   "slug": "speech-331023",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": "The speaker thanked the member for Dunkley for his long service and leadership in small business, expressing personal friendship and regret at his departure."
+  },
+  {
+   "slug": "speech-331024",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Interest Charge) Bill 2016 and announced they would not recontest the next election, highlighting achievements including competition law reform, a $5.5 billion small business budget package, grocery code reforms, and veterans' affairs reforms such as securing gold and white cards."
+  },
+  {
+   "slug": "speech-331029",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Social Services Legislation Amendment (Interest Charge) Bill 2016, thanking the minister for cost savings, and reflected on her 18 years in federal parliament, noting she was the first woman to represent Brisbane and the first woman of Italian origin in the federal parliament."
+  },
+  {
+   "slug": "speech-331038",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": "Strongly supported the Social Services Legislation Amendment (Interest Charge) Bill 2016."
+  }
+ ],
+ "acts": []
+}

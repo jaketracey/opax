@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6744",
+ "title": "Superannuation Guarantee (Administration) Amendment Bill 2021",
+ "short_title": "Superannuation Guarantee (Administration) Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-18",
+ "originating_house": "representatives",
+ "sponsor": "KELLY, Craig, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10750",
+ "portfolio": "(s) KELLY, Craig, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6744%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6744%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6744%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6744_ems_77edda27-b84f-4873-a95e-9cbdf4f21f01%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6744%22",
+   "document_date": "2021-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-18",
+  "sentences": [
+   "The bill would allow workers who move into a high-risk job to have their life insurance policy separated from their superannuation account.",
+   "It would amend the Superannuation Guarantee (Administration) Act to 'unstaple' the superannuation policy when a worker transfers to a 'dangerous occupation'.",
+   "A 'dangerous occupation' is defined as one where the workplace death rate exceeds 2.5 per 100,000 workers each year."
+  ],
+  "changes": [
+   "The bill would 'unstaple' life insurance policies from superannuation accounts when workers move to a dangerous occupation.",
+   "It would define a dangerous occupation by a workplace death rate threshold of more than 2.5 per 100,000 workers per year.",
+   "It would ensure workers have suitable life insurance coverage immediately upon starting a new high-risk job."
+  ],
+  "affected": "Workers who transfer employment into a dangerous occupation are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

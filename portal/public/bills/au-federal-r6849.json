@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-r6849",
+ "title": "Moratorium on New Coal, Gas and Oil Bill 2022",
+ "short_title": "Moratorium on New Coal, Gas and Oil Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-14",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6849%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6849%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6849%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6849_ems_27a15467-c060-4cdd-aead-20310b3b602b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6849%22",
+   "document_date": "2022-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-14",
+  "sentences": [
+   "This bill would halt new fossil fuel ventures in Australia and stop the movement of coal, gas and oil.",
+   "It would block environmental permits for new projects, cancel permits for projects not yet started, and ban new exploration and production permits in offshore areas.",
+   "The ban on environmental permits would take effect from the day the bill becomes law."
+  ],
+  "changes": [
+   "Prohibit environmental permits for new coal, gas and oil projects from the day the bill becomes law.",
+   "Cancel environmental permits for projects that have not yet started the activity the permit covers.",
+   "Ban new or renewed petroleum exploration permits in Commonwealth waters and cancel all current ones.",
+   "Ban new or renewed petroleum production licences in Commonwealth waters and cancel current licences where extraction has not started."
+  ],
+  "affected": "Companies and individuals involved in coal, gas and oil projects in Australia, including those seeking environmental approvals or petroleum permits in Commonwealth waters.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:12:53Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

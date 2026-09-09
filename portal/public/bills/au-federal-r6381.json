@@ -1,0 +1,233 @@
+{
+ "key": "au-federal-r6381",
+ "title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2019-2020",
+ "short_title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2019-2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2019-11-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6381_ems_44e6e167-443b-4280-b9d3-6a9ac6357267%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6381%22",
+   "document_date": "2019-07-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00102",
+   "document_date": "2019-11-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-25",
+  "sentences": [
+   "The bill would take money from the Consolidated Revenue Fund to pay for the Parliamentary Departments.",
+   "It would provide about seven-twelfths of the estimated annual funding for those departments for 2019-2020, plus extra for measures agreed since the last bill and election commitments.",
+   "The explanatory memorandum does not name the additional measures or give a total dollar amount."
+  ],
+  "changes": [
+   "Appropriates money from the Consolidated Revenue Fund for the Parliamentary Departments.",
+   "Provides roughly seven-twelfths of the estimated 2019-2020 annual appropriations for those departments.",
+   "Includes funding for measures agreed since Appropriation (Parliamentary Departments) Bill (No. 2) 2018‑2019 and certain election commitments."
+  ],
+  "affected": "The Parliamentary Departments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-378460",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 1) 2019–2020 and related bills were reintroduced to fund the government’s full-year budget, seeking $58.4 billion. Key appropriations include over $19.7 billion for Defence (including operations OKRA, ACCORDION, HIGHROAD, RESOLUTE and MANITOU), $6.3 billion for Health, $5.6 billion for Social Services, $3.2 billion for Foreign Affairs and Trade, $2.7 billion for Services Australia, $2.5 billion for Home Affairs, and $2.1 billion for the Australian Taxation Office."
+  },
+  {
+   "slug": "speech-378463",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "Appropriation Bill (No. 2) 2019-2020 seeks just over $7.4 billion for non-ordinary annual services, including $2.3 billion for Defence military equipment, $1.7 billion for the NBN Co loan, $1.3 billion for Western Sydney Airport, Inland Rail and roads, and $295 million in concessional loans for drought- and flood-affected farm businesses."
+  },
+  {
+   "slug": "speech-378464",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "The Appropriation (Parliamentary Departments) Bill (No. 1) 2019-2020 was moved for a second reading, providing full-year appropriations for the Department of the Senate, Department of the House of Representatives, Department of Parliamentary Services, and Parliamentary Budget Office. The largest item is almost $126 million for the Department of Parliamentary Services, covering Parliament House maintenance, replacement of the auxiliary power system, and a mobile phone antenna upgrade."
+  },
+  {
+   "slug": "speech-379176",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-30",
+   "stage_hint": null,
+   "brief": "Labor supported the appropriation bills but criticised the Liberal-National government’s economic record, citing HILDA survey data that showed real median household income fell by almost $500 per person in 2017, poverty rose to 10.4%, and economic growth, wages, and productivity had weakened over six years."
+  },
+  {
+   "slug": "speech-379460",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Liberal government is not a good economic manager, citing HILDA Survey data showing Australians earn less in real terms than in 2013, and that the economy has fallen from 8th to 20th fastest-growing in the OECD, with net debt doubled and gross debt over half a trillion dollars. Specific failures highlighted include Tasmania’s 6.7% unemployment rate, 12% national youth unemployment, a 34.4-minute average ambulance response time for category 1 patients, and over 3,500 people on Tasmania’s public housing list with only $5 million allocated for crisis accommodation."
+  },
+  {
+   "slug": "speech-379464",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The Labor member for Werriwa argued the government's economy is floundering, with the slowest growth since the GFC, a per capita recession since 1982, record low wages, 711,500 unemployed and over a million underemployed, and that the bills fail to address constituents' needs in areas such as NBN (Australia ranked 57th), aged care, Centrelink delays, NDIS understaffing, Western Sydney infrastructure, and energy policy."
+  },
+  {
+   "slug": "speech-379467",
+   "speaker": "Anthony Byrne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The member for Holt argued that the federal electorate's rapid population growth has created major shortfalls in roads, mobile phone coverage, hospital services and youth mental health care, and called on the Morrison government to match Labor's $850 million road upgrade plan and fund an MRI machine for Casey Hospital. He noted that over 100,000 extra vehicles were registered in Victoria in the past year, that Cranbourne East is Australia's fastest-growing suburb, and that the Casey City Council population of 327,000 is projected to exceed Canberra's within 20 years."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation (Parliamentary Departments) Act (No. 1) 2019-2020",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00102",
+   "assent_date": "2019-11-12"
+  }
+ ]
+}

@@ -1,0 +1,201 @@
+{
+ "key": "au-federal-r7376",
+ "title": "Fair Work Amendment (Baby Priya’s) Bill 2025",
+ "short_title": "Fair Work Amendment (Baby Priya’s) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2025-11-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7376_ems_1c15142e-74dd-41ab-bac1-860bb10c8a02%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7376%22",
+   "document_date": "2025-10-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00056",
+   "document_date": "2025-11-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-09",
+  "sentences": [
+   "The bill would change the Fair Work Act 2009 to implement a government promise that employers cannot end paid parental leave they fund when a worker's baby is stillborn or passes away.",
+   "It would add a rule that, unless both sides explicitly agree otherwise, such leave cannot be withdrawn in those circumstances, covering surrogacy and adoption cases as well.",
+   "The bill would not force employers to offer this leave if they do not already, and the explanatory memorandum does not specify a start date or any figures."
+  ],
+  "changes": [
+   "The bill would amend the Fair Work Act 2009 to introduce the new principle.",
+   "It would prevent cancellation of employer-funded paid parental leave due to stillbirth or death, unless agreed otherwise.",
+   "It would extend clarity to surrogacy and adoption arrangements.",
+   "It would not create new obligations for employers without existing leave provisions."
+  ],
+  "affected": "Parents whose child is stillborn or dies, and employers who provide paid parental leave.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1197717",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197749",
+   "speaker": "Madonna Jarrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198040",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198080",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-03",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment (Baby Priya’s) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00056",
+   "assent_date": "2025-11-06"
+  }
+ ]
+}

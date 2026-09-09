@@ -1,0 +1,244 @@
+{
+ "key": "au-federal-s1018",
+ "title": "Defence Legislation Amendment (First Principles) Bill 2015",
+ "short_title": "Defence Legislation Amendment (First Principles) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-10-14",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2015-12-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1018_ems_5c8a061c-3cfa-4d81-9525-06eaf203a418%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1018%22",
+   "document_date": "2015-10-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00164",
+   "document_date": "2015-12-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-10-14",
+  "sentences": [
+   "The bill would give the Chief of the Defence Force full command of the Australian Defence Force by removing legislative limits.",
+   "It would recognise the Vice Chief of the Defence Force as the CDF's deputy and make the Service Chiefs subject to the CDF's direction.",
+   "The bill would also repeal the Naval Defence Act 1910 and the Air Force Act 1923 and move their provisions into the Defence Act 1903."
+  ],
+  "changes": [
+   "Gives the Chief of the Defence Force full command of the Australian Defence Force.",
+   "Recognises the Vice Chief of the Defence Force as the deputy of the CDF.",
+   "Makes the Service Chiefs subject to the direction of the CDF.",
+   "Repeals the Naval Defence Act 1910 and the Air Force Act 1923.",
+   "Moves relevant provisions of those Acts into the Defence Act 1903."
+  ],
+  "affected": "The Australian Defence Force, including the Chief of the Defence Force, the Vice Chief of the Defence Force, and the Service Chiefs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:22Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-324057",
+   "speaker": "Mal Brough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The bill implements 75 recommendations from the First Principles Review of Defence, giving the Chief of the Defence Force full command of the Australian Defence Force, recognising the Vice Chief as deputy, repealing the Naval Defence Act 1910 and Air Force Act 1923, and consolidating cadet provisions."
+  },
+  {
+   "slug": "speech-324058",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "Labor supported the Defence Legislation Amendment (First Principles) Bill 2015, which implements recommendations from the first principles review to strengthen a unified \"One Defence\" approach. The party backed changes giving the Chief of the Defence Force sole command authority, removing service chiefs' statutory powers, and clarifying the status of ADF cadets and reserves, while criticising the government for cutting 2,406 civilian Defence jobs and flagging further reductions."
+  },
+  {
+   "slug": "speech-324059",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia should reconsider its participation in the Joint Strike Fighter program, citing that initial operational capability is eight years late, costs have risen from under $100 million to over $150 million per aircraft, and the planned number has dropped from 100 to 72. They noted that Canada cancelled its involvement and advocated for a first-principles review of defence capability requirements."
+  },
+  {
+   "slug": "speech-324560",
+   "speaker": "Ann Sudmalis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The Defence Legislation Amendment (First Principles) Bill 2015 implements the First Principles Review of Defence, clarifying the Chief of Defence Force's full command over the ADF, removing statutory authority of service chiefs, and formally recognising the Vice Chief as deputy, while also updating cadet provisions and flexible work arrangements."
+  },
+  {
+   "slug": "speech-324561",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The Defence Legislation Amendment (First Principles) Bill 2015 implements key recommendations from the \"Creating one Defence\" review, including consolidating the three services under the Defence Act, giving the Chief of the Defence Force full command, and formally recognising the Vice Chief as deputy; the bill enjoys bipartisan support."
+  },
+  {
+   "slug": "speech-324562",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Legislation Amendment (First Principles) Bill 2015, which gives full command of the Defence Force to the Chief of the Defence Force, and urged urgent action on PFOS contamination at Williamtown RAAF base, including remediation, town water supply, blood testing, and greater financial support for affected businesses."
+  },
+  {
+   "slug": "speech-324563",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The Defence Legislation Amendment (First Principles) Bill 2015 merges the three services under a single Defence Act to reduce duplication and improve accountability, following the 2015 First Principles Review. The government is also selling surplus Defence estate sites—including Bulimba Barracks, Leeuwin Barracks, Pontville Small Arms Range, Inverbrackie, and the Casino Drill Hall—with proceeds reinvested into Defence rather than treated as budget savings."
+  },
+  {
+   "slug": "speech-324564",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The Defence Legislation Amendment (First Principles) Bill 2015 formalises the authority of the Chief of the Defence Force and Vice Chief, implements 75 of 76 recommendations from the First Principles Review to improve efficiency and accountability, and addresses issues such as unclear chain of command and surplus estate disposal."
+  },
+  {
+   "slug": "speech-324566",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The bill gives the Chief of the Defence Force full command of the ADF, recognises the Vice Chief as deputy, and makes service chiefs subject to CDF direction, while repealing the Naval Defence Act and Air Force Act. The First Principles Review found senior Defence leaders nearly doubled from 201 to 374 between 1998 and 2014, and $18.2 billion was removed from the Defence budget from 2009-10."
+  },
+  {
+   "slug": "speech-324677",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Legislation Amendment (First Principles) Bill 2015, noting that it addresses longstanding inefficiencies in Defence’s capability development and acquisition, but warned that merging the Defence Materiel Organisation back into Defence and dissolving the Capability Development Group carries risks, especially for contestability and during concurrent major acquisitions worth over $80 billion."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence Legislation Amendment (First Principles) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00164",
+   "assent_date": "2015-12-02"
+  }
+ ]
+}

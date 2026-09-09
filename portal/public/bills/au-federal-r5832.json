@@ -1,0 +1,212 @@
+{
+ "key": "au-federal-r5832",
+ "title": "Copyright Amendment (Disability Access and Other Measures) Bill 2017",
+ "short_title": "Copyright Amendment (Disability Access and Other Measures) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "passed",
+ "status_as_of": "2017-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5832_ems_6286f247-9092-48bd-aac1-d771a2c7ee30%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5832%22",
+   "document_date": "2017-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00049",
+   "document_date": "2017-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-22",
+  "sentences": [
+   "The bill would make it easier for people with disabilities to access copyright material, aligning Australia with an international treaty ratified in 2015.",
+   "It would replace existing disability exceptions and licences with a single fair dealing exception and a single statutory licence for organisations helping people with disabilities.",
+   "The bill would also set standard copyright terms for published and unpublished works, update preservation rules for libraries and archives, and simplify educational licences."
+  ],
+  "changes": [
+   "Creates a single fair dealing exception for people with disabilities and those acting for them.",
+   "Replaces multiple statutory licences for disability organisations with one exception.",
+   "Modernises preservation exceptions for libraries, archives and cultural institutions.",
+   "Consolidates and simplifies statutory licences for educational institutions.",
+   "Allows copyright material to be included in online educational assessments.",
+   "Sets standard copyright terms for published, unpublished and Crown materials."
+  ],
+  "affected": "People with disabilities, organisations assisting them, educational institutions, libraries, archives and cultural institutions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:22:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-343776",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The Copyright Amendment (Disability Access and Other Measures) Bill 2017 was moved, introducing technology-neutral reforms including a consolidated exception and fair dealing for people with disabilities (following the Marrakesh Treaty ratification), simplified preservation copying for libraries and archives (including ABC, SBS, and ANU Archives Program), streamlined educational statutory licences for online examinations, and a harmonised 70-year copyright term for unpublished material from 1 January 2019, aligning Australia with the UK, US, Canada, NZ, Singapore, and the EU."
+  },
+  {
+   "slug": "speech-344762",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Copyright Amendment (Disability Access and Other Measures) Bill as a long-overdue implementation of the Marrakesh Treaty, noting that only 5% of books worldwide are accessible to print-disabled people and that Australia had fewer than half the 500,000 titles available on the US Bookshare site. The bill also includes reforms for library preservation, educational statutory licences, and harmonisation of copyright terms to life-plus-70 years, but the speaker criticised the government for delays and called for further copyright modernisation."
+  },
+  {
+   "slug": "speech-344763",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Copyright Amendment (Disability Access and Other Measures) Bill 2017, arguing it would enhance access to copyrighted material for people with disabilities, modernise library and archive preservation rules, and streamline educational licensing. The bill aims to benefit Australia’s 357,000 blind or low-vision residents, with projections of 564,000 by 2030, and reduce disability unemployment disparities."
+  },
+  {
+   "slug": "speech-344764",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Copyright Amendment Bill, which implements the Marrakesh Treaty to address the \"book famine\" where less than five percent of published works are in accessible formats for the visually impaired, and allows cross-border sharing of accessible copies. The bill also improves preservation copying for libraries, harmonises copyright to life-plus-70 years for unpublished works, and simplifies educational licenses, but the proposed extension of safe-harbour protections was removed."
+  },
+  {
+   "slug": "speech-344765",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The Copyright Amendment (Disability Access and Other Measures) Bill 2017 streamlines copyright exceptions to improve access for the 4.6 million Australians with disabilities, simplifies preservation copying for libraries and archives, and modernises educational statutory licences and copyright terms for unpublished works."
+  },
+  {
+   "slug": "speech-344774",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The Copyright Amendment (Disability Access and Other Measures) Bill 2017 passed with cooperation from the opposition and crossbench. The government removed proposed safe harbour provisions from the bill to allow additional consultation with stakeholders."
+  },
+  {
+   "slug": "speech-344776",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The speaker defended the Copyright Amendment (Disability Access and Other Measures) Bill 2017 as a modernising step for education, libraries, archives and disability sectors, and criticised the member for Chifley for failing to move an amendment or offer a solution."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Copyright Amendment (Disability Access and Other Measures) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00049",
+   "assent_date": "2017-06-22"
+  }
+ ]
+}

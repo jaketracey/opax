@@ -1,0 +1,292 @@
+{
+ "key": "au-federal-r6665",
+ "title": "Family Assistance Legislation Amendment (Early Childhood Education and Care Coronavirus Response and Other Measures) Bill 2021",
+ "short_title": "Family Assistance Legislation Amendment (Early Childhood Education and Care Coronavirus Response and Other Measures) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2021-03-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6665_ems_f33cea1f-1686-4189-87ff-90504037ce8a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6665%22",
+   "document_date": "2021-02-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00026",
+   "document_date": "2021-03-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-17",
+  "sentences": [
+   "The bill would let the government pay emergency funds to child care providers when a disaster or emergency strikes.",
+   "It would also allow families to have their child care subsidy debt reduced after the usual two-year deadline for lodging tax returns.",
+   "The changes aim to support the early childhood sector and families affected by COVID-19 and other emergencies."
+  ],
+  "changes": [
+   "Expands the circumstances for business continuity payments to approved child care providers during declared emergencies or disasters.",
+   "Lets child care subsidy debts be reconciled after the second deadline, reducing or eliminating the debt.",
+   "Ensures business continuity payments from the COVID-19 relief period are not automatically offset against future subsidies.",
+   "Allows the minister's rules to specify when those payments become debts if overpaid.",
+   "Exempts providers from reporting weekly session reports during the relief period.",
+   "Makes minor amendments about debts, review processes, delegation of powers, and back-dating approvals."
+  ],
+  "affected": "Approved child care providers, families receiving child care subsidy, and the early childhood education and care sector.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7046",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "question": "Family Assistance Legislation Amendment (Early Childhood Education and Care Coronavirus Response and Other Measures) Bill 2021 - Consideration in Detail – Waive fees during lockdown",
+   "stage": "Consideration in Detail – Waive fees during lockdown",
+   "ayes": 64,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-18/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-402316",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The bill extends COVID-19 childcare relief measures, including discretionary business continuity payments for providers affected by future large-scale disasters, and ensures relief payments are not offset against future Child Care Subsidy entitlements. It also extends tax return reconciliation deadlines for families, waives the 14-week non-attendance rule during the relief period, and addresses technical issues in Family Assistance Law."
+  },
+  {
+   "slug": "speech-404374",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The bill's technical COVID-19 response measures are supported, but the government's childcare system has failed: fee projections of 4% annual growth have eroded out-of-pocket benefits, and the system locks second-income earners—usually women—out of the workforce. Labor will move an amendment to protect families from gap fees during lockdowns and proposes scrapping the subsidy cap, lifting the maximum subsidy to 90%, and tasking the ACCC with price regulation."
+  },
+  {
+   "slug": "speech-404377",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Family Assistance Legislation Amendment (Early Childhood Education and Care Coronavirus Response and Other Measures) Bill 2021 is needed to ensure continuity and clarity for families while futureproofing the childcare sector, highlighting three aspects: enabling business continuity payments during future emergencies, extending reconciliation deadlines for childcare subsidies to assist families delayed by COVID-19, and addressing legal consequences to prevent double payments and debts from automatic enrolment cessation during the relief package. The speaker noted the Morrison government’s record $9.2 billion in childcare subsidy payments in 2020-21, rising to $10.7 billion, and cited a post-COVID rebound in female workforce participation from 57.5% in May 2020 to 61.2% in February 2021."
+  },
+  {
+   "slug": "speech-404378",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The Member argued that childcare costs have risen 36% since 2013, are more expensive in Brisbane, Sydney and Darwin since the 2018 system, and that the government's COVID free childcare policy was underfunded, with only 39% of exceptional circumstances fund applications approved. Labor supports the bill's technical amendments but announced its own policy: scrapping the $10,500 subsidy cap, lifting the maximum subsidy to 90% for families earning under $530,000, and tasking the ACCC and Productivity Commission with price regulation and sector review."
+  },
+  {
+   "slug": "speech-404383",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Family Assistance Legislation Amendment Bill 2021 and technical amendments moved by the member for Kingston, and criticised the coalition government’s childcare policy, stating fees have risen 35.9% since 2013, with increases of 5.4% in Kwinana and 5.8% in Rockingham. The speaker outlined Labor’s plan to scrap the $10,560 childcare subsidy cap, lift the maximum subsidy rate to 90%, and task the ACCC with price regulation."
+  },
+  {
+   "slug": "speech-404384",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Morrison government's COVID-19 response for childcare, citing a 35.9% fee increase since the Liberal government was elected and an average $595 per week in Canberra, and argued that Labor's plan—scrapping the $10,560 subsidy cap, lifting the maximum rate to 90%, and commissioning the ACCC and Productivity Commission—would make childcare affordable for 97% of families and address the 91,700 parents kept out of work by costs."
+  },
+  {
+   "slug": "speech-404433",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill as a necessary cleanup of pandemic childcare legislation, noting it clarifies emergency declarations, extends tax return deadlines, and removes the two-year cut-off for child care subsidy eligibility. They criticised the Morrison government for failing to waive childcare gap fees during recent Adelaide, Perth and Brisbane lockdowns and backed an amendment to automatically trigger exemptions when states declare lockdowns."
+  },
+  {
+   "slug": "speech-404438",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The speech addressed the Family Assistance Legislation Amendment (Early Childhood Education and Care Coronavirus Response and Other Measures) Bill 2021, with the speaker noting the personal relevance of early childhood education after returning from parental leave with twins."
+  },
+  {
+   "slug": "speech-404444",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for excluding many childcare providers from JobKeeper and for failing to waive gap fees during lockdowns, and announced Labor’s plan to scrap the $10,560 childcare subsidy cap, lift the maximum subsidy to 90 percent, and extend higher subsidy rates to families earning under $530,000."
+  },
+  {
+   "slug": "speech-404445",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-404447",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill provides necessary flexibility to support families and childcare providers during future emergencies, citing record childcare funding of $10.3 billion this year and a pre-COVID women’s workplace participation high of 61.5%. The bill ensures over 99% of services remained open during the pandemic and allows better management of childcare subsidy debts for those affected by COVID-19."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Family Assistance Legislation Amendment (Early Childhood Education and Care Coronavirus Response and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00026",
+   "assent_date": "2021-03-26"
+  }
+ ]
+}

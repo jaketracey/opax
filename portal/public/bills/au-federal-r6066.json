@@ -1,0 +1,93 @@
+{
+ "key": "au-federal-r6066",
+ "title": "Higher Education Support Amendment (National Regional Higher Education Strategy) Bill 2018",
+ "short_title": "Higher Education Support Amendment (National Regional Higher Education Strategy) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-26",
+ "originating_house": "representatives",
+ "sponsor": "MCGOWAN, Cathy, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10798",
+ "portfolio": "(s) MCGOWAN, Cathy, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-10-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6066%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6066%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6066%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6066_ems_52783171-234d-42d6-a94c-b93d92894ba1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6066%22",
+   "document_date": "2018-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-26",
+  "sentences": [
+   "The bill would require the government to keep a long-term plan for university education in regional areas.",
+   "It would make the minister responsible for presenting that plan to parliament half a year after the law starts and updating it every four years.",
+   "The explanatory memorandum says the plan should be created with input from governments, regional universities, their groups and industry."
+  ],
+  "changes": [
+   "The bill would mandate a national strategy for regional higher education.",
+   "It would require the minister to present the strategy to parliament within six months of royal assent.",
+   "The strategy would need to be revised every four years.",
+   "The bill would recognise regional universities as drivers of economic growth and employment."
+  ],
+  "affected": "Regional higher education providers, students in regional Australia, and the minister responsible for higher education.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:48Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-360943",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "The Higher Education Support Amendment (National Regional Higher Education Strategy) Bill 2018 was introduced to mandate a government strategic plan for regional higher education, recognising its role in economic growth and workforce retention. The speaker also criticised coalition regional MPs for not attending the debate, accusing them of failing rural and regional voters."
+  },
+  {
+   "slug": "speech-360944",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-03-26",
+   "stage_hint": null,
+   "brief": "The Higher Education Support Amendment (National Regional Higher Education Strategy) Bill 2018 was seconded, with the speaker arguing that regional universities are vital for economic prosperity and decentralisation, citing examples like the University of New England providing 12.6% of Armidale's employment and Deakin University's role in Geelong. The speaker highlighted that only 20% of people in regional areas have a bachelor degree compared to 42.4% in major cities, and called on the National Party to show leadership on the issue."
+  }
+ ],
+ "acts": []
+}

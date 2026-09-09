@@ -1,0 +1,178 @@
+{
+ "key": "au-federal-r7159",
+ "title": "Agriculture (Biosecurity Protection) Levies and Charges Collection Bill 2024",
+ "short_title": "Agriculture (Biosecurity Protection) Levies and Charges Collection Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-02-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "lapsed",
+ "status_as_of": "2025-02-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7159_ems_4136cb01-8dba-467c-8b8a-3d006fe3645f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7159%22",
+   "document_date": "2024-02-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-28",
+  "sentences": [
+   "This bill is part of a package that creates a new biosecurity protection levy on producers of agricultural, forestry and fisheries goods.",
+   "It sets up how the levy and related charges are collected, and allows enforcement actions such as monitoring, investigations and infringement notices.",
+   "The levy is expected to cover about six per cent of the costs of a sustainably funded biosecurity system, with most funding coming from taxpayers and importers."
+  ],
+  "changes": [
+   "Establishes a system for collecting the new biosecurity protection levy and charges.",
+   "Triggers enforcement powers under the Regulatory Powers (Standard Provisions) Act 2014, including monitoring, investigation and infringement notices.",
+   "Provides rules for using and disclosing information while protecting sensitive data."
+  ],
+  "affected": "Producers of agricultural, forestry and fisheries goods, whether for domestic or overseas markets, would pay the levy.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:29:37Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8833",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "question": "The majority voted in favour of agreeing with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a second time. ### What is the bill's main idea According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd055), the bill was introduced with the [Agriculture (Biosecurity Protection) Levies Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7158%22) (Levies Bill) and [Agriculture (Biosecurity Protection) Charges Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7157%22) (Charges Bill). Together, they: > *impose new agricultural biosecurity protection levies and charges (BPL) which will be payable by certain producers of agricultural, forestry and fisheries products within Australia; and to authorise their collection to help fund the costs of biosecurity activities at the border to prevent pest and disease incursions into Australia.* The [Agriculture (Biosecurity Protection) Levies and Charges Collection Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7159%22) \"*establishes a framework for collecting levies and charges under the Levies Bill and the Charges Bill respectively.*\"",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-27/4"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

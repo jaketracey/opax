@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s1313",
+ "title": "Ransomware Payments Bill 2021 (No. 2)",
+ "short_title": "Ransomware Payments Bill 2021 (No. 2)",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-12",
+ "originating_house": "senate",
+ "sponsor": "KENEALLY, Sen Kristina",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10906",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1313%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1313%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1313%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1313_ems_9d9c26b0-c8f6-4d78-82ba-e1170307a0b2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1313%22",
+   "document_date": "2021-08-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-12",
+  "sentences": [
+   "This bill would make it compulsory for most organisations that pay a ransom after a ransomware attack to tell the Australian Cyber Security Centre about the attack and payment.",
+   "The Australian Cyber Security Centre would collect the reports and could share de-identified information with the private sector and law enforcement.",
+   "Small businesses with an annual turnover below $10 million would be exempt from the reporting requirement."
+  ],
+  "changes": [
+   "Creates a mandatory notification scheme for ransomware payments.",
+   "Requires entities to provide details of the attack, attacker and payment to the Australian Cyber Security Centre.",
+   "Sets a civil penalty for failing to notify.",
+   "Allows the Australian Cyber Security Centre to share de-identified information for threat awareness and law enforcement.",
+   "Excludes small businesses with turnover under $10 million from the scheme.",
+   "Makes it an offence to disclose personal information from a report except for law enforcement purposes."
+  ],
+  "affected": "Commonwealth entities, state and territory agencies, and private businesses with an aggregate turnover of more than $10 million, but not small businesses, sole traders, unincorporated entities or charities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:10:42Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

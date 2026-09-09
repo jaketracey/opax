@@ -1,0 +1,440 @@
+{
+ "key": "au-federal-r6709",
+ "title": "Appropriation Bill (No. 1) 2021-2022",
+ "short_title": "Appropriation Bill (No. 1) 2021-2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2021-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6709_ems_d1b5b577-3b18-4101-9eb1-157d68968854%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6709%22",
+   "document_date": "2021-05-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00067",
+   "document_date": "2021-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-11",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for the government's ordinary annual services.",
+   "It is one of three appropriation bills required by the Constitution to separate ordinary annual services from other spending.",
+   "The explanatory memorandum says the bill should be read alongside the 2021-22 Portfolio Budget Statements, which give details on the amounts in the bill's schedules."
+  ],
+  "changes": [
+   "The bill would appropriate money from the Consolidated Revenue Fund for the ordinary annual services of the government.",
+   "It would ensure constitutional requirements are met by keeping ordinary annual services in a separate bill from other appropriations.",
+   "The bill would be accompanied by the Portfolio Budget Statements that contain further appropriation details."
+  ],
+  "affected": "The government and its departments that receive funding for ordinary annual services are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-405719",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-11",
+   "stage_hint": null,
+   "brief": "Appropriation Bill (No. 2) 2021–2022 seeks $20 billion from the Consolidated Revenue Fund for non-ordinary annual services, including $12.7 billion for Defence, over $3.5 billion for infrastructure, $600 million for agriculture and environment (with $500 million for plantation development loans), and $400 million for the Local Roads and Community Infrastructure Program, with a revised Advance to the Finance Minister of $3 billion."
+  },
+  {
+   "slug": "speech-406456",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-24",
+   "stage_hint": null,
+   "brief": "Three appropriation bills for 2021-2022—Appropriation Bill (No. 1), Appropriation Bill (No. 2), and Appropriation (Parliamentary Departments) Bill (No. 1)—were referred to the Federation Chamber for further consideration upon adjournment of the second reading debate."
+  },
+  {
+   "slug": "speech-406461",
+   "speaker": "Ken O'Dowd",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-24",
+   "stage_hint": null,
+   "brief": "The member for Flynn argued that the 2021-2022 budget protects Australians from COVID, creates jobs, and supports economic recovery through tax cuts, the instant asset write-off, $17.8 billion for aged care, $2 billion for Queensland roads, and extended telehealth and childcare reforms, benefiting 53,000 taxpayers and 23,000 businesses in his electorate."
+  },
+  {
+   "slug": "speech-406466",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's mixed messaging on COVID-19 is causing vaccine hesitancy and called for a consistent information campaign, while also noting that the government initially opposed Labor's wage subsidy proposal before adopting JobKeeper, crediting the ACTU for pushing it."
+  },
+  {
+   "slug": "speech-406470",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-05-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the budget lacked a road map for reopening international borders, sufficient climate and environment funding (only 0.8% of expenses), and adequate gender equity measures, while criticising a $9.5 billion unallocated fund and a $600 million gas plant at Kurri Kurri with no business case. They called for investment in renewables, green jobs, and proper quarantine planning to avoid a lost decade for young people."
+  },
+  {
+   "slug": "speech-406471",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the government's Appropriation Bill, criticising Labor and crossbenchers for amendments, and highlighted budget measures including $17.7 billion for 80,000 home-care packages, 163,000 JobTrainer places, 170,000 apprenticeships, $1.7 billion in child care, and an extension of the low-to-medium income tax offset."
+  },
+  {
+   "slug": "speech-406478",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's budget reflects eight years of mismanagement, stagnant wages, and neglect of essential services, citing specific failures in childcare and aged care, and noting that the average household income in their electorate is just over $60,000 a year. They criticised the government for pork-barrelling, a lack of an integrity commission, and a deliberate design of stagnant wage growth, while advocating for Labor's policies on secure jobs, affordable childcare, and housing affordability."
+  },
+  {
+   "slug": "speech-406483",
+   "speaker": "George Christensen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-24",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the 2021-2022 budget's $10 billion northern Australia cyclone reinsurance pool to lower insurance premiums in North Queensland and a $400 million Bruce Highway upgrade for the Mackay to Proserpine stretch. He also argued for increased defence spending of $44.6 billion, economic pivoting away from China, opposition to COVID vaccine passports, legislation for religious freedom, and a private member's bill to require medical treatment for children born alive after abortion."
+  },
+  {
+   "slug": "speech-406844",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "The speech supported the 2021-22 Appropriation Bill, welcoming funding for projects including $5 million for Victor Harbor Hospital, $5.4 million for the McLaren Vale recycling facility, and $40 million for South Australian roads. It also urged faster childcare subsidy changes, criticised the budget's omissions on climate policy, electric vehicles and the proposed Australian Local Power Agency, and called for a national fruit fly eradication strategy and food irradiation plant."
+  },
+  {
+   "slug": "speech-406846",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the Morrison government's 2021-2022 budget was unimpressive and failed on aged care, disability, climate, wages, vaccine rollout, quarantine, and social housing, while Labor proposed a $10 billion Housing Australia Future Fund to build 20,000 social housing properties and 10,000 affordable homes."
+  },
+  {
+   "slug": "speech-406867",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "The budget gives the government $142 billion to spend next financial year while failing to implement real reform, and the speaker argued that real wages will go backwards over the next four years under a government that has doubled national debt before the pandemic and now faces $1 trillion in debt. Specific failures cited include no adequate aged‑care funding, no reduction in home‑care waiting times, a vaccine program with only one per cent of people vaccinated, and no national quarantine standards."
+  },
+  {
+   "slug": "speech-406873",
+   "speaker": "Ross Vasta",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 2021–22 budget secures Bonner’s recovery, highlighted by a fuel security package for the Ampol refinery in Lytton that locks in 550 direct and 500 indirect jobs, $255 million in tax relief for small brewers and distillers, and measures including the instant asset write‑off benefiting 21,500 local businesses and loss carry‑back supporting over 8,000 businesses."
+  },
+  {
+   "slug": "speech-407134",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speech condemned the Morrison government’s 2021-22 budget for $100 billion in new spending and a forecast $1 trillion net debt, arguing it neglected Western Australia and the electorate of Brand—citing no funding for the Karnup train station, no help for Kwinana’s BP refinery, and criticising $17.7 billion for aged care, $1.7 billion for childcare, and the failed JobMaker scheme. It also outlined Labor’s alternative agenda, including a $10 billion Housing Australia Future Fund, 10,000 energy apprenticeships, criminalising wage theft, cheaper childcare for 97% of families, and a constitutionally enshrined voice for Indigenous Australians."
+  },
+  {
+   "slug": "speech-407137",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the appropriation bills, arguing the budget prioritises vaccination and economic recovery while delivering record federal funding to Western Australia, including $13.2 billion in total payments, $5.3 billion in GST, $1.6 billion for infrastructure, and $2.8 billion for health."
+  },
+  {
+   "slug": "speech-407141",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The member supported the 2021-22 budget, highlighting JobKeeper’s role in saving local businesses, the low- and middle-income tax offset (up to $1,080 for singles, $2,160 for couples), and the reduction in small business tax to 27 cents per dollar, falling to 25 cents by 2024-25. He also noted specific local benefits: $38 million for 38 local governments through the Local Roads and Community Infrastructure Program, a 300% increase in housing approvals in Albany, and 3,235 apprentices in O'Connor."
+  },
+  {
+   "slug": "speech-407144",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Appropriation Bill (No. 1) 2021-2022 and opposed amendments by Mr Bandt and Mr Chalmers, highlighting $98 million in joint funding for three intersection upgrades in his electorate of Sturt, along with community facility projects and the instant asset write-off as a key business incentive."
+  },
+  {
+   "slug": "speech-407145",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for failing to take responsibility for the vaccination rollout and quarantine, accusing it of broken promises and hiding behind state leaders. They argued the budget inadequately addressed aged care, child care, mental health, cities policy, and multicultural affairs, and called for full implementation of the Respect@Work report and the Uluru Statement from the Heart."
+  },
+  {
+   "slug": "speech-407149",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued the government’s budget lacks a long-term plan, citing $15–20 billion in JobKeeper payments going to profitable companies, only 1,000 jobs created from the JobMaker hiring credit, and failures in aged care, NDIS, vaccination targets, and quarantine; they proposed a $10 billion Housing Australia Future Fund, criminalising wage theft, and investing in apprenticeships and future technologies."
+  },
+  {
+   "slug": "speech-407150",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Appropriation Bill (No. 1) 2021-2022 but opposed the amendments, praising the government's pandemic response, including early border closures, the national cabinet, and local manufacturing of the AstraZeneca vaccine."
+  },
+  {
+   "slug": "speech-407153",
+   "speaker": "David Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The Labor Party will not oppose the appropriation bills but argues the budget fails to address wage growth, aged care, early childhood education, housing affordability, and university funding, with $100 billion spent without reform and real wages projected to fall behind inflation. The speaker also criticises the government's own enterprise agreement offer to public servants and the lack of support for international education, noting 17,000 university jobs lost."
+  },
+  {
+   "slug": "speech-407158",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "2021-22年度预算被表述为支持Curtin选区经济复苏，包含税收减免（低中收入者最高1,080澳元）、企业投资激励、技能培训和医疗研究资金等措施，并指出52,400名本地纳税人将受益。"
+  },
+  {
+   "slug": "speech-407159",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The government’s budget was criticised for promising $10 billion in infrastructure while actually cutting $3.3 billion, leaving South Australia with only two-thirds of its promised $3.2 billion for roads; the JobMaker program created just 1,000 of 450,000 promised jobs; and 80,000 new aged-care home packages are insufficient for the 130,000 people waiting, with no guarantee of 24/7 registered nurses or oversight of provider spending."
+  },
+  {
+   "slug": "speech-407160",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker criticised the 2021-2022 budget for failing the Central Coast community, highlighting specific failures: no funding for local potholes, a shortage of GPs despite a government denial, 97,000 older Australians waiting for home-care packages including constituents like Alan, rising out-of-pocket health costs, a 0.1% rental vacancy rate, and a 25% drop in local apprenticeships since the government took office. The speaker urged action on wage growth, gender equality, housing, and support for local manufacturers."
+  },
+  {
+   "slug": "speech-407356",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The Morrison government's economic plan has reduced unemployment to 5.5% and delivered the fastest economic rebound on record, with this budget providing tax relief to 10 million Australians, $110 billion for infrastructure, $17.7 billion for aged care, and extended JobTrainer and childcare investments."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 1) 2021-2022",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00067",
+   "assent_date": "2021-06-30"
+  }
+ ]
+}

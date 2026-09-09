@@ -1,0 +1,284 @@
+{
+ "key": "au-federal-r6726",
+ "title": "Australian Organ and Tissue Donation and Transplantation Authority Amendment (Governance and Other Measures) Bill 2021",
+ "short_title": "Australian Organ and Tissue Donation and Transplantation Authority Amendment (Governance and Other Measures) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-09-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6726_ems_508218d1-4323-4e02-bff0-b2dd09e88755%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6726%22",
+   "document_date": "2021-06-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00089",
+   "document_date": "2021-09-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-16",
+  "sentences": [
+   "This bill would shift financial accountability for the Organ and Tissue Authority from its board to its chief executive.",
+   "It would replace the existing board with an advisory body that counsels the chief executive on donation and transplantation issues.",
+   "The advisory board would have a chair, a deputy chair and three to five members, with skills drawn from fields such as health leadership and community engagement."
+  ],
+  "changes": [
+   "The chief executive becomes the accountable authority under the Public Governance, Performance and Accountability Act 2013.",
+   "The current board is abolished and replaced by an advisory board.",
+   "The advisory board's role is to give advice, expertise and mentorship to the chief executive."
+  ],
+  "affected": "The Organ and Tissue Authority, its chief executive and the advisory board members are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:43:49Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-411177",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker announced they will move a second reading amendment on behalf of the member for Hindmarsh, supporting the bill to transition the Organ and Tissue Authority's governance from a board to a CEO-led model with an advisory board, and criticised the government's COVID-19 vaccine rollout for missing all its targets, calling it a major policy failure."
+  },
+  {
+   "slug": "speech-411179",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill transitioning the Organ and Tissue Authority’s accountable authority from the board to the CEO and replacing the governance board with an advisory board. They also argued Australia should consider an opt-out organ donation system, noting that only 34% of Australians are registered donors and that an opt-out model could increase donors by 32%, saving hundreds of lives."
+  },
+  {
+   "slug": "speech-411180",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Organ and Tissue Donation and Transplantation Authority Amendment Bill 2021, arguing for reverting the governance structure so the CEO is the accountable entity rather than the board, noting that organ donation rates rose from around 220 to 550 per year under the DonateLife program but family consent rates remain stagnant at about 57-62 per cent."
+  },
+  {
+   "slug": "speech-411181",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The member supported the Australian Organ and Tissue Donation and Transplantation Authority Amendment Bill 2021, which shifts governance from a board to a CEO, and argued for moving to an opt-out organ donation system while encouraging more Australians to discuss their donation wishes."
+  },
+  {
+   "slug": "speech-411182",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The member supported the Organ and Tissue Donation and Transplantation Authority Amendment Bill 2021 and the Labor second reading amendment, urging Australians to register on the Australian Organ Donor Register and discuss their wishes with family, citing figures such as 1,650 people awaiting transplants and the stories of donor Keith Caldwell and recipient Jessica Sparks. The member also called on leaders to avoid spreading misinformation and to support health workers during the COVID-19 pandemic."
+  },
+  {
+   "slug": "speech-411183",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The bill transitions the Organ and Tissue Authority’s governance from a board to an advisory board, aligning it with other Commonwealth entities, and the speaker urged consideration of an opt-out donation system to increase registration rates, noting that Spain’s opt-out model yields 46.9 donors per million compared to Australia’s 22.2."
+  },
+  {
+   "slug": "speech-411184",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Organ and Tissue Donation and Transplantation Authority Amendment Bill 2021 and the second reading amendment urging better COVID-19 management, arguing the bill returns the Authority’s governance to a CEO-accountable model as recommended by its board and chair Dr Mal Washer. The speaker also called on Australians to register as organ donors at donatelife.gov.au, noted a 20% drop in donations and 2,000 people on waiting lists, and condemned comments by the member for Dawson as dangerous misinformation."
+  },
+  {
+   "slug": "speech-411185",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The Australian Organ and Tissue Donation and Transplantation Authority Amendment Bill 2021 was supported, transitioning the accountable authority from the board back to the CEO and establishing an advisory board. Increased organ and tissue donation was urged, noting nearly 1,800 Australians on the waiting list, and registration and family discussions were encouraged."
+  },
+  {
+   "slug": "speech-411298",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Organ and Tissue Donation and Transplantation Authority Amendment Bill 2021, arguing it would improve management and donor outcomes, but criticised the Labor Party for moving an amendment he called pointscoring. He urged organ donation registration, citing the stories of donor Peter Stutley, whose organs saved six people, and recipient Nancy Douglas-Irving, who later died."
+  },
+  {
+   "slug": "speech-411299",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Organ and Tissue Donation and Transplantation Authority Amendment Bill 2021, urged Australians to register as organ donors at donatelife.gov.au, and highlighted bipartisan efforts to increase donation rates."
+  },
+  {
+   "slug": "speech-411300",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The Australian Organ and Tissue Donation and Transplantation Authority Amendment (Governance and Other Measures) Bill 2021 allows the board greater strategic focus. Australia has 1,800 people waitlisted for transplants, 1,270 lives were saved from 463 deceased donors in 2020, and transplants dropped 12% due to COVID; the speaker urged more registrations and noted three donation specialist nurse positions were cut in Victoria."
+  },
+  {
+   "slug": "speech-411301",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to transfer the accountable authority from the board to the CEO and replace the governance board with an advisory board, and urged Australians to register as organ donors and discuss their wishes with family, noting that organ transplants fell 16% in 2020 due to COVID-19 and that 1,800 Australians are currently on the transplant waitlist."
+  },
+  {
+   "slug": "speech-411302",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to restore the Organ and Tissue Authority’s governance to the 2008 Labor model, criticising the 2017 changes as unsuccessful. They also urged the government to improve COVID-19 vaccination rates and expand quarantine facilities, specifically mentioning the Wellcamp site in Toowoomba."
+  },
+  {
+   "slug": "speech-411303",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill returns the Organ and Tissue Authority to a governance structure with the CEO as accountable entity and an advisory board, following Dr Mal Washer's review. He noted a 12% decrease in transplants and 16% decrease in donors in 2020 due to COVID-19, but 4,352 recipients since 2009, and urged Australians to discuss organ donation with families to increase rates."
+  },
+  {
+   "slug": "speech-411304",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Organ and Tissue Donation and Transplantation Authority Amendment Bill 2021, which reforms the governance structure to give the board a more strategic advisory focus. They noted a 16% drop in organ donations in 2020, a 58% family consent rate, and urged Australians to register as donors at donatelife.gov.au."
+  },
+  {
+   "slug": "speech-411305",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Organ and Tissue Donation and Transplantation Authority Amendment (Governance and Other Measures) Bill 2021, noting 1,800 Australians on transplant waiting lists and 1,270 lives saved by 463 deceased donors in 2020. They also raised concerns about the black market for organs, citing 176 Australians who had overseas transplants in 13 years to 2017, half allegedly illegal, and urged the government to review a parliamentary inquiry’s 12 recommendations on organ trafficking."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Organ and Tissue Donation and Transplantation Authority Amendment (Governance and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00089",
+   "assent_date": "2021-09-02"
+  }
+ ]
+}

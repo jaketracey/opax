@@ -1,0 +1,179 @@
+{
+ "key": "au-federal-r6865",
+ "title": "Supply (Parliamentary Departments) Bill (No. 1) 2022-2023",
+ "short_title": "Supply (Parliamentary Departments) Bill (No. 1) 2022-2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6865%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6865%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6865%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6865%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6865%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6865%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6865%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6865%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6865%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6865%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6865%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6865_ems_081acdc5-cbe3-4049-b446-630a01407d8a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6865%22",
+   "document_date": "2022-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00023",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-03-29",
+  "sentences": [
+   "The bill would take money from the Consolidated Revenue Fund to pay for the Parliamentary Departments.",
+   "It would provide about five-twelfths of the estimated annual funding for those departments for 2022-23, not including new budget items.",
+   "The remaining seven-twelfths plus budget measures would come from a separate bill later in the year."
+  ],
+  "changes": [
+   "Proposes appropriations from the Consolidated Revenue Fund for the Parliamentary Departments.",
+   "Sets the amount at broadly 5/12ths of the estimated 2022-23 annual appropriations, excluding Budget measures.",
+   "Leaves the balance of 7/12ths plus Budget measures to be proposed in a later bill."
+  ],
+  "affected": "The Parliamentary Departments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-419401",
+   "speaker": "Nola Bethwyn Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "The Supply Bill (No. 1) 2022-2023 and related bills seek over $80 billion in interim appropriations to fund normal government business and extended COVID-19 response measures for the first five months of 2022‑23. The bill includes a $2.4 billion advance to the finance minister—$2 billion earmarked for COVID-19 and $400 million for other urgent expenditure—with enhanced transparency and opposition concurrence required for advances over $1 billion."
+  },
+  {
+   "slug": "speech-419403",
+   "speaker": "Nola Bethwyn Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "The bill seeks $10.7 billion in appropriations for capital works, payments to states and territories, and equity injections for the first five months of 2022‑23, including extended COVID‑19 response measures. It also provides a $3.6 billion advance to the Finance Minister—$3 billion for COVID‑related expenditure and $600 million for other urgent spending—while returning the general advance to pre‑pandemic settings."
+  },
+  {
+   "slug": "speech-419404",
+   "speaker": "Nola Bethwyn Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "The Supply (Parliamentary Departments) Bill (No. 1) 2022‑2023 appropriates just under $114 million for the first five months of 2022‑23 for the Department of the Senate, Department of the House of Representatives, Department of Parliamentary Services and the Parliamentary Budget Office, to fund interim operations until annual appropriation bills pass."
+  },
+  {
+   "slug": "speech-419511",
+   "speaker": "Michelle Landry",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "The Supply Bill (No. 1) 2022-2023, Supply Bill (No. 2) 2022-2023 and Supply (Parliamentary Departments) Bill (No. 1) 2022-2023 seek authority to appropriate just over $91 billion from the Consolidated Revenue Fund for the first five months of 2022-23. The bills provide interim funding to ensure continuity of programs and services from 1 July 2022 until annual appropriation bills pass, and contain no new budget measures."
+  },
+  {
+   "slug": "speech-419519",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "The Appropriation (Parliamentary Departments) Bill (No. 1) 2022-2023 seeks $171 million for the last seven months of the financial year for four parliamentary departments, including $10.3 million for enhanced security infrastructure at Parliament House."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Supply (Parliamentary Departments) Act (No. 1) 2022-2023",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00023",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

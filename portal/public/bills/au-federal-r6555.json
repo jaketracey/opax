@@ -1,0 +1,299 @@
+{
+ "key": "au-federal-r6555",
+ "title": "Australian Prudential Regulation Authority Amendment (APRA Industry Funding) Bill 2020",
+ "short_title": "Australian Prudential Regulation Authority Amendment (APRA Industry Funding) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6555_ems_f8870fc3-bf1a-4558-8c6d-e3cf2abcfc9c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6555%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00054",
+   "document_date": "2020-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "This bill is part of a package that would let the Commonwealth recover costs for a broader set of activities funded through the financial institution supervisory levy framework.",
+   "The bill would amend the Australian Prudential Regulation Authority Act 1998 to expand the range of recoverable costs under that framework.",
+   "The package would also set a new maximum levy of $10 million for the financial year starting 1 July 2020 and allow the indexation factor to use the latest published CPI figures."
+  ],
+  "changes": [
+   "Amends the Australian Prudential Regulation Authority Act 1998 to widen the range of activities whose costs can be recovered through the supervisory levy framework.",
+   "Raises the statutory cap on certain levy amounts to $10 million for the financial year beginning 1 July 2020.",
+   "Permits the indexation factor for the statutory cap to be calculated using the most recent CPI figures."
+  ],
+  "affected": "Financial institutions subject to the supervisory levy framework.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:17Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-391038",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Australian Prudential Regulation Authority Amendment (APRA Industry Funding) Bill 2020 and associated levy imposition bills will give the Treasurer greater flexibility to set levies, raise the statutory cap on levy collections from $1.5 million to $10 million indexed to CPI, and expand levy conditions to include consumer outcomes, ensuring larger institutions pay their appropriate share of regulatory costs."
+  },
+  {
+   "slug": "speech-391039",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Authorised Deposit-taking Institutions Supervisory Levy Imposition Amendment Bill 2020 was moved for second reading, giving the Treasurer flexibility to set levies so that authorised deposit-taking institutions pay their appropriate share of APRA industry funding."
+  },
+  {
+   "slug": "speech-391040",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Authorised Non-operating Holding Companies Supervisory Levy Imposition Amendment Bill 2020 was moved for a second reading to give the Treasurer flexibility to set levies so non-operating holding companies pay their appropriate share of APRA industry funding."
+  },
+  {
+   "slug": "speech-391041",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The General Insurance Supervisory Levy Imposition Amendment Bill 2020 was moved for a second reading, complementing the APRA Industry Funding Bill 2020 to give the Treasurer flexibility in setting levies so general insurers pay their appropriate share."
+  },
+  {
+   "slug": "speech-391042",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Life Insurance Supervisory Levy Imposition Amendment Bill 2020 was moved for a second reading to give the Treasurer flexibility to set levies so that life insurance institutions pay their appropriate share."
+  },
+  {
+   "slug": "speech-391043",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The bill provides the Treasurer with flexibility to set supervisory levies for retirement savings account providers to ensure they pay their appropriate share."
+  },
+  {
+   "slug": "speech-391044",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Superannuation Supervisory Levy Imposition Amendment Bill 2020 was moved for a second reading to give the Treasurer flexibility to set levies so superannuation industry institutions pay their appropriate share, complementing the APRA Industry Funding Bill 2020."
+  },
+  {
+   "slug": "speech-391936",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the APRA Industry Funding Bill 2020, which expands APRA's funding base and fixes levy calculation problems, noting that smaller customer-owned banks like Illawarra Credit Union and IMB Bank had been paying a disproportionate share. The speaker also criticised the government for undermining superannuation by proposing policies that treat it like a bank account, arguing this would reduce long-term investment returns and increase future fiscal burdens."
+  },
+  {
+   "slug": "speech-391940",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the APRA Industry Funding Bill 2020 is needed to secure Australian workers' retirement savings, accusing Labor and the member for Whitlam of protecting industry super funds that have liquidity problems and put donors before workers."
+  },
+  {
+   "slug": "speech-391995",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the APRA Industry Funding Bill 2020 as a routine cost-recovery measure, but warned that Australia’s government debt—$666.3 billion in securities and projected to reach $1 trillion—could cost $80 billion a year in interest if rates rose to 7–8%, and expressed concern that much of the bond market is ultimately held by China."
+  },
+  {
+   "slug": "speech-391996",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's early access to superannuation scheme is a reckless raid on retirement savings that will cause long-term harm, and supported the APRA Industry Funding Bill 2020; they noted that 1.8 million Australians have accessed $3.5 billion from their superannuation so far."
+  },
+  {
+   "slug": "speech-391997",
+   "speaker": "George Christensen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The bill addresses a legislative barrier that deferred $3.1 million in levies from large banks, ensuring they pay their fair share for APRA regulation. The speaker also detailed his role in advocating for the banking royal commission, including drafting a parliamentary commission of inquiry bill."
+  },
+  {
+   "slug": "speech-391999",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The APRA Industry Funding Bill 2020 will allow fairer distribution of industry levies to fund APRA, addressing past underfunding of regulators that contributed to the banking royal commission. The early release of superannuation scheme was criticised for lacking fraud safeguards and for Senator Bragg encouraging withdrawals without a financial services licence."
+  },
+  {
+   "slug": "speech-392001",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the APRA Industry Funding Bill but warned regulators against regulatory capture, criticised Labor's former proposal to tax retiree incomes by up to a third as dishonest, and highlighted committee investigations into misconduct by industry super funds and ME Bank, including the harvesting of low-balance accounts and the non-disclosure of branch closures."
+  },
+  {
+   "slug": "speech-392002",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the APRA Industry Funding Bill 2020 as a modest step but argued that the government's early release of superannuation during COVID was unnecessary and damaging, noting that 7% of applicants had reduced their accounts to zero and 50,000 members had wiped their accounts by May 2020."
+  },
+  {
+   "slug": "speech-392003",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The speech opposed the APRA Industry Funding Bill 2020, arguing that APRA is a \"lapdog\" that failed to act on cases such as the Innisfail sugar mill and Kagara Zinc, and that superannuation is in jeopardy with 51 per cent of funds going into the stock market. It called for APRA to be removed and for a standard form contract."
+  },
+  {
+   "slug": "speech-392004",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The Australian Prudential Regulation Authority Amendment (APRA Industry Funding) Bill 2020 will ensure large financial institutions pay their appropriate share of APRA costs, ending levy deferrals, with industry support for the changes providing certainty during the coronavirus crisis."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Prudential Regulation Authority Amendment (APRA Industry Funding) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00054",
+   "assent_date": "2020-06-19"
+  }
+ ]
+}

@@ -1,0 +1,420 @@
+{
+ "key": "au-federal-r6181",
+ "title": "Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018",
+ "short_title": "Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Jobs and Innovation",
+ "status": "passed",
+ "status_as_of": "2018-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6181_ems_2b2ee1ae-6c4e-4880-b0ff-95490d6fb2d8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6181%22",
+   "document_date": "2018-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00169",
+   "document_date": "2018-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-13",
+  "sentences": [
+   "The bill would add five days of unpaid leave per year to the minimum employment standards for workers affected by family and domestic violence.",
+   "Employers would have to keep confidential any notice or evidence an employee gives about taking this leave, unless a law or a safety need requires disclosure.",
+   "The leave would be available in full at the start of each 12-month period, not accumulate, and apply to casual and part-time workers without pro-rating."
+  ],
+  "changes": [
+   "Creates a new unpaid leave entitlement of five days per year in the National Employment Standards.",
+   "Requires employers to treat information about an employee's family and domestic violence leave confidentially, with two exceptions.",
+   "Extends the leave to casual and part-time employees in full, without accrual or carry-over."
+  ],
+  "affected": "Employees covered by the national workplace relations system who are experiencing family or domestic violence, and their employers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5586",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "question": "The majority voted against a motion introduced by Labor MP for Gorton [Brendan O'Connor](https://theyvoteforyou.org.au/people/representatives/gorton/brendan_o'connor), which means it failed. The motion would have amended the usual motion \"*that the bill be [read a second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html)*\", which is another way of saying that the House agrees with the main idea of the bill. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give the bill a second reading, the House notes the Government's failure to match Labor’s commitment to 10 days paid family and domestic violence leave, which is part of this Government's wider failure to ensure all Australian workers have decent pay and workplace conditions\".*",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-12-04/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-369085",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The bill introduces five days of unpaid family and domestic violence leave for all employees under the Fair Work Act, extending coverage to up to six million additional workers, and the government has committed over $300 million to addressing family violence, including $54 million in the most recent budget."
+  },
+  {
+   "slug": "speech-373216",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's bill for five days unpaid domestic violence leave is insufficient and called for Labor's proposed 10 days paid leave, noting that many companies, state governments, and New Zealand already provide paid leave, and that domestic violence costs the economy billions."
+  },
+  {
+   "slug": "speech-373218",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2018-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 provides five days of unpaid leave to eight million Australian workers, excluding perpetrators, and highlighted that 72 women and 20 children were murdered due to domestic violence in 2018. The speaker also noted the government has committed over $300 million to women's safety initiatives, including $54 million in the recent budget for services like 1800RESPECT and GPS trackers for perpetrators."
+  },
+  {
+   "slug": "speech-373219",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 but argued it does not go far enough, advocating instead for 10 days of paid domestic violence leave. They also announced Labor's commitments including $18 million for the Keeping Women Safe in Their Homes program and new laws to prohibit direct cross-examination by alleged perpetrators."
+  },
+  {
+   "slug": "speech-373220",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 as a step forward but argued that five days of unpaid leave is insufficient, advocating instead for 10 days paid leave, citing that 210,000 Australian women experienced domestic violence in 2016 and that companies like ALDI, Telstra, and Qantas already provide paid leave."
+  },
+  {
+   "slug": "speech-373221",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's proposed unpaid domestic violence leave is insufficient and called for 10 days paid leave, noting that 63 women had been murdered by partners that year and that 40 women and children died during the eight-month delay in introducing the bill."
+  },
+  {
+   "slug": "speech-373222",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-29",
+   "stage_hint": null,
+   "brief": "Labor supported the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 but argued it fell short by providing only five days unpaid leave instead of Labor's commitment to 10 days paid leave. The speaker cited statistics that one woman is killed weekly by a partner, over 50% of physical assaults in their electorate are domestic violence related, and two-thirds of affected women are in the workforce, stressing that unpaid leave is inadequate for victims who cannot afford to miss work."
+  },
+  {
+   "slug": "speech-373225",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 is a positive step but inadequate, calling for at least 10 days of paid domestic violence leave instead of the proposed five days of unpaid leave. They cited one woman or more killed per week in Australia from family violence, named companies like IKEA, Telstra, and Qantas as leaders, and pointed to states offering more leave (Queensland, Western Australia, ACT, South Australia, Victoria)."
+  },
+  {
+   "slug": "speech-373226",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 and the amendment moved by the member for Gorton, noting that one woman per week is killed by domestic violence and two-thirds of affected women are in the workforce. They argued for legislating paid domestic violence leave, citing that unions including United Voice, the CFMMEU and the Finance Sector Union have already driven its inclusion in workplace agreements."
+  },
+  {
+   "slug": "speech-373228",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment but argued for 10 days paid domestic violence leave instead of five, citing statistics on violence against women and noting that New Zealand and many Australian businesses and state governments already provide paid leave. He criticised government members who opposed the measure as making \"ill-informed and ignorant claims.\""
+  },
+  {
+   "slug": "speech-373398",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speaker agreed that Queensland families and small businesses face cost-of-living pressures, but argued the coalition government has overseen falling house and share prices and is picking a fight with a state government due to lack of vision, noting the coalition had few speakers on other bills but many on this private member's bill."
+  },
+  {
+   "slug": "speech-373449",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The government’s response to domestic violence is inadequate and “too little, too late,” and Australia’s federal workplace system should provide paid family and domestic violence leave. Costs cited include approximately $18,000 to leave an abusive relationship and $1.9 billion to business (KPMG, 2015-16), with existing paid leave in New Zealand, several state public services, and enterprise agreements at companies like Telstra and Qantas."
+  },
+  {
+   "slug": "speech-373451",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018, which provides five days unpaid leave, does not go far enough, and called for 10 days of paid leave instead. They detailed the extensive steps required to leave a violent relationship—such as securing accommodation, seeking restraining orders, medical treatment, and legal assistance—and stated from personal experience that five days unpaid leave is insufficient."
+  },
+  {
+   "slug": "speech-373568",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's bill providing only five days of unpaid domestic violence leave is inadequate and called for 10 days of paid leave, citing that one in three Australian women experience physical violence and one woman per week is killed by a partner. They announced Labor's commitment to legislate 10 days paid leave, named companies like Telstra and Qantas and states like Queensland and New Zealand as already providing such leave, and criticised the Morrison government for opposing paid leave and for allowing only unpaid leave."
+  },
+  {
+   "slug": "speech-373569",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speaker argued the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 should provide 10 days paid leave, not five unpaid, and criticised the government for failing to act sooner. They noted that 63 Australian women have died from domestic violence in 2018, and that state governments and companies like Telstra and Qantas already offer paid leave."
+  },
+  {
+   "slug": "speech-373570",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 but criticised it as tokenistic for providing only five days unpaid leave, arguing for 10 days paid leave as proposed by Labor and already implemented by the NSW government and in New Zealand, and noting that companies like Telstra, NAB, and Qantas already offer 10 days paid leave."
+  },
+  {
+   "slug": "speech-373571",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's proposed five days of unpaid domestic violence leave is inadequate and that paid leave is essential, citing support from the ACTU, the Australian Services Union, and major corporations like Telstra, Woolworths, and Qantas. They noted that 63 Australian women died this year from domestic violence, that one in six women have experienced physical or sexual violence from a partner, and that the economic cost is $21.7 billion annually, while pledging Labor's policy of 10 days paid leave."
+  },
+  {
+   "slug": "speech-373572",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speech argued that the government’s Family and Domestic Violence Leave Bill 2018 is inadequate because it provides only five days of unpaid leave, while victims need at least ten days of paid leave. The speaker cited Labor commitments to invest $18 million in the Keeping Women Safe In Their Home program and a 10-year plan to reduce violence against women, and praised employers like Houston’s Farm for already offering paid domestic violence leave."
+  },
+  {
+   "slug": "speech-373573",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 but argued it does not go far enough, calling for 10 days of paid leave rather than five days of unpaid leave, citing research that one woman per week is killed by an abusive partner and referencing New Zealand’s 10-day paid leave policy. The speaker also highlighted a case from the Australian Services Union where a woman fleeing domestic violence was warned by a major bank for receiving calls from her abusive partner, and praised ASU state secretary Abbie Spencer for championing paid leave in South Australia."
+  },
+  {
+   "slug": "speech-373576",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The member supported the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 but criticised it for only providing five days unpaid leave, arguing for 10 days paid leave; she also announced Labor’s commitment to re-fund the Keeping Women Safe in their Home program."
+  },
+  {
+   "slug": "speech-373577",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 but argued that five days unpaid leave is insufficient, calling for ten days paid leave and citing Labor’s policy to legislate for that and invest $18 million in the Keeping Women Safe In Their Home program, while noting that one woman is murdered per week by a current or former partner and over 211,000 women experienced partner violence in 2016."
+  },
+  {
+   "slug": "speech-373578",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "Luke Howarth supported the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018, which provides five days unpaid leave for employees experiencing domestic violence, and noted the government's commitment of over $300 million to women's safety, including an additional $54 million in the 2018 budget."
+  },
+  {
+   "slug": "speech-373580",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 is inadequate because it provides only unpaid leave, not paid leave, and criticised the government for refusing to reinstate $18 million for the Keeping Women Safe in their Home program while noting that over 60 women have been killed by men in Australia in 2018. The speaker announced that a Labor government would introduce 10 days of paid family and domestic violence leave and supported Labor’s amendment to the bill."
+  },
+  {
+   "slug": "speech-373583",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "Labor supported the Fair Work Amendment (Family and Domestic Violence Leave) Bill 2018 in principle but argued it falls short of its commitment to 10 days of paid domestic and family violence leave, citing the dissenting report from Senators Marshall, O'Neill and Waters. The speech recounted advocacy by Ludo McFerran and early union efforts, including with Tanya Plibersek and the NTEU, to secure paid leave clauses in university enterprise agreements."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment (Family and Domestic Violence Leave) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00169",
+   "assent_date": "2018-12-11"
+  }
+ ]
+}

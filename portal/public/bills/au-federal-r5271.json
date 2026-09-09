@@ -1,0 +1,430 @@
+{
+ "key": "au-federal-r5271",
+ "title": "Family Assistance Legislation Amendment (Child Care Measures) Bill 2014",
+ "short_title": "Family Assistance Legislation Amendment (Child Care Measures) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2014-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-06-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5271_ems_90a07517-3010-4b9e-a028-a97398984a22%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5271%22",
+   "document_date": "2014-06-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00066",
+   "document_date": "2014-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3237",
+   "date": "2014-06-18",
+   "house": "representatives",
+   "question": "Family Assistance Legislation Amendment (Child Care Measures) Bill 2014 - Second Reading - Decline to read a second time",
+   "stage": "Second reading",
+   "ayes": 55,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 52,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-18/1"
+  },
+  {
+   "key": "federal-representatives-3238",
+   "date": "2014-06-18",
+   "house": "representatives",
+   "question": "Family Assistance Legislation Amendment (Child Care Measures) Bill 2014 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 80,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-18/2"
+  },
+  {
+   "key": "federal-senate-3241",
+   "date": "2014-06-23",
+   "house": "senate",
+   "question": "This division relates to the Policy _[For limiting availability of welfare payments](/policies/34)_. The majority voted against an amendment to the original motion, introduced by Greens Senator Sarah Hanson-Young. The original motion was \"that the bill be now read a second time\"(Read more about the stages that a bill must pass through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) to which Senator Hanson-Young moved the following amendment: _At the end of the motion, add:_ _but the Senate is of the opinion that, rather than punishing families, revenue should be raised from big miners, bankers and polluters through:_ _(a) applying a 'public insurance' levy on the big four banks that are too big to fail;_ _(b) removing fossil fuel subsidised fuel for big mining companies;_ _(c) retaining the billions in revenue from the carbon price;_ _(d) implementing the original super profits mining tax;_ _(e) imposing a millionaires tax;_ _(f) taxing discretionary trusts as corporations; and_ _(g) imposing a levy on thermal coal imports exports._ Because the majority voted against this amendment, it was unsuccessful _Background to the bill_ The [bill](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5271) was introduced primarily to amend the [A New Tax System (Family Assistance) Act 1999](http://www.austlii.edu.au/au/legis/cth/consol_act/antsaa1999357/) in order to: - maintain the indexation pause on the [Child Care Rebate](http://www.humanservices.gov.au/customer/services/centrelink/child-care-rebate) (CCR) limit at $7500 for three years from 1 July 2014; and - maintain the [Child Care Benefit](http://www.humanservices.gov.au/customer/services/centrelink/child-care-benefit) (CCB) income thresholds at the amounts applicable as at 30 June 2014 for three years from 1 July 2014. Normally, the CCR limit and CCB income test thresholds are indexed on an annual basis to the Consumer Price Index (CPI).",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-06-23/1"
+  },
+  {
+   "key": "federal-senate-3242",
+   "date": "2014-06-23",
+   "house": "senate",
+   "question": "Family Assistance Legislation Amendment (Child Care Measures) Bill 2014 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 41,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-06-23/2"
+  },
+  {
+   "key": "federal-senate-3243",
+   "date": "2014-06-23",
+   "house": "senate",
+   "question": "This division relates to the Policy _[For limiting availability of welfare payments](/policies/34)_. The majority voted in favour of a [motion](http://www.openaustralia.org/senate/?id=2014-06-23.24.1) to read the bill for a third time.(Read more about the stages that a bill must pass through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) This means that the majority agree with the bill and want it to pass through the Senate. The bill will now be returned to the House of Representatives for them to consider the [amendment](http://www.openaustralia.org/senate/?gid=2014-06-23.21.2) agreed to in the Senate during the in committee stage.(See the transcript for the in committee stage [here](http://www.openaustralia.org/senate/?id=2014-06-23.21.1). ) The amendment removed all references to the [Child Care Benefit](http://www.humanservices.gov.au/customer/services/centrelink/child-care-benefit) in the bill. Labor Senator [Kim Carr](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Kim_Carr&mpc=Senate&house=senate), who introduced the amendment, explained that it \"effectively will split the bill\" and \"will allow the Senate ... to consider the change to the childcare rebate as a separate issue\".(See Mr Carr's full explanation [here](http://www.openaustralia.org/senate/?gid=2014-06-23.11.2). Read Liberal Senator [Marise Payne](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Marise_Payne&mpc=Senate&house=senate)'s explanation for why the Government agreed to this amendment [here](http://www.openaustralia.org/senate/?gid=2014-06-23.17.1). ) _Background to the bill_ The [bill](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5271) was introduced primarily to amend the [A New Tax System (Family Assistance) Act 1999](http://www.austlii.edu.au/au/legis/cth/consol_act/antsaa1999357/) in order to: - maintain the indexation pause on the [Child Care Rebate](http://www.",
+   "stage": "Third reading",
+   "ayes": 39,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-06-23/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-290685",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291711",
+   "speaker": "Kate Ellis",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291713",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291714",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291716",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291717",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291718",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291933",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291934",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291942",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-18",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Family Assistance Legislation Amendment (Child Care Measures) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00066",
+   "assent_date": "2014-06-30"
+  }
+ ]
+}

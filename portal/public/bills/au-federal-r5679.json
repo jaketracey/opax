@@ -1,0 +1,180 @@
+{
+ "key": "au-federal-r5679",
+ "title": "Statute Update Bill 2016",
+ "short_title": "Statute Update Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2016-09-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-09-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5679_ems_e88d8685-a2de-40b1-9c21-e230dbd9574e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5679%22",
+   "document_date": "2016-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00061",
+   "document_date": "2016-09-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-09-01",
+  "sentences": [
+   "This bill is part of a package of Statute Update Bills that aim to modernize existing laws to align with current drafting standards and practices.",
+   "The package would revise various Acts to use penalty units instead of dollar amounts, update references to maximum penalties, adjust evidentiary provisions to treat certificates and registers as prima facie evidence, and update references to aircraft registration under the Civil Aviation Regulations 1988.",
+   "The explanatory memorandum does not specify how many Acts are amended or provide a commencement date."
+  ],
+  "changes": [
+   "The package would replace dollar-denominated penalties with penalty units.",
+   "It would update references to 'maximum penalty' in line with existing practice.",
+   "It would amend evidentiary provisions to make certificates and registers prima facie evidence.",
+   "It would update references to aircraft registered under the Civil Aviation Regulations 1988."
+  ],
+  "affected": "The changes affect Commonwealth legislation and those who rely on or administer these laws.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:55Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-332936",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-01",
+   "stage_hint": null,
+   "brief": "The Statute Update Bill 2016 makes minor and technical amendments to Commonwealth laws, including replacing dollar penalties with penalty units in criminal offence provisions and updating references to aircraft registered under the Civil Aviation Regulations 1988."
+  },
+  {
+   "slug": "speech-333871",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "Three bills—Statute Law Revision (Spring 2016) Bill 2016, Statute Update Bill 2016, and Corporations Amendment (Auditor Registration) Bill 2016—were referred to the Federation Chamber for further consideration upon adjournment of debate."
+  },
+  {
+   "slug": "speech-333874",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The Statute Update Bill 2016 is a routine set of drafting amendments with little legal effect, not an urgent reform; Labor supports it but rejects the government’s portrayal of it as part of a 25-point battle plan or a policy onslaught."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Statute Update Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00061",
+   "assent_date": "2016-09-23"
+  }
+ ]
+}

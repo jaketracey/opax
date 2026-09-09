@@ -1,0 +1,245 @@
+{
+ "key": "au-federal-r6547",
+ "title": "Aged Care Legislation Amendment (Emergency Leave) Bill 2020",
+ "short_title": "Aged Care Legislation Amendment (Emergency Leave) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2020-05-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6547_ems_a46dab93-af07-4e80-8509-1ac97a9b7261%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6547%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00041",
+   "document_date": "2020-05-15",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "The bill would let aged care providers keep getting government subsidies during declared emergencies, such as pandemics or natural disasters.",
+   "It would stop providers from charging residents a fee to hold their place in a facility during an emergency.",
+   "The leave would apply to a specific area and time period once an emergency is declared."
+  ],
+  "changes": [
+   "Introduces a new type of emergency leave for approved providers.",
+   "Prevents providers from charging residents a fee to reserve their place during a declared emergency.",
+   "Ensures providers remain eligible for residential care subsidy during emergency situations."
+  ],
+  "affected": "Approved providers of residential aged care and aged care residents.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-391046",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Aged Care Legislation Amendment (Emergency Leave) Bill 2020 introduces a new emergency leave type for permanent aged-care residents during pandemics, natural disasters, or other large-scale emergencies, allowing them to take leave without financial burden or losing their room, with retrospective application from 1 April 2020."
+  },
+  {
+   "slug": "speech-391057",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Aged Care Legislation Amendment (Emergency Leave) Bill 2020 creates emergency leave for permanent residential aged-care residents during emergencies, removing the 52-day social leave cap and the $230 daily cost to families, backdated to 1 April 2020. The speech also noted 71 infections at Newmarch House (37 residents, 34 staff) and called for a special investigation, while welcoming the retention bonus for aged-care workers but raising concerns about its exclusion of some workers."
+  },
+  {
+   "slug": "speech-391058",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Emergency Leave) Bill 2020, which introduces emergency leave for permanent aged-care residents during pandemics, natural disasters and other large-scale emergencies, allowing them to take leave without financial penalty or losing their placement, effective from 1 April 2020. The speaker also commended the minister for the Aged Care Visitor Access Code, which provides screening and limited visiting arrangements to support residents during the pandemic."
+  },
+  {
+   "slug": "speech-391059",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "Labor supported the Aged Care Legislation Amendment (Emergency Leave) Bill 2020, introducing emergency leave for permanent residential aged-care residents during disasters or pandemics, and criticised the government's response to COVID-19 outbreaks at Newmarch House and Dorothy Henderson Lodge, calling for greater transparency, accountability, and workforce improvements in the aged-care sector."
+  },
+  {
+   "slug": "speech-391060",
+   "speaker": "Melissa McIntosh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Legislation Amendment (Emergency Leave) Bill 2020 is essential to give aged-care residents and their families the choice to take emergency leave during crises like the COVID-19 pandemic without financial penalty or losing their room, addressing gaps exposed at Newmarch House in Lindsay. The bill introduces a new emergency leave type, effective retrospectively from 1 April 2020, for use during pandemics, natural disasters, and other large-scale emergencies."
+  },
+  {
+   "slug": "speech-391061",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Emergency Leave) Bill 2020, which allows emergency leave for permanent residential aged-care residents during disasters and pandemics, and noted that around 500 families face a $230 daily subsidy cost after exceeding a 52-day cap. They also highlighted the COVID-19 outbreak at Newmarch House, where 16 residents died, 34 staff and 37 residents tested positive, and called for a full investigation by the aged care royal commission."
+  },
+  {
+   "slug": "speech-391062",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Aged Care Legislation Amendment (Emergency Leave) Bill 2020, which raises the 52-day social leave cap for permanent aged-care residents during emergencies, removing the financial burden on families like that of constituent Jennifer, who faced $230 per day to hold a place. They also called for expanding the aged-care retention bonus to all workers, including cleaners and laundry staff."
+  },
+  {
+   "slug": "speech-391063",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Emergency Leave) Bill 2020, highlighting the hardship of COVID-19 restrictions on families and aged-care residents, and referenced St Catherine's aged care in Wangaratta."
+  },
+  {
+   "slug": "speech-391183",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Emergency Leave) Bill 2020, which allows aged-care residents to take emergency leave during declared emergencies—including pandemics and natural disasters—without losing their residential subsidy or being charged a fee to hold their place. The speaker also called for reducing the over-12-month wait for home-care packages, noting over 104,000 people were still waiting as of December 2019, and highlighted the need for continued funding for emergency infrastructure at Corryong Health’s aged-care facility."
+  },
+  {
+   "slug": "speech-391184",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Emergency Leave) Bill 2020, arguing it provides necessary flexibility during emergencies. They urged the government to ensure timely delivery of promised aged-care funding, revisit staffing ratios, address home-care package wait times of up to two years, and fully implement the Royal Commission's eventual recommendations."
+  },
+  {
+   "slug": "speech-391185",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Aged Care Legislation Amendment (Emergency Leave) Bill 2020, introducing a new emergency leave type so that permanent aged-care residents can temporarily relocate during emergencies like COVID-19 without exceeding their 52-day social leave allocation or incurring additional charges to retain their place."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care Legislation Amendment (Emergency Leave) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00041",
+   "assent_date": "2020-05-15"
+  }
+ ]
+}

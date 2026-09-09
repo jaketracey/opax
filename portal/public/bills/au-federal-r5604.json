@@ -1,0 +1,374 @@
+{
+ "key": "au-federal-r5604",
+ "title": "Appropriation Bill (No. 3) 2015-2016",
+ "short_title": "Appropriation Bill (No. 3) 2015-2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2016-03-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5604_ems_08234759-5797-4cea-8e88-6efca079e242%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5604%22",
+   "document_date": "2016-02-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00027",
+   "document_date": "2016-03-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-04",
+  "sentences": [
+   "This bill would allocate extra government funding from the national public account for the year 2015-2016, on top of the amounts already approved through the budget-related laws.",
+   "The money would be provided through a separate piece of legislation, as required by the constitution, with a companion bill covering other spending requests.",
+   "The explanatory memorandum says the detailed amounts are listed in the bill's schedules and are also described in the related portfolio statements tabled in parliament."
+  ],
+  "changes": [
+   "It would approve additional spending from the Consolidated Revenue Fund for the ordinary annual services of the government.",
+   "It would keep these appropriations in a separate bill from other appropriations, as the constitution requires.",
+   "It would work alongside a second bill to cover other annual appropriations, together forming the Additional Estimates Appropriation Bills."
+  ],
+  "affected": "The government and the parliament, as well as anyone relying on the detailed spending information in the portfolio statements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:31Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-326642",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-04",
+   "stage_hint": null,
+   "brief": "The government introduced Appropriation Bill (No. 3) 2015-2016, seeking just over $1.3 billion in additional funding, including $447 million for immigration and border protection, $277 million for social services (including $102 million to resettle 12,000 refugees from Syria and Iraq and $108 million for the National Disability Insurance Scheme), and $186 million for Defence."
+  },
+  {
+   "slug": "speech-326643",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-04",
+   "stage_hint": null,
+   "brief": "Appropriation Bill (No. 4) 2015-2016 seeks approval for $905 million in additional spending for 2015-16, including $385 million for the Roads to Recovery program, $125 million for the Biomedical Translation Fund, and $74 million for the Australian Taxation Office."
+  },
+  {
+   "slug": "speech-327838",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia should prioritise reducing fine particulate matter pollution over carbon dioxide, citing 1,586 deaths in 2008 from particulate matter in Sydney, Melbourne, Perth and Brisbane, and warning that rising electricity prices have increased wood fire use and particulate levels in Western Sydney. He also criticised the Moorebank intermodal project for increasing particulate matter emissions by 1,000% due to uncontrolled diesel locomotives."
+  },
+  {
+   "slug": "speech-327839",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-11",
+   "stage_hint": null,
+   "brief": "The speaker thanked the member for Hughes for covering their absence and noted they enjoyed his discussion on particulate matter."
+  },
+  {
+   "slug": "speech-327843",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-11",
+   "stage_hint": null,
+   "brief": "The member for Forrest urged prioritisation of funding for completing the Bunbury Outer Ring Road and dualling the Bussell Highway from Bunbury to Margaret River, and detailed federal investments including $750,000 for a bridge on Trevena Road, $8.27 million for the Collie River bridge, $400,000 for tourism projects, NBN access for 55,000 premises, $3 million for 14 mobile towers, and $250,000 for the Noongar Language Centre."
+  },
+  {
+   "slug": "speech-327844",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-11",
+   "stage_hint": null,
+   "brief": "The speaker criticised the lack of progress on Indigenous employment, noting the rate fell from 53.8% in 2008 to 47.5% in 2012-13, and argued that temporary visa programs (457, 417, and 462) in rural and regional Australia undermine job opportunities for Indigenous Australians. They proposed stronger legal obligations on employers, scrapping or scaling back second-year working holiday visas, enforcing employer sanctions, and establishing an employer-funded training fund for Indigenous Australians."
+  },
+  {
+   "slug": "speech-327845",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-11",
+   "stage_hint": null,
+   "brief": "The member for Bass argued that coalition policies have reduced Tasmania's unemployment from 8.6% to 6.6% and created 427,200 jobs nationally, citing $1 billion in Tasmanian infrastructure, $203 million for the Freight Equalisation Scheme, and $60 million for irrigation, while criticising Labor's coastal shipping laws for increasing freight costs."
+  },
+  {
+   "slug": "speech-327846",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-11",
+   "stage_hint": null,
+   "brief": "The government failed to deliver on its 2013 election promise to become an \"infrastructure government\" within a year, with the only notable aerial activity being former Speaker Bronwyn Bishop's helicopter."
+  },
+  {
+   "slug": "speech-327853",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-11",
+   "stage_hint": null,
+   "brief": "The member for Petrie argued that the coalition government has delivered infrastructure funding, border protection outcomes, and local projects including the Gateway Motorway upgrade (to six lanes), the Moreton Bay Rail Link ($500 million federal contribution), NBN rollout, Green Army projects, and a $4 million Dolphin Stadium contribution. He also claimed reductions in children in immigration detention (from 2,000 to 75) and increased shipbuilding orders."
+  },
+  {
+   "slug": "speech-327854",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-11",
+   "stage_hint": null,
+   "brief": "The government's economic record shows a $26 billion deficit blowout and higher debt, and cuts totalling $2.5 billion to skills and training have halved apprenticeship completions from 63,000 to 29,700."
+  },
+  {
+   "slug": "speech-327855",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-11",
+   "stage_hint": null,
+   "brief": "The speaker acknowledged Andrew Robb and Warren Truss, praising Robb's work on free trade agreements, particularly the China agreement, which will help Australian businesses export to China."
+  },
+  {
+   "slug": "speech-328242",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The member argued that the Badgerys Creek airport should not proceed without a curfew, citing 170 passenger and 28 freight flights daily by 2030, and criticised the government for lacking infrastructure details and for planning it as an overflow for Kingsford Smith. He also noted that Gonski funding cuts would harm educational attainment at schools like St Johns Park High School, which has a 91% Year 12 retention rate and 146 of 200 graduates receiving university offers."
+  },
+  {
+   "slug": "speech-328243",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The speaker opposed Labor's proposed negative gearing changes, arguing they would remove negative gearing for existing homes, causing 30% of investors to exit the market and reducing the value of Australia's $6 trillion housing stock, which is the primary asset for middle-income families."
+  },
+  {
+   "slug": "speech-328245",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that all Indigenous-specific policies and race-based classifications should be abolished, advocating for colour-blind policies addressing issues like alcoholism and child abuse without racial descriptors. He asserted that Australia's Indigenous policies are \"racist,\" citing the \"40-year failed experiment\" of affirmative action, criticised remote community subsidies as \"lifestyle choices,\" and stated the employment gap persists because too many Indigenous people do not participate in the \"real economy.\""
+  },
+  {
+   "slug": "speech-328246",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for lacking a clear economic agenda, citing internal divisions and the Treasurer’s failure to announce new policies at a National Press Club lunch. He outlined Labor’s alternative policies, including $30 billion from cracking down on negative gearing and capital gains tax, $80 billion in total savings measures, $4.5 billion in additional school funding over 2018-19, and support for Medicare, renewable energy, Australian jobs, and opposition to replacing local workers with overseas crews."
+  },
+  {
+   "slug": "speech-328247",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the federal government must fund water infrastructure in northern Australia, citing only two federally funded dams since Federation—Burdekin Falls Dam and Ord River Dam—and supported raising the Burdekin Falls Dam wall and building Hell's Gate Dam. He also called for the Queensland minister to sign the mining lease for the Carmichael Mine, for federal tenders to be broken into smaller contracts to boost local jobs, and for raising the Federal Safety Commission threshold from $4 million to $20–40 million."
+  },
+  {
+   "slug": "speech-328248",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Mid-Year Economic and Fiscal Outlook showed a deteriorating economy with a $26 billion deficit blow-out, $100 billion higher net debt, and locked in $23 billion in education cuts and $57 billion in health cuts, including $73 million for Victorian hospitals, while the government lacks an economic plan."
+  },
+  {
+   "slug": "speech-328249",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government has increased spending on health, education, and welfare each year, while criticising the previous Labor government for attempting to reduce its share of Pacific Highway funding from 80% to 50%. They announced the reinstatement of the 80-20 federal-state funding split, $2 billion in additional federal funding, and a target completion date of 2019, as well as $3.5 million for the Northern Rivers Livestock Exchange in Casino and $4 million for the Harwood Mill and Refinery under the National Stronger Regions Program."
+  },
+  {
+   "slug": "speech-328253",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for lacking a vision and a plan for Australia’s future prosperity, specifically on tax reforms like capital gains tax, negative gearing, and superannuation. They contrasted this with Labor’s policies, including limiting negative gearing to new housing from July 2017 and halving the capital gains tax discount to 25%, and highlighted poor NBN access and job cuts in Canberra as failures of the government."
+  },
+  {
+   "slug": "speech-328254",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The speaker argued for the government's vision of lower taxes, lower spending, economic growth, jobs and innovation, contrasting it with Labor's higher taxes and spending. He cited over $300 million in private investment for a residential and commercial centre in Beenleigh and Zarraffa's moving its global headquarters to Eagleby in his electorate of Forde."
+  },
+  {
+   "slug": "speech-328256",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the $2.2 billion appropriation bills, noting $385 million for Roads to Recovery, but criticised the government for cutting $534 million from Indigenous programs, $472 million from aged care, and $595 million from workforce programs, while urging the reinstatement of $279 million for the Ipswich Motorway upgrade."
+  },
+  {
+   "slug": "speech-328257",
+   "speaker": "Warren Entsch",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-328976",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speaker criticised Labor's proposed tax increases on tobacco and superannuation, arguing they would harm low-income Australians and self-funded retirees, and opposed Labor's negative gearing policy, claiming it would reduce property values. He highlighted the government's achievements, including 300,000 jobs created in the past year, record funding for education and health, the National Innovation and Science Agenda, trade agreements with South Korea, Japan and China, a $5.5 billion childcare package, and $50 billion in infrastructure investment, with specific reference to the Tasmanian Jobs and Investment Fund."
+  },
+  {
+   "slug": "speech-328978",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2016-02-24",
+   "stage_hint": null,
+   "brief": "The speech supported the Appropriation Bill, detailing coalition government funding for the Northern Territory electorate of Solomon, including a national day of observance for the bombing of Darwin, $70 million for Tiger Brennan Drive duplication, $1.7 million for the Albert Borella trek, and confirmation that the Palmerston hospital project is underway."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 3) 2015-2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00027",
+   "assent_date": "2016-03-23"
+  }
+ ]
+}

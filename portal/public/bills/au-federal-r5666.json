@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r5666",
+ "title": "Supply Bill (No. 1) 2016-2017",
+ "short_title": "Supply Bill (No. 1) 2016-2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-05-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2016-05-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5666_ems_eefdcd8a-97be-431a-9649-fff80713ae27%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5666%22",
+   "document_date": "2016-05-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00036",
+   "document_date": "2016-05-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-05-02",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund to cover the government's everyday running costs for the early part of the 2016-2017 financial year.",
+   "The spending would equal roughly 5/12ths of the estimated annual amount for those services, excluding new policy measures.",
+   "Extra funding is provided for agencies with high early-year costs, such as the Australian Electoral Commission."
+  ],
+  "changes": [
+   "Authorises interim government funding from the start of the financial year.",
+   "Allows normal government operations to continue until a full-year appropriation bill is passed.",
+   "Provides extra early funding for entities with high upfront expenses."
+  ],
+  "affected": "The Australian Government and its agencies, particularly the Australian Electoral Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-331564",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The Supply Bill (No. 1) 2016-2017 seeks $35 billion in appropriations for interim government funding from 1 July 2016, covering ordinary annual services until November 2016, with special provision for the Australian Electoral Commission."
+  },
+  {
+   "slug": "speech-331566",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The Supply Bill (No. 2) 2016-2017 seeks approval for just over $6 billion in appropriations from the Consolidated Revenue Fund for non-ordinary annual services, including capital works and payments to states, territories, and local governments, to ensure funding continuity from 1 July 2016. It also sets debit limits for the Nation-building Funds, the Building Australia Fund, the Education Investment Fund, and general purpose financial assistance and national partnership payments."
+  },
+  {
+   "slug": "speech-331574",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The speaker thanked contributors and stated that Supply Bills No. 1 and 2, and Supply (Parliamentary Departments) Bill (No.1), seek appropriations totalling just over $41 billion for the first part of 2016-17, and must be passed to ensure funding from 1 July 2016 for continuity of program and service delivery."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Supply Act (No. 1) 2016-2017",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00036",
+   "assent_date": "2016-05-04"
+  }
+ ]
+}

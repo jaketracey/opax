@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r5664",
+ "title": "Dental Benefits Amendment Bill 2016",
+ "short_title": "Dental Benefits Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-05-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-05-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5664%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5664%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5664%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5664_ems_67b8ff8b-438e-46aa-a15b-e25a7215499c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5664%22",
+   "document_date": "2016-05-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-05-05",
+  "sentences": [
+   "This bill would replace the existing Child Dental Benefits Schedule with a new Child and Adult Public Dental Scheme.",
+   "The Commonwealth would provide capped funding to the states through a National Partnership Agreement, with the states covering the remaining costs and managing service delivery.",
+   "The scheme would run from 1 July 2016 for five years, with a review after four years, and aims to treat an extra 600,000 patients each year."
+  ],
+  "changes": [
+   "Establishes a Child and Adult Public Dental Scheme to replace the Child Dental Benefits Schedule.",
+   "Creates a National Partnership Agreement for Commonwealth funding to states for public dental services.",
+   "Sets the Commonwealth contribution at 40 per cent of the efficient price of dental services.",
+   "Requires a review of the scheme after the fourth year to inform the next agreement.",
+   "Expands eligibility to all children and adults on concession cards."
+  ],
+  "affected": "Public dental patients, including children and adults on concession cards, and the states that provide public dental services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:47:41Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

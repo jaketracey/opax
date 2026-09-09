@@ -1,0 +1,234 @@
+{
+ "key": "au-federal-r6798",
+ "title": "National Redress Scheme for Institutional Child Sexual Abuse Amendment (Funders of Last Resort and Other Measures) Bill 2021",
+ "short_title": "National Redress Scheme for Institutional Child Sexual Abuse Amendment (Funders of Last Resort and Other Measures) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2021-12-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6798_ems_f15459ce-4e7d-4ed9-ba30-6612af6e7c05%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6798%22",
+   "document_date": "2021-10-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00119",
+   "document_date": "2021-12-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-27",
+  "sentences": [
+   "The bill would expand who can be covered by funder of last resort arrangements in the National Redress Scheme for survivors of institutional child sexual abuse.",
+   "It would let states and territories agree to take financial responsibility for institutions that cannot fully join the Scheme, and allow some institutions to partly participate.",
+   "The bill also gives the Scheme Operator new powers to disclose information about non-participating institutions named in applications, but not the identity of survivors."
+  ],
+  "changes": [
+   "Extends funder of last resort arrangements to non-defunct institutions that cannot join the Scheme and to defunct institutions where no jurisdiction or parent body is responsible.",
+   "Introduces partial participation for institutions unable to meet full Scheme obligations, with financial viability checks every 12 months.",
+   "Allows the Scheme Operator to disclose protected information about non-participating institutions after giving them a reasonable time to join.",
+   "Enables jurisdictions to become funder of last resort for institutions that cannot or will not partly participate, with potential loss of tax benefits and grant access.",
+   "Requires the Commonwealth to share costs with the funding jurisdiction that acts as funder of last resort.",
+   "Lets the Minister declare an institution as listed for a participating jurisdiction when a state or territory agrees."
+  ],
+  "affected": "Survivors of institutional child sexual abuse, non-participating institutions, partly-participating institutions, states and territories, and the Commonwealth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7511",
+   "date": "2021-11-23",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* of an [amendment](https://www.openaustralia.org.au/debates/?id=2021-11-23.95.2) to the usual second reading motion, which is that the the bill be read [for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) - parliamentary jargon for agreeing with the main idea of the bill. Because this vote passed, the amendment failed. It was introduced by Barton MP [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words: \"whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) the Royal Commission into Institutional Responses to Child Sexual Abuse estimated 60,000 survivors would be eligible for redress;* >> >> *(b) as of March 2021, after almost three years of operation, the National Redress Scheme had seen only 5,275 payments made;* >> >> *(c) the average processing time for a claim under the Scheme is over a year; and* >> >> *(d) the Government has not implemented all the recommendations of the two-year review of the National Redress Scheme; and* > > *(2) calls on the Government to work with states and territories to:* > >> *(a) lift the cap on Redress payments to $200,000, as recommended by the Royal Commission;* >> >> *(b) fix the assessment matrix so it properly takes into account the impact of abuse; and* >> >> *(c) provide ongoing support for survivors\".*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 38,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 124
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-11-23/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-415592",
+   "speaker": "Linda Jean Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-23",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment noting that only 5,275 payments had been made out of an estimated 60,000 eligible survivors, with average processing over a year, and called on the government to lift the redress cap to $200,000, fix the assessment matrix, and provide ongoing support."
+  },
+  {
+   "slug": "speech-415595",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Redress Scheme Amendment Bill 2021, which extends funder-of-last-resort provisions and allows public naming of institutions that refuse to join, but criticised the government for only making 5,000 payments in three years and failing to deliver justice for survivors, naming Kenja Communication, CYMS Basketball Association, Devonport Community Church and Forrest Tennis Club as institutions refusing to join."
+  },
+  {
+   "slug": "speech-415596",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-23",
+   "stage_hint": null,
+   "brief": "The National Redress Scheme Amendment Bill 2021 expands funder of last resort provisions to allow more survivors of institutional child sexual abuse to access redress, including for defunct or financially unable institutions, and confirms public naming of non-participating institutions; the government committed over $80 million over four years to prioritise 25 of 38 review recommendations."
+  },
+  {
+   "slug": "speech-415597",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-23",
+   "stage_hint": null,
+   "brief": "The speaker supported amendments to the National Redress Scheme Bill while criticising the Morrison government for slow implementation of the royal commission's recommendations. Specific positions included raising the redress cap to $200,000, ensuring prior payments are not indexed, allowing reviews without reduction risk, providing face-to-face application support for First Nations, CALD and disability communities, and extending eligibility to non-citizens, prisoners and those with criminal convictions."
+  },
+  {
+   "slug": "speech-415598",
+   "speaker": "Michelle Landry",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-11-23",
+   "stage_hint": null,
+   "brief": "The bill expands funder of last resort arrangements for survivors of institutional child sexual abuse whose responsible institution no longer exists or cannot participate, and strengthens the legislative basis for publicly naming institutions that have not joined the scheme."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Redress Scheme for Institutional Child Sexual Abuse Amendment (Funders of Last Resort and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00119",
+   "assent_date": "2021-12-02"
+  }
+ ]
+}

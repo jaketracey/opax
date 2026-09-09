@@ -1,0 +1,250 @@
+{
+ "key": "au-federal-r6654",
+ "title": "Financial Sector Reform (Hayne Royal Commission Response No. 2) Bill 2020",
+ "short_title": "Financial Sector Reform (Hayne Royal Commission Response No. 2) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-03-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6654_ems_fbe7be0f-10c5-44d5-808c-c87ffb6b2960%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6654%22",
+   "document_date": "2020-12-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00019",
+   "document_date": "2021-03-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-09",
+  "sentences": [
+   "The bill would stop financial firms from charging clients ongoing fees for services they do not use or know about.",
+   "It would require firms to ask clients each year if they want to keep paying, tell them the total fee in writing, and get their signed permission before taking money from their account.",
+   "The changes apply only to ongoing fee arrangements under the Corporations Act, with no start date or exemption mentioned in the outline."
+  ],
+  "changes": [
+   "Financial service providers must get annual renewal from clients for ongoing fee arrangements.",
+   "Providers must give clients a written statement of the total fees to be charged.",
+   "Providers must obtain written consent before deducting any ongoing fee from a client's account."
+  ],
+  "affected": "Clients with ongoing fee arrangements and the financial service providers who charge those fees.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6938",
+   "date": "2021-02-15",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-02-15.145.3) to keep the text of the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) unchanged. The original second reading motion is \"*that the bill be read a second time*,\" which is parliamentary jargon for agreeing with the main idea of the bill. This vote took place after the MP for Rankin [Jim Chalmers](https://theyvoteforyou.org.au/people/representatives/rankin/jim_chalmers) proposed the following [motion](https://www.openaustralia.org.au/debate/?id=2021-02-15.138.1). ### Proposed motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes the Government has:* > > *(1) taken far longer than promised to implement the recommendations of the Hayne Royal Commission;* > > *(2) failed to establish a compensation scheme of last resort, as recommended by the Hayne Royal Commission; and* > > *(3) actively rejected the very first recommendation of the Hayne Royal Commission, by proposing to repeal the responsible lending obligations in the National Consumer Credit Protection Act 2009 for the vast majority of credit contracts.\"*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-15/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-400590",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The Financial Sector Reform (Hayne Royal Commission Response No. 2) Bill 2020 was moved for second reading, implementing recommendations 2.1, 2.2, 3.2, and 3.3 from the Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry. Key measures include requiring clients to receive an annual forward‑looking fee and service summary and give express written authority for ongoing fee deductions, mandating a disclaimer from non‑independent financial advisers, and prohibiting ongoing advice fees from MySuper products while increasing fee transparency."
+  },
+  {
+   "slug": "speech-401969",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Financial Sector Reform Bill to align financial advisers' interests with their clients, arguing COVID-19 delayed its introduction. He also argued for prioritising homeownership over superannuation (\"home first, super second\") and criticised industry super funds for charging fees without providing services."
+  },
+  {
+   "slug": "speech-401970",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government has only implemented one-third of the Hayne royal commission's 76 recommendations in two years, delaying action while protecting big banks. Labor supported the Financial Sector Reform Bill but moved an amendment criticising the government for failing to establish a compensation scheme of last resort and proposing to repeal responsible lending obligations."
+  },
+  {
+   "slug": "speech-401972",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-15",
+   "stage_hint": null,
+   "brief": "The government has failed to implement the Banking Royal Commission recommendations, as shown by the Furneauxs' case with NAB and AFCA's ineffectiveness, while prioritizing other legislation like university integrity and cashless welfare cards."
+  },
+  {
+   "slug": "speech-401974",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Financial Sector Reform (Hayne Royal Commission Response No. 2) Bill 2020 for limiting fee-for-no-service practices and requiring annual fee reviews, but criticised the government for simultaneously introducing the National Consumer Credit Protection Amendment (Supporting Economic Recovery) Bill 2020, which removes responsible lending obligations contrary to the Hayne royal commission’s first recommendation. The speaker cited two cases from Barwon Community Legal Service—Sally, who was coerced into a $25,000 loan at 20% interest, and Ahmed, who was misled into a $30,000 loan at 22.9% interest—to argue that responsible lending laws are essential to prevent personal hardship and economic instability."
+  },
+  {
+   "slug": "speech-401977",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-15",
+   "stage_hint": null,
+   "brief": "The government has failed to implement over half of the Hayne royal commission’s recommendations, rejected the first recommendation, and is weakening responsible lending laws—including by repealing obligations for most credit contracts—which will worsen financial hardship for vulnerable Australians, particularly through payday lending (4.7 million loans worth $3.09 billion from 2016–2019, with 15% of borrowers entering debt spirals and a 28% rise in women borrowers since 2016)."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Financial Sector Reform (Hayne Royal Commission Response No. 2) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00019",
+   "assent_date": "2021-03-02"
+  }
+ ]
+}

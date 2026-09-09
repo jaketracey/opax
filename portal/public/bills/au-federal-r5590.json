@@ -1,0 +1,157 @@
+{
+ "key": "au-federal-r5590",
+ "title": "Broadcasting Legislation Amendment (Digital Radio) Bill 2015",
+ "short_title": "Broadcasting Legislation Amendment (Digital Radio) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2016-02-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5590_ems_d25a624b-5a57-4a13-a5e1-9efcc16fc3e4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5590%22",
+   "document_date": "2015-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00014",
+   "document_date": "2016-02-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-325130",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Digital Radio) Bill 2015 was moved to reduce regulatory complexity and facilitate digital radio rollout in regional Australia. Key changes include removing the minister's role in setting start-up days for regional digital radio, abolishing the unused restricted datacasting licence category, removing the six-year digital radio moratorium period, and amending licence definitions to allow the ABC and SBS to renew their category 3 multiplex licences."
+  },
+  {
+   "slug": "speech-325914",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Digital Radio) Bill 2015 implements recommendations from the government's digital radio review, with the opposition supporting the uncontroversial provisions while noting that several other recommendations were not enacted and calling for early engagement on future amendments."
+  },
+  {
+   "slug": "speech-325915",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The member for Solomon argued that the Broadcasting Legislation Amendment (Digital Radio) Bill 2015 will reduce regulatory complexity and allow market-driven rollout of digital radio in regional Australia, with Darwin and Canberra prioritised for permanent services. The bill removes the minister's role in setting start-up days and the six-year moratorium on additional licences, reflecting that digital radio remains a supplementary technology."
+  },
+  {
+   "slug": "speech-325916",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Digital Radio) Bill 2015 was argued to reduce regulatory complexity and create a simpler, more flexible process for planning and licensing digital radio services in regional Australia, drawing on recommendations from the government's July 2014 digital radio report. Key measures include repealing the restricted datacasting licence category, removing the minister's role in setting the digital radio start-up day for regional areas, and removing a six-year moratorium on additional digital commercial radio licences."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Broadcasting Legislation Amendment (Digital Radio) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00014",
+   "assent_date": "2016-02-29"
+  }
+ ]
+}

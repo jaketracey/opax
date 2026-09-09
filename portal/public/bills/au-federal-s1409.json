@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1409",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Protecting Environmental Heritage) Bill 2024",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Protecting Environmental Heritage) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-02-27",
+ "originating_house": "senate",
+ "sponsor": "CANAVAN, Sen Matthew",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10827",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1409%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1409%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1409%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1409_ems_9b0748f7-ab47-45cb-a5ff-8ae7647f2f6f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1409%22",
+   "document_date": "2024-02-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-27",
+  "sentences": [
+   "The bill would add large wind and solar projects to the environmental review system under the EPBC Act.",
+   "It creates a new category of controlled actions requiring approval if they could significantly harm the natural environment, with penalties for breaching the rules.",
+   "The changes would start the day after the bill becomes law."
+  ],
+  "changes": [
+   "Introduces a new review trigger for all large-scale wind and solar projects.",
+   "Establishes civil penalties and offences for projects with significant environmental impact unless approved under Part 9 of the EPBC Act.",
+   "Operates similarly to existing triggers for other developments like coal seam gas."
+  ],
+  "affected": "Proponents of large-scale wind and solar energy projects.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

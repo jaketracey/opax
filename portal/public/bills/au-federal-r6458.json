@@ -1,0 +1,228 @@
+{
+ "key": "au-federal-r6458",
+ "title": "Trade Support Loans Amendment (Improving Administration) Bill 2019",
+ "short_title": "Trade Support Loans Amendment (Improving Administration) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment, Skills, Small and Family Business",
+ "status": "passed",
+ "status_as_of": "2020-03-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6458_ems_dfd8b1ab-2080-4e6c-a6f8-34165a2c8a79%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6458_ems_b5efada7-6aa4-489d-b219-325b84523e82%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6458%22",
+   "document_date": "2019-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00020",
+   "document_date": "2020-03-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-28",
+  "sentences": [
+   "This bill would change how the Trade Support Loans Program is run.",
+   "The Secretary could offset wrongly paid loan instalments against future payments instead of recovering them as debts.",
+   "The bill also lets the Secretary give extra time to tell the department about a new address and sets standard notice periods."
+  ],
+  "changes": [
+   "The Secretary may treat an overpaid instalment as a loan payment and reduce a later instalment.",
+   "The Secretary can extend the deadline for reporting a change of address.",
+   "The minimum periods for recipients to notify the Secretary of information are made consistent."
+  ],
+  "affected": "People receiving trade support loans under the Trade Support Loans Act 2014.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6188",
+   "date": "2020-02-10",
+   "house": "representatives",
+   "question": "Trade Support Loans Amendment (Improving Administration) Bill 2019 - Second Reading - Support vocational education",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-10/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-387546",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-10",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to simplify trade support loan overpayment recovery, but argued the government has failed vocational education by cutting $3 billion in funding, causing 150,000 fewer apprentices and trainees, and creating skills shortages."
+  },
+  {
+   "slug": "speech-387548",
+   "speaker": "Ross Vasta",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-10",
+   "stage_hint": null,
+   "brief": "The coalition government's Trade Support Loans Amendment (Improving Administration) Bill 2019 reduces administrative burdens on apprentices and providers by allowing offsetting of overpayments against future instalments and extending notification periods for address and circumstance changes (to 14 days). The bill supports the 55,998 apprentices who received trade support loans in 2018–19 and the $1.1 billion in employer incentives."
+  },
+  {
+   "slug": "speech-387552",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-10",
+   "stage_hint": null,
+   "brief": "Labor will support the Trade Support Loans Amendment (Improving Administration) Bill 2019, but argues the government has cut $3 billion from TAFE and training, causing 150,000 fewer apprentices and trainees, with more dropping out than finishing and a 10% rise in skills shortages."
+  },
+  {
+   "slug": "speech-387553",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-10",
+   "stage_hint": null,
+   "brief": "The bill improves administration of the Trade Support Loans program by providing another avenue for apprentices to repay overpayment debts and aligning notification periods for flexibility. An addendum to the explanatory memorandum was tabled to justify leaving matters such as later instalment reductions to delegated legislation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Trade Support Loans Amendment (Improving Administration) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00020",
+   "assent_date": "2020-03-06"
+  }
+ ]
+}

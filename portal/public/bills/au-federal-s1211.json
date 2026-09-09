@@ -1,0 +1,203 @@
+{
+ "key": "au-federal-s1211",
+ "title": "Road Vehicle Standards Legislation Amendment Bill 2019",
+ "short_title": "Road Vehicle Standards Legislation Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Cities and Regional Development",
+ "status": "passed",
+ "status_as_of": "2019-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1211_ems_7cebac37-d591-4034-9eef-6b8dc21cdba9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1211%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00066",
+   "document_date": "2019-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5841",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debate/?id=2019-09-09.36.1) to amend the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), which is \"*that the bill be read a second time*\" and is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House criticises the Government for its failure to appropriately prepare for the significant reforms introduced by the act, which aim to ensure that Australians are kept safe on our roads\".*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-09/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-379760",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The Road Vehicle Standards Legislation Amendment Bill 2019 postpones the full commencement of the Road Vehicle Standards Act 2018 and related legislation until a date agreed with industry, no later than 1 July 2021, to allow more time for transition and avoid disadvantage to Australian businesses."
+  },
+  {
+   "slug": "speech-379761",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The government's failure to resource the department and provide leadership forced a two-year delay (until July 2021) to the Road Vehicle Standards Act 2018 reforms, which aimed to improve vehicle safety and save $68 million annually. Labor supported the bill but moved an amendment to condemn the government's implementation and leadership failures, specifically criticising the Deputy Prime Minister."
+  },
+  {
+   "slug": "speech-379764",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The Labor opposition supported the Road Vehicle Standards Legislation Amendment Bill 2019 but criticised the Morrison government for failing to prepare adequately, citing a lack of planning and IT resourcing that delayed implementation by nearly 24 months, costing an estimated $68 million in annual savings. The speaker also condemned Deputy Prime Minister McCormack for not responding to a road safety inquiry report, noting the road toll rose to 1,214 deaths in the 12 months to June 2019 from 1,170 in 2015."
+  },
+  {
+   "slug": "speech-379765",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The Road Vehicle Standards Legislation Amendment Bill 2019 delays the commencement of the substantive provisions of the Road Vehicle Standards Act 2018 from 10 September 2019 to allow more time for stakeholder preparation and industry transition, while the government also established the Office of Road Safety. The amendment is opposed."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Road Vehicle Standards Legislation Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00066",
+   "assent_date": "2019-09-13"
+  }
+ ]
+}

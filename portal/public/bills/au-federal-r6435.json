@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-r6435",
+ "title": "Refugee Protection Bill 2019",
+ "short_title": "Refugee Protection Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-21",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-08-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6435%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6435%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6435_ems_97dc1d6f-b6ac-40ba-9915-48b27f098b50%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6435%22",
+   "document_date": "2019-10-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-21",
+  "sentences": [
+   "The bill would create a system of processing centres in Asia Pacific countries, including Australia, where people seeking asylum can register and request resettlement.",
+   "It would set up a procedure for assessing protection claims in Australia if the applicant chooses Australia and falls within a set quota, with judicial review and time limits.",
+   "The bill would prohibit mandatory detention and says it prioritises applicants' immediate needs and international refugee and human rights law."
+  ],
+  "changes": [
+   "Establishes a network of centres in Asia Pacific countries for asylum seekers to register and lodge resettlement preferences.",
+   "Creates a process for assessing claims in Australia with oversight, limited timeframes and judicial review.",
+   "Prohibits mandatory detention and prioritises refugee and human rights law compliance."
+  ],
+  "affected": "People seeking asylum in the Asia Pacific region, including those who may apply for resettlement in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:31Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-383283",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The Refugee Protection Bill 2019 was introduced, proposing to abolish mandatory detention and establish the Asia-Pacific Asylum Seeker Solution (APASS)—a regional framework for processing and resettling asylum seekers—while criticising current offshore detention as unlawful, inhumane and costing $9.6 billion from 2013-2016."
+  },
+  {
+   "slug": "speech-383284",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Refugee Protection Bill, arguing that offshore indefinite detention should be replaced with a regional processing network. The Asia-Pacific solution would establish centres across the region to create a single queue and eliminate boat travel, with the claim that Australia's objectives can be met without compromising fairness."
+  }
+ ],
+ "acts": []
+}

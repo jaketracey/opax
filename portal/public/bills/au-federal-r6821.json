@@ -1,0 +1,709 @@
+{
+ "key": "au-federal-r6821",
+ "title": "Religious Discrimination Bill 2022",
+ "short_title": "Religious Discrimination Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-11-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6821%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6821%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6821%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6821%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6821%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6821%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6821_ems_dbc5cd34-0f4b-4044-a68f-69e52f3bce03%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6821_ems_2c87920b-3cb7-4c3e-8072-2d86a41b09d8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6821_ems_35f9f1b5-d41e-4f77-b073-d7bbf6df4e1c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6821_ems_73d7cd0f-6cf6-40ab-b7e5-6e6fd9f409bf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6821%22",
+   "document_date": "2021-11-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7615",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "question": "The majority voted against a motion to disagree with an amendment to the usual second reading motion, which is \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. Because this motion passed, the second reading motion will remain unchanged. The amendment was introduced by Clark MP [Andrew Wilkie](https://theyvoteforyou.org.au/people/representatives/clark/andrew_wilkie) (Independent). There was one rebellion, with Bass MP [Bridget Archer](https://theyvoteforyou.org.au/people/representatives/bass/bridget_archer) (Liberal) crossing the floor to vote 'No' against the rest of her party, who voted 'Yes.' Note that the electorates of Clark and Bass are both in Tasmania and that MP Wilkie's amendment was Tasmania-specific. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the House declines to give the bill a second reading and notes that:* > > *(1) this bill will have a greater negative impact on Tasmania than any other state or territory because our anti-discrimination legislation is currently the best in the country; and* > > *(2) the Tasmanian Anti-Discrimination Act 1998 has the full support of the Tasmanian Parliament and been strongly endorsed by the Liberal Premier the Hon Peter Gutwein MP\"* ### What does the bill do? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6821), the bill was introduced with the [Religious Discrimination (Consequential Amendments) Bill 2021](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6819) and [Human Rights Legislation Amendment Bill 2021](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6820) in order to: * *prohibit discrimination on the basis of a person’s religious belief or activity in a range of areas of public life, including in relation",
+   "stage": "Second reading",
+   "ayes": 97,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 102
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-09/1"
+  },
+  {
+   "key": "federal-representatives-7616",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "question": "Religious Discrimination Bill 2021 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 98,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 103
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-09/2"
+  },
+  {
+   "key": "federal-representatives-7617",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "question": "Religious Discrimination Bill 2021 - Consideration in Detail - Statements of belief",
+   "stage": "Consideration in detail",
+   "ayes": 91,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 95
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-09/3"
+  },
+  {
+   "key": "federal-representatives-7618",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "question": "Religious Discrimination Bill 2021 - Consideration in Detail - Statements of belief",
+   "stage": "Consideration in detail",
+   "ayes": 64,
+   "noes": 62,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 125
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-09/4"
+  },
+  {
+   "key": "federal-representatives-7619",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6821_amend_31568dc0-a744-4ca5-aeb1-faed9126d411%22) moved by Isaacs MP [Mark Dreyfus](https://theyvoteforyou.org.au/people/representatives/isaacs/mark_dreyfus) (Labor), which means the amendments failed. There was one rebellion, with Bass MP [Bridget Archer](https://theyvoteforyou.org.au/people/representatives/bass/bridget_archer) (Liberal) crossing the floor to vote 'No' against the rest of her party, who voted 'Yes.' ### What do the amendments do? MP Isaacs [explained that](https://www.openaustralia.org.au/debate/?id=2022-02-09.157.1): > *The amendments that Labor is moving now would introduce into this bill a provision to protect people from vilification on the grounds of their religious belief or practice. This is a very important provision that the government has deliberately left out of this bill, despite requests from a range of faith communities for such a provision to be included. Indeed, it's difficult to understand how the Prime Minister can insist on what he imagines is the desire of people of faith to be able to make discriminatory statements about other Australians in what would otherwise amount to a breach of state antidiscrimination laws while ignoring their clearly stated desire to be protected from vilification on the grounds of their faith.* ### Amendment text > *(2) Clause 4, page 3, after line 30, insert:* > >> *Religious vilification is unlawful, with certain exceptions (see Part 4A).* > > *(4) Clause 7, page 10 (line 8), omit “this Act”, substitute “Part 4”.* > > *(10) Clause 9, page 12 (line 24), omit “this Act”, substitute “Part 4”.* > > *(17) Clause 12, page 17 (line 15), omit “.”, substitute “; or”.* > > *(18) Clause 12, page 17 (after line 15), after paragraph (2)(c), insert:* > >> *(d) that is unlawful under Part 4A (religious vilification).* > > *(19) Clause 16, page 20 (lin",
+   "stage": "Consideration in detail",
+   "ayes": 63,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-09/5"
+  },
+  {
+   "key": "federal-representatives-7620",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "question": "Religious Discrimination Bill 2021 - Consideration in Detail - Aged Care",
+   "stage": "Consideration in detail",
+   "ayes": 64,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 124
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-09/6"
+  },
+  {
+   "key": "federal-representatives-7621",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "question": "Religious Discrimination Bill 2021 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 91,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 33,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 96
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-09/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-415917",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-25",
+   "stage_hint": null,
+   "brief": "The speaker moved the Religious Discrimination Bill 2021 to protect Australians from discrimination on the basis of religious belief or non-belief, fulfilling a 2019 election commitment and addressing gaps in existing laws, particularly in New South Wales and South Australia."
+  },
+  {
+   "slug": "speech-415919",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-25",
+   "stage_hint": null,
+   "brief": "The Religious Discrimination (Consequential Amendments) Bill 2021 makes amendments to support the Religious Discrimination Bill, implementing recommendations 15 and 19 of the Religious Freedom Review, establishing a Religious Discrimination Commissioner, and extending complaints-handling to the Australian Human Rights Commission and federal courts. It also amends the Fair Work Act to align with the new religious discrimination protections and includes a contingent amendment to prescribe the Victorian Equal Opportunity Act 2010 if certain Victorian amendments are enacted."
+  },
+  {
+   "slug": "speech-416095",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government is incompetent, dishonest, and divisive, citing lost votes on a national anticorruption commission, broken promises on climate targets and vaccine leadership, and the Prime Minister’s inconsistent statements. They announced Labor’s alternative agenda, including a National Reconstruction Fund, renewable energy superpower plan, Jobs and Skills Australia, same-job same-pay legislation, affordable childcare, and full implementation of the Uluru Statement from the Heart."
+  },
+  {
+   "slug": "speech-416159",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Religious Discrimination Bill is ironic because unvaccinated people in Victoria face harsh discrimination, citing a friend denied entry to a store for livestock feed while allowed to buy petrol. They condemned the restrictions as coercive control, noting that 50,000 people are protesting in Victoria."
+  },
+  {
+   "slug": "speech-417128",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-02",
+   "stage_hint": null,
+   "brief": "Labor will not adopt a final position on the Religious Discrimination Bill 2021 until a parliamentary committee completes its inquiry and public consultation, arguing the bill is complex and needs careful scrutiny to avoid unintended consequences. The speaker criticised the Prime Minister for introducing the bill shortly before a vote without prior bipartisan consultation, and reiterated Labor’s principles: support for extending federal anti-discrimination protections to religious belief, while ensuring existing protections against other forms of discrimination are not removed."
+  },
+  {
+   "slug": "speech-417358",
+   "speaker": "Graham Douglas Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Religious Discrimination Bill 2021 is flawed, overrides state anti-discrimination laws, and fails to protect against vilification, while criticising the Prime Minister’s deceptive reference to Citipointe Christian College and the Dreyfus law, and highlighting Labor’s history of anti-discrimination legislation."
+  },
+  {
+   "slug": "speech-417359",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued the Religious Discrimination Bill 2021 package is needed to fill a gap in Australia's human rights framework, protecting people of faith and non-believers from discrimination. Concrete positions included allowing religious schools to preference staff of the same religion, protecting statements of belief made in good faith, and noting that New South Wales and South Australia lack any religious discrimination laws."
+  },
+  {
+   "slug": "speech-417360",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The member opposed the Religious Discrimination Bill, arguing it would undermine Tasmania’s strong anti-discrimination laws and allow harmful statements in the name of faith, and moved an amendment to decline the bill a second reading. She cited a YouGov poll showing 77% of Australians oppose religious exemptions from discriminatory speech laws and criticised the committee inquiry process as biased."
+  },
+  {
+   "slug": "speech-417362",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Religious Discrimination Bill 2021, arguing it adds protections for people based on religion, matching existing protections for age, sex, race or disability. The speaker cited 61% of Australians (14 million) as religious, noted instances of religious discrimination including personal media attacks for being Christian, and argued religious institutions should be able to preference staff who adhere to their faith."
+  },
+  {
+   "slug": "speech-417385",
+   "speaker": "Andrew Charles Laming",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker condemned Citipointe Christian College's gender contracts as revolting, supported faith-based education broadly, but will vote based on a family in their electorate whose child travels two hours daily to find an accepting school, arguing that current protections against expulsion are insufficient because students are often bullied out instead."
+  },
+  {
+   "slug": "speech-417420",
+   "speaker": "Adam Paul Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Religious Discrimination Bill, even with amendments, would allow schools to sack an unmarried pregnant teacher, doctors to tell gay patients their illness is a punishment from God, and schools to expel transgender students, calling the bill a \"Trojan Horse for hate\" that increases discrimination."
+  },
+  {
+   "slug": "speech-417525",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "Presented two reports: Human rights scrutiny report 15 of 2021 and the inquiry report into the Religious Discrimination Bill 2021 and related bills, including dissenting reports, as parliamentary papers."
+  },
+  {
+   "slug": "speech-417526",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker presented the Parliamentary Joint Committee on Human Rights inquiry report into the Religious Discrimination Bill 2021, noting that 82% of over 48,000 survey respondents supported the bills, and recommended the legislation be passed subject to amendments to clarify the statement of belief clause. The speaker also presented the committee's 15th scrutiny report, which examined 24 new bills and six legislative instruments."
+  },
+  {
+   "slug": "speech-417527",
+   "speaker": "Graham Douglas Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The Deputy Chair criticised the 71-day inquiry timeframe over religious holidays and school breaks, noting the Attorney-General’s own department missed its submission deadline. She highlighted unresolved concerns that the Religious Discrimination Bill could harm LGBTIQ and disabled communities, and condemned the Prime Minister for publicly flagging a major amendment without providing it to the committee."
+  },
+  {
+   "slug": "speech-417541",
+   "speaker": "Bridget Archer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Religious Discrimination Bill, arguing it would override Tasmania’s Anti-Discrimination Act and enable discrimination against LGBTQ+ people, unmarried teachers, staff with disabilities, and transgender students, citing widespread opposition from Tasmanian politicians, unions, and business groups."
+  },
+  {
+   "slug": "speech-417542",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Religious Discrimination Bill 2021's core principles but opposed clauses 11 and 12, arguing clause 12 could allow harmful statements, override existing anti-discrimination laws, and create division. They urged the government to remove or revise clause 12 to avoid undermining protections for other groups."
+  },
+  {
+   "slug": "speech-417543",
+   "speaker": "George Christensen",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Religious Discrimination Bill 2021 is weak and watered down but supports it because it will do a little good, particularly clause 12 (the \"Porteous clause\") which protects statements of belief from being used in discrimination claims. He cited the cases of Archbishop Julian Porteous of Hobart and Citipointe Christian College as examples of religious figures being targeted for expressing beliefs, and criticised the removal of the \"Folau clause\" that would have protected workers."
+  },
+  {
+   "slug": "speech-417544",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "Opposed the Religious Discrimination Bill 2021, arguing it was poorly drafted, rushed through before an election, and used by the government as a political tool rather than addressing genuine community concerns. Noted broken promises by Prime Minister Scott Morrison, including failing to appoint a religious discrimination commissioner or conduct a Law Reform Commission inquiry."
+  },
+  {
+   "slug": "speech-417546",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government is prioritising the flawed Religious Discrimination Bill over urgent crises in aged care, a broken promise on a federal anticorruption commission, and economic pressures, and urged parliament to step back and craft a more inclusive national story that protects LGBTQ+ children, citing the suicide of his 15-year-old nephew Ollie and his own son's experience."
+  },
+  {
+   "slug": "speech-417547",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Religious Discrimination Bill, noting that religious people contribute an extra 30.5 million volunteering hours annually and arguing the bill is needed to address a 35% rise in anti-Semitic incidents and discrimination against Muslims, Buddhists, Hindus, Sikhs and Christians."
+  },
+  {
+   "slug": "speech-417583",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The Religious Discrimination Bill is argued to close a gap in federal protections for people of faith, with 95% of survey respondents supporting religious protections and 82% supporting the bill. The speech cites 447 anti-Semitic incidents in Australia between January and September of the previous year (a 35% increase) and states the bill acts as a shield to protect religious schools and institutions in hiring according to their faith."
+  },
+  {
+   "slug": "speech-417615",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Religious Discrimination Bill 2021, arguing it fails to adequately protect LGBTQIA+ students and teachers in religious schools and rolls back existing anti-discrimination laws by creating a proactive right to discriminate on religious grounds. They noted the government's amendments to the Sex Discrimination Act do not protect transgender students and allow discrimination against LGBTQIA+ individuals beyond formal expulsion, and cited opposition from the Australian Human Rights Commission, Diversity Council Australia, and the Uniting Church."
+  },
+  {
+   "slug": "speech-417616",
+   "speaker": "Garth Hamilton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The member for Groom argued in support of the Religious Discrimination Bill 2021, saying it fills a legislative void and protects religious expression, while acknowledging the need to review the Sex Discrimination Act to prevent discrimination on the basis of sexual orientation. He cited the Citipointe Christian College controversy as an example of the uncertainty this bill aims to address."
+  },
+  {
+   "slug": "speech-417618",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The member for Forde argued in favour of the Religious Discrimination Bill 2021, stating it would protect people of all faiths and no faith, implement three recommendations from the Religious Freedom Review, and establish a religious discrimination commissioner. He rejected claims the bill would allow hateful speech, citing his electorate's positive interfaith relations and the work of faith-based organisations."
+  }
+ ],
+ "acts": []
+}

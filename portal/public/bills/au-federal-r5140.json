@@ -1,0 +1,209 @@
+{
+ "key": "au-federal-r5140",
+ "title": "Ozone Protection and Synthetic Greenhouse Gas (Import Levy) Amendment (Carbon Tax Repeal) Bill 2013",
+ "short_title": "Ozone Protection and Synthetic Greenhouse Gas (Import Levy) Amendment (Carbon Tax Repeal) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "lapsed",
+ "status_as_of": "2014-03-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5140_ems_49e9df53-ddcc-489b-a2bd-9c59d94c894f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5140%22",
+   "document_date": "2013-11-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "This bill is part of a package that would repeal the carbon tax and includes measures to prevent price exploitation after the repeal.",
+   "The package would give the ACCC powers to monitor prices and ban businesses from making false claims about the carbon tax repeal's effect on prices.",
+   "Corporations that break the new price exploitation rules could face fines of up to 6,471 penalty units, and individuals up to 1,295 penalty units."
+  ],
+  "changes": [
+   "The bill would prohibit businesses from exploiting customers on key goods like electricity and gas after the carbon tax repeal.",
+   "It would give the ACCC new powers to watch prices before and after the repeal and check if companies are passing on savings.",
+   "It would stop companies from lying about how the carbon tax repeal affects prices."
+  ],
+  "affected": "Businesses that supply key goods such as electricity and gas, and consumers who buy them, would be affected by the package.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:08:01Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-278151",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825376",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278597",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825612",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825989",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": "The Ozone Protection and Synthetic Greenhouse Gas (Import Levy) Amendment (Carbon Tax Repeal) Bill 2013 was moved to repeal the equivalent carbon tax on synthetic greenhouse gases, ensuring importers of these gases and related products would not face the tax liability for imports after 1 July 2014, thereby reducing costs for businesses in refrigeration and air-conditioning."
+  }
+ ],
+ "acts": []
+}

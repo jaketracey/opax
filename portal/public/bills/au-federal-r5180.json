@@ -1,0 +1,238 @@
+{
+ "key": "au-federal-r5180",
+ "title": "Farm Household Support (Consequential and Transitional Provisions) Bill 2014",
+ "short_title": "Farm Household Support (Consequential and Transitional Provisions) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2014-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5180_ems_a6ee5fbb-c627-43d1-b70b-3e92d05da592%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5180%22",
+   "document_date": "2014-03-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00013",
+   "document_date": "2014-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-284777",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285360",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285361",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285362",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285587",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285593",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285596",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285610",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285611",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285612",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285613",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285620",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285623",
+   "speaker": "The DEPUTY SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Farm Household Support (Consequential and Transitional Provisions) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00013",
+   "assent_date": "2014-03-28"
+  }
+ ]
+}

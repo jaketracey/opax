@@ -1,0 +1,175 @@
+{
+ "key": "au-federal-s1252",
+ "title": "Transport Security Amendment (Testing and Training) Bill 2020",
+ "short_title": "Transport Security Amendment (Testing and Training) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-04",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2020-12-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1252_ems_350b7987-1855-4e11-823f-7a9af041b3c4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1252_ems_d534d281-ce37-4734-bee0-a5ef4babd7c7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1252_ems_93072b53-f18b-4676-9f65-92534a547bb5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1252%22",
+   "document_date": "2019-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00125",
+   "document_date": "2020-12-15",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-400520",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The Transport Security Amendment (Testing and Training) Bill 2020 clarifies the ability of aviation security inspectors to conduct system tests beyond screening points, including at air cargo and catering facilities, and establishes a framework for national competency standards for aviation and maritime screening personnel, responding to a 2016 Inspector of Transport Security inquiry."
+  },
+  {
+   "slug": "speech-400917",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-10",
+   "stage_hint": null,
+   "brief": "Labor supported the Transport Security Amendment (Testing and Training) Bill 2020, which expands aviation security testing to areas like air cargo and catering and introduces national competency standards for screening personnel. A second reading amendment was moved criticising the Coalition government's original bill as error-ridden and delayed over a year, citing broader border security failures such as the Ruby Princess and the lack of a national quarantine approach."
+  },
+  {
+   "slug": "speech-400923",
+   "speaker": "Vince Connelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-10",
+   "stage_hint": null,
+   "brief": "The Transport Security Amendment (Testing and Training) Bill 2020 gives aviation security inspectors explicit powers to test security systems at airports and updates training and qualification requirements for screening officers, supported by an additional $2.3 billion in national security investment since 2014."
+  },
+  {
+   "slug": "speech-400924",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-10",
+   "stage_hint": null,
+   "brief": "The Transport Security Amendment (Testing and Training) Bill 2020 amends the Aviation Transport Security Act 2004 and the Maritime Transport and Offshore Facilities Security Act 2003 to improve screening effectiveness at airports and seaports, incorporating minor amendments from the Senate Standing Committee for the Scrutiny of Bills."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Transport Security Amendment (Testing and Training) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00125",
+   "assent_date": "2020-12-15"
+  }
+ ]
+}

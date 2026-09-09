@@ -1,0 +1,293 @@
+{
+ "key": "au-federal-r5831",
+ "title": "Australian Immunisation Register and Other Legislation Amendment Bill 2017",
+ "short_title": "Australian Immunisation Register and Other Legislation Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2017-08-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5831_ems_5b87df23-1b27-4002-a8c5-f7bb06f1e3c5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5831%22",
+   "document_date": "2017-03-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00081",
+   "document_date": "2017-08-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-23",
+  "sentences": [
+   "This bill would widen which doctors can have their medical exemption assessments for vaccinations recognised by the Australian Immunisation Register.",
+   "It changes the register's law so that assessments from certain specialists—those who treat children, public health, infectious diseases, and clinical immunology—are accepted, alongside general practitioners.",
+   "The bill also clarifies that vaccination information can only come from recognised vaccination providers, not from members of the public, and aligns family assistance benefit rules for medical exemptions."
+  ],
+  "changes": [
+   "Amends the Australian Immunisation Register Act to allow more specialist doctors to have their medical exemption assessments recognised.",
+   "Adds a clarification that only recognised vaccination providers can supply vaccination information under the register's law.",
+   "Updates the Family Assistance Act to keep medical exemption assessments consistent between the register and family assistance benefits."
+  ],
+  "affected": "Medical specialists who assess medical exemptions to vaccination, general practitioners, recognised vaccination providers, and families or individuals involved in family assistance benefits.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-344027",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The Australian Immunisation Register and Other Legislation Amendment Bill 2017 expands the list of medical practitioners who can certify medical exemptions to include paediatricians, public health physicians, infectious diseases physicians and clinical immunologists, and clarifies that only recognised vaccination providers can supply vaccination information to the register. The bill is part of the Turnbull government's No Jab, No Pay policy, which has increased childhood vaccination rates to 93%."
+  },
+  {
+   "slug": "speech-350611",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Immunisation Register and Other Legislation Amendment Bill 2017, which adds four medical specialties to grant medical exemptions and clarifies vaccination provider rules. They criticised Senator Hanson for questioning vaccine safety, urged stronger government action against misinformation, highlighted a 1.35 percentage point increase in one-year-old immunisation rates since No Jab No Pay began, and called for a national approach to No Jab No Play laws and meningococcal vaccine shortages."
+  },
+  {
+   "slug": "speech-350612",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-08",
+   "stage_hint": null,
+   "brief": "The Turnbull government's Australian Immunisation Register and Other Legislation Amendment Bill 2017 aims to improve vaccination rates, with over 200,000 extra children vaccinated since the No Jab, No Pay policy was introduced."
+  },
+  {
+   "slug": "speech-350615",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-08",
+   "stage_hint": null,
+   "brief": "The Australian Immunisation Register and Other Legislation Amendment Bill 2017 strengthens the No Jab, No Pay program, with vaccination rates rising to 93–94.5% and an extra 200,000 children vaccinated; the Bill allows paediatricians and other specialist doctors to grant medical exemptions."
+  },
+  {
+   "slug": "speech-350617",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Immunisation Register and Other Legislation Amendment Bill 2017, arguing for stricter vaccination requirements and adding paediatricians, public health physicians, infectious disease physicians and clinical immunologists as the only experts who can grant exemptions. They criticised anti-vaccination movements and Senator Hanson's comments, called for a uniform national approach to non-immunised children in childcare, and urged the government to allocate more resources to a public education campaign on vaccination."
+  },
+  {
+   "slug": "speech-350618",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Immunisation Register and Other Legislation Amendment Bill should expand the list of health practitioners who can assess medical exemptions to vaccination, aligning the family assistance tax system so that families unable to immunise for legitimate medical reasons do not lose payments. They also noted that immunisation rates for herd immunity require above 95% coverage and criticised Senator Hanson’s anti-vaccination remarks."
+  },
+  {
+   "slug": "speech-350720",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Australian Immunisation Register and Other Legislation Amendment Bill 2017, condemning anti-vaccination misinformation and promoting vaccination as essential for public health. They highlighted the coalition government's $26 million Immunise Australia budget package (2015) and praised Professor Mark Kendall's nanopatch technology for needle-free vaccination, as well as Rotary International's polio eradication campaign."
+  },
+  {
+   "slug": "speech-350721",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Australian Immunisation Register and Other Legislation Amendment Bill 2017, defending the \"No Jab, No Pay\" and \"No Jab, No Play\" policies as a collective responsibility. The speaker cited historical vaccination successes, including a drop in whooping cough deaths from 1,700 in 1936–1945 to less than one per year, and polio deaths from over 1,000 in 1946–1955 to only four since the mid-1960s."
+  },
+  {
+   "slug": "speech-350723",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-350915",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Immunisation Register and Other Legislation Amendment Bill 2017, arguing it creates a national immunisation register framework and expands existing registers, while allowing specialists like paediatricians and infectious disease physicians to provide medical exemptions. The bill strengthens the No Jab, No Pay program, which has lifted immunisation rates from 90% to 93% and immunised an extra 200,000 children."
+  },
+  {
+   "slug": "speech-350916",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Immunisation Register and Other Legislation Amendment Bill 2017, citing personal medical experiences to argue for higher immunisation rates and condemning anti-vaccination groups, including Senator Hanson's comments. They called for improved education, increased funding for immunisation research, and better access to vaccines for adults and older Australians."
+  },
+  {
+   "slug": "speech-350917",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The member for Lalor supported the Australian Immunisation Register and Other Legislation Amendment Bill 2017, noting that 5,500 children in her electorate are unvaccinated and 30% of four-year-olds do not attend childcare or preschool, calling for more education and outreach rather than just penalties."
+  },
+  {
+   "slug": "speech-350918",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Immunisation Register and Other Legislation Amendment Bill 2017, which tightens \"No Jab, No Pay\" rules by restricting which medical professionals can provide vaccination evidence and exemptions. They noted immunisation rates are below the 95% herd immunity target, cited Springvale's 88% rate, and criticised Senator Pauline Hanson for encouraging parents to \"do their own research\" on vaccinations."
+  },
+  {
+   "slug": "speech-350922",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Immunisation Register and Other Legislation Amendment Bill 2017, which expands exemption-granting authority from GPs to four additional medical specialists. The speaker also criticised One Nation's Senator Hanson for anti-vaccination comments, called for a properly funded national immunisation education campaign, and highlighted a measles outbreak at a Perth school where only half of 400 students were vaccinated."
+  },
+  {
+   "slug": "speech-350925",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The bill expands the list of medical professionals who can assess vaccine contraindications and restricts the immunisation register to recognised providers. The government reported a 93% vaccination rate, 210,000 additional children vaccinated under No Jab, No Pay, and announced a $5.5 million awareness campaign targeting a 95% interim target."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Immunisation Register and Other Legislation Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00081",
+   "assent_date": "2017-08-16"
+  }
+ ]
+}

@@ -1,0 +1,263 @@
+{
+ "key": "au-federal-s1084",
+ "title": "Australian Grape and Wine Authority Amendment (Wine Australia) Bill 2017",
+ "short_title": "Australian Grape and Wine Authority Amendment (Wine Australia) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-05",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2017-11-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1084_ems_f3a86725-a861-4cc2-9482-888272f31005%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1084%22",
+   "document_date": "2017-09-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00122",
+   "document_date": "2017-11-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-05",
+  "sentences": [
+   "This bill would expand the powers of the Australian Grape and Wine Authority so it can run programs for cider and international wine tourism, and hand out grants for wine.",
+   "It would achieve this by amending the Australian Grape and Wine Authority Act 2013 to add those activities to the Authority's allowed functions.",
+   "The bill would also formally rename the Authority to Wine Australia."
+  ],
+  "changes": [
+   "The Authority would gain the ability to administer all parts of the Wine Support Package, including for cider and international wine tourism.",
+   "The Authority would be able to run grant programs for wine as defined in the Wine Equalisation Tax Act 1999.",
+   "The name of the Authority would change from Australian Grape and Wine Authority to Wine Australia."
+  ],
+  "affected": "The Australian Grape and Wine Authority and the wine industry, including cider producers and wine tourism businesses.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:33:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-355884",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The government's wine tax rebate reforms will"
+  },
+  {
+   "slug": "speech-355888",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-356401",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The member for the South West region supported the Australian Grape and Wine Authority Amendment (Wine Australia) Bill 2017, which enables the authority to implement the wine support package, administer grant programs including the cellar door grant, and changes its name to Wine Australia. The member noted the bill is important to over 95 cellar doors in the Margaret River and Geographe wine regions, which are celebrating 50 years of commercial fine wine making."
+  },
+  {
+   "slug": "speech-356403",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor supports the Wine Australia Bill but criticised the government's initial wine equalisation tax reform as unfair to small wineries, noting that after consultation the measure was improved. She expressed concern that the $50 million Export and Regional Wine Support Package uses a first-in-best-dressed basis and covers items like business cards instead of more strategic market support, and questioned whether free trade agreements are delivering for wine exporters."
+  },
+  {
+   "slug": "speech-356404",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Grape and Wine Authority Amendment (Wine Australia) Bill 2017, which creates a $50 million Export and Regional Wine Support Package and a $10 million Wine Tourism and Cellar Door Grant program from wine equalisation tax rebate reforms, while noting the government initially planned to save $300 million but now aims for $160 million and expressing concern for smaller wineries not exporting."
+  },
+  {
+   "slug": "speech-356405",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The bill renames the Australian Grape and Wine Authority to Wine Australia and enables it to administer wine support package programs and cellar door grants. The speaker criticised the government's 2016 budget reform announcement for lacking industry consultation and attempting to take $300 million from the sector, while noting the eventual backdown on the tax rebate cap."
+  },
+  {
+   "slug": "speech-356409",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The member for Indi supported the Australian Grape and Wine Authority Amendment (Wine Australia) Bill 2017, highlighting the importance of wine and tourism in the electorate and citing Brown Brothers as a successful regional business. They also argued for government support to secure the King Valley's position as the Australian home of prosecco, including through trade negotiations and protecting the name from Italian commercial demands."
+  },
+  {
+   "slug": "speech-356410",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The Australian Grape and Wine Authority Amendment (Wine Australia) Bill 2017 was supported, including its grant programs, but concerns were raised that the Wine Australia board lacks Western Australian representation and that wine equalisation tax reforms—which cut the rebate cap from $500,000 to $350,000 and leave the government $160 million better off—disproportionately hurt WA's small and medium wineries."
+  },
+  {
+   "slug": "speech-356602",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The bill changes the Australian Grape and Wine Authority's name to Wine Australia and enables grant programs under a $50 million export and regional wine support package and a $10 million wine tourism and cellar door program, intended to help the industry transition from the reduced wine equalisation tax rebate. However, the speaker argued that small premium producers, particularly in Tasmania, will be disproportionately hit by the rebate cut, and that the grant programs must be well-administered and aligned with industry strategies to be effective."
+  },
+  {
+   "slug": "speech-356603",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The bill renames the Australian Grape and Wine Authority to Wine Australia and lets it administer wine support grants, including the cellar door grant. The speaker also highlighted that women make up 50% of wine graduates but only 10% of the industry workforce, cited survey findings on pay gaps and sexism, and commended the Australian Women in Wine Awards."
+  },
+  {
+   "slug": "speech-356604",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The Australian Grape and Wine Authority Amendment (Wine Australia) Bill 2017 amends the Wine Australia Act to facilitate wine and cider tourism and cellar door development, part of WET rebate reforms that include a $50 million Export and Regional Wine Support Package and a $10 million Wine Tourism and Cellar Door Grant scheme, and renames the authority to Wine Australia."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Grape and Wine Authority Amendment (Wine Australia) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00122",
+   "assent_date": "2017-11-06"
+  }
+ ]
+}

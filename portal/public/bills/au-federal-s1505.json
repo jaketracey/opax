@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-s1505",
+ "title": "Criminal Code Amendment (Equal Access to Voluntary Assisted Dying) Bill 2026",
+ "short_title": "Criminal Code Amendment (Equal Access to Voluntary Assisted Dying) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-13",
+ "originating_house": "senate",
+ "sponsor": "HANSON-YOUNG, Sen Sarah",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10711",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1505%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1505%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1505_ems_c4696c68-d525-47e3-938b-cc6f521a6d65%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1505%22",
+   "document_date": "2026-08-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-13",
+  "sentences": [
+   "The bill would let doctors use phone or video calls for voluntary assisted dying without committing a federal crime.",
+   "It changes the Criminal Code so that telehealth consultations that follow state or territory VAD laws are not treated as the offence of counselling suicide.",
+   "The change would apply from before the law starts, protecting medical professionals who already used telehealth for VAD."
+  ],
+  "changes": [
+   "Clarifies that using a carriage service for VAD is not an offence when done under state or territory VAD laws.",
+   "Allows trained clinicians to decide whether to use telehealth for VAD consultations.",
+   "Applies retrospectively to cover past telehealth use for VAD."
+  ],
+  "affected": "Medical professionals and people in rural, regional and remote areas who need to access voluntary assisted dying via telehealth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:02:27Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

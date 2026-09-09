@@ -1,0 +1,190 @@
+{
+ "key": "au-federal-r6376",
+ "title": "Combatting Child Sexual Exploitation Legislation Amendment Bill 2019",
+ "short_title": "Combatting Child Sexual Exploitation Legislation Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-09-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6376_ems_0921e440-c545-4239-b247-57193a7710e5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6376%22",
+   "document_date": "2019-07-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00072",
+   "document_date": "2019-09-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-378198",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "The Combatting Child Sexual Exploitation Legislation Amendment Bill 2019 introduces new offences for Commonwealth officers failing to report or protect children from sexual abuse, criminalises child-like sex dolls, creates an offence for possessing child abuse material on devices, reduces the number of occasions required to prove persistent child sexual abuse overseas, restricts the defence of marriage for overseas child sex offences, and strengthens forced marriage offences for children under 16."
+  },
+  {
+   "slug": "speech-380616",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "Labor supported the Combatting Child Sexual Exploitation Legislation Amendment Bill, which implements Royal Commission recommendations including new offences for failure to protect or report child sexual abuse, criminalising possession of child abuse material obtained via carriage service, childlike sex dolls, and narrowing the defence for overseas child sex offences."
+  },
+  {
+   "slug": "speech-380618",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The Combatting Child Sexual Exploitation Legislation Amendment Bill 2019 was supported by Labor, creating new Commonwealth offences for failing to report child sexual abuse, failing to protect children, strengthening laws on overseas persistent child sexual abuse, criminalising possession of child-like sex dolls, and expanding the definition of forced marriage to include all marriages involving children under 16. The bill implements several recommendations from the Royal Commission into Institutional Responses to Child Sexual Abuse, which received 42,041 phone calls, 25,964 letters and emails, held 8,013 private sessions, and made 2,575 referrals to authorities."
+  },
+  {
+   "slug": "speech-380620",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Combatting Child Sexual Exploitation Legislation Amendment Bill 2019, which implements Royal Commission recommendations and criminalises childlike sex dolls, noting that a similar SA-BEST bill passed the South Australian Legislative Council with bipartisan support, imposing 10-year prison penalties for producing, disseminating, or possessing such dolls."
+  },
+  {
+   "slug": "speech-380621",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The Combatting Child Sexual Exploitation Legislation Amendment Bill 2019 introduces new offences for failing to protect or report child sexual abuse, criminalises childlike sex dolls and forced marriage for under-16s, and lowers the threshold for proving persistent child sexual abuse from three to two incidents."
+  },
+  {
+   "slug": "speech-380622",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The Combatting Child Sexual Exploitation Legislation Amendment Bill 2019 was argued to be critical for sending a clear message that perpetrators will face severe punishment, including through minimum mandatory sentencing, and for extending Australia's legal reach to prosecute offenders who abuse children overseas. The speaker also supported the recognition of child sex dolls as harmful and a potential precursor to offending."
+  },
+  {
+   "slug": "speech-380813",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Combatting Child Sexual Exploitation Legislation Amendment Bill 2019, which implements recommendations from the Labor-established Royal Commission, but criticized past government rhetoric and raised concerns about absolute liability, self-incrimination, and legal professional privilege, while accepting government assurances and pledging to monitor the bill's implementation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Combatting Child Sexual Exploitation Legislation Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00072",
+   "assent_date": "2019-09-20"
+  }
+ ]
+}

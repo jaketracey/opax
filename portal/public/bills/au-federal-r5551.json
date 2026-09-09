@@ -1,0 +1,252 @@
+{
+ "key": "au-federal-r5551",
+ "title": "Customs Tariff Amendment (China-Australia Free Trade Agreement Implementation) Bill 2015",
+ "short_title": "Customs Tariff Amendment (China-Australia Free Trade Agreement Implementation) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2015-11-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5551_ems_d00d2474-843a-42bc-b976-b346f07b9059%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5551%22",
+   "document_date": "2015-09-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00137",
+   "document_date": "2015-11-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-16",
+  "sentences": [
+   "This bill would change the Customs Tariff Act 1995 to put the China-Australia Free Trade Agreement into effect.",
+   "Most Chinese-origin goods would enter Australia duty-free once the agreement starts, with some goods getting phased tariff cuts to zero by the fifth year.",
+   "A new Schedule 12 in the Customs Tariff would hold the preferential, phasing and excise-equivalent rates for alcohol, tobacco and petroleum products."
+  ],
+  "changes": [
+   "Provides free customs duty rates for most Chinese-origin goods on the agreement's entry into force.",
+   "Phases preferential customs duty rates for certain Chinese-origin goods to Free by the fifth year.",
+   "Inserts a new Schedule 12 into the Customs Tariff for preferential, phasing and excise-equivalent rates.",
+   "Amends Schedule 4 to maintain customs duty rates for certain Chinese-origin goods in line with the applicable concessional item."
+  ],
+  "affected": "Importers of Chinese-origin goods and Australian businesses that trade with China.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:52:29Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-319052",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker introduced the enabling legislation for the China-Australia Free Trade Agreement, calling it the highest quality and most liberalising trade deal China has done with any developed country and the best for Australia in goods, services and investment, and argued that only two modest customs bills are needed with no changes to migration laws, contrary to claims by the CFMEU and ETU."
+  },
+  {
+   "slug": "speech-319055",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (China-Australia Free Trade Agreement Implementation) Bill 2015 was moved for a second reading, proposing duty-free access for certain Chinese-originating goods upon entry into force, preferential tariff rates phased to zero over three or five years for items including plastics, rubber, paper, textiles, clothing, footwear, base metals, and excise-equivalent duties on alcohol, tobacco, and petroleum products."
+  },
+  {
+   "slug": "speech-321579",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-21",
+   "stage_hint": null,
+   "brief": "A motion was moved to suspend standing orders to prioritise debate on the Customs Amendment (China-Australia Free Trade Agreement Implementation) Bill 2015 and related bill from 7:30 pm to 9:30 pm on 21 October, with no divisions called during that period, allowing the House to adjourn until 9 am the next day to finish remaining speakers and pass the legislation. The speaker noted approximately 9¾ hours of debate had occurred and encouraged speakers to reduce their time to 10 minutes to accommodate all who wished to speak."
+  },
+  {
+   "slug": "speech-321597",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the China-Australia Free Trade Agreement Implementation bills, highlighting that 85% of Australian exports would become duty-free immediately, rising to 95% upon full implementation, and citing specific industry benefits: beef exports estimated to gain $273 million annually by 2024, sheepmeat tariffs eliminated within eight years, dairy tariffs phased out over four to 11 years, wine tariffs removed over four years, and grain tariffs reduced to zero immediately."
+  },
+  {
+   "slug": "speech-321621",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Customs Amendment and Customs Tariff Amendment bills implementing the China-Australia Free Trade Agreement, arguing the deal is essential for Australia to benefit from China’s rising middle class, and highlighted bipartisan historical efforts from the Hawke-Keating and Whitlam eras toward Asian economic integration."
+  },
+  {
+   "slug": "speech-321630",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the China-Australia Free Trade Agreement bills, arguing Labor secured new safeguards on labour market testing, wages, and skills standards, and highlighted benefits for Western and Northern Australian exporters in agriculture, mining, and services. They also criticised the government for misstating that the agreement would remove tariffs on iron ore and LNG, which were already tariff-free."
+  },
+  {
+   "slug": "speech-321681",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that passing the China-Australia Free Trade Agreement (ChAFTA) legislation will open markets of over 1.5 billion people, benefiting small and medium enterprises and services exports, and called for a complementary agreement with Hong Kong while criticising Labor's opposition as fearmongering."
+  },
+  {
+   "slug": "speech-321688",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Customs Amendment and Tariff Amendment Bills for the China-Australia Free Trade Agreement will create opportunities for Australian exports, especially infant formula, dairy, wine, coal, education, and tourism. Specific benefits mentioned include a tariff reduction on infant formula from 15% to 4% and increased job growth in the Hunter Valley."
+  },
+  {
+   "slug": "speech-321689",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the China-Australia Free Trade Agreement will deliver significant benefits, with 85% of Australian exports entering China tariff-free immediately, rising to 95%, benefiting sectors like beef, dairy and wine. They highlighted Labor‑secured safeguards including labour market testing, training plans, and new visa conditions for 457 workers, while opposing the investor‑state dispute settlement provisions and pledging to review existing ISDS clauses if returned to government."
+  },
+  {
+   "slug": "speech-321692",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-22",
+   "stage_hint": null,
+   "brief": "The speaker announced the passage of legislation to implement the China-Australia Free Trade Agreement, arguing it will remove tariffs and barriers to benefit hundreds of thousands of businesses across sectors like agriculture, services, and mining. He noted that China trade grew from smaller than New Zealand trade in 1999 to $160 billion in 2013-14, and that the deal will supercharge that growth."
+  },
+  {
+   "slug": "speech-321701",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-22",
+   "stage_hint": null,
+   "brief": "The speaker concluded the debate on the Customs Tariff Amendment (China-Australia Free Trade Agreement Implementation) Bill 2015, urging its passage to implement the China-Australia Free Trade Agreement (ChAFTA). He highlighted benefits including tariff eliminations on resources, energy, and agriculture, new market access for services, and a raised investment screening threshold for private Chinese investors, citing support from business groups and projecting job growth in sectors like dairy and financial services."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (China-Australia Free Trade Agreement Implementation) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00137",
+   "assent_date": "2015-11-11"
+  }
+ ]
+}

@@ -1,0 +1,191 @@
+{
+ "key": "au-federal-r5500",
+ "title": "Australian Defence Force Cover Bill 2015",
+ "short_title": "Australian Defence Force Cover Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2015-09-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5500_ems_23e84c90-39c4-4da7-b861-7b0fa7bf0533%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5500%22",
+   "document_date": "2015-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00118",
+   "document_date": "2015-09-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-25",
+  "sentences": [
+   "The bill creates a new death and invalidity insurance scheme, called ADF Cover, for Australian Defence Force members from 1 July 2016.",
+   "ADF Cover would be a statutory scheme funded from the Consolidated Revenue, with no contributions from members or the Defence Force.",
+   "The explanatory memorandum states the scheme is designed to match the death and invalidity benefits of the current Military Superannuation and Benefits Scheme."
+  ],
+  "changes": [
+   "Establishes the Australian Defence Force Cover Scheme.",
+   "Provides death and invalidity cover for ADF Super members and certain members who choose another fund.",
+   "Funds benefits from the Consolidated Revenue through a specific appropriation."
+  ],
+  "affected": "People joining the Australian Defence Force on and after 1 July 2016, and those who could have been ADF Super members but chose a different fund.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:48:32Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-314872",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The Australian Defence Force Cover Bill 2015 establishes a new death and invalidity scheme for ADF members joining from 1 July 2016, providing cover consistent with the current Military Superannuation and Benefits Scheme without member contributions, with benefits funded from consolidated revenue and classified by degree of incapacity (class A, B, C) or paid to dependants upon death."
+  },
+  {
+   "slug": "speech-316479",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-18",
+   "stage_hint": null,
+   "brief": "The speaker announced that the Australian Defence Force Superannuation Bill 2015 and related bills will introduce ADF Super from 1 July 2016, giving members a 16.4% contribution rate and the ability to choose their superannuation fund, along with ADF Cover for death and invalidity and new part-time work options; the existing Military Superannuation and Benefits Scheme will close to new members from that date."
+  },
+  {
+   "slug": "speech-316717",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "Labor supported the Australian Defence Force Superannuation Bill 2015, the Australian Defence Force Cover Bill 2015, and the Defence Legislation Amendment (Superannuation and ADF Cover) Bill 2015, which establish the ADF Super scheme and standalone ADF Cover from 1 July 2016. The party endorsed the single 16.4% employer contribution rate, rejecting the government's original two-tier proposal, and argued the new scheme's flexibility would aid recruitment, particularly for women."
+  },
+  {
+   "slug": "speech-316718",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Abbott government introduced three bills to establish ADF Super, a new military superannuation scheme with a 16.4% employer contribution rate, ADF Cover for death and invalidity benefits, and part-time work options for full-time ADF members, effective from 1 July 2016. The reforms aim to improve flexibility and portability of superannuation, with 80% of personnel serving less than 15 years expected to benefit."
+  },
+  {
+   "slug": "speech-316721",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The speaker announced the establishment of ADF Super, a new military superannuation scheme with a 16.4% employer contribution rate and member choice of fund, along with the ADF Cover death and invalidity scheme funded from consolidated revenue. He also argued in favour of allowing young Australians to access their superannuation for a first home deposit."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Defence Force Cover Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00118",
+   "assent_date": "2015-09-10"
+  }
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r5836",
+ "title": "Banking Amendment (Establishing an Effective Code of Conduct) Bill 2017",
+ "short_title": "Banking Amendment (Establishing an Effective Code of Conduct) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-27",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "&#34;Independent Members&#34;",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-10-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5836%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5836%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5836%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5836_ems_9eecd5fc-763b-4857-b5d6-65069003f630%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5836%22",
+   "document_date": "2017-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-27",
+  "sentences": [
+   "The bill would put a Banking Code of Conduct into law.",
+   "The Minister would be required to write a code that matches the industry's existing voluntary code, and the banking regulator would handle customer complaints and punish breaches.",
+   "The regulator could fine banks that break the code and would have to publish the names of those banks on its website and in newspapers."
+  ],
+  "changes": [
+   "Creates a legislative Banking Code of Conduct.",
+   "Gives the regulator power to receive and assess customer complaints.",
+   "Allows civil penalties for code breaches.",
+   "Requires the regulator to publish details of offending banks.",
+   "Requires the Minister to review the code every three years with customer and small business input."
+  ],
+  "affected": "Authorised deposit-taking institutions such as banks, building societies and credit unions, and their customers including individuals and small businesses.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:29:49Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

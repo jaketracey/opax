@@ -1,0 +1,229 @@
+{
+ "key": "au-federal-r5786",
+ "title": "Therapeutic Goods Amendment (2016 Measures No. 1) Bill 2016",
+ "short_title": "Therapeutic Goods Amendment (2016 Measures No. 1) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2017-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5786_ems_b0d99514-5001-40e1-bf69-7ec043023064%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5786_ems_8abbcc40-fdac-4484-8f9e-5c5c36b37879%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5786%22",
+   "document_date": "2016-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00047",
+   "document_date": "2017-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-12-01",
+  "sentences": [
+   "The bill would implement eight expert panel recommendations aimed at streamlining regulation of medicines and medical devices while maintaining safety and quality.",
+   "It would create new regulation-making powers for priority approval pathways for medicines and devices, and for notifiable variations to medicines that do not affect safety.",
+   "The bill would also allow the Minister to set up a scheme for health practitioners to supply certain unregistered therapeutic goods to patients without prior approval, provided they notify the TGA within 28 days."
+  ],
+  "changes": [
+   "Establishes legislative bases for fast-tracked approval of medicines and medical devices through new priority pathways.",
+   "Introduces a notification scheme for low-risk variations to medicines, replacing the need for prior approval.",
+   "Provides for private Australian bodies to be designated by the TGA to conduct conformity assessment of medical devices.",
+   "Creates a notification scheme for health practitioners to supply certain unregistered therapeutic goods to patients.",
+   "Adds review and appeal rights for sponsors applying to include new ingredients in listed complementary medicines."
+  ],
+  "affected": "Sponsors of therapeutic goods, manufacturers of medical devices, health practitioners, and patients would be affected by the bill.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-339624",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-12-01",
+   "stage_hint": null,
+   "brief": "The bill amends the Therapeutic Goods Act 1989 to implement recommendations from the Expert Panel Review of Medicines and Medical Devices Regulation, led by Lloyd Sansom, Will Delaat, and John Horvath, including expedited pathways for serious conditions, enhanced post-market monitoring, notification-based changes for low-risk variations, and allowing Australian companies to conduct medical device conformity assessments."
+  },
+  {
+   "slug": "speech-344281",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The bill implements eight recommendations from the 2015 expert panel review of medicines and medical devices, covering stage 1 (March 2015) on regulatory frameworks for medicines and medical devices, and stage 2 (July 2015) on complementary medicines and advertising."
+  },
+  {
+   "slug": "speech-344284",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "Labor supported the bill but with reservations, criticising the lack of detail on regulations and expressing concerns about risks from relying on private bodies for assessments and potential undermining of TGA's capacity."
+  },
+  {
+   "slug": "speech-344285",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Therapeutic Goods Amendment Bill with reservations about un-drafted regulations and third-party medical device assessments, and highlighted constituent cases Ben Oakley (medicinal cannabis access) and Riley Bowyer (rare disease treatments) to argue for streamlined approval processes while maintaining safety and quality."
+  },
+  {
+   "slug": "speech-344286",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The member argued the Therapeutic Goods Amendment Bill improves medicine access by streamlining approvals for low-risk Category B medications under the Special Access Scheme and enhancing post-marketing surveillance, while also expressing reservations about unknown details on monitoring and notified bodies."
+  },
+  {
+   "slug": "speech-344287",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Therapeutic Goods Amendment (2016 Measures No.1) Bill 2016 to speed up access to new medicines, but criticised the government's health policy process as lacking an overarching plan and noted concerns about the bill's handling, including delays and insufficient scrutiny."
+  },
+  {
+   "slug": "speech-344288",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The Labor member supported the Therapeutic Goods Amendment (2016 Measures No. 1) Bill, arguing it cuts red tape and streamlines approval of therapeutic goods to provide faster patient access while maintaining safety, and noted Labor will monitor the development of yet-undrafted regulations. The bill implements recommendations from the 2015 Sansom review, including expanding approval pathways, enhancing post-market monitoring, and strengthening powers to cancel goods for false information."
+  },
+  {
+   "slug": "speech-344400",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Therapeutic Goods Amendment Bill balances streamlined medicine approvals with consumer safety, noting $20.4 million over four years for TGA regulation under a cost-recovery model. They highlighted support from Medicines Australia and the Consumers' Health Forum, but raised concerns about delegated legislation, strict liability offences, and the need for rigorous post-market monitoring."
+  },
+  {
+   "slug": "speech-344401",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Therapeutic Goods Amendment (2016 Measures No. 1) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00047",
+   "assent_date": "2017-06-19"
+  }
+ ]
+}

@@ -1,0 +1,82 @@
+{
+ "key": "au-federal-s1047",
+ "title": "Privacy Amendment (Re-identification Offence) Bill 2016",
+ "short_title": "Privacy Amendment (Re-identification Offence) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-12",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1047%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1047%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1047%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1047_ems_bbb11ed5-cc19-4a1b-9e11-2e05f8a4c915%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1047_ems_e4b54455-5694-43a8-acfd-4b9ff13c7cb4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1047%22",
+   "document_date": "2016-10-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-12",
+  "sentences": [
+   "The bill would create new criminal offences for deliberately re-identifying personal information that government agencies have published without identifying details.",
+   "Anyone who re-identifies such information would have to tell the responsible agency, stop using or sharing it, and follow the agency's instructions on handling it.",
+   "The offences would apply from 29 September 2016, and a breach could lead to up to two years in prison or a fine of 120 penalty units."
+  ],
+  "changes": [
+   "Prohibits intentionally re-identifying de-identified personal information published by responsible agencies.",
+   "Prohibits intentionally disclosing re-identified personal information.",
+   "Requires an entity that re-identifies such information to notify the responsible agency, cease any other use or disclosure, and comply with agency directions.",
+   "Imposes criminal penalties of up to two years imprisonment or 120 penalty units for re-identification or disclosure offences.",
+   "Imposes civil penalties of up to 600 penalty units for re-identification or disclosure offences.",
+   "Gives the Attorney-General power to exempt entities from the offences by legislative instrument after consulting the Australian Information Commissioner."
+  ],
+  "affected": "Entities that handle de-identified personal information published by responsible agencies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

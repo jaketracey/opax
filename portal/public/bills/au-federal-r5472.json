@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r5472",
+ "title": "Private Health Insurance (National Joint Replacement Register Levy) Amendment Bill 2015",
+ "short_title": "Private Health Insurance (National Joint Replacement Register Levy) Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2015-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5472_ems_b8666ab5-06b0-49aa-8d2b-d572803d27eb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5472%22",
+   "document_date": "2015-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00075",
+   "document_date": "2015-06-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-27",
+  "sentences": [
+   "The bill would change how the levy on joint replacement prostheses is calculated.",
+   "Instead of being based on how many prostheses a sponsor lists, the levy would be based on how often a sponsor's prostheses are recorded as provided to patients.",
+   "The maximum levy for any one prosthesis in a financial year would remain $5,000, and the bill would start the day after Royal Assent."
+  ],
+  "changes": [
+   "Removes the current restriction that the levy rate must be based on the number of prostheses listed on the Prostheses Rules.",
+   "Provides that the levy is imposed on the recording of the provision of a joint replacement prosthesis on the National Joint Replacement Register.",
+   "Allows the levy rate to take into account the number of times a kind of prosthesis is recorded in a particular period."
+  ],
+  "affected": "Sponsors of joint replacement prostheses, who are typically manufacturers or distributors, would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:56:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-310802",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-27",
+   "stage_hint": null,
+   "brief": "The government moved to amend the Private Health Insurance (National Joint Replacement Register) Levy to shift cost recovery to a utilisation-based calculation, with a maximum levy of $5,000 per prosthesis per year. Over 85% of companies will pay smaller contributions under the change, which aims to ensure the registry's ongoing funding."
+  },
+  {
+   "slug": "speech-312682",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "Labor supported the Private Health Insurance (National Joint Replacement Register Levy) Amendment Bill 2015, which changes the levy on device sponsors to be based on device utilisation and value, raising an additional $600,000 over four years to fund the National Joint Replacement Registry. The speaker also cited extensive health system cuts under the government, including $57 billion from hospitals and health, a GP tax by stealth through frozen Medicare rebates, and cuts to Aboriginal health, dental, preventive health, and PBS programs."
+  },
+  {
+   "slug": "speech-312683",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The Private Health Insurance (National Joint Replacement Register Levy) Amendment Bill 2015 changes cost-recovery for the National Joint Replacement Registry to a utilisation-based calculation, resulting in over 85 per cent of companies paying smaller individual contributions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance (National Joint Replacement Register Levy) Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00075",
+   "assent_date": "2015-06-25"
+  }
+ ]
+}

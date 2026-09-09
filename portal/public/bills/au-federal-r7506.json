@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-r7506",
+ "title": "Higher Education Support Amendment (Fix HECS) Bill 2026",
+ "short_title": "Higher Education Support Amendment (Fix HECS) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-29",
+ "originating_house": "representatives",
+ "sponsor": "RYAN, Monique, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10987",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7506%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7506%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7506_ems_45315b94-d207-4036-806d-85c54b2b075c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7506%22",
+   "document_date": "2026-06-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-29",
+  "sentences": [
+   "The bill would change when student loan debts are adjusted for inflation each year.",
+   "It would move the annual indexation date from 1 June to 1 November, so that repayments made during the financial year are deducted from the debt before the adjustment.",
+   "The indexation factors would use more recent economic data, and a transitional rule-making power would handle the one-off shift in 2026."
+  ],
+  "changes": [
+   "Moves the annual HELP debt indexation date from 1 June to 1 November.",
+   "Updates the CPI and WPI indexation factors to use quarterly data ending 30 June instead of 31 December.",
+   "Includes a transitional rule-making power for the implementation year."
+  ],
+  "affected": "People with HELP debts who make compulsory or voluntary repayments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:03:16Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,82 @@
+{
+ "key": "au-federal-s1346",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Fight for Australia’s Coastline) Bill 2022",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Fight for Australia’s Coastline) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-08-04",
+ "originating_house": "senate",
+ "sponsor": "WHISH-WILSON, Sen Peter",
+ "sponsor_party": "independent candidate for the federal seat of Bass, Tas",
+ "sponsor_person_id": "10780",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1346%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1346%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1346%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1346_ems_6460146f-a691-41a3-9a6c-13a80ccbb7e8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1346%22",
+   "document_date": "2022-08-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-08-04",
+  "sentences": [
+   "This bill would cancel three petroleum exploration permits and prohibit future petroleum exploration in three offshore areas.",
+   "The Joint Authority, made up of state and Commonwealth ministers, would be barred from granting or considering any new permits, leases, or licenses for these areas.",
+   "The cancellations and prohibitions would take effect two months after the bill receives Royal Assent."
+  ],
+  "changes": [
+   "Cancels Petroleum Exploration Permit 11 in the Sydney Basin (PEP11) and permit T/49P at King Island.",
+   "Prohibits granting any application for V21-3 at the Otway Basin.",
+   "Bans future petroleum exploration or exploitation in all three areas.",
+   "Stops the Joint Authority from considering or continuing applications for PEP11 or King Island.",
+   "Prevents the Joint Authority from inviting applications for permits over the three areas.",
+   "Blocks the Joint Authority or Titles Administrator from granting various petroleum-related titles."
+  ],
+  "affected": "Holders of petroleum exploration permits in the Sydney Basin, King Island, and Otway Basin, including Asset Energy Pty Ltd, ConocoPhillips Australia SH1 Pty Ltd, and their joint venture partners.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

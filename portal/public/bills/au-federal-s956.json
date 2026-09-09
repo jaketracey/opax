@@ -1,0 +1,97 @@
+{
+ "key": "au-federal-s956",
+ "title": "End Cruel Cosmetics Bill 2014",
+ "short_title": "End Cruel Cosmetics Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2014-03-18",
+ "originating_house": "senate",
+ "sponsor": "RHIANNON, Sen Lee",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10760",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s956%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s956%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s956%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s956%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s956%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s956%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s956%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s956_ems_62a5ddf0-53f3-4ced-b231-d42b030e00c8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s956%22",
+   "document_date": "2014-03-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-18",
+  "sentences": [
+   "The End Cruel Cosmetics Bill 2014 would ban developing, manufacturing, selling, advertising or importing cosmetics or cosmetic ingredients that were tested on live animals after the bill's Schedule 1 starts.",
+   "It creates three new offences under the Industrial Chemicals (Notification and Assessment) Act 1989, covering testing on live animals, and the manufacture, advertising, sale or import of such cosmetics or ingredients.",
+   "The ban would take effect six months after the bill receives Royal Assent, with a transitional period for affected entities."
+  ],
+  "changes": [
+   "Prohibits testing cosmetics or ingredients on live animals in Australia.",
+   "Prohibits manufacturing, advertising, selling or importing cosmetics or ingredients tested on live animals.",
+   "Creates new offences under Part 3B of the Industrial Chemicals (Notification and Assessment) Act 1989."
+  ],
+  "affected": "Entities that develop, manufacture, sell, advertise or import cosmetics or cosmetic ingredients in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

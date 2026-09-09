@@ -1,0 +1,87 @@
+{
+ "key": "au-federal-s1140",
+ "title": "Intelligence Services Amendment (Enhanced Parliamentary Oversight of Intelligence Agencies) Bill 2018",
+ "short_title": "Intelligence Services Amendment (Enhanced Parliamentary Oversight of Intelligence Agencies) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2018-08-14",
+ "originating_house": "senate",
+ "sponsor": "PATRICK, Sen Rex",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10903",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1140%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1140%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1140%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1140%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1140_ems_f3fa007b-88bb-4610-9e4d-00d99a1e5a0a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1140%22",
+   "document_date": "2018-08-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-08-14",
+  "sentences": [
+   "This bill would expand the power of the Parliamentary Joint Committee on Intelligence and Security to review intelligence agency operations.",
+   "The committee could examine and review operations and other activities, but a minister could order it to stop if the review involved an ongoing operation and would harm national security or foreign relations.",
+   "The Inspector-General of Intelligence and Security could review a minister's decision to stop a review and report back within 30 days."
+  ],
+  "changes": [
+   "Removes most legislative prohibitions on the PJCIS reviewing intelligence operations.",
+   "Allows a minister to certify that a review relates to an ongoing operation and must be stopped or suspended.",
+   "Gives the Inspector-General of Intelligence and Security power to review a minister's stoppage decision.",
+   "Retains the prohibition on reviewing information from a foreign government without its consent.",
+   "Retains the ban on reviewing individual complaints about intelligence agencies."
+  ],
+  "affected": "The Parliamentary Joint Committee on Intelligence and Security, relevant ministers, the Inspector-General of Intelligence and Security, and Australia’s ten national security and intelligence agencies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

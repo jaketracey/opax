@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6311",
+ "title": "Counter-Terrorism (Temporary Exclusion Orders) Bill 2019",
+ "short_title": "Counter-Terrorism (Temporary Exclusion Orders) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6311%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6311%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6311%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6311_ems_8d59d6e9-8c8b-4704-8314-69696a5b9ba8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6311%22",
+   "document_date": "2019-02-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-376235",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-02-21",
+   "stage_hint": null,
+   "brief": "The government introduced the Counter-Terrorism (Temporary Exclusion Orders) Bill 2019 to create a scheme allowing the minister to issue Temporary Exclusion Orders (TEOs) preventing Australians of counterterrorism interest from returning to Australia for up to two years, and to require a return permit with conditions for any return. Since 2014, 93 people have been charged with terrorism offences, 15 major counterterrorism disruptions have occurred, and around 100 Australians remain active in the Syria-Iraq conflict zone."
+  }
+ ],
+ "acts": []
+}

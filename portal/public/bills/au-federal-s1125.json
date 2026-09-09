@@ -1,0 +1,85 @@
+{
+ "key": "au-federal-s1125",
+ "title": "Air Services Amendment Bill 2018",
+ "short_title": "Air Services Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2018-03-27",
+ "originating_house": "senate",
+ "sponsor": "RICE, Sen Janet",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10836",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1125%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1125%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1125%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1125%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1125%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1125_ems_f522c04f-f872-487e-99e1-6b6df1cb940c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1125%22",
+   "document_date": "2018-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-27",
+  "sentences": [
+   "The bill would give communities more power over aircraft noise and changed flight paths.",
+   "Airservices Australia would have to consult residents and report on noise, and an independent ombudsman and advocate would be created.",
+   "In central Melbourne, the bill would ban flights below 2,000 metres above sea level within 5 kilometres of the city, with exceptions for emergency services and similar aircraft."
+  ],
+  "changes": [
+   "Requires Airservices Australia to consult communities and report on aircraft noise.",
+   "Establishes an independent ombudsman and an independent advocate for community aviation.",
+   "Mandates a plan for flight path and airspace management in central Melbourne."
+  ],
+  "affected": "Communities affected by aircraft noise, especially those in central Melbourne.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:48Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

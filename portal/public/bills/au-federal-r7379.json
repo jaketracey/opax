@@ -1,0 +1,284 @@
+{
+ "key": "au-federal-r7379",
+ "title": "Telecommunications Legislation Amendment (Triple Zero Custodian and Emergency Calling Powers) Bill 2025",
+ "short_title": "Telecommunications Legislation Amendment (Triple Zero Custodian and Emergency Calling Powers) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+ "status": "passed",
+ "status_as_of": "2025-10-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7379_ems_d459aaec-ae11-4bfa-aa29-f40abd4589fc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7379%22",
+   "document_date": "2025-10-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00050",
+   "document_date": "2025-10-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-07",
+  "sentences": [
+   "The bill would create a statutory role for a Triple Zero Custodian to oversee the end-to-end emergency call service.",
+   "The Custodian could ask the Australian Communications and Media Authority to direct carriers, service providers and emergency call persons to provide information or take action affecting the emergency call service.",
+   "The bill also harmonises the definition of 'emergency services' across two telecommunications Acts."
+  ],
+  "changes": [
+   "Establish the Triple Zero Custodian as a legislative position within the department.",
+   "Give the Custodian power to request ACMA directions on emergency call service matters.",
+   "Strengthen ACMA's ability to require information and direct action during outages and routine operations.",
+   "Introduce a formal information use and disclosure regime for the Custodian and ACMA.",
+   "Set reporting and review mechanisms for ACMA with ministerial oversight.",
+   "Align the definition of emergency services in the TCPSS Act and the Telco Act."
+  ],
+  "affected": "Carriers, carriage service providers, emergency call persons, the Australian Communications and Media Authority, the Minister for Communications, and the department.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:32Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9791",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2025-10-08.24.2) introduced by Lindsay MP [Melissa McIntosh](https://theyvoteforyou.org.au/people/representatives/lindsay/melissa_mcintosh) (Liberal), which means they failed. Ms McIntosh [explained that](https://www.openaustralia.org.au/debate/?id=2025-10-08.24.2): > *The first point in my amendment seeks to list our triple 0 network as critical infrastructure. This will ensure that the triple 0 service is enshrined as an infrastructure asset of national significance.* > > *The second point in my amendment will increase the current penalty framework for a contravention of the act from $10 million to $20 million.* ### Amendment text > *(1) Schedule 1, page 3 (before line 3), before the heading specifying Telecommunications (Consumer Protection and Service Standards) Act 1999, insert:* > >> *Security of Critical Infrastructure Act 2018* >> >> *1A Section 5 (after paragraph (a) of the definition of critical telecommunications asset)* >> >>> *Insert:* >>> >>> *(aa) a telecommunications network that is used to supply an emergency call service; or* > > *(2) Schedule 1, page 3 (before line 3), before the heading specifying Telecommunications (Consumer Protection and Service Standards) Act 1999, insert:* > >> *Telecommunications Act 1997* >> >> *1B After paragraph 570( 3)( ac)* >> >>> *Insert:* >>> >>> *(ad) in the case of a contravention of subsection 151D(1) or (2) of the Telecommunications (Consumer Protection and Service Standards) Act 1999$20 million for each contravention; or* > > *(3) Schedule 1, item 7, page 13 (after line 19), after section 151K, insert:* > >> *151KA Register of ECS outage events* >> >> *(1) The Custodian must establish and keep a register of ECS outage events.* >> >> *(2) The Custodian must include an ECS outage event in the register as soon as reasonably practicable after the Custodian reasonably believes that the ECS outage event has occurred, is occurring or wi",
+   "stage": "Consideration in detail",
+   "ayes": 44,
+   "noes": 86,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 86
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-10-08/2"
+  },
+  {
+   "key": "federal-representatives-9792",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2025-10-08.27.1) introduced by Mallee MP [Anne Webster](https://theyvoteforyou.org.au/people/representatives/mallee/anne_webster) (Nationals), which means they failed. Ms Webster [explained that](https://www.openaustralia.org.au/debate/?id=2025-10-08.27.1): > *These amendments ensure that the Triple Zero Custodian is reporting to the government and the parliament on the specific connectivity issues that rural, regional and remote Australians are facing.* ### Amendment text > *(1) Schedule 1, item 7, page 5 (line 33), at the end of subsection 151A(2), add:* > >> *; (c) the deficiencies in connectivity in rural, regional and remote Australia that put Australians living there at risk from ECS outage events.* > > *(2) Schedule 1, item 7, page 16 (after line 16), after paragraph 151Q(1)(b), insert:* > >> *(ba) the specific challenges and personal safety risks faced by Australians living in rural, regional and remote areas through poor connectivity to emergency call services;*",
+   "stage": "Consideration in detail",
+   "ayes": 44,
+   "noes": 86,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 86
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-10-08/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1197439",
+   "speaker": "Melissa McIntosh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-10-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197685",
+   "speaker": "Slade Brockman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-10-28",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications Legislation Amendment (Triple Zero Custodian and Emergency Calling Powers) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00050",
+   "assent_date": "2025-10-30"
+  }
+ ]
+}

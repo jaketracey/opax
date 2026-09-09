@@ -1,0 +1,339 @@
+{
+ "key": "au-federal-r6705",
+ "title": "Private Health Insurance Amendment (Income Thresholds) Bill 2021",
+ "short_title": "Private Health Insurance Amendment (Income Thresholds) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6705_ems_fd8867f1-06fe-4e32-ad33-3ab07c5ea657%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6705%22",
+   "document_date": "2021-05-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00052",
+   "document_date": "2021-06-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7173",
+   "date": "2021-06-01",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) unchanged. The usual second reading motion is \"*that the bill be read a second time*\", which is parliamentary jargon for agreeing with the main idea of the bill. This vote took place after the MP for Hindmarsh [Mark Butler](https://theyvoteforyou.org.au/people/representatives/hindmarsh/mark_butler) (Labor) proposed the following amendment. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House urges the Government to better protect Australians' health during the pandemic and deliver a more sustainable, equitable, and effective health care system\"*",
+   "stage": "Second reading",
+   "ayes": 73,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 40,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-01/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-405726",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The bill pauses indexation of income thresholds for the private health insurance rebate and Medicare levy surcharge for two years, with indexation to resume from 2023-24, and includes a review of the settings."
+  },
+  {
+   "slug": "speech-407195",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The opposition supported the bill extending the freeze on income thresholds for private health insurance rebates and the Medicare levy surcharge, arguing it costs middle-income households hundreds of dollars annually and saves the budget $300 million over two years, while also criticising the government's decision to discontinue most phone consultation Medicare items and the lack of general health funding in the budget."
+  },
+  {
+   "slug": "speech-407197",
+   "speaker": "Andrew Laming",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Private Health Insurance Amendment (Income Thresholds) Bill 2021, arguing that extending the freeze on indexation for two years provides policyholder certainty and that the rebates benefit Australians of all backgrounds, with 44% holding hospital cover and 54% general cover."
+  },
+  {
+   "slug": "speech-407198",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Private Health Insurance Amendment (Income Thresholds) Bill 2021 as a reasonable measure but argued it fails to address major inequities in healthcare, including rural and remote access to modern treatments, a deteriorating public hospital outpatient system, and a poor COVID-19 vaccination rollout."
+  },
+  {
+   "slug": "speech-407199",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Private Health Insurance Amendment (Income Thresholds) Bill 2021, which freezes indexation of the private health insurance rebate and Medicare levy surcharge thresholds for two years, arguing this would encourage more higher-income Australians to hold private health insurance and reduce pressure on the public system."
+  },
+  {
+   "slug": "speech-407203",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Private Health Insurance Amendment (Income Thresholds) Bill 2021 will relieve pressure on the public health system by pausing indexation of income thresholds for the Medicare levy surcharge and private health insurance rebate for two years until 30 June 2023, with thresholds remaining at $90,000 for singles and $180,000 for families. The speaker also highlighted record health funding of $121.4 billion in 2021-22 and over $25 billion committed to the COVID-19 health response."
+  },
+  {
+   "slug": "speech-407204",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's pause on indexing private health insurance income thresholds fails to address rising premiums, which have increased 36% since the coalition took office, while real wages stagnate. They noted that private health insurance premiums rose 2.74% in the past year, insurers saved $500 million in COVID-related benefit payouts without passing savings to consumers, and the number of Australians with private health insurance has fallen for five consecutive years, increasing pressure on the public health system."
+  },
+  {
+   "slug": "speech-407205",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The Private Health Insurance Amendment (Income Thresholds) Bill 2021 extends the indexation pause on the Medicare levy surcharge and private health insurance rebate income tiers for two years until 30 June 2023, keeping thresholds at $90,000 for singles and $180,000 for families. The bill aims to incentivise higher income earners to take up private health insurance or pay the Medicare levy surcharge."
+  },
+  {
+   "slug": "speech-407206",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill pausing income threshold indexation for private health insurance, but argued the industry is in a \"death spiral\" due to government inaction, and criticised the vaccine rollout—citing only 2% fully vaccinated and 1.4 million doses received but just over 500,000 administered—as well as quarantine failures, including 17 hotel quarantine outbreaks and Senator Gerard Rennick's anti-vaccine stance."
+  },
+  {
+   "slug": "speech-407207",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "Supported the Private Health Insurance Amendment (Income Thresholds) Bill 2021, arguing private health insurance empowers choice and frees up public resources. Criticised the Victorian government for turning people away from testing and vaccination centres, and urged Australians to get vaccinated, noting over 104,000 doses administered daily."
+  },
+  {
+   "slug": "speech-407347",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Private Health Insurance Amendment (Income Thresholds) Bill 2021 extends a \"stealth tax\" raising $304 million over four years by freezing indexation thresholds, and criticised the Morrison government for failures in the COVID-19 vaccine rollout, quarantine, and overall health system coordination."
+  },
+  {
+   "slug": "speech-407391",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia has one of the best health systems in the world and backed the Private Health Insurance Amendment (Income Thresholds) Bill 2021, stating it makes private health insurance simpler and more affordable, with the lowest average premium change in 20 years at 2.74 per cent in 2021."
+  },
+  {
+   "slug": "speech-407392",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The amendments extend the pause on indexation of private health insurance income thresholds for two years, keeping them at $90,000 for singles and $180,000 for families until 30 June 2023, while a review is undertaken. The speech also cited government investments of $30.6 million over four years, $17.1 million for the Medical Costs Finder, and figures including 465,000 young Australians receiving premium discounts."
+  },
+  {
+   "slug": "speech-407393",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Private Health Insurance Amendment (Income Thresholds) Bill 2021, which freezes the income thresholds for the Medicare levy surcharge and private health insurance rebate tiers for two years from July 2021 to July 2023, arguing this would maintain the viability of Australia's hybrid health system."
+  },
+  {
+   "slug": "speech-407394",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that parliamentarians should not recommend COVID-19 vaccinations without medical qualifications, and that being fully vaccinated does not provide complete immunity, citing US data showing 1,758 hospitalisations and 366 deaths among fully vaccinated individuals. They also disputed the claim that high vaccination rates enable reopening, referencing Forbes magazine."
+  },
+  {
+   "slug": "speech-407399",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Private Health Insurance Amendment (Income Thresholds) Bill 2021 and the second reading amendment moved by the member for Hindmarsh, describing the changes to indexation of income thresholds as minor but important. They also emphasised the need for improved administrative competence in the vaccine rollout, specifically that aged-care workers, residents, and people in residential disability care should have been vaccinated and that accurate data on vaccination rates must be readily available."
+  },
+  {
+   "slug": "speech-407523",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The bill extends current income thresholds for the private health insurance rebate and Medicare levy surcharge for two years, keeping the base thresholds at $90,000 for singles and $180,000 for couples/families, with indexation resuming from 2023-24."
+  },
+  {
+   "slug": "speech-408285",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-06-15",
+   "stage_hint": null,
+   "brief": "YouTube removed a video of Craig Kelly's 1 June 2021 parliamentary speech and issued a warning, which the member argued was contempt of parliament and improper interference with his duties; he sought to refer the matter to the Standing Committee of Privileges and Members' Interests."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance Amendment (Income Thresholds) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00052",
+   "assent_date": "2021-06-24"
+  }
+ ]
+}

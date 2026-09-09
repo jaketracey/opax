@@ -1,0 +1,242 @@
+{
+ "key": "au-federal-alrc-2408",
+ "title": "Social Security Amendment (Supporting More Australians into Work) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00121",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-2434",
+   "date": "2013-06-28",
+   "house": "senate",
+   "question": "Social Security Amendment (Supporting More Australians into Work) Bill 2013 - Second Reading - Increase Newstart and support single parents",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "member": 1,
+    "dated": 45,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-28/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-273407",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823690",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275752",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275754",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275755",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275757",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824176",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824349",
+   "speaker": "Anne McEwen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": "Two reports were tabled: one on the Social Security Amendment (Supporting More Australians into Work) Bill 2013 and one on the Early Years Quality Fund Special Account Bill 2013, both ordered to be printed."
+  },
+  {
+   "slug": "speech-825313",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-28",
+   "stage_hint": null,
+   "brief": "The bill increases the income-free area for Newstart and other allowances from $62 to $100 per fortnight, extends the pensioner education supplement to single parents on Newstart, and provides a 12‑week extension of the pensioner concession card for single parents leaving parenting payment. The opposition and the Greens supported the bill but criticised it as insufficient, with the Greens calling for a $50‑per‑week increase to Newstart and additional support for single parents."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Security Amendment (Supporting More Australians into Work) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00121",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

@@ -1,0 +1,184 @@
+{
+ "key": "au-federal-alrc-2339",
+ "title": "Family Assistance and Other Legislation Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Families, Housing, Community Services and Indigenous Affairs",
+ "status": "passed",
+ "status_as_of": "2013-06-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-27",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00070",
+   "document_date": "2013-06-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-270129",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270130",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270131",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270135",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270140",
+   "speaker": "Laura Smyth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273611",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825261",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill's cuts to the baby bonus, reducing it from $5,000 to $3,000 and later abolishing it in favour of a lower family tax benefit loading, harm families and undermine the policy's goal of boosting Australia's fertility rate. Specific figures cited include the baby bonus reduction from $5,437 to $5,000, then to $3,000, and the replacement offering $2,000 for the first child and $1,000 for subsequent children."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Family Assistance and Other Legislation Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00070",
+   "assent_date": "2013-06-27"
+  }
+ ]
+}

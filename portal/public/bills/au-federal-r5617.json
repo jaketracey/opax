@@ -1,0 +1,263 @@
+{
+ "key": "au-federal-r5617",
+ "title": "Aged Care Legislation Amendment (Increasing Consumer Choice) Bill 2016",
+ "short_title": "Aged Care Legislation Amendment (Increasing Consumer Choice) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2016-03-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5617_ems_8c60b84a-b0aa-410d-ae48-09838255247a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5617%22",
+   "document_date": "2016-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00019",
+   "document_date": "2016-03-18",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-11",
+  "sentences": [
+   "This bill would let older Australians who receive home care choose their own provider and take their government funding with them if they switch.",
+   "Funding would follow the consumer rather than being allocated to providers by region, and a national waiting list through My Aged Care would prioritise people based on need and wait time.",
+   "The changes start on 27 February 2017, with a second stage merging two home care programmes into one from July 2018 requiring separate legislation."
+  ],
+  "changes": [
+   "Home care funding would be attached to the consumer, not to a provider or region.",
+   "A single national system through My Aged Care would rank applicants for home care packages by need and waiting time.",
+   "Red tape for providers would be cut, including removing the need to apply for new places through the Aged Care Approvals Round."
+  ],
+  "affected": "Older Australians receiving home care, aged care providers, and the My Aged Care gateway.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:17:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-327826",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-11",
+   "stage_hint": null,
+   "brief": "The bill amends aged care law to let consumers direct home care funding to any approved provider, make packages portable, create a national waiting list prioritisation system, and reduce provider red tape, implementing the first stage of home care reforms from the 2015-16 budget with changes from February 2017."
+  },
+  {
+   "slug": "speech-329759",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-01",
+   "stage_hint": null,
+   "brief": "The Aged Care Legislation Amendment (Increasing Consumer Choice"
+  },
+  {
+   "slug": "speech-329760",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Increasing Consumer Choice) Bill 2016, which reforms home care by attaching funding to the consumer rather than the provider, giving seniors greater choice and flexibility. The Central Coast had over 78,000 residents aged 65+ in 2011, projected to reach 93,000 by 2021, and Dobell has 16,280 people aged 55–64; the bill amends the Aged Care Act 1997 to allow funding to follow the consumer, create a national prioritisation system via My Aged Care, and reduce red tape for providers."
+  },
+  {
+   "slug": "speech-329761",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-01",
+   "stage_hint": null,
+   "brief": "Labor supports the Aged Care Legislation Amendment (Increasing Consumer Choice) Bill 2016, which from 27 February 2017 will allocate home care packages directly to consumers rather than service providers. The speaker noted concerns about access hurdles, workforce shortages, and the need for timely assessments, citing that Australia has about 3.5 million people aged over 65, projected to rise to 10 million by 2050."
+  },
+  {
+   "slug": "speech-329762",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Legislation Amendment (Increasing Consumer Choice) Bill 2016 will give consumers more control over home‑care packages by allowing funding to follow the consumer, with a national prioritisation system replacing provider‑allocated places. The speech noted that the Paterson electorate had 18,642 residents over 70 (15.6% of its population) and listed aged care facilities affected by boundary changes, while supporting the reforms as a step toward a more flexible, consumer‑driven system."
+  },
+  {
+   "slug": "speech-329764",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-01",
+   "stage_hint": null,
+   "brief": "The member for Petrie supported the Aged Care Legislation Amendment (Increasing Consumer Choice) Bill 2016, which from February 2017 lets home care funding follow the consumer, removes allocated home care places, streamlines provider approvals, and plans to integrate home care programs by July 2018. He also highlighted the My Aged Care gateway for national prioritisation and thanked aged-care workers."
+  },
+  {
+   "slug": "speech-329765",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Increasing Consumer Choice) Bill 2016, which lets home-care packages follow the consumer so older Australians can choose or change their provider, and creates a national prioritisation system through My Aged Care. The speech noted Australia's over-65 population is projected to rise from 14 per cent to 25 per cent over three decades, cited $7.4 billion in Commonwealth funding for home-care packages, and highlighted a case where a family could not access a level 4 package after a stroke."
+  },
+  {
+   "slug": "speech-329792",
+   "speaker": "Ann Sudmalis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The Aged Care Legislation Amendment (Increasing Consumer Choice) Bill 2016 was argued to implement stage 1 of home‑care reforms, giving consumers choice and portability of home‑care packages from February 2017 and introducing a national prioritisation system; the government also commissioned the Australian Law Reform Commission to inquire into elder abuse following a scoping study."
+  },
+  {
+   "slug": "speech-329794",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Increasing Consumer Choice) Bill 2016, which shifts home care package funding from providers to individuals to increase consumer choice, but raised concerns about insufficient consultation, problems with the My Aged Care website, long waiting times for assessments and payments, and potential regional inequities in package distribution."
+  },
+  {
+   "slug": "speech-329795",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Increasing Consumer Choice) Bill 2016, arguing it would shift home-care funding from providers to consumers to create a more competitive and user-friendly system. Key figures cited: 8.9 million Australians aged 65+ predicted by 2025, and 16.6% of Canning residents aged 60–69, with 49.1% aged 50+."
+  },
+  {
+   "slug": "speech-329796",
+   "speaker": "Warren Entsch",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Legislation Amendment (Increasing Consumer Choice) Bill 2016 will create a more flexible, consumer-driven system by letting funding follow the consumer, cutting red tape for providers, streamlining approvals, and establishing a national prioritisation system through My Aged Care. They also highlighted specific local impacts, including 416 new residential places and 109 home care packages for Far North Queensland, the opening of Bupa Cairns with 144 beds, and progress on the Mossman and Star of the Sea facilities."
+  },
+  {
+   "slug": "speech-329799",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The Aged Care Legislation Amendment (Increasing Consumer Choice) Bill 2016 will allow home-care package funding to follow the consumer from February 2017, with a single integrated care-at-home program planned from July 2018, aiming to increase consumer choice and reduce red tape for providers."
+  },
+  {
+   "slug": "speech-329800",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The government announced the first stage of home care reforms, effective February 2017, allowing consumers to direct government funding to their chosen provider and change providers or take their package when moving. A second stage will commence from July 2018 to simplify service delivery and funding, with the bill receiving widespread support from stakeholders including the National Aged Care Alliance."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care Legislation Amendment (Increasing Consumer Choice) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00019",
+   "assent_date": "2016-03-18"
+  }
+ ]
+}

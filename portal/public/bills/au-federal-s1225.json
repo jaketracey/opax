@@ -1,0 +1,225 @@
+{
+ "key": "au-federal-s1225",
+ "title": "ANL Legislation Repeal Bill 2019",
+ "short_title": "ANL Legislation Repeal Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-11",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Cities and Regional Development",
+ "status": "passed",
+ "status_as_of": "2019-10-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1225_ems_97939c39-264d-4a3f-84a3-aa4be43604e4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1225%22",
+   "document_date": "2019-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00088",
+   "document_date": "2019-10-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5900",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "question": "ANL Legislation Repeal Bill 2019 - Second Reading - Support Australian shipping",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-10-16/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-382835",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The ANL Legislation Repeal Bill 2019 repeals the ANL Act 1956 and ANL Guarantee Act 1994, removing outdated provisions and unintended barriers for maritime businesses after the 1998 sale of the Australian National Line to CMA CGM."
+  },
+  {
+   "slug": "speech-382836",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The opposition supported the ANL Legislation Repeal Bill 2019 but moved a second reading amendment criticising the government's record on Australian shipping, noting that less than 0.5% of seaborne trade is carried by Australian ships and the number of Australian flagged vessels has fallen to around 11."
+  },
+  {
+   "slug": "speech-382838",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia's merchant maritime fleet has declined to just 11 Australian-flagged ships, down from 100 thirty years ago, due to the Liberal government's policies, and that this overreliance on foreign vessels and crews threatens national and economic security. They supported the ANL Legislation Repeal Bill 2019 and the member for Ballarat's amendment, calling for rebuilding the Australian-owned and crewed domestic fleet, citing fuel reserves below the required 90-day IEA standard and the need for stronger maritime regulations."
+  },
+  {
+   "slug": "speech-382839",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "Labor did not oppose the ANL Legislation Repeal Bill 2019, which removes restrictions on protected names of the former Australian National Line after its sale to French owner CMA CGM. The speaker criticised the government's shipping policies, citing the February 2019 sacking of Newcastle-based crew on the MV Mariloula via email while at sea, who were replaced by foreign workers paid as low as $2 an hour, and called for a national strategic fleet with Australian-flagged ships and secure jobs."
+  },
+  {
+   "slug": "speech-382840",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the ANL Legislation Repeal Bill 2019 highlights the loss of Australia’s national shipping fleet, which has left the country vulnerable in national security, biosecurity, environmental protection, and skills retention. They criticised the 1998 sale of the Australian National Line to French company CMA CGM and supported Labor’s commitment to establish a strategic fleet of Australian-flagged vessels, citing risks such as fuel shortages, reliance on foreign crews with poor conditions, and animal welfare issues like the 2017 Awassi Express incident."
+  },
+  {
+   "slug": "speech-382841",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The ANL Legislation Repeal Bill 2019 repeals the ANL Act 1956 and the ANL Guarantee Act 1994 to remove outdated legislation and unintended name protections that had impeded maritime businesses. The bill corrects an oversight from the 1998 sale of the ANL shipping line, allowing businesses to re-register website names and trademarks."
+  }
+ ],
+ "acts": [
+  {
+   "title": "ANL Legislation Repeal Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00088",
+   "assent_date": "2019-10-28"
+  }
+ ]
+}

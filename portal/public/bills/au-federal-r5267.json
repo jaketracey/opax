@@ -1,0 +1,181 @@
+{
+ "key": "au-federal-r5267",
+ "title": "Textile, Clothing and Footwear Investment and Innovation Programs Amendment Bill 2014",
+ "short_title": "Textile, Clothing and Footwear Investment and Innovation Programs Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5267%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5267%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5267%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5267%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5267%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5267%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5267%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5267%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5267_ems_7bb0590a-2608-41f4-87ee-5cb70070835a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5267%22",
+   "document_date": "2014-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3214",
+   "date": "2014-06-05",
+   "house": "representatives",
+   "question": "Tony Zappia This bill amends the Textile, Clothing and Footwear Investment and Innovation Programs Act 1999. The purpose of the bill is to close the Clothing and Household Textile (Building Innovative Capability) Scheme, otherwise known as the BIC scheme, and the Textile, Clothing and Footwear Small Business Program on 30 June 2014. That is one year ahead of the original time intended for closure of those two programs. The closing of the programs one year early would provide some $25 million of savings to this government but at a detrimental cost to our TCF industries—our textile, clothing and footwear industries. It is just another example of this government turning its back on the manufacturing sector in Australia. I note from the second reading speech of the parliamentary secretary that he provided no justification or explanation whatsoever as to why the two programs were being terminated a year earlier than intended. The BIC scheme is a $22.5 million program that supports innovation and development of sustainable and internationally competitive manufacturing and design industries for clothing and household textiles in Australia. Payments for BIC grants are retrospective. They are based on investment decisions firms have already made to improve their operations. The final program eligibility year is 2014-15, with final payments to be made in 2015-16—that was the intent. Grants are available for research and development, including innovative product design activities, innovative process improvements, market research and some industrial property rights. The TCF Small Business Program provides grants of up to $50,000 for projects to improve the business enterprise culture of TCF businesses. Funding of $2.5 million is available per year over a 10-year program period which commenced in 2006-07. In 2012-13, total funding of $2.58 million went to 74 innovative TCF businesses under the TCF Small Business Program. Grants are available to TCF small businesses that have few",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-05/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-289524",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290695",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290698",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2014-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290699",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290701",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290703",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-05",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

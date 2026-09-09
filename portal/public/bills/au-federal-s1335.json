@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1335",
+ "title": "Electoral Legislation Amendment (Voter Identification) Bill 2022",
+ "short_title": "Electoral Legislation Amendment (Voter Identification) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-09",
+ "originating_house": "senate",
+ "sponsor": "MCGRATH, Sen James",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10833",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1335%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1335%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1335_ems_ea5968b6-71ab-4888-abcc-f905c67234a4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1335%22",
+   "document_date": "2022-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-09",
+  "sentences": [
+   "This bill would require voters to show proof of identity before casting a ballot in a federal election or referendum.",
+   "Voters without acceptable identification could have their identity attested by another enrolled person or cast a declaration vote.",
+   "The bill would start the day after it receives royal assent."
+  ],
+  "changes": [
+   "Requires electors to display a proof of identity document before voting.",
+   "Allows voters without acceptable identification to use an attester or cast a declaration vote.",
+   "Amends the Commonwealth Electoral Act 1918 and the Referendum (Machinery Provisions) Act 1984."
+  ],
+  "affected": "Voters in federal elections and referendums.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

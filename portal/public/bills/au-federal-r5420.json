@@ -1,0 +1,166 @@
+{
+ "key": "au-federal-r5420",
+ "title": "Airports Amendment Bill 2015",
+ "short_title": "Airports Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "passed",
+ "status_as_of": "2015-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5420_ems_987377e4-b5f1-467c-b48d-2892a477fd68%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5420%22",
+   "document_date": "2015-06-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00108",
+   "document_date": "2015-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-312188",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Airports Amendment Bill 2015 would streamline planning for the new Badgerys Creek airport and remove common ownership requirements so the government could offer development to third parties or build the airport itself if Sydney Airport Group declines."
+  },
+  {
+   "slug": "speech-313073",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The opposition supported the Airports Amendment Bill 2015 to remove obstacles to building a second Sydney airport, arguing it is needed urgently to avoid a projected $6 billion loss in national GDP by 2035 and 77,900 forgone jobs nationally by 2060. The bill addresses deficiencies in the 1996 Act, including the flawed right of first refusal granted to Sydney Airport Corporation in the 2002 Kingsford Smith privatisation, and strengthens environmental conditions and community consultation."
+  },
+  {
+   "slug": "speech-313074",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Airports Amendment Bill 2015, supporting the decision to designate Badgerys Creek as Sydney’s second airport and calling for separate ownership of Sydney West Airport and Kingsford Smith Airport to promote competition. He criticised the Moorebank Intermodal project as a \"planning fallacy\" and argued that its funding should instead go toward a rail link to Badgerys Creek."
+  },
+  {
+   "slug": "speech-313075",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Airports Amendment Bill 2015, which facilitates a second Sydney airport at Badgerys Creek by consolidating planning and environmental assessment and allowing other bidders if Sydney Airport Corporation declines its first right of refusal. The speaker cited economic benefits: $9.3 billion in value added and 50,000 jobs from airport businesses, plus $18.3 billion and 230,000 jobs from tourism and freight."
+  },
+  {
+   "slug": "speech-313076",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The Abbott government will be the largest contributor to public transport rail projects in Commonwealth history through the Asset Recycling Initiative, and is investing $3.6 billion in Western Sydney infrastructure, including the Bringelly Road project. The Airports Amendment Bill 2015 creates a plan for the Western Sydney airport, incorporates environmental conditions from the environment minister, and allows consideration of alternative operators if Sydney Airport Group declines the first right of refusal."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Airports Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00108",
+   "assent_date": "2015-06-30"
+  }
+ ]
+}

@@ -1,0 +1,187 @@
+{
+ "key": "au-federal-r5429",
+ "title": "Governance of Australian Government Superannuation Schemes Legislation Amendment Bill 2015",
+ "short_title": "Governance of Australian Government Superannuation Schemes Legislation Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2015-06-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5429_ems_2522c736-fa08-42a6-8b96-6e605f869a37%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5429%22",
+   "document_date": "2015-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00065",
+   "document_date": "2015-06-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-308244",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-03-19",
+   "stage_hint": null,
+   "brief": "The Governance of Australian Government Superannuation Schemes Legislation Amendment Bill 2015 merges ComSuper with the Commonwealth Superannuation Corporation (CSC) to eliminate duplication and improve efficiency, with no changes to member benefits or service delivery, and transfers ComSuper staff to CSC with preserved entitlements."
+  },
+  {
+   "slug": "speech-311303",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The bill merges ComSuper and the Commonwealth Superannuation Corporation to reduce duplication and overlap, with the government having already reduced government bodies by 286, saving $1.4 billion, and cut 17,300 Public Service positions from September 2013 to February 2015. The measure also shifts administration costs to PSSAP members, saving $26.8 million over four years."
+  },
+  {
+   "slug": "speech-311304",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor will support the Governance of Australian Government Superannuation Schemes Legislation Amendment Bill 2015, which merges ComSuper into the Commonwealth Superannuation Corporation (CSC) to reduce duplication and save $500,000 annually, but will move Senate amendments to protect ComSuper employees' APS transfer rights for three years."
+  },
+  {
+   "slug": "speech-311305",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The Governance of Australian Government Superannuation Schemes Legislation Amendment Bill 2015 merges ComSuper with the Commonwealth Superannuation Corporation to reduce duplication and deducts Public Sector Superannuation Accumulation Plan administration costs from member accounts, saving $28.6 million over four years while leaving defined benefit scheme benefits unchanged."
+  },
+  {
+   "slug": "speech-311306",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The member supported the Governance of Australian Government Superannuation Schemes Legislation Amendment Bill 2015 and backed Labor’s amendments to protect redundant employees’ APS transfer and promotion rights. He also argued superannuation is unsustainable due to heavy equity weighting, with less than five per cent of nearly $3 trillion invested in Australian infrastructure, and cited Ken Henry on excessive risk."
+  },
+  {
+   "slug": "speech-311307",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The bill merges ComSuper with the Commonwealth Superannuation Corporation to streamline administration, with the government reporting 286 fewer bodies and $1.4 billion in savings, and over 17,300 public servants leaving the APS. The speaker also supported encouraging super funds to invest in Australian enterprises, including mining, construction and agriculture."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Governance of Australian Government Superannuation Schemes Legislation Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00065",
+   "assent_date": "2015-06-17"
+  }
+ ]
+}

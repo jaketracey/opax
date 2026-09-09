@@ -1,0 +1,168 @@
+{
+ "key": "au-federal-r5528",
+ "title": "Import Processing Charges Amendment Bill 2015",
+ "short_title": "Import Processing Charges Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2015-11-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5528_ems_f071958a-db75-4324-a2a0-44ce77450341%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5528%22",
+   "document_date": "2015-09-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00148",
+   "document_date": "2015-11-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-16",
+  "sentences": [
+   "This bill would raise fees for bringing goods into Australia.",
+   "It would replace the current system of different fees for sea, air and post with a single fee for all methods.",
+   "A $40 difference would apply between electronic and paper import forms, with the higher fee for paper."
+  ],
+  "changes": [
+   "Increase import processing charges on import and warehouse declarations.",
+   "Remove the different charges for sea, air and post imports.",
+   "Introduce a $40 price gap between electronic and manual import declarations.",
+   "Apply the new charges to declarations made on or after 1 January 2016."
+  ],
+  "affected": "Importers and businesses that lodge import or warehouse declarations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:52:29Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-319061",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The Customs Amendment (Fees and Charges) Bill 2015 restructures customs broker, depot and warehouse licensing charges, introduces new application and variation fees, and increases the warehoused goods declaration processing fee to achieve full or partial cost recovery, forecast to recover $4.0 million in 2014‑15."
+  },
+  {
+   "slug": "speech-319063",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The Import Processing Charges Amendment Bill 2015 was introduced to implement 2014-15 budget measures from a border fees review, broadening the cost base for import and warehouse declaration charges to include immigration and border protection reform costs, simplifying charges by removing sea, air, and postal price differentials, and introducing a higher standard charge for documentary declarations. The changes, effective 1 January 2016, are projected to raise approximately $106.4 million over the forward estimates."
+  },
+  {
+   "slug": "speech-320239",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-14",
+   "stage_hint": null,
+   "brief": "The speaker supported three customs bills commencing 1 January 2016, which aim to generate $107.6 million over the forward estimates by increasing fees and charges to recover full costs for border operations, including new warehouse licensing fees up to $4,500 and higher import declaration charges."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Import Processing Charges Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00148",
+   "assent_date": "2015-11-12"
+  }
+ ]
+}

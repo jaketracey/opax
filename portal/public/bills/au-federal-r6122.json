@@ -1,0 +1,125 @@
+{
+ "key": "au-federal-r6122",
+ "title": "Export Legislation Amendment (Live-stock) Bill 2018",
+ "short_title": "Export Legislation Amendment (Live-stock) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6122%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6122%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6122%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6122%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6122_ems_c251c305-651b-4c4c-9999-425e389265c6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6122%22",
+   "document_date": "2018-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-24",
+  "sentences": [
+   "The bill would increase penalties for people and companies that break live-stock export rules.",
+   "It would amend the Australian Meat and Live-stock Industry Act 1997 and the Export Control Act 1982 to strengthen criminal and civil sanctions.",
+   "The explanatory memorandum says the changes aim to deter non-compliant behaviour and meet community expectations."
+  ],
+  "changes": [
+   "The bill would raise the maximum penalties available for live-stock export offences.",
+   "It would create stronger deterrents for conduct that risks trade or harms animals.",
+   "The amendments would allow courts to impose significant penalties for serious breaches."
+  ],
+  "affected": "Exporters, individuals and companies involved in live-stock exports, and the Australian Government regulator.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:07Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-363305",
+   "speaker": "David Littleproud",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-24",
+   "stage_hint": null,
+   "brief": "The Export Legislation Amendment (Live-stock) Bill 2018 increases criminal penalties and introduces new offences for livestock exporters, including obstructing veterinarians or officers, dishonestly influencing export personnel, and holding executive officers personally liable. The speaker defended the live export trade as worth over $1.4 billion in 2016-17 and supporting 1,800 jobs, rejected calls for a ban as a kneejerk reaction, and noted the government accepted all recommendations from the May 2018 McCarthy review of sheep exports."
+  },
+  {
+   "slug": "speech-363887",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Export Legislation Amendment (Live-stock) Bill 2018, which increases criminal penalties for livestock exporters—including fines of up to $4.2 million or 10% of annual turnover for companies and 10 years’ imprisonment for directors—and argued against phasing out the live sheep trade, warning it would collapse the market and devastate the 1.6 million sheep exported annually from his electorate of O'Connor, worth $150 million."
+  },
+  {
+   "slug": "speech-363888",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The Export Legislation Amendment (Live-stock) Bill 2018 is too modest, and a Shorten Labor government would phase out live sheep exports over five years, citing repeated animal welfare failures including 2,400 sheep deaths on a single voyage in August 2017. The speaker also called on the government to allow debate on a private member's bill by the member for Farrer to end the trade."
+  },
+  {
+   "slug": "speech-363889",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Export Legislation Amendment (Live-stock) Bill 2018 increases criminal penalties—up to $4.2 million fines or 10 years’ imprisonment—to protect animal welfare, while opposing any ban on live sheep exports, warning it would cost Western Australia $250 million annually and devastate regional communities, farmers and small businesses."
+  },
+  {
+   "slug": "speech-363890",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The Export Legislation Amendment (Live-Stock) Bill 2018 is insufficient because it only raises penalties without establishing an effective regulator or addressing ventilation, following repeated government failures including the Awassi Express scandal, 3,000 sheep deaths in 2016, and a ship passing 39 inspections. The trade requires an immediate cessation of long-haul summer voyages and a transition plan working with farmers to protect their livelihoods and Australia’s reputation."
+  }
+ ],
+ "acts": []
+}

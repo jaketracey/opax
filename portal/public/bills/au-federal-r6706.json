@@ -1,0 +1,238 @@
+{
+ "key": "au-federal-r6706",
+ "title": "Higher Education Support Amendment (Extending the Student Loan Fee Exemption) Bill 2021",
+ "short_title": "Higher Education Support Amendment (Extending the Student Loan Fee Exemption) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2021-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6706_ems_b30fcc75-3505-4d3a-b2b9-cc791608b0f2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6706%22",
+   "document_date": "2021-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00051",
+   "document_date": "2021-06-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7157",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2021-05-25.118.1) to keep the usual second reading motion unchanged. The usual second reading motion is \"*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*,\" which is parliamentary jargon for agreeing with the main idea of the bill. Moreton MP [Graham Perrett](https://theyvoteforyou.org.au/people/representatives/moreton/graham_perrett) (Labor) proposed to change it with the amendment below. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the bill does nothing to address the crisis Australia's world-class universities are facing after the Government abandoned universities during the pandemic, resulting in:* > > *(1) thousands of jobs lost;* > > *(2) hundreds of courses cut; and* > > *(3) Australian students being loaded up with a lifetime of debt\".*",
+   "stage": "Second reading",
+   "ayes": 80,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-05-25/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-406045",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The bill extends the FEE-HELP loan fee exemption for approximately 30,000 undergraduate students at private providers until 31 December 2021, originally due to end in June, to support students and providers amid the COVID-19 pandemic."
+  },
+  {
+   "slug": "speech-406814",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to extend the FEE-HELP loan fee exemption for students at non-university providers until 31 December 2021, arguing it reduces student debt. The speaker criticised the Morrison government for excluding public universities from JobKeeper, leading to over 17,000 job losses and hundreds of course cuts, while increasing student fees and debt."
+  },
+  {
+   "slug": "speech-406816",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "The government is extending the FEE-HELP loan fee exemption by a further six months to incentivise students to commence or continue study throughout 2021, continuing a temporary measure originally introduced due to the COVID-19 pandemic."
+  },
+  {
+   "slug": "speech-406820",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "The speaker supported extending the FEE-HELP loan fee exemption to the end of 2021, but criticised the Morrison government for cutting higher education funding, leading to 17,300 job losses in 2020 and a $3.8 million revenue loss. She also opposed the TEQSA fee structure and the job-ready graduate reforms that increased fees for humanities courses."
+  },
+  {
+   "slug": "speech-406822",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "Labor supported the bill extending the FEE-HELP loan fee exemption but argued the Coalition has failed universities and students, citing $1 billion in annual funding cuts, exclusion of public universities from JobKeeper, 17,000 job losses, and fee increases for humanities degrees to $58,000 for a four-year degree."
+  },
+  {
+   "slug": "speech-406824",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "The Higher Education Support Amendment (Extending the Student Loan Fee Exemption) Bill extends the temporary exemption from the 20 per cent FEE-HELP loan fee for domestic undergraduate students to units with census dates up to 1 December 2021, and reduces the loan fee back to 20 per cent for units with census dates on or after 1 January 2022. The speaker also argued for permanently removing the FEE-HELP loan fee, citing 15 years of data that may no longer justify the original risk premium rationale."
+  },
+  {
+   "slug": "speech-406825",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "The Higher Education Support Amendment (Extending the Student Loan Fee Exemption) Bill 2021 extends the FEE-HELP loan fee exemption for six months to 31 December 2021, benefiting around 30,000 undergraduate students and private higher education providers. The measure is intended to support enrolments, upskilling, and Australia’s economic recovery."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Support Amendment (Extending the Student Loan Fee Exemption) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00051",
+   "assent_date": "2021-06-24"
+  }
+ ]
+}

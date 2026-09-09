@@ -1,0 +1,116 @@
+{
+ "key": "au-federal-r5202",
+ "title": "Australian Charities and Not-for-profits Commission (Repeal) (No. 1) Bill 2014",
+ "short_title": "Australian Charities and Not-for-profits Commission (Repeal) (No. 1) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5202%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5202%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5202%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5202%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5202_ems_43c2f9ce-f4c7-4c4d-89ee-528d39b09619%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5202%22",
+   "document_date": "2014-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-19",
+  "sentences": [
+   "This bill would abolish the Australian Charities and Not-for-profits Commission.",
+   "It would repeal the Australian Charities and Not-for-profits Commission Act 2012, but would not take effect until a later bill is enacted to set up replacement arrangements.",
+   "The bill would also provide transitional rules for transferring records, handling outstanding Ombudsman investigations, and continuing protection for information disclosed under the Act."
+  ],
+  "changes": [
+   "Abolishes the Australian Charities and Not-for-profits Commission.",
+   "Repeals the Australian Charities and Not-for-profits Commission Act 2012.",
+   "Provides transitional arrangements for records, investigations, and reporting requirements."
+  ],
+  "affected": "Charities and not-for-profit organisations that are registered with the Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-303852",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303853",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303854",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303861",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-03",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,194 @@
+{
+ "key": "au-federal-r6039",
+ "title": "Protection of the Sea Legislation Amendment Bill 2018",
+ "short_title": "Protection of the Sea Legislation Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Transport",
+ "status": "passed",
+ "status_as_of": "2018-05-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-05-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6039_ems_9bbb9d8d-b7f6-41ce-a398-a2dee290ce54%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6039%22",
+   "document_date": "2018-02-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00040",
+   "document_date": "2018-05-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-28",
+  "sentences": [
+   "The bill would update Australian law to match international shipping pollution rules.",
+   "It would require shippers to label solid bulk cargoes as harmful or not harmful to the marine environment and tell the ship's captain.",
+   "The bill also makes a minor correction to a reference in the Protection of the Sea (Prevention of Pollution from Ships) Act 1983 and removes a requirement for regulations to specify how a levy notice is delivered."
+  ],
+  "changes": [
+   "Implement amendments to Annex V of MARPOL in Australian law.",
+   "Require shippers to classify solid bulk cargoes as harmful or non-harmful to the marine environment.",
+   "Remove the need for regulations to prescribe the manner of serving a Protection of the Sea levy notice."
+  ],
+  "affected": "Shippers and ship masters.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:41:36Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-360457",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The Protection of the Sea Legislation Amendment Bill 2018 amends the Protection of the Sea (Prevention of Pollution from Ships) Act 1983 to implement international obligations under MARPOL, requiring ship masters to assess cargo residues before discharging them into the sea only if not harmful to the marine environment, and removes redundant regulations for levy notices under the Protection of the Sea (Shipping Levy Collection) Act 1981."
+  },
+  {
+   "slug": "speech-362006",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The Protection of the Sea Legislation Amendment Bill 2018 enacts Australia’s MARPOL obligations, requiring shippers to classify and declare solid bulk cargo waste, prohibit dumping harmful waste in designated special areas (e.g., Great Barrier Reef, Torres Strait, Antarctic zone), and establish accountability chains for waste discharge. The speaker also noted that Labor previously created the largest growth in marine parks, which was later reversed by the coalition government."
+  },
+  {
+   "slug": "speech-362007",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speech supported the Protection of the Sea Legislation Amendment Bill 2018, which would require shippers to classify and declare solid bulk cargoes as harmful or non-harmful to the marine environment under MARPOL Annex V, alongside minor amendments to adopt international instruments and remove obsolete levy notice regulations. It also highlighted the government's recent $500 million investment in the Great Barrier Reef and cited statistics including 4,000 microplastic fragments per square kilometre in Australian waters."
+  },
+  {
+   "slug": "speech-362008",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The member for Hindmarsh supported the Protection of the Sea Legislation Amendment Bill 2018, arguing it is essential to protect Australia's coastlines and marine ecosystems from pollution by requiring shippers to classify and declare solid bulk cargoes. He noted his electorate has 18 kilometres of coastline including beaches like Glenelg, Henley and Grange, and that 2.15 million tonnes of cargo enter the ocean annually from bulk shipping."
+  },
+  {
+   "slug": "speech-362009",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The Protection of the Sea Legislation Amendment Bill 2018 was supported, with the speaker citing that 11,000 bulk carriers and 52,000 merchant ships discharge 300–500 tonnes of cargo slurry per voyage, and that 144,000 of 25 million live animals exported from Australia between 2010 and 2017 died, with dead livestock often dumped overboard. The speaker argued the bill is needed to monitor and regulate ocean pollution, which threatens the Great Barrier Reef (valued at $56 billion) and Australia’s $2.8 billion fishing industry."
+  },
+  {
+   "slug": "speech-362010",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The Protection of the Sea Legislation Amendment Bill 2018 implements international maritime environmental obligations by ensuring ship masters have cargo information to discharge non-harmful residues into the sea, and removes outdated shipping levy collection regulations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Protection of the Sea Legislation Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00040",
+   "assent_date": "2018-05-22"
+  }
+ ]
+}

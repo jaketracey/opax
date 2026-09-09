@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-r6770",
+ "title": "No Requirement for Medical Treatment (Including Experimental Injections) Without Consent (Implementing Article 6 of the Universal Declaration on Bioethics and Human Rights) Bill 2021",
+ "short_title": "No Requirement for Medical Treatment (Including Experimental Injections) Without Consent (Implementing Article 6 of the Universal Declaration on Bioethics and Human Rights) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-30",
+ "originating_house": "representatives",
+ "sponsor": "KELLY, Craig, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10750",
+ "portfolio": "(s) KELLY, Craig, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6770%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6770%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6770%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6770_ems_a883b4b6-7f78-43d5-ae4f-f612a28127dd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6770%22",
+   "document_date": "2021-08-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

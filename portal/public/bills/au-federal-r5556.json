@@ -1,0 +1,170 @@
+{
+ "key": "au-federal-r5556",
+ "title": "Migration Amendment (Complementary Protection and Other Measures) Bill 2015",
+ "short_title": "Migration Amendment (Complementary Protection and Other Measures) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-10-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5556%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5556%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5556%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5556%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5556%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5556%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5556%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5556%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5556_ems_afbc5f56-9361-4e98-9e8d-376a8f7a2e81%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5556%22",
+   "document_date": "2015-10-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-10-14",
+  "sentences": [
+   "The bill would change how Australia assesses protection claims from people who are not refugees but cannot be sent home due to risk of serious harm.",
+   "It would align the rules for these complementary protection cases with the existing refugee framework, and clarify several definitions and procedures in the Migration Act.",
+   "The changes would apply to decisions about protection visas, including those involving character grounds and information sharing with foreign countries, but the explanatory memorandum does not specify a start date."
+  ],
+  "changes": [
+   "Align complementary protection standards with those in the refugee framework.",
+   "Clarify the definition of 'protection obligations' and 'country' in the Migration Act.",
+   "Remove duplication in provisions excluding applicants on character grounds.",
+   "Extend disclosure rules for identifying information to certain maritime arrivals.",
+   "Allow the Minister to make non-reviewable decisions on character-related complementary protection refusals.",
+   "Apply exclusion from Australia to persons refused protection visas on complementary protection character grounds."
+  ],
+  "affected": "People seeking protection in Australia on complementary protection grounds, and the Minister for Immigration and Border Protection.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:22Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-320238",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-14",
+   "stage_hint": null,
+   "brief": "This bill aligns the statutory framework for complementary protection with the refugee framework, tightening criteria to exclude people who could relocate internally, access effective state protection, or modify their behaviour to avoid harm, and to require risk to be personally faced rather than generalised. The government also withdrew the 2013 Regaining Control Bill, opting instead to keep complementary protection in the Migration Act with these modifications."
+  },
+  {
+   "slug": "speech-325742",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "Labor opposed the Migration Amendment (Complementary Protection and Other Measures) Bill 2015, arguing it weakens complementary protection and that the government's removal of refugee convention references from the Migration Act was unjustified and creates legal gaps."
+  },
+  {
+   "slug": "speech-325743",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Complementary Protection and other Measures) Bill 2015 is necessary to clarify the threshold for non-refugees claiming persecution risk, excluding those who could avoid harm by modifying behaviour or facing indiscriminate risk, and linked the bill to Australia's secure borders policy. He criticised German Chancellor Angela Merkel's decision to accept up to 800,000 Syrian immigrants, warning it would lead to civil unrest, violence, and unsustainable migration, citing 46,000 arrivals in Greece in a month and over one million in Germany over two years."
+  },
+  {
+   "slug": "speech-325902",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Complementary Protection and Other Measures) Bill 2015 is necessary to close loopholes in Australia's complementary protection system, citing cases where individuals involved in serious crimes or criminal gangs were granted protection. The bill clarifies that protection must relate to all areas of the receiving country, excludes those who can avoid harm by modifying their behaviour, and aligns complementary protection with the refugee framework to ensure only those genuinely in need receive visas."
+  },
+  {
+   "slug": "speech-325904",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Complementary Protection and Other Measures) Bill, arguing it aligns complementary protection with the refugee framework and clarifies tests for 'real risk of significant harm' including personal risk, effective protection, and behaviour modification. He also cited unauthorised boat arrival statistics to contrast coalition border policies with Labor's record, noting no successful unauthorised arrivals since July 2013."
+  },
+  {
+   "slug": "speech-325905",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "Labor opposed the Migration Amendment (Complementary Protection and Other Measures) Bill 2015, arguing it would weaken protection for vulnerable asylum seekers and raise the risk of returning people to harm. Specific concerns included changes to internal relocation, effective protection, behaviour modification, and reduced merits review, with the Law Council of Australia and experts like Professor McAdam cited in opposition."
+  },
+  {
+   "slug": "speech-325906",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The government argued the Migration Amendment (Complementary Protection and Other Measures) Bill 2015 is needed to align complementary protection with refugee frameworks, clarifying that protection risks must be personal, relate to all areas of the receiving country, and be excluded if effective protection or reasonable behavioural modification (consistent with identity or core beliefs) is available. The bill aims to restore the government’s intended interpretation after judicial interpretations widened protection to cases like selling adult movies or drinking alcohol in countries where those activities are punished."
+  }
+ ],
+ "acts": []
+}

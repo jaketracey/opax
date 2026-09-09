@@ -1,0 +1,121 @@
+{
+ "key": "au-federal-alrc-2329",
+ "title": "Australian Sports Anti-Doping Authority Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-06",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Sport",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-06",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-06",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-24",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00126",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-821280",
+   "speaker": "Jacinta Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-06",
+   "stage_hint": null,
+   "brief": "The Australian Sports Anti-Doping Authority Amendment Bill 2013 was introduced to strengthen anti-doping powers, including compelling interviews and document production under civil penalty, and to implement recommendations from the Wood Review of Cycling Australia."
+  },
+  {
+   "slug": "speech-824931",
+   "speaker": "Gary Humphries",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Sports Anti-Doping Authority Amendment Bill 2013 was being rushed through the Senate with only 35 minutes for debate, which was an \"absolute disgrace\" given its controversial nature and significant impact on Australian sport. The speaker supported the bill's amendments but expressed ongoing concerns about balancing ASADA's new coercive powers with individual legal rights, and called for the government to quickly resolve the \"dark cloud\" over Australian sport by concluding investigations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Sports Anti-Doping Authority Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00126",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

@@ -1,0 +1,158 @@
+{
+ "key": "au-federal-r5982",
+ "title": "Customs Amendment (Anti-Dumping Measures) Bill 2017",
+ "short_title": "Customs Amendment (Anti-Dumping Measures) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation and Science",
+ "status": "passed",
+ "status_as_of": "2017-10-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5982_ems_6af775a1-7d2d-4240-9eb8-5e4983e6d609%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5982%22",
+   "document_date": "2017-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00119",
+   "document_date": "2017-10-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-13",
+  "sentences": [
+   "This bill would prevent exporters from lowering anti-dumping duties by temporarily reducing exports.",
+   "It would let the minister use alternative methods to calculate an export price when exporters have exported nothing or very little during a review period.",
+   "The new methods apply to all reviews lodged or started before the bill starts, but not reviews already finished."
+  ],
+  "changes": [
+   "Prescribe a range of methods in new subsection 269TAB(2B) to determine appropriate export prices.",
+   "Allow the minister to apply one of these methods to any review not yet finalised.",
+   "Require procedural fairness, including notifying affected parties and inviting submissions before a decision."
+  ],
+  "affected": "Exporters subject to anti-dumping and countervailing duties, and Australian industries that may suffer material injury from dumping.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:33:38Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-353910",
+   "speaker": "Craig Laundy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The government introduced the Customs Amendment (Anti-Dumping Measures) Bill 2017 to close a loophole where foreign exporters could limit exports during duty reviews to obtain lower rates and resume dumping. The bill gives the Anti-Dumping Commission three specific methods to set export prices when exporters have made no or unrepresentative exports during a review period, protecting Australian manufacturers and jobs."
+  },
+  {
+   "slug": "speech-354879",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The bill closes a loophole that allowed foreign exporters to avoid anti-dumping duties by temporarily reducing exports, then resuming injurious dumping. Labor supported the legislation, citing local manufacturers Capral Aluminium and G.James Glass & Aluminium as examples of businesses affected by dumping."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Anti-Dumping Measures) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00119",
+   "assent_date": "2017-10-30"
+  }
+ ]
+}

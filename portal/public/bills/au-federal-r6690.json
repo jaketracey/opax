@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6690",
+ "title": "Charter of Budget Honesty Amendment (Rural and Regional Australia Statements) Bill 2021",
+ "short_title": "Charter of Budget Honesty Amendment (Rural and Regional Australia Statements) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-22",
+ "originating_house": "representatives",
+ "sponsor": "HAINES, Helen, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10929",
+ "portfolio": "(s) HAINES, Helen, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-11-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6690%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6690%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6690%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6690_ems_d100e3c9-65e0-403b-b75e-5404e9fc5ebd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6690%22",
+   "document_date": "2021-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-404650",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-03-22",
+   "stage_hint": null,
+   "brief": "The Charter of Budget Honesty Amendment (Rural and Regional Australia Statements) Bill 2021 would require the Treasurer to publicly release a regional statement with each budget and economic outlook, assessing the impact of government decisions on regional Australia. The speaker noted that regional Australia contributes approximately 40% of national economic output and employs one-third of the workforce, and highlighted challenges in health and education access."
+  }
+ ],
+ "acts": []
+}

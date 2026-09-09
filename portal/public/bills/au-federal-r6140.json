@@ -1,0 +1,236 @@
+{
+ "key": "au-federal-r6140",
+ "title": "Farm Household Support Amendment Bill 2018",
+ "short_title": "Farm Household Support Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2018-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6140_ems_cda09268-230c-4b09-b8a7-bd8be981b213%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6140%22",
+   "document_date": "2018-06-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00062",
+   "document_date": "2018-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-20",
+  "sentences": [
+   "The bill would increase the maximum time a farmer can receive the Farm Household Allowance from three years to four years.",
+   "It changes the Farm Household Support Act 2014 to add an extra year of income support, case management and training funding for eligible farmers and their partners.",
+   "Recipients who have already used their three years of allowance would be able to apply for a fourth year of support."
+  ],
+  "changes": [
+   "Extends the Farm Household Allowance program from 1,095 days to 1,460 days per person.",
+   "Allows people who have already received three years of the allowance to access an additional year.",
+   "Provides an extra twelve months for recipients to use the Activity Supplement, which can be up to $4,000."
+  ],
+  "affected": "Qualifying farmers and their partners who receive the Farm Household Allowance.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:26:57Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-364863",
+   "speaker": "David Littleproud",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment Bill 2018 extends the cumulative period of farm household allowance from three years to four years for current and future recipients, including those who have already used their initial three-year entitlement. The government has allocated over $230 million to assist more than 7,900 farmers and their partners, with nearly 90% of recipients reporting improved financial circumstances."
+  },
+  {
+   "slug": "speech-365909",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The opposition argued that drought must be treated as a permanent part of Australia’s climate, not an abnormal event, and criticised the government for failing to deliver a policy after the Prime Minister’s drought tour, for abolishing the COAG process that underpinned the 2013 intergovernmental drought agreement, and for over‑relying on concessional loans. The Farm Household Support Amendment Bill 2018 extends farm household allowance from three to four years, but the speaker said the necessary work on farm resilience has not been done."
+  },
+  {
+   "slug": "speech-365915",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The government MP argued for extending farm household support indefinitely and proposed a combination of policies including improved insurance products, farm management deposits, water infrastructure projects like the Wimmera Mallee Pipeline, and expanded export markets to build drought resilience, while criticising the opposition for lacking alternative proposals."
+  },
+  {
+   "slug": "speech-365919",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor and the Greens would cause a man-made water crisis in the Murray-Darling Basin and supported the Farm Household Support Amendment Bill 2018, which extends the farm household allowance by 12 months and provides up to $23,000–$24,000 per year per couple and low-interest loans, helping 830 dairy farmers during the 2016 milk crisis."
+  },
+  {
+   "slug": "speech-365920",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government is failing Australian farmers across multiple areas, including labour shortages, lack of innovation support, non-tariff barriers on exports, climate change adaptation, and drought policy, while accusing it of merely \"tinkering at the edges\" with the Farm Household Support Amendment Bill 2018. They defended Labor's role in ending the Murray-Darling water wars and implementing the Basin Plan, and cited meetings with Voice of Horticulture regarding migrant worker exploitation and tax loopholes."
+  },
+  {
+   "slug": "speech-365921",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Farm Household Support Amendment Bill 2018, noting it extends the farm household allowance from three to four years and has helped over 7,900 people, while calling for increased freight subsidies and praising the government's drought assistance measures."
+  },
+  {
+   "slug": "speech-365922",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Nationals have failed to plan for worsening drought conditions driven by climate change, citing damage to the APVMA, removal of the inspector-general for live exports, and inadequate water management. He advocated for long-term support measures such as the Carbon Farming Initiative and aggregated farming systems, noting that 88% of surveyed farmers want politicians to do more on climate change."
+  },
+  {
+   "slug": "speech-365923",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speech argued for the Farm Household Support Amendment Bill 2018 to extend drought assistance, noting about 7,000 recipients, and highlighted policies including $800,000 farm management deposits, accelerated depreciation for grain storages and water/fencing, and a 220-kilometre cluster fence at Gilgunyah."
+  },
+  {
+   "slug": "speech-365925",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment Bill 2018 was supported, extending the farm household allowance from three to four years, providing up to $580 per fortnight for singles and nearly $1,000 for couples, with an uncapped, demand-driven program that has assisted almost 8,000 people at a cost of $230 million since 2004. The speaker also highlighted the severe drought in central western New South Wales, including the Calare electorate, and noted $70 million allocated to the Rural Financial Counselling Service from 2016 to 2020, with an additional $20 million funding boost."
+  },
+  {
+   "slug": "speech-365987",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "Drought is affecting every local government area in the Calare electorate, and the government's extension of the Farm Household Allowance and the Regional Investment Corporation (RIC), headquartered in Orange, deliver real help through concessional loans – with $834 million already approved and $4 billion in the loan book, including $2 billion for water infrastructure. The member for Hunter was criticised for opposing the RIC and decentralisation, while the Farm Management Deposits Scheme allows producers to set aside up to $800,000, and further support will be needed as conditions worsen."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Farm Household Support Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00062",
+   "assent_date": "2018-06-29"
+  }
+ ]
+}

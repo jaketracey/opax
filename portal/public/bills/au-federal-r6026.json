@@ -1,0 +1,163 @@
+{
+ "key": "au-federal-r6026",
+ "title": "Australian Research Council Amendment Bill 2018",
+ "short_title": "Australian Research Council Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2018-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6026_ems_0530e23a-1cac-424a-bcec-dc12da45793a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6026%22",
+   "document_date": "2018-05-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00054",
+   "document_date": "2018-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-362274",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The Australian Research Council Amendment Bill 2018 was introduced to update funding caps for the ARC through to 30 June 2022, ensuring continued support for research. The government highlighted recent funding allocations including $333.5 million for 859 projects and $170.6 million for 120 projects."
+  },
+  {
+   "slug": "speech-365229",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-21",
+   "stage_hint": null,
+   "brief": "The Australian Research Council Amendment Bill 2018 updates annual indexation for grant programs, with funding rising from $758 million in 2018‑19 to $771.93 million in 2019‑20. The speech urged stable, predictable research funding, contrasting Labor's past higher investment with current cuts that risk losing talent."
+  },
+  {
+   "slug": "speech-365354",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-21",
+   "stage_hint": null,
+   "brief": "Labor supported the Australian Research Council Amendment Bill 2018, noting that the government had cut nearly $900 million from science and research in its first budget, resulting in a $94.1 million real-term fall in ARC funding and a halving of Future Fellowships from 200 to 100, with Western Australia receiving only 7.5% of Discovery Projects funding."
+  },
+  {
+   "slug": "speech-365473",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The Australian Research Council Amendment Bill 2018 increases funding caps to support fundamental and applied research, expanding Australia's research capabilities and providing thousands of direct and indirect jobs."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Research Council Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00054",
+   "assent_date": "2018-06-28"
+  }
+ ]
+}

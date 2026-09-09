@@ -1,0 +1,80 @@
+{
+ "key": "au-federal-r6822",
+ "title": "Illegal Detention of Australian Journalists (Free Julian Assange) Bill 2021",
+ "short_title": "Illegal Detention of Australian Journalists (Free Julian Assange) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-11-29",
+ "originating_house": "representatives",
+ "sponsor": "CHRISTENSEN, George, MP",
+ "sponsor_party": "Liberal National Party of Queensland",
+ "sponsor_person_id": "10726",
+ "portfolio": "(s) CHRISTENSEN, George, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-11-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6822%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6822%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6822_ems_d48610a5-fd79-4080-a1af-9776fdaf5f02%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6822%22",
+   "document_date": "2021-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-11-29",
+  "sentences": [
+   "The bill would create new criminal offences to protect Australian journalists from being detained or prosecuted by foreign governments for doing legitimate journalism.",
+   "It would make a foreign head of government liable for up to seven years in prison if their government detains an Australian journalist or asks another government to do so.",
+   "The bill would also require the immediate release of any Australian journalist transferred to Australian custody under a prisoner transfer agreement."
+  ],
+  "changes": [
+   "Creates an offence for a foreign head of government who detains an Australian journalist or requests another government to do so.",
+   "Makes agents of a foreign government, including private security contractors and intelligence agencies, liable for the same offence.",
+   "Defines 'journalism' to include publishing and passively receiving information that would not be an offence in Australia.",
+   "Provides that detention for an ancillary violation, such as a bail breach, is taken to be because of legitimate journalistic activity.",
+   "Requires immediate release of an Australian journalist transferred to Commonwealth custody.",
+   "Deems the conduct alleged against Julian Assange as editor of WikiLeaks to be regular journalistic activity."
+  ],
+  "affected": "Australian journalists and foreign governments, including their heads, agents, and private contractors.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-416174",
+   "speaker": "George Christensen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The bill creates an offence of seven years imprisonment for a foreign head of state who detains or requests the detention of an Australian journalist for legitimate journalistic activity. The speaker argued that Julian Assange, an Australian journalist facing 175 years in US prison, is being punished for exposing corruption, and that the bill is needed to deter politically motivated prosecutions and protect press freedom."
+  }
+ ],
+ "acts": []
+}

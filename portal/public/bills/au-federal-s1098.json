@@ -1,0 +1,93 @@
+{
+ "key": "au-federal-s1098",
+ "title": "Nuclear Fuel Cycle (Facilitation) Bill 2017",
+ "short_title": "Nuclear Fuel Cycle (Facilitation) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2017-11-14",
+ "originating_house": "senate",
+ "sponsor": "BERNARDI, Sen Cory",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10038",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1098%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1098%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1098%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1098%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1098_ems_de876f42-54dd-48ae-a0bd-d81e3539c8f2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1098%22",
+   "document_date": "2017-11-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-11-14",
+  "sentences": [
+   "The bill would allow the Minister for Environment and Energy to consider applications for certain nuclear facilities by removing existing prohibitions.",
+   "It repeals sections in the Environment Protection and Biodiversity Conservation Act 1999 and the Australian Radiation Protection and Nuclear Safety Act 1998 that currently ban the construction or operation of those facilities.",
+   "The bill would commence the day after it receives Royal Assent."
+  ],
+  "changes": [
+   "Repeals the blanket prohibition on the minister considering applications for certain nuclear facilities.",
+   "Repeals the blanket prohibition on constructing or operating certain nuclear facilities.",
+   "Leaves unaffected state and territory powers to protect citizens and the environment from radiation impacts.",
+   "Leaves unaffected the minister's power to assess applications under other parts of the EPBC Act.",
+   "Leaves unaffected the Minister for Foreign Affairs's power to issue permits under the Nuclear Non-Proliferation (Safeguards) Act 1987."
+  ],
+  "affected": "The Minister for Environment and Energy, the Australian Radiation Protection and Nuclear Safety Agency, and parties seeking to establish nuclear facilities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:45:14Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

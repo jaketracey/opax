@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1188",
+ "title": "Water Amendment (Purchase Limit Repeal) Bill 2019",
+ "short_title": "Water Amendment (Purchase Limit Repeal) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-13",
+ "originating_house": "senate",
+ "sponsor": "PRATT, Sen Louise",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10714",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1188%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1188%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1188%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1188_ems_a008dd00-a1c8-4e70-9f32-b39fefc6b827%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1188%22",
+   "document_date": "2019-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "This bill would remove the current legal cap of 1,500 gigalitres on how much water the Commonwealth can buy in the Murray-Darling Basin.",
+   "It does this by changing the Water Act 2007 so that no statutory barrier prevents additional water purchases if a review or the Murray-Darling Basin Authority recommends them.",
+   "The change also covers the 605 gigalitre 'supply projects', meaning purchases could be made if those projects fail to deliver expected environmental outcomes."
+  ],
+  "changes": [
+   "Repeals the 1,500 gigalitre limit on Commonwealth surface water purchases.",
+   "Allows the Government to buy more water if a review or the Basin Authority advises it is needed.",
+   "Removes the legislative obstacle to buying water beyond the cap when supply projects underperform."
+  ],
+  "affected": "The Commonwealth Government, the Murray-Darling Basin Authority, and communities and environments in the Murray-Darling Basin.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:21:15Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,199 @@
+{
+ "key": "au-federal-r7349",
+ "title": "Commonwealth Workplace Protection Orders Bill 2025",
+ "short_title": "Commonwealth Workplace Protection Orders Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2025-11-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-11-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7349_ems_de2e349d-2a63-4eea-9646-da32c1ab07c4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7349_ems_23dedf94-0999-4d1b-88aa-04f7d4f19de2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7349%22",
+   "document_date": "2025-07-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00052",
+   "document_date": "2025-11-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-31",
+  "sentences": [
+   "The bill would create a new Act to protect Commonwealth workers and workplaces from violence and harmful behaviour by members of the public.",
+   "It would let authorised people apply to certain courts for workplace protection orders when personal violence linked to a worker's duties occurs.",
+   "A final order would last no more than two years and could not be made against anyone under 14 years old."
+  ],
+  "changes": [
+   "Establishes the Commonwealth Workplace Protection Orders Act 2025.",
+   "Allows authorised persons to seek workplace protection orders from state or territory courts, the Federal Court, or the Federal Circuit and Family Court.",
+   "Makes contravening an order a criminal offence punishable by up to 120 penalty units or two years in prison.",
+   "Requires courts to consider hardship, harm, and existing orders before imposing conditions.",
+   "Prevents orders from blocking access to government services, benefits, or political communication."
+  ],
+  "affected": "Commonwealth workers, frontline service-delivery staff, and members of the public in Commonwealth workplaces, including those at Services Australia and the Australian Taxation Office.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195866",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196448",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196560",
+   "speaker": "Alison Penfold",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2025-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196865",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197753",
+   "speaker": "Andrew Bragg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-10-29",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Commonwealth Workplace Protection Orders Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00052",
+   "assent_date": "2025-11-04"
+  }
+ ]
+}

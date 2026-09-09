@@ -1,0 +1,94 @@
+{
+ "key": "au-federal-s1026",
+ "title": "Family Law Amendment (Financial Agreements and Other Measures) Bill 2015",
+ "short_title": "Family Law Amendment (Financial Agreements and Other Measures) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-11-25",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1026%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1026%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1026%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1026%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1026_ems_75c1d7ac-dd27-4fdf-94f2-d70260d98343%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1026_ems_16740415-32d3-4cc9-a860-0c7779c5638e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1026%22",
+   "document_date": "2015-11-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-11-25",
+  "sentences": [
+   "The bill would make it easier for separating couples to sort out their finances without going to court.",
+   "It would clarify the rules for making, interpreting and enforcing financial agreements between spouses or de facto partners.",
+   "The bill would also strengthen court protections for victims of family violence and improve the handling of international child abduction cases."
+  ],
+  "changes": [
+   "Remove uncertainties about how financial agreements are entered, interpreted and enforced.",
+   "Change the scope of spousal maintenance covered by agreements.",
+   "Add a statement of principles explaining the binding nature of agreements.",
+   "Reinforce that financial agreements are binding to give parties certainty.",
+   "Strengthen protections against family violence in certain court procedures.",
+   "Make minor and technical amendments, such as clarifying definitions and deleting out-of-date provisions."
+  ],
+  "affected": "Separating couples, victims of family violence, and parties to international parental child abduction cases.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,239 @@
+{
+ "key": "au-federal-r5888",
+ "title": "Treasury Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Bill 2017",
+ "short_title": "Treasury Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5888_ems_cdec377b-a66b-4d3f-a1af-c9700891c5f8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5888%22",
+   "document_date": "2017-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00058",
+   "document_date": "2017-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-24",
+  "sentences": [
+   "This bill updates several income cut-offs for the Medicare levy and the Medicare levy surcharge.",
+   "The thresholds for low-income earners, including families and those eligible for the seniors and pensioners tax offset, would be raised to match inflation as measured by the consumer price index.",
+   "The aim is to keep the same people exempt from the levy in 2016-17 as were exempt in 2015-16, provided their incomes grew no faster than inflation."
+  ],
+  "changes": [
+   "Raises the low-income thresholds for the Medicare levy for individuals and families.",
+   "Raises the low-income threshold for the Medicare levy for those eligible for the seniors and pensioners tax offset.",
+   "Raises the low-income threshold for the Medicare levy surcharge."
+  ],
+  "affected": "Low-income individuals, families, seniors, and pensioners who are exempt from the Medicare levy.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:45:27Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-346816",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-24",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Treasury Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Bill 2017, which increases the Medicare levy by 0.5% from July 2019 to fully fund the National Disability Insurance Scheme, closing a $55.7 billion gap, with low-income earners exempt and higher earners paying more."
+  },
+  {
+   "slug": "speech-348807",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the coalition's Treasury Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Bill 2017 raises the Medicare levy to fully fund the NDIS, with low-income thresholds protecting vulnerable Australians, and criticised Labor for supporting the levy increase but not allocating the funds to the NDIS."
+  },
+  {
+   "slug": "speech-348808",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "Labor supports the Treasury Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Bill 2017."
+  },
+  {
+   "slug": "speech-348812",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill’s 0.5% Medicare levy increase to 2.5% fully funds the NDIS, accusing Labor of leaving a $55 billion funding shortfall for the scheme. Specific income thresholds were cited: no levy for singles earning up to $21,655, couples up to $36,541, and seniors/pensioners up to $47,670."
+  },
+  {
+   "slug": "speech-348813",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the indexation of income thresholds for the Medicare levy and surcharge to protect vulnerable Australians, and criticised the Treasurer for using the phrase \"dealing with disabilities\" regarding families and carers."
+  },
+  {
+   "slug": "speech-348816",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The government argued the Treasury Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Bill raises Medicare levy low-income thresholds in line with CPI, benefiting around one million low-income individuals, and supports fully funding the NDIS through the Medicare levy. It also announced the Medicare Guarantee Fund from 1 July to cover Medicare Benefits Schedule and Pharmaceutical Benefits Scheme expenses."
+  },
+  {
+   "slug": "speech-348817",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Bill 2017, which adjusts income thresholds for the Medicare levy and surcharge to keep pace with the cost of living, noting that bulk-billing in Tasmania fell 2.2% and out-of-pocket GP costs rose $5.90 since December 2014. They argued the government's record undermines Medicare, citing the 2014 proposed $7 GP fee, a five-year Medicare rebate freeze, and a $65 billion corporate tax cut that could instead fund the NDIS, while contrasting Labor's alternative to protect 10 million workers from a tax increase and raise $4.5 billion more."
+  },
+  {
+   "slug": "speech-348818",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Bill 2017, arguing it would fill the $55.7 billion funding gap for the National Disability Insurance Scheme by increasing the levy for those who can afford it, while maintaining exemptions for low-income earners."
+  },
+  {
+   "slug": "speech-348837",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Medicare levy increase unfairly targets low- and middle-income earners while giving tax cuts to millionaires and big business, citing figures such as a $16,400 annual tax cut for some millionaires versus a $300 increase for someone earning $60,000. They also announced that in the Bendigo electorate, only one 100% bulk-billing practice remains, with average out-of-pocket GP costs of $21 per visit, and that 40% of locals reported delaying doctor visits due to cost."
+  },
+  {
+   "slug": "speech-349037",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to index the Medicare levy and surcharge thresholds, so low-income earners in Lalor do not pay these before income tax. They argued the government is undermining Medicare, citing the former GP tax, a $275 levy increase for someone earning $55,000, and rising out-of-pocket GP costs in Victoria by an average of $8."
+  },
+  {
+   "slug": "speech-349038",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The bill increases Medicare levy low-income thresholds for 2016-17 in line with CPI, exempting singles earning up to $21,655, single seniors/pensioners up to $34,244, and couples/families up to $36,541 (or $47,670 for seniors/pensioners) plus $3,356 per child, benefiting about one million people. The speaker also corrected the second reading speech, stating the Medicare levy on $80,000 income is $1,600, not $1,699, and on $240,000 income is $4,800, not $250,000."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00058",
+   "assent_date": "2017-06-22"
+  }
+ ]
+}

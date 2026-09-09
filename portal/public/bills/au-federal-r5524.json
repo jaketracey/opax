@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r5524",
+ "title": "Maritime Legislation Amendment Bill 2015",
+ "short_title": "Maritime Legislation Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "passed",
+ "status_as_of": "2015-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5524_ems_76cb217f-05f7-4cb1-a015-fcb6d752a767%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5524%22",
+   "document_date": "2015-09-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00176",
+   "document_date": "2015-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-09",
+  "sentences": [
+   "The bill makes several minor changes to Australian maritime laws covering safety and the environment.",
+   "It fixes drafting errors and closes loopholes in laws about pollution from ships, including rules on heavy oil in Antarctic waters and definitions of dangerous goods.",
+   "The changes clarify state sea boundaries and ensure insurance and oil pollution certificates can be enforced."
+  ],
+  "changes": [
+   "Amends the Protection of the Sea (Prevention of Pollution from Ships) Act 1983 to fix the definition of 'sea near a State' and close a loophole allowing heavy grade oil as ballast in Antarctic waters.",
+   "Amends the Navigation Act 2012 to update the definition of 'dangerous goods' and correct drafting errors.",
+   "Amends the Protection of the Sea (Civil Liability for Bunker Oil Pollution Damages) Act 2008 and the Protection of the Sea (Civil Liability) Act 1981 to fix drafting errors that hindered enforcement of insurance and oil pollution certificates."
+  ],
+  "affected": "Ships and operators in Australian waters, particularly those carrying heavy oil or dangerous goods, and authorities enforcing pollution and safety rules.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:53:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-317831",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-09",
+   "stage_hint": null,
+   "brief": "The Maritime Legislation Amendment Bill was introduced to align Australia's domestic maritime laws with international conventions, correct drafting errors, and close a loophole allowing heavy grade oil carriage in Antarctic waters. Key amendments include updating the definition of 'dangerous goods' in the Navigation Act, fixing errors in the Bunkers and CLC acts to enable AMSA enforcement, and banning heavy grade oil carried as ballast in Antarctic waters."
+  },
+  {
+   "slug": "speech-324025",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-324029",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The government argued that reform of the shipping industry is needed to lower costs and create jobs, and that current problems stem from Labor's existing legislation."
+  },
+  {
+   "slug": "speech-324034",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "Labor supported the Maritime Transport and Offshore Facilities Security Amendment (Inter-State Voyages) Bill 2015, which passed with unanimous backing, but argued the government's separate legislation before the Senate would force Australian vessels to reflag and replace Australian seafarers with foreign crews on foreign wages. Labor offered to work with industry, unions and government on practical productivity improvements, but refused to support legislation that would \"throw the Australian flag under water.\""
+  }
+ ],
+ "acts": [
+  {
+   "title": "Maritime Legislation Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00176",
+   "assent_date": "2015-12-11"
+  }
+ ]
+}

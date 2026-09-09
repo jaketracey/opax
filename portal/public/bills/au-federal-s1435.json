@@ -1,0 +1,89 @@
+{
+ "key": "au-federal-s1435",
+ "title": "Electoral Legislation Amendment (Fair Territory Representation) Bill 2024",
+ "short_title": "Electoral Legislation Amendment (Fair Territory Representation) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2024-11-20",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen David",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "11009",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1435%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1435%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1435%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1435_ems_4aa22980-854a-4ead-b61e-f3bd334d08e4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1435%22",
+   "document_date": "2024-11-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-20",
+  "sentences": [
+   "This bill would give the Australian Capital Territory and the Northern Territory fairer representation in the Senate.",
+   "It would set the number of senators for each territory at half the number for a state, rounded to the nearest whole number.",
+   "Each territory would elect three senators at every federal election, and those senators would serve six-year terms."
+  ],
+  "changes": [
+   "Increases the number of senators for the Australian Capital Territory and the Northern Territory.",
+   "Provides for three senators from each territory to be elected at each federal election.",
+   "Gives senators from the territories six-year terms."
+  ],
+  "affected": "Voters and senators in the Australian Capital Territory and the Northern Territory.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195261",
+   "speaker": "Wendy Askew",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

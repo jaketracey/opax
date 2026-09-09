@@ -1,0 +1,209 @@
+{
+ "key": "au-federal-s1251",
+ "title": "National Vocational Education and Training Regulator Amendment Bill 2019",
+ "short_title": "National Vocational Education and Training Regulator Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-04",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment, Skills, Small and Family Business",
+ "status": "passed",
+ "status_as_of": "2020-02-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1251_ems_5a710be4-2b9c-47a5-ad30-2e0f36c5eafb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1251%22",
+   "document_date": "2019-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00010",
+   "document_date": "2020-02-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-04",
+  "sentences": [
+   "This bill changes the main law for regulating vocational education and training to make the regulator more efficient and effective.",
+   "It would give the Australian Skills Quality Authority stronger powers to oversee training organisations and courses, including new requirements for registration and reporting.",
+   "The changes respond to recommendations from reviews by Valerie Braithwaite and Steven Joyce, and the bill's explanatory memorandum says it would not add to the financial burden on the Commonwealth or on registered training organisations."
+  ],
+  "changes": [
+   "Training organisations would need to show they are committed and able to deliver quality education to be registered.",
+   "Training organisations would have to tell the regulator about major changes to their operations or events that could affect their compliance.",
+   "The regulator could issue general directions on how course owners meet accreditation standards.",
+   "The regulator would have to prepare and publish an audit report.",
+   "The regulator could use enforceable undertakings for all purposes under the Act and cancel qualifications or statements of attainment when there is a risk to people or the community.",
+   "The regulator could stay a decision while it reconsiders that decision."
+  ],
+  "affected": "Registered training organisations, course owners, students, employers, and the Australian Skills Quality Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:20:17Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-388073",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The bill amends the National Vocational Education and Training Regulator Act to strengthen RTO registration requirements, improve transparency through audit report publication and information sharing, and streamline ASQA’s operations, following the Braithwaite and Joyce reviews, backed by a government commitment of $18.1 million."
+  },
+  {
+   "slug": "speech-388140",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Vocational Education and Training Regulator Amendment Bill 2019, arguing it would improve VET quality and transparency while reducing regulatory burden, including by publishing audit reports and student outcome data. The bill is backed by an $18.1 million commitment to reform the regulator, within a broader 2019-20 VET investment of over $3 billion, and follows recommendations from the 2016 Braithwaite and later Joyce reports."
+  },
+  {
+   "slug": "speech-388141",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "Labor supported the National Vocational Education and Training Regulator Amendment Bill 2019 to strengthen ASQA’s powers, transparency, and student protections, but expressed concerns about the shift to a full cost-recovery model potentially increasing costs for vulnerable students. The party also criticized the government for cutting $3 billion from vocational training, an underspend of $919 million, and overseeing a decline in apprenticeships and skills shortages."
+  },
+  {
+   "slug": "speech-388142",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the National Vocational Education and Training Regulator Amendment Bill 2019, which strengthens ASQA’s powers and transparency, but opposed the full cost-recovery model as it could pass costs to students. They also criticised the government for cutting $3 billion from TAFE, leading to 150,000 fewer apprentices and trainees, and called for $1 million to upgrade Wyong TAFE."
+  },
+  {
+   "slug": "speech-388143",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Vocational Education and Training Regulator Amendment Bill 2019 and the shadow assistant minister’s amendment, but criticised the government’s full cost recovery model for auditing, arguing it would increase training costs for students. The speaker also stated the government underspent $919 million of its TAFE and training budget over five years, leading to 150,000 fewer apprentices and declining training quality."
+  },
+  {
+   "slug": "speech-388145",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The National Vocational Education and Training Regulator Amendment Bill 2019 gives ASQA greater powers to scrutinise registered training organisations, allows flexibility in cancellations to minimise student impact, and improves transparency through public audit reports and expanded information sharing; the government committed $18.1 million to support these reforms."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Vocational Education and Training Regulator Amendment Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00010",
+   "assent_date": "2020-02-26"
+  }
+ ]
+}

@@ -1,0 +1,214 @@
+{
+ "key": "au-federal-r6049",
+ "title": "Treasury Laws Amendment (Illicit Tobacco Offences) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Illicit Tobacco Offences) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-08-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6049_ems_7d941399-f916-400d-b044-97f2830340f8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6049%22",
+   "document_date": "2018-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00082",
+   "document_date": "2018-08-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-15",
+  "sentences": [
+   "The bill would create a new set of criminal offences for dealing with illicit tobacco.",
+   "It would establish penalties meant to discourage illegal activity and allow seizure of tobacco of unknown origin.",
+   "The bill would also align the definition of tobacco for excise and customs duty purposes."
+  ],
+  "changes": [
+   "Creates a new offence regime for illicit tobacco that is domestically made or of unknown origin.",
+   "Creates new offences for possessing equipment used to produce or manufacture illicit tobacco.",
+   "Sets penalties at a level intended to deter illegal activity.",
+   "Confirms that tobacco of unknown origin can be seized.",
+   "Aligns the definition of tobacco for excise and excise-equivalent customs duty purposes."
+  ],
+  "affected": "People or businesses involved in the production, manufacture, possession or dealing of illicit tobacco.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359683",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Illicit Tobacco Offences) Bill 2018 reforms the penalty and offence framework in the Excise Act 1901 to combat the illicit tobacco market, introducing tiered offences and strengthened penalties, and confirming that tobacco offences apply even when the origin of the tobacco cannot be established."
+  },
+  {
+   "slug": "speech-360668",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Illicit Tobacco Offences) Bill 2018, arguing it strengthens penalties and enforcement against illicit tobacco, and criticised the Turnbull government for not funding the Australian Border Force's tobacco strike team beyond July 2018 despite seizing 104 tonnes of smuggled tobacco and 233 million cigarettes. They also highlighted Labor's record on tobacco control, including plain packaging and a 25% excise increase, and noted that smoking rates in regional areas are nearly double those in urban areas."
+  },
+  {
+   "slug": "speech-360669",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Illicit Tobacco Offences) Bill 2018, arguing that bipartisan excise increases had driven cigarette prices to around $25 a packet—the highest in the world—fuelling a black market where smuggled cigarettes sold for about $10. He noted the Tobacco Strike Team seized over 400 tonnes of illegal tobacco worth $300 million in lost duty in its first two years, and cited a rise in the number of regular smokers to 2.4 million, casting doubt on the effectiveness of further tax increases."
+  },
+  {
+   "slug": "speech-360670",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Illicit Tobacco Offences) Bill 2018, which introduces tiered penalties—including fines up to $2 million and 10 years imprisonment—to combat illicit tobacco, a major source of revenue for organised crime costing Australia $1.6 billion to $4 billion annually in lost tax. The bill also aims to discourage smoking, noting that the Australian Border Force has already seized 400 tonnes of illegal tobacco and prosecuted 45 smugglers."
+  },
+  {
+   "slug": "speech-360671",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Illicit Tobacco Offences) Bill 2018, arguing it would generate about $1.6 billion in revenue and stop the illicit tobacco black market hurting law‑abiding businesses, but also warned that high tobacco taxes have created a tipping point driving illegal sales, citing evidence from Master Grocers Australia (CEO Jos de Bruin) of 20–25% sales losses and from the Australian Retailers Association that almost all tobacco‑stocking shopfronts had experienced break‑ins."
+  },
+  {
+   "slug": "speech-360672",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Illicit Tobacco Offences Bill but condemned the coalition's acceptance of tobacco industry donations, citing Philip Morris donations of $107,000 to the Liberal and National parties in 2012–13, including $6,100 to the Liberal Party in Hindmarsh. He also noted Sylvester Stallone was paid $50,000 in the early 1990s to display cigarettes in a film, and argued MPs should refuse such money."
+  },
+  {
+   "slug": "speech-360674",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Illicit Tobacco Offences) Bill 2018, using the debate to condemn the tobacco industry and highlight the dangers of smoking. He detailed two landmark legal cases—Rolah McCabe's successful damages claim against British American Tobacco (later overturned on appeal) and the case of Paul Cotton, whose estate argued asbestos and tobacco exposure caused his lung cancer—to argue that tobacco companies have destroyed evidence and preyed on addicts. He proudly affirmed Labor's refusal to accept any financial assistance from tobacco companies."
+  },
+  {
+   "slug": "speech-360675",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Illicit Tobacco Offences) Bill 2018 reforms the Excise Act 1901 to introduce tiered offences and stronger penalties for illicit tobacco, delivering on the government's 2016–17 budget commitment to combat the illicit tobacco market and reduce smoking rates."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Illicit Tobacco Offences) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00082",
+   "assent_date": "2018-08-24"
+  }
+ ]
+}

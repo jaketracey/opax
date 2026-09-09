@@ -1,0 +1,268 @@
+{
+ "key": "au-federal-alrc-2401",
+ "title": "Private Health Insurance Legislation Amendment (Base Premium) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Ageing",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-03",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00106",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-272054",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823220",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273042",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273043",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273044",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273045",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273047",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273760",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274216",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274218",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274680",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274683",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824345",
+   "speaker": "Anne McEwen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": "Two parliamentary committee reports were presented: one on the Therapeutic Goods Amendment (2013 Measures No. 1) Bill 2013 and one on the Private Health Insurance Legislation Amendment (Base Premium) Bill 2013, with both reports ordered to be printed."
+  },
+  {
+   "slug": "speech-825297",
+   "speaker": "Concetta Fierravanti-Wells",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-27",
+   "stage_hint": null,
+   "brief": "The coalition argued that Labor’s changes to private health insurance broke repeated promises to maintain the rebate, and will increase premiums by up to 27.5 percent and push people onto public hospitals. The coalition moved an amendment to oppose the lifetime health cover component of the first bill and did not oppose the base premium bill."
+  },
+  {
+   "slug": "speech-825298",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2013-06-27",
+   "stage_hint": null,
+   "brief": "The remaining stages of the Private Health Insurance Amendment (Lifetime Health Cover Loading and Other Measures) Bill 2012 and the Private Health Insurance Legislation Amendment (Base Premium) Bill 2013 were agreed to, and both bills were read a third time and passed."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance Legislation Amendment (Base Premium) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00106",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

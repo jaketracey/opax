@@ -1,0 +1,413 @@
+{
+ "key": "au-federal-r5754",
+ "title": "Migration Legislation Amendment (Regional Processing Cohort) Bill 2016",
+ "short_title": "Migration Legislation Amendment (Regional Processing Cohort) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5754%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5754%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5754%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5754%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5754%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5754%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5754%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5754%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5754%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5754_ems_0aef4e52-49e9-42c7-9e7d-e8316c971fe1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5754%22",
+   "document_date": "2016-11-08",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4389",
+   "date": "2016-11-10",
+   "house": "representatives",
+   "question": "Migration Legislation Amendment (Regional Processing Cohort) Bill 2016 - Second Reading - Put the motion",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-10/1"
+  },
+  {
+   "key": "federal-representatives-4390",
+   "date": "2016-11-10",
+   "house": "representatives",
+   "question": "Migration Legislation Amendment (Regional Processing Cohort) Bill 2016 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-10/2"
+  },
+  {
+   "key": "federal-representatives-4391",
+   "date": "2016-11-10",
+   "house": "representatives",
+   "question": "Migration Legislation Amendment (Regional Processing Cohort) Bill 2016 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 75,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-10/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-337025",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-337180",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "Labor opposed the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016, arguing it was unnecessary and an overreach by the government. The bill would impose a lifetime ban on visa applications for about 3,100 asylum seekers, including those on Manus Island and Nauru, and Labor criticised the government for failing to secure third-country resettlement options and for using the legislation to distract from that failure."
+  },
+  {
+   "slug": "speech-337181",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016 to permanently ban boat arrivals from settling in Australia, citing the Coalition's success in stopping boats for over 830 days, closing 17 detention centres, and increasing the refugee intake to 18,750 by 2018‑19 plus 12,000 Syrians, while criticising Labor's record of 50,000 illegal arrivals, 8,000 children in detention, and an $11 billion budget blowout."
+  },
+  {
+   "slug": "speech-337182",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016, calling it a politically motivated \"dog whistle\" by the Turnbull government to appease One Nation and right-wing extremists, and highlighted its draconian consequences such as lifetime visa bans for genuine refugees. The speaker cited the failed $55 million Cambodia resettlement deal (which relocated only five refugees) and the government's failure to resettle refugees on Manus and Nauru after 830 days, advocating instead for a bipartisan, UNHCR-negotiated solution."
+  },
+  {
+   "slug": "speech-337361",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016 will further strengthen Australia’s border protection system, which has had no boat arrivals in 830 days under the coalition government."
+  },
+  {
+   "slug": "speech-337367",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "The bill is being debated on the day Donald Trump is likely elected president on a campaign of bigotry and demonising minorities, making the timing fitting."
+  },
+  {
+   "slug": "speech-337373",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that strong borders enable greater compassion and refugee resettlement, supporting the bill by citing 1,200 deaths at sea and 50,000 arrivals on 800 boats under Labor, contrasted with zero children in detention and 830 days without boat arrivals under the coalition."
+  },
+  {
+   "slug": "speech-337376",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016, arguing it is discriminatory, unfair, and based on fear and punishment, and noted that over 100 constituents in their electorate of Indi had contacted them with concerns."
+  },
+  {
+   "slug": "speech-337381",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016, arguing it would impose a lifelong ban on visas for any refugee resettled in a third country, calling it divisive policy that treats refugees as political footballs. They noted Labor’s unanimous opposition and cited contributions of refugees to Australia, including over 100,000 Vietnamese boat arrivals resettled in the 1970s and 1980s."
+  },
+  {
+   "slug": "speech-337382",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016, arguing it was unnecessary, not based on international law, and failed to offer a third-country settlement solution for refugees on Manus Island and Nauru. They cited the government’s Cambodia deal—$55 million for three refugees, about $18 million each—as a wasteful failure, and criticised lifetime visa bans on former refugees, pointing to Minister Peter Dutton as evidence that ministerial discretion was unreliable."
+  },
+  {
+   "slug": "speech-337385",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016, arguing it had no policy rationale and was driven by cynical politics and division. They criticised Minister Dutton and Prime Minister Turnbull for weakness and for pandering to reactionary elements, including Pauline Hanson's One Nation Party."
+  },
+  {
+   "slug": "speech-337436",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016, arguing it imposes a lifetime ban on any visa for asylum seekers who arrived by boat after 19 July 2013—including for tourism, study, or business—going beyond the bipartisan policy of no permanent resettlement. The speaker cited Human Rights Watch calling the proposal \"malicious and unnecessary\" and the Australian Catholic Bishops Conference calling it \"deeply disappointing\" and \"cruel and un-Australian.\""
+  },
+  {
+   "slug": "speech-337437",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The member opposed the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016, arguing it would impose lifelong visa bans on refugees from Manus Island and Nauru, including for visits, and called it cruel, unnecessary, and an overreach. She cited United Nations and legal objections, the unresolved issue of third-country resettlement, and the case of refugee surgeon Dr Al Muderis as an example of a successful refugee contribution."
+  },
+  {
+   "slug": "speech-337438",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia's treatment of asylum seekers is unethical, illegal, and impractical, citing $10.3 billion spent on offshore processing from 2012-2016 and a planned $5.7 billion from 2016-2020. He moved an amendment to the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016, calling for a humanitarian approach consistent with international treaties, and criticized both the Liberal-National coalition and Labor for identical harsh policies."
+  },
+  {
+   "slug": "speech-337440",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The Migration Legislation Amendment (Regional Processing Cohort) Bill 2016 is likened to Donald Trump's policies, described as a shameful attempt to use the politics of fear and race to win votes. The speaker argued that Australia's current immigration system costs $570,000 per person per year to detain people, and proposed an alternative of substantially increasing refugee intake from regional camps, ending mandatory detention, and treating boat people humanely."
+  },
+  {
+   "slug": "speech-337444",
+   "speaker": "Maria Vamvakinou",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016, describing it as a dog whistle that detracts from the government's failure to secure third-country resettlement for refugees on Manus and Nauru, and argued it does not address the global humanitarian crisis of 65 million people on the move."
+  },
+  {
+   "slug": "speech-337445",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "Labor opposed the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016, arguing it would permanently ban visa applications from anyone processed offshore after July 2013, including those in detention, returned to their country, or resettled elsewhere. The speaker argued the bill breached international law, made resettlement harder, and was a cynical political move by the Turnbull government, while calling for third-party resettlement, increased humanitarian intake, and independent oversight of processing facilities."
+  },
+  {
+   "slug": "speech-337446",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Legislation Amendment (Regional Processing Cohort) Bill as a \"ridiculous\" and \"ludicrous\" government distraction and act of division, arguing it would ban asylum seekers who arrived by boat from ever entering Australia. She cited constituents' objections, Labour's alternative policy of increased UNHCR funding and faster processing, and personal accounts of asylum seekers contributing to her Bendigo electorate yet being blocked from citizenship."
+  },
+  {
+   "slug": "speech-337447",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The bill is a symbolic attack on asylum seekers that will not address any real economic, social or security problems, and is instead a cynical attempt to scapegoat vulnerable people. The speaker opposed the bill, arguing it has no policy purpose and that Australia will not become greater by excluding people."
+  },
+  {
+   "slug": "speech-337448",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016, arguing it would permanently ban anyone arriving by boat from entering Australia, calling it ineffective gesture politics that would not resettle refugees and would hinder third-country resettlement, citing opposition from New Zealand Prime Minister John Key and noting the contributions of past refugees like Fred Gruen."
+  },
+  {
+   "slug": "speech-337449",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The member argued that Labor and the Greens, not the coalition, caused Australia's refugee policy failures, citing 50,000 boat arrivals, 800 boats, an $11 billion cost blowout, over 1,200 drownings and 8,000 children in detention under Labor, while the coalition's border protection policies stopped the boats. He supported the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016 as necessary to close a loophole allowing people on Nauru resettled to a third country to later obtain an Australian visa, and noted an estimated 14,000 people in Java in the people-smuggling supply chain."
+  },
+  {
+   "slug": "speech-337450",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Legislation Amendment (Regional Processing Cohort) Bill 2016 is a solution in search of a problem, noting that boat arrivals have stopped since Labor’s 19 July 2013 policy change, and stated the bill would not create a single job. He referenced the 2012 expert panel report by Houston, Aristotle, and L’Estrange and the Christmas Island tragedy inquiry."
+  }
+ ],
+ "acts": []
+}

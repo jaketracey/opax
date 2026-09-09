@@ -1,0 +1,82 @@
+{
+ "key": "au-federal-r5697",
+ "title": "Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill 2016",
+ "short_title": "Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2017-05-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5697%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5697%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5697%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5697_ems_7a4d0452-8bf8-42fe-a278-a856dd219b8c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5697%22",
+   "document_date": "2016-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-332942",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-01",
+   "stage_hint": null,
+   "brief": "The bill funds the Jobs for Families Child Care Package by reforming family payments, including increasing Family Tax Benefit Part A fortnightly rates by $10.08 per child, phasing out end-of-year supplements, and restructuring Family Tax Benefit Part B from 2017-18. It also aligns youth allowance rates for under-18s and extends some FTB B eligibility for single parents and grandparent carers."
+  },
+  {
+   "slug": "speech-345729",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "Moved to discharge four government bills from the Notice Paper: the Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill 2016, the Social Services Legislation Amendment (Budget Repair) Bill 2016, the Social Services Legislation Amendment (Youth Employment) Bill 2016, and the Fairer Paid Parental Leave Bill 2016."
+  },
+  {
+   "slug": "speech-345752",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "A Labor MP supported discharging four social services bills—the Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures), Budget Repair, Youth Employment, and Fairer Paid Parental Leave bills—but criticised the government for refusing to explain the decision. He argued the government still backed the measures and would reintroduce them, noting it had conceded that $13.5 billion of its claimed $16 billion fiscal gap with Labor would not pass parliament."
+  }
+ ],
+ "acts": []
+}

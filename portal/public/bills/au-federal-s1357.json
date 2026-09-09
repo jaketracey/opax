@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1357",
+ "title": "Commonwealth Electoral Amendment (Banning Dirty Donations) Bill 2022",
+ "short_title": "Commonwealth Electoral Amendment (Banning Dirty Donations) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-24",
+ "originating_house": "senate",
+ "sponsor": "WATERS, Sen Larissa",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10764",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1357%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1357%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1357%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1357%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1357_ems_1fe9a923-cae9-4768-8ca9-d7e33e3dd4a5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1357%22",
+   "document_date": "2022-11-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-24",
+  "sentences": [
+   "The bill would ban political donations from certain industries and cap other donations at $3,000 per election term.",
+   "It would prohibit donations from the fossil fuel, property development, tobacco, banking, liquor and gambling, and pharmaceutical industries, as well as their representative organisations.",
+   "The definition of 'gift' would be expanded to cover membership fees, subscription fees and payments to attend fundraising events."
+  ],
+  "changes": [
+   "Bans donations from specified industries.",
+   "Imposes a $3,000 cumulative donation limit per election term.",
+   "Broadens the definition of 'gift' to include fees for memberships, subscriptions and fundraising events."
+  ],
+  "affected": "Political parties, candidates, associated entities, and donors from the banned industries and other sources.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

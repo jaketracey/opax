@@ -1,0 +1,58 @@
+{
+ "key": "au-federal-r7450",
+ "title": "Protecting Australia’s Prime Agricultural Land Bill 2026",
+ "short_title": "Protecting Australia’s Prime Agricultural Land Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-23",
+ "originating_house": "representatives",
+ "sponsor": "GEE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10883",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-03-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7450%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7450%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7450_ems_5d9e6fbf-7013-433f-99b8-f5975832d5ca%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7450%22",
+   "document_date": "2026-03-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1201445",
+   "speaker": "Andrew Gee",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-03-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

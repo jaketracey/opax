@@ -1,0 +1,194 @@
+{
+ "key": "au-federal-s1210",
+ "title": "National Disability Insurance Scheme Amendment (Worker Screening Database) Bill 2019",
+ "short_title": "National Disability Insurance Scheme Amendment (Worker Screening Database) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "National Disability Insurance Scheme",
+ "status": "passed",
+ "status_as_of": "2019-10-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1210_ems_40be53ca-a6c5-4b93-ab11-eec9bdf9bcbc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1210%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00082",
+   "document_date": "2019-10-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5891",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), which is \"*that the bill be read a second time*\" - which is parliamentary jargon for agreeing with the main idea of the bill. This means the amendment failed. It was introduced by Lalor MP [Joanne Ryan](https://theyvoteforyou.org.au/people/representatives/lalor/joanne_ryan) (Labor). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the House:* > > *(1) notes that, while the National Worker Screening Database will be an important tool to prevent some abuse occurring in the future, it can never investigate the crimes of the past; and* > > *(2) welcomes the fact that there will finally be a Royal Commission into Violence and Abuse of People with Disability\".*",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Labor": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-19/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-381980",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Disability Insurance Scheme Amendment (Worker Screening Database) Bill 2019 but criticised the government for a $4.6 billion underspend in the NDIS and systemic failures, citing cases such as a boy in Queensland relying on a wheelbarrow for transport and a woman in Penrith needing a GoFundMe page for a car."
+  },
+  {
+   "slug": "speech-381983",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-19",
+   "stage_hint": null,
+   "brief": "The speaker argued the National Disability Insurance Scheme Amendment (Worker Screening Database) Bill is essential to close state-based screening loopholes and create a national database, citing 1,459 serious incident reports (including 496 abuse allegations and 62 sexual misconduct allegations) in six months, with $22 billion flowing annually through the NDIS and 90,000 new jobs expected."
+  },
+  {
+   "slug": "speech-381986",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-19",
+   "stage_hint": null,
+   "brief": "The NDIS Amendment (Worker Screening Database) Bill 2019 establishes a national database for NDIS worker screening checks, funded at $13.6 million over four years with states contributing $6.8 million. It aims to provide portable clearances and ongoing monitoring of criminal history to protect participants from harm."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Disability Insurance Scheme Amendment (Worker Screening Database) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00082",
+   "assent_date": "2019-10-02"
+  }
+ ]
+}

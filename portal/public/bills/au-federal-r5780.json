@@ -1,0 +1,164 @@
+{
+ "key": "au-federal-r5780",
+ "title": "Statute Update (A.C.T. Self-Government (Consequential Provisions) Regulations) Bill 2016",
+ "short_title": "Statute Update (A.C.T. Self-Government (Consequential Provisions) Regulations) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "passed",
+ "status_as_of": "2017-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5780_ems_cc29d5c9-11cc-4866-b5b6-747712a25b17%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5780_ems_d75f002f-5a3c-4970-937b-c71318748cbd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5780%22",
+   "document_date": "2016-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00013",
+   "document_date": "2017-02-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-30",
+  "sentences": [
+   "This bill would update 18 federal Acts across nine portfolios to include changes originally made by a set of regulations after the ACT became self-governing.",
+   "It would move modifications from subordinate legislation into the primary Acts, without altering the law's policy intent or effect.",
+   "For example, the bill would add the ACT to the definition of a State in the Disability Services Act 1986."
+  ],
+  "changes": [
+   "The bill would incorporate outstanding modifications from the ASGR into 18 Acts.",
+   "It would allow the repeal of Schedule 1 and Regulation 2 of the ASGR.",
+   "The bill would simplify the legislative framework by moving rules from subordinate to primary legislation."
+  ],
+  "affected": "Users of the law who need to interpret and apply the affected Acts, and the ACT Government which was consulted.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-339322",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The Statute Update (A.C.T. Self-Government (Consequential Provisions) Regulations) Bill 2016 was introduced to ensure Commonwealth laws continue to apply to the Australian Capital Territory after the current regulations sunset in 2018, simplifying the legislative framework by repealing certain provisions and modifying legislation to remove reliance on the regulations."
+  },
+  {
+   "slug": "speech-339976",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill makes minor technical amendments to 18 Commonwealth acts across nine portfolios to ensure ACT self-government provisions remain effective, and supported it as necessary housekeeping. They also criticised the government for failing to address inequality, citing cuts to schools ($30 billion), paid parental leave, and a pension age increase to 70, and for abandoning marriage equality despite Prime Minister Turnbull’s past support."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Statute Update (A.C.T. Self-Government (Consequential Provisions) Regulations) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00013",
+   "assent_date": "2017-02-22"
+  }
+ ]
+}

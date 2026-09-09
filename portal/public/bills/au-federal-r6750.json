@@ -1,0 +1,244 @@
+{
+ "key": "au-federal-r6750",
+ "title": "Treasury Laws Amendment (2021 Measures No. 6) Bill 2021",
+ "short_title": "Treasury Laws Amendment (2021 Measures No. 6) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6750_ems_47ccdcb2-8d9e-4d25-9912-f940d5e850e8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6750%22",
+   "document_date": "2021-08-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00111",
+   "document_date": "2021-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-412011",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill 2021, highlighting that it includes a new mechanism for sharing superannuation information in family law proceedings to address hidden assets and the gender superannuation gap (women’s median $118,000 vs men’s $188,000 at retirement), while criticising the government for a two‑year delay on a 2019 commitment and for failing to implement stronger franchising penalties as recommended by a bipartisan committee."
+  },
+  {
+   "slug": "speech-412023",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Treasury Laws Amendment (2021 Measures No. 6) Bill 2021, particularly schedule 5, which provides a new mechanism for sharing superannuation information in family law proceedings to help women achieve fairer asset splits. They criticised the government for taking three years to implement the 2018 reform and accused the Liberals of hypocrisy for opposing a royal commission into financial services while now claiming expertise."
+  },
+  {
+   "slug": "speech-412024",
+   "speaker": "Gladys Liu",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 6) Bill increases the maximum civil pecuniary penalty for franchising code breaches from 300 to 600 penalty units and allows separated couples in family law proceedings to request superannuation information held by the ATO."
+  },
+  {
+   "slug": "speech-412031",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The bill increases maximum penalties under the franchising code from $133,200 to $10 million and creates a mechanism for sharing superannuation information in family law proceedings to ensure fair asset division, particularly for women and children. The speaker supported these measures, criticising the previous government's delays and inadequate penalties."
+  },
+  {
+   "slug": "speech-412032",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (2021 Measures No. 6) Bill 2021, which includes five schedules: clarifying that refunded large-scale generation shortfall charges are not taxed; increasing maximum civil penalties for industry code breaches (e.g., franchising code penalties up to $10 million, three times the benefit, or 10% of annual turnover); removing redundant actuarial certificate requirements for self-managed and small APRA-regulated superannuation funds; clarifying that industry codes can confer powers on third parties; and improving visibility of superannuation assets in family law proceedings via an ATO information-sharing mechanism from 1 April 2022."
+  },
+  {
+   "slug": "speech-412033",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker supported schedule 1 of the Treasury Laws Amendment (2021 Measures No. 6) Bill, which improves the Renewable Energy Target scheme, and promoted their Australian Local Power Agency Bill to require large-scale renewable projects to offer local communities up to 20% co-investment, citing Germany’s model and the need to keep energy profits in regional Australia."
+  },
+  {
+   "slug": "speech-412034",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The bill clarifies tax treatment of Large-scale Generation Certificate shortfall charge refunds (costing $70 million over forward estimates), increases civil penalties for industry code breaches (including up to $10 million for franchising code violations), and improves superannuation asset visibility in family law proceedings from 1 April 2022 to support women's economic security."
+  },
+  {
+   "slug": "speech-412035",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 6) Bill 2021 was supported as a five-schedule package to improve economic efficiency and fairness, including tax-free refunds for renewable energy shortfall charges, higher penalties for franchisor misconduct, reduced red tape for small and self-managed super funds, clarified industry codes, and better disclosure of superannuation assets in family law. The speaker also cited that women receive about $37,000 in superannuation payouts compared to men’s $110,000, and noted the family-law measure was a 2018 Women’s Economic Security Statement initiative estimated to cost $120 million."
+  },
+  {
+   "slug": "speech-412037",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 6) Bill 2021 increases maximum civil penalties for breaches of franchising codes to $10 million or three times the benefit obtained or 10% of annual turnover, and allows Family Court orders for disclosure of superannuation assets from April 2022. The speaker supported both measures, citing the need to deter inequitable bargaining power in franchising and to address hidden superannuation assets in family law proceedings."
+  },
+  {
+   "slug": "speech-412065",
+   "speaker": "Ross Vasta",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (2021 Measures No.6) Bill 2021, which includes five schedules: clarifying income tax law for energy retailers under the Renewable Energy Target scheme; increasing maximum penalties for franchising code breaches to $10 million or three times the benefit gained; removing redundant actuarial certificate requirements for superannuation funds; strengthening the industry codes framework; and improving visibility of superannuation assets in family law proceedings by allowing information sharing through the ATO."
+  },
+  {
+   "slug": "speech-412066",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-26",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 6) Bill includes an urgent measure to share superannuation information in family law proceedings, which the government committed to in 2018 but delayed for three years; the speaker warned the Senate not to add amendments on JobKeeper transparency that could delay this bill, criticising the Greens for parliamentary stunts."
+  },
+  {
+   "slug": "speech-412067",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-26",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 6) Bill 2021 increases penalties for franchisors breaching the Franchising Code of Conduct to a maximum of $500,000 for individuals and up to $10 million or 10% of annual turnover for corporations, exempts refunded shortfall charges on large-scale generation certificates from taxation at a cost of $70 million, and improves visibility of superannuation assets in family law proceedings to address underreporting that disproportionately affects women."
+  },
+  {
+   "slug": "speech-412068",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-26",
+   "stage_hint": null,
+   "brief": "The speech backed the superannuation transparency bill but focused on attacking the Morrison government for blocking a Labor amendment to require reporting of every JobKeeper recipient with turnover over $10 million, noting $13 billion went to firms with rising earnings and 11,000 people such as Jan Raabe are facing Centrelink debt notices."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2021 Measures No. 6) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00111",
+   "assent_date": "2021-09-13"
+  }
+ ]
+}

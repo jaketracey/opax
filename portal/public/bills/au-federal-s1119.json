@@ -1,0 +1,180 @@
+{
+ "key": "au-federal-s1119",
+ "title": "Security of Critical Infrastructure (Consequential and Transitional Provisions) Bill 2018",
+ "short_title": "Security of Critical Infrastructure (Consequential and Transitional Provisions) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-07",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1119_ems_d4079923-38d4-4b64-88cc-e948a71ac71b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1119_ems_666296e1-7651-4eb4-b261-acb0cd7d36ce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1119_ems_926b4525-c093-4b09-bea5-8036a1418c9e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1119%22",
+   "document_date": "2017-12-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00030",
+   "document_date": "2018-04-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2017-12-07",
+  "sentences": [
+   "This bill would amend the Australian Security Intelligence Organisation Act 1979 to align it with the proposed Security of Critical Infrastructure Bill 2017.",
+   "The amendments would ensure that adverse security assessments made under a ministerial directions power in the Security of Critical Infrastructure Bill are subject to notification requirements under section 38A of the ASIO Act, not section 38.",
+   "The government says the amendments implement recommendations from a Parliamentary Joint Committee report of March 2018 and have nil financial impact."
+  ],
+  "changes": [
+   "Amends the ASIO Act to reflect the operation of the Security of Critical Infrastructure Bill.",
+   "Makes a technical correction so that adverse security assessments related to the directions power are notified under section 38A, removing ministerial power to withhold notice from the assessed party.",
+   "Inserts new words into the heading of section 38A to cover directions under the Security of Critical Infrastructure Act.",
+   "Inserts new subsection 38A(1A) to apply notification requirements to assessments given in connection with clause 32(2) of the Security of Critical Infrastructure Bill."
+  ],
+  "affected": "The amendments affect the Attorney-General, the Australian Security Intelligence Organisation, and persons subject to adverse security assessments under the Security of Critical Infrastructure Bill.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-361687",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The government introduced the Security of Critical Infrastructure Bill 2017 to establish a register of around 106 critical infrastructure assets in electricity, water, gas and ports, requiring owners and operators to provide ownership and beneficial owner information, and granting the Minister for Home Affairs a last-resort directions power to mitigate national security risks from foreign involvement, subject to safeguards including ASIO assessments, consultation and judicial review."
+  },
+  {
+   "slug": "speech-361688",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "Labor supported the Security of Critical Infrastructure Bill 2018, arguing it appropriately balances national security risks with minor regulatory requirements for critical infrastructure in electricity, gas, ports and water. The bill, modelled on telecommunications sector reforms, applies to around 140 assets and the speaker noted nine Parliamentary Joint Committee recommendations were implemented."
+  },
+  {
+   "slug": "speech-361696",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The Security of Critical Infrastructure (Consequential and Transitional Provisions) Bill 2017 was introduced to manage consequential and transitional matters arising from the Security of Critical Infrastructure Act 2017 and to amend the Foreign Acquisitions and Takeovers Act 1975."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Security of Critical Infrastructure (Consequential and Transitional Provisions) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00030",
+   "assent_date": "2018-04-11"
+  }
+ ]
+}

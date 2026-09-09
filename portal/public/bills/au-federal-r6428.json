@@ -1,0 +1,160 @@
+{
+ "key": "au-federal-r6428",
+ "title": "Education Legislation Amendment (2019 Measures No. 1) Bill 2019",
+ "short_title": "Education Legislation Amendment (2019 Measures No. 1) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2019-11-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6428_ems_a0732920-d9e4-43a8-997b-77a4d6d00306%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6428%22",
+   "document_date": "2019-10-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00103",
+   "document_date": "2019-11-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-16",
+  "sentences": [
+   "This bill aims to lower the cost and widen access to higher education for students.",
+   "It raises the maximum HELP loan amount for aviation students, cuts indexation for remote teachers, forgives their study debts after four years of service, and lets the Department of Human Services view education records to manage student payments.",
+   "The higher loan limit is set at $152,700 for 2020."
+  ],
+  "changes": [
+   "Increases the combined HELP loan limit for students in eligible aviation courses from 1 January 2020.",
+   "Allows the Minister to decide which aviation courses qualify for the higher limit.",
+   "Provides for partial or full remission of HELP debt for teachers after four years in very remote schools.",
+   "Reduces indexation on HELP debt for teachers in very remote locations.",
+   "Permits the Department of Human Services to access higher education and VET student loan data to administer student benefits."
+  ],
+  "affected": "Students in eligible aviation courses, teachers in very remote schools, and the Department of Human Services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-382812",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The bill increases the HELP loan limit for eligible aviation students to $152,700 from 1 January 2020, and remits the HELP debt of teachers after four years of service in very remote Australian schools, while waiving indexation during that period."
+  },
+  {
+   "slug": "speech-384133",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government has failed to adequately support schools and should adopt Labor's sector-blind, needs-based funding model, which would provide an additional $14 billion to public schools. He also noted that Queensland will need 229,000 more school places by 2036 and contrasted the Palaszczuk Labor government's record of building 13 new schools since 2015 with the LNP's past school closures and cuts."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education Legislation Amendment (2019 Measures No. 1) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00103",
+   "assent_date": "2019-11-28"
+  }
+ ]
+}

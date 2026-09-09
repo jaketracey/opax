@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-s1491",
+ "title": "Online Safety Amendment (Fix Our Feeds) Bill 2026",
+ "short_title": "Online Safety Amendment (Fix Our Feeds) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-04-01",
+ "originating_house": "senate",
+ "sponsor": "HANSON-YOUNG, Sen Sarah",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10711",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1491%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1491%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1491_ems_717e424d-a3f4-48a3-bccf-9c4d6d099bb8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1491%22",
+   "document_date": "2026-04-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-04-01",
+  "sentences": [
+   "The bill would require social media platforms to let users switch off algorithmic content recommendations at any time and impose a legal duty on large providers to keep their services safe.",
+   "It would amend the Online Safety Act 2021 to give the eSafety Commissioner powers to handle complaints about non-compliance and enforce obligations through civil penalties.",
+   "A large provider is defined as one with Australian users totalling more than 10% of the population, 2.6 million or more users, or 630,000 or more children, and the bill would start the day after royal assent."
+  ],
+  "changes": [
+   "Requires social media services to offer users an opt-out from recommended content at any time.",
+   "Creates a digital duty of care for large providers, including obligations to assess and mitigate risks, publish transparency reports, and notify the Commissioner of key personnel changes.",
+   "Imposes civil penalties for non-compliance of the greater of 100,000 penalty units or 10% of annual turnover."
+  ],
+  "affected": "Providers of social media services and regulated online services, especially large providers with significant Australian user bases, and Australian end-users.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

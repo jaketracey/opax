@@ -1,0 +1,160 @@
+{
+ "key": "au-federal-r6043",
+ "title": "National Housing Finance and Investment Corporation (Consequential Amendments and Transitional Provisions) Bill 2018",
+ "short_title": "National Housing Finance and Investment Corporation (Consequential Amendments and Transitional Provisions) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6042_ems_fd58a2d8-acce-47d8-8cb2-ec7fd852aac2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6043%22",
+   "document_date": "2018-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00066",
+   "document_date": "2018-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359686",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The bill amends the Administrative Decisions (Judicial Review) Act and the Freedom of Information Act to exempt the National Housing Finance and Investment Corporation from providing reasons for decisions and disclosing commercial documents, consistent with exemptions for bodies like the Export Finance and Insurance Corporation, NBN Co, and Indigenous Business Australia. It also includes transitional provisions to allow the corporation to begin its core lending, investment and grant functions from 1 July 2018."
+  },
+  {
+   "slug": "speech-360725",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that housing affordability has declined due to state government disinvestment in public housing, closure of public banks, upfront infrastructure charges, negative gearing and capital gains tax concessions costing $12 billion annually, and foreign buyers. They criticised the $1 billion fund as a paltry slush fund with unclear conditions, potential for pork-barrelling, and no guarantee of cheaper housing, and opposed using superannuation for housing."
+  },
+  {
+   "slug": "speech-360728",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The National Housing Finance and Investment Corporation Bill 2018 establishes an independent corporate entity to administer a $1 billion National Housing Infrastructure Facility and an affordable housing bond aggregator, aiming to boost housing supply, improve affordability for first home buyers and low-to-middle-income Australians, and enhance social housing outcomes. The speaker noted that housing supply has not kept up with demand, particularly in major cities, and cited figures including $7.6 billion in Commonwealth housing expenditure in 2016-17, 40,000 on community housing waiting lists, and 148,000 on public housing waiting lists."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Housing Finance and Investment Corporation (Consequential Amendments and Transitional Provisions) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00066",
+   "assent_date": "2018-06-29"
+  }
+ ]
+}

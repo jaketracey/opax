@@ -1,0 +1,88 @@
+{
+ "key": "au-federal-s1317",
+ "title": "Federal Environment Watchdog Bill 2021",
+ "short_title": "Federal Environment Watchdog Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2021-08-31",
+ "originating_house": "senate",
+ "sponsor": "HANSON-YOUNG, Sen Sarah",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10711",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1317%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1317%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1317%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1317%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1317%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1317_ems_80c2711f-c8ae-46c0-9a7a-007b51cf880a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1317%22",
+   "document_date": "2021-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-31",
+  "sentences": [
+   "The bill would create an independent environmental regulator called the Commonwealth Environment Protection Authority (EPA).",
+   "The EPA would take over the federal government's day-to-day environmental approval, monitoring and enforcement tasks under the EPBC Act and other environment laws.",
+   "The new agency would start six months after Royal Assent, but only if Parliament provides the necessary funding."
+  ],
+  "changes": [
+   "Establishes the Commonwealth Environment Protection Authority (EPA) as an independent regulator.",
+   "Transfers the Commonwealth's routine environmental regulatory functions, including approvals, monitoring and enforcement, to the EPA.",
+   "Creates an Office of Monitoring, Compliance, Enforcement and Assurance within the EPA.",
+   "Requires that at least the CEO or one Deputy CEO be an Aboriginal or Torres Strait Islander person.",
+   "Bans people from serving as CEO if they held political office, were a registered lobbyist or campaigner, or held a senior industry or environmental organisation role in the previous five years.",
+   "Links commencement to the passage of an appropriation."
+  ],
+  "affected": "The federal government, businesses and people seeking environmental approvals, and the broader community would be affected by the new regulator.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

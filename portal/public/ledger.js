@@ -1,3 +1,4 @@
+import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
 /**
  * OPAX Ledger — an analyst-grade table over the donor→party money flows.
  *
@@ -87,7 +88,7 @@ export function groupColour (group) {
 /** Join edges to their donor/party nodes → flat flow rows. */
 export function buildFlows (data) {
   const byId = new Map(data.nodes.map((n) => [n.id, n]))
-  return data.edges.map((e) => {
+  return filterMoneyEdges(data, { type: "receipts" }).map((e) => {
     const donor = byId.get(e.source) || {}
     const party = byId.get(e.target) || {}
     return {
@@ -203,7 +204,7 @@ function csvCell (v) {
 export function buildCSV (view, rows, commentLines) {
   const lines = commentLines.map((l) => '# ' + l)
   if (view === 'flows') {
-    lines.push(['Donor', 'Industry', 'Party', 'Total (AUD)', 'Donations',
+    lines.push(['Donor', 'Industry', 'Party', 'Total (AUD)', 'Records',
       'First year', 'Last year'].join(','))
     for (const r of rows) {
       lines.push([
@@ -213,7 +214,7 @@ export function buildCSV (view, rows, commentLines) {
     }
   } else {
     lines.push(['Donor', 'Industry', 'Total (AUD)', 'Parties funded',
-      'Donations', 'First year', 'Last year', 'Top recipient',
+      'Records', 'First year', 'Last year', 'Top recipient',
       'Top recipient share (%)'].join(','))
     for (const r of rows) {
       lines.push([
@@ -236,7 +237,7 @@ const COLUMNS = {
     { key: 'industry', label: 'Industry', numeric: false },
     { key: 'party', label: 'Party', numeric: false },
     { key: 'total', label: 'Total', numeric: true },
-    { key: 'count', label: 'Donations', numeric: true },
+    { key: 'count', label: 'Records', numeric: true },
     { key: 'years', label: 'Years', numeric: true },
   ],
   donors: [
@@ -447,7 +448,7 @@ export function mountLedger (container, opts = {}) {
 
   // ---- static chrome (no data passes through this template) ---------------
   const root = el('section', 'lg-root')
-  root.setAttribute('aria-label', 'The Ledger: disclosed donations, donor by donor')
+  root.setAttribute('aria-label', 'Political receipts: disclosed records, payer by payer')
   root.innerHTML = `
     <div class="lg-toolbar" role="group" aria-label="Ledger filters">
       <div class="lg-field" role="group" aria-label="Jurisdiction">
@@ -504,7 +505,7 @@ export function mountLedger (container, opts = {}) {
 
     <p class="lg-summary" aria-live="polite" aria-atomic="true"></p>
 
-    <div class="lg-tablewrap" role="region" tabindex="0" aria-label="Donations table (scrollable)">
+    <div class="lg-tablewrap" role="region" tabindex="0" aria-label="Political receipts table (scrollable)">
       <div class="lg-status">Loading the ledger…</div>
       <table class="lg-table" hidden>
         <caption class="lg-visually-hidden"></caption>
@@ -664,8 +665,8 @@ export function mountLedger (container, opts = {}) {
     const file = JURISDICTIONS[state.jur].file
     const comments = [
       state.view === 'flows'
-        ? 'OPAX — The Ledger: disclosed donor→party flows'
-        : 'OPAX — The Ledger: donors aggregated over the filtered flows',
+        ? 'OPAX — Political receipts: disclosed donor→party flows'
+        : 'OPAX — Political receipts: donors aggregated over the filtered flows',
       meta.jurisdiction
         ? `Source: ${meta.commission} disclosures (${meta.sourceShort}), ${meta.coverage}, top disclosed donors, via opax.com.au${file}`
         : `Source: AEC donation disclosure returns ${YEAR_MIN}–${YEAR_MAX} (top 250 disclosed donors), via opax.com.au${file}`,

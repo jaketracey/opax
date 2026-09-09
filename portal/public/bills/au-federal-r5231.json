@@ -1,0 +1,356 @@
+{
+ "key": "au-federal-r5231",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Bilateral Agreement Implementation) Bill 2014",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Bilateral Agreement Implementation) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5231%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5231%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5231%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5231%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5231%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5231_ems_4df96247-1ab3-4f6f-bc7a-7da993dea631%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5231_ems_78a64579-d1ce-4126-8ebf-24fa0776364c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5231_ems_a9941744-ac92-486f-8e81-78f4da368856%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5231_ems_5eac51ae-ccf7-4e62-a484-f2c4b4165905%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5231%22",
+   "document_date": "2014-05-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2014-05-14",
+  "sentences": [
+   "This bill would change the main environmental law to put a single approval process for nationally protected matters into practice.",
+   "It would make technical adjustments to existing rules for agreements between the Commonwealth and states or territories so those agreements work smoothly.",
+   "States and territories could be accredited to approve big coal and coal seam gas projects that could seriously affect water resources, but only if they promise to get and consider advice from the Independent Expert Scientific Committee."
+  ],
+  "changes": [
+   "States and territories could be accredited to approve big coal and coal seam gas projects that could seriously affect water resources.",
+   "Those states or territories would have to promise to get and consider advice from the Independent Expert Scientific Committee.",
+   "The Independent Expert Scientific Committee would gain a new role: advising the Commonwealth on how a bilateral agreement is working for such projects.",
+   "People proposing projects would not need to refer matters to the Commonwealth if an approval bilateral agreement covers the action.",
+   "There would be a clear process for the Commonwealth to finish an approval if a bilateral agreement is suspended, cancelled, or stops applying to a particular action.",
+   "Minor changes would let bilateral agreements refer to the latest versions of instruments and policy documents."
+  ],
+  "affected": "State and territory governments, businesses proposing projects that affect nationally protected matters, and the Independent Expert Scientific Committee would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:32:50Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3219",
+   "date": "2014-06-16",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Bilateral Agreement Implementation) Bill 2014 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 62,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-16/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-291088",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291090",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291091",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291093",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291238",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291239",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291240",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291241",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291242",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291243",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291244",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291245",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291250",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291251",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291252",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291253",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291257",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291261",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291380",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

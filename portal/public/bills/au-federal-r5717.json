@@ -1,0 +1,159 @@
+{
+ "key": "au-federal-r5717",
+ "title": "Social Services Legislation Amendment (Transition Mobility Allowance to the National Disability Insurance Scheme) Bill 2016",
+ "short_title": "Social Services Legislation Amendment (Transition Mobility Allowance to the National Disability Insurance Scheme) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5717%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5717%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5717%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5717%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5717%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5717%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5717%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5717%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5717_ems_eebaa8f1-b1ab-4304-9dab-2511fb3a2584%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5717%22",
+   "document_date": "2016-10-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-13",
+  "sentences": [
+   "This bill would change how mobility allowance works to help people move to the National Disability Insurance Scheme.",
+   "From 1 January 2017, new rules would apply for who can get mobility allowance and for how long it continues after someone no longer qualifies.",
+   "Mobility allowance would stop being paid on 1 July 2020, making the NDIS the main support for people with disability who need help to work or take part in economic activities."
+  ],
+  "changes": [
+   "Changes the qualification criteria for new mobility allowance claims from 1 January 2017.",
+   "Changes how long mobility allowance continues when someone stops being qualified in certain situations.",
+   "Stops mobility allowance for people who move to the NDIS and then stop being NDIS participants.",
+   "Ends mobility allowance on 1 July 2020."
+  ],
+  "affected": "People with disability who receive or claim mobility allowance and are moving to the National Disability Insurance Scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:17Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-335106",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The government moved to transition the Mobility Allowance program into the NDIS, aligning eligibility rules from 1 January 2017 and closing the program by 1 July 2020. It provided $46.5 million in the 2016-17 budget to ensure continuity of support for current recipients ineligible for the NDIS, including around 18,000 people."
+  },
+  {
+   "slug": "speech-337821",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The bill transitions the mobility allowance into the NDIS, phasing it out by 1 July 2020 and tightening eligibility from 1 January 2017; Labor acknowledged the need for continuity of support but raised concerns about impacts on those not eligible for the NDIS, and will not oppose the bill in the House pending a Senate inquiry. The speaker also criticised the government's NDIS rollout, including IT problems and the proposed removal of board chair Bruce Bonyhady."
+  },
+  {
+   "slug": "speech-337822",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The Assistant Minister for Social Services and Disability Services argued the bill aligns mobility allowance with NDIS disability criteria, reducing the grace period from 12 to 4 weeks and limiting new claimants to under 65 years old, with an estimated 42,000 of 60,000 current recipients eligible for NDIS packages and $46.5 million allocated for short-term support for those ineligible."
+  },
+  {
+   "slug": "speech-337824",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "Labor will refer the bill to an inquiry and not oppose it in the meantime, citing concerns that the transition could leave current mobility allowance recipients who are ineligible for the NDIS worse off, including a reduced continuation period, a cut-off age of 65, and a case where a recipient lost her allowance before reassessment. The bill phases out the allowance by July 2020, affecting 14,000 current recipients who will not qualify for the NDIS."
+  },
+  {
+   "slug": "speech-337825",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The member for Bendigo argued that the government is failing to implement the NDIS properly, citing inadequate resourcing of the NDIA, IT system problems, and the impact of transitioning the mobility allowance on people in regional areas with poor public transport. She noted that Radius Disability Services’ collapse left 120 supported employees and 100 day clients without services, and called on the government to listen to concerns and invest extra funding."
+  },
+  {
+   "slug": "speech-337826",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The bill transitions the mobility allowance into the National Disability Insurance Scheme and provides $46.5 million for recipients who are ineligible for the NDIS, while the speaker noted that the previous government allocated no funding for that cohort in its original proposal."
+  }
+ ],
+ "acts": []
+}

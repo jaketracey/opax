@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r7167",
+ "title": "Reducing Supermarket Dominance Bill 2024",
+ "short_title": "Reducing Supermarket Dominance Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-25",
+ "originating_house": "representatives",
+ "sponsor": "KATTER, Bob, Jnr, MP",
+ "sponsor_party": "Katter&#39;s Australian Party",
+ "sponsor_person_id": "10352",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-11-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7167%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7167%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7167%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7167_ems_a81464cf-ae64-44ca-9675-9ef4765fabd6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7167%22",
+   "document_date": "2024-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-03-25",
+  "sentences": [
+   "The bill would force Australia's biggest supermarket chains to sell off stores until each has no more than 20% of the national grocery market, over five years.",
+   "A new Commissioner for Food Retailing would enforce the market share limits and investigate unfair or predatory practices against suppliers and competitors.",
+   "The bill also caps the supermarket giants' share of the household retail market at 20% over the same period, with a clause allowing smaller grocery operators a larger share of that market."
+  ],
+  "changes": [
+   "Reduces the market share of supermarket businesses to 20% through enforced progressive divestiture over five years.",
+   "Establishes a Commissioner for Food Retailing to administer market share limits and promote competition and fairness.",
+   "Gives the commissioner powers to investigate suspected breaches, including those from confidential complaints.",
+   "Extends the 20% market share cap to household retail businesses over five years.",
+   "Allows businesses with a smaller supermarket share to have a larger share of the household retail market."
+  ],
+  "affected": "Australia's supermarket giants, their suppliers, and independent retailers and consumers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:10:34Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

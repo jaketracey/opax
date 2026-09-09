@@ -1,0 +1,173 @@
+{
+ "key": "au-federal-r6569",
+ "title": "Civil Aviation (Unmanned Aircraft Levy) Bill 2020",
+ "short_title": "Civil Aviation (Unmanned Aircraft Levy) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development and Communications",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6569%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6569%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6569%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6569%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6569%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6569%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6569%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6569%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6569%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6569%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6569_ems_575c6360-f5ce-4059-bf60-813e4ff866b8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6569%22",
+   "document_date": "2020-08-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00142",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-27",
+  "sentences": [
+   "This bill is part of a package that would introduce a levy on certain drone and model aircraft operators to recover the cost of regulating them.",
+   "The bill would impose the levy for remotely piloted aircraft, with the amount set in regulations and capped at $300.",
+   "Collection would start on 30 September 2020, but the levy would not apply to model aircraft until 2022."
+  ],
+  "changes": [
+   "The bill would establish the legal mechanism to impose a levy for cost recovery of regulatory services for remotely piloted aircraft operators.",
+   "It would define key terms such as 'RPA' and 'model aircraft' as in the Civil Aviation Safety Regulations.",
+   "It would cap the levy at $300 and allow it to be set to nil."
+  ],
+  "affected": "Commercial and professional users of remotely piloted aircraft and, from 2022, relevant model aircraft operators.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-393992",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "Two bills were introduced to establish a cost-recovery levy on commercial remotely piloted aircraft (drone) operators to fund the Civil Aviation Safety Authority’s regulatory functions, with no levy set for the current financial year."
+  },
+  {
+   "slug": "speech-393993",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The Civil Aviation Amendment (Unmanned Aircraft Levy Collection and Payment) Bill 2020 establishes a mechanism for the Commonwealth to pay the Civil Aviation Safety Authority (CASA) the levy amounts collected from remotely piloted aircraft operators, supporting long-term safe and lawful operations."
+  },
+  {
+   "slug": "speech-400479",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The opposition supports the drone levy bills but will move an amendment, citing concerns that registration fees of up to $300 are far higher than comparable fees of $16 in the UK, $7 in the US and $5 in Canada. The speaker also criticised the government for failing to support the broader aviation sector during COVID-19, noting 3,000 job losses at Virgin, 5,000 at Dnata and 8,500 at Qantas, and called for a sector-wide aviation recovery plan."
+  },
+  {
+   "slug": "speech-400481",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Civil Aviation (Unmanned Aircraft Levy) Bill 2020 and related bill to fund CASA's regulation of drones, with fees ranging from $0 to $300, to improve safety through training and registration, but also criticised CASA's bureaucratic over-regulation of recreational and general aviation, calling for reform to reduce costs and barriers."
+  },
+  {
+   "slug": "speech-400483",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The bills enable CASA to continue regulating remotely piloted aircraft (drones) through a cost-recovery levy on commercial operators, with registration starting 30 September 2020 but no fees until mid-2021; recreational users are exempt."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Civil Aviation (Unmanned Aircraft Levy) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00142",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

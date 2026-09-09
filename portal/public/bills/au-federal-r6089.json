@@ -1,0 +1,185 @@
+{
+ "key": "au-federal-r6089",
+ "title": "Corporations Amendment (Asia Region Funds Passport) Bill 2018",
+ "short_title": "Corporations Amendment (Asia Region Funds Passport) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6089_ems_a0a1838d-1456-45df-957e-1fc0b231d4a3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6089_ems_fd6ac978-462e-45f1-9f13-263a67fd0b49%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6089_ems_5db25180-4cbd-4da3-9eff-f3a64f275797%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6089%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00061",
+   "document_date": "2018-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill would let eligible investment funds market themselves across several Asian economies under one set of rules.",
+   "It would add a new chapter to the Corporations Act and change the ASIC Act to create a framework based on an international agreement called the Asia Region Funds Passport.",
+   "New offences would include strict liability crimes and extend Australian criminal law to certain acts committed overseas."
+  ],
+  "changes": [
+   "Creates a process for registering Australian funds as passport funds and for foreign funds to notify ASIC of their intent to offer interests in Australia.",
+   "Gives ASIC extra powers to enforce the rules, accept enforceable undertakings, and share confidential information with other passport regulators.",
+   "Allows ASIC and regulations to exempt entities from the new rules or modify how they apply."
+  ],
+  "affected": "Eligible collective investment schemes, their operators, and Australian investors in foreign passport funds.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-365576",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "Labor supported the Asia Region Funds Passport bills, enabling eligible funds to be offered across Australia, Japan, Korea, New Zealand, Thailand and future signatories, and argued for deeper Asian engagement under its FutureAsia policy framework, criticising the Turnbull government for lacking an economic plan for Asia."
+  },
+  {
+   "slug": "speech-365577",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment (Asia Region Funds Passport) Bill 2018, which allows eligible managed funds to be marketed across participating economies (Japan, Korea, New Zealand, Thailand) with reduced regulatory requirements, arguing it will improve economic ties with Asia, reduce red tape, and benefit Australian fund managers and investors."
+  },
+  {
+   "slug": "speech-365582",
+   "speaker": "Craig Laundy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Asia Region Funds Passport) Bill 2018 implements a regulatory framework to remove duplicated barriers for qualifying managed funds, with Australia holding A$3 trillion in funds under management but only 4% sourced from overseas, compared to 69% in Hong Kong and 80% in Singapore. Participating economies are Japan, Korea, New Zealand, and Thailand."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Corporations Amendment (Asia Region Funds Passport) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00061",
+   "assent_date": "2018-06-29"
+  }
+ ]
+}

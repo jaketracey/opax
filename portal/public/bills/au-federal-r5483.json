@@ -1,0 +1,208 @@
+{
+ "key": "au-federal-r5483",
+ "title": "Export Charges (Imposition—General) Bill 2015",
+ "short_title": "Export Charges (Imposition—General) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2015-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5483_ems_bafc78b3-2fe4-41ad-bc77-de8730401871%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/3910072%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5483%22",
+   "document_date": "2015-06-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00095",
+   "document_date": "2015-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-311896",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-03",
+   "stage_hint": null,
+   "brief": "The Export Charges (Imposition-Customs) Bill 2015 was moved for a second reading as part of a four-bill export charging package, imposing charges only when considered a duty of customs, with amounts and exemptions to be set in delegated legislation and no direct financial impacts from the bill itself."
+  },
+  {
+   "slug": "speech-311897",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-03",
+   "stage_hint": null,
+   "brief": "The Export Charges (Imposition-Excise) Bill 2015 imposes charges only when considered a duty of excise, with amounts and exemptions to be set in delegated legislation, not by the bill itself."
+  },
+  {
+   "slug": "speech-311898",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-03",
+   "stage_hint": null,
+   "brief": "The Export Charges (Collection) Bill 2015 was moved for second reading, providing authority to collect charges under related imposition bills, with regulations for payment timelines, agent liability, late fees, and mechanisms for nonpayment including service refusal or export approval revocation, to sustainably fund export services for Australia's agricultural sector."
+  },
+  {
+   "slug": "speech-313234",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "The opposition supported four export charges bills that recover certification and inspection costs from exporting companies rather than taxpayers. The speaker criticised the government for having no agriculture policy after two years, opposed discriminatory foreign investment rules that set lower thresholds for Asian investors compared to American and Canadian investors, and argued the government's approach to foreign investment in agricultural land was populist and would deter needed capital."
+  },
+  {
+   "slug": "speech-313235",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Export Charges (Imposition-General) Bill 2015, arguing it equalises AQIS charges to assist small exporters, but called for further cost reductions through contestable certification and locally authorised inspectors to maintain Australia's agricultural reputation and efficiency."
+  },
+  {
+   "slug": "speech-313236",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Export Charges bills, arguing for fair cost recovery in primary production fees and warning that excessive charges could become a barrier to exports, while also calling for stronger biosecurity oversight on food imports and noting the $40 billion export industry and potential for a South Australian food hub."
+  },
+  {
+   "slug": "speech-313237",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "The member for Murray supported the Export Charges (Imposition-General) Bill 2015 while expressing concern that past price hikes for export inspection charges have been extraordinary and are unfairly burdening primary producers. They argued for more efficient, contestable inspection services, comparing fees with competitors like New Zealand, and for costs to be shared across broader beneficiaries including importers and society, not just producers."
+  },
+  {
+   "slug": "speech-313238",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australian farmers are disadvantaged by high electricity costs (second-highest in the world, with Queensland household bills rising from $670 to $2,400 in 12 years) and water costs (near $100 per megalitre), a lack of a biofuels mandate unlike most other countries, and an overvalued dollar (which should be 50c). He also criticised the OECD's tariff subsidy effect (Australia 4.1% vs OECD average 39%) and praised the minister for attending the debate."
+  },
+  {
+   "slug": "speech-313253",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Export Charges (Imposition-General) Bill 2015 but criticised the current food import inspection regime, noting that 37% of manufactured fruits and vegetables and over 80% of fish are imported, with risks such as hepatitis A from Chinese frozen berries, and that inspection rates drop to 5% after a series of passes, creating a double standard compared to export inspections. The speaker also highlighted the public's support for Australian manufacturer SPC Ardmona, which survived a crisis due to consumer demand for local products."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Charges (Imposition—General) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00095",
+   "assent_date": "2015-06-29"
+  }
+ ]
+}

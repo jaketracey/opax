@@ -1,0 +1,194 @@
+{
+ "key": "au-federal-r5879",
+ "title": "Industrial Chemicals Charges (Excise) Bill 2017",
+ "short_title": "Industrial Chemicals Charges (Excise) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2019-04-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5879_ems_8fa6af14-0d1e-4b96-96f1-c9be11471b88%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5879_ems_dae52e69-a6dc-467d-9b03-03575e98aae7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5879_ems_bdf917ae-e780-4bb5-9133-7cc0b72587db%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5879%22",
+   "document_date": "2017-06-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00019",
+   "document_date": "2019-04-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "This bill is part of a package that updates how industrial chemicals are regulated in Australia.",
+   "It would impose an excise charge on companies that register to bring industrial chemicals into the country.",
+   "The charge would be calculated each year according to methods set out in regulations, and those who fail to register would face penalties."
+  ],
+  "changes": [
+   "It requires chemical importers to register before they can bring in any industrial chemical.",
+   "It sets up an annual registration fee for those importers.",
+   "It lets regulations specify how to work out the amount of that fee."
+  ],
+  "affected": "Businesses that introduce industrial chemicals into Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:20Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-348095",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals Charges (General) Bill 2017 was introduced as part of a package to establish the Australian Industrial Chemicals Introduction Scheme (AICIS), replacing the 1997 registration charge act. It imposes an annual charge on registered chemical introducers, with amounts set in regulations and capped at the likely cost of regulatory activities, alongside two companion charges bills and a consultation process."
+  },
+  {
+   "slug": "speech-348097",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals Charges (Excise) Bill 2017 was introduced to impose charges only when they are a duty of excise, mirroring the Industrial Chemicals Charges (General) Bill 2017; the bill does not set charge amounts, which will be determined in regulations after further consultation."
+  },
+  {
+   "slug": "speech-355036",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The bills create a new Australian Industrial Chemicals Introduction Scheme, adopting a risk‑based regulatory approach that includes a ban on animal testing for cosmetics consistent with the European Union, while the speaker argued opposition amendments would create loopholes and place Australian industry at a disadvantage by blocking necessary animal test data for multi‑use chemicals."
+  },
+  {
+   "slug": "speech-355066",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "Presented addenda to the explanatory memoranda for the Industrial Chemicals Bill 2017 and four related bills."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Industrial Chemicals Charges (Excise) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00019",
+   "assent_date": "2019-04-03"
+  }
+ ]
+}

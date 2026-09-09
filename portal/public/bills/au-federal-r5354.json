@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-r5354",
+ "title": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 5) Bill 2014",
+ "short_title": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 5) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5354%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5354%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5354%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5354_ems_fe2d4c34-e908-4e87-b014-cf8362148e5e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5354%22",
+   "document_date": "2014-10-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-02",
+  "sentences": [
+   "The bill would reintroduce several 2014 Budget measures that change social security and veterans' payments.",
+   "It would freeze the income test free areas for most pensions for three years from July 2017, index pensions only to the Consumer Price Index from September 2017, and reset deeming thresholds from the same date.",
+   "The qualifying age for age pension would increase to 70, rising by six months every two years starting 1 July 2025."
+  ],
+  "changes": [
+   "Freezes income test free areas for most pensions for three years from July 2017.",
+   "Shifts pension indexation to the Consumer Price Index only from September 2017.",
+   "Resets deeming thresholds to specified amounts from September 2017.",
+   "Increases the qualifying age for age pension to 70 from 1 July 2025."
+  ],
+  "affected": "Recipients of Australian Government payments, including pensioners and income support recipients, as well as veterans.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:32:50Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

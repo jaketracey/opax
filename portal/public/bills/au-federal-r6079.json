@@ -1,0 +1,185 @@
+{
+ "key": "au-federal-r6079",
+ "title": "Customs Amendment (Illicit Tobacco Offences) Bill 2018",
+ "short_title": "Customs Amendment (Illicit Tobacco Offences) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Law Enforcement and Cybersecurity",
+ "status": "passed",
+ "status_as_of": "2018-08-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6079_ems_aa922346-91ad-470a-988f-33811b6a230e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6079%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00089",
+   "document_date": "2018-08-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "This bill would create new criminal offences for importing illicit tobacco based on recklessness, rather than requiring proof of intent.",
+   "It would remove the need to prove whether illicit tobacco was imported or domestically produced, and align penalties between domestic and border offences.",
+   "Customs officers would gain powers to investigate new illicit tobacco offences in the Taxation Administration Act 1953."
+  ],
+  "changes": [
+   "Creates two new offences for importing illicit tobacco based on recklessness.",
+   "Removes the requirement to prove the origin of illicit tobacco when excise duty has not been paid.",
+   "Extends Customs officers' investigation powers to new offences in the Taxation Administration Act 1953."
+  ],
+  "affected": "People and businesses involved in the importation or possession of illicit tobacco, and Customs officers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-361540",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The government introduced the Customs Amendment (Illicit Tobacco Offences) Bill to create new offences and strengthen enforcement, including allowing the Australian Border Force to prosecute illicit tobacco cases without proving the tobacco's origin. Previously announced 12.5% annual tobacco duty increases until 2020 and funding for the ABF Tobacco Strike Team were deemed insufficient to curb the growing black market."
+  },
+  {
+   "slug": "speech-366844",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-14",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment noting the Turnbull Government's projected 2019-20 surplus relies on a one-off tobacco tax collection timing trick worth over $3 billion. The speaker supported the bill creating new reckless importation offences to target illicit tobacco, citing 2.3 million kilograms of illicit tobacco consumed in 2017 with an estimated excise value of $1.91 billion, and criticised the National Party for accepting $15,700 in tobacco industry donations."
+  },
+  {
+   "slug": "speech-366846",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-14",
+   "stage_hint": null,
+   "brief": "The Customs Amendment (Illicit Tobacco Offences) Bill 2018 lowers the legal standard for prosecuting illicit tobacco importation from knowledge or intent to recklessness, and a related bill removes the need to establish whether tobacco is domestic or imported. These measures aim to reduce smoking costs of 15,000 lives and $30 billion annually, and address a growing black market costing up to $1.5 billion in lost duty, with 14% of tobacco now illegal."
+  },
+  {
+   "slug": "speech-366847",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Customs Amendment (Illicit Tobacco Offences) Bill 2018 but argued that past policies—high tobacco excise and plain packaging—have fuelled the illicit tobacco trade, and called for legalising vaping as a harm reduction alternative to cut smoking rates and reduce criminal involvement."
+  },
+  {
+   "slug": "speech-366852",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Customs Amendment (Illicit Tobacco Offences) Bill 2018 will enhance border and law enforcement agencies' ability to investigate and prosecute illicit tobacco trade, backed by over $70 million in funding for the Illicit Tobacco Taskforce. They noted that last financial year the ABF detected over 240 million cigarettes and 217 tonnes of tobacco at the border, worth over $356 million in evaded duty, and since July 2016 the ATO has seized 231 tonnes of illicit tobacco worth an estimated $194 million."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Illicit Tobacco Offences) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00089",
+   "assent_date": "2018-08-31"
+  }
+ ]
+}

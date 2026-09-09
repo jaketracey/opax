@@ -1,0 +1,220 @@
+{
+ "key": "au-federal-r5629",
+ "title": "Primary Industries Levies and Charges Collection Amendment Bill 2016",
+ "short_title": "Primary Industries Levies and Charges Collection Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5629%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5629%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5629%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5629%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5629%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5629%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5629%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5629%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5629%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5629_ems_d87794e6-748a-4cfa-a387-0f91f1adefc2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5629%22",
+   "document_date": "2016-03-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-03",
+  "sentences": [
+   "This bill changes the law that collects levies and charges from primary industries.",
+   "It would let the Department of Agriculture and Water Resources share levy payer details with the rural research and development corporations (RDCs) and the Australian Bureau of Statistics (ABS).",
+   "The bill also sets rules for how this information can be used, including a ban on using it for agri-political purposes."
+  ],
+  "changes": [
+   "The bill amends sections 27 and 29 of the Primary Industries Levies and Charges Collection Act 1991 and adds new sections 27A and 27B.",
+   "It allows the department to give levy payer information to the thirteen other RDCs, not just the wool and dairy ones.",
+   "It allows the department to give levy payer information to the ABS.",
+   "It specifies the purposes for which levy payer information can be used, such as developing registers and making public de-identified statistics.",
+   "It prohibits secondary disclosure of register information except with the Secretary's written permission."
+  ],
+  "affected": "Levy payers in primary industries, the rural research and development corporations, and the Australian Bureau of Statistics.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:17:14Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-330749",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The opposition will support the Primary Industries Levies and Charges Collection Amendment Bill 2016, which allows the Department of Agriculture to share levy-payer information with rural research and development corporations (RDCs) for creating levy-payer registers, but raised concerns about transparency, privacy protections, and potential misuse of data by peak industry bodies. The speaker also criticised the Grains Research and Development Corporation for spending levy money on Alan Jones roadshows and questioned the minister's trustworthiness, citing the doctoring of Hansard and the sacking of a departmental secretary."
+  },
+  {
+   "slug": "speech-330755",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The Primary Industries Levies and Charges Collection Amendment Bill 2016 was argued to allow rural research and development corporations (RDCs) to access levy payers' contact details and payment amounts, enabling direct consultation and giving farmers a central role in how levies are spent. The speaker cited specific regional data, including Wide Bay's $1 billion agricultural output in 2012-13, and noted examples of R&D returns such as $13 per dollar invested for cotton levy payers and $30 for the wider community."
+  },
+  {
+   "slug": "speech-330756",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Primary Industries Levies and Charges Collection Amendment Bill 2016 should be passed to allow levy payer information to be shared with rural RDCs for developing registers. They noted that for every dollar of R&D levy, $13 returns to farmers and $30 to the wider community, and welcomed the decentralisation of RIRDC to Wagga Wagga, which gained a dozen jobs."
+  },
+  {
+   "slug": "speech-330762",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The Primary Industries Levies and Charges Collection Amendment Bill 2016 would allow the Department of Agriculture to share levy payer information—including names, addresses, contact details, ABNs and levy amounts—with rural research and development corporations to create registers, improving collaboration and policy. The speaker noted that for every dollar invested in rural R&D, farmers generate $12 in returns, and cited endorsements from the Cattle Council of Australia (CEO Jed Matz) and the Sheepmeat Council of Australia (President Jeff Murray)."
+  },
+  {
+   "slug": "speech-330764",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Primary Industries Levies and Charges Collection Amendment Bill 2016 will allow rural research and development corporations to establish levy payer registers, improving consultation with primary producers on research priorities, and highlighted that free trade agreements with China, Japan, South Korea and the Trans-Pacific Partnership have boosted agricultural exports and farmgate prices."
+  },
+  {
+   "slug": "speech-330765",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The Primary Industries Levies and Charges Collection Amendment Bill 2016 amends the 1991 Act to allow the government to provide levy payer information to 13 research and development corporations (RDCs) for establishing levy payer registers, but only upon an RDC’s request with industry consultation and ministerial approval."
+  },
+  {
+   "slug": "speech-330836",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Primary Industries Levies and Charges Collection Amendment Bill 2016, arguing it would allow rural research and development corporations to access levy payer information, improving consultation and aligning research with industry priorities to restore productivity growth (which stalled in the 2000s after decades of 2–3% annual increases) and maintain Australia’s global reputation for clean, green agricultural exports."
+  },
+  {
+   "slug": "speech-330837",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-330838",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia's competition laws are ineffective and need reform, citing the Harper review, and criticised Woolworths for extending supplier payment terms to 60 days. He also attacked Labor for opposing competition reforms and supporting centralised control, referencing the Road Safety Remuneration Tribunal."
+  },
+  {
+   "slug": "speech-330839",
+   "speaker": "Ian Macfarlane",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": "The speaker announced his retirement after 17½ years as the federal member for Groom, noting that farmers generate a $12 return for every dollar invested in R&D over 10 years, and argued that declining bipartisanship and personal attacks in politics are destroying public confidence in parliament."
+  },
+  {
+   "slug": "speech-330846",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": "The Primary Industries Levies and Charges Collection Amendment Bill 2016 allows research and development corporations to establish levy payer registers, enabling better consultation with primary producers and giving them more say in how levy funds are spent. The bill also permits levy payer information to be shared with the Australian Bureau of Statistics for purposes including research and development, biosecurity, and residue surveys."
+  },
+  {
+   "slug": "speech-330852",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-17",
+   "stage_hint": null,
+   "brief": "The speaker praised the member for Boothby for voluntarily retiring, comparing him to the ancient Roman Cincinnatus, and argued that the Primary Industries Levies and Charges Collection Amendment Bill 2016 expands the distribution of levy payer information to 13 additional rural research and development corporations for levy payer registers, with safeguards on use and disclosure."
+  }
+ ],
+ "acts": []
+}

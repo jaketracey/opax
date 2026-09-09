@@ -1,0 +1,218 @@
+{
+ "key": "au-federal-r5854",
+ "title": "Communications Legislation Amendment (Deregulation and Other Measures) Bill 2018",
+ "short_title": "Communications Legislation Amendment (Deregulation and Other Measures) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5854_ems_0763cd08-45bd-4396-b78e-adbefd6caa2b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5854_ems_fe9a7460-7fb9-495d-ada9-6ca4e5e08583%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5854_ems_a7f03016-6de6-4d3a-b455-2b672115805a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5854_ems_32747feb-6dd4-446d-b620-59a44cc6ac4c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5854%22",
+   "document_date": "2017-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-03-29",
+  "sentences": [
+   "This bill would cut red tape in broadcasting and telecommunications by removing outdated or duplicate rules.",
+   "It would change several laws, including the Broadcasting Services Act 1992 and the Telecommunications Act 1997, to reduce reporting duties, simplify classification, and let the industry manage phone numbers.",
+   "The bill would also remove NBN Co's power to declare it will not install fibre in new developments and repeal the requirement to keep a public register of such statements."
+  ],
+  "changes": [
+   "Remove duplicate reporting requirements for media licensees, publishers and controllers to notify the ACMA of control changes.",
+   "Create a consistent classification system for all television programs, including films.",
+   "Let the telecommunications industry develop a scheme for managing phone numbers.",
+   "End the ACCC's power to issue tariff filing directions to carriers and service providers.",
+   "Repeal NBN Co's authority to issue statements about not installing fibre in new developments.",
+   "Allow NBN companies to sell surplus goods to any person."
+  ],
+  "affected": "Broadcasters, telecommunications carriers and service providers, the Australian Communications and Media Authority, the Australian Competition and Consumer Commission, and NBN Co.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-344848",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The Communications Legislation Amendment (Deregulation and Other Measures) Bill 2017 was introduced to reduce red tape in broadcasting and telecommunications while maintaining consumer safeguards, including measures to appoint an industry-based numbering scheme manager, streamline licensee reporting, repeal tariff filing requirements, and reform ACMA and ACCC monitoring and reporting. The bill also removes NBN Co’s ability to issue statements about not installing fibre in new developments and allows NBN Co to dispose of surplus non-communications assets."
+  },
+  {
+   "slug": "speech-359574",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": "Labor supported the bill's deregulation measures but opposed the repeal of Part 11 of the Broadcasting Services Act, arguing it would undermine co-regulation; the government has since prepared amendments to reverse that repeal. The speech also noted delays in the communications portfolio, including a 600-day response to the video game industry report, and criticised NBN Co's $170 million copper expenditure and potential 5G overbuild."
+  },
+  {
+   "slug": "speech-359575",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-359860",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The bill's amendments to the Broadcasting Services Act and NBN Companies Act were described as sensible and were supported. The government was criticised for being slow to act on NBN consumer protections, with 83% of small businesses lacking confidence in the NBN and complaints surging 159% in 2016–17."
+  },
+  {
+   "slug": "speech-359861",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Communications Legislation Amendment (Deregulation and Other Measures) Bill 2017, noting Labor successfully argued for the removal of schedule 2, which would have repealed part 11 of the Broadcasting Services Act and undermined broadcast co-regulation and consumer complaints handling. The bill includes administrative amendments, technical corrections, and the repeal of 53 redundant acts, but the speaker argued it does not result in industry savings."
+  },
+  {
+   "slug": "speech-359862",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Communications Legislation Amendment (Deregulation and Other Measures) Bill 2017, which includes measures to deregulate broadcasters, remove tariff-filing requirements, allow an industry scheme for telephone numbering, repeal NBN Co's power to avoid fibre installation, allow NBN companies to dispose of surplus goods, and abolish a consultation requirement for submarine cable zones. The speaker highlighted that in Lachlan, Tasmania, NBN speeds drop below two megabits per second at peak hours, preventing residents from even running a speed test, despite the town being only 45 minutes from Hobart."
+  },
+  {
+   "slug": "speech-360701",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The bill reduces the regulatory burden on broadcasting and telecommunications industries by removing duplicate notification requirements, introducing a single television classification scheme, transitioning to an industry-based telephone numbering system, and repealing over 50 spent acts. It also ensures that Network Investments Pty Ltd, not Northern Rivers Television Pty Ltd, receives the transitional support payment for the commercial broadcasting spectrum tax switchover."
+  }
+ ],
+ "acts": []
+}

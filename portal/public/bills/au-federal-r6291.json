@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6291",
+ "title": "Combatting Child Sexual Exploitation Legislation Amendment Bill 2019",
+ "short_title": "Combatting Child Sexual Exploitation Legislation Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6291%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6291%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6291_ems_53785d94-467c-4074-b841-44c62cd75bd5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6291%22",
+   "document_date": "2019-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "This bill aims to better safeguard children from sexual exploitation by updating Commonwealth laws on child abuse material, overseas abuse, forced marriage, and reporting obligations.",
+   "It would create new criminal offences for Commonwealth officers who fail to protect a child in their care from sexual abuse or fail to report such abuse to police.",
+   "The bill would also lower from three to two the number of separate abuse occasions needed to prove the offence of persistent overseas child sexual abuse."
+  ],
+  "changes": [
+   "Creates an offence for Commonwealth officers who negligently fail to reduce or remove a risk of child sexual abuse to a child under their supervision.",
+   "Creates an offence for Commonwealth officers who know of information suggesting a child sexual abuse offence has or will occur and do not promptly disclose it to police.",
+   "Expands the definitions of child pornography to include child-like sex dolls.",
+   "Criminalises possession of child-like sex dolls.",
+   "Introduces offences for possessing or controlling child pornography or abuse material obtained via a carriage service.",
+   "Reduces from three to two the minimum occasions of abuse needed for the overseas persistent child sexual abuse offence."
+  ],
+  "affected": "Commonwealth officers with care or supervision of children, people dealing with child-like sex dolls, and those possessing child abuse material obtained online.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:44:50Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375073",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "The Combatting Child Sexual Exploitation Legislation Amendment Bill 2019 was introduced to implement recommendations from the Royal Commission into Institutional Responses to Child Sexual Abuse and address operational issues for the Australian Federal Police, Australian Border Force and Commonwealth Director of Public Prosecutions. The bill creates offences for Commonwealth officers failing to report or protect children from abuse, reduces the occasions needed to prove persistent overseas child sexual abuse, restricts the marriage defence for overseas offences, strengthens forced marriage laws to explicitly cover children under 16, and clarifies offences for childlike sex dolls and possession of child abuse material in data form."
+  }
+ ],
+ "acts": []
+}

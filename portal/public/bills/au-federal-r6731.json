@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-r6731",
+ "title": "Human Rights (Children Born Alive Protection) Bill 2021",
+ "short_title": "Human Rights (Children Born Alive Protection) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-09",
+ "originating_house": "representatives",
+ "sponsor": "CHRISTENSEN, George, MP",
+ "sponsor_party": "Liberal National Party of Queensland",
+ "sponsor_person_id": "10726",
+ "portfolio": "(s) CHRISTENSEN, George, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6731%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6731%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6731%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6731_ems_b63b95c8-e657-4609-8d24-5558050aaeb3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6731%22",
+   "document_date": "2021-08-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-09",
+  "sentences": [
+   "The bill would make it a criminal offence for health workers to deny medical care to a baby born alive after a termination.",
+   "It would require health practitioner registration boards to treat any breach of that duty the same as other professional misconduct.",
+   "The bill would also require health workers to record live births from terminations so statistics can be compiled, and it would exempt mothers from prosecution."
+  ],
+  "changes": [
+   "Creates an offence for health practitioners who fail to provide medical care to a child born alive after a termination.",
+   "Requires health practitioner registration boards to handle alleged breaches of this duty as they would any other breach.",
+   "Requires health practitioners to report live births from terminations to enable statistical collection.",
+   "Exempts mothers from prosecution under the bill."
+  ],
+  "affected": "Health practitioners and mothers are affected, as well as children born alive after a termination.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-410780",
+   "speaker": "George Christensen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-09",
+   "stage_hint": null,
+   "brief": "The Human Rights (Children Born Alive Protection) Bill 2021 would require medical practitioners to provide the same care to a child born alive after an abortion as to any other newborn, with penalties for non-compliance and mandatory reporting; the speaker cited data showing 33 such births in Victoria in one year and 204 in Queensland over ten years, and argued the bill is constitutional under Australia's obligations under the UN Convention on the Rights of the Child."
+  }
+ ],
+ "acts": []
+}

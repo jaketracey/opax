@@ -1,0 +1,221 @@
+{
+ "key": "au-federal-r6525",
+ "title": "Supply Bill (No. 1) 2020-2021",
+ "short_title": "Supply Bill (No. 1) 2020-2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-03-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2020-03-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6525_ems_8518f7d4-c12d-4dad-a8c1-a60b5dd5beb8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6525%22",
+   "document_date": "2020-03-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00030",
+   "document_date": "2020-03-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-03-23",
+  "sentences": [
+   "This bill would authorise money to be taken from the government's main bank account to pay for its everyday running costs.",
+   "It would give the government access to roughly seven-twelfths of the money it expects to need for the 2020-21 financial year, with extra amounts for agencies like the health department that face high spending early in the year due to the COVID-19 pandemic.",
+   "The bill is one of three supply bills that together fund the government's ordinary services, and it must be kept separate from other appropriations under the Australian Constitution."
+  ],
+  "changes": [
+   "Proposes appropriations from the Consolidated Revenue Fund for ordinary annual services.",
+   "Sets the appropriation at about 7/12ths of estimated 2020-21 annual amounts.",
+   "Provides larger appropriations for entities with high early-year spending, including the Department of Health and Services Australia."
+  ],
+  "affected": "The government and its agencies, particularly those involved in the COVID-19 response.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-390587",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The three supply bills—Supply Bill (No. 1) 2020‑2021 ($76.3 billion), Supply Bill (No. 2) 2020‑2021 ($6.7 billion), and Supply (Parliamentary Departments) Bill (No. 1) 2020‑2021 ($150 million)—were moved to fund government operations for the first seven months of 2020‑21, with the federal budget rescheduled to 6 October 2020 due to coronavirus uncertainty. The bills include advance to the finance minister provisions of $16 billion and $24 billion for urgent expenditure, subject to additional transparency measures."
+  },
+  {
+   "slug": "speech-390589",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the supply bills, highlighting an unprecedented advance to the finance minister with new transparency measures requiring a press release for each use and opposition approval via Senator Gallagher for advances over $1 billion, and urged the government to release updated economic and budget forecasts to avoid a 10-month gap."
+  },
+  {
+   "slug": "speech-390592",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the COVID-19 stimulus package but argued it should also prepare Australia for a more secure future by rebuilding manufacturing, reducing overseas reliance, and fixing health system gaps; they raised concerns about small businesses unable to benefit due to closures, panic buying, and Australians stranded overseas."
+  },
+  {
+   "slug": "speech-390593",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued for acting out of hope rather than fear during the COVID-19 crisis, thanking health workers and acknowledging 7,996 community workers, 6,096 retail staff, 3,183 health workers, and 3,147 hospitality workers in the Perth electorate. He commended WA Premier Mark McGowan and Deputy Premier Roger Cook for opening new coronavirus clinics, noted $280 million in lost gig work from 255,000 cancellations, and called for a comprehensive recovery plan including kindness, compassion, and support for the homeless."
+  },
+  {
+   "slug": "speech-390594",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The MP welcomed the $550 fortnightly coronavirus supplement, $750 one-off payment, and deeming rate cuts, but criticised the delayed start dates (27 April, July, May) and the unchanged jobseeker income test, which they said would leave many singles earning over $542 a week and couples over $993.50 a week without support, and called for extra help for sole traders, the arts, travel agents, and teachers."
+  },
+  {
+   "slug": "speech-390595",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "Labor will support the Supply Bill (No. 1) 2020-2021 to ensure funds flow quickly, but argues the measures are inadequate and too slow, particularly the $550 coronavirus supplement starting 27 April and the retained income test for jobseeker allowance. The speaker also calls for a consistent national government message on schools and childcare, and for banks to clarify interest on mortgage deferrals."
+  },
+  {
+   "slug": "speech-390596",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "Peter Khalil (electorate of Wills) supported the urgent COVID-19 stimulus package (Supply Bill No. 1 2020-2021 and related bills), proposing amendments to bring forward pension payments, business assistance, student help, and arts sector support, while welcoming expanded telehealth. He also advocated for increased testing, immediate fever clinics, and greater mental health services, and publicised his office’s contact details (93505777, peter.khalil.mp@aph.gov.au) for constituents."
+  },
+  {
+   "slug": "speech-390597",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Supply Bill (No. 1) 2020-2021, emphasising the need for faster government action to support Australians during the pandemic, including ensuring employer payments protect jobs. Specific mentions include $17 million for COVID-19 vaccine research at the University of Queensland, thanks to Premier Annastacia Palaszczuk and Queensland ministers, and concerns for 12,000 over-70s and 6,436 small businesses in the Oxley electorate."
+  },
+  {
+   "slug": "speech-390598",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued for the passage of three supply bills appropriating just under $83.2 billion for the first seven months of 2021, emphasising that the funding is interim and includes no new 2020-21 budget measures, only adjustments for COVID-19 and prior decisions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Supply Act (No. 1) 2020-2021",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00030",
+   "assent_date": "2020-03-24"
+  }
+ ]
+}

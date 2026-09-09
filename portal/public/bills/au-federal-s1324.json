@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1324",
+ "title": "Migration Amendment (Temporary Visa Extensions and Reinstatements) Bill 2021",
+ "short_title": "Migration Amendment (Temporary Visa Extensions and Reinstatements) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-20",
+ "originating_house": "senate",
+ "sponsor": "MCKIM, Sen Nick",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10841",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1324%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1324%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1324%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1324_ems_d6b17543-813b-4662-ab57-7556085b0d14%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1324%22",
+   "document_date": "2021-10-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-20",
+  "sentences": [
+   "The bill would automatically extend or reinstate certain temporary visas for people stuck overseas because of Australia's COVID-19 border closure.",
+   "Eligible visas would be credited with the time lost from the remaining stay period due to the border restrictions, with the maximum extension equal to the full closure period.",
+   "The bill covers any temporary visa holder who could not enter Australia solely due to the government's travel ban, not for other reasons like medical or financial issues."
+  ],
+  "changes": [
+   "Automatically extends temporary visas for holders stranded offshore during the border closure.",
+   "Reinstates expired temporary visas once borders reopen, making them eligible for extensions.",
+   "Ensures uniform treatment across all eligible temporary visa subclasses."
+  ],
+  "affected": "Temporary visa holders who were overseas and unable to enter Australia because of the COVID-19 international border closure.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

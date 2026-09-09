@@ -11,8 +11,11 @@
     "binding": "ASSETS",
     // API routes must reach the Worker even though assets exist; so must the
     // share images, which are drawn on request (src/og-render.ts).
-    "run_worker_first": ["/api/*", "/og/*"]
+    "run_worker_first": ["/api/*", "/og/*", "/ingest/*", "/mcp"]
   },
+
+  "d1_databases": [{"binding":"COMMUNITY_DB","database_name":"opax-community","database_id":"ea0ca399-189f-4fc0-83f8-66a41204a180","migrations_dir":"migrations"}],
+  "send_email": [{"name":"COMMUNITY_EMAIL"}],
 
   "observability": {
     "enabled": true,
@@ -32,6 +35,9 @@
   //   npx wrangler secret put ARAG_KB_TOKEN
   //   npx wrangler secret put ARAG_KB_ID
   "vars": {
+    "COMMUNITY_ORIGIN": "https://opax.com.au",
+    "COMMUNITY_EMAIL_FROM": "hello@login.opax.com.au",
+    "COMMUNITY_ENABLED": "true",
     "ARAG_ZONE": "aws-ap-southeast-2-1",
     // Folded into every response-cache key (/api/ask 7 days, /api/search,
     // /api/resource, /api/followups). Bump it whenever the corpus changes
@@ -39,7 +45,7 @@
     // answers built on the old record are never served again. Any string;
     // the convention is the date of the corpus change. See docs/STREAMING.md
     // "Caching" and the MIGRATION-ARAG.md invariants.
-    "CACHE_EPOCH": "2026-09-05-prompt-direct"
+    "CACHE_EPOCH": "2026-09-09-grants-research"
   },
 
   // Workers Rate Limiting bindings (wrangler >= 4.36 top-level `ratelimits`;
@@ -59,5 +65,18 @@
     // hundred ms of CPU each. A crawler fetches one per shared link; only a
     // script minting fresh ?q= URLs could ask for sixty in a minute.
     { "name": "OG_LIMITER", "namespace_id": "1004", "simple": { "limit": 60, "period": 60 } }
-  ]
+  ],
+  "env": {
+    "staging": {
+      "name": "opax-portal-staging",
+      "d1_databases": [{"binding":"COMMUNITY_DB","database_name":"opax-community-staging","database_id":"033d5775-4443-4757-a984-326f2914ac7f","migrations_dir":"migrations"}],
+      "send_email": [{"name":"COMMUNITY_EMAIL"}],
+      "workers_dev": true,
+      "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
+      "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
+      "vars": { "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-09-grants-research" },
+      "ratelimits": [],
+      "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/*"] }
+    }
+  }
 }

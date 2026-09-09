@@ -1,0 +1,124 @@
+{
+ "key": "au-federal-r6134",
+ "title": "Migration (Validation of Port Appointment) Bill 2018",
+ "short_title": "Migration (Validation of Port Appointment) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6134%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6134%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6134%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6134%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6134%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6134%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6134%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6134%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6134_ems_790b2199-a3d1-4b4e-998a-debe4120e8cc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6134_ems_8be5be84-6e29-4559-b348-415a2d82bca9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/6159125%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6134%22",
+   "document_date": "2018-06-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-364862",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-20",
+   "stage_hint": null,
+   "brief": "The Migration (Validation of Port Appointment) Bill 2018 confirms the validity of a 2002 port appointment at Ashmore and Cartier Islands, ensuring that illegal maritime arrivals who entered via that port between 23 January 2002 and 1 June 2013 remain classified as unauthorised maritime arrivals and, where applicable, fast-track applicants under the Migration Act 1958. The bill maintains the status quo and does not apply to cases where a court has already set aside or declared the appointment invalid."
+  },
+  {
+   "slug": "speech-367294",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The motion substituted words to note poor drafting of immigration legislation by successive Coalition governments, citing a 2002 gazette error by minister Ruddock that omitted coordinates for a port. Labor supported the bill while reiterating its asylum seeker policy of strong borders and regional resettlement, including accepting New Zealand's offer."
+  },
+  {
+   "slug": "speech-367298",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The Migration (Validation of Port Appointment) Bill 2018 confirms the validity of a 2002 port appointment at Ashmore and Cartier Islands, ensuring that unauthorised boat arrivals entering through that port between 23 January 2002 and 1 June 2013 remain classified as unauthorised maritime arrivals and, where applicable, fast-track applicants. The bill prevents legal challenges to the appointment that could undermine border protection policies."
+  }
+ ],
+ "acts": []
+}

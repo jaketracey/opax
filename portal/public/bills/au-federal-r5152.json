@@ -1,0 +1,980 @@
+{
+ "key": "au-federal-r5152",
+ "title": "Infrastructure Australia Amendment Bill 2013",
+ "short_title": "Infrastructure Australia Amendment Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "passed",
+ "status_as_of": "2014-07-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5152_ems_9db80cab-2c9e-4b2e-99a5-4c9b2033635a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5152_ems_9935da54-0757-4d64-9998-be748f44cbe6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5152%22",
+   "document_date": "2013-11-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00077",
+   "document_date": "2014-07-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-20",
+  "sentences": [
+   "The bill would strengthen Infrastructure Australia as an independent advisory body on national infrastructure needs, financing, and regulation.",
+   "It would re-establish Infrastructure Australia as a separate legal and financial entity under the Commonwealth Authorities and Companies Act 1997.",
+   "The bill would more clearly define Infrastructure Australia's functions to improve evidence-based infrastructure planning and prioritisation, with no net budget impact and existing funding of $12.072 million in 2013-14."
+  ],
+  "changes": [
+   "Re-establishes Infrastructure Australia as a separate entity under the Commonwealth Authorities and Companies Act 1997.",
+   "More clearly defines Infrastructure Australia's functions and deliverables.",
+   "Strengthens Infrastructure Australia's governance structure."
+  ],
+  "affected": "Infrastructure Australia, governments, investors, and infrastructure owners.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:03Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3043",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Pat Conroy I rise to oppose the Infrastructure Australia Amendment Bill 2013. I follow on from excellent speeches from this side of parliament, which have drawn attention to some very significant flaws in this bill, mostly around the criteria, the granting of extraordinary powers to the minister, the politicisation of an independent process, a complete abandonment of any commitment to an evidence-based approach to infrastructure funding in this country and a clear bias against public transport funding. I would like to concentrate on three particular aspects of this bill, namely the politicisation of a very important process, the impact that this will have on private sector investment and the changes to Infrastructure Australia's role around climate change, which is a little known aspect of this bill and yet another example of the government attacking any independent authority that dares to advise on climate change. Before I go to that, I would like to comment on the proud record that Labor has in this area compared to those opposite. When Labor came to government in 2007 the OECD had ranked Australia 20 out of 25 countries in relation to our investment in public infrastructure as a proportion of national income. I am proud that, because of Labor's record investment-particularly through the GFC, which the member for Scullin highlighted-Australia is now ranked second in the OECD in terms of investment in infrastructure as a percentage of national income. Among the advanced economies only South Korea is investing more in infrastructure. Investment in infrastructure in Australia in 2011-12 was four per cent of GDP, which is the highest it has been in 30 years. Again in 2011-12, annual infrastructure spending was 59 per cent higher than the last full year of the Howard government when compared in real terms. This was a real achievement of the previous Labor government and something of which we should be justly proud-both the former minister responsible, the member for Gr",
+   "stage": "Second reading",
+   "ayes": 83,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/1"
+  },
+  {
+   "key": "federal-representatives-3044",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Bronwyn Bishop There is no point of order. Jamie Briggs I move: That the question be put. Bronwyn Bishop The question is that the motion be put.",
+   "stage": "Second reading",
+   "ayes": 84,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/2"
+  },
+  {
+   "key": "federal-representatives-3045",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Anthony Albanese _(In division)_ I raise a point of order, Madam Speaker. Just prior to your calling this division, there were two members on their feet: the member for Watson, who has not spoken in this debate, and the member for Mayo, who has. Bronwyn Bishop _(In division)_ He was moving the formal procedural motion. Anthony Albanese _(In division)_ How did you know that before you gave the call? You chose— Bronwyn Bishop _(In division)_ He was on his feet at the dispatch box and received the call from me. The question now is that the bill be read a second time.",
+   "stage": "Second reading",
+   "ayes": 85,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/3"
+  },
+  {
+   "key": "federal-representatives-3047",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Jamie Briggs I seek leave of the House to move the third reading immediately. Leave not granted. Tony Burke I move: That so much of standing and sessional orders be suspended as would prevent the Member for Watson moving immediately: That this House: condemns the Government for failing to allow proper debate on legislation before the Parliament. We are in the middle of a debate on important legislation about infrastructure— Bronwyn Bishop I call the Leader of the House. Tony Burke and the cowardice of the Leader of the House— Christopher Pyne I move: That the Member be no longer heard. Bronwyn Bishop The question is that the member be no longer heard.",
+   "stage": "Third reading",
+   "ayes": 84,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/5"
+  },
+  {
+   "key": "federal-representatives-3051",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Bronwyn Bishop The question now is that the motion for the suspension of standing and sessional orders be agreed to.",
+   "stage": "Third reading",
+   "ayes": 49,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 131,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/9"
+  },
+  {
+   "key": "federal-representatives-3052",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Christopher Pyne I move: That, pursuant to contingent notice, so much of the standing orders be suspended as would prevent the motion for the third reading being moved without delay. Anthony Albanese Speaking to the motion, the fact is that the opposition have amendments to this legislation that is before the parliament. Christopher Pyne I move: That the member be no longer heard. _A division having_ _been called and the bells being_ _rung—_ Anthony Albanese Madam Speaker, I rise on a point of order. I note that the door on this side of the chamber is locked and that people on this side of the chamber cannot get in. I could not get in. Bronwyn Bishop The member might recall that that door has constantly been locked and it has been commented upon often in this House.",
+   "stage": "Third reading",
+   "ayes": 84,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/10"
+  },
+  {
+   "key": "federal-representatives-3053",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Christopher Pyne I move: That the question be now put. Bronwyn Bishop The question is that the motion be put.",
+   "stage": "Third reading",
+   "ayes": 84,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/11"
+  },
+  {
+   "key": "federal-representatives-3054",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Bronwyn Bishop The question now is that the motion for the suspension of standing and sessional orders be agreed to.",
+   "stage": "Third reading",
+   "ayes": 84,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/12"
+  },
+  {
+   "key": "federal-representatives-3055",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Anthony Albanese I move: That so much of the sessional and standing orders be suspended as would— Christopher Pyne Madam Speaker, on a point of order: I move: That the question be now put. Bronwyn Bishop In fairness, I have to give the call to the member for Grayndler. The point of order could not sustain the question being put. Anthony Albanese I move: That so much of the standing and sessional orders be suspended as would prevent the member for Grayndler moving immediately that section 9 of this legislation be deleted. In terms of this legislation— Christopher Pyne I move: That the member be no longer heard. Bronwyn Bishop The question is that the member be no longer heard.",
+   "stage": "Third reading",
+   "ayes": 83,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/13"
+  },
+  {
+   "key": "federal-representatives-3056",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Bronwyn Bishop Is the suspension motion seconded? Tony Burke The parliament tonight is in chaos. I second the motion-- Christopher Pyne I move: That the member be no longer heard. Bronwyn Bishop The question is that the member be no longer heard.",
+   "stage": "Third reading",
+   "ayes": 84,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/14"
+  },
+  {
+   "key": "federal-representatives-3057",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Christopher Pyne This debate can continue, because you have had the mover and the seconder and now a speaker has been called, and I am speaking, because the time continues till 10.43. What we are seeing tonight is one of the greatest displays of petulance— Anthony Albanese I move: That the member be no longer heard. Bronwyn Bishop The question is that the member be no longer heard.",
+   "stage": "Third reading",
+   "ayes": 49,
+   "noes": 85,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 132,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/15"
+  },
+  {
+   "key": "federal-representatives-3058",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Christopher Pyne I am grateful that the House decided not to gag my speech on this suspension motion. What we are witnessing tonight is one of the most petulant and juvenile displays I have ever seen in this House from government change deniers— Tony Burke Madam Speaker, on a point of order, we have a resolution before us for a suspension of standing orders. The Leader of the House is speaking to other issues and needs to refer specifically to whether or not standing orders should be suspended under the motion before the House. Bronwyn Bishop I am sure the Leader of the House will refer to why standing orders should be so suspended. Christopher Pyne The reason why the standing orders should not be suspended is that this side of the House would like to get on with the business of government. We have an infrastructure bill before the House. I have moved the contingency motion so that there will be a third reading on the bill, and I have moved that the bill be now read a third time. Unlike the government change deniers on the other side of the House, the government wants to get on with the business of the parliament. The House should have risen at 9.30, so standing orders should not be suspended, because this is a silly game—a very embarrassing, petulant display by the acting Manager of Opposition Business in the House, who is being run by the former Leader of the House. Tony Burke Madam Speaker, on a point of order, the comments made by the Leader of the House should be withdrawn under standing order 90. Bronwyn Bishop There is no point of order. Christopher Pyne Thank you, Madam Speaker. They are not the least bit unparliamentary. I know you are showing off in front of— Tony Burke Madam Speaker, on a point of order, I do not see how those comments could be anything other than a reflection on members, which is what standing order 90 refers to. Bronwyn Bishop If my memory serves me correctly, unless a reflection is on a specific individual member, it is in order. I cal",
+   "stage": "Third reading",
+   "ayes": 48,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 47,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 130,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/16"
+  },
+  {
+   "key": "federal-representatives-3059",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Christopher Pyne I move: That the question be now put. Bronwyn Bishop The question is that the motion for the third reading of the bill should now take place.",
+   "stage": "Third reading",
+   "ayes": 84,
+   "noes": 47,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/17"
+  },
+  {
+   "key": "federal-representatives-3060",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "question": "Bronwyn Bishop The question now is that the bill be read a third time. Bill read a third time.",
+   "stage": "Third reading",
+   "ayes": 84,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-10/18"
+  },
+  {
+   "key": "federal-senate-3245",
+   "date": "2014-06-23",
+   "house": "senate",
+   "question": "David Johnston I table a supplementary explanatory memorandum relating to the government amendments to be moved to this bill. Scott Ludlam I will put a couple of general questions relating to the purposes of the bill. I would also like to acknowledge the amendments that Senator Johnston has just tabled. They actually go quite a long way, a remarkable way, towards quieting some of the concerns that have been expressed by those in the sector, by transport academics and by people who watch this area. So I would like to acknowledge quite genuinely that it is rare in this place to see errors as grievous as those contained in the bill not have to be shot out on the floor of the chamber but in fact moved by the government. It saves the opposition and the cross benches a great deal of time when a government of either political persuasion brings these amendments forward themselves. Senator Johnston, I have a couple of general questions before we get into the substance and detail of the amendments that the Greens, the opposition and the government are proposing to move. Can you explain for us in simple terms why the Australian government has cancelled all funding for public transport and on what policy basis the Australian government has decided to get out of the business of funding urban rail infrastructure? David Johnston I think that question is a bit of a distraction and away from the bill, but the point is that the government has chosen where it seeks to augment and facilitate productivity and to enhance the Australian economy. We have acknowledged that road funding, which is an integral part of public transport, is a very important part of infrastructure that has been neglected. Scott Ludlam I am also acknowledging, Senator Johnston, that this is not your portfolio. You are here in a representative capacity and you just have to make do with the best that your advisers can throw at you this evening. I found the answer profoundly unsatisfying. Are you aware of the product",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 3,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-06-23/5"
+  },
+  {
+   "key": "federal-senate-3246",
+   "date": "2014-06-23",
+   "house": "senate",
+   "question": "Infrastructure Australia Amendment Bill 2013 - in Committee - Local community consultation",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-06-23/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-279025",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281299",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281303",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281304",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281305",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281309",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281311",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281312",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281319",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281321",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281328",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281333",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281334",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281403",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826710",
+   "speaker": "Arthur Sinodinos",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": "The speaker moved a motion to change committee memberships, discharging Senator Urquhart and appointing Senator Gallacher to the National Disability Insurance Scheme Joint Standing Committee, and appointing substitute members for several other committees including Wright, Milne, and Ludlam."
+  },
+  {
+   "slug": "speech-293752",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293753",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293759",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Infrastructure Australia Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00077",
+   "assent_date": "2014-07-17"
+  }
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r7260",
+ "title": "Accountability of Grants, Investment Mandates and Use of Public Resources Amendment (End Pork Barrelling) Bill 2024 [No. 2]",
+ "short_title": "Accountability of Grants, Investment Mandates and Use of Public Resources Amendment (End Pork Barrelling) Bill 2024 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-04",
+ "originating_house": "representatives",
+ "sponsor": "HAINES, Helen, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10929",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7260%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7260%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7260%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7260_ems_806b7b96-52ac-4dcb-8a57-f373c632f139%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7260%22",
+   "document_date": "2024-11-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-04",
+  "sentences": [
+   "The bill would tighten rules on how the federal government awards grants to stop public money being used for political advantage.",
+   "It would give the Public Service Commissioner new powers to investigate and punish misconduct related to grant spending, and create a parliamentary committee to oversee grants and investment mandates.",
+   "Ministers would have to report to Parliament when they approve a grant in their own electorate or against official advice, and extra reporting would apply to grant programs worth more than $100 million."
+  ],
+  "changes": [
+   "Removes the exemption that lets corporate Commonwealth entities avoid the Commonwealth Grants Rules and Principles.",
+   "Requires all grant programs to use merit-based selection criteria and publish clear guidelines.",
+   "Makes key grant rules legally binding instead of just ministerial guidelines.",
+   "Forces ministers to table annual reports on how investment mandates are followed and makes those mandates subject to parliamentary disallowance.",
+   "Grants the Public Service Commissioner the ability to start investigations and impose sanctions for breaches of the resource management code of conduct."
+  ],
+  "affected": "Commonwealth government agencies, corporate Commonwealth entities, ministers, public servants, and the Parliament.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:37Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

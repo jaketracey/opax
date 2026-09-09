@@ -1,0 +1,503 @@
+{
+ "key": "au-federal-r6256",
+ "title": "Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6256%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6256%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6256%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6256%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6256%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-12-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6256%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6256%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6256_ems_d3ff6f65-72ab-4f00-8ae6-f8a2bad19b22%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6256%22",
+   "document_date": "2018-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5605",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2018-12-05.136.1) to *put the question*. These types of motions are known as gagging motions because they end debate and force the House to vote on the question under discussion, which in this case was on [whether to suspend the usual procedural rules](https://theyvoteforyou.org.au/divisions/representatives/2018-12-05/6).",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-12-05/5"
+  },
+  {
+   "key": "federal-representatives-5606",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2018-12-05.134.1) introduced by Sturt MP [Christopher Pyne](https://theyvoteforyou.org.au/people/representatives/sturt/christopher_pyne) (Liberal), which means it passed. [Standing orders](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/standing-orders/) are the procedural rules of parliament. ### Motion text > *That so much of the standing orders be suspended as would prevent the resumption of debate on the motion that the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018 be read a second time being made an order of the day for a later hour.*",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-12-05/6"
+  },
+  {
+   "key": "federal-representatives-5607",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-12-05/7"
+  },
+  {
+   "key": "federal-representatives-5608",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2018-12-05.134.1) introduced by Sturt MP [Christopher Pyne](https://theyvoteforyou.org.au/people/representatives/sturt/christopher_pyne) (Liberal), which means it passed and debate on this motion will resume at a later date. ### Motion text > *That the resumption of debate on the motion that the bill be read a second time be made an order of the day for a later hour.*",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-12-05/8"
+  },
+  {
+   "key": "federal-representatives-5613",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2018-12-05.151.2): > *That the debate be adjourned.* This means the debate will continue.",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-12-05/13"
+  },
+  {
+   "key": "federal-representatives-5614",
+   "date": "2018-12-06",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018 - Second Reading - Speed thing along",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-12-06/1"
+  },
+  {
+   "key": "federal-representatives-5615",
+   "date": "2018-12-06",
+   "house": "representatives",
+   "question": "The majority voted against a motion to amend the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), which is that the majority should agree with the main idea of the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6256) (or, in parliamentary jargon, that the majority should agree to read the bill for a second time). Since this motion was unsuccessful, the original motion will remain unchanged and [can be voted on as is](https://theyvoteforyou.org.au/divisions/representatives/2018-12-06/3). ### Motion text > *That all words after “That” be omitted with a view to substituting the following words:* > *“the House declines to give the bill a second reading, and notes:* > *(1) this unprecedented intervention into markets which will result in higher prices for families and businesses;* > *(2) the Government has abandoned all pretence at being the party of free enterprise and open markets; and* > *(3) the Government has abandoned all proper process, scrutiny and consultation.”* ### What is the main idea of the bill? This bill is part of the Government's package of measures in relation to the electricity sector. For example, the bill sets out three kinds of prohibited conduct in relation to retail prices, the electricity financial contract market and the wholesale electricity market. The remedies included in the bill are graduated, from the Australian Competition and Consumer Commission (ACCC) issuing a public warning notice to the ACCC applying to a court for a pecuniary penalty. The bill also gives new compulsory information gathering powers on the Australian Energy Regulator (AER) and lets the AER share information with other agencies. The Labor Party was concerned with the [speed this legislation](https://www.openaustralia.org.au/debates/?id=2018-12-05.125.2) was being pushed through Parliament by the Coalition Government.",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-12-06/2"
+  },
+  {
+   "key": "federal-representatives-5616",
+   "date": "2018-12-06",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2018-12-06.23.2) to agree with the main idea of the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6256), which means the bill can now be discussed in greater detail. In parliamentary jargon, they voted to read the bill for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What is the main idea of the bill? This bill is part of the Government's package of measures in relation to the electricity sector. For example, the bill sets out three kinds of prohibited conduct in relation to retail prices, the electricity financial contract market and the wholesale electricity market. The remedies included in the bill are graduated, from the Australian Competition and Consumer Commission (ACCC) issuing a public warning notice to the ACCC applying to a court for a pecuniary penalty. The bill also gives new compulsory information gathering powers on the Australian Energy Regulator (AER) and lets the AER share information with other agencies. The Labor Party was concerned with the [speed this legislation](https://www.openaustralia.org.au/debates/?id=2018-12-05.125.2) was being pushed through Parliament by the Coalition Government.",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-12-06/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-374163",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The speaker moved to suspend standing orders to resume debate on the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018, arguing that passing it within 48 hours would allow Senate passage by February 2019 and force energy companies to lower electricity prices, while delay would push passage to at least April 2019."
+  },
+  {
+   "slug": "speech-374209",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor opposes the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018 to protect big energy company profits, citing an ACCC finding that three players control 80% of dispatchable generation. They claimed Labor's 45% emission reduction target requires higher electricity prices and will wreck the economy, also tightening rules on farmers' land."
+  },
+  {
+   "slug": "speech-374216",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018, which creates prohibitions on retail pricing, contract liquidity, and wholesale bid misconduct to lower electricity costs. The bill establishes a graduated enforcement process—including warning notices, civil penalties up to $10 million or 10% of turnover, and divestment as a last resort—citing ACCC evidence of market dysfunction and price discrepancies such as $411–$832 annual differences for households."
+  },
+  {
+   "slug": "speech-374218",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government rushed the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018 through parliament without proper scrutiny, calling the process chaotic and unacceptable. They criticised the government’s energy policy as a \"dog's breakfast\" and \"harebrained,\" noting it was the tenth iteration, lacked expert support, and included an unprecedented and possibly unconstitutional divestiture power not recommended by ACCC chairman Rod Sims."
+  },
+  {
+   "slug": "speech-374220",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018, arguing that divestiture powers for the ACCC should extend to all markets, not just energy, to address abuses such as supermarkets squeezing agricultural suppliers. The speaker credited former senator Nick Xenophon for championing this power and noted that the court, not a minister, should have the final say on divestiture as a remedy of last resort."
+  },
+  {
+   "slug": "speech-374221",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The speaker argued the Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018 would penalise energy companies for misconduct with graduated penalties including divestiture, and criticised the Queensland Labor government for maintaining an effective monopoly, overinvesting $7.3 billion in poles and wires, imposing a six per cent guaranteed return, and failing to pass on a 40 per cent wholesale price reduction to consumers."
+  },
+  {
+   "slug": "speech-374308",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-06",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018 was condemned as the worst, shallowest, and most ill-conceived legislation seen in the parliament, being rushed, unsupported by any inquiry or the ACCC, and opposed by business groups—argued to fail in reducing electricity prices, increase carbon emissions, deter investment, and destroy jobs."
+  }
+ ],
+ "acts": []
+}

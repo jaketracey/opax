@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6846",
+ "title": "Telecommunications Legislation Amendment (Faster Internet for Regional Australia) Bill 2022",
+ "short_title": "Telecommunications Legislation Amendment (Faster Internet for Regional Australia) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-14",
+ "originating_house": "representatives",
+ "sponsor": "HAINES, Helen, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10929",
+ "portfolio": "(s) HAINES, Helen, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6846%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6846%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6846%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6846_ems_abfb3377-bab8-42f1-ad09-18c273b05f86%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6846%22",
+   "document_date": "2022-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-14",
+  "sentences": [
+   "The bill would move performance targets for companies that build and maintain telecommunications infrastructure into an Act of Parliament and set tougher requirements they must meet or pay penalties for failing.",
+   "These companies would have to report their performance data to the Australian Communications and Media Authority, which would publish it every three months or within 30 days after a major network failure.",
+   "The new rules include a nationwide average download speed of 25 megabits per second over any 24-hour period and a maximum one-day wait for fixing faults in rural areas."
+  ],
+  "changes": [
+   "Moves Statutory Infrastructure Provider performance benchmarks into primary legislation.",
+   "Establishes new higher standards for download speed, fault rectification and connection times.",
+   "Requires SIPs to disclose performance data to ACMA for quarterly publication."
+  ],
+  "affected": "Statutory Infrastructure Providers and internet users in urban, regional and remote Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-418163",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The bill would require NBN and other broadband providers to meet minimum standards in regional Australia, including 25 Mbps download speeds at all times, same-day connection and fault repair times as cities, and financial penalties for non-compliance. The speaker argued current government standards are too low, citing examples of slow speeds, long wait times, and inadequate service in regional electorates like Indi."
+  }
+ ],
+ "acts": []
+}

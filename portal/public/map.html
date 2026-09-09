@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OPAX Money Map</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <style>
     html, body { height: 100%; margin: 0; }
     body {
@@ -11,11 +12,23 @@
       font: 14px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif;
     }
     header {
-      display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
-      padding: 12px 18px; border-bottom: 1px solid #e4e1d8;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      position: relative; padding: 12px 74px 12px 18px; border-bottom: 1px solid #e4e1d8;
     }
+    .logo { display: inline-flex; flex: none; }
+    .logo-mark { width: 48px; height: 44px; }
+    .logo-land { fill: #a98048; }
+    .logo-star { fill: #33322e; }
+    header p { flex: 1 1 320px; }
     header h1 { margin: 0; font-size: 17px; }
     header p { margin: 0; font-size: 12.5px; color: #8a8578; }
+    .map-close {
+      position: absolute; top: 12px; right: 18px; display: inline-flex;
+      align-items: center; justify-content: center; width: 44px; height: 44px;
+      color: #33322e; border-radius: 50%;
+    }
+    .map-close:hover { background: #eae6de; }
+    .map-close:focus-visible { outline: 2px solid #876738; outline-offset: 2px; }
     #map { flex: 1; min-height: 0; }
     #status {
       display: flex; align-items: center; justify-content: center;
@@ -25,46 +38,20 @@
 </head>
 <body>
   <header>
-    <h1>OPAX Money Map</h1>
+    <a class="logo" href="/" aria-label="OPAX home">
+        <svg class="logo-mark" viewBox="0 0 176 160" role="img" aria-hidden="true"><g transform="translate(0 14)"><path class="logo-land" d="M108.6 23.0L113.3 31.2L116.6 37.9L124.0 48.0L132.9 58.7L134.0 66.4L128.5 80.9L125.7 90.4L117.5 95.3L111.9 93.6L104.1 92.4L97.8 84.9L93.3 83.6L82.3 74.2L65.5 80.3L52.6 83.9L46.2 81.8L47.8 75.4L45.3 67.0L42.0 60.5L44.2 49.4L52.6 45.8L62.1 40.2L64.4 36.4L69.0 32.0L73.3 30.1L78.7 32.8L81.8 27.0L84.6 24.4L89.9 26.1L95.8 26.5L94.9 29.1L92.6 32.6L96.2 35.4L100.6 36.6L104.7 39.2L106.6 33.1L106.9 27.4Z"/><path class="logo-land" d="M113.8 100.1L121.3 100.4L121.9 104.3L119.0 109.0L115.3 105.8Z"/></g><path class="logo-star" d="M 88.0 1.0 L 90.9 7.1 L 97.0 10.0 L 90.9 12.9 L 88.0 19.0 L 85.1 12.9 L 79.0 10.0 L 85.1 7.1 Z"/><path class="logo-star" d="M 142.7 29.9 L 144.8 34.2 L 149.2 36.4 L 144.8 38.5 L 142.7 42.9 L 140.6 38.5 L 136.2 36.4 L 140.6 34.2 Z"/><path class="logo-star" d="M 156.2 87.6 L 158.8 93.0 L 164.2 95.6 L 158.8 98.2 L 156.2 103.6 L 153.6 98.2 L 148.2 95.6 L 153.6 93.0 Z"/><path class="logo-star" d="M 118.4 137.1 L 120.3 141.1 L 124.4 143.1 L 120.3 145.0 L 118.4 149.1 L 116.4 145.0 L 112.4 143.1 L 116.4 141.1 Z"/><path class="logo-star" d="M 57.6 135.1 L 60.2 140.5 L 65.6 143.1 L 60.2 145.7 L 57.6 151.1 L 55.0 145.7 L 49.6 143.1 L 55.0 140.5 Z"/><path class="logo-star" d="M 19.8 89.1 L 21.9 93.5 L 26.3 95.6 L 21.9 97.7 L 19.8 102.1 L 17.6 97.7 L 13.3 95.6 L 17.6 93.5 Z"/><path class="logo-star" d="M 33.3 27.4 L 36.2 33.4 L 42.3 36.4 L 36.2 39.3 L 33.3 45.4 L 30.3 39.3 L 24.3 36.4 L 30.3 33.4 Z"/></svg>
+      </a>
+    <h1>Money Map</h1>
     <p>
       Who funds Australian politics: the top 250 donors and the parties they gave to,
       from AEC returns 1998&ndash;2026. Colour and territory are the donor's industry;
       size is lifetime dollars. Click the legend to isolate an industry.
     </p>
+    <a class="map-close" href="/money" aria-label="Close full-screen map" title="Close full-screen map">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+    </a>
   </header>
-  <div id="map"><div id="status">Loading the map&hellip;</div></div>
-  <script type="module">
-    // The bundle is loaded lazily on purpose - this is the pattern the main
-    // portal page will use when the user opens the map.
-    const { mountMoneyMap } = await import('/money-map.js')
-    const container = document.getElementById('map')
-    try {
-      document.getElementById('status')?.remove()
-      // Embed testbed: /map.html?focus=party:Labor&chrome=mini exercises the
-      // options subject pages use.
-      const params = new URLSearchParams(location.search)
-      // ?jur=qld|vic|tas loads a state commission export (same shape as the
-      // federal file; the two are never summed - see docs/DATA-MONEY.md).
-      const STATE_FILES = {
-        qld: ['/graph/money.qld.json', 'Electoral Commission of Queensland gifts register'],
-        vic: ['/graph/money.vic.json', 'Victorian Electoral Commission disclosures'],
-        tas: ['/graph/money.tas.json', 'Tasmanian Electoral Commission disclosures'],
-      }
-      const state = STATE_FILES[params.get('jur')]
-      if (state) {
-        document.querySelector('header p').textContent =
-          'Who funds state politics: the top disclosed donors and the parties they gave to, from the ' +
-          state[1] + '. Colour and territory are the donor\'s industry; size is disclosed dollars. ' +
-          'Gifts under the disclosure threshold are not reported; state and federal returns are not summed.'
-      }
-      await mountMoneyMap(container, state ? state[0] : '/graph/money.json', {
-        focus: params.get('focus') || undefined,
-        chrome: params.get('chrome') === 'mini' ? 'mini' : undefined,
-        onSelect: (node) => console.log('[money-map] user selected:', node && node.id),
-      })
-    } catch (error) {
-      container.textContent = 'The money map failed to load: ' + error.message
-    }
-  </script>
+  <div id="map"><div id="status" role="status">Loading the map&hellip;</div></div>
+  <script type="module" src="/map-page.js"></script>
 </body>
 </html>

@@ -1,0 +1,379 @@
+{
+ "key": "au-federal-r5674",
+ "title": "Broadcasting Legislation Amendment (Media Reform) Bill 2016",
+ "short_title": "Broadcasting Legislation Amendment (Media Reform) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5674%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5674%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5674%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5674%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5674%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5674%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5674%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5674%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5674%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5674%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5674_ems_3e2a882f-48ae-4661-84e0-21f6a30801e7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5674_ems_e22a2fa3-8857-42b6-b7e6-496e808699cc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5674%22",
+   "document_date": "2016-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-09-01",
+  "sentences": [
+   "The bill would remove two media ownership limits and add new local content rules for regional TV stations.",
+   "The audience reach cap and the cross-media control rule would be repealed, and new local programming obligations would apply after a change of control triggers them.",
+   "Affected regional stations in aggregated markets and Tasmania would have to provide an extra 30 points of local material per week, while those in non‑aggregated markets would need about 60 points per week."
+  ],
+  "changes": [
+   "The bill would repeal the 75 per cent audience reach rule for commercial television licences.",
+   "The bill would repeal the ‘2 out of 3 cross‑media control rule’.",
+   "The bill would increase local programming requirements by 30 points per week for affected regional licensees in aggregated markets and Tasmania after a trigger event.",
+   "The bill would introduce local programming requirements of about 60 points per week for affected regional licensees in non‑aggregated markets after a trigger event.",
+   "The bill would require licensees to report to the ACMA on compliance 18 months after a trigger event and again one year later.",
+   "The ACMA would review the new local programming provisions within two years of their commencement."
+  ],
+  "affected": "Regional commercial television broadcasting licensees, particularly those in aggregated markets, Tasmania and non‑aggregated markets, and the major metropolitan networks (Seven, Nine and Ten) and regional operators (Prime, WIN and Southern Cross).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:24:27Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4450",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "question": "Broadcasting Legislation Amendment (Media Reform) Bill 2016 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-30/1"
+  },
+  {
+   "key": "federal-representatives-4451",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "question": "Broadcasting Legislation Amendment (Media Reform) Bill 2016 - Consideration in Detail - Cross-media control rule",
+   "stage": "Consideration in detail",
+   "ayes": 71,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-30/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-332934",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-01",
+   "stage_hint": null,
+   "brief": "The minister moved the Broadcasting Legislation Amendment (Media Reform) Bill 2016, which repeals the 75% audience reach rule and the two-out-of-three cross-media control rule to allow media businesses to scale in the digital environment, while introducing new local television programming obligations for regional broadcasters after a change in control triggers increased local content requirements."
+  },
+  {
+   "slug": "speech-339273",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-29",
+   "stage_hint": null,
+   "brief": "Labor supported removing the redundant 75% audience reach rule but opposed repealing the two-out-of-three cross-media ownership rule, arguing the bill was piecemeal rather than genuine reform. The speech criticised Communications Minister Mitch Fifield for ineptitude and abandoning holistic media reform, citing public polling that 61% disapproved of allowing one company to own a newspaper, TV network and radio station in a single market."
+  },
+  {
+   "slug": "speech-339274",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-29",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Media Reform) Bill 2016 was defended as removing the outdated two-out-of-three media ownership rule and the 75 per cent television reach rule, arguing this would allow Australian companies to merge and compete with digital platforms like Google and Facebook while remaining subject to ACCC scrutiny. It was also claimed the 75 per cent rule is ineffective because regional networks Prime, Southern Cross and WIN already rebroadcast metropolitan content from Seven, Nine and Ten to most of the population."
+  },
+  {
+   "slug": "speech-339275",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued the government should split the Broadcasting Legislation Amendment (Media Reform) Bill 2016, supporting removal of the 75 per cent reach rule, improved local content rules and reduced licence fees, but opposing removal of the two-out-of-three rule to protect media diversity in regional areas like the Paterson electorate."
+  },
+  {
+   "slug": "speech-339277",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-29",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Media Reform) Bill 2016 should remove the two-out-of-three rule, which is an archaic restriction that does not protect media diversity in today's abundant media environment; instead, viable business models are needed to support quality journalism and enable Australian media to thrive as an export sector."
+  },
+  {
+   "slug": "speech-339330",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Broadcasting Legislation Amendment (Media Reform) Bill 2016 is essential for modernising Australia's media regulations, specifically by repealing the 75% audience reach rule and the two-out-of-three cross-media control rule to allow traditional media companies to compete with digital platforms. They cited figures showing online platforms' advertising share grew from 6.1% to 36.2% by 2014, while television fell to 30.7%, radio to 8.2%, and newspapers to 15.7%, and noted Netflix reached 2.68 million Australian users within seven months of its 2015 launch."
+  },
+  {
+   "slug": "speech-339331",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "Labor supported repealing the 75 per cent reach rule but opposed removing the two-out-of-three cross-media ownership rule, warning it would increase media concentration. It criticised the government for failing to deliver comprehensive media reform addressing convergence and online platforms."
+  },
+  {
+   "slug": "speech-339332",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued for repealing the 75% audience reach rule and the two-out-of-three cross-media ownership rule as outdated in the digital age, and for introducing new regional programming obligations. He cited examples of fake news, including a false report of pro-Trump supporters chanting hateful slogans in New York and misleading claims about 70% of the Great Barrier Reef dying from coral bleaching."
+  },
+  {
+   "slug": "speech-339347",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "Labor backed the removal of the 75 per cent reach rule but opposed repealing the two-out-of-three rule in the Broadcasting Legislation Amendment (Media Reform) Bill 2016. The bill was criticised as piecemeal and harmful to diversity, citing the Centre for Policy Development's finding that Australia has one of the world's most concentrated media markets, submissions from Seven West Media and the NSW Farmers Association, and Minister Mitch Fifield's handling of the reform."
+  },
+  {
+   "slug": "speech-339348",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Broadcasting Legislation Amendment (Media Reform) Bill is inadequate for regional Australians, citing poor free-to-air television reception and a flawed NBN rollout in his electorate of Shortland, where five of the top ten suburbs for NBN complaints are located. He stated Labor supports removing the 75% reach rule but opposes abolishing the two-out-of-three rule, and will back the bill only if the government agrees to Labor’s amendment."
+  },
+  {
+   "slug": "speech-339349",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "Labor supports abolishing the 75% audience reach rule but opposes removing the two-out-of-three rule in the Broadcasting Legislation Amendment (Media Reform) Bill 2016, arguing the Coalition's bill fails to protect media diversity or guarantee local content, especially in regional areas like the electorate of Lyons in Tasmania."
+  },
+  {
+   "slug": "speech-339350",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The speaker supported removing the 75% reach rule (schedule 1) but opposed repealing the two-out-of-three cross-media ownership rule (schedule 2), arguing it would reduce media diversity and local content. They criticised the government for not conducting a comprehensive inquiry into media ownership, which has not occurred in nearly 20 years, and highlighted cuts to journalist jobs and to the ABC."
+  },
+  {
+   "slug": "speech-339351",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the two-out-of-three media ownership rule must be retained to protect media diversity and democracy, and supported the member for Greenway's amendment to the Broadcasting Legislation Amendment (Media Reform) Bill 2016, opposing the government's plan as insufficient and harmful to local content and jobs."
+  },
+  {
+   "slug": "speech-339353",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Broadcasting Legislation Amendment (Media Reform) Bill 2016, which repeals the two-out-of-three cross-media rule and the 75% audience reach rule, citing regional media cuts such as Fairfax cutting 62 journalists in regional Victoria in 2015, and expressed concern over ABC funding cuts of nearly $200 million, urging the ABC to consider rural internet access."
+  },
+  {
+   "slug": "speech-339354",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The member for Gippsland argued that regional media—including local newspapers, television, the ABC, and commercial radio—are vital for keeping communities informed, especially during natural disasters like fire seasons, and supported the bill as a necessary response to the transformation in media markets over the past 30 years."
+  },
+  {
+   "slug": "speech-339357",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "Labor supported removing the 75% reach rule but opposed repealing the two-out-of-three cross-media ownership rule, arguing the bill was a piecemeal package that would reduce media diversity, particularly in regional Australia. The party also criticised the government's NBN rollout and cuts to ABC and SBS funding, and called for comprehensive, evidence-based media reform."
+  },
+  {
+   "slug": "speech-339358",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Broadcasting Legislation Amendment (Media Reform) Bill 2016, arguing it would increase media ownership concentration in Australia rather than improve diversity. They called for keeping the two-out-of-three rule as a minimum safeguard, criticized the government for prioritizing commercial broadcasters over public interest, and noted that the Abbott-Turnbull government's NBN mismanagement has worsened the digital divide for millions of households."
+  },
+  {
+   "slug": "speech-339360",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Media Reform) Bill 2016 removes the 75% audience reach rule and the two-out-of-three media control rule, arguing they are outdated due to digital media growth and declining traditional revenues—citing profit falls of 10.7% for Seven West Media, 7.1% for Nine Entertainment, and 17.2% for Prime Media Group in 2015-16. The bill also imposes additional local content obligations on regional broadcasters after a trigger event, such as a merger that exceeds the 75% population reach."
+  },
+  {
+   "slug": "speech-339513",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The government argued the media reform bill would remove the 75% audience reach rule and the two-out-of-three rule, citing Nielsen data that 14 of 28 news websites with over one million monthly unique visitors were not owned by traditional media. It blamed the Australian Labor Party for delays to the bill and said the government was negotiating with crossbench senators to secure its passage."
+  }
+ ],
+ "acts": []
+}

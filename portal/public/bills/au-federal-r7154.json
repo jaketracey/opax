@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7154",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Stop PEP11 Forever and Protect Our Coastal Waters) Bill 2024",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Stop PEP11 Forever and Protect Our Coastal Waters) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-02-26",
+ "originating_house": "representatives",
+ "sponsor": "STEGGALL, Zali, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10941",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-09-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7154%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7154%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7154%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7154_ems_9c2cf384-8506-413a-b4bb-a1d3ac53343a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7154%22",
+   "document_date": "2024-02-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-26",
+  "sentences": [
+   "This bill would cancel a specific offshore petroleum exploration permit and ban all future petroleum activity in that area.",
+   "The Joint Authority, made up of the relevant state and federal ministers, would be blocked from considering or granting any petroleum titles related to that permit.",
+   "The permit would automatically end two months after the bill becomes law."
+  ],
+  "changes": [
+   "Cancels Petroleum Exploration Permit 11.",
+   "Prohibits the Joint Authority from processing any applications linked to that permit.",
+   "Bans the grant of various petroleum titles in the permit area."
+  ],
+  "affected": "The titleholders of PEP11, local communities, tourism businesses, and coastal ecosystems near Newcastle, the Central Coast, and Manly Beach.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:42:41Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

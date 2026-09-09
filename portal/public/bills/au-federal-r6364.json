@@ -1,0 +1,273 @@
+{
+ "key": "au-federal-r6364",
+ "title": "Aged Care Amendment (Movement of Provisionally Allocated Places) Bill 2019",
+ "short_title": "Aged Care Amendment (Movement of Provisionally Allocated Places) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2019-09-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6364_ems_fd5c3180-c6d9-4f6c-98f2-515e4b3b17b5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6364%22",
+   "document_date": "2019-07-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00071",
+   "document_date": "2019-09-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-24",
+  "sentences": [
+   "The bill would let the Department of Health secretary approve moving some residential aged care places between regions inside a state or territory.",
+   "The change fixes a legal problem where the current Act did not allow the department to vary the region assigned to a place that had been allocated but not yet used.",
+   "The government says the amendment brings the law into line with how the department had been handling these moves before the issue was discovered."
+  ],
+  "changes": [
+   "Permit the secretary or delegates to allow approved providers to move provisionally allocated places to a different region within the same state or territory.",
+   "Remedy the incorrect interpretation of the Aged Care Act 1997 that had prevented such movements.",
+   "Align the legislation with the existing departmental practice."
+  ],
+  "affected": "Approved providers of residential aged care and the Department of Health.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5867",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) \"*that the bills be read a second time*\", which is parliamentary jargon for agreeing with the main idea of the bill. Since this vote was unsuccessful, the second reading motion will remain unchanged. ### Amendment text > *That all words after 'That' be omitted with a view to substituting the following words: \"whilst not declining to give the bill a second reading, the House notes the Government's continued mismanagement of aged care reform\".*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-11/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-378204",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "The Aged Care Amendment (Movement of Provisionally Allocated Places) Bill 2019 was introduced to allow residential aged care places to be moved between planning regions, provided the move benefits consumers, addresses need in the new region, and does not shift places from high-need regional areas to lower-need metropolitan areas."
+  },
+  {
+   "slug": "speech-380344",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-10",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Aged Care Amendment (Movement of Provisionally Allocated Places) Bill 2019, which allows residential aged-care places to be moved within a state or territory if it benefits consumers, and moved an amendment criticising the government's aged care record, citing 129,000 people on the home care waiting list, 16,000 deaths while waiting, and 14,000 entering residential care."
+  },
+  {
+   "slug": "speech-380347",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-10",
+   "stage_hint": null,
+   "brief": "The bill allows aged-care places to be moved to different planning regions within the same state or territory, with the federal government determining the number of subsidised places to grow in line with the aged population."
+  },
+  {
+   "slug": "speech-380349",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Amendment (Movement of Provisionally Allocated Places) Bill 2019 and Labor's amendments, arguing the government has mismanaged aged care by cutting billions in funding, leaving over 129,000 older Australians waiting for home care packages, and reducing residential care places on the NSW Far North Coast from 87 per 1,000 people over 70 in 2014 to 76 in 2017."
+  },
+  {
+   "slug": "speech-380350",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Amendment (Movement of Provisionally Allocated Places) Bill 2019, which allows shifting aged-care places to meet demand, but criticised the government for not addressing broader aged-care funding issues. They highlighted that Fitzgerald Aged Care, a 39-bed facility in the Hawkesbury, has faced funding cuts due to tightened ACFI rules, and noted over 129,000 older Australians are on a waiting list for in-home care packages, with more than 16,000 having died while waiting."
+  },
+  {
+   "slug": "speech-380351",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-09-10",
+   "stage_hint": null,
+   "brief": "The member for Mayo welcomed the 221 additional residential aged-care beds allocated to the electorate in the 2018-19 Aged Care Approvals Round, noting that the Aged Care Amendment (Movement of Provisionally Allocated Places) Bill 2019 would remove uncertainty about moving provisionally allocated places between regions. The member also reiterated support for public disclosure of staffing levels in aged-care facilities."
+  },
+  {
+   "slug": "speech-380406",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Amendment (Movement of Provisionally Allocated Places) Bill 2019 for allowing more efficient allocation of residential aged-care places, and called for flexible Medicare funding, provider transparency, implementation of royal commission recommendations, wellness programs, and increased dementia care funding. They also backed the Aged Care Amendment (Staffing Ratio Disclosure) Bill 2019 to require disclosure of carer-to-patient ratios."
+  },
+  {
+   "slug": "speech-380407",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill allowing movement of provisional aged-care beds but argued the government must urgently address systemic failures, noting 129,000 people waiting for home care packages (76,000 with none), 16,000 deaths or admissions while waiting, and 14 unaddressed House committee recommendations."
+  },
+  {
+   "slug": "speech-380408",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The Aged Care Amendment (Movement of Provisionally Allocated Places) Bill 2019 allows approved providers to move provisionally allocated residential aged-care places between regions if it benefits consumers, addresses need in the new region, and does not harm the original region. The bill aims to remove barriers to accessing residential aged care and support faster availability of places."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care Amendment (Movement of Provisionally Allocated Places) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00071",
+   "assent_date": "2019-09-20"
+  }
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r6060",
+ "title": "Fair Work Amendment (Tackling Job Insecurity) Bill 2018",
+ "short_title": "Fair Work Amendment (Tackling Job Insecurity) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-26",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-10-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6060%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6060%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6060_ems_7a87c659-e773-4e5c-b248-4798930109d3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6060%22",
+   "document_date": "2018-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-26",
+  "sentences": [
+   "The bill would let casual and rolling contract employees ask their employer to switch to ongoing part-time or full-time work.",
+   "Employers must respond in writing within 21 days, and if they refuse, they must give a reason; the Fair Work Commission can then issue a secure employment order.",
+   "Small businesses are exempt for genuine short-term casuals employed up to three months at a time, but the Commission can act if the exemption is misused."
+  ],
+  "changes": [
+   "Creates a process for insecure workers to request ongoing employment.",
+   "Allows the Fair Work Commission to issue secure employment orders when requests are refused.",
+   "Gives unions the ability to apply for orders regulating insecure work independently of employee requests.",
+   "Exempts genuine short-term casuals in small businesses from the process.",
+   "Empowers the Fair Work Commission to regulate exempt casuals if small businesses misuse the exemption."
+  ],
+  "affected": "Casual and rolling contract employees, their employers, unions, and the Fair Work Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:39Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

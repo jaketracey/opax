@@ -1,0 +1,110 @@
+{
+ "key": "au-federal-s941",
+ "title": "Migration Amendment (Visa Maximum Numbers Determinations) Bill 2013",
+ "short_title": "Migration Amendment (Visa Maximum Numbers Determinations) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-12-09",
+ "originating_house": "senate",
+ "sponsor": "HANSON-YOUNG, Sen Sarah",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10711",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s941%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s941%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s941%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s941%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s941%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s941%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s941_ems_2bb41fda-1287-4533-a2f2-84295ea030b7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s941%22",
+   "document_date": "2013-12-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-09",
+  "sentences": [
+   "The bill would make visa limit decisions subject to parliamentary disallowance.",
+   "It amends the Migration Act 1958 to remove the exemption that currently prevents legislative instruments made under Section 85 from being disallowed.",
+   "The bill would override a December 2 determination that capped Protection Visas for the 2013-1014 financial year."
+  ],
+  "changes": [
+   "Allows legislative instruments designated under Section 85 to be disallowed.",
+   "Overrides the government's December 2 determination that capped Protection Visas.",
+   "Ensures changes to visa limits, particularly for Protection Visas, are subject to parliamentary scrutiny."
+  ],
+  "affected": "Asylum seekers in indefinite detention, community detention or on bridging visas who are subject to a Protection Visa grant freeze.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:05:09Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-826476",
+   "speaker": "Sarah Hanson-Young",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Visa Maximum Numbers Determinations) Bill 2013 was introduced to amend the Migration Act 1958. The bill proceeded without formalities and was read a first time."
+  },
+  {
+   "slug": "speech-826810",
+   "speaker": "Sarah Hanson-Young",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": "The Greens' bill would require any cap on protection visas to be approved by parliament, arguing the minister's recent freeze on 30,000 refugee applications was a retaliatory move that bypassed democratic scrutiny. The government opposed the bill, stating that visa capping is a standard administrative tool and that the freeze was necessary to deter illegal boat arrivals and manage the migration program."
+  }
+ ],
+ "acts": []
+}

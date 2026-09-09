@@ -9,7 +9,11 @@ block makes a claim a reader can act on:
   every source         carries a passage of about 400 characters, and the
                        answer it sits under carries at least one inline
                        citation marker (a source's `answer_ranges`) pointing
-                       into it — the same two things the ask page shows
+                       into it — the same two things the ask page shows.
+                       The lede is the one exception: it paraphrases the
+                       whole report in three short paragraphs, so it may
+                       carry fewer markers than the sections it draws on,
+                       including none at all
   every key figure     carries a numerator, a denominator and a unit, and its
                        label names the base it is measured against
   every source slug    resolves live in the box
@@ -44,7 +48,8 @@ STAT_FIELDS = ("value", "label", "numerator", "denominator", "unit", "slug", "wi
 # model's summary of a prompt rather than the record.
 FORBIDDEN_OPENERS = re.compile(
     r"^\s*(?:based on|according to the (?:provided|passages)|the (?:provided )?context"
-    r"|the passages|from the (?:provided )?context)", re.I)
+    r"|the passages|from the (?:provided )?context|the record shows|the record indicates"
+    r"|the record reveals)", re.I)
 # A passage is trimmed to PASSAGE_CHARS and may carry an ellipsis on either
 # side ("…" is one character), so a couple of characters of slack either way
 # is the trim doing its job, not a bug. PASSAGE_MIN only catches the empty or
@@ -64,13 +69,20 @@ def check(condition: object, message: str, problems: list[str]) -> bool:
     return True
 
 
-def validate_markup(where: str, sources: list[dict], text: str, problems: list[str]) -> None:
+def validate_markup(where: str, sources: list[dict], text: str, problems: list[str], *,
+                    require_marker: bool = True) -> None:
     """Every source carries a quotable passage; the answer carries markers.
 
     These are the two things the ask page shows beside a live answer — a
     passage behind each source and a superscript in the prose that says which
     source a claim came from — and a report carries both in the file instead
-    of asking the platform for them again on every page view."""
+    of asking the platform for them again on every page view.
+
+    `require_marker` is False for the lede: it is a paraphrase of the whole
+    report in three short paragraphs, not a one-sentence-per-source list, so
+    it may earn fewer markers than the sections it draws on — a synthesised
+    sentence with no verbatim quotation should carry no marker, not a wrong
+    one, and a lede with none at all is honest rather than broken."""
     length = len(text)
     for source in sources:
         label = source.get("slug") or source.get("title") or "?"
@@ -84,8 +96,9 @@ def validate_markup(where: str, sources: list[dict], text: str, problems: list[s
                      and all(isinstance(n, int) for n in span)
                      and 0 <= span[0] < span[1] <= length)
             check(valid, f"{where}: source {label!r} has a bad citation range {span!r}", problems)
-    check(any(s.get("answer_ranges") for s in sources),
-          f"{where}: no source carries an inline citation marker", problems)
+    if require_marker:
+        check(any(s.get("answer_ranges") for s in sources),
+              f"{where}: no source carries an inline citation marker", problems)
 
 
 def validate_section(where: str, section: dict, problems: list[str]) -> list[str]:
@@ -111,9 +124,9 @@ def validate_report(slug: str, report: dict, problems: list[str]) -> list[str]:
         problems.append(f"{slug}: version {version!r}, expected 2")
         return slugs
 
-    # v1 fields must survive, so the live page keeps working.
-    for field in ("title", "blurb", "generated_at", "key_moments", "sections", "stats"):
-        check(field in report, f"{slug}: v1 field {field!r} was dropped", problems)
+    # Shared report fields remain required; obsolete v1 prose is optional.
+    for field in ("title", "blurb", "generated_at", "key_moments", "stats"):
+        check(field in report, f"{slug}: field {field!r} was dropped", problems)
 
     moments = report.get("key_moments") or []
     check(6 <= len(moments) <= 8, f"{slug}: {len(moments)} key speeches, expected 6-8", problems)
@@ -134,7 +147,8 @@ def validate_report(slug: str, report: dict, problems: list[str]) -> list[str]:
     check(not FORBIDDEN_OPENERS.match(lede.get("text") or ""),
           f"{slug}: the lede opens with a context preamble", problems)
     if lede_text and lede.get("sources"):
-        validate_markup(f"{slug} lede", lede.get("sources") or [], lede.get("text") or "", problems)
+        validate_markup(f"{slug} lede", lede.get("sources") or [], lede.get("text") or "",
+                        problems, require_marker=False)
     slugs += [s["slug"] for s in (lede.get("sources") or []) if s.get("slug")]
 
     now = report.get("now") or {}
@@ -202,6 +216,14 @@ def validate_report(slug: str, report: dict, problems: list[str]) -> list[str]:
         for row in rows:
             check(row.get("speaker") and (row.get("count") or 0) > 0,
                   f"{slug}: a {window} voice has no speaker or no count", problems)
+    if report.get("retrieval_scope") == "full-corpus":
+        check(report.get("parliamentary_metrics_scope") == "speech",
+              f"{slug}: parliamentary metrics lost their speech scope", problems)
+        check(any(source.get("kind") and source["kind"] != "speech" and source.get("cited")
+                  for section in sections for source in section.get("sources") or []),
+              f"{slug}: full-corpus report has no cited non-speech evidence", problems)
+        check(not any(s.startswith("bill-") for s in slugs),
+              f"{slug}: generated bill registry summaries used as original evidence", problems)
     return slugs
 
 
@@ -221,6 +243,15 @@ def main() -> None:
         if args.reports and path.stem not in args.reports:
             continue
         report = json.loads(path.read_text())
+        if report.get('format') == 'source-comparison':
+            check(path.stem == 'grants-allocation', f'{path.stem}: unknown source comparison', problems)
+            data = json.loads((REPORT_DIR.parent / 'research' / 'mlci.json').read_text())
+            active = [p for p in data['projects'] if p['status'] != 'Withdrawn']
+            check(len(active) == 226 and sum(p['value'] for p in active) == 559241712,
+                  f'{path.stem}: invitation totals do not reconcile', problems)
+            check(len(data['seats']) == 150 and bool(data['sources'].get('cpi')), f'{path.stem}: incomplete sources', problems)
+            checked.append((path.stem, 0, len(data['cpi_comparison'])))
+            continue
         found = validate_report(path.stem, report, problems)
         slugs += found
         checked.append((path.stem, len(report.get("now", {}).get("sections") or []),

@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6344",
+ "title": "Migration Legislation Amendment (Regional Processing Cohort) Bill 2019",
+ "short_title": "Migration Legislation Amendment (Regional Processing Cohort) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6344%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6344%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6344%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6344_ems_999b068c-ee6c-43dc-85f2-19b787efe9ac%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6344%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill would ban certain people who arrived by sea without permission and were sent to another country for processing from applying for an Australian visa.",
+   "The minister could allow an individual or group in that situation to apply for a visa if doing so is in the public interest.",
+   "The ban would apply to people who were 18 or older when sent to a regional processing country after July 2013, including those who have left that country."
+  ],
+  "changes": [
+   "Prevents certain unauthorised maritime arrivals from lodging a valid visa application.",
+   "Creates a ministerial power to lift the ban for individuals or groups when in the public interest.",
+   "Removes automatic visa grants or application rights for those people under the Migration Act and Regulations."
+  ],
+  "affected": "Unauthorised maritime arrivals and transitory persons who were at least 18 years old and sent to a regional processing country after 19 July 2013.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:40:27Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-377408",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The Migration Legislation Amendment (Regional Processing Cohort) Bill 2019 would bar illegal maritime arrivals transferred to regional processing countries on or after 19 July 2013—the date of Kevin Rudd's PNG resettlement announcement—from applying for any Australian visa, subject to ministerial discretion in the public interest and an exemption for those under 18 at transfer. The bill was advanced to codify the policy that illegal boat arrivals will never be settled in Australia, citing Labor-era statistics under the Rudd-Gillard-Rudd governments of 50,000 arrivals on over 800 boats, 1,200 deaths, and a $16 billion blowout, compared with Operation Sovereign Borders achieving no deaths at sea, closed detention centres, and an increased humanitarian program of 18,750 places."
+  }
+ ],
+ "acts": []
+}

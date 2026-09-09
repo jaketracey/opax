@@ -1,0 +1,145 @@
+{
+ "key": "au-federal-r7242",
+ "title": "Customs Tariff Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Expansion) Bill 2024",
+ "short_title": "Customs Tariff Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Expansion) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-09-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2024-10-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-10-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7242_ems_a6d906af-e967-4668-82ff-261161eefb4d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7242%22",
+   "document_date": "2024-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00094",
+   "document_date": "2024-10-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-09-11",
+  "sentences": [
+   "This bill would change Australia's customs duties to reflect the United Kingdom joining the Comprehensive and Progressive Agreement for Trans-Pacific Partnership.",
+   "Goods from the United Kingdom that meet the agreement's origin rules would generally enter Australia duty-free, with some exceptions listed in a schedule.",
+   "For certain products, the tariff would be phased down gradually, reaching zero by no later than 1 January 2033, and a safeguard could temporarily restore the previous rate if the United Kingdom keeps its equivalent measure."
+  ],
+  "changes": [
+   "Sets a zero customs duty for most goods originating in the United Kingdom.",
+   "Creates a phased reduction schedule for some goods, with the final zero rate due by 1 January 2033.",
+   "Adds a safeguard clause that can reinstate the pre-Protocol duty rate on certain products while the United Kingdom maintains its own safeguard."
+  ],
+  "affected": "Importers of goods from the United Kingdom and Australian businesses that compete with those imports.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:15Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Expansion) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00094",
+   "assent_date": "2024-10-24"
+  }
+ ]
+}

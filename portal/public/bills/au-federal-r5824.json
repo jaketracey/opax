@@ -1,0 +1,109 @@
+{
+ "key": "au-federal-r5824",
+ "title": "Fair Work Amendment (Protecting Take Home Pay) Bill 2017",
+ "short_title": "Fair Work Amendment (Protecting Take Home Pay) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-20",
+ "originating_house": "representatives",
+ "sponsor": "SHORTEN, Bill, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10580",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2018-03-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5824%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5824%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5824%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5824_ems_1e28eca1-5147-4684-89a1-a8929d8b8fef%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5824%22",
+   "document_date": "2017-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-20",
+  "sentences": [
+   "The bill would stop modern awards from being changed in a way that cuts an employee's take-home pay.",
+   "It would add a new section to the Fair Work Act requiring the Fair Work Commission to not vary awards if the change would reduce take-home pay, including through lower penalty rates or fewer hours those rates apply to.",
+   "The bill would also void any determination made from 22 February 2017 that results from the Fair Work Commission's decision AM2014/305."
+  ],
+  "changes": [
+   "Prevents modern award variations that reduce take-home pay.",
+   "Invalidates determinations from decision AM2014/305 made on or after 22 February 2017.",
+   "Defines take-home pay to include wages, incentive payments, allowances and overtime, but not deductions under section 324 of the Fair Work Act."
+  ],
+  "affected": "Employees covered by modern awards and the Fair Work Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:14Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r5955",
+ "title": "Renewable Energy Legislation Amendment (Supporting Renewable Communities) Bill 2017",
+ "short_title": "Renewable Energy Legislation Amendment (Supporting Renewable Communities) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-10-16",
+ "originating_house": "representatives",
+ "sponsor": "MCGOWAN, Cathy, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10798",
+ "portfolio": "(s) MCGOWAN, Cathy, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5955%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5955%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5955%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5955_ems_79088155-a3ef-48b3-abf8-da2a08e3d84a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5955%22",
+   "document_date": "2017-10-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-16",
+  "sentences": [
+   "The bill would require the Australian Renewable Energy Agency and the Clean Energy Finance Corporation to support community energy projects.",
+   "It would expand the functions of ARENA to fund planning, development and implementation of community energy projects and to advise the minister on community energy models.",
+   "The bill would also allow the CEFC to invest in community joint partnerships and other community energy models to help make them commercially viable."
+  ],
+  "changes": [
+   "Expands ARENA's functions to fund community energy projects and to collect and share information on community energy models.",
+   "Adds to the CEFC's functions to invest in community joint partnerships and other community energy models.",
+   "Clarifies ARENA's role in advising the minister on community energy matters."
+  ],
+  "affected": "Communities and individuals developing community-based energy projects.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:41:36Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-354467",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker moved the Renewable Energy Legislation Amendment (Supporting Renewable Communities) Bill 2017, which would amend ARENA and CEFC functions to fund and support community energy projects, citing the Totally Renewable Yackandandah project’s goal of 100% renewable energy by 2022 as a model to be replicated across rural Australia."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,184 @@
+{
+ "key": "au-federal-r5748",
+ "title": "Law Enforcement Legislation Amendment (State Bodies and Other Measures) Bill 2016",
+ "short_title": "Law Enforcement Legislation Amendment (State Bodies and Other Measures) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2016-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5748_ems_b8e6b436-597b-4e44-aaf4-e050a051cc8e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5748_ems_9d732564-0df8-4851-b8c2-177ac4f46424%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5748_ems_691e3a2e-83c9-415e-a49e-42d03b1c5837%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5748%22",
+   "document_date": "2016-10-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00086",
+   "document_date": "2016-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-335904",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The bill amends Commonwealth laws to give New South Wales' new Law Enforcement Conduct Commission and Victoria's Independent Broad-based Anti-corruption Commission the investigative powers they need, and clarifies that property used as security for a loan paid off with crime proceeds is not 'lawfully acquired' under the Proceeds of Crime Act."
+  },
+  {
+   "slug": "speech-337679",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The Parliamentary Joint Committee on Intelligence and Security tabled advisory reports for the Criminal Code Amendment (War Crimes) Bill 2016 and item 28 of the Law Enforcement Legislation Amendment (State Bodies and Other Measures) Bill 2016. The reports are now parliamentary papers under standing order 39(e)."
+  },
+  {
+   "slug": "speech-337810",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The bill updates Commonwealth laws to grant the Victorian IBAC and the new NSW Law Enforcement Conduct Commission investigative powers equivalent to other state anti-corruption bodies, and closes a proceeds of crime loophole that allowed property to be considered lawfully acquired if only the initial deposit was legitimate."
+  },
+  {
+   "slug": "speech-337811",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The Law Enforcement Legislation Amendment (State Bodies and Other Measures) Bill 2016 was supported for establishing the New South Wales Law Enforcement Conduct Commission (LECC), aligning Victorian anti-corruption investigative powers, and clarifying the definition of 'lawfully acquired' under the Proceeds of Crime Act following the AFP v Huang case. Contrasting crime statistics—such as Victorian robbery up 14% and theft up 19.2% against declines in equivalent New South Wales categories—were cited to argue for greater national alignment of policing laws and crime data."
+  },
+  {
+   "slug": "speech-337812",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The bill supports the establishment of the New South Wales Law Enforcement Conduct Commission, aligns Victoria's anti-corruption commission powers under Commonwealth law, and amends the Proceeds of Crime Act 2002 to require courts to examine layered loans and mortgage repayments in determining whether property is lawfully acquired."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Law Enforcement Legislation Amendment (State Bodies and Other Measures) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00086",
+   "assent_date": "2016-11-30"
+  }
+ ]
+}

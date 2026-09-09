@@ -1,0 +1,208 @@
+{
+ "key": "au-federal-r5623",
+ "title": "Biological Control Amendment Bill 2016",
+ "short_title": "Biological Control Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2016-03-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5623_ems_8935c0e0-9069-4215-ab78-23ec9a263305%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4431980%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5623%22",
+   "document_date": "2016-02-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00028",
+   "document_date": "2016-03-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-330358",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that invasive weeds and pest animals cost Australian agriculture billions annually and supported the Biological Control Amendment Bill 2016, but criticised the minister’s plan to relocate the APVMA from Canberra to Armidale as damaging to the regulator’s workforce and efficiency. He also announced he would seek a Senate inquiry into flying-fox infestations affecting communities like Singleton and Cessnock in his electorate."
+  },
+  {
+   "slug": "speech-330359",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The Biological Control Amendment Bill 2016 was argued to amend the definition of 'organism' to include viruses and subviral agents, and to remove the term 'live' from references, providing certainty for biological control programs. The speaker highlighted local successes such as relocating a bat colony in Boonah, and supported measures to control rabbits (reducing populations to 15% via a virus) and carp (using cyprinid herpesvirus 3), noting potential savings of over $2 billion annually in agricultural costs."
+  },
+  {
+   "slug": "speech-330490",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Biological Control Amendment Bill 2016, which updates the definition of an organism to include viruses and sub-viral agents. They announced a program to release cyprinid herpesvirus 3 to control European carp, aiming to remove 80–90% of the carp biomass from the Murray-Darling Basin, with an estimated cost of $50 million and a two-year timeline before full implementation."
+  },
+  {
+   "slug": "speech-330491",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the prickly acacia tree has infested seven million hectares in North Queensland, threatening the endangered Julia Creek dunnart, and called for immediate eradication. He also warned that flying foxes in Charters Towers carry deadly diseases like lyssavirus and hendra virus, and urged the Queensland Health Minister to remove them from population centres."
+  },
+  {
+   "slug": "speech-330492",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Biological Control Amendment Bill 2016, citing the successful eradication of European carp from Lake Crescent and the ongoing removal at Lake Sorell in Tasmania. They also detailed the impact of Pacific oyster mortality syndrome on Tasmanian oyster farms and called for a strategic working group, an education campaign, and Green Army projects to retain workers and rebuild the industry."
+  },
+  {
+   "slug": "speech-330493",
+   "speaker": "Ann Sudmalis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The Biological Control Amendment Bill 2016 amends the Biological Control Act 1984 to clarify that viruses and subviral agents are organisms for biological control, removing the term 'live' to end ambiguity. The bill supports national programs targeting pests like rabbits, carp, and weeds, citing economic benefits such as $70 billion recovered in agriculture since 1950 and a 23:1 cost-benefit ratio for weed control."
+  },
+  {
+   "slug": "speech-330494",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The Biological Control Amendment Bill 2016 was supported to clarify that viruses and sub-viral agents count as organisms for biocontrol programs. Passage was urged to allow the spring 2016 release of the new rabbit virus strain K5 and the potential release of Cyprinid herpesvirus to control common carp."
+  },
+  {
+   "slug": "speech-330495",
+   "speaker": "Craig Laundy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The Biological Control Amendment Bill 2016 amends the Biological Control Act 1984 to clarify that the definition of an organism includes viruses and subviral agents, supporting national biological control programs. It will back a $1.2 million commitment for a new rabbit calicivirus strain, noting that existing virus-based control saves agricultural industries up to $2 billion annually."
+  },
+  {
+   "slug": "speech-330498",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "Labor supports the Norfolk Island reforms, arguing the community has long received substandard services and infrastructure. The speaker notes the bill extends Commonwealth laws (including the Fair Work Act) to Norfolk Island and gives it federal electoral representation through the ACT division of Canberra and ACT senators."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Biological Control Amendment Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00028",
+   "assent_date": "2016-03-23"
+  }
+ ]
+}

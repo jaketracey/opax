@@ -1,0 +1,143 @@
+{
+ "key": "au-federal-r7518",
+ "title": "Biosecurity Amendment (Improving Operational Efficiency) Bill 2026",
+ "short_title": "Biosecurity Amendment (Improving Operational Efficiency) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-07-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "before_parliament",
+ "status_as_of": "2026-08-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7518%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7518%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7518%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7518%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7518%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7518_ems_3e6aa9af-12b9-4fe6-8b7c-6afd5b13125c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7518%22",
+   "document_date": "2026-07-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-07-01",
+  "sentences": [
+   "This bill would change the Biosecurity Act 2015 to make biosecurity operations more efficient and effective.",
+   "It would require travellers to provide biosecurity information at set times and in set ways, such as through the digital Australia Travel Declaration, and would require a Notice of Intention before certain decisions on approved arrangements.",
+   "The obligation for travellers mirrors the existing power in section 196 of the Act to require information from those entering Australia by aircraft or vessel."
+  ],
+  "changes": [
+   "Require travellers to provide biosecurity information or documents at prescribed times and in prescribed manners.",
+   "Require a Notice of Intention before refusing an application for approving or varying an approved arrangement under Chapter 7 of the Act.",
+   "Remove the term 'relevant information' from section 568 of the Act."
+  ],
+  "affected": "Travellers entering Australia by aircraft or vessel, and biosecurity industry participants seeking approved arrangements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:03:16Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1204832",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204890",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205098",
+   "speaker": "Tom French",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

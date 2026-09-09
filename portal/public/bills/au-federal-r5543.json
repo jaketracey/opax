@@ -1,0 +1,230 @@
+{
+ "key": "au-federal-r5543",
+ "title": "Aviation Transport Security Amendment (Cargo) Bill 2015",
+ "short_title": "Aviation Transport Security Amendment (Cargo) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "passed",
+ "status_as_of": "2015-12-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5543_ems_103d6d1c-cf22-4849-b4fc-4962dd7bbf0c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5543%22",
+   "document_date": "2015-09-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00165",
+   "document_date": "2015-12-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-17",
+  "sentences": [
+   "The bill would update Australia's air cargo security rules to match international standards.",
+   "It would create a new type of industry participant, the known consignor, and give the government power to make regulations for approving them.",
+   "The changes are meant to keep Australian air freight competitive and avoid trade disruptions as global standards evolve."
+  ],
+  "changes": [
+   "Create two new categories of aviation industry participant: known consignor and regulated agent.",
+   "Define when cargo is cleared for transport on an aircraft.",
+   "Allow regulations to set up a scheme for approving known consignors.",
+   "Clarify that examining cargo may include opening or unpacking it.",
+   "Expand what the Secretary can cover in a notice.",
+   "Remove outdated provisions."
+  ],
+  "affected": "Businesses that handle or arrange air cargo transport.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:52:29Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-319353",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-17",
+   "stage_hint": null,
+   "brief": "The Aviation Transport Security Amendment (Cargo) Bill 2015 was moved to amend the Aviation Transport Security Act 2004 to meet US requirements for 100% piece-level examination of air cargo on passenger flights, protecting $4.8 billion in Australian airfreight exports to the US. The government negotiated a two-year timeframe to implement changes, including a known consignor scheme and off-airport screening."
+  },
+  {
+   "slug": "speech-323931",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aviation Transport Security Amendment (Cargo) Bill is necessary to balance aviation safety with economic efficiency, and that Labor supports it as a non-partisan measure. The bill creates a \"known consignor\" category to shift cargo screening responsibility to shippers, responding to US requirements that Australia meet item-by-item inspection standards for air cargo entering the United States."
+  },
+  {
+   "slug": "speech-323932",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The Aviation Transport Security Amendment (Cargo) Bill 2015 mandates 100% piece-level screening of air cargo on US-bound passenger flights and establishes a known consignor scheme, with Australia’s cargo security program recognised by the US until July 2017 to avoid disruption to $4.8 billion in annual air freight exports."
+  },
+  {
+   "slug": "speech-323934",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The Aviation Transport Security Amendment (Cargo) Bill 2015 requires 100% X-ray scanning of all air freight parcels destined for the United States, implemented through off-airport cargo examination by approved freight forwarders or a known consigner scheme. The measure, necessitated by US security requirements, supports $4.8 billion in Australian air exports to the US and is expected to provide a competitive advantage for exporters, including Tasmanian producers like Tasmanian Quality Meats."
+  },
+  {
+   "slug": "speech-323935",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aviation Transport Security Amendment (Cargo) Bill 2015 and praised the member for Lyons."
+  },
+  {
+   "slug": "speech-323937",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The Aviation Transport Security Amendment (Cargo) Bill 2015 establishes a known consignor program, streamlines air cargo clearance, and enhances cargo examinations to meet US Transportation Security Administration requirements, maintaining Australia's $4.8 billion annual airfreight export market to the USA. The speaker supported the bill, noting it balances necessary security upgrades—including potential 100% piece-level screening for US-bound cargo—against minimal regulatory burden, with a two-year industry adjustment period negotiated after US re-evaluation in December 2014."
+  },
+  {
+   "slug": "speech-323938",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The Aviation Transport Security Amendment (Cargo) Bill 2015 requires 100% screening of all cargo on passenger aircraft to meet US security standards, with a transition agreement extending to July 2017 to protect $4.8 billion in air freight exports. The bill establishes a known consignor scheme and allows exporters to choose screening methods to minimise costs and red tape."
+  },
+  {
+   "slug": "speech-323939",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The Aviation Transport Security Amendment (Cargo) Bill 2015 establishes a known consignor and regulated agent scheme to align Australia’s air cargo security with US and international standards, addressing a US finding that current arrangements fell short. Australia’s airfreight exports to the US are worth $4.8 billion, and the bill provides a two-year transition period to implement piece-level screening of all cargo on passenger aircraft."
+  },
+  {
+   "slug": "speech-323940",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The Aviation Transport Security Amendment (Cargo) Bill 2015 was introduced to align Australian air cargo security with US requirements, including 100% piece-level examination of cargo on passenger flights, via a known consignor scheme and off-airport screening, to protect $4.8 billion in airfreight exports to the United States."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aviation Transport Security Amendment (Cargo) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00165",
+   "assent_date": "2015-12-02"
+  }
+ ]
+}

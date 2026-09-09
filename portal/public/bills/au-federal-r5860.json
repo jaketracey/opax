@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r5860",
+ "title": "Parliamentary Business Resources (Consequential and Transitional Provisions) Bill 2017",
+ "short_title": "Parliamentary Business Resources (Consequential and Transitional Provisions) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2017-05-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-05-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5860_ems_4ce42125-3d6c-46ec-a60a-157427cb0f4e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5860%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00038",
+   "document_date": "2017-05-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "This bill handles minor follow-up and switch-over issues from a new system for parliamentary work costs.",
+   "It removes the old rules for such costs, makes small updates to other laws, and sets up the transition to the new system.",
+   "The explanatory memorandum says the bill has no financial impact."
+  ],
+  "changes": [
+   "It repeals the old parliamentary work expenses framework.",
+   "It makes minor consequential amendments to Commonwealth legislation.",
+   "It provides transitional provisions, including preserving the Parliamentary Injury Compensation Scheme Instrument 2016."
+  ],
+  "affected": "Members of Parliament and others who use parliamentary work expenses.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-345185",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The Parliamentary Business Resources (Consequential and Transitional Provisions) Bill 2017 was moved for second reading, repealing the Parliamentary Entitlements Act 1990 and Parliamentary Allowances Act 1952 to implement a new principles-based expenses framework, with transitional provisions validating expenses spanning both systems and amending the Independent Parliamentary Expenses Authority Act 2017 accordingly."
+  },
+  {
+   "slug": "speech-345930",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Parliamentary Business Resources Bills, arguing they improve transparency and accountability for politicians' work expenses to help restore public trust, and noted that a previous independent review into parliamentary expenses—ordered after the former member for Mackellar used a helicopter on taxpayer funds—was delayed for over a year before action was taken."
+  },
+  {
+   "slug": "speech-345932",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The Parliamentary Business Resources Bill 2017 and its consequential bill implement a key recommendation of the Tune-Conde review, establishing a new framework where parliamentarians can only claim expenses for the dominant purpose of parliamentary business, must ensure value for money, and face personal financial liability plus a 25% penalty loading for non-compliant expenses not repaid within 28 days."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Parliamentary Business Resources (Consequential and Transitional Provisions) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00038",
+   "assent_date": "2017-05-19"
+  }
+ ]
+}

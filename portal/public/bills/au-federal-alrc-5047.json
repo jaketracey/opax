@@ -1,0 +1,69 @@
+{
+ "key": "au-federal-alrc-5047",
+ "title": "Criminal Code Amendment (Misrepresentation of Age to a Minor) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-26",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2013-06-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-821960",
+   "speaker": "Nick Xenophon",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-02-26",
+   "stage_hint": null,
+   "brief": "The speaker moved to introduce the Criminal Code Amendment (Misrepresentation of Age to a Minor) Bill 2013, which creates new offences for misrepresenting age to minors online under the Criminal Code Act 1995. The bill was agreed to and read a first time."
+  },
+  {
+   "slug": "speech-825237",
+   "speaker": "Jacinta Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-27",
+   "stage_hint": null,
+   "brief": "The order of general business was set to consider first the Health Insurance Amendment (Medicare Funding for Certain Types of Abortion) Bill 2013, then the Criminal Code Amendment (Misrepresentation of Age to a Minor) Bill 2013. The motion was agreed to."
+  },
+  {
+   "slug": "speech-825282",
+   "speaker": "Anne McEwen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-27",
+   "stage_hint": null,
+   "brief": "The committee reports listed under order of business items 8 and 10 were tabled, and the Publications Committee's 26th report was adopted."
+  }
+ ],
+ "acts": []
+}

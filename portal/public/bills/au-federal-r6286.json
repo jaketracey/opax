@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r6286",
+ "title": "Fair Work Amendment (Right to Request Casual Conversion) Bill 2019",
+ "short_title": "Fair Work Amendment (Right to Request Casual Conversion) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Jobs and Small Business",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6286%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6286%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6286%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6286_ems_56450c7a-1472-42da-a2a4-b2649816d4d8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6286%22",
+   "document_date": "2019-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "The bill would add a new right to the Fair Work Act 2009 allowing eligible casual employees to ask to become full-time or part-time workers.",
+   "Employers would have to respond in writing within 21 days, and can only refuse after consulting the employee and on reasonable grounds.",
+   "The right follows a model clause developed by the Fair Work Commission, which already applies to 85 modern awards since 1 October 2018."
+  ],
+  "changes": [
+   "Insert a new right to request casual conversion into the National Employment Standards.",
+   "Require employers to give a written response within 21 days and to consult before refusing.",
+   "Provide a dispute resolution mechanism for disagreements about the new right.",
+   "Allow employees to revert to casual employment with written employer agreement.",
+   "Prohibit employers from avoiding the right by re-engaging or reducing hours.",
+   "Clarify how pre-conversion casual service counts for other entitlements."
+  ],
+  "affected": "Eligible casual employees in the national system and their employers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:21:15Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

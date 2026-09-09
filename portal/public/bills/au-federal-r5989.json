@@ -1,0 +1,170 @@
+{
+ "key": "au-federal-r5989",
+ "title": "Financial Sector Legislation Amendment (Crisis Resolution Powers and Other Measures) Bill 2017",
+ "short_title": "Financial Sector Legislation Amendment (Crisis Resolution Powers and Other Measures) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-10-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-03-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5989_ems_d5c61274-9551-412b-9ecb-8a423f880f1b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5989%22",
+   "document_date": "2017-10-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00010",
+   "document_date": "2018-03-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-19",
+  "sentences": [
+   "This bill would give the Australian Prudential Regulation Authority stronger powers to handle a financial crisis.",
+   "It would amend several laws to improve APRA's ability to manage distressed banks, insurers and life insurers, including through judicial management, directions and transfers.",
+   "The changes would also require regulated entities to prepare resolution plans under APRA's prudential standards."
+  ],
+  "changes": [
+   "Enhance APRA's statutory and judicial management regimes for crisis situations.",
+   "Improve APRA's directions powers and its ability to transfer business under the Transfer Act.",
+   "Support conversion and write-off of capital instruments and strengthen stay provisions in contracts.",
+   "Give APRA clearer powers to respond to distress in Australian branches of foreign entities.",
+   "Improve the Financial Claims Scheme and simplify APRA's wind-up and external administration powers.",
+   "Require regulated entities to prepare resolution plans under APRA's prudential standards."
+  ],
+  "affected": "APRA, banks, insurers, life insurers, and their corporate groups.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:32:27Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359006",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Financial Sector Legislation Amendment (Crisis Resolution Powers and Other Measures) Bill 2017 strengthens APRA’s crisis management powers, and expressed strong support for the bill. He credited Labor’s 2007–2013 response to the global financial crisis, including a $42 billion stimulus, with saving 200,000 jobs and keeping Australia as one of only two OECD countries to avoid recession, citing Nobel laureate Joseph Stiglitz’s praise and noting that GDP per capita growth exceeded that of any other G20 nation by over 80%."
+  },
+  {
+   "slug": "speech-359007",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Financial Sector Legislation Amendment (Crisis Resolution Powers and Other Measures) Bill 2017, arguing it would strengthen Australia's financial system by giving APRA flexible, timely resolution powers to address gaps identified in a 2012 review, balanced by compensation for affected stakeholders. They also criticised the opposition's positive portrayal of the global financial crisis response, noting the US and UK experiences showed inadequate resolution powers worsened crises."
+  },
+  {
+   "slug": "speech-359008",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Financial Sector Legislation Amendment (Crisis Resolution Powers and Other Measures) Bill 2017 would strengthen APRA's crisis management powers, including resolution planning and resolution powers, to protect the financial system and taxpayers. The bill addresses deficiencies identified by the Murray Financial System Inquiry and aligns Australia with international best practice."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Financial Sector Legislation Amendment (Crisis Resolution Powers and Other Measures) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00010",
+   "assent_date": "2018-03-05"
+  }
+ ]
+}

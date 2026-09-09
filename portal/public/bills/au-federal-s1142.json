@@ -1,0 +1,94 @@
+{
+ "key": "au-federal-s1142",
+ "title": "Freedom of Information Legislation Amendment (Improving Access and Transparency) Bill 2018",
+ "short_title": "Freedom of Information Legislation Amendment (Improving Access and Transparency) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2018-08-22",
+ "originating_house": "senate",
+ "sponsor": "PATRICK, Sen Rex",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10903",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1142%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1142%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1142%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1142%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1142%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1142_ems_6ab16212-a81e-45c0-91cd-8d0095bca254%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1142%22",
+   "document_date": "2018-08-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-08-22",
+  "sentences": [
+   "This bill would make government more transparent and accountable by improving freedom of information laws.",
+   "It would require the three commissioner roles—Australian Information Commissioner, Privacy Commissioner and Freedom of Information Commissioner—to be filled, and let FOI applicants bypass the Information Commissioner to the Administrative Appeals Tribunal if the Commissioner takes over 120 days.",
+   "Agencies would be barred from raising new exemptions during FOI reviews, and must publish their legal expenses for each concluded FOI matter."
+  ],
+  "changes": [
+   "Requires the government to appoint all three commissioner positions.",
+   "Allows FOI review applicants to choose to have their case heard by the Administrative Appeals Tribunal instead of the Information Commissioner.",
+   "Gives FOI applicants the right to move a review to the AAT without charge if the Commissioner takes or indicates more than 120 days.",
+   "Stops agencies from making submissions in FOI reviews that were not part of their internal decision-making.",
+   "Prevents the Information Commissioner from making FOI decisions without the legal qualifications required of the FOI Commissioner.",
+   "Forces agencies to publish their external legal expenses for each concluded FOI matter at the Information Commission or AAT."
+  ],
+  "affected": "Citizens, the media, parliamentarians, and government agencies that handle FOI requests.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:10Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,190 @@
+{
+ "key": "au-federal-r5386",
+ "title": "Australian Securities and Investments Commission Amendment (Corporations and Markets Advisory Committee Abolition) Bill 2014",
+ "short_title": "Australian Securities and Investments Commission Amendment (Corporations and Markets Advisory Committee Abolition) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5386%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5386%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5386%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5386%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5386%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5386%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5386%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5386%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5386_ems_aa299ddd-bf0a-4e05-9cc6-514f394b6429%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5386%22",
+   "document_date": "2014-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3696",
+   "date": "2015-03-02",
+   "house": "representatives",
+   "question": "Ed Husic Earlier in the debate on this bill, the Australian Securities and Investments Commission Amendment (Corporations and Markets Advisory Committee Abolition) Bill 2014, I was reflecting on the great work that CAMAC has done, particularly in trying to work out a framework for the introduction of crowdsourced equity funding in Australia, and what that might do to help support businesses, particularly start-ups and those that are at the early stage of innovation, being able to get access to much-needed capital. As I indicated earlier, CAMAC brought down a very comprehensive report in May. I would like to congratulate the subcommittee of CAMAC who brought that report down, led by chair, Greg Vickery AO, from Norton Rose Australia; along with Teresa Handicott from Corrs Chambers Westgarth; Professor Ian Ramsay, who is a professor of commercial law at the University of Melbourne; and Brian Salter, who is the General Counsel at AMP; and they were assisted by ASIC's Maan Beydoun. Even in mentioning those names, you get a sense of the calibre of people who have committed to assist in CAMAC's work. As I indicated in my earlier contribution, from a policy perspective it is simply a tragedy that with the abolition of CAMAC we will lose those skills and that expertise, and the acquisition of the insights of that body—and it is assumed that, once CAMAC is demolished in the way that is proposed, the three people currently working for CAMAC will be absorbed by Treasury. It is an absolute tragedy that the government will have to pay more to get that expertise, as opposed to what they had at hand and the great work CAMAC has done, such as this report. This report on crowdsource equity funding was widely welcomed by many for its breadth. It looked at jurisdictions—particularly in the US, the UK, New Zealand, Canada and within the EU—that are working very hard to put, or have put, in place mechanisms to allow crowdsource equity funding. Not everyone would necessarily agree with w",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-03-02/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-306513",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306514",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306515",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306648",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306649",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306651",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306652",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-02",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

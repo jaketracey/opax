@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r5635",
+ "title": "Broadcasting Legislation Amendment (Media Reform) Bill 2016",
+ "short_title": "Broadcasting Legislation Amendment (Media Reform) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5635%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5635%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5635%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5635_ems_c0a01f51-a8ac-43d2-895f-2d7c4f6e9790%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5635%22",
+   "document_date": "2016-03-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-02",
+  "sentences": [
+   "The bill would remove two ownership restrictions on media companies and set new local content rules for regional TV stations.",
+   "It would repeal the rule limiting a person to controlling TV licences covering no more than 75 per cent of the population and the rule barring control of more than two of three regulated media platforms in one area.",
+   "After a change of control, affected regional broadcasters in aggregated markets would need to provide 150 points of local programming per week, up from 120, and those in non-aggregated markets would need 60 points per week."
+  ],
+  "changes": [
+   "Repeal the 75 per cent audience reach rule.",
+   "Repeal the 2 out of 3 cross-media control rule.",
+   "Increase local programming requirements by 30 points per week for affected regional broadcasters in aggregated markets and Tasmania after a trigger event.",
+   "Introduce local programming requirements of about 60 points per week for affected regional broadcasters in non-aggregated markets after a trigger event.",
+   "Require licensees to report to the ACMA on compliance 18 months after a trigger event and again one year later.",
+   "Direct the ACMA to review the new local programming provisions within two years after the additional obligations start."
+  ],
+  "affected": "Commercial television broadcasters, especially regional licensees in aggregated and non-aggregated markets, and the Australian Communications and Media Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-329788",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Media Reform) Bill 2016 repeals the '75 per cent audience reach rule' and the 'two out of three cross-media control rule' to allow media businesses to gain scale. It introduces new local television content obligations for regional broadcasters, adding a 30-point weekly increase in aggregated markets and Tasmania and requiring about 60 points per week (minimum 45) in non-aggregated markets, triggered by a change in control and commencing six months later."
+  }
+ ],
+ "acts": []
+}

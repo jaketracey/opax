@@ -1,0 +1,161 @@
+{
+ "key": "au-federal-r5876",
+ "title": "Treasury Laws Amendment (2017 Measures No. 2) Bill 2017",
+ "short_title": "Treasury Laws Amendment (2017 Measures No. 2) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5876%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5876%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5876%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5876%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5876%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5876%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5876%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5876%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5876%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5876%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5876%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5876_ems_918b161e-481a-47d7-beaf-b345cd127591%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5876%22",
+   "document_date": "2017-05-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00055",
+   "document_date": "2017-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-25",
+  "sentences": [
+   "This bill would amend the Treasury Laws to fix how certain superannuation measures work.",
+   "It would change rules about contribution caps, transition to retirement income streams, and capital gains tax relief for superannuation funds.",
+   "The explanatory memorandum does not specify a start date or the exact Acts amended."
+  ],
+  "changes": [
+   "The bill would modify the transfer balance cap rules.",
+   "It would adjust concessional and non-concessional contribution rules.",
+   "It would update the objective of superannuation and streamline administrative processes."
+  ],
+  "affected": "The changes affect superannuation funds and their members.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:37:21Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-349041",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's support for the Treasury Laws Amendment (2017 Measures No. 2) Bill 2017, which makes technical amendments to superannuation and insolvency laws to address issues raised by the superannuation sector, reduce legal complexity, and support the Fair Entitlements Guarantee Recovery Program."
+  },
+  {
+   "slug": "speech-349044",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "Labor supports the Treasury Laws Amendment Bill to fix problems created by the government's rushed and poorly consulted superannuation changes, and warns the same pattern of division and lack of consultation is now repeating with energy and climate policy."
+  },
+  {
+   "slug": "speech-349045",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (2017 Measures No. 2) Bill 2017, particularly its exemption of catastrophic injury compensation from the transfer balance cap, but criticised the government for repeatedly rushing and poorly consulting on amendments to landmark Labor reforms such as the 1993 Native Title Act and 1992 compulsory superannuation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2017 Measures No. 2) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00055",
+   "assent_date": "2017-06-22"
+  }
+ ]
+}

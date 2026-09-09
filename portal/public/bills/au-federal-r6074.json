@@ -1,0 +1,179 @@
+{
+ "key": "au-federal-r6074",
+ "title": "Biosecurity Legislation Amendment (Miscellaneous Measures) Bill 2018",
+ "short_title": "Biosecurity Legislation Amendment (Miscellaneous Measures) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2018-08-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6074_ems_326a6655-247e-46eb-a928-831f7fbad358%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6074%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00088",
+   "document_date": "2018-08-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "This bill would update the Biosecurity Act 2015 to better protect Australia from pests and diseases.",
+   "It would let certain legal instruments, like the list of banned goods, refer to documents that can be updated later without rewriting the instrument.",
+   "The bill would also clarify the meaning of 'commercial-in-confidence information' and 'human remains', and repeal an outdated fees law from 1985."
+  ],
+  "changes": [
+   "Strengthens Australia's biosecurity system.",
+   "Allows instruments under section 174(1) to adopt documents that change over time.",
+   "Clarifies definitions for commercial-in-confidence information and human remains.",
+   "Improves rules on sharing protected information with National Focal Points under the International Health Regulations.",
+   "Fixes technical errors in references and titles.",
+   "Repeals the Quarantine (Validation of Fees) Act 1985."
+  ],
+  "affected": "People and businesses involved in biosecurity, including those handling goods or information under the Biosecurity Act.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:29:16Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-361534",
+   "speaker": "David Littleproud",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The Biosecurity Legislation Amendment (Miscellaneous Measures) Bill 2018 was moved to strengthen Australia's biosecurity system, including new information-gathering powers to track goods like uncooked prawns after import. The Coalition government has increased biosecurity investment by over 29% since 2013, totalling $783.2 million this financial year, with up to $200 million over four years from the Agricultural Competitiveness White Paper."
+  },
+  {
+   "slug": "speech-366015",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The opposition will support the Biosecurity Legislation Amendment (Miscellaneous Measures) Bill 2018, citing its expansion of information-gathering powers to allow faster identification of at-risk goods. The member for New England was criticized for abolishing the Inspector-General of Biosecurity in 2015 and the Inspector-General of Animal Welfare and Live Animal Exports, with the latter linked to the Awassi Express incident, and his claim that Labor members hate farmers was disputed."
+  },
+  {
+   "slug": "speech-366032",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The member supported the Biosecurity Legislation Amendment (Miscellaneous Measures) Bill 2018, arguing that federal and Tasmanian Liberal governments have under-resourced biosecurity, citing the fruit fly incursion that endangered Tasmania's $50 million stone fruit industry and contrasting Justine Keay's response with former member Brett Whiteley's inaction."
+  },
+  {
+   "slug": "speech-366034",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-27",
+   "stage_hint": null,
+   "brief": "The Biosecurity Legislation Amendment (Miscellaneous Measures) Bill 2018 introduces new information-gathering powers for goods like uncooked prawns released from biosecurity control and establishes a biosecurity imports levy on sea imports from 1 July 2019, projected to raise $325 million. The government has also committed up to $200 million over four years and an additional $121.6 million in the 2018-19 budget to strengthen Australia’s biosecurity system."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Biosecurity Legislation Amendment (Miscellaneous Measures) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00088",
+   "assent_date": "2018-08-31"
+  }
+ ]
+}

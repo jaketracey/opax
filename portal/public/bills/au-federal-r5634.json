@@ -1,0 +1,130 @@
+{
+ "key": "au-federal-r5634",
+ "title": "Social Services Legislation Amendment (Enhanced Welfare Payment Integrity) Bill 2016",
+ "short_title": "Social Services Legislation Amendment (Enhanced Welfare Payment Integrity) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5634%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5634%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5634%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5634%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5634%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5634%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5634%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5634%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5634_ems_580f1ca3-f129-43f3-a0ff-24df6d37eae7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5634%22",
+   "document_date": "2016-03-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-330603",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The bill introduces departure prohibition orders for unpaid welfare debts and removes the six-year limit on debt recovery, with a net saving of $157.8 million. Labor will not oppose it in the House but awaits a Senate committee report, while criticising the government's rhetoric on welfare recipients."
+  },
+  {
+   "slug": "speech-330739",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued for the bill to allow departure prohibition orders for targeted social welfare debtors and remove the six-year limitation on debt recovery, noting that as of June 2015 there were over one million debts owed to the Commonwealth valued at $3.04 billion."
+  },
+  {
+   "slug": "speech-330741",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Enhanced Welfare Payment Integrity) Bill 2016 is a reasonable measure to recover overpayments from welfare recipients, citing that social services account for 35% of Commonwealth spending. They claimed Labor created a $46.9 billion budget black hole, including nearly $10 billion in social services, and blocked $13.4 billion in savings and revenue measures."
+  },
+  {
+   "slug": "speech-330746",
+   "speaker": "Craig Laundy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the bill to strengthen welfare debt recovery, citing $3.04 billion in outstanding debts and advocating for removing the six-year limitation on recovery and allowing travel bans for debtors, emphasising that debts are owed to Australian taxpayers."
+  },
+  {
+   "slug": "speech-330747",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill would strengthen debt recovery from former welfare recipients by allowing departure prohibition orders and removing a six-year limitation, estimating net savings of $157.8 million and targeting $870 million in debts from 270,000 former recipients."
+  }
+ ],
+ "acts": []
+}

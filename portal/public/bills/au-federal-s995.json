@@ -1,0 +1,98 @@
+{
+ "key": "au-federal-s995",
+ "title": "Competition and Consumer Amendment (Australian Country of Origin Food Labelling) Bill 2015",
+ "short_title": "Competition and Consumer Amendment (Australian Country of Origin Food Labelling) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2015-02-12",
+ "originating_house": "senate",
+ "sponsor": "MILNE, Sen Christine",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10458",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s995%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s995%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s995%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s995%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s995%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s995%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s995%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s995_ems_779abccb-f1d3-4b0c-a77a-9e3018b1ddd0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s995%22",
+   "document_date": "2015-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-02-12",
+  "sentences": [
+   "The bill would overhaul country of origin food labels in Australia to reduce consumer confusion.",
+   "It creates a dedicated section in the Competition and Consumer Act 2010 for food origin claims, replacing current rules under another Act, and limits labels to three types of claims.",
+   "New rules would require the phrase 'Manufactured in Australia' instead of 'Made in Australia' and remove vague labels like those referring to local and imported ingredients."
+  ],
+  "changes": [
+   "Creates a single regulatory regime for most packaged and unpackaged food.",
+   "Restricts country of origin labelling to three kinds of claims.",
+   "Replaces the term 'Made in Australia' with 'Manufactured in Australia'.",
+   "Bans qualified claims about local and imported ingredients and substitutes them with 'Packaged in Australia'."
+  ],
+  "affected": "Producers and retailers of packaged and unpackaged food for retail sale in Australia, and consumers who buy those products.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:32:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

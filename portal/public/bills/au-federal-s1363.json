@@ -1,0 +1,210 @@
+{
+ "key": "au-federal-s1363",
+ "title": "Workplace Gender Equality Amendment (Closing the Gender Pay Gap) Bill 2023",
+ "short_title": "Workplace Gender Equality Amendment (Closing the Gender Pay Gap) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-08",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Women",
+ "status": "passed",
+ "status_as_of": "2023-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1363_ems_c828bc87-8341-420d-9641-981a45c43fc6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1363%22",
+   "document_date": "2023-02-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00018",
+   "document_date": "2023-04-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-02-08",
+  "sentences": [
+   "The bill would require the Workplace Gender Equality Agency to publish the gender pay gap of each large employer.",
+   "It would also rename the current minimum standards as gender equality standards and force chief executives to give certain reports to their governing body.",
+   "The measures implement four of ten recommendations from a 2022 review, with a further review of the changes planned five years after passage."
+  ],
+  "changes": [
+   "The bill gives the Workplace Gender Equality Agency a new power to release employer-level gender pay gap data.",
+   "The bill renames minimum standards as gender equality standards.",
+   "The bill requires chief executives of relevant employers to provide the Executive Summary and Industry Benchmark Report to all members of their governing body.",
+   "The bill amends the Act to align with its legislative instrument on collecting information about sexual harassment and discrimination."
+  ],
+  "affected": "Relevant employers, defined as registered higher education institutions, employers of 100 or more employees in Australia, Commonwealth companies, and Commonwealth entities, are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-827287",
+   "speaker": "Jess Walsh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-08",
+   "stage_hint": null,
+   "brief": "The Albanese government is introducing the Workplace Gender Equality Amendment (Closing the Gender Pay Gap) Bill, which will for the first time require businesses with 100 or more employees to publicly report their gender pay gaps, with first reporting planned for early 2024. The Minister noted that women working full time earn 14.1% less than men, costing the economy $51.8 billion annually, and highlighted the government’s broader investment of over $7 billion and reintroduction of gender-responsive budgeting to advance gender equality."
+  },
+  {
+   "slug": "speech-829043",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-23",
+   "stage_hint": null,
+   "brief": "The bill requires the Workplace Gender Equality Agency to publish employer-level gender pay gaps for organisations with over 100 employees, renames minimum standards as gender equality standards, and adds sexual harassment as a gender equality indicator. The opposition supported the bill as implementing reforms from a review commissioned by the former coalition government, while the Greens called for lowering the reporting threshold to 50 employees and stronger compliance measures."
+  },
+  {
+   "slug": "speech-829052",
+   "speaker": "Marielle Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-23",
+   "stage_hint": null,
+   "brief": "The bill requires employers with 100 or more workers to publish gender pay gaps, aiming to close a gap of 14.1 % (equivalent to $263 per week) that costs the economy $51.8 billion annually and, at current rates, would take 26 years to close. The speaker also highlighted that women retire with 23.4 % less superannuation than men and called for further action beyond data transparency, including lifting wages in feminised occupations and expanding paid parental leave."
+  },
+  {
+   "slug": "speech-829459",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2023-03-29",
+   "stage_hint": null,
+   "brief": "The coalition speaker supported the Workplace Gender Equality Amendment (Closing the Gender Pay Gap) Bill 2023, which allows public reporting of gender pay gaps by employer, and highlighted their record: 815,600 female business operators, 60% of 1.9 million jobs created going to women, and a gender pay gap reduced to 13.8%. They also named women appointed to leadership roles, including Julieanne Alroe, Pip Spence, Romilly Madew, and Lea Vesic."
+  },
+  {
+   "slug": "speech-829608",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-30",
+   "stage_hint": null,
+   "brief": "The Workplace Gender Equality Amendment (Closing the Gender Pay Gap) Bill 2023 was passed, allowing the Workplace Gender Equality Agency to publish gender pay gaps at employer level for the first time, speeding up progress toward closing the gap that otherwise would take 26 years."
+  },
+  {
+   "slug": "speech-829642",
+   "speaker": "Cassandra Fernando",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-30",
+   "stage_hint": null,
+   "brief": "The Gender Equality Amendment (Closing the Gender Pay Gap) Bill 2023 has passed through both houses, fulfilling a Labor election commitment to require employer-level gender pay gap reporting for the first time. The bill aims to close a pay gap where women earn $253.50 less per week in full-time earnings, have 23.4% less super at retirement, and cost the economy $51.8 billion annually."
+  },
+  {
+   "slug": "speech-829738",
+   "speaker": "Marielle Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-30",
+   "stage_hint": null,
+   "brief": "The Workplace Gender Equality Amendment (Closing the Gender Pay Gap) Bill passed with wide parliamentary support, requiring businesses to report gender pay gaps to drive transparency and accountability. The government is advancing women’s economic equality through investments in cheaper child care, 10 days paid family and domestic violence leave, boosted paid parental leave, gender-responsive budgeting, a National Strategy to Achieve Gender Equality, the National Plan to End Violence Against Women and Children, a wage increase for aged-care workers, and the National Women’s Health Advisory Council."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Workplace Gender Equality Amendment (Closing the Gender Pay Gap) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00018",
+   "assent_date": "2023-04-11"
+  }
+ ]
+}

@@ -1,0 +1,149 @@
+{
+ "key": "au-federal-r5770",
+ "title": "Hazardous Waste (Regulation of Exports and Imports) Levy Bill 2016",
+ "short_title": "Hazardous Waste (Regulation of Exports and Imports) Levy Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Energy",
+ "status": "passed",
+ "status_as_of": "2017-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5770_ems_1c160721-b016-497d-b60b-d8d675f373e5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5770%22",
+   "document_date": "2016-11-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00009",
+   "document_date": "2017-02-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-24",
+  "sentences": [
+   "This bill is part of a package that would introduce a levy on hazardous waste import, export and transit permit applications.",
+   "The package would amend the existing Act to fully recover the costs of running the permit scheme, with the levy covering costs that cannot be linked to individual applicants.",
+   "The amendment bill would also allow the Department to publish permit applications and decisions on its website instead of in the Commonwealth Gazette."
+  ],
+  "changes": [
+   "Introduces a levy on permit applications for import, export and transit of hazardous waste.",
+   "Allows full cost recovery of the permit scheme, including costs not linked to individual applicants.",
+   "Streamlines administrative processes by permitting online publication of permit applications and decisions."
+  ],
+  "affected": "Applicants for hazardous waste import, export and transit permits, and the Department of the Environment and Energy.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-339973",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-07",
+   "stage_hint": null,
+   "brief": "The Hazardous Waste (Regulation of Exports and Imports) Amendment Bill 2016 and Levy Bill 2016 implement Australia's Basel Convention obligations, allow full cost recovery for permitting, and lift the $8,000 cap on waste imports/exports to ensure cost recovery, while the speaker also urged reducing the $500 billion national debt and returning the budget to surplus."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Hazardous Waste (Regulation of Exports and Imports) Levy Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00009",
+   "assent_date": "2017-02-22"
+  }
+ ]
+}

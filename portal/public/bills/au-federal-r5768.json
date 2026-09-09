@@ -1,0 +1,229 @@
+{
+ "key": "au-federal-r5768",
+ "title": "Corporations Amendment (Professional Standards of Financial Advisers) Bill 2016",
+ "short_title": "Corporations Amendment (Professional Standards of Financial Advisers) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5768_ems_c6b53b56-1756-4e41-8010-03cfca59ab6f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5768%22",
+   "document_date": "2016-11-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00007",
+   "document_date": "2017-02-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-23",
+  "sentences": [
+   "The bill would set higher hurdles for the skills and honesty of financial advisers who give personal tips to everyday clients on complex products.",
+   "Advisers would need a university degree, a supervised work year, an exam, ongoing learning, and a binding ethics code, and only those authorised could call themselves financial advisers or planners.",
+   "The main rules start on the earlier of a day set by the government or six months after the bill becomes law, and the government estimates it would cost industry $165.1 million to comply."
+  ],
+  "changes": [
+   "Requires advisers to hold a degree or equivalent qualification.",
+   "Mandates a professional year, an exam, and ongoing professional development.",
+   "Introduces a Code of Ethics that advisers must follow.",
+   "Bans unqualified people from using the titles 'financial adviser' and 'financial planner'.",
+   "Applies transitional arrangements for advisers already working before the new rules start."
+  ],
+  "affected": "Financial advisers who give personal advice to retail clients on complex financial products.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4514",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/debates/?id=2017-02-07.121.1) introduced by Labor MP [Andrew Leigh](https://theyvoteforyou.org.au/people/representatives/fenner/andrew_leigh) (Fenner), which means it was unsuccessful. ### Motion text > *That all the words after \"that\" be omitted with a view to substituting the following words:* > *\"whilst not declining to [give the bill a second reading](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html), the House:* > *(1) notes that in recent years, numerous cases of inappropriate financial advice have had a negative impact on Australian consumers' confidence in the financial services industry;* > *(2) notes that this lack of trust has become a barrier to consumers seeking financial advice;* > *(3) welcomes this continuation of the [Future of Financial Advice reforms](http://futureofadvice.treasury.gov.au/Content/Content.aspx?doc=home.htm) which were initiated under the former Labor government; and* > *(4) calls on current Liberal and National Party parliamentarians to apologise for the disregard their colleagues in the 43rd parliament showed for the many victims of bad practice in the financial advice sector when they voted against Labor's Future of Financial Advice measures.*",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-07/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-340138",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Professional Standards of Financial Advisers) Bill 2016 introduces a remedial power for the Commissioner of Taxation with strict safeguards, allows farmers to re-access income averaging after 10 years, exempts public museums and galleries from luxury car tax for display vehicles, and corrects technical defects in tax law."
+  },
+  {
+   "slug": "speech-340141",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-07",
+   "stage_hint": null,
+   "brief": "The Labor member moved a second reading amendment welcoming the bill as a continuation of Labor’s Future of Financial Advice reforms, while calling on Liberal and National Party MPs to apologise for their past opposition to those reforms. The member argued the government should go further and support a royal commission into the banking sector, noting that only a royal commission can adequately address misconduct in financial advice."
+  },
+  {
+   "slug": "speech-340143",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-07",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Corporations Amendment (Professional Standards of Financial Advisers) Bill, which requires financial advisers to hold a degree, pass exams, complete a professional year, and adhere to a code of ethics, with a new standards body to be established by mid-2017 and all advisers required to meet the new education standards by 1 January 2024."
+  },
+  {
+   "slug": "speech-340145",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment (Professional Standards of Financial Advisers) Bill 2016, which requires financial advisers to hold a degree, pass an exam, undertake a professional year, and comply with a code of ethics. He argued that expert predictions are often wrong, citing oil price shifts, coal price doubling, the Trump rally, and Brexit outcomes, and opposed a royal commission into banks, instead backing the Kate Carnell report and calling for corporate tax cuts to 15–20% to match international rates."
+  },
+  {
+   "slug": "speech-340146",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-07",
+   "stage_hint": null,
+   "brief": "The bill would raise professional, education and ethical standards for financial advisers, requiring new advisers to hold a degree from 1 January 2019 and existing advisers to meet equivalent standards by 2024, with an independent standards body established by mid-2017 to oversee an exam, code of ethics and professional year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Corporations Amendment (Professional Standards of Financial Advisers) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00007",
+   "assent_date": "2017-02-22"
+  }
+ ]
+}

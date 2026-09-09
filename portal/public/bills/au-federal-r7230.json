@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7230",
+ "title": "Fair Work (Registered Organisations) Amendment (Removing Criminals from Worksites) Bill 2024",
+ "short_title": "Fair Work (Registered Organisations) Amendment (Removing Criminals from Worksites) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-08-19",
+ "originating_house": "representatives",
+ "sponsor": "DUTTON, Peter, MP",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10188",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7230%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7230%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7230%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7230_ems_145f46b8-1d42-47dd-a7fc-def251af1077%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7230%22",
+   "document_date": "2024-08-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-08-19",
+  "sentences": [
+   "The bill would disqualify individuals from leadership roles in registered organisations if they have been convicted of workplace crimes or are suspected of links to criminal groups.",
+   "It would let the federal court cancel an organisation's registration or impose alternative orders, such as banning specific officers or suspending the organisation's rights.",
+   "The bill sets penalties including fines and imprisonment for people who try to hold office while disqualified, and organisations that disobey court orders could lose their registration."
+  ],
+  "changes": [
+   "Introduces stricter disqualification rules for holding office in registered organisations based on criminal activity or workplace law breaches.",
+   "Allows cancellation of an organisation's registration for corrupt or unlawful conduct, or court orders to disqualify officers or suspend rights instead.",
+   "Creates penalties for individuals who hold office while disqualified and for organisations that fail to comply with court orders."
+  ],
+  "affected": "Individuals who hold office in registered organisations and the organisations themselves.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

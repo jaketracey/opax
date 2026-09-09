@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6949",
+ "title": "Classification (Publications, Films and Computer Games) Amendment (Loot Boxes) Bill 2022",
+ "short_title": "Classification (Publications, Films and Computer Games) Amendment (Loot Boxes) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-28",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-08-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6949%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6949%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6949%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6949_ems_4ab98b9c-36ec-4080-aed4-150684c83a2b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6949%22",
+   "document_date": "2022-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-28",
+  "sentences": [
+   "This bill would change how games with purchasable mystery prizes are rated by Australia's classification system.",
+   "The Classification Board would have to give games containing these prize mechanisms a rating of R18+ or Refused Classification, and require a label warning parents about them.",
+   "The bill says loot boxes can be virtual boxes, crates, prize wheels or similar mechanisms that contain undisclosed items bought with real money."
+  ],
+  "changes": [
+   "Requires the Classification Board to factor in loot boxes when deciding a game's rating.",
+   "Forces a minimum rating of R18+ or Refused Classification on any game that includes loot boxes.",
+   "Mandates a warning notice on games that contain loot boxes or similar features."
+  ],
+  "affected": "Producers and sellers of computer, video and online games, and parents and guardians who buy or supervise access to these games.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

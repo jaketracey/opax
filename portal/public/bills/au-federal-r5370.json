@@ -1,0 +1,195 @@
+{
+ "key": "au-federal-r5370",
+ "title": "Customs Tariff Amendment (Japan-Australia Economic Partnership Agreement Implementation) Bill 2014",
+ "short_title": "Customs Tariff Amendment (Japan-Australia Economic Partnership Agreement Implementation) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2014-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5370_ems_a62c6396-16ec-4b0e-8358-4febb29bc250%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5370%22",
+   "document_date": "2014-10-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00125",
+   "document_date": "2014-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-29",
+  "sentences": [
+   "This bill changes the Customs Tariff Act 1995 to put into effect the Japan-Australia Economic Partnership Agreement.",
+   "It sets zero customs duty on goods that qualify as Japanese originating goods under a new part of the Customs Act 1901, adjusts some existing tariff rates, and phases other preferential rates to zero by 2021.",
+   "The bill also adds a new schedule to the tariff to hold the preferential, phasing, and excise-equivalent rates on certain alcohol, tobacco, and petroleum products."
+  ],
+  "changes": [
+   "Provides free rates of customs duty for Japanese originating goods.",
+   "Amends Schedule 4 to keep certain duty rates for Japanese goods.",
+   "Phases preferential rates for some goods to Free by 2021.",
+   "Inserts a new Schedule 11 for preferential, phasing, and excise-equivalent rates."
+  ],
+  "affected": "Importers of Japanese goods and the Australian Customs Tariff system.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:00:07Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-300905",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300906",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301988",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302206",
+   "speaker": "Russell Matheson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302211",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302217",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Japan-Australia Economic Partnership Agreement Implementation) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00125",
+   "assent_date": "2014-12-04"
+  }
+ ]
+}

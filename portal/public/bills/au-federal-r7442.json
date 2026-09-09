@@ -1,0 +1,190 @@
+{
+ "key": "au-federal-r7442",
+ "title": "Parliamentary Frameworks Legislation Amendment (Reviews) Bill 2026",
+ "short_title": "Parliamentary Frameworks Legislation Amendment (Reviews) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2026-03-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-03-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7442_ems_38e394a3-28ac-4b00-95ff-02896b2b6607%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7442%22",
+   "document_date": "2026-03-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00011",
+   "document_date": "2026-03-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1200647",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200958",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200960",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201043",
+   "speaker": "Julie-Ann Campbell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201275",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201388",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201427",
+   "speaker": "Varun Ghosh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Parliamentary Frameworks Legislation Amendment (Reviews) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00011",
+   "assent_date": "2026-03-13"
+  }
+ ]
+}

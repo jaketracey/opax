@@ -1,0 +1,266 @@
+{
+ "key": "au-federal-r5580",
+ "title": "Social Services Legislation Amendment (Budget Repair) Bill 2015",
+ "short_title": "Social Services Legislation Amendment (Budget Repair) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5580%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5580%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5580%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5580%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5580%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5580%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5580%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5580%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5580%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5580_ems_e338ab54-f7d1-4c6b-a68e-40a5d06472e5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5580_ems_fbf39c34-1cfe-4d2c-b58a-bf795c72d216%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5580%22",
+   "document_date": "2015-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-02",
+  "sentences": [
+   "This bill would reintroduce three measures from the 2015 Budget that were removed from an earlier bill in June 2015.",
+   "It would cut from two weeks to six weeks the period that age pension and certain other payment recipients receive their full basic rate while overseas, then adjust payments based on Australian working life residence.",
+   "The bill would also freeze income free areas for working age allowances and student payments from 1 July 2016 and 1 January 2016 respectively, and cease the pensioner education supplement from 1 January 2016."
+  ],
+  "changes": [
+   "Reduces the portability period for age pension and some other payments from two weeks to six weeks.",
+   "Freezes income free areas for working age allowances and student payments for three years.",
+   "Ends the pensioner education supplement from 1 January 2016."
+  ],
+  "affected": "Age pension recipients and a small number of people on other payments with unlimited portability, as well as recipients of working age allowances and student payments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:17:15Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4063",
+   "date": "2016-02-08",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Budget Repair) Bill 2015 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 87,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-08/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-326682",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Budget Repair) Bill 2015 is necessary to address a $100 million daily interest bill on debt accrued under the previous Labor government, which left $191 billion in deficits and $123 billion in projected deficits. The speaker stated that the bill does not cut pensions for those who have lived in Australia for 35 years, but introduces a six-week overseas portability limit with proportional reductions for shorter residency, and saves $500 million by removing outdated education supplements."
+  },
+  {
+   "slug": "speech-326685",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-04",
+   "stage_hint": null,
+   "brief": "The speaker argued the government unfairly targets low-income Australians, pensioners, and unemployed youth with budget cuts while protecting wealthy superannuants and multinationals avoiding tax. Specific measures criticised include changing overseas pension payments, abolishing the pensioner education supplement, and freezing income-free areas for working-age allowances, which the speaker said would push more people into poverty, citing 30% of Bendigo’s electorate surviving on under $600 per week."
+  },
+  {
+   "slug": "speech-326686",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Budget Repair) Bill 2015 is essential for Australia's long-term economic health, citing Labor's $191 billion in deficits and a projected $667 billion deficit without policy change."
+  },
+  {
+   "slug": "speech-326688",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-04",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Budget Repair) Bill 2015, arguing it unfairly targets vulnerable Australians, particularly pensioners, by cutting overseas pension payments after six weeks, abolishing the pensioner education supplement and education entry payment, and pausing indexation. They also criticised the government for doubling the deficit and for its record on pensioner cuts since 2013."
+  },
+  {
+   "slug": "speech-326690",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-04",
+   "stage_hint": null,
+   "brief": "Opposition members opposed the Social Services Legislation Amendment (Budget Repair) Bill 2015, which included measures affecting pensioners travelling overseas, cuts to the pensioner education supplement and education entry payment, and changes to indexation."
+  },
+  {
+   "slug": "speech-326692",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the budget is in desperate need of repair, citing nine consecutive years of deficits, daily borrowing of $100 million, and $14 billion in annual interest payments, and quoted former Labor Prime Minister Paul Keating in support of spending cuts."
+  },
+  {
+   "slug": "speech-327060",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Budget Repair) Bill 2015, arguing it unfairly cuts the overseas pension payment period from 26 weeks to six weeks and abolishes the pensioner education supplement and education entry payment. Labor will not support the bill."
+  },
+  {
+   "slug": "speech-327062",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Budget Repair) Bill 2015, arguing it targets older Australians and vulnerable people, and highlighted three measures: reducing overseas pension portability from 26 to 6 weeks, abolishing the pensioner education supplement affecting 41,300 people (mostly women), and abolishing the education entry payment affecting 87,000 people."
+  },
+  {
+   "slug": "speech-327064",
+   "speaker": "Maria Vamvakinou",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Budget Repair) Bill 2015, arguing it would cut age pension payments for migrants who travel overseas for more than six weeks, creating a discriminatory system that saves $168.4 million over four years at the expense of vulnerable pensioners."
+  },
+  {
+   "slug": "speech-327065",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Budget Repair) Bill 2015, arguing it unfairly targets vulnerable groups. The bill would reduce pension portability for overseas visits from 26 weeks to six weeks for those with fewer than 35 years of Australian work history, abolish the $208 education entry payment for 87,000 recipients, and cut the pensioner education supplement of $31–$61 per fortnight for 41,130 people, three-quarters of whom are women."
+  },
+  {
+   "slug": "speech-327066",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The MP opposed the Social Services Legislation Amendment (Budget Repair) Bill 2015, arguing it unfairly cuts $579 million from pensioners and students, including abolishing the pensioner education supplement and education entry payment, and restricting overseas pension portability to six weeks for those who have lived in Australia less than 35 years. The MP also cited broader government policies—such as pension asset-test changes, increased pension age, and possible GST rises—as disproportionately hitting low- and middle-income Australians."
+  },
+  {
+   "slug": "speech-327067",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The government argued that reducing the portability period for age pension payments overseas from 26 weeks to six weeks, saving $168 million, is necessary for budget repair and fairness, as Australia is one of few nations paying a non-contributory pension abroad indefinitely. The bill also reintroduces measures to cease the pensioner education supplement and education entry payment, and freeze indexation of income-free areas for three years."
+  }
+ ],
+ "acts": []
+}

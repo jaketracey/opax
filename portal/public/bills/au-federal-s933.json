@@ -1,0 +1,197 @@
+{
+ "key": "au-federal-s933",
+ "title": "Australian Capital Territory Water Management Legislation Amendment Bill 2013",
+ "short_title": "Australian Capital Territory Water Management Legislation Amendment Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-13",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "passed",
+ "status_as_of": "2013-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s933%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s933%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s933%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s933%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s933%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s933%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s933%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s933%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s933%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s933%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-12-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s933%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s933_ems_f368ea0c-a47a-4948-8b96-1627096df2f2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s933%22",
+   "document_date": "2013-11-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00147",
+   "document_date": "2013-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "The bill would move day-to-day water management in the Australian Capital Territory from the Commonwealth to the ACT Government.",
+   "It would change the law so the ACT Government, not the Commonwealth, controls all water taken from National Land and by Commonwealth agencies in the ACT.",
+   "The amendments to the Googong Dam Act would give the ACT Executive full management of the dam's surface water, and the Water Act would be updated to cover the Googong Dam Area in a water resource plan for the ACT."
+  ],
+  "changes": [
+   "Transfer water abstraction management on National Land and by Commonwealth bodies to the ACT Government.",
+   "Give the ACT Executive powers to manage Googong Dam's surface water under ACT law.",
+   "Require the Googong Dam Area to be part of a water resource plan managed by the ACT."
+  ],
+  "affected": "The ACT Government, Commonwealth agencies, and water users in the ACT.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:08:01Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-826321",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-05",
+   "stage_hint": null,
+   "brief": "The speaker moved to schedule the Australian Capital Territory Water Management Legislation Amendment Bill 2013 for 12:45 pm and the Commonwealth Inscribed Stock Amendment Bill 2013 for debate until 2 pm, arguing the opposition supports the stock bill but needs more time for substantive discussion on debt ceiling changes, and criticised poor time management in the chamber."
+  },
+  {
+   "slug": "speech-281448",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281449",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281450",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281456",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281457",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826596",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Capital Territory Water Management Legislation Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00147",
+   "assent_date": "2013-12-17"
+  }
+ ]
+}

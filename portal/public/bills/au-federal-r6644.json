@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r6644",
+ "title": "Defence Amendment (Parliamentary Approval of Overseas Service) Bill 2021",
+ "short_title": "Defence Amendment (Parliamentary Approval of Overseas Service) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-15",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-08-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6644%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6644%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6644%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6644_ems_0a9cdb07-bddf-4d8e-94d0-0e41154b21f4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6644%22",
+   "document_date": "2021-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-15",
+  "sentences": [
+   "This bill aims to stop Australian Defence Force personnel being sent overseas for combat without approval from both houses of Parliament, as far as the Constitution and practical circumstances allow.",
+   "It would add a new section to the Defence Act 1903 requiring that approval for warlike service outside Australia, with some exceptions.",
+   "The bill is a revised version of a 1985 Senate bill and adds more detail on emergencies when Parliament is not sitting and on what information must be given to the public and Parliament."
+  ],
+  "changes": [
+   "The bill would insert a new section into the Defence Act 1903.",
+   "It would require approval from both Houses of Parliament for overseas warlike service by Defence Force members.",
+   "It would set out exceptions to that approval requirement.",
+   "It would add more detailed provisions for emergencies when Parliament is not meeting.",
+   "It would specify information that must be provided to the public and Parliament."
+  ],
+  "affected": "Australian Defence Force personnel and the Parliament.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

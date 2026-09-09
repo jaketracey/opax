@@ -1,0 +1,239 @@
+{
+ "key": "au-federal-r5615",
+ "title": "Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016",
+ "short_title": "Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5615%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5615%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5615%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5615%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5615%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5615%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5615%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5615%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5615%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5615_ems_a261c3d2-75e2-4eae-ac76-c59e07cca158%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5615%22",
+   "document_date": "2016-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-10",
+  "sentences": [
+   "This bill would fix gaps in the Migration Act so that 2014 changes to visa cancellations for people with criminal records work as intended.",
+   "It would broaden the definition of 'character concern' and allow the minister to detain people whose visas are suspected of being cancelled under a new power.",
+   "The bill would also make decisions by the minister under certain sections reviewable by the Federal Court instead of the Federal Circuit Court."
+  ],
+  "changes": [
+   "Amends the definition of 'character concern' to match the broader character test.",
+   "Ensures the minister's visa cancellation power under section 501BA does not affect other cancellation powers.",
+   "Allows detention of a person whose visa is suspected of being cancelled under section 501BA.",
+   "Requires release of a person if the officer becomes aware their visa will not be cancelled.",
+   "Makes decisions by the minister under sections 501BA and 501CA reviewable by the Federal Court.",
+   "Protects confidential information given to the Department from further disclosure."
+  ],
+  "affected": "Non-citizens with criminal records or character concerns, and the Department of Immigration and Border Protection.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:30Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-327579",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016 was moved for a second reading to implement consequential amendments from the 2014 character cancellation act, ensuring mandatory visa cancellation powers apply consistently across the Migration Act. The bill protects confidential information in character decisions, confirms removal of noncitizens subject to mandatory cancellation who do not seek or win revocation, and aligns the definition of 'character concern' with the strengthened character test."
+  },
+  {
+   "slug": "speech-330243",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016, which makes technical amendments to ensure consistency in character-related visa cancellation provisions. They noted the government is using ministerial discretion to cancel visas on character grounds more than under Labor, and stressed the need for transparency, while Labor supports the bill in the House pending a Senate inquiry."
+  },
+  {
+   "slug": "speech-330244",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016 was supported as giving full effect to the 2014 character cancellation reforms, including mandatory visa cancellation for non-citizens in prison who fail the character test, a relocation power, and a ministerial power to set aside revocation decisions in the national interest. The bill also aligns the definition of 'character concern' with the strengthened character test and protects confidential information in decision-making."
+  },
+  {
+   "slug": "speech-330507",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 12-month imprisonment trigger for mandatory visa cancellation under the character test is too sensitive, citing the case of a 53-year-old man who lived in Australia since infancy, had a psychotic episode, served his sentence, and was detained before his visa was restored. He called for a review of the triggers to balance community safety with reasonableness, especially for long-term residents."
+  },
+  {
+   "slug": "speech-330508",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016 should be passed to lower the visa character test threshold from \"significant risk\" to \"risk\", allow cancellation based on reasonable suspicion of association with criminal conduct, and give the minister broader powers to refuse or cancel visas for noncitizens who pose a risk to Australian society. The bill also requires state and territory governments to disclose personal information relevant to character, and the speaker cited 88 visa refusals and 157 cancellations in 2011–12 as insufficient."
+  },
+  {
+   "slug": "speech-330509",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016, arguing it undermines rule of law and procedural fairness. Specific criticisms included retrospective visa cancellations, the minister assuming judicial powers, risks of indefinite detention and refoulement, and insufficient human rights protections for asylum seekers and refugees—citing concerns from the Law Council of Australia, Asylum Seeker Resource Centre, and Parliamentary Joint Committee on Human Rights."
+  },
+  {
+   "slug": "speech-330510",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016 was endorsed to give full effect to the 2014 character test changes, mandating visa cancellation and deportation for noncitizens with substantial criminal records or sentences of 12 months or more. The 2016 Melbourne and Sydney gang riots and lawyer Deng Adut's support for deporting young criminals were cited as justification for the policy."
+  },
+  {
+   "slug": "speech-330511",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The government rejected Senate amendments to the Migration Amendment Bill that would have mandated reporting of child abuse in detention, allowed media access, and protected doctors from prosecution for speaking out. The speaker criticised Labor for supporting the bill, which expands ministerial visa cancellation powers based on reasonable suspicion, and called for a refugee policy that includes taking people from regional camps to reduce boat journeys."
+  },
+  {
+   "slug": "speech-330512",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016 was commended to implement mandatory visa cancellation for noncitizens of bad character, including new removal powers and protection of confidential information in revocation decisions, citing a case of a protection visa holder convicted of robbery."
+  },
+  {
+   "slug": "speech-330513",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016 strengthens accountability by ensuring non-citizens who fail the character test—including over 1,050 people whose visas have been cancelled, among them 19 bikies—can be deported, and that amendments facilitate removals and protect sensitive AFP information from those seeking revocation."
+  },
+  {
+   "slug": "speech-330515",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016, which strengthens visa cancellation powers for noncitizens of poor character and aligns character-related provisions in the Migration Act. The speaker cited John Howard's statement that \"We will decide who comes to this country,\" contrasted Australia's policies with European immigration failures, and noted that tougher cancellation provisions have led to more visa revocations, including for New Zealanders."
+  },
+  {
+   "slug": "speech-330516",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016 was supported, introducing new removal powers for noncitizens who fail to appeal cancellation decisions or whose revocation is refused. In support of the bill, 1,052 foreign-born residents, including Italian crime figure Francesco Madafferi, had been ordered out of Australia, with the government also committing to admitting 12,000 Syrian refugees and investing $22 billion in defence."
+  },
+  {
+   "slug": "speech-330517",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016, emphasising that immigration enriches Australia’s cultural depth and character, citing musicians including Jimmy Barnes, Suze DeMarchi, Glenn Shorrock, John Farnham, Tina Arena, Michael Hutchence, and Joe Camilleri as examples of successful immigrants."
+  },
+  {
+   "slug": "speech-330519",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-15",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Character Cancellation Consequential Provisions) Bill 2016 is a technical bill to ensure mandatory visa cancellation powers for noncitizens serving at least 12 months imprisonment or convicted of child sex offences operate effectively, targeting repeat and serious offenders. The amendments give full effect to the 2014 Migration Amendment Act."
+  }
+ ],
+ "acts": []
+}

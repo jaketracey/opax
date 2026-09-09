@@ -1,0 +1,401 @@
+{
+ "key": "au-federal-r5287",
+ "title": "Australian Renewable Energy Agency (Repeal) Bill 2014",
+ "short_title": "Australian Renewable Energy Agency (Repeal) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5287%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5287%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5287%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5287%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5287%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5287%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5287%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5287%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5287%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5287_ems_60810d3f-fea8-4f8f-a33e-7523ee794087%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5287%22",
+   "document_date": "2014-06-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-19",
+  "sentences": [
+   "The bill would shut down the Australian Renewable Energy Agency (ARENA).",
+   "It would repeal the 2011 Act that created ARENA and gave it funding and governance rules.",
+   "The changes would start when the bill becomes law, and the Industry Department would take over ARENA's unfinished business."
+  ],
+  "changes": [
+   "Closes the Australian Renewable Energy Agency.",
+   "Repeals the Australian Renewable Energy Agency Act 2011.",
+   "Transfers ARENA's commitments, assets and liabilities to the Commonwealth Minister and Department of Industry.",
+   "Cancels any undecided applications for financial assistance from ARENA."
+  ],
+  "affected": "The Australian Renewable Energy Agency, the Commonwealth Minister, the Department of Industry, and applicants for ARENA financial assistance.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:05:04Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3402",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "question": "Australian Renewable Energy Agency (Repeal) Bill 2014 — Second Reading — Criticise abolition of ARENA",
+   "stage": "Second reading",
+   "ayes": 53,
+   "noes": 81,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 50,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-01/13"
+  },
+  {
+   "key": "federal-representatives-3403",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "question": "Australian Renewable Energy Agency (Repeal) Bill 2014 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-01/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-292341",
+   "speaker": "Ian Macfarlane",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295904",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295905",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295906",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295907",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295908",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295909",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295921",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295923",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295928",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295930",
+   "speaker": "Ken O'Dowd",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295931",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296096",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296333",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296335",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296336",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296337",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296341",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296344",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296345",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296347",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296350",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296352",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,159 @@
+{
+ "key": "au-federal-r5872",
+ "title": "Safe Work Australia Amendment (Role and Functions) Bill 2017",
+ "short_title": "Safe Work Australia Amendment (Role and Functions) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "passed",
+ "status_as_of": "2017-08-16",
+ "key_dates": [
+  {
+   "stage": "second_reading",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5872_ems_30a617be-f096-4c63-9f9c-152cbae9219a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5872%22",
+   "document_date": "2017-05-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00086",
+   "document_date": "2017-08-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-31",
+  "sentences": [
+   "The bill would update the role of Safe Work Australia to keep its functions current.",
+   "It would add an overarching statement on how the body leads national work health and safety and workers' compensation policy, and simplify its listed functions.",
+   "The bill would replace old terms like 'occupational health and safety' and 'Ministerial Council', and confirm that WHS ministers still approve the model WHS framework."
+  ],
+  "changes": [
+   "Adds an overarching statement to guide Safe Work Australia's work.",
+   "Updates, consolidates and simplifies the body's functions.",
+   "Replaces outdated terminology.",
+   "Clarifies that WHS ministers continue to approve the model WHS legislative framework."
+  ],
+  "affected": "Safe Work Australia, its stakeholders and WHS ministers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:20Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-350967",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Safe Work Australia Amendment Bill 2017, arguing it updates terminology and clarifies the agency’s role in improving workplace safety and workers' compensation. They also criticised the government for not doing enough on safety, citing 19 construction deaths in 2017 and 46 transport industry deaths, and opposing the ABCC and the abolition of the Road Safety Remuneration Tribunal."
+  },
+  {
+   "slug": "speech-350968",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The Safe Work Australia Amendment (Role and Functions) Bill 2017 clarifies and updates Safe Work Australia’s role and functions, based on a review tabled on 8 November 2016, to improve workplace safety and workers’ compensation arrangements through collaboration with states, territories, and employer and employee representatives."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Safe Work Australia Amendment (Role and Functions) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00086",
+   "assent_date": "2017-08-16"
+  }
+ ]
+}

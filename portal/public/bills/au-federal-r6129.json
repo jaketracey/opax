@@ -1,0 +1,227 @@
+{
+ "key": "au-federal-r6129",
+ "title": "Space Activities Amendment (Launches and Returns) Bill 2018",
+ "short_title": "Space Activities Amendment (Launches and Returns) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Jobs and Innovation",
+ "status": "passed",
+ "status_as_of": "2018-08-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6129_ems_c024f367-e0c7-403a-b8d8-c94344eb1d1e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6129_ems_4fa3084d-054f-41f4-a622-a883c436277a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6129%22",
+   "document_date": "2018-05-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00092",
+   "document_date": "2018-08-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-30",
+  "sentences": [
+   "The bill would update Australia's space laws to keep pace with changes in the industry.",
+   "It expands the rules to cover launches from aircraft and high-power rockets, and simplifies approvals and insurance.",
+   "Insurance for each launch or return would be capped at $100 million, down from the previous minimum of $750 million, set in rules Parliament can disallow."
+  ],
+  "changes": [
+   "Broadens the regulatory framework to include launches from aircraft and high-power rockets.",
+   "Reduces barriers to entry by streamlining approval processes and insurance requirements.",
+   "Lowers the maximum insurance requirement from $750 million to $100 million and moves the detail to disallowable rules."
+  ],
+  "affected": "Space industry participants, including smaller businesses and universities, and the Commonwealth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-363695",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The Space Activities Amendment (Launches and Returns) Bill 2018 reduces red tape, streamlines approvals and insurance requirements for space launches and returns, and introduces licensing for launches from aircraft, aiming to boost Australia's 0.8% share of the global space sector (worth over US$345 billion) and support innovation, investment and job creation."
+  },
+  {
+   "slug": "speech-367692",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "Labor supports the Space Activities Amendment (Launches and Returns) Bill 2018 to modernise commercial and scientific space laws, but criticises the government for failing to implement a complete legislative rewrite as recommended by stakeholders, noting concerns about vague regulations and unclear debris mitigation requirements. A Shorten Labor government would invest $51 million in an Australian space industry plan, including a space science and industry agency and innovation council."
+  },
+  {
+   "slug": "speech-367693",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Space Activities Amendment (Launches and Returns) Bill 2018, arguing it reduces barriers for Australian companies in the space industry and noted bipartisan support for the new Australian Space Agency, led by Megan Clark, with the aim of increasing Australia's 0.8% share of the global $420 billion space industry."
+  },
+  {
+   "slug": "speech-367694",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The Space Activities Amendment (Launches and Returns) Bill 2018 was supported to streamline licensing and insurance requirements for commercial space activities, with the global space economy valued at $450 billion and Australia’s space industry employing nearly 11,000 people and worth $4 billion annually."
+  },
+  {
+   "slug": "speech-367695",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Space Activities Amendment (Launches and Returns) Bill 2018, arguing it would streamline regulations and boost Australia's space industry, and advocated for Western Australia to host the new Australian Space Agency, citing local projects like the Square Kilometre Array and partnerships with NASA and the European Space Agency."
+  },
+  {
+   "slug": "speech-367696",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "Labor supported the Space Activities Amendment Bill 2018 but noted that any Senate amendments would depend on a legislative inquiry, while calling for the Australian Space Agency to be permanently based in Canberra, arguing that one in four Australian space jobs are already there and that 41% of Canberra adults hold a bachelor’s degree or higher."
+  },
+  {
+   "slug": "speech-367697",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The speaker argued the Space Activities Amendment (Launches and Returns) Bill 2018 is a necessary but overdue partial reform to modernise space law, and announced Labor's plan to double Australia's space industry—worth $3–4 billion annually—within five years via a space agency, four research hubs, two training centres, and 10,000 new jobs, while praising local Space Camp funding for four Hawkesbury schools and Jackie Slaviero's work with One Giant Leap."
+  },
+  {
+   "slug": "speech-367698",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The Space Activities Amendment (Launches and Returns) Bill 2018 broadens regulations to include launches from aircraft and high-power rockets, streamlining approvals and insurance. The government should promptly decide the location of the national space agency headquarters, with $41 million committed, noting South Australia’s history of 4,000 rockets launched from Woomera since 1947 and the sector’s $3–4 billion annual revenue."
+  },
+  {
+   "slug": "speech-367699",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The Space Activities Amendment (Launches and Returns) Bill 2018 updates the Space Activities Act 1998 to reduce red tape, lower insurance requirements from $750 million to no more than $100 million, and broaden regulations for launches from aircraft and high-power rockets, aiming to grow Australia's 0.8% share of the US$345 billion global space economy."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Space Activities Amendment (Launches and Returns) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00092",
+   "assent_date": "2018-08-31"
+  }
+ ]
+}

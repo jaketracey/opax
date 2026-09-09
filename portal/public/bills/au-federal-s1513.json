@@ -1,0 +1,77 @@
+{
+ "key": "au-federal-s1513",
+ "title": "Housing Australia Amendment (Transparency and Reporting) Bill 2026",
+ "short_title": "Housing Australia Amendment (Transparency and Reporting) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-19",
+ "originating_house": "senate",
+ "sponsor": "BRAGG, Sen Andrew",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10945",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1513%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1513%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1513_ems_d42499ff-b075-4b26-a7a5-15e12418eac4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1513%22",
+   "document_date": "2026-08-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-19",
+  "sentences": [
+   "The bill would require Housing Australia to report quarterly on its spending, projects, and operations.",
+   "Housing Australia must give the Minister a quarterly report covering expenditure, program data, guarantees, and board minutes.",
+   "The first report is due after the first full quarter following the bill's commencement, and the Minister must table it in Parliament within 7 sitting days."
+  ],
+  "changes": [
+   "Requires Housing Australia to prepare and provide quarterly reports to the Minister.",
+   "Specifies the information each quarterly report must include, such as spending, project numbers, guarantee breakdowns by income decile, and summarised board minutes.",
+   "Prevents the Minister from directing Housing Australia on its quarterly reporting function."
+  ],
+  "affected": "Housing Australia, the Minister, and Parliament.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-04T23:59:30Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1205782",
+   "speaker": "Andrew Bragg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-19",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

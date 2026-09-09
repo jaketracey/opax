@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6300",
+ "title": "Office for Regional Australia Bill 2019",
+ "short_title": "Office for Regional Australia Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-18",
+ "originating_house": "representatives",
+ "sponsor": "MCGOWAN, Cathy, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10798",
+ "portfolio": "(s) MCGOWAN, Cathy, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6300%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6300%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6300%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6300_ems_3e5bf91c-36e4-40e1-bc4b-8cceb4dfe79e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6300%22",
+   "document_date": "2019-02-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-18",
+  "sentences": [
+   "The bill would create a new statutory agency called the Office for Regional Australia.",
+   "The Office would hold inquiries, coordinate policy, support regional development committees, and advise the minister on regional deals and planning.",
+   "The minister must table a statement of the government's regional policy at least once every five years, and the Office must deliver a 'Regional Australia Impacts Report' by 1 October each year."
+  ],
+  "changes": [
+   "Establishes the Office for Regional Australia as a statutory agency.",
+   "Gives the Office powers to conduct inquiries and research, similar to the Productivity Commission.",
+   "Requires the Office to support the Regional Development Australia committee network with policy and research.",
+   "Requires the Office to provide advice to the minister on regional deals and evaluate existing deals.",
+   "Requires the minister to table a regional policy statement at least every five years.",
+   "Provides for the appointment of a parliamentary joint committee to oversee the Office."
+  ],
+  "affected": "People and communities in regional Australia, government bodies, the Regional Development Australia committee network, and the minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375346",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The Office for Regional Australia Bill 2019 was moved for a second reading, arguing the government's response to the *Regions at the ready* report was inadequate and calling for a permanent office modelled on the Productivity Commission to develop long-term regional policy. The bill would create an office to support regional planning, hold inquiries, and establish a parliamentary joint committee on regional development."
+  }
+ ],
+ "acts": []
+}

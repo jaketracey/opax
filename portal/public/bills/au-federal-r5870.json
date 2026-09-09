@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r5870",
+ "title": "Social Services Legislation Amendment (Relieving Domestic Violence Victims of Debt) Bill 2017",
+ "short_title": "Social Services Legislation Amendment (Relieving Domestic Violence Victims of Debt) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-29",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-02-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5870%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5870%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5870%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5870_ems_0b40afa1-dc20-49a3-8a33-5da390cffbe9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5870%22",
+   "document_date": "2017-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-29",
+  "sentences": [
+   "This bill would let the government waive certain debts for people affected by domestic or family violence.",
+   "The Secretary of the responsible department could waive a debt if the person cannot pay because of domestic or family violence, or if they made a false statement or broke a rule due to such violence.",
+   "The bill would create a clearer legal framework for waiving debts in domestic violence situations, going beyond the current 'special circumstances' rule and extending the existing provision for false statements made unknowingly."
+  ],
+  "changes": [
+   "Inserts provisions into the A New Tax System (Family Assistance) (Administration Act) 1999 and the Social Security Act 1991.",
+   "Allows the Secretary to waive social security and family assistance debts for victims of domestic or family violence.",
+   "Extends debt waiver provisions to cases where a debtor knowingly made a false statement due to domestic or family violence."
+  ],
+  "affected": "Victims of domestic or family violence who have social security or family assistance debts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:20Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-347263",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-05-29",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment (relieving Domestic Violence Victims of Debt) Bill 2017 would allow Centrelink debts to be waived for people subjected to domestic violence, including when they were forced to make false statements. The bill was prompted by a case of a woman with a $23,000 debt after 20 years of abuse, and the speaker cited statistics showing one in three Australian women have experienced physical violence since age 15."
+  }
+ ],
+ "acts": []
+}

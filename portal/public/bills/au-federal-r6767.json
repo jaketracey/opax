@@ -1,0 +1,164 @@
+{
+ "key": "au-federal-r6767",
+ "title": "Territories Stolen Generations Redress Scheme (Consequential Amendments) Bill 2021",
+ "short_title": "Territories Stolen Generations Redress Scheme (Consequential Amendments) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Indigenous Australians",
+ "status": "passed",
+ "status_as_of": "2021-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6767_ems_5c85ec69-1bb6-49c6-b63b-c23e762309f9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6767%22",
+   "document_date": "2021-08-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00141",
+   "document_date": "2021-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-26",
+  "sentences": [
+   "This bill would change several Commonwealth laws to support the Territories Stolen Generations Redress Scheme.",
+   "The scheme offers a one-off payment and a chance to tell their story to a senior official for people removed as children from the Northern Territory, Australian Capital Territory before self-government, or Jervis Bay Territory.",
+   "The bill would amend the Bankruptcy Act 1966, Income Tax Assessment Act 1997, Social Security Act 1991, Veterans' Entitlements Act 1986, and Social Security (Administration) Act 1999 to ensure the payment does not affect other benefits or allow identity cross-checks."
+  ],
+  "changes": [
+   "Amends the Bankruptcy Act 1966, Income Tax Assessment Act 1997, Social Security Act 1991, and Veterans' Entitlements Act 1986 so the redress payment does not affect income testing for other Commonwealth payments.",
+   "Amends the Social Security (Administration) Act 1999 to allow identity cross-checks with the Department of Social Services or Services Australia.",
+   "Sets the scheme to operate from 1 March 2022 to 30 June 2026, with applications open from 1 March 2022 to 28 February 2026."
+  ],
+  "affected": "Survivors of the Stolen Generations removed as children from the Northern Territory, Australian Capital Territory before self-government, or Jervis Bay Territory.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-414493",
+   "speaker": "Katie Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-26",
+   "stage_hint": null,
+   "brief": "The member spoke in support of the Territories Stolen Generations Redress Scheme bills, detailing a $400 million commitment with a $75,000 one-off payment and $7,000 healing assistance for survivors in the NT, ACT, and Jervis Bay. The bills also include safeguards to prevent reduced access to other Commonwealth funds and verify identity information."
+  },
+  {
+   "slug": "speech-414500",
+   "speaker": "Gladys Liu",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-26",
+   "stage_hint": null,
+   "brief": "The bill facilitates a $378 million redress scheme for living Stolen Generations survivors from the Northern Territory, ACT and Jervis Bay Territory, announced by Prime Minister Scott Morrison, with payments, counselling support and protections for survivors' Commonwealth benefits; the scheme will begin accepting applicants in early 2022 and is designed to be survivor-focused and trauma-informed."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Territories Stolen Generations Redress Scheme (Consequential Amendments) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00141",
+   "assent_date": "2021-12-13"
+  }
+ ]
+}

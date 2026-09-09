@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-r7168",
+ "title": "Electoral Legislation Amendment (Fair and Transparent Elections) Bill 2024",
+ "short_title": "Electoral Legislation Amendment (Fair and Transparent Elections) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-25",
+ "originating_house": "representatives",
+ "sponsor": "CHANEY, Kate, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10974",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-11-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7168%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7168%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7168%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7168_ems_b5fbfd83-3ed9-4cab-bc0f-61f0b15fa07e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7168%22",
+   "document_date": "2024-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

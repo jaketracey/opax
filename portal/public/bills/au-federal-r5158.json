@@ -1,0 +1,307 @@
+{
+ "key": "au-federal-r5158",
+ "title": "Tax Bonus for Working Australians Repeal Bill 2013",
+ "short_title": "Tax Bonus for Working Australians Repeal Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-12-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2014-05-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-05-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5158_ems_0c1e91a0-e246-4fd4-ba6b-4aeb82226beb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5158%22",
+   "document_date": "2013-12-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00032",
+   "document_date": "2014-05-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-282484",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282497",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282500",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282501",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282504",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282506",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282507",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282508",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282518",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282520",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282523",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282533",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282534",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282539",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282540",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282542",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282695",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282696",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282771",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282772",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax Bonus for Working Australians Repeal Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00032",
+   "assent_date": "2014-05-27"
+  }
+ ]
+}

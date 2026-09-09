@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r5776",
+ "title": "Migration Amendment (Putting Local Workers First) Bill 2016",
+ "short_title": "Migration Amendment (Putting Local Workers First) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-28",
+ "originating_house": "representatives",
+ "sponsor": "SHORTEN, Bill, MP",
+ "sponsor_party": "&#34;ALP&#34;",
+ "sponsor_person_id": "10580",
+ "portfolio": "(s) SHORTEN, Bill, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-08-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5776%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5776%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5776%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5776_ems_642dee5c-d78d-424c-ae55-4875facaf23e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5776%22",
+   "document_date": "2016-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-28",
+  "sentences": [
+   "The bill would change the Migration Act 1958 to alter the temporary work visa system.",
+   "It would require employers to meet stronger labour market testing and a new Australian Jobs Test before sponsoring temporary skilled workers.",
+   "Sponsors in certain sectors with more than a set proportion of 457 visa holders would have to use a Labour Agreement instead of standard sponsorship."
+  ],
+  "changes": [
+   "Strengthen labour market testing for employers nominating 457 visa workers.",
+   "Introduce an Australian Jobs Test that employers must pass to sponsor temporary workers.",
+   "Require sponsors in specified sectors with a high proportion of 457 visa holders to use a Labour Agreement."
+  ],
+  "affected": "Employers who sponsor temporary skilled workers and Australian workers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:14:54Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-338747",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Putting Local Workers First) Bill 2016 proposed tighter 457 visa rules, including mandatory four-week job advertising, a ban on ads excluding local workers, and a new ‘Australian jobs test’ for labour agreements. It cited 700,000 unemployed Australians and a 130,000 drop in apprenticeships, and required licensed trade visa holders to hold an Australian licence or pass a skills assessment, referencing exploitation at Pizza Hut, 7-Eleven and Caltex."
+  }
+ ],
+ "acts": []
+}

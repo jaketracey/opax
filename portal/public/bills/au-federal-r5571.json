@@ -1,0 +1,283 @@
+{
+ "key": "au-federal-r5571",
+ "title": "Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill (No. 2) 2015",
+ "short_title": "Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill (No. 2) 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5571%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5571%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5571%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5571%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5571%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5571%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5571%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5571%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5571%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5571%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5571_ems_e09be27e-9091-495a-9e0d-d73099a462cf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5571%22",
+   "document_date": "2015-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4069",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill (No. 2) 2015 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-10/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-327222",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill (No. 2) 2015, arguing it would cut $16 billion from low- and middle-income families over ten years, including up to $5,000 annually for single-parent families, and called on the Liberal-National government to abandon the cuts."
+  },
+  {
+   "slug": "speech-327223",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The coalition argued the family payments bill is necessary to repair the budget, blaming Labor for a record deficit that now requires $13 billion a year in interest payments and a decade of projected deficits; the member also noted the nation borrows another $1.4 million every 20 minutes."
+  },
+  {
+   "slug": "speech-327228",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The bill increases family tax benefit A by $10 per fortnight for some families and introduces a $1,000 annual payment for families with children under one, but cuts family tax benefit B for single parents with children aged 13–16 (by around $1,700–$3,100), abolishes it for single parents whose youngest child is 17–19 and in secondary school, and phases out end-of-year supplements over two years. The speaker criticised the government for targeting vulnerable families instead of closing tax loopholes for multinational companies and wealthy superannuants."
+  },
+  {
+   "slug": "speech-327229",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The bill increases Family Tax Benefit Part A fortnightly rates by $10 per child aged up to 19, raises Family Tax Benefit Part B by $1,000 per year for families with a youngest child under one, and phases out FTB Part A and Part B supplements, aiming to achieve long-term sustainability of family payments while targeting support to vulnerable families."
+  },
+  {
+   "slug": "speech-327230",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government faces a fiscal crisis due to ongoing budget deficits, with expenditure still 10% higher than revenue, and blamed the Labor Party for creating the problem and blocking savings measures. He announced the Social Services Legislation Amendment Bill as a set of reasonable savings measures to restrain spending, including phasing out family tax benefit supplements and introducing a new rate structure for Family Tax Benefit Part B, while increasing Family Tax Benefit Part A payments by about $10 per child aged up to 19."
+  },
+  {
+   "slug": "speech-327231",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment Bill, arguing it unfairly cuts family tax benefits A and B, affecting 1.3 million families losing the FTB B supplement and 1.5 million losing the FTB A supplement, with a single mother of two potentially $5,000 worse off annually. The speaker noted their electorate has an average household income of $53,000 and contains 52% of NSW families living with autism, mostly single-parent households."
+  },
+  {
+   "slug": "speech-327374",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The bill reforms family tax benefit rates and aligns youth allowance for under-18s living at home with family tax benefit rates from 1 July 2018 to remove financial incentives to leave school. The speaker supported the bill, noting that in the electorate of Murray, low income growth, high youth unemployment (26–27%), and water policy impacts have increased reliance on welfare."
+  },
+  {
+   "slug": "speech-327375",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill (No. 2) 2015, arguing it would cut Family Tax Benefit A and B for over 20,000 families in each of several regional electorates, including their own, and disproportionately harm working poor, single parents, and grandparent carers."
+  },
+  {
+   "slug": "speech-327523",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill (No. 2) 2015, arguing it unfairly targets low- and middle-income families and single parents, with specific cuts including 1.5 million families losing the family tax benefit part A supplement (over $700 per child per year) and 1.3 million losing the part B supplement (over $350 per family per year), while single parents with children over 13 would lose $1,700 annually and those with children over 16 would lose $3,100."
+  },
+  {
+   "slug": "speech-327524",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to increase Family Tax Benefit Part A by $10 a fortnight, reform Part B with a $1,000 annual increase for families with a child under one, phase out end-of-year supplements, and reinvest savings into the $3 billion Jobs for Families childcare package."
+  },
+  {
+   "slug": "speech-327534",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government must live within its means and supported the Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill (No. 2) 2015, which includes increasing Family Tax Benefit Part A by about $10 per fortnight per child up to age 19, introducing a new rate structure for Part B, and phasing out Part A and Part B supplements. He criticised the opposition and crossbenchers for blocking budget repair measures, citing the need to address the $150 billion annual social security budget and encourage workforce participation."
+  },
+  {
+   "slug": "speech-327535",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill (No. 2) 2015, arguing it unfairly cuts family payments—leaving single parents up to $5,000 a year worse off—and criticised the government for $80 billion in health and education cuts and a proposed 15% GST. Specific figures cited include 1.5 million families losing FTB A supplements of over $700 per child annually, 136,000 single parents with children aged 13–16 facing a $1,700 cut, and Labor’s $37 billion investment in the Gonski education plan."
+  },
+  {
+   "slug": "speech-327536",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment Bill (No. 2) 2015, which phases out family tax benefit supplements, increases FTB Part A rates by $10 per child, and introduces a new FTB Part B rate structure, with savings partly funding the $3 billion Jobs for Families Child Care Package. The speaker also noted that $12 billion a year is spent on interest from Labor's debt."
+  },
+  {
+   "slug": "speech-327538",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment Bill, which increases Family Tax Benefit Part A by about $10 per fortnight per child for 1.2 million families, raises Part B by $1,000 per year for families with a child under one, and phases out end-of-year supplements to save over $4 billion. The speaker also promoted the Jobs for Families childcare package and criticised Labor’s record on family payments."
+  },
+  {
+   "slug": "speech-327539",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull government's policies remain as unfair as the Abbott government's, citing the Social Services Legislation Amendment Bill as cutting $16 billion from family payments over ten years. They claimed Labor supported $9 billion in reasonable cuts but opposed these harsh measures, noting the government doubled the deficit to $38 billion and should instead tackle tax avoidance and wealthy tax breaks."
+  },
+  {
+   "slug": "speech-327593",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The bill increases Family Tax Benefit Part A fortnightly payments by $10.08 per child for around 1.2 million lower-income families, aligns youth allowance rates, and phases out the Part A and B supplements by 2018, saving $4.1 billion. It also raises the maximum Family Tax Benefit Part B rate by $1,000.10 for families with a youngest child under 12 months and ends Part B for single parents when the youngest child turns 16, while exempting grandparent carers and single parents aged 60 and over, with the package funding the Jobs for Families childcare reforms."
+  }
+ ],
+ "acts": []
+}

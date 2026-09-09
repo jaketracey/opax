@@ -1,0 +1,236 @@
+{
+ "key": "au-federal-r6482",
+ "title": "Fair Work (Registered Organisations) Amendment (Ensuring Integrity No. 2) Bill 2019",
+ "short_title": "Fair Work (Registered Organisations) Amendment (Ensuring Integrity No. 2) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industrial Relations",
+ "status": "lapsed",
+ "status_as_of": "2020-06-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6482%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6482%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6482%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6482%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6482%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6482%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6482_ems_bd86fac7-06d9-409e-b224-f4c8809829e9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6482%22",
+   "document_date": "2019-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-04",
+  "sentences": [
+   "The bill aims to strengthen rules for unions and employer groups after a royal commission found widespread misconduct.",
+   "It would let a court disqualify officers and cancel an organisation's registration for serious or repeated law-breaking, and require a public interest test for some mergers.",
+   "A new automatic disqualification would apply to anyone convicted of a criminal offence carrying a prison term of five years or more."
+  ],
+  "changes": [
+   "Creates a new category of prescribed offence for automatic disqualification from office.",
+   "Gives the Federal Court power to disqualify officers on application by the Registered Organisations Commissioner.",
+   "Allows the Federal Court to cancel an organisation's registration on several grounds.",
+   "Expands the grounds for court-ordered remedial action, including appointing an administrator.",
+   "Requires the Fair Work Commission to apply a public interest test to amalgamations based on compliance history.",
+   "Directs the minister to commission an independent review of the amendments after two years."
+  ],
+  "affected": "Registered employee and employer organisations and their officers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6104",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Fair Work (Registered Organisations) Amendment (Ensuring Integrity No. 2) Bill 2019 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 60
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/1"
+  },
+  {
+   "key": "federal-representatives-6105",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2019-12-04.5.1) *that the resumption of the debate be made an order of the day for the next sitting.*",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 60
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-386519",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-05",
+   "stage_hint": null,
+   "brief": "The government was accused of preventing debate on the Fair Work (Registered Organisations) Amendment (Ensuring Integrity No.2) Bill 2019, with the Prime Minister condemned for anti-democratic behaviour, petulance, and contempt for democracy."
+  },
+  {
+   "slug": "speech-386520",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-05",
+   "stage_hint": null,
+   "brief": "The opposition moved to suspend standing orders to debate the Fair Work (Registered Organisations) Amendment (Ensuring Integrity No.2) Bill 2019, arguing the government's attempt to prevent debate was anti-democratic and condemning the Prime Minister for petulance and contempt for democracy."
+  }
+ ],
+ "acts": []
+}

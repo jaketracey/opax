@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s1183",
+ "title": "Environment Legislation Amendment (Protecting Dugongs and Turtles) Bill 2019",
+ "short_title": "Environment Legislation Amendment (Protecting Dugongs and Turtles) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-14",
+ "originating_house": "senate",
+ "sponsor": "HINCH, Sen Derryn",
+ "sponsor_party": "Derryn Hinch&#39;s Justice Party",
+ "sponsor_person_id": "10852",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1183%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1183%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1183%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1183_ems_6feea82d-6da7-4af6-b883-e11f8e678150%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1183%22",
+   "document_date": "2019-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "This bill would change several laws to give dugongs and turtles more protection in Australian waters.",
+   "It would require the Great Barrier Reef Marine Park Authority to factor turtle and dugong conservation into agreements with community groups and to only back traditional use agreements when the animal population can cope with the harvest and the methods are humane.",
+   "It would also raise the maximum prison terms for serious environmental crimes and make Commonwealth agencies detail their enforcement work in yearly reports."
+  ],
+  "changes": [
+   "Requires community agreements handled by the Great Barrier Reef Marine Park Authority to address turtle and dugong protection.",
+   "For traditional use agreements, mandates specifying harvest methods and that the Authority only approves or funds them if the species can sustain the take and the methods are not cruel.",
+   "Boosts the custodial penalties for aggravated offences under the Environment Protection and Biodiversity Conservation Act and the Great Barrier Reef Marine Park Act.",
+   "Forces Commonwealth bodies, including those under the Australian Border Force Act and the Australian Federal Police Act, to disclose in annual reports how they have investigated and enforced existing crime provisions."
+  ],
+  "affected": "Community groups, traditional owners, the Great Barrier Reef Marine Park Authority, Commonwealth agencies like the border force and federal police, and those who hunt dugongs and turtles.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:20:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

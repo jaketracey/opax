@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6832",
+ "title": "Agriculture Biodiversity Stewardship Market Bill 2022",
+ "short_title": "Agriculture Biodiversity Stewardship Market Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6832%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6832%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6832%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6832_ems_5931a93e-88e2-4aa4-b49a-826d7ebc187e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6832%22",
+   "document_date": "2022-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-09",
+  "sentences": [
+   "The bill creates a national voluntary market where farmers can earn tradeable certificates for projects that protect or enhance native biodiversity.",
+   "The Clean Energy Regulator would administer the scheme, and the Agriculture Minister would make rules and protocol determinations with advice from an expert committee.",
+   "Unlike carbon credits, only one biodiversity certificate would be issued per project, and each certificate would describe the project's unique biodiversity gain."
+  ],
+  "changes": [
+   "Establishes a framework for describing and measuring biodiversity outcomes consistently across Australia.",
+   "Enables biodiversity certificates to be bought, sold, transferred, claimed, used and publicly tracked.",
+   "Sets up project assurance and compliance systems to give market certainty.",
+   "Creates the Agriculture Biodiversity Stewardship Market Advisory Committee to advise the minister on protocols.",
+   "Requires the Regulator to publish information about certificates on its website and to publish annual reports.",
+   "Allows the Commonwealth to purchase biodiversity certificates through conservation contracts."
+  ],
+  "affected": "Agricultural landholders, farmers, businesses, community organisations, individuals, the Clean Energy Regulator, the Agriculture Minister, and the Commonwealth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-417589",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The bill establishes a national voluntary agriculture biodiversity stewardship market to financially reward farmers for restoring, enhancing, or protecting biodiversity on their land. It creates biodiversity certificates as tradeable assets, an independent advisory committee, and a public register, with the Clean Energy Regulator overseeing compliance."
+  }
+ ],
+ "acts": []
+}

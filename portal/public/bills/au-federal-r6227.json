@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6227",
+ "title": "Passenger Movement Charge Amendment (Timor Sea Maritime Boundaries Treaty) Bill 2018",
+ "short_title": "Passenger Movement Charge Amendment (Timor Sea Maritime Boundaries Treaty) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-11-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6227%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6227%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6230_ems_90f3a4a9-9d26-488f-a6a9-c5773f370aa1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6227%22",
+   "document_date": "2018-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-28",
+  "sentences": [
+   "This bill is part of a package that partially implements the 2018 Timor Sea Maritime Boundaries Treaty between Australia and Timor-Leste.",
+   "It amends the Seas and Submerged Lands Act 1973 to establish the Greater Sunrise special regime area, where Australia and Timor-Leste jointly exercise sovereign rights.",
+   "The bill also gives domestic effect to a two-tiered administrative structure for joint petroleum development, including a Designated Authority and a Governance Board."
+  ],
+  "changes": [
+   "Amends the Seas and Submerged Lands Act 1973 to define the Greater Sunrise special regime area.",
+   "Establishes a two-tiered governance structure for joint petroleum development in the Special Regime Area.",
+   "Provides for the cessation of the special regime area when the Greater Sunrise Special Regime ends."
+  ],
+  "affected": "Australia and Timor-Leste, and entities involved in petroleum activities in the Timor Sea.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:14Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-372964",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "Moved the second reading of the Passenger Movement Charge Amendment (Timor Sea Maritime Boundaries Treaty) Bill 2018, which exempts passenger movement charge for journeys to installations in the special regime area, implementing the 2018 Maritime Boundaries Treaty with Timor-Leste."
+  }
+ ],
+ "acts": []
+}

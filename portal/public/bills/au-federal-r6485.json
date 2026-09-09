@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r6485",
+ "title": "Defence Legislation Amendment (Miscellaneous Measures) Bill 2020",
+ "short_title": "Defence Legislation Amendment (Miscellaneous Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2020-05-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-05-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6485_ems_ec185e79-17a9-4fc4-8a9a-42316d4c07c6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6485%22",
+   "document_date": "2020-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00045",
+   "document_date": "2020-05-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-13",
+  "sentences": [
+   "This bill would make two changes to laws affecting Australian Defence Force members and veterans.",
+   "It would extend from two to five years the period after leaving the ADF during which a veteran can apply for a home loan subsidy under the Defence Home Ownership Assistance Scheme.",
+   "The bill would also clarify that former ADF members who served at least 12 months can continue contributing to their ADF Super accounts, and would require ADF Super to obtain insurance for those no longer serving."
+  ],
+  "changes": [
+   "Extends the time to apply for a DHOAS subsidy certificate from two years to five years after separating from the ADF.",
+   "Allows former ADF members with at least 12 months of service to keep making contributions to ADF Super.",
+   "Requires ADF Super to obtain insurance for members who are no longer serving, amending the Superannuation Industry (Supervision) Act 1993."
+  ],
+  "affected": "Current and former Australian Defence Force members and their families.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-388132",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The bill extends access to the Defence Home Ownership Assistance Scheme from two years to five years after leaving the ADF, benefiting roughly 5,500 members per year, and clarifies that former members can continue contributions to their ADF super accounts, effective 1 May 2020."
+  },
+  {
+   "slug": "speech-391287",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-14",
+   "stage_hint": null,
+   "brief": "The speech backed the Defence Legislation Amendment (Miscellaneous Measures) Bill 2020, which lets former ADF members with at least 12 months' service keep contributing to ADF Super and extends the DHOAS home subsidy application window from two to five years. It also criticised the government for withholding the Tune review affecting 28,000 TPI pensioners, failing to compensate veterans harmed by defective DFRDB advice, and inadequate action on veteran homelessness and COVID-19 support."
+  },
+  {
+   "slug": "speech-391290",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Legislation Amendment (Miscellaneous Measures) Bill 2020, which extends ADF Super membership and DHOAS eligibility from two to five years for veterans, and noted a $5 million commitment to a Darwin wellbeing centre. He also criticised the government for not awarding the Victoria Cross to WWII sailor Teddy Sheean, who died protecting his mates, and called on the Prime Minister to explain the decision."
+  },
+  {
+   "slug": "speech-391291",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-05-14",
+   "stage_hint": null,
+   "brief": "The Defence Legislation Amendment (Miscellaneous Measures) Bill 2020 will extend the home ownership assistance scheme application period from two to five years after leaving the ADF and allow ADF Super members to continue contributions after transition. The government also highlighted $15 million for veteran employment programs by Soldier On, Team Rubicon, and the RSL, plus $4.8 million for additional case coordinators and $5.6 million for career support for early leavers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence Legislation Amendment (Miscellaneous Measures) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00045",
+   "assent_date": "2020-05-25"
+  }
+ ]
+}

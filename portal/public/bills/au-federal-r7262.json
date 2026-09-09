@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7262",
+ "title": "Food and Grocery (Mandatory) Code of Conduct Bill 2024",
+ "short_title": "Food and Grocery (Mandatory) Code of Conduct Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-04",
+ "originating_house": "representatives",
+ "sponsor": "LITTLEPROUD, David, MP",
+ "sponsor_party": "Liberal National Party of Queensland",
+ "sponsor_person_id": "10890",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7262%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7262%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7262%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7262_ems_7b081927-7e35-47e6-abb7-321b78e1ee23%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7262%22",
+   "document_date": "2024-11-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-04",
+  "sentences": [
+   "The bill would make the Food and Grocery Code of Conduct mandatory for large supermarkets and wholesalers with annual turnover over $5 billion.",
+   "It would introduce significant penalties for breaches, including fines of up to $2 million for infringement notices and penalties of three times the value of any benefit obtained from a contravention.",
+   "The Australian Competition and Consumer Commission would gain powers to audit retailers and wholesalers for compliance with the mandatory code."
+  ],
+  "changes": [
+   "Makes the Food and Grocery Code of Conduct mandatory for large retailers and wholesalers with annual turnover over $5 billion.",
+   "Introduces significant penalties for breaches, including infringement notices of $2 million and penalties of three times the value of the benefit obtained from a contravention.",
+   "Gives the Australian Competition and Consumer Commission functions and powers to conduct audits of supermarket retailers and wholesalers."
+  ],
+  "affected": "Large retailers and wholesalers in the supermarket sector with annual turnover over $5 billion, and their suppliers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

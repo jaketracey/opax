@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s1061",
+ "title": "Fair Work Amendment (Pay Protection) Bill 2017",
+ "short_title": "Fair Work Amendment (Pay Protection) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-29",
+ "originating_house": "senate",
+ "sponsor": "RHIANNON, Sen Lee",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10760",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1061%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1061%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1061%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1061_ems_f5a88a15-776d-42a2-96ad-af1116637d02%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1061%22",
+   "document_date": "2017-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 10,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-29",
+  "sentences": [
+   "This bill changes the Fair Work Act 2009 so that workers under an enterprise agreement must be paid at least what the relevant award or national minimum wage order requires.",
+   "The main change is to extend existing protections, which currently only cover the base rate of pay, to also cover the full rate of pay—that includes overtime, penalty rates, and casual loadings.",
+   "The new rules start the day after the law receives royal assent, and they apply to agreements made before, on, or after that date, though the government notes the effect would be the same if only new agreements were covered."
+  ],
+  "changes": [
+   "Extends the requirement that enterprise agreement pay rates cannot undercut the modern award to the full rate of pay, not just the base rate.",
+   "Extends the requirement that base rates and casual loadings under enterprise agreements cannot be less than the national minimum wage order.",
+   "Extends the same protection to employees not covered by a modern award, ensuring their base rate and casual loading meet the national minimum wage order.",
+   "Extends the protection to employees covered by a modern award, ensuring their full rate of pay meets the award.",
+   "Allows regulations to set the full rate of pay for pieceworkers for the purpose of section 206.",
+   "Updates references in the Act from 'base rate of pay' to 'rate of pay' or 'full rate of pay' where needed."
+  ],
+  "affected": "Employees covered by enterprise agreements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:06:43Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

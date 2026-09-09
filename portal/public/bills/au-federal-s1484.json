@@ -1,0 +1,234 @@
+{
+ "key": "au-federal-s1484",
+ "title": "High Seas Biodiversity Bill 2026",
+ "short_title": "High Seas Biodiversity Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-04",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "passed",
+ "status_as_of": "2026-04-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1484_ems_888b5230-327a-441a-8ecb-00a437df75f2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1484_ems_edaaf0df-2a93-4a43-9ae4-51e0f6949fb9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1484%22",
+   "document_date": "2026-02-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00042",
+   "document_date": "2026-04-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2026-02-04",
+  "sentences": [
+   "The bill would turn Australia's commitments under a global ocean biodiversity treaty into domestic law.",
+   "It creates a new regulatory system covering marine genetic resources, area-based management tools and environmental impact assessments for waters beyond any country's control.",
+   "The compliance framework would adopt standard provisions from the Regulatory Powers (Standard Provisions) Act 2014, with minor modifications."
+  ],
+  "changes": [
+   "Implements obligations from Parts II, III and IV of the BBNJ Agreement into Australian law.",
+   "Establishes a modern compliance and enforcement framework using standard Commonwealth regulatory powers.",
+   "Allows information collected under the bill to be shared with state, territory and other Australian Government bodies.",
+   "Provides legislative authority for Commonwealth spending to implement the BBNJ Agreement."
+  ],
+  "affected": "Australian government agencies, industries such as tourism, fishing and aquaculture, and individuals operating in areas beyond national jurisdiction.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1199696",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201563",
+   "speaker": "Andrew Bragg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202084",
+   "speaker": "Sophie Scamps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-03-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202185",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202241",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202243",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202277",
+   "speaker": "Tom Venning",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-31",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "High Seas Biodiversity Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00042",
+   "assent_date": "2026-04-08"
+  }
+ ]
+}

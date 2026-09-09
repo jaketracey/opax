@@ -1,0 +1,187 @@
+{
+ "key": "au-federal-alrc-2357",
+ "title": "Parliamentary Service Amendment (Parliamentary Budget Officer) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00102",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-270525",
+   "speaker": "Wayne Swan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822435",
+   "speaker": "Wayne Swan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273232",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273233",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273234",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273236",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823652",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824723",
+   "speaker": "Mathias Cormann",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": "The Coalition supported the Parliamentary Service Amendment (Parliamentary Budget Officer) Bill 2013, which gives the Parliamentary Budget Office the additional function of auditing election costings for all parties and preparing a report within 30 days after a government is formed. The speaker argued this ensures all parties are honest in their policy commitments and that policies are fully and accurately costed."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Parliamentary Service Amendment (Parliamentary Budget Officer) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00102",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

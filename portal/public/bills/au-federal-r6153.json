@@ -1,0 +1,218 @@
+{
+ "key": "au-federal-r6153",
+ "title": "Customs Amendment (Pacific Agreement on Closer Economic Relations Plus Implementation) Bill 2018",
+ "short_title": "Customs Amendment (Pacific Agreement on Closer Economic Relations Plus Implementation) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-08-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Law Enforcement and Cyber Security",
+ "status": "passed",
+ "status_as_of": "2018-09-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6153_ems_e4fb7b2b-8ccf-436f-bc26-54ac4734dc95%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6153%22",
+   "document_date": "2018-08-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00112",
+   "document_date": "2018-09-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-08-16",
+  "sentences": [
+   "This bill changes the Customs Act 1901 to set new rules for determining where goods imported from Pacific Agreement member countries come from.",
+   "Goods meeting these rules could enter Australia at lower customs duty rates, and exporters and producers of such goods would face new requirements.",
+   "The new rules would start on the later of the day the bill becomes law or the day the Pacific Agreement takes effect for Australia."
+  ],
+  "changes": [
+   "Introduces new rules of origin for goods imported from Pacific Agreement member countries.",
+   "Allows eligible goods to receive preferential customs duty rates.",
+   "Imposes obligations on exporters and producers of eligible goods."
+  ],
+  "affected": "Importers, exporters, and producers of goods from Pacific Agreement member countries, and the Department of Home Affairs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-367288",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The bill implements Australia's obligations under the Pacific Agreement on Closer Economic Relations Plus (PACER Plus), a free trade agreement with 11 Pacific island countries, to reduce trade barriers and support regional development. The government argued it will help Pacific island countries address economic challenges and create opportunities for Australian exporters."
+  },
+  {
+   "slug": "speech-367289",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (Pacific Agreement on Closer Economic Relations Plus Implementation) Bill 2018 was moved for a second reading, amending the Customs Tariff Act 1995 to provide duty-free access for eligible goods from PACER Plus parties, with excise-equivalent duties maintained for consistency with domestic goods. The bill complements the Customs Amendment (PACER Plus Implementation) Bill 2018 and follows the Joint Standing Committee on Treaties' recommendation for binding treaty action."
+  },
+  {
+   "slug": "speech-368047",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Amendment bills to implement the PACER Plus free trade agreement with 14 Pacific Island nations, providing preferential duty rates on imports and committing Australia to $23 million in aid for Pacific countries. The speaker criticised the Turnbull government for refusing to commission independent economic modelling on trade agreements, despite recommendations from the Joint Standing Committee on Treaties and industry groups."
+  },
+  {
+   "slug": "speech-368048",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker argued for the passage of the Customs Amendment (Pacific Agreement on Closer Economic Relations Plus Implementation) Bill 2018, which implements new rules of origin to provide duty-free access for imports from nine Pacific Island countries, aiming to drive economic growth and opportunity in the region while benefiting Australian exporters with tariff reductions on 91.5% of tariff lines, covering $360 million in exports."
+  },
+  {
+   "slug": "speech-368049",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speech supported the PACER Plus implementation bills but argued the agreement primarily benefits Australia through tariff reductions, eliminating tariffs on 91.5 per cent of export lines from Australia and New Zealand and 88.5 per cent of Australian exports, while noting the labour mobility arrangement is the key interest for Pacific island nations."
+  },
+  {
+   "slug": "speech-368179",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the PACER Plus trade bills represent a small but significant step in regional development, stressing that the agreement is not about expanding Australian markets but about providing development assistance and tariff reductions for Pacific island nations. They noted the exclusion of Papua New Guinea and Fiji, called for greater Australian leadership in the Pacific, and emphasised that opening the Australian economy and labour market, including through the Seasonal Worker Program, is the most impactful way to drive development in the region."
+  },
+  {
+   "slug": "speech-368181",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the bills implementing PACER Plus, which will cut tariffs on 88.5% of Australian exports to signatory Pacific nations (excluding New Zealand) and remove tariffs on imports from them, with $23 million in assistance. He criticised the government for cutting $11 billion from the aid budget and for refusing to require independent economic analysis of trade agreements, which Labor would mandate if elected."
+  },
+  {
+   "slug": "speech-368182",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The minister argued that the Coalition government has refocused foreign aid towards the Pacific and blamed the Labor Party for Australia's half-trillion-dollar debt and the reduction in the aid budget, accusing Labor of hypocrisy for complaining without committing funds. He announced that the PACER Plus agreement, signed by 11 Pacific Islands Forum members, will create closer economic integration and development in the region, and urged Australia to ratify early."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Pacific Agreement on Closer Economic Relations Plus Implementation) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00112",
+   "assent_date": "2018-09-25"
+  }
+ ]
+}

@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-r6099",
+ "title": "Air Services Amendment Bill 2018 (No. 2)",
+ "short_title": "Air Services Amendment Bill 2018 (No. 2)",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-21",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-10-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6099%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6099%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6099%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6099_ems_7dd64cf6-1083-495c-af75-433dc9267e37%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6099%22",
+   "document_date": "2018-05-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-21",
+  "sentences": [
+   "The bill would give communities more power to challenge aircraft noise and changed flight paths over homes.",
+   "It would force Airservices Australia to consult residents, report on noise, and protect the environment and residential areas from aircraft operations.",
+   "The bill would create an ombudsman and an advocate to represent communities, and require a plan for central Melbourne that bans flights below 2,000 metres above sea level within 5 kilometres of the city centre, with exceptions for emergency services, hospitals, defence and similar aircraft."
+  ],
+  "changes": [
+   "Set clear rules for Airservices Australia to consult and report on aircraft noise.",
+   "Require Airservices Australia to minimise harm from aircraft operations to people, the environment and residential areas.",
+   "Establish an independent body to investigate noise complaints and an independent representative for affected communities.",
+   "Compel Airservices Australia to write a plan for central Melbourne's airspace that bans low flights near the city centre, except for emergency, hospital, defence and similar aircraft."
+  ],
+  "affected": "Communities affected by aircraft noise, especially those in residential areas and central Melbourne.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:39Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

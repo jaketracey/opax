@@ -1,0 +1,69 @@
+{
+ "key": "au-federal-r7496",
+ "title": "Commonwealth Electoral Amendment (Voter Protections in Political Advertising) Bill 2026",
+ "short_title": "Commonwealth Electoral Amendment (Voter Protections in Political Advertising) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-22",
+ "originating_house": "representatives",
+ "sponsor": "STEGGALL, Zali, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10941",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7496%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7496_ems_59a05d92-3a67-4322-89d2-6ed298016b77%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7496%22",
+   "document_date": "2026-06-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-22",
+  "sentences": [
+   "Political advertising in federal elections and referendums would face new bans on false or misleading factual claims and on fake endorsements or impersonations.",
+   "The bill would set up a Political Advertising Standards Board to investigate complaints and seek court orders, while also creating a code of conduct and labelling rules for AI-made content.",
+   "Penalties would range from 50 penalty units for individuals up to 1,000 penalty units for authorising non-compliant material, though the source does not state when the changes would start."
+  ],
+  "changes": [
+   "The bill would ban electoral or referendum content that contains materially misleading or deceptive factual statements.",
+   "It would also ban people or companies from pretending to be someone else or wrongly attributing material to a candidate, party, or campaign.",
+   "The bill would create a Political Advertising Standards Board with powers to investigate, decide, request corrections, and go to court.",
+   "It would establish an enforceable Ethical Political Advertising Code with civil penalties for non-compliance.",
+   "The bill would require AI-generated content that looks like a real record to carry an 'AI-generated content' label, with civil penalties for violations."
+  ],
+  "affected": "Candidates, parties, campaigners, and any person or company that publishes electoral or referendum advertising in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

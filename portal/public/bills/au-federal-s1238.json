@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1238",
+ "title": "Commonwealth Electoral Amendment (Transparency Measures—Lowering the Disclosure Threshold) Bill 2019",
+ "short_title": "Commonwealth Electoral Amendment (Transparency Measures—Lowering the Disclosure Threshold) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-27",
+ "originating_house": "senate",
+ "sponsor": "FARRELL, Sen Don",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10708",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1238%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1238%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1238%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1238_ems_1cd63b88-5576-4edc-b532-4b3890f5de5f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1238%22",
+   "document_date": "2019-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-27",
+  "sentences": [
+   "This bill would lower the amount of political donations that must be reported to the Australian Electoral Commission.",
+   "It would change the disclosure threshold from a figure that rises with inflation to a fixed $1,000.",
+   "The change would start on the first 1 July after the bill becomes law."
+  ],
+  "changes": [
+   "Lowers the disclosure threshold for political donations from $13,800 to $1,000.",
+   "Removes indexation so the threshold becomes a fixed dollar amount.",
+   "Prevents regulations from setting a disclosure amount higher than the threshold."
+  ],
+  "affected": "Political donors, candidates, parties and the Australian Electoral Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

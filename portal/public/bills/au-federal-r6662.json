@@ -1,0 +1,239 @@
+{
+ "key": "au-federal-r6662",
+ "title": "Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021",
+ "short_title": "Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6662_ems_b5b1f927-0bbc-44ae-8e79-4c0174e43c78%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6662%22",
+   "document_date": "2021-02-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00056",
+   "document_date": "2021-06-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-03",
+  "sentences": [
+   "The bill would simplify the licensing system for medicinal cannabis by merging three existing licences into one.",
+   "It would introduce a perpetual licence with periodic permits for most activities, replacing the current structure to reduce regulatory burden.",
+   "The bill implements recommendations from the 2019 McMillan Review and also creates two new strict liability offences for manufacturing without authorisation and breaching a licence condition."
+  ],
+  "changes": [
+   "Consolidates the three-licence structure into a single licence.",
+   "Introduces a perpetual licence and periodic permit framework.",
+   "Creates strict liability offences for unauthorised manufacture and licence condition breaches."
+  ],
+  "affected": "Industry participants involved in cultivating, producing, manufacturing, or researching medicinal cannabis.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:10Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-401362",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021 replaces separate licences for cultivation, production, manufacture and research with a single perpetual licence, reducing regulatory burden and implementing recommendations from Professor John McMillan AO’s review. The bill also reaffirms the government’s commitment to ensuring safe, legal and sustainable patient access to medicinal cannabis."
+  },
+  {
+   "slug": "speech-403447",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021, which implements McMillan review recommendations such as consolidating three industry licences into one, but argued the bill does little to improve patient access, noting that over 95% of the 600,000 Australians using medicinal cannabis obtain it illegally and that only one TGA-approved product (Sativex) exists. The opposition moved a second reading amendment urging the government to implement reforms to significantly improve patient access."
+  },
+  {
+   "slug": "speech-403449",
+   "speaker": "Ted O'Brien",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker defended the coalition government's 2016 legalisation of medicinal cannabis cultivation and production, arguing the Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021 implements the McMillan review's recommendations to consolidate licensing into a single framework and create perpetual licences, reducing red tape and encouraging investment. They noted the highest number of prescriptions come from Queensland and praised MEDIFARM as a leading company in the sector."
+  },
+  {
+   "slug": "speech-403450",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the current system for accessing medicinal cannabis is overly complicated and burdensome, and announced support for the Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021 to consolidate licensing and streamline supply chain assessments, while criticising the Morrison government and state governments for failing to improve patient access, citing examples such as Peter Fielding in Tasmania."
+  },
+  {
+   "slug": "speech-403451",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021 implements stage 2 of the McMillan review recommendations, introducing a single perpetual licence to reduce regulatory burden and improve patient access to medicinal cannabis while maintaining safeguards against illegal diversion and honouring international obligations."
+  },
+  {
+   "slug": "speech-403452",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The Greens argued the Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021 makes only minor improvements but fails to address prohibitive costs and regulatory complexities, forcing patients to rely on the black market; they called for full implementation of the Senate inquiry’s recommendations."
+  },
+  {
+   "slug": "speech-403453",
+   "speaker": "Patrick Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021 was supported for streamlining the licensing structure into a single licence (replacing the current three), creating perpetual licences and periodic permits, and reaffirming the government's commitment to patient availability. The changes were argued to reduce red tape and create certainty for investors, industry, and patients, though it was acknowledged that more work on access remains."
+  },
+  {
+   "slug": "speech-403454",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021 to streamline regulatory licensing for businesses. They also urged listing medicinal cannabis on the PBS to address cost barriers, citing a patient paying $200/week and a four-year-old named Evelyn whose family spends $180 per 10 days, and called for implementing Senate committee recommendations on access."
+  },
+  {
+   "slug": "speech-403455",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021 introduces a single perpetual licence to replace three separate licences for cultivation, production, manufacture and research, cutting red tape and implementing recommendations from the McMillan review. The speaker noted that 151 licences have been granted since October 2016 and highlighted the THC Global Group facility in Southport, visited by the health minister in 2019."
+  },
+  {
+   "slug": "speech-403456",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021 does little to improve patient access, citing the case of Stephen Taylor, who grew cannabis for his daughters Morgan and Ariel with Crohn's disease, and supported an amendment by Mark Butler to highlight the government's slow pace. The speaker noted that licensing delays, complex access schemes, and high costs force patients to the black market, with Professor Iain McGregor estimating 100,000 Australians use illegal cannabis for medical problems."
+  },
+  {
+   "slug": "speech-403457",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Narcotic Drugs Amendment (Medicinal Cannabis) Bill 2021, which introduces a single permanent medicinal cannabis licence to replace multiple licences, reduces regulatory burden, and reaffirms commitment to safe, legal supply for patients."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Narcotic Drugs Amendment (Medicinal Cannabis) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00056",
+   "assent_date": "2021-06-24"
+  }
+ ]
+}

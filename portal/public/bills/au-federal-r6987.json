@@ -1,0 +1,223 @@
+{
+ "key": "au-federal-r6987",
+ "title": "National Health Amendment (Effect of Prosecution—Approved Pharmacist Corporations) Bill 2023",
+ "short_title": "National Health Amendment (Effect of Prosecution—Approved Pharmacist Corporations) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "passed",
+ "status_as_of": "2023-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-04-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6987_ems_18148e20-ab3d-4ac6-b6ca-05ed94e17d29%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6987%22",
+   "document_date": "2023-03-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00016",
+   "document_date": "2023-04-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-828326",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "The Albanese government introduced a bill to close a loophole allowing pharmacists convicted of PBS fraud to continue supplying medicines under company structures, extending suspension or revocation powers to all approvals regardless of ownership type."
+  },
+  {
+   "slug": "speech-828653",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "Bills on financial accountability, financial services compensation, health, national security, education and vocational training were referred to the Federation Chamber for further consideration. The speaker also remarked that they hoped their next speech would be more interesting."
+  },
+  {
+   "slug": "speech-828655",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "The opposition supported the National Health Amendment (Effect of Prosecution—Approved Pharmacist Corporations) Bill 2023, which extends the power to suspend or revoke pharmacist approvals for PBS-related offences to company structures. The Labor government's removal of the diabetes medicine Fiasp from the PBS and other broken promises were also criticised."
+  },
+  {
+   "slug": "speech-828725",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "The bill extends the discretionary power to suspend or revoke approval for PBS-related fraud to pharmacists operating under company structures, closing a loophole that previously only applied to individual pharmacists. The speaker noted bipartisan support and cited a case where a pharmacist was sentenced to over six years for defrauding $19 million in fraudulent PBS claims."
+  },
+  {
+   "slug": "speech-828925",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-828950",
+   "speaker": "Tim Ayres",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "The government introduced a bill to allow suspension or revocation of PBS approvals for pharmacists convicted of fraud, regardless of whether they operate as individuals or under company structures, after PBS expenditure reached $14.7 billion in 2021-22."
+  },
+  {
+   "slug": "speech-829046",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-23",
+   "stage_hint": null,
+   "brief": "A motion was moved and agreed to suspend standing order 111 paragraphs (5) to (8) so that the National Health Amendment (Effect of Prosecution—Approved Pharmacist Corporations) Bill 2023 could be considered during that sitting period."
+  },
+  {
+   "slug": "speech-829059",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-829060",
+   "speaker": "Jonathon Duniam",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-23",
+   "stage_hint": null,
+   "brief": "The coalition supported the bill to close a loophole allowing pharmacist corporations to continue receiving PBS payments after directors are charged with fraud, and criticised the government for removing Fiasp insulin from the PBS. The Greens also supported the bill and moved an amendment calling for public hospital pharmacists to be enabled to supply PBS medicines under the Closing the Gap Co-payment Program."
+  },
+  {
+   "slug": "speech-829099",
+   "speaker": "Paul Scarr",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-24",
+   "stage_hint": null,
+   "brief": "The senator supported the National Health Amendment (Effect of Prosecution—Approved Pharmacist Corporations) Bill 2023 to close a loophole in PBS licensing, but criticised the government for delisting the diabetes drug Fiasp, affecting 15,000 Australians, and for failing to list Trikafta for children aged 6–11 with cystic fibrosis despite a PBAC recommendation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Health Amendment (Effect of Prosecution—Approved Pharmacist Corporations) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00016",
+   "assent_date": "2023-04-11"
+  }
+ ]
+}

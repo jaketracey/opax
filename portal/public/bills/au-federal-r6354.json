@@ -1,0 +1,177 @@
+{
+ "key": "au-federal-r6354",
+ "title": "Farm Household Support Amendment Bill 2019",
+ "short_title": "Farm Household Support Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2019-08-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6354_ems_d4b444f1-6cda-4afc-bedf-d5a68884bc4a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6354%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00060",
+   "document_date": "2019-08-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill would keep the farm assets value limit for the Farm Household Allowance at $5.0 million from 1 July 2019.",
+   "It would also change how allowable deductions are treated, so they can only be claimed against the same type of income they relate to, such as on-farm or off-farm income.",
+   "The $5.0 million limit would be applied retrospectively to claims made from 1 July 2019 until the amendments start, and CPI indexation of the limit would be removed."
+  ],
+  "changes": [
+   "Maintains the temporary farm assets value limit at $5.0 million from 1 July 2019.",
+   "Removes CPI indexation of the farm assets value limit.",
+   "Ensures allowable deductions are offset against the type of income they relate to.",
+   "Applies the $5.0 million limit retrospectively to claims from 1 July 2019 until the amendments commence."
+  ],
+  "affected": "Farmers and their partners who receive or claim the Farm Household Allowance.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-377412",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The bill maintains the farm assets value limit for farm household assistance at $5 million and ensures allowable deductions are applied against the related income type."
+  },
+  {
+   "slug": "speech-378850",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-29",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment Bill 2019 maintains the farm assets value limit at $5 million and alters income deductions for farm businesses. The speaker moved an amendment criticising the government's inadequate drought assistance, particularly the Farm Household Allowance's access difficulties since 2014, and cited the 'Hansard-gate' incident involving former minister Barnaby Joyce and the dismissal of department head Dr. Grimes."
+  },
+  {
+   "slug": "speech-378859",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the member for Hunter's amendment to the Farm Household Support Amendment Bill, arguing the government has mismanaged the farm household allowance since 2014, causing low uptake due to complexity, stigma, and inadequate Newstart rates. They called for decoupling the allowance from social security legislation, raising Newstart, improving Centrelink staffing, and criticised the government for photo opportunities without meaningful action—citing criticism from ABC's Kath Sullivan and Victorian farmer Steve Harrison."
+  },
+  {
+   "slug": "speech-378872",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-07-29",
+   "stage_hint": null,
+   "brief": "The government argued the Farm Household Support Amendment Bill 2019 maintains the farm asset value limit at $5 million and clarifies income and deduction rules for recipients, noting program outlays grew from over $230 million to over $340 million and recipients exceeded 12,000."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Farm Household Support Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00060",
+   "assent_date": "2019-08-07"
+  }
+ ]
+}

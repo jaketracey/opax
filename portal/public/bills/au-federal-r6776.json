@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r6776",
+ "title": "Biosecurity Amendment (Enhanced Risk Management) Bill 2021",
+ "short_title": "Biosecurity Amendment (Enhanced Risk Management) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6776%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6776%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6776%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6776%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6776%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6776%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6776%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6776%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6776%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6776_ems_e1872076-c183-46dc-b76d-dc1c0f18c03d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6776%22",
+   "document_date": "2021-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 10,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-09-01",
+  "sentences": [
+   "The bill would update the Biosecurity Act 2015 to better prevent pests and diseases from entering or spreading in Australia and harming health, the environment or the economy.",
+   "It would widen pre-arrival reporting for planes and ships, create a power to direct groups on human biosecurity, and raise penalties for breaking the rules on goods.",
+   "Most changes would start the day after royal assent, but the strengthened pratique and human health rules would start by proclamation or six months after royal assent, whichever comes first."
+  ],
+  "changes": [
+   "Strengthen penalties for failing to comply with negative pratique requirements.",
+   "Allow the Agriculture Minister and Health Minister to authorise biosecurity program spending directly through the Act.",
+   "Increase civil and criminal penalty amounts for contraventions of the goods-related chapter.",
+   "Expand pre-arrival reporting requirements for aircraft and vessels.",
+   "Create a mechanism to issue a group direction for human biosecurity risks.",
+   "Streamline the process for making determinations about prohibited or restricted goods and for granting import permits."
+  ],
+  "affected": "People and businesses involved in international maritime and aviation arrivals, importers of goods, and the Australian Government agencies administering biosecurity.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:00:36Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-414826",
+   "speaker": "Julie Maree Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "Federal Labor supported the Biosecurity Amendment (Enhanced Risk Management) Bill 2021, which separates human and agricultural biosecurity responsibilities, strengthens border measures, and increases penalties. The speaker also criticised the Morrison-Joyce government for biosecurity failures, citing the Inspector-General of Biosecurity’s report on the Ruby Princess incident and two other damning reports, and announced Labor would move a second reading amendment."
+  },
+  {
+   "slug": "speech-414829",
+   "speaker": "Pat Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Biosecurity Amendment (Enhanced Risk Management) Bill 2021, citing the Ruby Princess incident—which caused 28 deaths and 662 COVID-19 cases—as a key lesson requiring stronger maritime and aviation biosecurity measures, including group directions, contact tracing, and increased civil and criminal penalties."
+  },
+  {
+   "slug": "speech-417049",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The speaker criticised the federal government for delaying debate on the Biosecurity Amendment (Enhanced Risk Management) Bill 2021 until December, 18 months after the COVID-19 pandemic began, arguing the government selectively prioritises biosecurity responsibilities."
+  },
+  {
+   "slug": "speech-417051",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "A motion was moved to suspend standing orders to give priority to three bills: the Biosecurity Amendment (Enhanced Risk Management) Bill 2021, the Independent National Security Legislation Monitor Amendment Bill 2021, and the Crimes Amendment (Remissions of Sentences) Bill 2021. It also proposed that after the third reading of the Treasury Laws Amendment (Enhancing Superannuation Outcomes For Australians and Helping Australian Businesses Invest) Bill 2021, the House adjourn until 9:30 am on 2 December 2021, and that from 8 pm any divisions be deferred and a quorum count occur at that time."
+  },
+  {
+   "slug": "speech-417052",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The Biosecurity Amendment (Enhanced Risk Management) Bill 2021 strengthens human biosecurity risk management for maritime and aviation arrivals, expands pre-arrival reporting, increases civil and criminal penalties, and addresses recommendations from the Inspector-General of Biosecurity’s review of the Ruby Princess incident."
+  },
+  {
+   "slug": "speech-417059",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The speaker moved to suspend standing orders to prioritise three bills—Biosecurity Amendment (Enhanced Risk Management) Bill 2021, Independent National Security Legislation Monitor Amendment Bill 2021, and Crimes Amendment (Remissions of Sentences) Bill 2021—and to defer any divisions from 8 pm until 9.30 am on 2 December 2021."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,268 @@
+{
+ "key": "au-federal-r5974",
+ "title": "Social Services Legislation Amendment (Housing Affordability) Bill 2018",
+ "short_title": "Social Services Legislation Amendment (Housing Affordability) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5974%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5974%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5974%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5974%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5974%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5974_ems_f507e222-24e7-4a3f-ab2d-9ea0cace6ff7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5974_ems_b5f31f98-1e5a-410f-ad37-0eb46e842964%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5974_ems_ef399f4e-d573-427d-801b-51558984b7b3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5974_ems_d8ef56f8-722e-48ff-bd9a-db75a9905771%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5974%22",
+   "document_date": "2017-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-354194",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-14",
+   "stage_hint": null,
+   "brief": "The bill introduces an Automatic Rent Deduction Scheme to deduct rent and housing costs from income support payments for social housing tenants, aiming to prevent arrears and evictions (citing 8,900 households in arrears and 2,300 evictions in 2013-14), and amends the National Rental Affordability Scheme Act to simplify administration until the scheme ceases in 2026-27."
+  },
+  {
+   "slug": "speech-372104",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the Social Services Legislation Amendment (Housing Affordability) Bill 2017 does not address housing affordability, criticising the proposed Automatic Rent Deduction Scheme as too broad and harmful to vulnerable tenants. Labor will move amendments to limit compulsory deductions to tenants at risk of homelessness, cap deductions at 30% of payments, and exclude property damage, while noting the government cut the National Rental Affordability Scheme from 50,000 to 38,000 dwellings."
+  },
+  {
+   "slug": "speech-372106",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The bill makes rent and utility deductions automatic for social housing tenants on income support to reduce arrears and evictions, and amends the National Rental Affordability Scheme to require middlemen to pass on payments to investors, with regulatory enforcement."
+  },
+  {
+   "slug": "speech-372107",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the Social Services Legislation Amendment (Housing Affordability) Bill 2017, which extends mandatory rent deductions for social security recipients in public housing and clarifies the National Rental Affordability Scheme, but argued the government has failed to address key housing affordability and homelessness issues, citing a reduction of the NRAS cap from 50,000 to 38,000 dwellings and criticizing the government's support for negative gearing and capital gains tax concessions."
+  },
+  {
+   "slug": "speech-372108",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The speech argued for the Social Services Legislation Amendment (Housing Affordability) Bill 2017, which introduces an Automatic Rent Deduction Scheme for social housing tenants to prevent rental arrears and homelessness, and amends the National Rental Affordability Scheme to increase flexibility. The social housing system loses over $30 million annually in unpaid rent, and the bill received 32 submissions."
+  },
+  {
+   "slug": "speech-372109",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Social Services Legislation Amendment (Housing Affordability) Bill 2017 is a reactionary and inadequate response to the homelessness crisis affecting nearly 120,000 Australians, including a growing number of older people. They called for redirecting funding from tax concessions like negative gearing and capital gains discounts—costing billions annually—to affordable housing, citing reports from Anglicare and the Grattan Institute that show rental stress, falling homeownership, and insufficient public housing supply."
+  },
+  {
+   "slug": "speech-372110",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's Automatic Rent Deduction Scheme is overly punitive and will harm pensioners, disability support recipients, and carers, while the Abbott-Turnbull-Morrison governments have failed to address housing affordability and homelessness. They outlined Labor's proposals including an $88 million safe housing fund, negative gearing and capital gains tax reforms, and a national plan to reduce homelessness."
+  },
+  {
+   "slug": "speech-372111",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the Social Services Legislation Amendment (Housing Affordability) Bill 2017 is too narrow to address Australia's homelessness crisis, citing 116,427 homeless in 2016 (up from 102,439 in 2011) and one in 200 Australians homeless, and announced Labor's plan to halve homelessness by 2025 with an $88 million safe housing fund for women and children escaping family violence."
+  },
+  {
+   "slug": "speech-372112",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the automatic rent deduction component of the Social Services Legislation Amendment (Housing Affordability) Bill 2017, arguing it is a disproportionate response since 90% of tenants meet rental obligations and 86% already use voluntary deductions, and warning it could push people into financial stress without protections. They supported amendments to the National Rental Affordability Scheme but criticized the government for insufficient action on housing affordability."
+  },
+  {
+   "slug": "speech-372113",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The bill extends voluntary rent deductions from social security payments, but Tasmania, Victoria and the ACT have not agreed to participate; Labor will support it but wants a Senate inquiry. The speaker contrasted it with Labor's 2013 compulsory deduction bill, criticised the government's housing record, and cited 116,427 people homeless in 2016, up 13.7% since 2011, while raising concerns that property damage deductions could harm domestic violence victims."
+  },
+  {
+   "slug": "speech-372114",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The speaker broadly supported the bill but reserved Centre Alliance's position in the Senate, urging the government to revive the National Rental Affordability Scheme (NRAS) and citing the Service to Youth Council's expansion from 7 to 39 housing units. They criticised the lack of cost disclosure for the Automatic Rent Deduction Scheme and raised concerns about creating two classes of tenants, the need for time limits, and safeguards to prevent tenants from being left with no income."
+  },
+  {
+   "slug": "speech-372115",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Social Services Legislation Amendment (Housing Affordability) Bill 2017, which introduces the Automatic Rent Deduction Scheme (ARDS) to deduct rent and utilities from welfare payments for social housing tenants to reduce homelessness, and amends the National Rental Affordability Scheme (NRAS) to simplify administration until 2026-27, while criticising opposition resistance and noting a $200,000 Homes for Homes announcement for older women."
+  },
+  {
+   "slug": "speech-372116",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the mandatory Automatic Rent Deduction Scheme in the Social Services Legislation Amendment (Housing Affordability) Bill 2017, arguing it could make domestic violence victims liable for property damage caused by abusive partners, and announced amendments to cap deductions and restrict them to rent and utilities only."
+  },
+  {
+   "slug": "speech-372245",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Automatic Rent Deduction Scheme in the Social Services Legislation Amendment (Housing Affordability) Bill 2017, arguing it would force mandatory deductions from income support payments for public housing tenants, harming vulnerable people including domestic violence victims and older women. They proposed amendments to cap deductions and exempt liability for property damage caused by others."
+  },
+  {
+   "slug": "speech-372970",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The coalition government has failed on housing affordability; Labor will refer the bill to the Senate for inquiry. Labor proposed reforms to negative gearing and capital gains tax, a bond aggregator, a dedicated housing minister, and a homelessness target, and stated the government has no plan and called for an election."
+  },
+  {
+   "slug": "speech-372972",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill introduces the Automatic Rent Deduction Scheme (ARDS) to deduct rent and utilities from social security payments for social housing tenants to reduce homelessness and eviction risks, and amends the National Rental Affordability Scheme Act to simplify its administration until it ceases in 2026-27."
+  },
+  {
+   "slug": "speech-372989",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,220 @@
+{
+ "key": "au-federal-r5402",
+ "title": "Public Governance and Resources Legislation Amendment Bill (No. 1) 2015",
+ "short_title": "Public Governance and Resources Legislation Amendment Bill (No. 1) 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-02-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2015-04-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-04-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5402_ems_126da0a5-fac4-4fa7-989e-acfc994bec58%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5402_ems_3aea0c94-076e-48b4-851d-a830b50f757c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5402_ems_84ee5179-9c30-4e4f-826d-25e09c2569ef%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5402%22",
+   "document_date": "2015-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00036",
+   "document_date": "2015-04-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2015-02-12",
+  "sentences": [
+   "This bill would update 35 Commonwealth Acts to improve how government bodies are run and manage their resources.",
+   "It would make technical fixes to the Public Governance, Performance and Accountability Act 2013, including clarifying reporting periods and corporate plan descriptions, and streamline how functions are transferred between non-corporate entities.",
+   "It would also amend the transitional rules from the 2014 consequential act so that repayments to the Commonwealth are handled under the new act rather than the old one, avoiding complex reporting."
+  ],
+  "changes": [
+   "Amends 35 Acts across the Commonwealth for governance and resource management.",
+   "Improves the operation of the PGPA Act, including supporting GST obligations of non-corporate entities.",
+   "Streamlines transitional arrangements for implementing the PGPA Act.",
+   "Clarifies that section 77 of the PGPA Act, not section 28 of the FMA Act, supports repayments for amounts received before or after 1 July 2014.",
+   "Clarifies obligations such as disclosure of interests and roles of accountable authorities."
+  ],
+  "affected": "Commonwealth entities and companies, and their enabling legislation.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:59:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-305213",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307953",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The bill continues Labor’s financial framework reforms with mostly technical amendments, but concerns were raised about schedule 3 removing body corporate status from the Clean Energy Regulator and Climate Change Authority, and schedule 6 expanding audit report disclosure exemptions with a two-year imprisonment penalty. The speaker supported the bill pending a Senate committee inquiry."
+  },
+  {
+   "slug": "speech-307954",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The bill makes technical amendments to 33 Commonwealth acts to improve governance and resource management, including removing body corporate status from the Clean Energy Regulator and Climate Change Authority, adding 'domestic tourism' to Austrade's CEO role, and varying Reserve Bank board disclosure requirements. The speaker cited declining education rankings (12th to 22nd in primary, 8th to 23rd in quality), NBN fibre targets missed (1.27 million houses passed vs 208,000), and rising illegal boat arrivals (161 in 2008 to 20,587 in 2013) as failures of the previous government, and noted bipartisan support for allowing parliamentarians to use self-managed superannuation funds."
+  },
+  {
+   "slug": "speech-308796",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill finally gives Austrade power to develop tourism policies, but criticised the government for making tourism a low priority through a \"spare capacity\" clause, and for past cuts, delays, and broken promises like the Cadbury factory grant. They called for concrete government action to drive tourism growth, noting Labor's prior success with the Tourism 2020 strategy and warning that the government's approach risks falling short of growth targets."
+  },
+  {
+   "slug": "speech-308803",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-24",
+   "stage_hint": null,
+   "brief": "The opposition supported the Public Governance and Resources Legislation Amendment Bill (No. 1) 2015, which allows parliamentarians to place their 15.4 per cent superannuation into self-managed funds, a change backed by the Remuneration Tribunal and costing taxpayers nothing. The speaker also urged urgent action on two further low-cost measures: occupational health and safety insurance for MPs and regularising redundancy payments to avoid an upfront tax burden."
+  },
+  {
+   "slug": "speech-308804",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-03-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the coalition government is strongly engaged with tourism, citing record international visitor expenditure of $30 billion in 2013-14 and a $50 billion tourism investment pipeline. He announced that the bill makes technical amendments to improve governance and resource management, including allowing parliamentarians to direct superannuation contributions to self-managed funds."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Public Governance and Resources Legislation Amendment Act (No. 1) 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00036",
+   "assent_date": "2015-04-13"
+  }
+ ]
+}

@@ -1,0 +1,77 @@
+{
+ "key": "au-federal-r7532",
+ "title": "Carbon Credits and Other Legislation Amendment (Integrity and Transparency) Bill 2026",
+ "short_title": "Carbon Credits and Other Legislation Amendment (Integrity and Transparency) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "before_parliament",
+ "status_as_of": "2026-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7532%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7532_ems_94dda87f-a58c-461c-8230-821efa9ee7ef%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7532%22",
+   "document_date": "2026-08-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-20",
+  "sentences": [
+   "The bill would tighten rules and oversight for Australia's main carbon offset, greenhouse gas reporting and vehicle efficiency schemes.",
+   "It would replace an existing emissions committee with a new independent body, give native title claimants consent rights over carbon projects, and shift government carbon credit purchasing from the regulator to a department secretary.",
+   "The bill would let the minister stop carbon credits being issued under methods that face serious integrity risks, and change the purchasing principle from 'least cost' to 'value for money'."
+  ],
+  "changes": [
+   "Reforms the Australian Carbon Credit Unit Scheme's governance and consent processes.",
+   "Overhauls the National Greenhouse and Energy Reporting Scheme's integrity and transparency.",
+   "Fixes a timing issue in the New Vehicle Efficiency Standard's compliance rules."
+  ],
+  "affected": "Landholders including farmers and First Nations communities, businesses, vehicle suppliers, industrial facilities, and the Clean Energy Regulator.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-04T23:59:30Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1205804",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

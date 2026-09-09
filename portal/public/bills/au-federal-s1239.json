@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1239",
+ "title": "Commonwealth Electoral Amendment (Transparency Measures—Real Time Disclosure) Bill 2019",
+ "short_title": "Commonwealth Electoral Amendment (Transparency Measures—Real Time Disclosure) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-27",
+ "originating_house": "senate",
+ "sponsor": "FARRELL, Sen Don",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10708",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1239%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1239%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1239_ems_6ea7c59e-7e11-40a0-a739-4222a4690597%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1239%22",
+   "document_date": "2019-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-27",
+  "sentences": [
+   "This bill would require political parties, candidates and others to tell the public about large donations within a week of getting them, instead of waiting until the next year.",
+   "Gift recipients would have to give the Australian Electoral Commission a return within seven days for any donation at or above the disclosure threshold, and for smaller donations that together cross that threshold.",
+   "The new rules would start on 1 July after the bill becomes law, and the disclosure threshold for 2019–20 is $14,000."
+  ],
+  "changes": [
+   "Introduces a real-time disclosure system for political donations and gifts.",
+   "Requires disclosure within seven days of receiving a donation or, for political campaigners, within seven days of using any part of a gift for electoral spending.",
+   "Aggregates multiple small donations from the same donor so that they trigger disclosure when their total reaches the disclosure threshold."
+  ],
+  "affected": "Registered political parties, their associated entities, candidates, senate groups and political campaigners.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6380",
+ "title": "Constitution Alteration (Water Resources) 2019 [No. 2]",
+ "short_title": "Constitution Alteration (Water Resources) 2019 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-29",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-02-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6380%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6380%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6380%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6380_ems_422cb3f5-8fb7-42e4-ab5b-3eabb68f89d0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6380%22",
+   "document_date": "2019-07-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-29",
+  "sentences": [
+   "This bill would ask Australians in a referendum whether the Constitution should be changed to let the Commonwealth Parliament make laws managing water resources nationally while protecting the environment.",
+   "The change would give the Commonwealth clear power to legislate for water resources that cross state borders, without needing state referrals, and could override state laws.",
+   "Any Commonwealth law about water resources must not have an overall harmful effect on the environment."
+  ],
+  "changes": [
+   "The bill would put a proposed constitutional amendment to a referendum.",
+   "It would give the Commonwealth Parliament power to manage water resources that extend beyond a state's limits.",
+   "It would require that any Commonwealth law on water resources must not harm the environment overall."
+  ],
+  "affected": "The Australian people, the Commonwealth Parliament, and the states and territories that share the Murray-Darling Basin and Great Artesian Basin.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

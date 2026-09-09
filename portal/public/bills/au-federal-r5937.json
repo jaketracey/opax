@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5937",
+ "title": "Electoral Amendment (Banning Foreign Political Donations) Bill 2017",
+ "short_title": "Electoral Amendment (Banning Foreign Political Donations) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-14",
+ "originating_house": "representatives",
+ "sponsor": "KATTER, Bob, Jnr, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10352",
+ "portfolio": "(s) KATTER, Bob, Jnr, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-02-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5937%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5937%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5937%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5937_ems_388d7caa-5165-4a89-aa58-c1a174adb29d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5937%22",
+   "document_date": "2017-08-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-14",
+  "sentences": [
+   "This bill would ban political parties and candidates from taking donations from foreign sources.",
+   "It would make donors give a statutory declaration saying they are not a foreign person, with an offence still applying if they are.",
+   "A gift over $1,000 would require the declaration at the time of giving, which is stricter than the current name and address rules for gifts over $10,000."
+  ],
+  "changes": [
+   "Makes it an offence for a political party or candidate to accept a foreign donation.",
+   "Requires the donor to submit a statutory declaration confirming they are not a foreign person.",
+   "Adds a requirement for the declaration to be provided at the time of the gift."
+  ],
+  "affected": "Political parties, candidates, and foreign donors.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:34:39Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

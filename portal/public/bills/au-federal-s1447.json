@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1447",
+ "title": "Constitution Alteration (Right to Free Speech) 2025",
+ "short_title": "Constitution Alteration (Right to Free Speech) 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-02-12",
+ "originating_house": "senate",
+ "sponsor": "BABET, Sen Ralph",
+ "sponsor_party": "United Australia Party (Clive Palmer",
+ "sponsor_person_id": "11003",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1447%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1447%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1447%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1447_ems_3c674132-b71e-490f-adf2-10bcc28a38bf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1447%22",
+   "document_date": "2025-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-12",
+  "sentences": [
+   "This bill would add a right to free speech to the Australian Constitution.",
+   "It would insert a new chapter and section barring the Commonwealth and states from making laws that limit free speech, including press and media freedom.",
+   "The change would take effect only if approved by a majority of all eligible voters nationally and in a majority of states at a referendum."
+  ],
+  "changes": [
+   "The bill would insert a new Chapter IIIA and section 80A into the Constitution.",
+   "It would prohibit the Commonwealth or a state from making any law that limits freedom of speech.",
+   "The bill would require a referendum under section 128 before the alteration takes effect."
+  ],
+  "affected": "The change would affect all Australians, including the press and other media.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

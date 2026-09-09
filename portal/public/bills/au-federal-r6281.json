@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6281",
+ "title": "Treasury Laws Amendment (Consumer Data Right) Bill 2019",
+ "short_title": "Treasury Laws Amendment (Consumer Data Right) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6281%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6281%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6281%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6281_ems_58a7c56b-36e3-4388-acf8-58455b983a76%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6281%22",
+   "document_date": "2019-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "This bill is part of a package that would create the Consumer Data Right (CDR), giving individuals and businesses a right to access their data held by businesses and share it with trusted third parties.",
+   "The CDR would also require businesses to make public information about specified products they offer.",
+   "The explanatory memorandum says a person may commit an offence or face a civil penalty for failing to comply with certain CDR obligations."
+  ],
+  "changes": [
+   "Creates a right for individuals and businesses to access and authorise secure sharing of their data held by businesses.",
+   "Requires businesses to publicly disclose information on specified products they offer.",
+   "Establishes offences and civil penalties for non-compliance with the CDR regime."
+  ],
+  "affected": "Individuals, businesses, and trusted accredited third parties.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:21:15Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

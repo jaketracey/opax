@@ -22,7 +22,7 @@ working until the v2 page lands.
   "stats", "brief", "key_moments", "sections",   // v1, untouched
   "version": 2,
 
-  "lede": { "text": "three sentences", "sources": [...] },
+  "lede": { "text": "three short paragraphs, ~150 words", "sources": [...] },
 
   "now": {
     "since": "2024-07-01",
@@ -287,10 +287,25 @@ jurisdiction the model actually names is always kept: a federal senator saying
   calls. **Federal only**, for the endpoint's own reason: the state Hansards
   start at different dates, so an all-parliament share would track the mix of
   sources as much as the mix of subjects. `tide_scope` records it.
-- **Lede** is three sentences over the `now` sections' own answers, each
-  carrying a `source_ref` into the sections' own **cited** sources. The
-  citation therefore points at a record the report actually went to, not at a
-  fresh retrieval.
+- **Lede** is a ~150-word, three-paragraph opening over the WHOLE report, not
+  just the `now` sections: paragraph one names the largest discovered debates
+  and the main lines of argument across the `now` findings — who wants what,
+  and the sharpest disagreement; paragraph two gives one sentence per era
+  since 1993, ending with the direction the tide of attention shows
+  (`tide_direction()`, computed, not asked for); paragraph three gives the
+  two or three strongest key stats with their base and each party's current
+  position in a clause. The model sees only the report's own generated
+  content — the `now` answers, the era answers, the kept key stats, the
+  positions, the tide — and nothing else, so a reader gets a summary of the
+  entire report rather than three unrelated speech summaries. Its source list
+  (`lede_sources()`) is the union of the `now` sections' and eras' own
+  **cited** sources, capped at 12 — the same records the report actually
+  went to, not a fresh retrieval — and it earns its citation markers exactly
+  the way every other answer does (see **Markers and passages** below): a
+  sentence that quotes a source verbatim gets a marker, a synthesised
+  sentence does not, and a lede with fewer markers than the report has
+  sections is expected, since a three-paragraph summary of a dozen asks is
+  mostly paraphrase.
 
 ## Markers and passages
 
@@ -327,10 +342,13 @@ every retrieved source:
   exactly one source (`longest_verbatim_run()`) is still proof; a paraphrase
   that shares no long run with any single source gets no marker, which is
   correct — a paraphrase does not say whose words it paraphrased.
-- **The lede** is one sentence per source by construction and is settled by
-  the speaker it names (`settle_lede_ref()`, already run when the lede is
-  generated) rather than by verbatim overlap, since a lede sentence is a
-  paraphrase almost by definition.
+- **The lede** earns its markers through this exact same mechanism, over its
+  own three paragraphs, once `cite_report()` runs — it gets no special
+  treatment and no by-speaker shortcut. A three-paragraph summary is mostly
+  paraphrase, so most of its sentences earn no marker, which is correct: a
+  synthesised sentence should carry no citation rather than a guessed one.
+  `validate_reports.py` therefore does not require the lede to carry a
+  marker at all, unlike every other block.
 
 A section marked this way carries `"cite_method": "verbatim"`. A block that
 earned no marker at all — no citation ranges from the platform and no

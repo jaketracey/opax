@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r7210",
+ "title": "Customs Licensing Charges Amendment Bill 2024",
+ "short_title": "Customs Licensing Charges Amendment Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-06-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2024-09-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7209_ems_69517914-920f-4cd1-acd2-2febdf6486cd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7210%22",
+   "document_date": "2024-06-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00080",
+   "document_date": "2024-09-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-26",
+  "sentences": [
+   "This bill is part of a package that would modernise customs processes for returning seized goods and overhaul the customs licensing regime.",
+   "The changes would let industry submit forms and receive notices electronically, remove the need to hand back physical licences, and align depot and warehouse rules.",
+   "The package would also let the Australian Border Force suspend or cancel licences when renewal fees are not paid on time, and would stop refunds for licences cancelled due to breaches."
+  ],
+  "changes": [
+   "Electronic submissions and electronic service of notices would replace the paper-based system.",
+   "The requirement to return physical licences on cancellation or surrender would be removed.",
+   "Depot and warehouse requirements would be aligned to be consistent.",
+   "Licence renewal fees would be aligned across licence types, with suspension and cancellation for late payment.",
+   "Refunds would be denied when a licence is cancelled for breaching the Act.",
+   "Fit and Proper Person Assessments would extend to other persons, such as labour hire."
+  ],
+  "affected": "Businesses that act as customs brokers or run warehouses and depots would be affected, as would the Australian Border Force.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Customs Licensing Charges Amendment Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00080",
+   "assent_date": "2024-09-05"
+  }
+ ]
+}

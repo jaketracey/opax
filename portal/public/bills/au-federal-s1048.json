@@ -1,0 +1,185 @@
+{
+ "key": "au-federal-s1048",
+ "title": "Regulatory Powers (Standardisation Reform) Bill 2016",
+ "short_title": "Regulatory Powers (Standardisation Reform) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-12",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2017-11-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1048_ems_982e4363-23ba-464b-87b6-54ec41b9054c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1048%22",
+   "document_date": "2016-10-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00124",
+   "document_date": "2017-11-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-12",
+  "sentences": [
+   "The bill would update the Building Energy Efficiency Disclosure Act 2010 to use the standard civil penalty and infringement notice rules from the Regulatory Powers Act.",
+   "It does this by applying Part 4 (civil penalties) and Part 5 (infringement notices) of the Regulatory Powers Act to the BEED Act, and modifying those rules to keep existing powers.",
+   "The changes are limited to procedural matters and do not expand the current regulatory powers framework."
+  ],
+  "changes": [
+   "Repeals existing civil penalty and infringement notice provisions in the BEED Act and replaces them with corresponding provisions from the Regulatory Powers Act.",
+   "Modifies the operation of the Regulatory Powers Act to retain certain existing powers in the BEED Act, such as maximum pecuniary penalty and time limits for representations.",
+   "Makes the BEED Act a triggering Act under the Regulatory Powers Act, requiring it to identify authorised persons, relevant courts, and infringement officers."
+  ],
+  "affected": "Commercial building owners, lessors, and lessees subject to the Commercial Building Disclosure Scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-356050",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The Regulatory Powers (Standardisation Reform) Bill 2016 amends 15 Commonwealth acts to replace existing regulatory provisions with the standardised framework of the Regulatory Powers (Standard Provisions) Act 2014, aiming to reduce legislative length, improve consistency, and simplify compliance for businesses. The bill also makes minor amendments to the 2014 act to clarify provisions and reduce administrative burdens, while in some cases repealing or narrowing outdated regulatory powers."
+  },
+  {
+   "slug": "speech-356051",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "Labor will support the Regulatory Powers (Standardisation Reform) Bill 2016, which amends 15 Commonwealth acts to replace existing regulatory powers with standard provisions from the 2014 Act, reducing legislative volume and complexity."
+  },
+  {
+   "slug": "speech-356612",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Regulatory Powers (Standardisation Reform) Bill 2016, which amends 15 Commonwealth acts to implement standard regulatory powers, continuing a reform project started by the previous Labor government. The bill has bipartisan support and does not alter existing arrangements in most cases."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Regulatory Powers (Standardisation Reform) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00124",
+   "assent_date": "2017-11-06"
+  }
+ ]
+}

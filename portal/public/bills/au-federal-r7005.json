@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7005",
+ "title": "Renewable Energy (Electricity) Amendment (Cheaper Home Batteries) Bill 2023",
+ "short_title": "Renewable Energy (Electricity) Amendment (Cheaper Home Batteries) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-27",
+ "originating_house": "representatives",
+ "sponsor": "HAINES, Helen, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10929",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-11-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7005%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7005%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7005%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7005_ems_2495f798-d364-4b66-9ed4-0ce7eee9ee2f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7005%22",
+   "document_date": "2023-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-27",
+  "sentences": [
+   "This bill would make home batteries eligible for financial incentives under the Small-Scale Renewable Energy Scheme.",
+   "Home batteries would earn small-scale technology certificates, which liable electricity retailers must buy and surrender to the Clean Energy Regulator.",
+   "The scheme requires home batteries to be installed by 2030, and certificates can be created for a 15-year deeming period until 2041."
+  ],
+  "changes": [
+   "Adds home batteries as an eligible technology for creating small-scale technology certificates.",
+   "Extends the existing certificate creation and transfer system to home batteries.",
+   "Requires a review of the scheme by the Minister, with a final report due by 1 January 2029."
+  ],
+  "affected": "Households and small businesses that install home batteries.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:57Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,331 @@
+{
+ "key": "au-federal-r5702",
+ "title": "Fair Work (Registered Organisations) Amendment Bill 2014",
+ "short_title": "Fair Work (Registered Organisations) Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "passed",
+ "status_as_of": "2016-11-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5702_ems_3438ef05-bb4a-4e3d-8eca-adc065ce163b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5702_ems_3ce5e5db-c211-4e8a-86e9-8e0871a0ac17%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5702%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00079",
+   "document_date": "2016-11-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-08-31",
+  "sentences": [
+   "This bill is part of a package that would tighten rules for unions and employer groups registered under federal workplace laws.",
+   "It would create a new watchdog, the Registered Organisations Commission, with powers to investigate and enforce compliance, and impose stricter duties on officers.",
+   "The package would introduce criminal penalties for serious breaches of officer duties and increase civil fines, mirroring rules for company directors."
+  ],
+  "changes": [
+   "Establishes an independent regulator called the Registered Organisations Commission.",
+   "Strengthens financial reporting and transparency obligations for registered organisations.",
+   "Adds criminal offences and higher civil penalties for serious misconduct by officers.",
+   "Requires officers to disclose personal interests and restricts their voting and decision-making on those matters.",
+   "Broadens grounds for disqualification from holding office.",
+   "Gives the Commissioner investigation and information-gathering powers similar to those of the Australian Securities and Investments Commission."
+  ],
+  "affected": "Registered organisations, their branches, and their officers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:31Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4368",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-19/3"
+  },
+  {
+   "key": "federal-representatives-4369",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "question": "Fair Work (Registered Organisations) Amendment Bill 2014 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 78,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-19/4"
+  },
+  {
+   "key": "federal-representatives-4417",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "question": "Christopher Pyne I move that the amendments be agreed to. Brendan O'Connor I want to comment on the Senate's proposed amendments to the Fair Work (Registered Organisations) Amendment Bill 2014. As you know, Mr Deputy Speaker, there was a debate that went until after two o'clock this morning in the other place about this bill. I want to make it very clear, firstly, that Labor believe that there was room to find longstanding reform in this area, and that is why we moved five separate amendments, including providing that the regulator for registered organisations be the Australian Securities and Investments Commission. We believe that is a mature body, one that would be invulnerable to executive government interference. We believe it would treat registered organisations and companies in the same manner. So the government would have had a change, if you like, to the law where we had a regulator that would treat bodies the same and be seen to be treating them the same, but, unfortunately, that amendment was not accepted by the government and by the Senate. I just wanted to put on record that that reform would have been significant and longstanding, unlike some of the amendments that have been proposed and accepted in the Senate. In relation to the matters that have been accepted, firstly the whistleblower protection provisions proposed by Senator Xenophon, we in principle support greater protection to be afforded to whistleblowers. In fact, one of our five amendments went to the protection of whistleblowers. However, given that we were given no time to consider the amendments moved by Senator Xenophon, we did not support his amendment but had our own amendment. We are also concerned that the basis upon which Senator Xenophon moved that amendment was that there is an undertaking by the government to extend protection to whistleblowers beyond registered organisations to the corporate and public sectors. We think that undertaking means nothing unless there is evidence to su",
+   "stage": "Consideration of Senate message",
+   "ayes": 79,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-22/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-332743",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The government reintroduced the Fair Work (Registered Organisations) Amendment Bill to establish a Registered Organisations Commission, strengthen financial accountability, and introduce criminal penalties for union and employer organisation officers, citing misconduct including misuse of members' funds by the Health Services Union, National Union of Workers, and Transport Workers' Union."
+  },
+  {
+   "slug": "speech-335907",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker moved to suspend standing orders to fast-track debate on the Fair Work (Registered Organisations) Amendment Bill 2014, arguing it had been thoroughly scrutinised and passed by the House of Representatives three times previously before being rejected by the Senate. The motion proposed to limit debate by allowing one opposition speaker, then the Prime Minister to conclude before immediate votes on all remaining stages."
+  },
+  {
+   "slug": "speech-335911",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's motion to gag debate on the Fair Work (Registered Organisations) Amendment Bill 2014 prevents new MPs from speaking on one of the double dissolution trigger bills, and moved an amendment to allow a consideration in detail stage. They criticised the government and the Leader of the House for avoiding parliamentary debate on the legislation."
+  },
+  {
+   "slug": "speech-335916",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The Fair Work (Registered Organisations) Amendment Bill was reintroduced for the fourth time, with the government arguing it has a clear mandate following the double dissolution election to improve governance and accountability of unions and employer organisations, claiming the reforms will boost the economy rather than union-bust. The bill had been repeatedly blocked by the previous Senate and was cited as one of the two reasons for the July election."
+  },
+  {
+   "slug": "speech-338115",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "Labor argued that the Senate's amendments to the Fair Work (Registered Organisations) Amendment Bill 2014 were inadequate, proposing instead that ASIC be the regulator, whistleblower protections be expanded, auditor compliance be strengthened, donation disclosure thresholds be reduced to $1,000, and volunteers be exempted—all rejected by the government, leading Labor to oppose the bill."
+  },
+  {
+   "slug": "speech-338194",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The Turnbull government passed the Fair Work (Registered Organisations) Amendment Bill 2014, establishing a Registered Organisations Commission with stronger enforcement powers and penalties to improve accountability and transparency for unions and employer groups. The speaker cited scandals involving Craig Thomson misusing $300,000 and Kathy Jackson fleecing over $1 million from the Health Services Union, and criticised Labor for opposing the reforms."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work (Registered Organisations) Amendment Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00079",
+   "assent_date": "2016-11-24"
+  }
+ ]
+}

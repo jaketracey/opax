@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-r7431",
+ "title": "Flags Amendment (Protection of Australian National Flags) Bill 2026",
+ "short_title": "Flags Amendment (Protection of Australian National Flags) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-09",
+ "originating_house": "representatives",
+ "sponsor": "CONAGHAN, Pat, MP",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10922",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-02-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7431%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7431%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7431_ems_5ffeaf64-b00e-49f2-8f60-3e65f3838e39%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7431%22",
+   "document_date": "2026-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

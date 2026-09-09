@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6312",
+ "title": "Health Insurance Amendment (Bonded Medical Programs Reform) Bill 2019",
+ "short_title": "Health Insurance Amendment (Bonded Medical Programs Reform) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-04-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6312%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6312%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6312%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6312_ems_6152aa0d-2368-494f-a715-d737e0ce33ca%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6312%22",
+   "document_date": "2019-04-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-04-04",
+  "sentences": [
+   "The bill would create a single legal framework for the Bonded Medical Program, which requires participants to work in regional, rural, remote or workforce-shortage areas in return for a government-supported medical school place.",
+   "It would give the minister power to make rules to keep the program current and allow the Secretary to decide whether existing participants can voluntarily join the new scheme, which would eventually replace individual contracts.",
+   "From 1 January 2020, new participants would need to serve a three-year return-of-service obligation, down from six years under the old Medical Rural Bonded Scholarship scheme and from four to six years under the earlier Bonded Medical Places scheme."
+  ],
+  "changes": [
+   "The bill establishes a statutory scheme for the Bonded Medical Program, covering the existing Bonded Medical Places and Medical Rural Bonded Scholarship schemes.",
+   "It reduces the return-of-service obligation for new participants to three years, compared with up to six years under the current arrangements.",
+   "It allows existing participants to voluntarily opt into the new scheme if the Secretary agrees.",
+   "It requires participants to use a web-portal for program administration.",
+   "It gives participants a right to internal review of certain Secretary decisions and access to review by the Administrative Appeals Tribunal.",
+   "It gives the minister power to make Bonded Medical Program rules to update the program."
+  ],
+  "affected": "Medical students and doctors who hold or accept bonded Commonwealth-supported places, especially those in regional, rural, remote or workforce-shortage areas, and the Department of Health.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:34Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-376965",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-04-04",
+   "stage_hint": null,
+   "brief": "The government introduced the Health Insurance Amendment (Bonded Medical Programs Reform) Bill 2019 to establish a single statutory scheme for bonded medical programs from 1 January 2020, backed by $20.2 million under the $550 million Stronger Rural Health Strategy. The reforms aim to streamline administrative requirements, give doctors more flexibility in completing return-of-service obligations, and better target workforce placements in regional, rural and remote areas."
+  }
+ ],
+ "acts": []
+}

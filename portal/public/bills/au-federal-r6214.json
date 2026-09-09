@@ -1,0 +1,89 @@
+{
+ "key": "au-federal-r6214",
+ "title": "Migration Amendment (Strengthening the Character Test) Bill 2018",
+ "short_title": "Migration Amendment (Strengthening the Character Test) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-10-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration, Citizenship and Multicultural Affairs",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6214%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6214%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6214%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6214_ems_7da208f1-0723-41ac-9ec0-fcc0eceaaf8c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/6491986%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6214%22",
+   "document_date": "2018-10-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2018-10-25",
+  "sentences": [
+   "The bill would let the minister refuse or cancel a visa for anyone convicted of a designated offence, based on the type of crime rather than the actual sentence given.",
+   "A designated offence is defined as one that involves certain physical elements, such as violence or sexual conduct, and carries a maximum prison term of at least two years under Australian or foreign law.",
+   "The bill uses the maximum available penalty for the offence, not the sentence actually imposed, which critics say ignores the role of sentencing in reflecting individual culpability."
+  ],
+  "changes": [
+   "Adds a new ground for failing the character test based on conviction of a designated offence.",
+   "Makes visa refusal or cancellation discretionary for designated offence convictions, not mandatory.",
+   "Defines designated offence by the type of conduct and a minimum two-year maximum penalty, not the actual sentence."
+  ],
+  "affected": "Non-citizens convicted of designated offences, including those involving violence, sexual conduct, or weapon possession.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-372082",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-25",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Strengthening the Character Test) Bill 2018 was proposed to allow discretionary visa refusal or cancellation for noncitizens convicted of designated serious crimes—including violence, sexual offences, weapons offences, and breaches of protection orders—regardless of the custodial sentence imposed, replacing the current 12-month sentence threshold. The bill also referenced the Joint Standing Committee on Migration's report No one teaches you to become an Australian and stated that visa entry or stay is a privilege, not a right."
+  }
+ ],
+ "acts": []
+}

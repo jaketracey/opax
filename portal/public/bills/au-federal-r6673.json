@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6673",
+ "title": "Australian Local Power Agency Bill 2021",
+ "short_title": "Australian Local Power Agency Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-22",
+ "originating_house": "representatives",
+ "sponsor": "HAINES, Helen, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10929",
+ "portfolio": "(s) HAINES, Helen, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-10-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6673%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6673%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6673%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6673_ems_ad6f298a-1c91-4d68-8cff-1d4b34c7513b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6673%22",
+   "document_date": "2021-02-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-22",
+  "sentences": [
+   "The bill would create a new government body called the Australian Local Power Agency to boost investment in community energy projects and ensure regional areas benefit from renewable energy.",
+   "The agency would provide financial help, technical support, and investment for community energy projects, and also collect research and advise the minister.",
+   "From 1 July 2023, large renewable energy projects over 10MW would need ministerial approval, which requires offering locals within 30 kilometres at least 20% of the project's profits."
+  ],
+  "changes": [
+   "Establishes the Australian Local Power Agency as a corporate Commonwealth entity.",
+   "Gives the agency functions to provide financial assistance, technical support, and investment for community energy projects.",
+   "Creates a requirement for large renewable energy projects over 10MW to offer at least 20% of profits to locals within 30 kilometres.",
+   "Requires ministerial approval for such projects from 1 July 2023, based on ALPA advice that locals had a reasonable investment opportunity.",
+   "Sets up an ALPA Board, CEO, and CFO, with the Board developing a general strategy and the minister approving it.",
+   "Establishes an Investment Mandate for the agency's investment function, developed by the minister after consulting the Board."
+  ],
+  "affected": "Regional communities, organisations developing community energy projects, and large renewable energy project developers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-402784",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-02-22",
+   "stage_hint": null,
+   "brief": "The member introduced the Australian Local Power Agency Bill 2021, which would establish a new agency to help regional communities develop and co-invest in local renewable energy projects. The bill proposes funding and technical support for community renewables, extending government underwriting to locally-owned projects, and requiring large renewable developers to offer local communities co-investment opportunities."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r6035",
+ "title": "Road Vehicle Standards (Consequential and Transitional Provisions) Bill 2018",
+ "short_title": "Road Vehicle Standards (Consequential and Transitional Provisions) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Regional Development and Cities",
+ "status": "passed",
+ "status_as_of": "2018-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6035_ems_8bb28e49-eaf9-4c8c-86c7-8a35dca0227a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6035%22",
+   "document_date": "2018-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00164",
+   "document_date": "2018-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-07",
+  "sentences": [
+   "This bill supports the switch from the Motor Vehicle Standards Act 1989 to a new Road Vehicle Standards Bill 2018.",
+   "It provides a twelve-month transition period during which the old law continues to apply so industry can adjust.",
+   "Certain approval holders under the old law can use their existing evidence to get new approvals under the new law."
+  ],
+  "changes": [
+   "Repeals the Motor Vehicle Standards Act when the Road Vehicle Standards Bill starts.",
+   "Makes transitional rules for regulating vehicles during the changeover.",
+   "Amends other Commonwealth laws to replace references to the old Act with the new one."
+  ],
+  "affected": "Industry stakeholders and the general public who have rights or obligations under the old law.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-358385",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The Road Vehicle Standards Bill 2018 and its transitional bill were moved for second reading, aiming to modernize vehicle import regulation with a 12‑month transition period and repeal the Motor Vehicle Standards Act 1989."
+  },
+  {
+   "slug": "speech-363704",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "Labor supported the Road Vehicle Standards package, which replaces the Motor Vehicle Standards Act, creates an online register of approved vehicles, and is projected to reduce industry compliance costs by $68 million, while noting stakeholder concerns about impacts on small workshops and campervan converters."
+  },
+  {
+   "slug": "speech-363707",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The Road Vehicle Standards Bill 2018 and four companion bills were presented as a modern framework for regulating road vehicles, projected to save industry an estimated $20 million, establish the Register of Approved Vehicles (saving around $14 million a year), and introduce compulsory recall powers. The government announced amendments to allow used-vehicle imports for campervan/motorhome conversions, adjust power-to-weight thresholds for specialist vehicles, permit left-hand-drive heavy vehicles, and presented addenda to the explanatory memoranda following the Scrutiny of Bills committee's recommendations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Road Vehicle Standards (Consequential and Transitional Provisions) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00164",
+   "assent_date": "2018-12-10"
+  }
+ ]
+}

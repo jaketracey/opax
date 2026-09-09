@@ -1,0 +1,204 @@
+{
+ "key": "au-federal-r6146",
+ "title": "Office of National Intelligence (Consequential and Transitional Provisions) Bill 2018",
+ "short_title": "Office of National Intelligence (Consequential and Transitional Provisions) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "passed",
+ "status_as_of": "2018-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6146_ems_60f2ca79-5bce-4279-af98-a6498ae3a01c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6147_ems_b28dfe82-7304-4b69-9d5c-3f4233ce1359%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6146_ems_d4690262-9c9c-46b0-ba37-feb38f063a32%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6146%22",
+   "document_date": "2018-06-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00156",
+   "document_date": "2018-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2018-06-28",
+  "sentences": [
+   "This bill would make technical changes to support the creation of the Office of National Intelligence as an independent agency reporting to the Prime Minister.",
+   "It would amend the main bill to stop the Director-General from delegating powers to engage with foreign authorities, remove an offence about communicating certain information, and require ONI to publish privacy rules unless classified.",
+   "The Prime Minister would have to consult the Privacy Commissioner when developing ONI's privacy rules."
+  ],
+  "changes": [
+   "Prohibits delegation of the Director-General's power to engage with foreign authorities.",
+   "Removes the offence of subsequent communications of certain information.",
+   "Requires ONI to publish privacy rules unless disclosure would reveal classified information.",
+   "Requires the Prime Minister to consult the Privacy Commissioner on privacy rules."
+  ],
+  "affected": "The Office of National Intelligence, the Director-General of National Intelligence, the Prime Minister, and the Privacy Commissioner.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-366275",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-28",
+   "stage_hint": null,
+   "brief": "The Office of National Intelligence (Consequential and Transitional Provisions) Bill 2018 amends 19 acts, repeals the Office of National Assessments Act 1977, and establishes the Office of National Intelligence (ONI) with access to information, oversight by the Parliamentary Joint Committee on Intelligence and Security and the Inspector-General of Intelligence and Security, access to the assumed identities regime, and cooperation with ASIO, ASIS, AGO, and ASD. The bill includes transitional provisions for the change from ONA to ONI."
+  },
+  {
+   "slug": "speech-372739",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-27",
+   "stage_hint": null,
+   "brief": "Labor supported the Office of National Intelligence Bill 2018 and related legislation, which implement recommendations from the 2017 Independent Intelligence Review to establish the Office of National Intelligence to lead Australia's intelligence agencies and replace the Office of National Assessments, and urged the government to also act on two further review recommendations regarding the Parliamentary Joint Committee on Intelligence and Security."
+  },
+  {
+   "slug": "speech-372740",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Office of National Intelligence Bill 2018 and related legislation are critical for strengthening parliamentary oversight, supporting amendments that expand scrutiny by the Parliamentary Joint Committee on Intelligence and Security and the Inspector-General of Intelligence and Security, and called for greater accountability of agencies like the Australian Taxation Office."
+  },
+  {
+   "slug": "speech-372741",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-27",
+   "stage_hint": null,
+   "brief": "The Office of National Intelligence Bill 2018 and its consequential bill were argued to be needed to implement the 2017 Independent intelligence review recommendations, establishing the Office of National Intelligence (ONI) to coordinate intelligence, advise the Prime Minister, and integrate capabilities across the national intelligence community. Four government amendments from the Parliamentary Joint Committee on Intelligence and Security will enhance transparency, particularly in the privacy rules."
+  },
+  {
+   "slug": "speech-372742",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-27",
+   "stage_hint": null,
+   "brief": "The speaker presented a supplementary explanatory memorandum and moved government amendments (1) to (4) to the Office of National Intelligence Bill 2018 and the Office of National Intelligence (Consequential and Transitional Provisions) Bill 2018."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Office of National Intelligence (Consequential and Transitional Provisions) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00156",
+   "assent_date": "2018-12-10"
+  }
+ ]
+}

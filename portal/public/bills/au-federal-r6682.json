@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6682",
+ "title": "Sex Discrimination Amendment (Prohibiting All Sexual Harassment) Bill 2021",
+ "short_title": "Sex Discrimination Amendment (Prohibiting All Sexual Harassment) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-15",
+ "originating_house": "representatives",
+ "sponsor": "STEGGALL, Zali, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10941",
+ "portfolio": "(s) STEGGALL, Zali, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-10-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6682%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6682%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6682%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6682_ems_90db2b10-e895-4fb3-ae7c-6a8c113b75f9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6682%22",
+   "document_date": "2021-03-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-403693",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-03-15",
+   "stage_hint": null,
+   "brief": "The Sex Discrimination Amendment (Prohibiting All Sexual Harassment) Bill 2021 was moved to prohibit sexual harassment in all circumstances, including for MPs and judges, citing gaps in current law highlighted by the Respect@Work report and allegations involving Dyson Heydon and Parliament House. The bill cites that one in three Australians experienced workplace sexual harassment in five years, workplace harassment costs the economy $3.5 billion annually, and only three of the Respect@Work report's 55 recommendations have been partially implemented."
+  }
+ ],
+ "acts": []
+}

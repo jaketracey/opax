@@ -1,0 +1,68 @@
+{
+ "key": "au-federal-s1482",
+ "title": "A New Tax System (Family Assistance) Amendment (No Jab No Pay Repeal) Bill 2025",
+ "short_title": "A New Tax System (Family Assistance) Amendment (No Jab No Pay Repeal) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-26",
+ "originating_house": "senate",
+ "sponsor": "ANTIC, Sen Alex",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10954",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1482%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1482_ems_32533778-532a-4e8b-b508-6ba3c55d5ea9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1482%22",
+   "document_date": "2025-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-26",
+  "sentences": [
+   "The bill would let parents who object to vaccination on personal, philosophical, religious or medical grounds again receive family assistance payments, reversing a 2015 law that removed that exemption.",
+   "A child would meet the immunisation requirement if a recognised provider certifies in writing that they discussed the risks and benefits with the parent, and the parent declares in writing their conscientious objection.",
+   "The bill would start the day after it receives royal assent."
+  ],
+  "changes": [
+   "Repeals the 2015 No Jab, No Pay changes to family assistance immunisation requirements.",
+   "Restores conscientious objector exemptions for family assistance payments.",
+   "Defines a conscientious objection as a belief based on personal, philosophical, religious or medical conviction that vaccination under the latest standard schedule should not occur.",
+   "Allows a child aged 7 or older to meet immunisation requirements without a provider discussion or declaration."
+  ],
+  "affected": "Parents who are conscientious objectors to child vaccination, particularly those from lower socio-economic backgrounds, and their children.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

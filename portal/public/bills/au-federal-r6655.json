@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6655",
+ "title": "Intelligence Oversight and Other Legislation Amendment (Integrity Measures) Bill 2020",
+ "short_title": "Intelligence Oversight and Other Legislation Amendment (Integrity Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6655%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6655%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6655%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6655_ems_a493fbc0-4184-4827-b281-ccb74c0ecee1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6655%22",
+   "document_date": "2020-12-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-09",
+  "sentences": [
+   "This bill would expand intelligence oversight to cover certain functions of the Australian Criminal Intelligence Commission and AUSTRAC.",
+   "It would give the Inspector-General of Intelligence and Security jurisdiction over those agencies' intelligence work and give the Parliamentary Joint Committee on Intelligence and Security oversight of AUSTRAC's intelligence functions.",
+   "The bill also updates the Inspector-General's governing legislation with technical amendments to improve clarity and strengthen inquiry processes."
+  ],
+  "changes": [
+   "The bill extends the Inspector-General's oversight to the intelligence functions of the Australian Criminal Intelligence Commission and AUSTRAC.",
+   "The bill extends the Parliamentary Joint Committee on Intelligence and Security's oversight to the intelligence functions of AUSTRAC.",
+   "The bill amends the Inspector-General of Intelligence and Security Act to modernise drafting expressions and remove redundant provisions."
+  ],
+  "affected": "The Australian Criminal Intelligence Commission and AUSTRAC are affected, along with the Inspector-General of Intelligence and Security and the Parliamentary Joint Committee on Intelligence and Security.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:23:38Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-400587",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The government moved to extend the Inspector-General of Intelligence and Security’s jurisdiction to the intelligence functions of the Australian Criminal Intelligence Commission and AUSTRAC, and the Parliamentary Joint Committee on Intelligence and Security’s jurisdiction to AUSTRAC’s intelligence functions, based on the Richardson review and with $52 million in additional funding for the IGIS."
+  }
+ ],
+ "acts": []
+}

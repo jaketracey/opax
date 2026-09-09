@@ -1,0 +1,211 @@
+{
+ "key": "au-federal-r6742",
+ "title": "Treasury Laws Amendment (2021 Measures No. 5) Bill 2021",
+ "short_title": "Treasury Laws Amendment (2021 Measures No. 5) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6742_ems_d382712d-56bc-4279-b2e4-80635ba92d6c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6742_ems_d174727b-cb7f-42eb-9483-482c7b89da46%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6742%22",
+   "document_date": "2021-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00127",
+   "document_date": "2021-12-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-409933",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-24",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 5) Bill 2021 increases the producer offset to 30% of qualifying Australian production expenditure for films not released in cinemas, makes threshold and integrity changes to screen tax offsets, and includes consequential amendments to small business insolvency processes and various Treasury portfolio legislation clarifications."
+  },
+  {
+   "slug": "speech-411132",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-10",
+   "stage_hint": null,
+   "brief": "The speaker argued the Treasury Laws Amendment Bill should support screen production and insolvency reforms, and tabled documents alleging a Chinese state-linked entity, China Taiping, deliberately triggered the liquidation of Sargon."
+  },
+  {
+   "slug": "speech-411134",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill, arguing that changes to corporate insolvency rules will streamline processes and reduce administrator fees to maximise creditor returns, and that reforms to the Australian Screen Production Incentive will boost local film production and economic benefits, citing Silver Wings Films (producer Pamela Collis, director Michael Collis) and Lark Lee Films as examples."
+  },
+  {
+   "slug": "speech-411136",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed three changes in schedule 1 of the bill: doubling the producer offset threshold to $1 million, doubling the post-production offset threshold, and removing the Gallipoli clause, arguing these would harm smaller films, documentaries, post-production jobs (400 at risk), and multicultural storytelling. Labor will move amendments to block the changes."
+  },
+  {
+   "slug": "speech-411137",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-10",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the harmonisation of the producer offset to 30% but argued that raising the threshold to $1 million could halt 58% of documentary productions, that changes to the Gallipoli clause may deter hiring Australian crews, and that the $30 million support package is insufficient. They called for content quotas on streaming services, noting Canada and the EU require 30% while Australian producers seek 20%."
+  },
+  {
+   "slug": "speech-411138",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-10",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Treasury Laws Amendment Bill for harming the Australian screen industry, arguing it raises qualifying expenditure thresholds that will hurt documentaries and post-production/visual effects sectors, and removes the \"Gallipoli clause\" allowing overseas filming costs for Australian stories. The bill's only positive measures are increasing the producer offset for TV productions from 20 to 30 per cent and removing the 65-hour cap, while the government offers no clear rationale for damaging changes amid the pandemic."
+  },
+  {
+   "slug": "speech-411139",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government was forced to drop a planned reduction in the producer offset for Australian feature films from 40% to 30%, but warned that raising the qualifying expenditure threshold for both the producer offset and the post‑production, digital and visual effects (PDV) offset will harm smaller films, documentaries, and the domestic post‑production sector, citing an industry estimate of 400 job losses."
+  },
+  {
+   "slug": "speech-411143",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-10",
+   "stage_hint": null,
+   "brief": "The speaker argued for immediate Australian content obligations on global streamers to support the screen industry, welcomed the increase of the TV offset credit to 30% and retention of the film offset at 40%, and criticised the government for cutting documentary support, citing films like *High Ground* and *A Debt of Honour* as examples of important Australian stories."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2021 Measures No. 5) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00127",
+   "assent_date": "2021-12-07"
+  }
+ ]
+}

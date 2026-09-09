@@ -1,0 +1,170 @@
+{
+ "key": "au-federal-r7427",
+ "title": "Law and Justice Legislation Amendment (New South Wales Local Court) Bill 2026",
+ "short_title": "Law and Justice Legislation Amendment (New South Wales Local Court) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2026-03-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7427_ems_49269eed-113c-4c57-94ca-d076d1d360e8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7427%22",
+   "document_date": "2026-02-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00004",
+   "document_date": "2026-03-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-02-04",
+  "sentences": [
+   "This bill updates Commonwealth laws so that judges of the new NSW Local Court can exercise the same powers as former NSW magistrates.",
+   "It would amend the Acts Interpretation Act 1901 to define 'magistrate' to include NSW Local Court judges and exclude them from the definition of 'judge', unless a law says otherwise.",
+   "The bill also includes transitional provisions that only take effect if the Governor-General and NSW Governor agree to them."
+  ],
+  "changes": [
+   "Amends the Acts Interpretation Act 1901 to update definitions of 'magistrate' and 'judge' for NSW Local Court judges.",
+   "Makes minor and technical amendments to other Commonwealth Acts that show a contrary intention to those definitions.",
+   "Sets out transitional provisions to allow existing arrangements for NSW magistrates to continue and for NSW Local Court judges to take over their functions."
+  ],
+  "affected": "Judges of the NSW Local Court and the Commonwealth and NSW governments are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1200015",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200096",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-02-10",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Law and Justice Legislation Amendment (New South Wales Local Court) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00004",
+   "assent_date": "2026-03-05"
+  }
+ ]
+}

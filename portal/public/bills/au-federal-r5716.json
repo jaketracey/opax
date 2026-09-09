@@ -1,0 +1,95 @@
+{
+ "key": "au-federal-r5716",
+ "title": "Seafarers Safety and Compensation Levies Bill 2016",
+ "short_title": "Seafarers Safety and Compensation Levies Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5716%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5716%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5716%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5716_ems_5f110fe7-3d98-431f-9212-4998d16fa550%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5716%22",
+   "document_date": "2016-10-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-13",
+  "sentences": [
+   "This bill would create two charges on seafarer positions to pay for a national workplace safety and compensation system for a small number of maritime workers.",
+   "An insurance charge would fund a backup fund for seafarers when their employer cannot meet compensation duties, kept at $15 per berth unless changed by regulation after an actuarial review.",
+   "A second charge to recover regulatory costs from the Safety, Rehabilitation and Compensation Commission, Comcare and the Australian Maritime Safety Authority would start at $0 and be introduced gradually through regulations."
+  ],
+  "changes": [
+   "Imposes an insurance levy on seafarer berths to support a safety net fund for unpaid workers' compensation.",
+   "Imposes a cost recovery levy on seafarer berths to cover regulatory expenses of the SRCC, Comcare and AMSA.",
+   "Replaces the Seafarers Rehabilitation and Compensation Levy Act 1992 with this Bill and the Seafarers Safety and Compensation Levies Collection Bill 2016.",
+   "Sets the initial cost recovery levy at $0 with staggered introduction by regulation.",
+   "Requires any increase to the insurance levy to be based on an actuarial assessment of amounts payable from the safety net fund.",
+   "Aligns the scheme with model work health and safety laws and government cost recovery guidelines."
+  ],
+  "affected": "Seafarers and employers in the maritime industry covered by the Seacare scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:17Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-335114",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The Seafarers Safety and Compensation Levies Bill 2016 replaces the 1992 Levy Act, imposing a seafarers' insurance levy on Seacare employers to fund a safety net for workers' compensation and introducing a cost recovery levy for regulatory bodies (the Safety, Rehabilitation and Compensation Commission, Comcare, and the Australian Maritime Safety Authority). The insurance levy will initially match the current rate, with future rates set by actuarial assessment, while the cost recovery levy will not be charged immediately pending consultation with Seacare employers."
+  },
+  {
+   "slug": "speech-335115",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The bill replaces the Seafarers Rehabilitation and Compensation Levy Collection Act 1992, enabling collection of the seafarers insurance levy and cost recovery levy, and requiring Seacare employers to lodge returns and make quarterly payments."
+  }
+ ],
+ "acts": []
+}

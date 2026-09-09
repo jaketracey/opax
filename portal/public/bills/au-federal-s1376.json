@@ -1,0 +1,88 @@
+{
+ "key": "au-federal-s1376",
+ "title": "Digital Assets (Market Regulation) Bill 2023",
+ "short_title": "Digital Assets (Market Regulation) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-29",
+ "originating_house": "senate",
+ "sponsor": "BRAGG, Sen Andrew",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10945",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1376%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1376%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1376%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1376_ems_66ab60ef-6c9d-4a00-a5a5-ca0c31a60fa0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1376%22",
+   "document_date": "2023-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 9,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-29",
+  "sentences": [
+   "This bill creates a licensing system for digital asset exchanges, custody services, and stablecoin issuers in Australia.",
+   "It would require these entities to meet standards covering capital, customer fund segregation, cybersecurity, and record-keeping, and would give ASIC monitoring and enforcement powers.",
+   "The bill also mandates that banks and financial institutions disclose their use of foreign central bank digital currencies to ASIC and the Reserve Bank of Australia, and it would commence six months after receiving Royal Assent."
+  ],
+  "changes": [
+   "Introduces three types of authorisations: for digital asset exchanges, custody services, and stablecoin issuance.",
+   "Sets minimum capital requirements and requires segregation of customer funds for exchanges and custody services.",
+   "Imposes cybersecurity, disclosure, and record-keeping obligations on digital asset exchanges.",
+   "Requires stablecoin issuers to hold reserves equal to their liabilities in accounts with Australian ADIs.",
+   "Mandates disclosures about foreign CBDCs by banks and financial institutions.",
+   "Gives ASIC monitoring and investigation powers and establishes civil and criminal penalties."
+  ],
+  "affected": "Digital asset exchanges, custody services, stablecoin issuers, banks, and financial institutions in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:49:20Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

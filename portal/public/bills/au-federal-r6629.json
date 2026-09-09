@@ -1,0 +1,153 @@
+{
+ "key": "au-federal-r6629",
+ "title": "Corporations (Fees) Amendment (Hayne Royal Commission Response) Bill 2020",
+ "short_title": "Corporations (Fees) Amendment (Hayne Royal Commission Response) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-11-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6629%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6629%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6629%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6629%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6629%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6629%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6629%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6629%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6629%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6629%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6629%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6630_ems_4c5698fa-a114-4687-9843-595e795a64cf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6629%22",
+   "document_date": "2020-11-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00137",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-11-12",
+  "sentences": [
+   "This bill is part of a package that would give ASIC more power over industry codes of conduct.",
+   "It would let ASIC designate parts of voluntary codes as enforceable, with breach penalties of up to 300 penalty units.",
+   "The package would also create mandatory codes set by regulation, with breach penalties of up to 1,000 penalty units."
+  ],
+  "changes": [
+   "ASIC could designate enforceable code provisions in approved voluntary codes of conduct.",
+   "A mandatory code of conduct framework for financial services and consumer credit would be set via regulations.",
+   "Breach of an enforceable code provision could attract civil penalties of up to 300 penalty units.",
+   "Breach of a mandatory code provision could attract civil penalties of up to 1,000 penalty units."
+  ],
+  "affected": "The financial services and consumer credit industry, including providers regulated by the Corporations Act and the Credit Act.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-400597",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Financial Sector Reform Bill 2020 and related bill, which implement Hayne royal commission recommendations, and highlighted schedule 2 replacing consumers' duty of disclosure with a duty to take reasonable care not to misrepresent, requiring insurers to ask for further information at application time. This gives effect to recommendations 4.5 and 4.6 and aims to prevent insurers from denying claims for unrelated omissions unless there is deliberate misrepresentation."
+  },
+  {
+   "slug": "speech-400603",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The Financial Sector Reform (Hayne Royal Commission Response) Bill 2020 and Corporations (Fees) Amendment (Hayne Royal Commission Response) Bill 2020 deliver 21 government commitments from the Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, framed as critical to restoring trust and confidence in the financial system."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Corporations (Fees) Amendment (Hayne Royal Commission Response) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00137",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

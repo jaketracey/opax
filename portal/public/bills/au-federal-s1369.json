@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1369",
+ "title": "Governor-General Amendment (Cessation of Allowances in the Public Interest) Bill 2023",
+ "short_title": "Governor-General Amendment (Cessation of Allowances in the Public Interest) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-06",
+ "originating_house": "senate",
+ "sponsor": "SHOEBRIDGE, Sen David",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "11010",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1369%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1369%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1369_ems_d7438e8e-4d5b-45b6-9917-092b747ee2f8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1369%22",
+   "document_date": "2023-03-06",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-06",
+  "sentences": [
+   "The bill would allow the government to end pension-like payments to ex-governors-general or their surviving partners if the former officeholder committed serious wrongdoing.",
+   "The minister could issue a legislative instrument to stop the payments, or either house of parliament could pass a resolution to the same effect.",
+   "The change would start the day after the bill receives royal assent."
+  ],
+  "changes": [
+   "Creates a power to stop allowances to former governors-general or their spouses for serious misconduct.",
+   "Allows the minister to make a declaration through a legislative instrument to cease payments.",
+   "Allows a house of parliament to pass a resolution to cease payments."
+  ],
+  "affected": "Former governors-general and their spouses who receive allowances under the Governor-General Act 1974.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:59Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

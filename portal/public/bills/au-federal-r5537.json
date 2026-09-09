@@ -1,0 +1,348 @@
+{
+ "key": "au-federal-r5537",
+ "title": "Health Insurance Amendment (Safety Net) Bill 2015",
+ "short_title": "Health Insurance Amendment (Safety Net) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-10-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5537%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5537%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5537%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5537%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5537_ems_04859a5d-b857-4895-b083-2db21a12d84a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5537_ems_67590ae2-89bf-43fd-8dd6-432ff486b21f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5537%22",
+   "document_date": "2015-10-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3993",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "question": "Rob Mitchell The Health Insurance Amendment (Safety Net) Bill 2015 represents cuts of some $270 million to the Medicare safety net. So much for the promise of no cuts to health that this lot opposite promised before the last election. I am here today to tell those opposite that the Australian people are not the bottom line on an accounting spreadsheet. The caps in the bill are not supported by independent reports or input from health professionals. These are blanket caps across a multitude of MBS items or services. The Minister for Health will tell you that the new safety net simplifies the arrangements—but that comes at a cost. It abolishes the existing, original Medicare safety net and the extended Medicare safety net. If you were walking a tightrope and relying on a safety net in case you fell, you would not use a safety net offered by the Abbott-Turnbull government, because you could guarantee it would not be there when you needed it. The Liberals' record on universal health care speaks for itself. In 1974 the Liberals, under Snedden, voted against Medibank—Australia's first universal healthcare scheme, introduced by one of our most progressive prime ministers, Mr Gough Whitlam. Between 1975 and 1981, the Liberals proceeded to rip Medibank apart until a Labor government, led by Prime Minister Bob Hawke, came back in and reintroduced the Medicare framework in 1985. In 1987 the then Liberal opposition leader, John Howard, told Australians that bulk-billing would be scrapped, and in 1993 John Hewson took that policy to an election. In 2004, before the election, now ex-prime minister Tony Abbott made a 'rock-solid, ironclad' guarantee he would not raise the Medicare safety net threshold. But what did he do straight after the election, in his usual fashion? With a quick backflip, he did exactly the opposite, because the costings that he had put in place blew out. So much for the theory of great Liberal financial management and control. We know that that, like everyth",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-11-25/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-322621",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Health Insurance Amendment (Safety Net) Bill 2015 cuts Medicare safety nets by nearly $270 million and fails to properly target concession cardholders, while increasing out-of-pocket costs for vulnerable groups such as patients needing intensive psychiatric therapy—including sexual abuse survivors—and those affected by the MBS indexation freeze. Labor opposed the bill, citing concerns from the RACGP, AMA, and a petition of 1,464 people."
+  },
+  {
+   "slug": "speech-322629",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Safety Net) Bill 2015 replaces three Medicare safety nets with one new scheme, aiming to save $266.7 million over five years by capping benefits and preventing fee inflation, following findings that over 78 cents per dollar of the previous extended safety net went to providers rather than patients."
+  },
+  {
+   "slug": "speech-322630",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Safety Net) Bill 2015 was argued to erode Medicare’s sustainability and safety net, creating a two-tiered system and shifting costs to public hospitals through reduced benefits and inadequate consultation."
+  },
+  {
+   "slug": "speech-322762",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Health Insurance Amendment (Safety Net) Bill 2015, arguing it lowers Medicare safety net reimbursements and shifts costs to patients, particularly affecting cancer, IVF, psychotherapy, and low-income patients. Cited figures included out-of-pocket costs up to $7,400 for melanoma, $8,000 for prostate radiotherapy, $15,000 for IVF/cancer patients, and specialist and non-bulk-billing GP costs rising from $88 to $94 and $7.60 to $19.47 respectively, alongside criticism of the government’s rebate freeze as a “GP tax by stealth.”"
+  },
+  {
+   "slug": "speech-322766",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Health Insurance Amendment (Safety Net) Bill 2015 simplifies three safety net systems into one, reduces inflationary effects on charges, and creates a more progressive system where 55% of benefits previously went to the top 20% of socioeconomically advantaged Australians while the least advantaged 20% received under 3.5%."
+  },
+  {
+   "slug": "speech-322773",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Safety Net) Bill 2015 cuts the Medicare safety net by $270 million, restricts which out-of-pocket costs count towards the threshold, and reduces the amount patients receive once they reach it, with particular impact on vulnerable Australians including radiation oncology patients facing up to $7,400 in new costs."
+  },
+  {
+   "slug": "speech-322774",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The member for Lyne supported the Health Insurance Amendment (Safety Net) Bill 2015, which consolidates existing Medicare safety nets into one scheme, lowers thresholds from $2,000 to $700 for singles and $1,000 for families, and from $638.40 to $400 for concession cardholders, and changes the threshold calculation to 150% of the Medicare fee minus the rebate. The government expects 53,000 more people to receive benefits, including 80,000 additional concession cardholders, though fewer non-concession cardholders will qualify, and some patients will face higher out-of-pocket costs."
+  },
+  {
+   "slug": "speech-322776",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Health Insurance Amendment (Safety Net) Bill 2015, arguing it cuts nearly $270 million from Medicare safety nets, reduces out-of-pocket coverage for patients, and will harm those needing oncology, psychiatric, or IVF services, while the savings fund the Medical Research Future Fund."
+  },
+  {
+   "slug": "speech-322777",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Safety Net) Bill 2015 is a $270 million cut disguised as simplification, lacking evidence or justification, and will increase out-of-pocket costs for vulnerable patients—including cancer patients facing $7,000–$8,000, IVF patients up to $10,000–$15,000 per cycle, and those with mental illness or chronic conditions. Labor opposes the bill and will propose amendments."
+  },
+  {
+   "slug": "speech-322778",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Health Insurance Amendment (Safety Net) Bill 2015, arising from the 2014 Abbott-Turnbull budget, will increase out-of-pocket costs for vulnerable Australians. They highlighted specific impacts: cancer patients could face up to $8,000 in extra expenses, and IVF patients will also be affected, citing criticism from the Australian Medical Association and Royal Australian College of General Practitioners."
+  },
+  {
+   "slug": "speech-322780",
+   "speaker": "Kate Ellis",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Safety Net) Bill 2015 was opposed for increasing IVF cycle costs from $4,000 to up to $15,000 per cycle, affecting one in six couples, and for lacking independent studies on its impact—the speaker urged parliament to vote against the legislation, which sought $270 million in savings."
+  },
+  {
+   "slug": "speech-322781",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Health Insurance Amendment (Safety Net) Bill 2015, arguing it cuts health funding without evidence and will increase out-of-pocket costs for vulnerable patients, citing examples such as IVF costs rising from $4,000 to $10,000–$15,000 per cycle and radiotherapy patients facing an additional $7,000–$8,000. The bill will be referred to a Senate committee for further scrutiny."
+  },
+  {
+   "slug": "speech-322782",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Health Insurance Amendment (Safety Net) Bill should be rejected and the amendment by the member for Ballarat supported, claiming the bill would cut $270 million from safety nets and harm vulnerable patients including those accessing IVF, psychiatric, and radiation oncology services, while lacking an evidence base and representing a broader attack on universal healthcare."
+  },
+  {
+   "slug": "speech-322940",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "Labor opposed the Health Insurance Amendment (Safety Net) Bill 2015, arguing it would cut Medicare safety net arrangements by $270 million and increase out-of-pocket costs for cancer and mental health patients. The MP cited examples such as $7,400 for melanoma radiation treatment and $8,000 for prostate cancer therapy, and noted opposition from the AMA and other medical colleges."
+  },
+  {
+   "slug": "speech-322941",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Safety Net) Bill 2015 will cut $270 million from the Medicare Safety Net and increase out-of-pocket costs for over 800,000 Australians, with patients facing expenses up to $8,000 for radiation oncology and $10,000-$15,000 for IVF cycles, breaking the government's pre-election promise of no health cuts. Labor opposes the bill and calls for its referral to the Senate Community Affairs Legislation Committee."
+  },
+  {
+   "slug": "speech-322943",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Health Insurance Amendment (Safety Net) Bill cuts the safety net by $270 million, harming low-income and rural Australians, and accused the government of destroying Medicare. They contrasted this with the Rudd and Gillard governments' reforms, including activity-based funding for public hospitals and addressing cancer treatment access."
+  },
+  {
+   "slug": "speech-322971",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-11",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Health Insurance Amendment (Safety Net) Bill 2015, arguing it would increase out-of-pocket costs for patients—including up to $7,400 for melanoma, $8,000 for prostate cancer, a 200% rise for breast cancer, and $10,000–$15,000 for IVF—and cited opposition from the AMA, RACGP, and Association of Practising Psychiatrists."
+  },
+  {
+   "slug": "speech-324045",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Health Insurance Amendment (Safety Net) Bill 2015, arguing it cuts $270 million from the Medicare safety net, abolishes existing safety nets, and is part of a Liberal agenda to privatise healthcare, citing historical Liberal opposition to universal health schemes."
+  },
+  {
+   "slug": "speech-324046",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Safety Net) Bill 2015 was supported as a structural reform to replace complex, regressive Medicare safety nets with a more progressive system, lowering thresholds for singles and families and expanding coverage to over 53,000 additional people. The speaker noted that independent reviews in 2009 and 2011 had identified flaws, such as 55% of benefits going to the top 20% of socioeconomic groups, and that the previous Labor government failed to act on these issues."
+  },
+  {
+   "slug": "speech-324047",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Safety Net) Bill 2015 would cut $270 million over five years by capping out-of-pocket costs that count toward the safety net and limiting benefits, increasing costs for vulnerable patients including those with cancer and mental health conditions; Labor opposed the bill, citing over $60 billion in cuts to public hospitals, $370 million from preventative health, and a $2 billion Medicare rebate freeze."
+  },
+  {
+   "slug": "speech-324048",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Safety Net) Bill 2015 replaces three existing Medicare safety nets with a single new Medicare safety net, lowering thresholds (e.g., from $2,000 to $700 for non-concessional singles and from $638.40 to $400 for concession card holders) and capping out-of-pocket costs per service to curb fee inflation, with an estimated 80,000 additional people receiving benefits."
+  },
+  {
+   "slug": "speech-324052",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that Medicare is not under attack but under unsustainable financial stress, citing a 56% increase in claims over 10 years and projected costs rising from $20 billion to $39 billion annually by 2025. He announced the government's Health Insurance Amendment (Safety Net) Bill, which lowers safety net thresholds (e.g., from $2,000 to $700 for singles, $638 to $400 for concession card holders) to introduce price signals and curb exponential growth, while accusing Labor of blocking savings and leaving a $54 billion gap."
+  },
+  {
+   "slug": "speech-324053",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The bill replaces the two existing Medicare safety nets with a new, simpler one, lowering thresholds: to $400 for concession card holders, $1,000 for families without concession cards, and $700 for single people without concession cards, bringing an additional 80,000 concession card holders into the scheme. The speaker argued the current system disproportionately benefits wealthier areas (e.g., $23 million in North Sydney/Hornsby vs. $120,000 in the Northern Territory outback) and that out-of-pocket cost increases would be minimal (e.g., $23 more for a standard radiation oncology course)."
+  }
+ ],
+ "acts": []
+}

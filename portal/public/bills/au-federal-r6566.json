@@ -1,0 +1,146 @@
+{
+ "key": "au-federal-r6566",
+ "title": "Customs Charges and Levies Legislation Amendment (Sheep and Lamb) Bill 2020",
+ "short_title": "Customs Charges and Levies Legislation Amendment (Sheep and Lamb) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6566%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6566%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6566%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6566%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6566%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6566%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6566%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6566%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6566%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6566%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6567_ems_485f828a-451a-45cb-906e-9b87277244ac%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6566%22",
+   "document_date": "2020-06-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00144",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-17",
+  "sentences": [
+   "This bill is part of a package that would update the definition of lamb used for levies and charges on sheep and lamb transactions.",
+   "The package would align the definition of lamb for levy purposes with the new definition used for export and by industry, which is an ovine animal under 12 months old or without permanent incisor teeth in wear.",
+   "The new definition took effect in July 2019 for export and industry purposes, following industry consultation."
+  ],
+  "changes": [
+   "The bill would update the definition of lamb in the Primary Industries (Excise) Levies Act 1999 and the Primary Industries (Customs) Charges Act 1999.",
+   "It would also update the definition in the National Residue Survey (Excise) Levy Act 1998 and the National Residue Survey (Customs) Levy Act 1998.",
+   "The change would ensure consistency across legislation for the animal on which levies and charges are imposed."
+  ],
+  "affected": "The changes would affect primary producers, processors, exporters, levy recipient bodies such as Meat and Livestock Australia and others, and levy payers in the sheep and lamb industry.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:57Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-392792",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The Customs Charges and Levies Legislation Amendment (Sheep and Lamb) Bill 2020 aligns the definition of lamb for customs charges with a new industry-developed definition effective from July 2019, aiming to improve compliance and clarity for producers, processors and exporters."
+  },
+  {
+   "slug": "speech-400161",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for taking two years to amend the definition of 'lamb' in the bills, and highlighted that a trade deal with Qatar for 1.2 million chilled fat lambs had just collapsed, with no response from the agriculture minister."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Charges and Levies Legislation Amendment (Sheep and Lamb) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00144",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

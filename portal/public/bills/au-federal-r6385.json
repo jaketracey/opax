@@ -1,0 +1,191 @@
+{
+ "key": "au-federal-r6385",
+ "title": "Veterans’ Affairs Legislation Amendment (Partner Service Pension and Other Measures) Bill 2019",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Partner Service Pension and Other Measures) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-08-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2019-09-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6385_ems_515b380a-80dc-4a00-b376-11b1042ad2b0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/6914825%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6385%22",
+   "document_date": "2019-08-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00075",
+   "document_date": "2019-09-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2019-08-01",
+  "sentences": [
+   "The bill would extend the period during which submarine special operations are classified as operational and qualifying service under the Veterans' Entitlements Act 1986.",
+   "It would amend sections 6DB and 7A of that Act to change the cut-off date from 31 December 1992 to 12 May 1997 for service between 1 January 1978 and that new date.",
+   "The Bills Digest notes that the covert nature of these operations limits public scrutiny of the entitlement, and that service after 1997 would be treated as non-warlike under ministerial determination rather than by legislation."
+  ],
+  "changes": [
+   "Changes the reference date in section 6DB of the Veterans' Entitlements Act 1986 from 31 December 1992 to 12 May 1997.",
+   "Changes the reference date in subparagraphs 7A(1)(a)(v) and (vi) of the same Act from 31 December 1992 to 12 May 1997.",
+   "Removes the date references from the heading of section 6DB."
+  ],
+  "affected": "Veterans who served on submarine special operations between 1 January 1978 and 12 May 1997 would be affected, as would the departments of Defence and Veterans' Affairs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-379507",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-08-01",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Partner Service Pension and Other Measures) Bill 2019 improves financial outcomes for former partners of veterans, extends benefits to ADF submarine special operations veterans serving between 31 December 1992 and 12 May 1997, and aligns marriage definitions in veterans' legislation with the 2017 Marriage Amendment Act."
+  },
+  {
+   "slug": "speech-380837",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The bill improves outcomes for former partners of veterans by extending the partner service pension to all former partners for 12 months after separation, with indefinite eligibility under special circumstances like domestic violence; reclassifies submarine special operations service from 1993–1997 as operational service for benefits and extends coverage for 1997–2006; and aligns marriage definitions with the Marriage Amendment Act 2017."
+  },
+  {
+   "slug": "speech-380838",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Partner Service Pension and Other Measures) Bill 2019, which extends partner service pensions for up to 12 months after separation, removes discrimination between married and non-married former partners, and recognises submarine special operations service from 1992–1997 as qualifying service. The speaker also cited 373 serving and ex-service personnel suicides from 2001–2016, noted ex-service members have an 18% higher suicide rate, and highlighted a report finding over 1,200 veterans faced homelessness after discharge between 2011–2017."
+  },
+  {
+   "slug": "speech-380839",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Partner Service Pension and Other Measures) Bill 2019 will provide up to 12 months of continued partner service pension to eligible former, current and widowed partners of veterans, with special domestic circumstances allowing longer payments, and will reclassify submarine special operations between 1 January 1993 and 12 May 1997 as operational and qualifying service, while updating definitions of widow and widower to align with Australian marriage law. The government has allocated $6.2 million for the measures, which commence on 20 September 2019."
+  },
+  {
+   "slug": "speech-380840",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The bill amends the Veterans' Affairs Legislation to extend the partner service pension to former married and non-married partners for up to 12 months after separation, with continued eligibility for those in domestic violence situations, and to recognise submarine special operations between 31 December 1992 and 12 May 1997 as qualifying service, while also making technical amendments to align with the updated definition of marriage."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans’ Affairs Legislation Amendment (Partner Service Pension and Other Measures) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00075",
+   "assent_date": "2019-09-20"
+  }
+ ]
+}

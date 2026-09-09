@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r5531",
+ "title": "High Speed Rail Planning Authority Bill 2015",
+ "short_title": "High Speed Rail Planning Authority Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-10-12",
+ "originating_house": "representatives",
+ "sponsor": "ALBANESE, Anthony, MP",
+ "sponsor_party": "&#34;Australian Labor Party&#34;",
+ "sponsor_person_id": "10007",
+ "portfolio": "(s) ALBANESE, Anthony, MP",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5531%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5531%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5531%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5531%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5531%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5531_ems_d01a062e-5ee0-400a-90f2-46a9c17b67a9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5531%22",
+   "document_date": "2015-10-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-323603",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The High Speed Rail Planning Authority Bill 2015 was supported, proposing an 11-person authority to plan a Brisbane–Melbourne high-speed rail link via Newcastle, Sydney, and Canberra. A study cited found $2.15 in economic benefit per dollar invested for the Sydney–Melbourne section and 84 million passengers per year once fully operational, while the government was criticised for cutting $54 million in previously allocated funding."
+  }
+ ],
+ "acts": []
+}

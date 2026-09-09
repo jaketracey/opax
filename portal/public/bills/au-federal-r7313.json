@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7313",
+ "title": "Interactive Gambling Amendment (Know Your Losses Activity Statement) Bill 2025",
+ "short_title": "Interactive Gambling Amendment (Know Your Losses Activity Statement) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-02-10",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7313%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7313%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7313%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7313_ems_ef0137e9-6784-401a-ba4d-f59871d5c614%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7313%22",
+   "document_date": "2025-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-10",
+  "sentences": [
+   "The bill would require online gambling services to always show users their account activity statements, including net wins and losses, during wagering.",
+   "It would mandate that this information be displayed on websites and apps at all times while a user is betting, rather than requiring them to seek it out.",
+   "A six-month transition period is proposed to allow operators and customers to adjust to the new requirements."
+  ],
+  "changes": [
+   "Requires regulated interactive gambling services to display account activity statements to users during wagering.",
+   "Provides a six-month implementation period for operators to update systems and processes.",
+   "Allows for engagement with operators, peak bodies, and advocates on regulations specifying the information to be displayed."
+  ],
+  "affected": "Australians who use regulated interactive gambling services and the operators of those services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

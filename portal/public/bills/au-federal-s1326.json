@@ -1,0 +1,169 @@
+{
+ "key": "au-federal-s1326",
+ "title": "Autonomous Sanctions Amendment (Magnitsky-style and Other Thematic Sanctions) Bill 2021",
+ "short_title": "Autonomous Sanctions Amendment (Magnitsky-style and Other Thematic Sanctions) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-11-24",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs",
+ "status": "passed",
+ "status_as_of": "2021-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1326_ems_2247203f-523a-4b5a-9cb0-e085c56799f6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1326_ems_e40e7516-f535-43fd-8ae8-de9836868b00%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1326%22",
+   "document_date": "2021-11-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00128",
+   "document_date": "2021-12-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-417116",
+   "speaker": "Brendan Patrick John O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-02",
+   "stage_hint": null,
+   "brief": "Labor supported the Autonomous Sanctions Amendment (Magnitsky-Style and Other Thematic Sanctions) Bill 2021 to broaden sanctions against human rights abuses and corruption, but argued it was overdue and should also cover violations of international humanitarian law, including war crimes and genocide. The opposition criticised the Morrison government for delays, notably regarding sanctions on Myanmar after the February coup, and called for stronger action on modern slavery."
+  },
+  {
+   "slug": "speech-417117",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-02",
+   "stage_hint": null,
+   "brief": "Labor supported the Autonomous Sanctions Amendment Bill 2021, which introduces Magnitsky-style targeted sanctions for human rights violations and corruption, and expands sanctions to cover malicious cyberactivities. The speech acknowledged advocates like former MP Michael Danby and Senator Kitching, noted Australia was slower than allies like the US and UK in adopting such measures, and named specific cybercriminal groups like REvil and Lazarus Group."
+  },
+  {
+   "slug": "speech-417118",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-02",
+   "stage_hint": null,
+   "brief": "The Autonomous Sanctions Amendment (Magnitsky-Style and Other Thematic Sanctions) Bill 2021 was supported, but criticised as too narrow for omitting war crimes, genocide, crimes against humanity, systematic sexual violence, civilian targeting, humanitarian obstruction and protections for journalists. The speech urged early sanctions against Cambodia’s corrupt ruling elite under Hun Sen, citing Human Rights Watch’s “Cambodia dirty dozen,” and raised Julian Assange’s prosecution as a threat to media freedom."
+  },
+  {
+   "slug": "speech-417124",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-12-02",
+   "stage_hint": null,
+   "brief": "The Autonomous Sanctions Amendment (Magnitsky-style and Other Thematic Sanctions) Bill 2021 was commended to the House as long-overdue legislation, with thanks to Michael Danby and others who advocated for it."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Autonomous Sanctions Amendment (Magnitsky-style and Other Thematic Sanctions) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00128",
+   "assent_date": "2021-12-07"
+  }
+ ]
+}

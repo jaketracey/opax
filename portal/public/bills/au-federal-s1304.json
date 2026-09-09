@@ -1,0 +1,242 @@
+{
+ "key": "au-federal-s1304",
+ "title": "Courts and Tribunals Legislation Amendment (2021 Measures No. 1) Bill 2021",
+ "short_title": "Courts and Tribunals Legislation Amendment (2021 Measures No. 1) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-23",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2022-02-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1304_ems_3de2bb8b-e056-4962-a252-560eef76712b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1304_ems_2d3c28ff-5760-47c2-a45e-5a84d2e00f9f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1304_ems_a580d875-b78d-4e20-ba94-61ac3fc9d276%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/8129245%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1304%22",
+   "document_date": "2021-06-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00003",
+   "document_date": "2022-02-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7613",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an amendment to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). The usual second reading motion is \"*this bill be now read a second time,*\" which is parliamentary jargon for agreeing with the main idea of the bill. Because this vote was successful, the amendment failed and the second reading motion will remain unchanged. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes that the current Government has:* > >> *(a) appointed at least 79 former Liberal Party politicians, failed Liberal Party candidates and former Liberal Party staffers to the Administrative Appeals Tribunal;* >> >> *(b) used the Tribunal to serve the interests of the Liberal Party and its mates rather than the interests of the Australian people; and* >> >> *(c) in doing so, brought the Tribunal into disrepute; and* > > *(2) calls on the Government to implement a merit-based selection process for Tribunal members.\"*",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-14/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-418209",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The bill makes incremental amendments to improve federal courts and the Administrative Appeals Tribunal, including clarifying remote hearings, foreign state immunity, and repealing the Nauru (High Court Appeals) Act."
+  },
+  {
+   "slug": "speech-418210",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "Labor supported the bill after successfully amending three aspects: removing a change that would let the minister rather than the Governor-General assess AAT appointees' qualifications, removing protections for Immigration Assessment Authority reviewers, and removing a provision allowing short-form reasons in Federal Court appeals. The speaker also criticised the Morrison government for appointing at least 79 Liberal Party associates to the Administrative Appeals Tribunal, calling for merit-based selection."
+  },
+  {
+   "slug": "speech-418354",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "Supported the second reading of the Courts and Tribunals Legislation Amendment (2021 Measures No. 1) Bill 2021, arguing that the Administrative Appeals Tribunal provides essential, accessible and affordable review of government decisions, and that the bill’s technical changes will improve efficiency and modernise the system, including adjustments to foreign government immunities."
+  },
+  {
+   "slug": "speech-418355",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The bill makes administrative amendments to multiple acts affecting federal courts and tribunals, including empowering the AAT President to refer Social Services Division proceedings to alternative dispute resolution, clarifying powers to summons witnesses, and allowing short-form reasons in Federal Court appeals—a provision criticised by the Asylum Seeker Resource Centre and others for disadvantaging unrepresented applicants. The speaker also condemned the politicisation of AAT appointments, noting 79 Liberal-linked appointments since 2013, and highlighted delays causing injustice, such as a constituent's appeal taking over a year just to be acknowledged."
+  },
+  {
+   "slug": "speech-418359",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The government argued that the Courts and Tribunals Legislation Amendment (2021 Measures No. 1) Bill 2021 improves the administration of federal courts and the Administrative Appeals Tribunal, modernises practices including remote hearings, clarifies procedural immunities for foreign states, and repeals the obsolete Nauru (High Court Appeals) Act 1976."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Courts and Tribunals Legislation Amendment (2021 Measures No. 1) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00003",
+   "assent_date": "2022-02-17"
+  }
+ ]
+}

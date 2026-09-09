@@ -1,0 +1,352 @@
+{
+ "key": "au-federal-r5584",
+ "title": "Telecommunications Legislation Amendment (Access Regime and NBN Companies) Bill 2016",
+ "short_title": "Telecommunications Legislation Amendment (Access Regime and NBN Companies) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5584%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5584%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5584%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5584%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5584%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5584_ems_c272776e-fdc5-41aa-bdf9-ababdcc86e55%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5584_ems_4c6b7892-8635-49e4-990f-b59b94e494ca%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5584_ems_31e19c73-4ae2-4f05-a817-b0a93019bfb4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5584%22",
+   "document_date": "2015-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2015-12-02",
+  "sentences": [
+   "The bill would partly put into action the government's response to a review of regulations for the National Broadband Network.",
+   "It would clarify how the facilities access regime and the general access regime work together, and add a new requirement for access providers to share in-building cabling they use for active declared services.",
+   "The bill also amends the National Broadband Network Companies Act to let NBN companies sell surplus goods to anyone, and changes how the competition regulator handles fixed principles in access undertakings."
+  ],
+  "changes": [
+   "Clarify the interaction between the facilities access regime and the general access regime.",
+   "Introduce a new obligation for access providers to give access to in-building cabling they own or control when used for an active declared service.",
+   "Amend the Competition and Consumer Act to increase the chance the regulator can accept fixed principles provisions.",
+   "Require the regulator to consider previous fixed principles terms when making new access decisions.",
+   "Amend section 19 of the National Broadband Network Companies Act to allow NBN companies to dispose of surplus goods to any person."
+  ],
+  "affected": "The telecommunications industry, access providers, the Australian Competition and Consumer Commission, and NBN companies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:20:29Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-325131",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The Telecommunications Legislation Amendment (Access Regime and NBN Companies) Bill 2015 was introduced to implement part of the government's response to the Vertigan panel, enhancing the telecommunications access regime and NBN Co's line of business obligations. The bill gives NBN Co flexibility for service pilots and trials, allows disposal of surplus assets, and clarifies access to in-building cabling, while maintaining its wholesale-only role."
+  },
+  {
+   "slug": "speech-329322",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Telecommunications Legislation Amendment (Access Regime and NBN Companies) Bill 2015, arguing it was based on discredited Vertigan panel recommendations and would harm competition and consumers, and noted the government subsequently removed parts 3, 4, 5, 7 and 8. The speaker also highlighted that the NBN cost had blown out from $29.5 billion to $56 billion, fibre-to-node costs tripled to $1,600 per home, and only 29,000 homes had been completed against a 65,000 target."
+  },
+  {
+   "slug": "speech-329325",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications Legislation Amendment Bill 2015 would harm regional Australians by removing uniform wholesale pricing, leading to higher broadband costs for rural areas. They criticized the government, particularly Prime Minister Malcolm Turnbull and the Nationals, for cost blowouts and delays in the NBN rollout, citing a leaked report showing 1.4 million households were to be approved but fewer than 660,000 were connected, and that the project was falling behind schedule and over budget."
+  },
+  {
+   "slug": "speech-329326",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The member defended the Coalition's NBN rollout, citing contractor collapses in South Australia and Western Australia under Labor, and argued the bill implements Vertigan panel recommendations for flexible use of existing infrastructure. He reported 28 fixed wireless sites commissioned in his electorate of Grey, with more under construction, and noted the new satellite service will provide 25 Mbps download speeds starting around the end of April."
+  },
+  {
+   "slug": "speech-329450",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The member reported that over 52,000 premises in Indi now have fixed-line NBN and mobile phone black spots have been reduced from 300 to around 100, with Indi receiving one-third of allocated base stations nationally. She criticised the government’s response to the regional telecommunications independent review as inadequate and argued for universal service obligations for broadband and mobile to ensure competition and coverage in rural areas."
+  },
+  {
+   "slug": "speech-329451",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The member for Swan argued the Telecommunications Legislation Amendment Bill 2015 would fix the NBN mess left by Labor, claiming Labor connected only 34 brownfield premises across Perth by the 2013 election while the coalition has since completed or begun construction in 17 telecommunications areas in Swan, including suburbs such as South Perth, Burswood, and Victoria Park. He also criticised Labor’s contracts with Telstra and Syntheo for leaving infrastructure stagnant and subcontractors unpaid, and announced that the Ascot exchange, previously neglected, is now in the three-year rollout plan."
+  },
+  {
+   "slug": "speech-329456",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The member for Greenway argued that the Coalition government's NBN plan has failed, breaking the 2013 promise of minimum speeds by the end of 2016, and that the $46 billion project is in crisis, leaving many constituents in Greenway without reliable broadband."
+  },
+  {
+   "slug": "speech-329457",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor's NBN plan was unworkable and that the coalition's multi-technology mix is delivering reliable broadband to regional areas like the electorate of Lyons, citing that 86% of Tasmanian fibre-to-the-premises users chose speeds of 25/5 Mbps or less. He announced fibre-to-the-node connections for Evandale, Westbury, Hagley, and other towns, and noted that over 17,500 premises in Lyons can access wireless NBN, with uptake at some towers as low as 17%."
+  },
+  {
+   "slug": "speech-329478",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's National Broadband Network plan is a failure, with costs blowing out from $29.5 billion to up to $56 billion, connection costs tripling to $1,600 per home, and copper network repairs exceeding $640 million, while creating a digital divide in her electorate of Lalor. She noted the government was forced to amend its own bill to adopt Labor's recommendations following industry criticism."
+  },
+  {
+   "slug": "speech-329479",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker argued the Coalition government's NBN rollout is a costly failure, citing leaked documents showing costs have blown out from $29.5 billion to $56 billion and completion delayed from 2016 to 2020. They criticised broken promises in Tasmania, where no homes have been connected to the Coalition's fibre-to-the-node network despite a 2015 completion promise, and condemned proposed wholesale price differences for regional areas."
+  },
+  {
+   "slug": "speech-329485",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coalition government broke promises to deliver the NBN to Bendigo and Central Victoria by 2016, accusing the Prime Minister of lying at a 2013 event. Specific failures cited include unswitched towers built in 2013, no fibre-to-the-node connections in Bendigo, oversubscribed satellite services, and growth areas like Maiden Gully not on the rollout map."
+  },
+  {
+   "slug": "speech-329491",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that technology is overtaking us and wireless will become the preferred connection method, touching on the roles of public and private investment in the NBN."
+  },
+  {
+   "slug": "speech-329494",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coalition's approach to broadband, including reliance on wireless and satellite, would lead to higher costs for regional consumers and undermine uniform pricing. They criticised the Nationals for failing to defend their constituents, noting that Labor's plan for 93 per cent fibre-to-the-premises and two satellites would better serve remote areas."
+  },
+  {
+   "slug": "speech-329497",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull-Joyce government's changes to the NBN have resulted in a cost blowout from $29.5 billion to $56 billion, rollout delayed to 2020, cost per home rising from $600 to $1,600, and copper patch-up costs increasing from $55 million to over $640 million, while revenue forecasts dropped from $2.5 billion to $1.1 billion. He claimed the government sabotaged Labor's fibre-based NBN for ideological reasons, citing a biased review panel and the Prime Minister's understanding of the technology."
+  },
+  {
+   "slug": "speech-329813",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-329985",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The speaker argued the Telecommunications Legislation Amendment Bill 2015 would fine-tune NBN obligations and administration, citing four measures including clarifying access to facilities, ensuring access to in-building cabling, improving fixed principle provisions, and allowing NBN to sell surplus assets to any buyer. They also announced specific NBN rollout timelines for their electorate of Petrie, with 53,390 priority households and construction starting in July 2016 in areas such as North Lakes, Mango Hill, Griffin, Rothwell, and Deception Bay, aiming for all homes in the electorate to be connected by end of 2018."
+  },
+  {
+   "slug": "speech-329987",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill, arguing the government’s NBN approach doubled costs and halved speeds—citing copper repair costs rising from $55 million to $641 million, fibre-to-the-node cost per home from $600 to $1,600, and revenue forecasts falling from $2.5 billion to $1.1 billion—and claimed Prime Minister Malcolm Turnbull broke promises on completion timelines and universal access."
+  },
+  {
+   "slug": "speech-329998",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications Legislation Amendment (Access Regime and NBN Companies) Bill 2015 is about to be undone by the same government that introduced it, and referenced the member for Perth's animated criticism of the government's decision-making."
+  },
+  {
+   "slug": "speech-330002",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the NBN rollout under Prime Minister Turnbull has failed, citing cost blowouts from $41 billion to $56 billion, fibre-to-the-node costs rising from $600 to $1,600 per home, and revenue dropping from $2.5 billion to $1.1 billion. The speaker also opposed the government's plan to end universal wholesale pricing, which would disadvantage regional areas, and tabled a letter from the West Coast Council in South Australia criticising the decision to limit five towns to satellite-only service."
+  },
+  {
+   "slug": "speech-330053",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The bill reflects the government's failure to provide digital equality of opportunity, and the Howard government did nothing on telecommunications infrastructure during its 11 years in power."
+  },
+  {
+   "slug": "speech-330067",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications Legislation Amendment Bill 2015 is ideologically driven and would undermine universal wholesale pricing for the NBN, harming rural and regional Australians by making them pay more than city residents. He criticised the government's copper-based NBN, citing a $640 million cost to repair copper wires and delivering a service slower than ADSL2, and challenged National Party MPs to defend their constituents."
+  },
+  {
+   "slug": "speech-330069",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor's NBN plan failed, costing over $50 billion with little delivery, while the coalition government has a definite rollout plan with specific build commencement dates for fixed-line and fixed-wireless services in areas including Aberglasslyn, Maitland, Kurri Kurri, Newcastle, and Port Stephens. The speaker also accused the member for Hunter of avoiding a marginal seat fight and lacking commitment to constituents."
+  },
+  {
+   "slug": "speech-330078",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The government amended the bill to retain only four uncontested measures: clarifying facilities access regulation, requiring access to in-building cabling, improving regulatory consistency for access determinations, and allowing nbn co to sell surplus assets to any person. The speaker also defended the NBN rollout, citing 14,000 connections per week under the Turnbull government versus 51,000 under Labor in three years, and targets of 500,000 fibre-to-the-node premises by June."
+  },
+  {
+   "slug": "speech-330094",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The speaker invited the minister to visit their electorate to meet over 100 constituents affected by the NBN rollout, arguing the policy has caused chaos and that the minister's removal of amendments was humiliating. They cited an email from a constituent about elderly parents in a retirement village."
+  }
+ ],
+ "acts": []
+}

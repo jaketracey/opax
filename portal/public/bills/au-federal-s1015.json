@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s1015",
+ "title": "Marriage Equality Plebiscite Bill 2015",
+ "short_title": "Marriage Equality Plebiscite Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-08-19",
+ "originating_house": "senate",
+ "sponsor": "RICE, Sen Janet",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10836",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1015%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1015%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1015%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1015_ems_5e8b3463-7761-42c1-8c3a-b95b87cb33ab%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1015%22",
+   "document_date": "2015-08-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-08-19",
+  "sentences": [
+   "This bill would require a national vote on same-sex marriage to be held at the same time as the next federal election.",
+   "The minister would arrange for electors to answer a specific question about whether marriage should be allowed for any two people regardless of gender.",
+   "If the vote supports the change, Parliament intends to legislate it within six months after the result is confirmed."
+  ],
+  "changes": [
+   "Requires a national plebiscite on same-sex marriage to be conducted at the next general election.",
+   "Sets the question to be put to electors.",
+   "Declares Parliament's intention to legislate within six months if the result is affirmative.",
+   "Applies the Referendum (Machinery Provisions) Act 1984 to the plebiscite.",
+   "Limits Commonwealth spending on the plebiscite to arguments made by members of Parliament.",
+   "Gives the Governor-General power to make regulations."
+  ],
+  "affected": "Electors at the next general election and members of Parliament.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:53:35Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

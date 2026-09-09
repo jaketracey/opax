@@ -1,0 +1,113 @@
+{
+ "key": "au-federal-r6093",
+ "title": "National Consumer Credit Protection Amendment (Mandatory Comprehensive Credit Reporting) Bill 2018",
+ "short_title": "National Consumer Credit Protection Amendment (Mandatory Comprehensive Credit Reporting) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6093%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6093%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6093%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6093%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6093%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6093%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6093%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6093%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6093_ems_bf439f57-c669-4d8a-8401-a4bde4b12425%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6093%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "This bill would make it compulsory for certain lenders to share consumer credit data with credit bureaus.",
+   "Eligible licensees that are large authorised deposit-taking institutions as of 1 July 2018 would be required to supply credit information on consumer credit accounts to specified credit reporting bodies.",
+   "The bill builds on a voluntary scheme introduced by 2014 amendments to the Privacy Act, and regulations would set conditions for when credit reporting bodies can share or must share the information."
+  ],
+  "changes": [
+   "Requires eligible large ADIs to provide credit information on consumer credit accounts to credit reporting bodies.",
+   "Establishes a mandatory comprehensive credit reporting regime under the Credit Act.",
+   "Allows regulations to set conditions for credit reporting bodies sharing the disclosed information."
+  ],
+  "affected": "Large authorised deposit-taking institutions and other credit providers within their banking group, as well as credit reporting bodies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-365476",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "Labor supported the mandatory comprehensive credit reporting bill but announced it would move Senate amendments to delay the supply of repayment history information by one year, until after the Attorney-General's Department completes its review of financial hardship arrangements. The scheme requires large banks with assets over $100 billion to share comprehensive credit data, with initial bulk supplies of 50% of accounts due by 28 September 2018 and the remainder by 28 September 2019."
+  }
+ ],
+ "acts": []
+}

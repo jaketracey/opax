@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r6139",
+ "title": "Telecommunications Amendment (Giving the Community Rights on Phone Towers) Bill 2018",
+ "short_title": "Telecommunications Amendment (Giving the Community Rights on Phone Towers) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-25",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6139%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6139%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6139%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6139_ems_a1da244b-58fe-409c-8139-68a26caf00ed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6139%22",
+   "document_date": "2018-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-25",
+  "sentences": [
+   "The bill would give residents more say about where mobile phone towers and other telecom equipment can be built.",
+   "Land owners and occupiers would have to be told about a proposed tower and get 30 days to reply, and new towers could not be classed as low impact.",
+   "The telecom regulator could not consider commercial benefits when deciding a facility's importance, and communities could challenge installation permits in a tribunal."
+  ],
+  "changes": [
+   "Requires notification of land owners and occupiers about proposed towers.",
+   "Gives 30 days for responses to proposed developments.",
+   "Prevents new towers from being declared low impact.",
+   "Stops the regulator from weighing commercial interests when assessing a facility's network importance.",
+   "Forces the regulator to check all alternative sites are unworkable near sensitive community sites.",
+   "Allows local communities to appeal installation permits to a tribunal."
+  ],
+  "affected": "Land owners, occupiers, local communities and the Australian Communications and Media Authority (ACMA).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:26:57Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

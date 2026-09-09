@@ -1,0 +1,202 @@
+{
+ "key": "au-federal-r7292",
+ "title": "Health Legislation Amendment (Improved Medicare Integrity and Other Measures) Bill 2025",
+ "short_title": "Health Legislation Amendment (Improved Medicare Integrity and Other Measures) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7292%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7292%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7292%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7292%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7292%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7292%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7292%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7292%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7292%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7292_ems_25dd7356-f2aa-4a84-9edc-6c2c7d947e5d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7292_ems_aec602b6-8570-437b-b9af-d9acdb1dcd80%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7292_ems_3a1ff0da-6710-4567-ae56-31c29c9482de%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7292%22",
+   "document_date": "2024-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2024-11-28",
+  "sentences": [
+   "This bill would change several health laws to protect Medicare and other health benefit schemes from fraud and incorrect payments.",
+   "It would shorten the time limit for bulk-billed Medicare and dental claims from 2 years to 1 year, while giving the Minister and Chief Executive Medicare discretion to accept late claims in special cases.",
+   "The bill would also broaden the range of offences that investigators can use a single set of powers for, by amending the definition of 'relevant offence' in the Human Services Medicare Act."
+  ],
+  "changes": [
+   "Reduces the maximum timeframe for making bulk-billed Medicare and dental claims from 2 years to 1 year.",
+   "Expands the definition of 'relevant offence' in the Human Services Medicare Act to allow consistent investigative powers for Medicare fraud offences.",
+   "Removes some restrictions on using information obtained under Professional Services Review Agency notice-to-produce powers as evidence in certain proceedings."
+  ],
+  "affected": "Health practitioners, patients, and the agencies administering Medicare, the Pharmaceutical Benefits Scheme, and the Child Dental Benefits Schedule.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9295",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "question": "Health Legislation Amendment (Improved Medicare Integrity and Other Measures) Bill 2024 - Second Reading - Dental care",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 52,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 60,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-05/3"
+  },
+  {
+   "key": "federal-representatives-9296",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This amendment was introduced by Farrer MP [Sussan Ley](https://theyvoteforyou.org.au/people/representatives/farrer/sussan_ley) (Liberal). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the House notes that under this Government, Australians' access to affordable health care through the Medicare Benefits Schedule has only gone backwards, and it has never been harder or more expensive to see a GP\".*",
+   "stage": "Second reading",
+   "ayes": 47,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 119,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-05/4"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

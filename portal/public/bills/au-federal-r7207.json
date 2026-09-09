@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7207",
+ "title": "National Housing and Homelessness Plan Bill 2024",
+ "short_title": "National Housing and Homelessness Plan Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-06-24",
+ "originating_house": "representatives",
+ "sponsor": "TINK, Kylea, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10992",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-02-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7207%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7207%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7207%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7207_ems_4091d098-19a4-453b-b256-40e7487aef9d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7207%22",
+   "document_date": "2024-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-24",
+  "sentences": [
+   "The bill would create a legal framework for developing a National Housing and Homelessness Plan focused on human rights.",
+   "The Housing Minister must develop the plan with expert advice and assistance from Housing Australia, a National Housing Consumer Council, and an independent National Housing and Homelessness Advocate.",
+   "The plan must be fully refreshed every 10 years, with progress reports to Parliament every three years."
+  ],
+  "changes": [
+   "Requires the Housing Minister to develop and maintain a National Housing and Homelessness Plan.",
+   "Establishes a National Housing Consumer Council to give consumer perspectives on the plan.",
+   "Creates an independent National Housing and Homelessness Advocate to monitor progress and review systemic housing issues."
+  ],
+  "affected": "People in Australia who need housing, including those experiencing homelessness, and the agencies involved in housing policy such as Housing Australia and the Housing Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:42:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

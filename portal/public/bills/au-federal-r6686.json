@@ -1,0 +1,294 @@
+{
+ "key": "au-federal-r6686",
+ "title": "Education Legislation Amendment (2021 Measures No. 2) Bill 2021",
+ "short_title": "Education Legislation Amendment (2021 Measures No. 2) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2021-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6686_ems_17df9f75-444d-4fc3-b5be-751b783b799b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6686%22",
+   "document_date": "2021-03-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00055",
+   "document_date": "2021-06-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-03-18",
+  "sentences": [
+   "This bill would let some people who once held permanent humanitarian visas keep their access to student loans after switching to a different visa type.",
+   "It would amend the Higher Education Support Act 2003 to give the Minister power to extend loan eligibility from 1 January 2022 through a legislative instrument.",
+   "The bill also makes minor technical changes to student protections, Indigenous language references, grant funding and grandfathering arrangements."
+  ],
+  "changes": [
+   "Allows former permanent humanitarian visa holders who obtain a resident return visa to keep their Higher Education Loan Program eligibility.",
+   "Gives the Minister authority to extend loan availability to holders of certain visas via a legislative instrument from 1 January 2022.",
+   "Aligns student protection provisions across all HELP programs.",
+   "Clarifies references to Indigenous languages.",
+   "Streamlines the operation of grant funding.",
+   "Clarifies the operation of grandfathering arrangements."
+  ],
+  "affected": "Higher education students who are former permanent humanitarian visa holders and now hold a resident return visa.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:17Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7111",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the usual second reading unchanged, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This vote occurred after Sydney MP [Tanya Plibersek](https://theyvoteforyou.org.au/people/representatives/sydney/tanya_plibersek) (Labor) proposed the amendment below. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the Government's actions on education:* > > *(1) have damaged Australia's world-class university sector, loading up students with a lifetime of debt;* > > *(2) are placing thousands of university jobs at risk; and* > > *(3) will make it harder for Australia to recover from the COVID-19 pandemic\".*",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-05-13/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-404419",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "This bill expands Higher Education Loan Program (HELP) eligibility to permanent humanitarian visa holders who have transitioned to a resident return visa, and makes minor amendments to the Higher Education Support Act 2003 and the Education Services for Overseas Act 2000 to improve clarity, protect overseas students, and support the international education sector."
+  },
+  {
+   "slug": "speech-406061",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The bill extends Higher Education Loan Program (HELP) eligibility to former permanent humanitarian visa holders who lose eligibility when travelling outside Australia, and makes technical amendments to the Higher Education Support Act, including refunding upfront payments, clarifying grandfathered student definitions, and allowing automatic rollover of unspent grant amounts."
+  },
+  {
+   "slug": "speech-406062",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "Labor supported the Education Legislation Amendment Bill 2021 as minor administrative fixes, but argued the Morrison government's education record is abysmal, citing a 9.3% real-term university funding cut, $60,000 average student debt, 17,000 university job losses, and a $20 billion annual loss from no international students due to quarantine failures."
+  },
+  {
+   "slug": "speech-406063",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill is needed to extend Higher Education Loan Program access to permanent humanitarian visa holders after five years, clarify Indigenous languages as non-foreign languages under HESA funding, and strengthen the Tuition Protection Service. The speaker also defended the government's higher education record, citing Sir Robert Menzies' expansion of universities and a record $20 billion investment, with tuition cost reductions of up to 59 per cent for agriculture and maths degrees."
+  },
+  {
+   "slug": "speech-406064",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Education Legislation Amendment (2021 Measures No. 2) Bill 2021, arguing it would create a flexible framework for international students and ensure permanent humanitarian visa holders can access the Higher Education Loan Program."
+  },
+  {
+   "slug": "speech-406065",
+   "speaker": "Andrew Laming",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Education Legislation Amendment Bill to prevent interruptions to education for humanitarian visa holders, noting over 4,000 permanent residents on protection visas would benefit. They argued Australia should improve pre-arrival preparation for working-age humanitarian arrivals, including English courses and job matching, to achieve 100% success in connecting them to education or employment."
+  },
+  {
+   "slug": "speech-406066",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The bill amends HELP eligibility so former permanent humanitarian visa holders who change visas due to travel retain loan access, affecting about 4,300 students. The speaker also noted increased higher education participation and praised Western Australian universities for maintaining face-to-face learning."
+  },
+  {
+   "slug": "speech-406067",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The bill extends Higher Education Loan Program (HELP) eligibility to former permanent humanitarian visa holders who lose their visa status after travelling overseas, and makes technical amendments including classifying Indigenous languages as native languages and strengthening the tuition protection scheme for international students."
+  },
+  {
+   "slug": "speech-406068",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The member for Bennelong argued that the electorate is Australia's capital of innovation, citing the inventions of Wi‑Fi, Cochlear, Australia's first hydrogen refuelling station and the world's first Granny Smith apple, and highlighted Macquarie Park as a major innovation centre."
+  },
+  {
+   "slug": "speech-406070",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "Supported the Education Legislation Amendment (2021 Measures No. 2) Bill 2021, arguing international students are vital for university finances and research, particularly for the University of Adelaide, University of South Australia, and Flinders University. The bill closes loopholes for humanitarian students' FEE-HELP and promotes university-industry-government partnerships for sovereign manufacturing capability."
+  },
+  {
+   "slug": "speech-406071",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The bill ensures resident return visa holders who previously held a permanent humanitarian visa remain eligible for Higher Education Loan Program (HELP) assistance, correcting a drafting oversight, and makes minor amendments to the Education Services for Overseas Students Act to improve the Tuition Protection Service and the Overseas Student Tuition Fund."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education Legislation Amendment (2021 Measures No. 2) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00055",
+   "assent_date": "2021-06-24"
+  }
+ ]
+}

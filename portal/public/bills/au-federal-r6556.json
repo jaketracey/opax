@@ -1,0 +1,292 @@
+{
+ "key": "au-federal-r6556",
+ "title": "Privacy Amendment (Public Health Contact Information) Bill 2020",
+ "short_title": "Privacy Amendment (Public Health Contact Information) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2020-05-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6556_ems_a40793f4-58c6-4a27-987a-9853a300e820%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/7335779%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6556%22",
+   "document_date": "2020-05-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00044",
+   "document_date": "2020-05-15",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-390786",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The Privacy Amendment (Public Health Contact Information) Bill 2020 was moved to enshrine privacy protections for the COVIDSafe app into primary legislation, creating criminal offences with penalties of up to five years imprisonment or $63,000 for unauthorised data use, and giving the Australian Information Commissioner oversight. The bill requires all COVIDSafe data to be deleted after the pandemic, prohibits mandatory use of the app, and mandates six-monthly ministerial reports to parliament on the app's operation."
+  },
+  {
+   "slug": "speech-390787",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "Labor supported the Privacy Amendment (Public Health Contact Information) Bill 2020, citing amendments that strengthened privacy protections for the COVIDSafe app, and noted that only 5.5 million Australians had downloaded the app against a 10 million target. The Senate Select Committee on COVID-19 will review the app's rollout."
+  },
+  {
+   "slug": "speech-390889",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Office of the Australian Information Commissioner needs additional funding and a standalone privacy commissioner to handle new oversight roles under the Privacy Amendment Bill, and called on the government to address public concerns about the COVIDSafe app by being more transparent, including explaining the Amazon Web Services data storage contract and fixing technical and security issues."
+  },
+  {
+   "slug": "speech-390890",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Privacy Amendment (Public Health Contact Information) Bill 2020 to secure COVIDSafe app data, noting over five million downloads and outlining protections including voluntary participation, restricted access, penalties for breaches, no law enforcement access, and mandatory data deletion when the app is no longer needed."
+  },
+  {
+   "slug": "speech-390892",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Privacy Amendment (Public Health Contact Information) Bill 2020 is a good law and that most of Labor's concerns were addressed through bipartisan amendments, including stronger enforcement of voluntary use by the Privacy Commissioner, six-monthly reporting obligations, and data deletion mandates. However, they strongly criticised the government's repeated mishandling of technology projects—citing the National Broadband Network, encryption legislation, and robodebt—and warned that the government's poor communication and lack of transparency around the COVIDSafe app, including its announcement without a clear plan and the Prime Minister's initial claim it would be mandatory, have undermined public trust needed for the 40-60% uptake required for success."
+  },
+  {
+   "slug": "speech-390893",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Privacy Amendment (Public Health Contact Information) Bill 2020 but criticised the COVIDSafe app for Bluetooth functionality issues on iPhones, data storage with Amazon, and insufficient public trust, urging the government to fix the problems."
+  },
+  {
+   "slug": "speech-390894",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Privacy Amendment (Public Health Contact Information) Bill 2020 but raised concerns about the COVIDSafe app's limitations, including reduced effectiveness on iOS devices, inconsistent government messaging, and the lack of a vulnerability disclosure process. They urged the government to incorporate the Google-Apple API, improve transparency, and address security issues raised by researchers like Jim Mussared."
+  },
+  {
+   "slug": "speech-390896",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Privacy Amendment (Public Health Contact Information) Bill 2020 but warned the COVIDSafe app is not a protective measure and could lead to complacency, urging continued physical distancing and hygiene. They called for a national integrity commission to restore public trust, noted technical limitations such as poor iPhone background functionality, and stressed the need for transparency and support for young people."
+  },
+  {
+   "slug": "speech-390897",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for awarding the COVIDSafe app data storage contract to Amazon Web Services instead of Australian providers, and argued that the government has failed to build trust by not releasing clear download targets, source code in a timely manner, or addressing technical issues like battery drain and iPhone compatibility."
+  },
+  {
+   "slug": "speech-390898",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The Privacy Amendment (Public Health Contact Information) Bill 2020 was supported as a step to build trust in the COVIDSafe app for contact tracing, given the government adopted Labor's privacy improvements. The government was urged to address privacy concerns over overseas data warehousing, ensure the app works on older Android phones, correct public misunderstandings that it acts as a protective shield, and recall parliament before August."
+  },
+  {
+   "slug": "speech-390899",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Privacy Amendment (Public Health Contact Information) Bill 2020 strengthens privacy protections for COVIDSafe app data, but noted technical issues including incompatibility with older phones and interference with diabetes monitoring apps, and called for improved public confidence. The speaker announced they would now download the app, and stated that over five million Australians had done so, short of the 10 million target."
+  },
+  {
+   "slug": "speech-390900",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The Greens will not oppose the bill but will move amendments in the Senate for a sunset clause, reporting obligations, and enforceable prohibitions on derivative data, while expressing concern that Amazon may be required to hand over COVIDSafe app data to US authorities under the US CLOUD Act."
+  },
+  {
+   "slug": "speech-390901",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the COVIDSafe app is a useful but limited tool within a broader public health response, not a \"magic wand\" or \"silver bullet.\" They noted that Labor supported the bill constructively but raised concerns about technical issues, privacy, and the app's incompatibility with Android phones, and stressed the need for continued scrutiny and community trust."
+  },
+  {
+   "slug": "speech-390902",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The MP argued the app is a valuable tool but highlighted that only 20% of the population has uploaded it, older phones are unsupported, and the data storage contract was given to Amazon overseas instead of Australian companies. She urged an education campaign on operating the app and stressed that it is not a \"magic shield\" against COVID-19."
+  },
+  {
+   "slug": "speech-390903",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The member for Shortland argued that the COVIDSafe app should remain voluntary and that data should only be used by state health officials for contact tracing. He raised concerns about elderly constituents unable to download the app due to older phones, the data storage contract with Amazon Web Services, and potential interference with glucose-monitoring systems for diabetics."
+  },
+  {
+   "slug": "speech-390904",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Privacy Amendment (Public Health Contact Information) Bill 2020 and the COVIDSafe app, noting it uses Bluetooth rather than geolocation and has strong privacy provisions; they also acknowledged collaboration with shadow ministers Chris Bowen and Mark Dreyfus to improve the app."
+  },
+  {
+   "slug": "speech-390906",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "The Privacy Amendment (Public Health Contact Information) Bill 2020 enshrines in primary legislation strong privacy protections for COVIDSafe app data, including criminal offences for unauthorised use, extension of the Notifiable Data Breaches scheme, a guarantee that no further data will be collected from former users, and a process for deletion of all data when the app is no longer needed. The bill aims to give Australians confidence to download and use COVIDSafe to help contact tracers combat COVID-19."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Privacy Amendment (Public Health Contact Information) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00044",
+   "assent_date": "2020-05-15"
+  }
+ ]
+}

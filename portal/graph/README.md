@@ -153,7 +153,8 @@ as before (retried no sooner than a minute later).
 Public money going the other way. `scripts/export_money_graph.py` (and the
 state export for Queensland) adds one **grantor** node per file
 (`grantor:federal` "Commonwealth grants", `grantor:qld` "Queensland grants";
-`kind: 'grantor'`, `group: 'parties'` so it sits at the centre, teal
+`kind: 'grantor'`; legacy exports use `group: 'parties'`, which the adapter maps
+to a separate `public money` territory away from the party centre; teal
 `GRANTOR_COLOUR`) and one **grant flow** per donor on the map that the grant
 register resolves to the same entity (`parli.ingest.grant_recipients`: ABN,
 then unique name), `grantor -> donor`, marked `grant: true`, with `byYear`
@@ -170,9 +171,30 @@ of money are never summed.
   (the grantor row, top programs, and "Open their grants file", which deep
   links to `/explore?game=grants&jur=<jur>&open=<rid>`); a grant flow has its
   own card. Grantor nodes get no words block.
+- Public-money sources remain individual nodes at every zoom level, so grants
+  and contracts are never combined into a single total.
 - Semantic zoom: flows INTO a folded cluster from outside it (the grantor's)
   fold into one aggregated flow per source, drawn in the source's hue, the
   mirror of the donor->party hub flows.
+
+### The contracts hub, and the second way onto the map
+
+The federal file carries a second public-money hub, `grantor:contracts`
+("Commonwealth contracts", `kind: 'grantor'`, `flow: 'contracts'`, slate
+`CONTRACTOR_COLOUR`), built from AusTender by `parli.ingest.austender_full`
+and `parli.ingest.contract_suppliers` (docs/DATA-CONTRACTS.md). Its flows are
+`grant: true, flow: 'contracts'`; a donor holding contracts carries a
+`contracts` block shaped exactly like `grants` (the three largest agencies in
+`top`, the supplier id in `rid`). The one legend toggle switches both hubs;
+"Public money received" on a donor card shows a row per hub; the contracts hub
+card opens the Discover page and states the notices' coverage span
+(`meta.contracts_coverage`), which matters while a fetch is still running.
+
+A donor under the top-250 donation cut-off joins the map when the layers
+resolve at least `meta.public_money_floor` ($50m) of contracts and grants to
+it (`node.via = 'public_money'`, `node.publicMoney`); the card says so, and the
+donor page shows that figure instead of a rank. The smoke test asserts every
+such node carries the block that brought it.
 
 ## Checks
 

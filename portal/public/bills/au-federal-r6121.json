@@ -1,0 +1,225 @@
+{
+ "key": "au-federal-r6121",
+ "title": "Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment Bill 2018",
+ "short_title": "Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2018-09-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6121_ems_518e5501-110a-4f19-9f84-be086dc660be%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6121_ems_4f73fb7f-728e-4020-aa24-d0bdf6d1b064%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6121%22",
+   "document_date": "2018-05-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00103",
+   "document_date": "2018-09-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-23",
+  "sentences": [
+   "This bill would let the government charge a tax on pathology collection centre approvals that last more than one year.",
+   "It changes the Pathology Tax Act so that the tax can be calculated for approvals longer than a year, instead of only for one-year approvals.",
+   "A two-year approval would cost $2,000, and centres co-located with certain pathology labs would still pay no tax."
+  ],
+  "changes": [
+   "Amends the Pathology Tax Act to allow a tax for approvals of more than one year.",
+   "Extends the maximum approval period from one year to two years.",
+   "Sets the tax for a two-year approval at $2,000.",
+   "Keeps the nil tax rate for collection centres on the same site as a category GX or GY pathology laboratory."
+  ],
+  "affected": "Approved Pathology Authorities (APAs) that operate pathology specimen collection centres.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:58Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-364417",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment Bill 2018 changes the tax on pathology collection centres from $1,000 annually to $2,000 biennially. Labor supported the bill while condemning the government for cutting $650 million in bulk-billing incentives and making a desperate pre-election deal."
+  },
+  {
+   "slug": "speech-364419",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment Bill 2018 and its amendment, but condemned the government for an election deal on pathology rent control that favoured corporate giants over small centres, and for ongoing cuts to Medicare, bulk-billing, and hospital services. They cited specific examples including the sell-off of the Australian cancer registry, removal of GP after-hours services at Campbelltown Hospital, and out-of-pocket specialist costs of $500 or more in their electorate, arguing the government is creating a two-tiered healthcare system."
+  },
+  {
+   "slug": "speech-364421",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The member for Oxley supported the Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment Bill 2018 but accused the government of hypocrisy, citing broken promises on pathology bulk-billing incentives and a Medicare rebate freeze that excluded most scans. He announced Labor's commitments to cut private health insurance premium increases by 2% per year for two years, invest $2.8 billion in public hospitals, and spend $80 million to fund 20 new MRI licences for 500,000 more scans."
+  },
+  {
+   "slug": "speech-364422",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The speaker supported an amendment to the Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment Bill 2018, which changes the tax on pathology centres from $1,000 annually to $2,000 every two years. The speaker also cited a local survey where over 70% of 1,000+ respondents found private health insurance poor value, and noted Labor's policy to cap premium increases at 2% for two years and task the Productivity Commission with a review."
+  },
+  {
+   "slug": "speech-364423",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill, which changes pathology tax payments from $1,000 annually to $2,000 biennially, is a minor administrative fix that does not address the government's broken pre-election deal with Pathology Australia and its $650 million cut to Medicare bulk-billing incentives for pathology and diagnostic imaging. The speaker condemned the government for abandoning the deal, creating regulatory chaos, and undermining Medicare, citing evidence that the incentives had raised bulk-billing rates to 98% for 114 million services."
+  },
+  {
+   "slug": "speech-364425",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment Bill 2018 changes the tax on approximately 6,000 approved pathology collection centres from $1,000 per year to $2,000 every two years, reducing regulatory burden while maintaining revenue; Labor supports the bill but argues it is damage control from a government that has cut $650 million in bulk-billing incentives, $2.8 billion from hospitals, and prioritised $80 billion in tax cuts for big business over health."
+  },
+  {
+   "slug": "speech-364426",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's health portfolio management is chaotic, citing the pathology tax bill as an example of policy flip-flopping, and criticised new dental product fees introduced without consultation. They noted out-of-pocket GP costs rose from $21 to $38, private health insurance premiums increased 27%, and quoted AMA president Dr Tony Bartone saying the health system is ailing."
+  },
+  {
+   "slug": "speech-364427",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment Bill 2018 changes the tax on ACC approvals from $1,000 annually to $2,000 paid every two years, extending approval periods to reduce administrative burden. The rate had not changed since 1999, and the government engaged stakeholders including Pathology Australia CEO Liesel Wett before implementation on 1 July 2018."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Insurance (Approved Pathology Specimen Collection Centres) Tax Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00103",
+   "assent_date": "2018-09-21"
+  }
+ ]
+}

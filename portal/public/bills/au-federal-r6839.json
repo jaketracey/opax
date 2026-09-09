@@ -1,0 +1,215 @@
+{
+ "key": "au-federal-r6839",
+ "title": "Appropriation (Coronavirus Response) Bill (No. 1) 2021-2022",
+ "short_title": "Appropriation (Coronavirus Response) Bill (No. 1) 2021-2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2022-02-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6839%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6839%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6839%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6839%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6839%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6839%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6839%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6839%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6839%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6839%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6839%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6839_ems_8c2f68cb-1842-4965-a104-b3278690324f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6839%22",
+   "document_date": "2022-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00001",
+   "document_date": "2022-02-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-09",
+  "sentences": [
+   "This bill would take money from the Consolidated Revenue Fund to pay for the government's everyday running costs.",
+   "It would provide extra cash for coronavirus response programs that need funding in February and March 2022.",
+   "The bill is separate from other spending bills because the Constitution requires ordinary annual services to be in their own bill."
+  ],
+  "changes": [
+   "The bill proposes appropriations from the Consolidated Revenue Fund for ordinary annual services.",
+   "It proposes additional appropriation for coronavirus response programs needing funding through February and March 2022.",
+   "The bill separates ordinary annual services appropriations from other appropriations, as required by sections 53 and 54 of the Australian Constitution."
+  ],
+  "affected": "The government and agencies running coronavirus response programs that need cash flow in February and March 2022.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:05Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-417593",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The government introduced two appropriation bills seeking nearly $5.2 billion for COVID-19 variant response, including $2.2 billion for pandemic leave disaster payments and $935 million for vaccines, treatments and rapid antigen testing, plus a $5 billion contingency fund for urgent coronavirus pressures."
+  },
+  {
+   "slug": "speech-417595",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "Moved to pass the Appropriation (Coronavirus Response) Bill (No. 2) 2021-2022, seeking additional funding for the Department of Health to urgently purchase personal protective equipment and rapid antigen tests for the National Medical Stockpile in response to COVID-19 variants."
+  },
+  {
+   "slug": "speech-417605",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The bills propose nearly $5.2 billion for the Department of Health and the National Recovery and Resilience Agency, including $2.2 billion for pandemic leave payments, $935 million for the vaccine program, and $2 billion in capital expenses. Less than 20% of burnt private homes in East Gippsland have been replaced two years after the Black Summer bushfires, and the speech called for improved human resource training and monitoring of staff turnover in parliamentary offices."
+  },
+  {
+   "slug": "speech-417606",
+   "speaker": "Amanda Louise Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the federal government was unprepared for the Omicron outbreak, particularly in early childhood education, and criticised the lack of rapid antigen test supplies, booster encouragement, and support for educators. They supported the Appropriation (Coronavirus Response) Bills but called for long-term solutions and leadership from the government to address ongoing staffing, testing, and financial pressures."
+  },
+  {
+   "slug": "speech-417607",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The emergency spending bills for vaccine and PPE continuation were supported, but the Morrison government was criticised over aged care failures including 622 COVID deaths, PPE shortages in facilities like Jeta Gardens, and lack of free RAT kits, as well as 38% median house price rises and 8% rent increases in the member’s electorate."
+  },
+  {
+   "slug": "speech-417608",
+   "speaker": "Linda Jean Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The government failed to deliver on its promise to vaccinate First Nations communities by last winter, leaving a 20% vaccination gap and severe outbreaks in remote areas. The speaker called for better data on booster rates and rapid antigen tests, warning that the gap threatens both health outcomes and cultural maintenance."
+  },
+  {
+   "slug": "speech-417609",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's pandemic response in aged care and early childhood education, noting 533 aged-care deaths in 2022 and 1,500 total since the pandemic began, and argued the government failed to provide adequate rapid antigen tests, boosters, and staffing support."
+  },
+  {
+   "slug": "speech-417610",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's failure to plan for COVID-19 caused a crisis in aged care, with over 600 deaths in 2022, 1,176 outbreaks, and half the workforce unboosted, and criticised the Minister for Senior Australians and Aged Care Services for attending the Ashes cricket instead of addressing the emergency. They announced support for the $5.2 billion Appropriation (Coronavirus Response) Bill and its second reading amendment, condemning the government's last-minute spending and lack of structural reform."
+  },
+  {
+   "slug": "speech-417611",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The two bills propose nearly $5.2 billion in additional appropriations for the Department of Health and the National Recovery and Resilience Agency to fund COVID-19 variant responses through February and March 2022."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation (Coronavirus Response) Act (No. 1) 2021-2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00001",
+   "assent_date": "2022-02-14"
+  }
+ ]
+}

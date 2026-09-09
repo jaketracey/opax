@@ -1,0 +1,163 @@
+{
+ "key": "au-federal-r5667",
+ "title": "Supply Bill (No. 2) 2016-2017",
+ "short_title": "Supply Bill (No. 2) 2016-2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-05-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2016-05-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5667_ems_6f9bf327-7082-4272-bb1b-e4265577b653%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4538817%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5667%22",
+   "document_date": "2016-05-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00037",
+   "document_date": "2016-05-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-331564",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The Supply Bill (No. 1) 2016-2017 seeks $35 billion in appropriations for interim government funding from 1 July 2016, covering ordinary annual services until November 2016, with special provision for the Australian Electoral Commission."
+  },
+  {
+   "slug": "speech-331566",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The Supply Bill (No. 2) 2016-2017 seeks approval for just over $6 billion in appropriations from the Consolidated Revenue Fund for non-ordinary annual services, including capital works and payments to states, territories, and local governments, to ensure funding continuity from 1 July 2016. It also sets debit limits for the Nation-building Funds, the Building Australia Fund, the Education Investment Fund, and general purpose financial assistance and national partnership payments."
+  },
+  {
+   "slug": "speech-331574",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The speaker thanked contributors and stated that Supply Bills No. 1 and 2, and Supply (Parliamentary Departments) Bill (No.1), seek appropriations totalling just over $41 billion for the first part of 2016-17, and must be passed to ensure funding from 1 July 2016 for continuity of program and service delivery."
+  },
+  {
+   "slug": "speech-332074",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-03",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 2) 2016-2017 seeks just under $9 billion for non‑ordinary annual services, including $4.9 billion for the National Broadband Network, $1.4 billion for defence (with an additional $700 million for the 2016 defence white paper), $544 million for infrastructure programs such as Roads to Recovery and Western Sydney airport, and $310 million for agriculture, including a $50 million national water infrastructure loan facility."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Supply Act (No. 2) 2016-2017",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00037",
+   "assent_date": "2016-05-04"
+  }
+ ]
+}

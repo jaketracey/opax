@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6848",
+ "title": "Social Media (Protecting Australians from Censorship) Bill 2022",
+ "short_title": "Social Media (Protecting Australians from Censorship) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-14",
+ "originating_house": "representatives",
+ "sponsor": "CHRISTENSEN, George, MP",
+ "sponsor_party": "Liberal National Party of Queensland",
+ "sponsor_person_id": "10726",
+ "portfolio": "(s) CHRISTENSEN, George, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6848%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6848%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6848%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6848_ems_e628a88a-237d-4626-a656-d7be09289231%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6848%22",
+   "document_date": "2022-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-14",
+  "sentences": [
+   "The bill would stop large foreign social media platforms from removing or restricting lawful content posted by Australian politicians, candidates, parties, journalists and media organisations.",
+   "The Australian Communications and Media Authority would be given the job of enforcing the law and issuing warnings and fines to platforms that break it.",
+   "The bill also extends the same protection to lawful philosophical and political discussion on those platforms."
+  ],
+  "changes": [
+   "Bans large foreign social media services from removing or restricting lawful content by specified Australian political and media figures.",
+   "Bans those services from restricting lawful philosophical or political discussion.",
+   "Gives the Australian Communications and Media Authority oversight and enforcement powers including issuing notices and fines."
+  ],
+  "affected": "Large foreign social media services operating in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:43:25Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

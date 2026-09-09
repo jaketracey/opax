@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s948",
+ "title": "Adelaide Airport Curfew Amendment (Protecting Residents’ Amenity) Bill 2014",
+ "short_title": "Adelaide Airport Curfew Amendment (Protecting Residents’ Amenity) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-02-12",
+ "originating_house": "senate",
+ "sponsor": "WRIGHT, Sen Penny",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10765",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s948%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s948%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s948%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s948_ems_e0d80e11-7737-49fc-b0e0-586f69b70a37%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s948%22",
+   "document_date": "2014-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-12",
+  "sentences": [
+   "The bill would stop the Transport Minister from allowing flights during the curfew's shoulder periods at Adelaide Airport.",
+   "It would repeal the part of the Adelaide Airport Curfew Act 2000 that lets the minister approve take-offs and landings between 11pm and midnight and from 5am to 6am.",
+   "The changes would apply to any take-off or landing after the bill starts, even if the minister had already approved it before then."
+  ],
+  "changes": [
+   "Removes the minister's power to permit international aircraft movements during the curfew shoulder periods.",
+   "Deletes the definition of international aircraft from the Act.",
+   "Removes the reporting requirement about international aircraft landing during the curfew.",
+   "Updates the delegation provision to remove reference to the repealed section 9."
+  ],
+  "affected": "Airlines and passengers using Adelaide Airport during the curfew shoulder periods.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:48Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

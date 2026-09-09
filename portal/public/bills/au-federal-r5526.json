@@ -1,0 +1,215 @@
+{
+ "key": "au-federal-r5526",
+ "title": "Australian Immunisation Register Bill 2015",
+ "short_title": "Australian Immunisation Register Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2015-11-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5526_ems_f7aa8097-7c64-4272-83ac-568d4b95a86d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5526%22",
+   "document_date": "2015-09-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00138",
+   "document_date": "2015-11-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-10",
+  "sentences": [
+   "This bill would combine existing immunisation registers into a single legislative framework.",
+   "It would authorise the collection and use of Medicare numbers and other identifiers for register purposes, and allow disclosure of personal information under certain laws.",
+   "The new Australian Immunisation Register would expand from recording vaccines for children under seven to eventually covering all ages from birth to death, starting with those under 20 from 1 January 2016."
+  ],
+  "changes": [
+   "Creates a new legislative framework for the Australian Immunisation Register.",
+   "Expands the existing childhood register to eventually cover all ages.",
+   "Establishes a new Australian School Vaccination Register to capture adolescent vaccinations from 2017.",
+   "Allows transfer of immunisation data to the Centrelink system to assess payment eligibility.",
+   "Repeals the previous register provisions in the Health Insurance Act 1973 and the National Health Act 1953.",
+   "Gives individuals the right to opt out of receiving correspondence or having their details disclosed."
+  ],
+  "affected": "All Australians from birth to death who receive vaccines through general practice, community clinics, or school programs, and agencies including Centrelink and Medicare.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:52:59Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-318153",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-10",
+   "stage_hint": null,
+   "brief": "The Australian Immunisation Register Bill 2015 was introduced to consolidate and expand national immunisation registers, with the Childhood Immunisation Register broadening to the Australian Immunisation Register from 2016-2017 to record vaccinations from birth to death, and the HPV register becoming the Australian School Vaccination Register for all adolescent school-based vaccines from 2017. The changes support the government's 'no jab, no pay' policy, new GP catch-up incentives, and the addition of the zoster vaccine for 70-year-olds, with staged commencement from 1 January 2016."
+  },
+  {
+   "slug": "speech-319678",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's strong support for the Australian Immunisation Register Bill 2015 and related bill, which establish a comprehensive national vaccination register covering all ages from birth to death, expand the childhood register to age 20, and enable the No Jab, No Pay policy. The bills were partly motivated by the deaths of Dana McCaffery and Riley Hughes from whooping cough."
+  },
+  {
+   "slug": "speech-319792",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Immunisation Register Bill 2015, which expands the childhood immunisation register to a lifelong register, and the \"No Jab, No Pay\" policy removing conscientious objection exemptions for childcare payments and Family Tax Benefit supplements from 1 January 2016. They noted childhood immunisation rates rose from 52% in 1996 to around 90% and cited areas where rates for five-year-olds fell below 85%, including the Blue Mountains, Sunshine Coast, inner Brisbane, inner Sydney, Adelaide and Darwin."
+  },
+  {
+   "slug": "speech-319793",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Australian Immunisation Register Bill 2015, which expands the childhood immunisation register to cover all ages and replaces the HPV register with a schools vaccination register, and defended the No Jab, No Pay policy removing conscientious objection to vaccination. The speaker also cited rising conscientious objector numbers and low vaccination rates in areas such as Mullumbimby, Mosman, and Manly."
+  },
+  {
+   "slug": "speech-319795",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker strongly supported the Australian Immunisation Register Bill 2015, which expands the childhood immunisation register to cover vaccinations for people under 20 from 2016 and all ages from September 2016, and replaces the HPV register with a broader school vaccination register."
+  },
+  {
+   "slug": "speech-319797",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Immunisation Register Bill 2015, which expands the childhood immunisation register to cover all ages and replaces the HPV register with a school vaccination register, citing that vaccination prevents two to three million deaths annually per the WHO and that severe side effects occur in one in 100,000 to one in a million cases. He backed the No Jab, No Pay policy removing conscientious objection for family tax benefits, and criticised government cuts to health funding, including at Prince of Wales Hospital."
+  },
+  {
+   "slug": "speech-319799",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The Australian Immunisation Register Bill 2015 expands the childhood register to cover people under 20 and later all ages, implementing the No Jab, No Pay policy that withholds financial support for unimmunised children. The speaker noted that diphtheria deaths fell from over 4,000 (1926–1935) to zero (1996–2000), criticised cuts to preventive health funding, but supported the bill."
+  },
+  {
+   "slug": "speech-319801",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The Australian Immunisation Register Bill 2015 consolidates the childhood and HPV immunisation registers into a single legislative framework, laying the groundwork for a lifelong, integrated vaccination register and creating an offence for unauthorised disclosure of personal information. The companion Consequential and Transitional Provisions Bill sets out staged amendments to related legislation commencing from 1 January 2016, later in 2016, and 1 January 2017, all contingent on the main bill receiving royal assent."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Immunisation Register Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00138",
+   "assent_date": "2015-11-12"
+  }
+ ]
+}

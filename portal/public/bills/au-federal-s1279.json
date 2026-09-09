@@ -1,0 +1,163 @@
+{
+ "key": "au-federal-s1279",
+ "title": "Designs Amendment (Advisory Council on Intellectual Property Response) Bill 2020",
+ "short_title": "Designs Amendment (Advisory Council on Intellectual Property Response) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-02",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science, Energy and Resources",
+ "status": "passed",
+ "status_as_of": "2021-09-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1279_ems_38a6aab9-463f-4b50-8ec7-00c15b39cf19%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1279_ems_e33c9d1f-dcd8-49e6-bda3-4d6471399ca5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1279%22",
+   "document_date": "2020-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00100",
+   "document_date": "2021-09-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-412253",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "Labor supported the Designs Amendment (Advisory Council on Intellectual Property Response) Bill 2020, with a second reading amendment to be moved by the member for Whitlam, while criticising the coalition for delaying the legislation since a 2012 review and for broader R&D underinvestment. The speech also cited a $70 billion design-sector contribution, a 30% decline in business R&D, 50,000 manufacturing jobs lost, and Labor's proposed $15 billion National Reconstruction Fund and 2,000-student start-up year."
+  },
+  {
+   "slug": "speech-412254",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Designs Amendment (Advisory Council on Intellectual Property Response) Bill 2020 will simplify and clarify the designs system, providing more flexibility for designers to commercialise innovations. He criticised the opposition for focusing on taxes rather than technology, and noted the design industry contributes $68 billion annually to Australia's economy."
+  },
+  {
+   "slug": "speech-412257",
+   "speaker": "Ross Vasta",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Designs Amendment (Advisory Council on Intellectual Property Response) Bill 2020, which introduces a 12-month grace period for designers to apply for protection after public disclosure, allows exclusive licensees to bring infringement actions, and creates a prior use exemption and innocent infringer defence, aiming to support Australia's 1.3 million design-industry workers and the sector's $68 billion annual contribution."
+  },
+  {
+   "slug": "speech-412258",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The Designs Amendment (Advisory Council on Intellectual Property Response) Bill 2020 will introduce a 12-month grace period for design protection, align Australia with major trading partners, and include a prior use infringement exemption, exclusive licensee enforcement rights, and streamlined application processes."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Designs Amendment (Advisory Council on Intellectual Property Response) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00100",
+   "assent_date": "2021-09-10"
+  }
+ ]
+}

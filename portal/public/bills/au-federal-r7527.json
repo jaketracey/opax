@@ -1,0 +1,219 @@
+{
+ "key": "au-federal-r7527",
+ "title": "Counter-Terrorism Legislation Amendment Bill 2026",
+ "short_title": "Counter-Terrorism Legislation Amendment Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "before_parliament",
+ "status_as_of": "2026-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7527%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7527%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7527%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7527%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7527%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7527%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7527_ems_676ee585-1944-437b-ab16-3b1a10c9f921%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7527%22",
+   "document_date": "2026-08-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 8,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-12",
+  "sentences": [
+   "The bill would strengthen counter-terrorism powers, including frameworks for post-sentence orders and control orders, and extend their sunset dates.",
+   "It would amend the Criminal Code, Crimes Act, Surveillance Devices Act and Telecommunications (Interception and Access) Act to update and extend these powers.",
+   "The sunset date for several frameworks would be extended by 3 years to 7 December 2029."
+  ],
+  "changes": [
+   "Extends the operation of control order, preventative detention order and post-sentence order frameworks for 3 years to 7 December 2029.",
+   "Extends police powers in relation to terrorism under the Crimes Act for 3 years to 7 December 2029.",
+   "Updates the high-risk terrorist offenders post-sentence order framework to reflect the increasing role of control orders.",
+   "Strengthens the control order framework to adapt to the current terrorist threat environment.",
+   "Amends provisions on de-listing terrorist organisations in the Criminal Code.",
+   "Expands protections for United Nations and associated personnel under the Criminal Code."
+  ],
+  "affected": "Terrorist offenders, individuals who pose a risk of committing terrorism, and agencies involved in counter-terrorism operations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:42:07Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10619",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the amendments moved by the honourable member for Mayo be agreed to.",
+   "stage": "Bill",
+   "ayes": 39,
+   "noes": 90,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 84
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-08-20/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1205002",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205629",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205633",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205725",
+   "speaker": "David Moncrieff",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205945",
+   "speaker": "Dean Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205953",
+   "speaker": "Tim Ayres",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

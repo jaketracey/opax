@@ -1,0 +1,133 @@
+{
+ "key": "au-federal-r5555",
+ "title": "Australian Crime Commission Amendment (Criminology Research) Bill 2015",
+ "short_title": "Australian Crime Commission Amendment (Criminology Research) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-10-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Justice",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5555%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5555%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5555%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5555%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5555%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5555%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5555%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5555%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5555%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5555_ems_0b4b9d4f-dece-48bd-84a2-2bb8b6feeecb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4187147%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5555%22",
+   "document_date": "2015-10-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-320550",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The Australian Crime Commission Amendment (Criminology Research) Bill merges the Australian Institute of Criminology (AIC) into the Australian Crime Commission (ACC), creating the Australian Crime and Justice Research Centre within the ACC. The bill abolishes the AIC as an independent statutory agency, repeals the Criminology Research Act 1971, and removes the legislated role of the Criminology Research Advisory Council."
+  },
+  {
+   "slug": "speech-322437",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Australian Crime Commission Amendment (Criminology Research) Bill 2015 merges the Australian Institute of Criminology into the Australian Crime Commission, creating the Crime and Justice Research Centre. Labor supports the merger after securing assurances that the centre will retain independent research capability, access to datasets, and an open access library, and that there will be no job losses or erosion of employment standards."
+  },
+  {
+   "slug": "speech-322438",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Labor Party did not oppose the Australian Crime Commission Amendment (Criminology Research) Bill but expressed concerns that merging the Australian Institute of Criminology with the Australian Crime Commission would compromise independent research, risking the loss of data that could challenge law enforcement assumptions and hinder evidence-based policymaking."
+  },
+  {
+   "slug": "speech-322440",
+   "speaker": "Mal Brough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Australian Crime Commission Amendment (Criminology Research) Bill merges the Australian Institute of Criminology with the Australian Crime Commission under one banner, creating the Australian Crime and Justice Research Centre headed by a senior criminologist. The merger maintains the AIC’s research independence while providing staff greater access to classified information and enhancing evidence-based crime prevention strategies."
+  }
+ ],
+ "acts": []
+}

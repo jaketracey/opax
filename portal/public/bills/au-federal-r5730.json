@@ -1,0 +1,217 @@
+{
+ "key": "au-federal-r5730",
+ "title": "Veterans’ Affairs Legislation Amendment (Budget and Other Measures) Bill 2016",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Budget and Other Measures) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "passed",
+ "status_as_of": "2016-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5730_ems_6cfbc963-ada7-44b4-bac4-ae3c6b44c9b0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5730%22",
+   "document_date": "2016-10-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00102",
+   "document_date": "2016-12-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-335110",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The government introduced the Veterans' Affairs Legislation Amendment (Budget & Other Measures) Bill 2016, which expands non-liability health care for five mental health conditions to all current and former permanent ADF members with at least one day of continuous service, enables interim incapacity payments at 100% of normal earnings upon discharge, and aligns the incapacity cut-off age to pension age. Budget commitments include $0.2 million for interim payments, $37.9 million for health care, and $5.5 million for the age alignment, with about 120 veterans per annum benefitting from the latter."
+  },
+  {
+   "slug": "speech-337682",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The speaker announced the Veterans' Affairs Legislation Amendment (Budget and Other Measures) Bill 2016, which includes three measures: increasing access to non-liability health care for five mental health conditions, allowing interim incapacity payments at 100% of normal earnings immediately upon discharge, and aligning the incapacity payment cut-off age with pension age. The government committed $0.2 million, $37.9 million, and $5.5 million respectively to these measures."
+  },
+  {
+   "slug": "speech-337684",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The bill introduces interim incapacity payments at 100% of normal earnings, extends non‑liability mental health treatment to all current and former ADF members with at least one day of continuous full‑time service (estimated 67,000 additional personnel), and aligns the cut‑off age for incapacity payments with the pension age."
+  },
+  {
+   "slug": "speech-337686",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's support for the Veterans' Affairs Legislation Amendment (Budget and Other Measures) Bill 2016, which provides interim incapacity payments at 100% of normal earnings, extends non-liability mental health treatment to all past and current ADF members regardless of service, and aligns the end date for veterans' incapacity payments with the age pension age increase to 67 by 2024."
+  },
+  {
+   "slug": "speech-337688",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Budget and Other Measures) Bill 2016 includes interim compensation payments at 100% of normal income for incapacitated current or former Australian Defence Force members while their claims are processed, and expands access to treatment for mental health disorders."
+  },
+  {
+   "slug": "speech-337797",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Budget and Other Measures) Bill 2016 removes service requirements to allow an estimated 67,000 additional current and former ADF members to access non‑liability mental health care, and aligns the cut‑off age for incapacity payments with the increased pension age, at a total cost of under $44 million by 30 June 2020. The bill also extends eligibility to victims of abuse in the ADF."
+  },
+  {
+   "slug": "speech-337798",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The speech supported the Veterans' Affairs Legislation Amendment (Budget And Other Measures) Bill 2016, specifically highlighting measures to streamline claims and extend mental-health treatment eligibility to an additional 67,000 current and former Defence members, backed by a $37.9 million budget commitment. It also acknowledged Warrant Officer Sean Campbell's participation in the parliamentary program and praised the service of units like the 11th/28th Battalion and current operations such as Operation Resolute."
+  },
+  {
+   "slug": "speech-337800",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Budget and Other Measures) Bill 2016, which provides interim compensation to incapacitated ADF members, expands non‑liability health care eligibility to those with one day of full‑time service (an estimated 67,000 additional members), and aligns the incapacity payment cut‑off age with age pension eligibility, at a cost of $43.6 million."
+  },
+  {
+   "slug": "speech-337801",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Budget and Other Measures) Bill 2016 will increase interim compensation for incapacitated ADF members above the minimum wage, extend non‑liability health coverage for PTSD and related disorders to an estimated 67,000 additional current and former permanent members, and align the incapacity payments cut‑off age with the age pension eligibility. The speaker also noted that RSL Queensland has provided almost $7 million to the Gallipoli Medical Research Foundation for world‑first PTSD research, and that around 4,000 Australian veterans of Afghanistan alone have PTSD."
+  },
+  {
+   "slug": "speech-337803",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The bill expands non‑liability health care for five mental health conditions (PTSD, anxiety, depressive disorder, alcohol use disorder and substance use disorder) with $37.9 million in funding, removes the requirement for a formal diagnosis before treatment, increases interim incapacity payments to 100% of normal earnings, and aligns the incapacity payment cut‑off age with the rising pension age."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans' Affairs Legislation Amendment (Budget and Other Measures) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00102",
+   "assent_date": "2016-12-07"
+  }
+ ]
+}

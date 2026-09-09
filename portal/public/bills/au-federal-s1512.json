@@ -1,0 +1,69 @@
+{
+ "key": "au-federal-s1512",
+ "title": "Tax Laws Amendment (Incentivising Food Donations to Charitable Organisations) Bill 2026",
+ "short_title": "Tax Laws Amendment (Incentivising Food Donations to Charitable Organisations) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-09-07",
+ "originating_house": "senate",
+ "sponsor": "SMITH, Sen Dean",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-09-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1512%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1512%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1512_ems_81f60262-ecd6-48ea-86d7-ecb96cb6b553%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1512%22",
+   "document_date": "2026-09-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-09-07",
+  "sentences": [
+   "This bill would offer eligible companies a tax offset for qualifying costs of donating food to registered food charities.",
+   "The offset would depend on company turnover and eligible expenditure, with an annual ceiling of $5 million.",
+   "Large retailers and wholesalers in the excluded categories could not claim it, and smaller eligible companies could receive a refundable offset."
+  ],
+  "changes": [
+   "Creates an offset for specified expenditure incurred in food donation activities.",
+   "Caps the claim at the lower of $5 million and the applicable turnover-based percentage of eligible costs.",
+   "Makes the offset refundable where aggregated turnover is below $20 million and non-refundable otherwise.",
+   "Excludes companies defined as large retailers, very large retailers or large wholesalers.",
+   "Includes integrity rules and requires an independent review after three years of the temporary incentive."
+  ],
+  "affected": "Eligible corporate food donors, registered food charities and the tax authority administering claims are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.378985+00:00"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

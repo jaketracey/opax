@@ -1,0 +1,199 @@
+{
+ "key": "au-federal-r6734",
+ "title": "Customs Tariff Amendment (2022 Harmonized System Changes) Bill 2021",
+ "short_title": "Customs Tariff Amendment (2022 Harmonized System Changes) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2021-09-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6734_ems_9c2a555d-fcd3-4cf9-8cf9-1d7758a5aa06%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6734%22",
+   "document_date": "2021-06-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00091",
+   "document_date": "2021-09-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-23",
+  "sentences": [
+   "This bill updates Australia's import tax schedules to align with the latest global standard for classifying traded goods, which takes effect at the start of 2022.",
+   "It revises the codes and descriptions used to identify goods in the tax law, including adding new categories for emerging items and removing ones for obsolete products, while keeping most tax rates unchanged.",
+   "For screens, chips, and e-waste, the bill sets a zero tax rate because existing rates vary and cannot be preserved for these items."
+  ],
+  "changes": [
+   "The bill creates new classifications for new technologies and products, like 3D printers and edible insects, and removes classifications for items no longer traded in large amounts.",
+   "It adds classifications to better monitor goods of concern, such as synthetic diamonds and controlled chemicals.",
+   "It applies a free duty rate to flat-panel screens, semiconductor transducers, and electronic waste.",
+   "It makes related changes to schedules covering concessional and free-trade-agreement rates.",
+   "It also amends the Customs Act 1901 to support the new system."
+  ],
+  "affected": "Importers and goods traded internationally are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-409605",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The Customs Amendment (2022 Harmonized System Changes) Bill 2021 updates the definition of \"tobacco products\" to include e-cigarettes containing tobacco under a new tariff subheading, ensuring they face the same import treatment as other tobacco products."
+  },
+  {
+   "slug": "speech-409606",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The bill implements the sixth review of the Harmonized System, updating tariff codes for new technologies (smartphones, drones, hybrid/electric vehicles) and trade patterns (insect-based food, placebos for clinical trials, virgin olive oil), removing obsolete codes (world globes, answering machines), and simplifying classifications for flat-panel display modules, semiconductor transducers, and electronic waste with a free duty rate."
+  },
+  {
+   "slug": "speech-410983",
+   "speaker": "Terry Young",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Customs Tariff Amendment Bill to align Australia’s tariff codes with the 2022 international Harmonized System, creating new classifications for drones, 3D printers, edible insects, e-waste, and vaping tobacco, while removing outdated ones like world globes and answering machines. Duty rates for flat panel displays, semiconductor transducers, and e-waste were set to free, and Australia secured preferred classifications for virgin olive oil, placebos in clinical trial kits, LED lighting, and synthetic diamonds."
+  },
+  {
+   "slug": "speech-410984",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-10",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Amendment (2022 Harmonized System Changes) Bill 2021 and the Customs Tariff Amendment (2022 Harmonized System Changes) Bill 2021, which implement the World Customs Organization's sixth review of the harmonised system from 1 January 2022 and give e-cigarettes and vapes their own classification code while keeping them under existing tobacco regulations. Labor also moved a second reading amendment through the member for Paterson, arguing the government's failure to secure diverse vaccine deals left Australians in trade-exposed industries dangerously vulnerable to the post-COVID economic recovery."
+  },
+  {
+   "slug": "speech-410988",
+   "speaker": "Keith Pitt",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-10",
+   "stage_hint": null,
+   "brief": "The two bills amend Australia’s customs tariff and act to implement the sixth review of the international Harmonized System, including a new tariff subheading for e-cigarettes and a corresponding amendment to the definition of tobacco products."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (2022 Harmonized System Changes) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00091",
+   "assent_date": "2021-09-02"
+  }
+ ]
+}

@@ -1,0 +1,145 @@
+{
+ "key": "au-federal-r5803",
+ "title": "Independent Parliamentary Expenses Authority (Consequential Amendments) Bill 2017",
+ "short_title": "Independent Parliamentary Expenses Authority (Consequential Amendments) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2017-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5803_ems_c94607c0-d1f8-46a3-92a7-6801211c9874%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5803%22",
+   "document_date": "2017-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00003",
+   "document_date": "2017-02-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-341528",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bills to establish the Independent Parliamentary Expenses Authority (IPEA) will improve transparency and public trust, while noting that 87% of current MPs—those elected after 2004—no longer receive a pension or generous travel allowances. He welcomed the authority for clarifying expense rules and providing a reference point for MPs, though he cautioned that oversight costs may exceed savings."
+  },
+  {
+   "slug": "speech-341530",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The Independent Parliamentary Expenses Authority (Consequential Amendments) Bill 2017 is the first step in the biggest reforms to managing parliamentarians' expenses in more than a generation, establishing a new authority to provide clear guidance and ensure accountability. The government will continue implementing recommendations from an independent entitlements review, and a consequential amendment to the Freedom of Information Act will allow the authority to give confidential advice on travel expenses."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Independent Parliamentary Expenses Authority (Consequential Amendments) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00003",
+   "assent_date": "2017-02-22"
+  }
+ ]
+}

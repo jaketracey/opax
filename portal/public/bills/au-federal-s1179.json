@@ -1,0 +1,166 @@
+{
+ "key": "au-federal-s1179",
+ "title": "Wine Australia Amendment (Trade with United Kingdom) Bill 2019",
+ "short_title": "Wine Australia Amendment (Trade with United Kingdom) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-13",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2019-03-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1179_ems_103c3556-2537-4c30-88e5-65868c565046%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1179%22",
+   "document_date": "2019-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00011",
+   "document_date": "2019-03-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375820",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The speaker praised the backbench contributions of Wayne Swan and Michael Danby, then argued that the Wine Australia Amendment (Trade with United Kingdom) Bill 2019 is a rushed but uncontroversial bill needed to ensure the UK retains its status as an agreement country for wine trade after Brexit, which the speaker strongly supports."
+  },
+  {
+   "slug": "speech-375822",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The Wine Australia Amendment (Trade with United Kingdom) Bill 2019 was supported as a mutually beneficial trade agreement, with the UK highlighted as Australia's second-largest wine importer by volume ($2.76 billion in 2018 exports). The speaker also outlined Labor's policy that future trade agreements must legislatively prohibit waiving labour market testing, privatising public services, or undermining the Pharmaceutical Benefits Scheme, while calling for smooth post-Brexit trade transitions and a renewed discussion on an Australian republic."
+  },
+  {
+   "slug": "speech-375823",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Wine Australia Amendment (Trade with United Kingdom) Bill 2019 while urging the government to protect Australian winemakers' right to use the name \"prosecco\" against Italian claims in EU trade negotiations. They also argued for ensuring smaller boutique winemakers gain from UK market opportunities, unlike the China FTA which they said benefited large producers, citing the industry's $40 billion contribution and 170,000 jobs."
+  },
+  {
+   "slug": "speech-375824",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Wine Australia Amendment (Trade with United Kingdom) Bill 2019 to maintain open trade with the UK after Brexit, noting the wine industry contributes over $40 billion to the economy and employs 172,000 people, with South Australia producing 51% of national wine. He also argued the coalition government has mismanaged the Murray-Darling Basin, citing a recent royal commission report by Bret Walker."
+  },
+  {
+   "slug": "speech-375829",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-19",
+   "stage_hint": null,
+   "brief": "The bill amends the definition of an EC country in the Wine Australia Act 2013 to include the UK during a Brexit transition period, ensuring continued beneficial conditions for wine trade. The speaker also argued that the Liberal-National government has secured multiple trade agreements—including with China, Japan, South Korea, Peru, and others—while Labor failed to conclude any deals during its six years in office."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Wine Australia Amendment (Trade with United Kingdom) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00011",
+   "assent_date": "2019-03-12"
+  }
+ ]
+}

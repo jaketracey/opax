@@ -1,0 +1,146 @@
+{
+ "key": "au-federal-r6943",
+ "title": "Telecommunications Legislation Amendment (Information Disclosure, National Interest and Other Measures) Bill 2022",
+ "short_title": "Telecommunications Legislation Amendment (Information Disclosure, National Interest and Other Measures) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2023-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-04-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6943_ems_49e1acac-3ac3-4858-a3c2-31ba4a0a688c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6943_ems_1cc11eba-d1d5-4e28-89ee-499e6c409034%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6943%22",
+   "document_date": "2022-11-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00017",
+   "document_date": "2023-04-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-10",
+  "sentences": [
+   "The bill would change how telecommunications companies share customer information with emergency services and law enforcement.",
+   "It would allow the disclosure of unlisted phone numbers and associated details from the Integrated Public Number Database to emergency call persons without consent in certain situations.",
+   "The bill would also remove the word 'imminent' from the existing exception for disclosing information to prevent a serious threat to life or health."
+  ],
+  "changes": [
+   "Repeals existing provisions that allowed use and disclosure of information from the Integrated Public Number Database for emergency calls.",
+   "Inserts a new exception to authorise use and disclosure of unlisted numbers and personal details to emergency call persons when it is unreasonable to obtain consent.",
+   "Adds a condition that the person disclosing information must believe it is unreasonable or impracticable to obtain consent.",
+   "Removes the 'imminent' qualifier from the exception for disclosing information to prevent a serious threat to life or health."
+  ],
+  "affected": "Telecommunications companies, law enforcement agencies, emergency service organisations, and users of telecommunications services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Telecommunications Legislation Amendment (Information Disclosure, National Interest and Other Measures) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00017",
+   "assent_date": "2023-04-11"
+  }
+ ]
+}

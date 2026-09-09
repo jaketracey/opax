@@ -1,0 +1,227 @@
+{
+ "key": "au-federal-r6602",
+ "title": "Export Market Development Grants Legislation Amendment Bill 2020",
+ "short_title": "Export Market Development Grants Legislation Amendment Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6602_ems_82247f8e-e374-4974-ba27-d8472a29eb68%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6602_ems_71a2ebc6-14aa-424d-9ef7-e134a60de3d5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6602%22",
+   "document_date": "2020-10-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00138",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-07",
+  "sentences": [
+   "The bill would overhaul the grant program for Australian small and medium exporters by moving operational rules out of the main Act and into subordinate legislation.",
+   "It would empower the Minister to set program rules through a disallowable legislative instrument, while keeping policy principles in the Act and relying on general Commonwealth laws where possible.",
+   "Austrade’s CEO could use an extra 2.5 per cent of the annual appropriation in 2020-21 and 2021-22 to cover transition costs."
+  ],
+  "changes": [
+   "The bill replaces the current reimbursement model with upfront grant agreements.",
+   "It limits eligibility to businesses that are new to exporting or expanding their export promotion.",
+   "It allows industry bodies and alliances to receive funding that includes training in marketing and promotion.",
+   "The bill moves program operational rules from the Act into subordinate legislation.",
+   "It gives the Minister authority to make those rules through a disallowable legislative instrument.",
+   "It amends the Austrade Act to let the CEO delegate decision-making powers to employees of non-corporate Commonwealth entities."
+  ],
+  "affected": "Australian small and medium enterprises that export and are either new to exporting or expanding their export promotion, as well as industry bodies and alliances that represent them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-400311",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Export Market Development Grants Legislation Amendment Bill 2020 but moved an amendment noting that funding for the scheme is lower in real terms than 24 years ago, Australian SMEs account for only 14% of exports compared to the G7 average of 25%, and the government has failed to implement 19 of 20 priority recommendations from the India Economic Strategy and lacks a plan to repair the trade relationship with China."
+  },
+  {
+   "slug": "speech-400313",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-400541",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The Export Market Development Grants Legislation Amendment Bill 2020 supports Australia's export industry, with a record 56,700 goods-exporting businesses in 2018-19, a 7% increase from the previous year and 27% since 2013-14."
+  },
+  {
+   "slug": "speech-400544",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "Labor supported the Export Market Development Grants Amendment Bill 2020 but criticised the government for inadequate support of SME exporters, citing a $150 million cap since 1997, two-year reimbursement delays, and over-reliance on China. The speaker argued Australia's exports are overly dependent on mining, with only 14% from SMEs compared to 25% in G7 countries, and claimed diversifying to 25% could add $36 billion to GDP."
+  },
+  {
+   "slug": "speech-400545",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The Export Market Development Grants Legislation Amendment Bill 2020 was supported, changing the scheme from a reimbursement to an eligibility-based grants program for SMEs with turnover under $20 million. Key changes include reducing red tape, introducing multi-year entitlements, and targeting funding at exporters ready for new market entry, growth, or strategic shifts."
+  },
+  {
+   "slug": "speech-400548",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Export Market Development Grants Legislation Amendment Bill 2020, which lowers the cap from $50 million to $20 million and creates two streams for new and expanding exporters. They argued the government’s trade performance is poor, citing that SMEs account for only 14% of exports (compared to 25% in G7 nations and 35% in the EU), Australia ranks 93rd in export complexity behind Kazakhstan, Uganda and Senegal, and 80 ships with over $1 billion of exports are stranded off China."
+  },
+  {
+   "slug": "speech-400552",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "Labor supported the Export Market Development Grants Legislation Amendment Bill 2020, which shifts the scheme from a reimbursement model to an upfront grants program to provide certainty for small and medium enterprises. The speaker noted the Fisher review's 10 recommendations to streamline the program and emphasised the need for calm, strategic trade relations with China, citing risks to exporters like wine, barley, and honey producers."
+  },
+  {
+   "slug": "speech-400553",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The Export Market Development Grants Legislation Amendment Bill 2020 was supported for lowering the eligibility threshold to businesses with turnovers under $20 million, introducing upfront grants, and including education and training as eligible expenses. The scheme has generated $3.8 billion in export earnings, supported 69,000 jobs, and facilitated exports to 138 countries, with Australian goods and services exports reaching a record $470 billion."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Market Development Grants Legislation Amendment Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00138",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

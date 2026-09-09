@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-r7263",
+ "title": "Competition and Consumer Amendment (Tougher Penalties for Supermarket and Hardware Businesses) Bill 2024",
+ "short_title": "Competition and Consumer Amendment (Tougher Penalties for Supermarket and Hardware Businesses) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-04",
+ "originating_house": "representatives",
+ "sponsor": "TAYLOR, Angus, MP",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10817",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7263%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7263%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7263_ems_8806d46a-da9d-4b4a-8cc0-380a77fb359a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7263%22",
+   "document_date": "2024-11-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-04",
+  "sentences": [
+   "This bill would introduce new penalties for large supermarket and hardware chains that misuse their market power, with the goal of promoting fair competition and protecting smaller businesses.",
+   "It would add a new section to the Competition and Consumer Act 2010 allowing courts to order the divestiture of assets when these businesses are found to have contravened the misuse of market power provision.",
+   "Courts could only order divestiture if it would substantially improve competition and is in the public interest, considering impacts on employment, services, and shareholder value."
+  ],
+  "changes": [
+   "Introduces a court power to order divestiture of assets for contraventions of section 46.",
+   "Sets conditions for divestiture orders, including a public interest test.",
+   "Allows courts to accept enforceable undertakings between the ACCC and affected parties as an alternative to divestiture.",
+   "Limits who can bring a divestiture application to the regulator or a party to a section 46 action."
+  ],
+  "affected": "Large supermarket and hardware chains, smaller businesses, consumers, and the ACCC.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:37Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

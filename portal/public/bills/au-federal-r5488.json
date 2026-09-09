@@ -1,0 +1,199 @@
+{
+ "key": "au-federal-r5488",
+ "title": "Social Services Legislation Amendment (Family Measures) Bill 2015",
+ "short_title": "Social Services Legislation Amendment (Family Measures) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2016-03-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5488_ems_fd3da076-77b1-4e86-b9fd-634d3fe994c6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5488_ems_a68b1d2c-f5cd-4d64-949f-3d2f45146cbf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5488%22",
+   "document_date": "2015-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00017",
+   "document_date": "2016-03-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-327208",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the bill, which saves $200 million by reducing overseas family tax benefit portability from 56 to six weeks and abolishing the large-family supplement, but opposes other government cuts that would leave 1.6 million families and three million children worse off."
+  },
+  {
+   "slug": "speech-327210",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Family Measures) Bill 2015, which reduces family tax benefit portability to six weeks and removes the large family supplement, saving $42.1 million and $177.3 million respectively over the forward estimates, and also called for similar portability restrictions on former politicians' pensions."
+  },
+  {
+   "slug": "speech-327213",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill's changes to family tax benefit portability and the large family supplement are necessary to address unsustainable debt from previous Labor government spending, and denied opposition claims that the coalition doubled the deficit."
+  },
+  {
+   "slug": "speech-327217",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Family Measures) Bill 2015 is necessary to rein in unsustainable spending, citing savings of $42.1 million from changes to family tax benefit portability and $177 million from ceasing the large family supplement over the forward estimates."
+  },
+  {
+   "slug": "speech-327218",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Family Measures) Bill 2015, which reduces FTB Part A portability from 56 to 6 weeks and ceases the large family supplement from July 2016, saving over $40 million over four years. He argued the measures are necessary for budget repair but criticised the complexity of the welfare system and called for broader reform, noting $160 billion in annual social security spending."
+  },
+  {
+   "slug": "speech-327219",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-08",
+   "stage_hint": null,
+   "brief": "The speaker announced two savings measures in the Social Services Legislation Amendment (Family Measures) Bill 2015: reducing the overseas portability period for Family Tax Benefit Part A from 56 weeks to six weeks, and removing the Large Family Supplement from 1 July 2016, achieving combined savings of $219.4 million over the forward estimates. The speaker argued these modest savings are necessary to restrain expenditure growth in the social services portfolio, which represents over one-third of the Commonwealth budget and is the fastest-growing area of expenditure."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Family Measures) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00017",
+   "assent_date": "2016-03-08"
+  }
+ ]
+}

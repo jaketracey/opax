@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6301",
+ "title": "Reserve Bank Amendment (Australian Reconstruction and Development Board) Bill 2019",
+ "short_title": "Reserve Bank Amendment (Australian Reconstruction and Development Board) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-18",
+ "originating_house": "representatives",
+ "sponsor": "KATTER, Bob, Jnr, MP",
+ "sponsor_party": "Katter&#39;s Australian Party",
+ "sponsor_person_id": "10352",
+ "portfolio": "(s) KATTER, Bob, Jnr, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6301%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6301%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6301%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6301_ems_f594eb66-5562-4e82-ae55-ac5e88abdf77%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6301%22",
+   "document_date": "2019-02-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-18",
+  "sentences": [
+   "The bill would create a new body called the Australian Reconstruction and Development Board to help struggling farmers and related businesses.",
+   "The board would sit inside the Reserve Bank of Australia as a third board, using the bank's existing legal powers.",
+   "The explanatory memorandum says rural debt reached 135.4% of gross value of farm production in 2012."
+  ],
+  "changes": [
+   "Establishes the Australian Reconstruction and Development Board.",
+   "Gives the board power to restructure debts and provide tailored finance for at-risk agriculture.",
+   "Requires the board to research and monitor industries to give early warning of problems."
+  ],
+  "affected": "Farmers, agricultural producers and associated industries and infrastructures.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

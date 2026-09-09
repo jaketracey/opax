@@ -1,0 +1,294 @@
+{
+ "key": "au-federal-alrc-2425",
+ "title": "Australian Education (Consequential and Transitional Provisions) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-06-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2013-06-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-27",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00068",
+   "document_date": "2013-06-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-2979",
+   "date": "2013-06-26",
+   "house": "senate",
+   "question": "John Hogg Order! The time allotted for the consideration of these bills has expired. The question is that the amendment on sheet 7404 moved by Senator Mason be agreed to.",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 64,
+    "member": 2,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-26/7"
+  },
+  {
+   "key": "federal-senate-2980",
+   "date": "2013-06-26",
+   "house": "senate",
+   "question": "The No votes succeeded in rejecting amendments proposed by Greens [Senator Wright](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Penny_Wright&mpc=Senate&house=senatein). This vote means that the amendments will not be included in the legislation. Someone who votes aye for this amendment supports these measures. The majority voted no for this amendment so it was unsuccessful. **Summary of amendments** Two amendments were proposed. The [first](http://parlinfo.aph.gov.au/parlInfo/download/legislation/amend/r4945_amend_8ff5e077-f708-4fc1-8b1b-df544a3658ac/upload_pdf/7410_Australian%20Education%20Bill%202013_AG.pdf;fileType=application%2Fpdf#search=%22legislation/amend/r4945_amend_8ff5e077-f708-4fc1-8b1b-df544a3658ac%22) proposes that schools apply with anti-discrimination laws. The [second](http://parlinfo.aph.gov.au/parlInfo/download/legislation/amend/r4945_amend_62e58efd-d663-4e43-9939-57f9a5c565f0/upload_pdf/7409_Australian%20Education%20Bill%202013_AG.pdf;fileType=application%2Fpdf#search=%22legislation/amend/r4945_amend_62e58efd-d663-4e43-9939-57f9a5c565f0%22) includes such proposals as schools reporting about their financial assistance. **Background to Bill** This Bill was developed in response to the [Review of Funding for Schooling](http://foi.deewr.gov.au/system/files/doc/other/review-of-funding-for-schooling-final-report-dec-2011.pdf), commissioned by [David Gonski](http://www.abc.net.au/news/2012-08-27/whats-in-the-gonski-report/4219508) (known as the 'Gonski Review'). The Report explored the issue of the decline of performance in Australian school children over the past 10 years and the gap between the highest and lowest performing students. The Report found that the current funding model for Australian schools was unnecessarily complex and proposed a new funding system. As an alternative, a new funding model was proposed. This included a base 'per student' fee that is to be set for a student at any school. Additional loadings would be pa",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 56,
+   "outcome": "negative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 61,
+    "member": 2,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-26/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-274919",
+   "speaker": "Peter Garrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824033",
+   "speaker": "Peter Garrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275970",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275971",
+   "speaker": "Deb O'Neill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275980",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275981",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276387",
+   "speaker": "Mike Symon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276389",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276390",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825135",
+   "speaker": "Brett Mason",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-26",
+   "stage_hint": null,
+   "brief": "The senator argued that the government rushed the Australian Education Bill 2013 through the Senate with only 165 minutes of debate for a $16.2 billion reform, and that the new funding model would leave 469 government schools in Queensland, Victoria, and the Northern Territory worse off. He moved an amendment calling for certainty that no school would lose funding and for greater transparency, while criticising increased federal interference and red tape."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Education (Consequential and Transitional Provisions) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00068",
+   "assent_date": "2013-06-27"
+  }
+ ]
+}

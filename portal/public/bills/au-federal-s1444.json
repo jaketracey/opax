@@ -1,0 +1,89 @@
+{
+ "key": "au-federal-s1444",
+ "title": "Remuneration Tribunal Amendment (There For Public Service, Not Profit) Bill 2025",
+ "short_title": "Remuneration Tribunal Amendment (There For Public Service, Not Profit) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-02-05",
+ "originating_house": "senate",
+ "sponsor": "LAMBIE, Sen Jacqui",
+ "sponsor_party": "Jacqui Lambie Network",
+ "sponsor_person_id": "10830",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1444%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1444%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1444%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1444%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1444_ems_fa639020-699a-41d6-8082-ee46b59a1cb6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1444%22",
+   "document_date": "2025-02-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-05",
+  "sentences": [
+   "The bill would cap the pay of senior government executives and public office holders at $430,000 per year.",
+   "It would amend the Remuneration Tribunal Act 1973 to require the Remuneration Tribunal to set remuneration below that limit, unless the responsible minister prescribes a higher amount by legislative instrument subject to parliamentary disallowance.",
+   "The limit would take effect the day after the bill receives royal assent and would apply to determinations made on or after that date."
+  ],
+  "changes": [
+   "Sets a statutory limit of $430,000 on annual remuneration for departmental secretaries and other public office holders.",
+   "Allows the responsible minister to prescribe a different amount by legislative instrument, which must be made by 1 July of the preceding year and is subject to parliamentary disallowance.",
+   "Removes the Remuneration Tribunal's power to consent to inconsistent terms and conditions for principal executive offices."
+  ],
+  "affected": "Australian Government department secretaries, holders of public office, and holders of principal executive office.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195254",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

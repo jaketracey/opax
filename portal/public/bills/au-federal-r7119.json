@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r7119",
+ "title": "National Security Legislation Amendment (Comprehensive Review and Other Measures No. 3) Bill 2023",
+ "short_title": "National Security Legislation Amendment (Comprehensive Review and Other Measures No. 3) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2024-05-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-05-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7119_ems_505e6952-8ec2-488b-b96c-39c5c7a0adeb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7119_ems_f6345ebb-c710-4469-a551-0b109a8a6f56%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7119%22",
+   "document_date": "2023-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00024",
+   "document_date": "2024-05-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-30",
+  "sentences": [
+   "This bill implements parts of the government's response to a review of the laws governing Australia's intelligence agencies.",
+   "It would change rules for security assessments, protect staff identities, adjust authorisation processes, and increase oversight of vetting.",
+   "Agencies would have to tell the Inspector-General of Intelligence and Security when a security assessment or clearance decision takes over 12 months."
+  ],
+  "changes": [
+   "Expands the definition of 'prescribed administrative action' to include decisions on parole, security guard licences, and firearms licences.",
+   "Allows ASIO to make urgent temporary communications to states in certain security situations.",
+   "Lets the heads of ASIS, ASD, and ASIO authorise cover employers for staff, with legal protections for those who help.",
+   "Consolidates secrecy offences in the IS Act and protects identities from disclosure under the Archives Act.",
+   "Allows the Attorney-General's agreement to be given before or after a minister's authorisation for certain intelligence activities.",
+   "Requires ASIO to notify the IGIS when finalising a security assessment or clearance decision takes more than 12 months."
+  ],
+  "affected": "National security agencies, their staff, and people involved in security assessments or clearances.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "National Security Legislation Amendment (Comprehensive Review and Other Measures No. 3) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00024",
+   "assent_date": "2024-05-21"
+  }
+ ]
+}

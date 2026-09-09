@@ -1,0 +1,77 @@
+{
+ "key": "au-federal-s1467",
+ "title": "Public Governance, Performance and Accountability Amendment (Ban Unethical Contractors) Bill 2025",
+ "short_title": "Public Governance, Performance and Accountability Amendment (Ban Unethical Contractors) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-09-04",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen Barbara",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "11008",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-09-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1467%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1467_ems_91e15c74-cb39-4cf7-86fa-50ac4592fe13%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1467%22",
+   "document_date": "2025-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-09-04",
+  "sentences": [
+   "The bill would stop companies that have acted unethically from winning Australian government contracts.",
+   "The Finance Minister would be required to make rules that exclude suppliers who have recent convictions, poor labour records or tax avoidance, or whose conduct harms public trust.",
+   "A public register of banned suppliers would be created as a transparency measure."
+  ],
+  "changes": [
+   "The bill amends the Public Governance, Performance and Accountability Act 2013 to add a new requirement that procurement contracts cannot be given to suppliers who have engaged in unethical conduct.",
+   "It defines unethical conduct to include recent convictions, pecuniary penalties, poor labour practices, tax avoidance, or conduct harming the integrity of or confidence in the Commonwealth.",
+   "It establishes a public register of excluded suppliers."
+  ],
+  "affected": "Potential suppliers and tenderers for Commonwealth government contracts, and the Finance Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1197324",
+   "speaker": "Barbara Pocock",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

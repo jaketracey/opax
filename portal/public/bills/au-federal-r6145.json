@@ -1,0 +1,172 @@
+{
+ "key": "au-federal-r6145",
+ "title": "Treasury Laws Amendment (Financial Sector Regulation) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Financial Sector Regulation) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-11-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6145_ems_396eaaee-8ae3-4c1a-a728-689aebbc8b4c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6145%22",
+   "document_date": "2018-06-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00142",
+   "document_date": "2018-11-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-367703",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The opposition supported the Treasury Laws Amendment (Financial Sector Regulation) Bill 2018, which raises the ownership threshold for financial institutions from 15% to 20%, streamlines licensing for start-ups, and allows time-limited licences to boost competition. The speaker argued the changes are minor and criticised the government for cutting $120 million from ASIC, opposing a banking royal commission for 600 days, and proposing a $17 billion tax cut for big banks."
+  },
+  {
+   "slug": "speech-367706",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government is \"addicted to announcement and deficient on delivery\" on fin-tech reform, citing stalled legislation on equity crowdfunding and regulatory sandboxes, and warned that the UK-Australia fin-tech bridge risked \"digital recolonisation\" by favouring established UK firms over maturing Australian ones."
+  },
+  {
+   "slug": "speech-367709",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-367710",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Financial Sector Regulation) Bill 2018, arguing it will boost banking competition by raising the ownership threshold from 15 to 20 per cent, streamlining licences for small banks, and introducing a restricted licensing framework modelled on the UK. They also criticised Labor's financial sector record, citing the $60 billion lost in the GFC-era collapses and the unlimited deposit guarantee under former Prime Minister Rudd, and noted the major bank levy will raise $16 billion."
+  },
+  {
+   "slug": "speech-367828",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-21",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Financial Sector Regulation) Bill 2018 relaxes ownership restrictions for financial sector companies by lifting the ministerial approval threshold from 15% to 20% and creating a streamlined approval path for new firms with under $200 million in assets ($50 million for general insurers). It also facilitates a new restricted authorised deposit institution licensing regime allowing start-ups up to two years to test their business model with lighter regulation, empowering APRA to revoke these licences without merits review for non-compliance."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Financial Sector Regulation) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00142",
+   "assent_date": "2018-11-29"
+  }
+ ]
+}

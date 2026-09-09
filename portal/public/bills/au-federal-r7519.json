@@ -1,0 +1,145 @@
+{
+ "key": "au-federal-r7519",
+ "title": "Wine and Other Legislation Amendment Bill 2026",
+ "short_title": "Wine and Other Legislation Amendment Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-07-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "before_parliament",
+ "status_as_of": "2026-08-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7519%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7519%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7519%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7519%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7519%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7519%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7519_ems_1aae42b6-970e-450f-934e-5984ef1456c5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7519%22",
+   "document_date": "2026-07-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 8,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-07-01",
+  "sentences": [
+   "This bill would change wine industry laws to put into action the government's response to a review of wine and grape regulations.",
+   "It would give the wine industry body new powers to run surveys, set up rules for handling information, and make clear the law's goals include supporting consumer protection rules and a planned code for wine grape buying.",
+   "The bill would also let an agricultural research agency share contact details of levy payers with a mailing company to send out survey materials, while keeping privacy safeguards."
+  ],
+  "changes": [
+   "It would let the wine industry body organise surveys of grape or wine producers.",
+   "It would create a modern framework for managing information, with protections for sensitive data.",
+   "It would update the purposes of the wine law to mention supporting consumer protection and a proposed code of conduct.",
+   "It would allow the agricultural research agency to use and share levy information, including personal details, for its work.",
+   "It would make small fixes to the rule-making power of the department's secretary."
+  ],
+  "affected": "The wine and grape industry, levy payers, and the agricultural research agency are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:48:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1204832",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204891",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205099",
+   "speaker": "Gabriel Ng",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

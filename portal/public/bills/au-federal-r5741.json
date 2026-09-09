@@ -1,0 +1,202 @@
+{
+ "key": "au-federal-r5741",
+ "title": "Corporations Amendment (Life Insurance Remuneration Arrangements) Bill 2016",
+ "short_title": "Corporations Amendment (Life Insurance Remuneration Arrangements) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5741_ems_0a5d0db5-c983-4d1e-93f7-25f95e899354%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5741%22",
+   "document_date": "2016-10-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00006",
+   "document_date": "2017-02-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-12",
+  "sentences": [
+   "The bill would ban commissions and other conflicted payments for life insurance advice, ending an exemption in the Corporations Act.",
+   "It would give ASIC power to set rules allowing some payments if insurers meet conditions on commission amounts and clawback requirements.",
+   "The changes start on 1 January 2018, and the government estimates compliance costs at $27.8 million each year."
+  ],
+  "changes": [
+   "Removes the exemption from the ban on conflicted remuneration for life insurance products.",
+   "Gives ASIC power to permit certain life insurance benefits by legislative instrument.",
+   "Applies a ban on payments based on sales volume for life insurance.",
+   "Includes transitional grandfathering arrangements in the Corporations Act.",
+   "Uses an existing provision for ongoing reporting of policy replacement data to ASIC."
+  ],
+  "affected": "Consumers, financial advisers, life insurers, and the Australian Securities and Investments Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:31Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-338909",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment (Life Insurance Remuneration Arrangements) Bill 2016, which caps up-front life insurance commissions at 60% of premiums from 2020 and introduces clawback arrangements to reduce churn and better align adviser and consumer interests. They also noted ASIC found that high up-front commissions correlated with lower-quality advice, and highlighted that ASIC will produce annual public reports on life insurance industry performance, including claims denial rates where one insurer denied 37% of total and permanent disability claims."
+  },
+  {
+   "slug": "speech-338910",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Life Insurance Remuneration Arrangements) Bill 2016 was debated, noting that over half of Australians hold life insurance, the industry generates over $56 billion annually in premiums, and there are 28 registered life insurers in Australia. The speaker referenced the FOFA reforms under the Gillard government, which banned financial advisers from receiving remuneration for selling financial products to consumers."
+  },
+  {
+   "slug": "speech-338912",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued against a royal commission into the insurance industry, supporting instead a low-cost tribunal to resolve disputes, and criticised the bill’s price controls on life insurance commissions as government interference, but reluctantly supported it due to a mandated 2018 review."
+  },
+  {
+   "slug": "speech-338913",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Corporations Amendment (Life Insurance Remuneration Arrangements) Bill 2016, which phases down upfront life insurance commissions from 80% in 2018 to 60% by 2020, caps ongoing commissions at 20%, and introduces a two-year clawback period. The speaker also called for a royal commission into banking and insurance, citing scandals like CommInsure and ASIC findings that 45% of advice under upfront commission models failed to comply with the law."
+  },
+  {
+   "slug": "speech-338914",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-28",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the life insurance remuneration reforms but criticised the two-year clawback period and the delay in reaching a 60 per cent upfront commission cap by 2020, calling for a royal commission into the banking and financial sector. They cited ASIC reports showing 45 per cent of advice under upfront commission models failed to comply with the law, and highlighted cases of claim denials, twisting, churning, and tombstoning."
+  },
+  {
+   "slug": "speech-339271",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-29",
+   "stage_hint": null,
+   "brief": "The government announced it will cap upfront commissions and introduce a two-year clawback requirement for life insurance advice to reduce poor consumer outcomes, with ASIC setting maximum commission amounts and a mandatory review in 2021."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Corporations Amendment (Life Insurance Remuneration Arrangements) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00006",
+   "assent_date": "2017-02-22"
+  }
+ ]
+}

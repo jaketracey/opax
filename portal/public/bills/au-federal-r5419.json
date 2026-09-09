@@ -1,0 +1,266 @@
+{
+ "key": "au-federal-r5419",
+ "title": "Succession to the Crown Bill 2015",
+ "short_title": "Succession to the Crown Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "passed",
+ "status_as_of": "2015-03-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5419_ems_a7233b8e-f893-42ff-a143-3c4e72e30516%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5419%22",
+   "document_date": "2015-03-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00023",
+   "document_date": "2015-03-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-05",
+  "sentences": [
+   "The bill would change royal succession rules in Australia to remove gender discrimination and the ban on marrying a Roman Catholic.",
+   "It would implement changes agreed by the United Kingdom and other Commonwealth realms in 2011, after all Australian states request the Commonwealth to act.",
+   "The bill would limit the requirement for sovereign consent to marriages of the six people closest to the throne and validate some marriages previously voided under British law."
+  ],
+  "changes": [
+   "Ends male preference primogeniture so future succession follows birth order alone.",
+   "Removes the rule that marrying a Roman Catholic disqualifies a person from the line of succession.",
+   "Limits the sovereign's consent requirement to the six nearest heirs and validates marriages voided by the Royal Marriages Act 1772."
+  ],
+  "affected": "Members of the royal family and the line of succession to the Australian Crown.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:57:31Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-307188",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-307758",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Succession to the Crown Bill 2015 to change royal succession rules based on birth rather than gender and remove the bar on heirs marrying a Catholic, but argued Australia should instead pursue an Australian head of state and reignite the republic debate, also calling for constitutional recognition of Aboriginal and Torres Strait Islander peoples."
+  },
+  {
+   "slug": "speech-307759",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's support for the Succession to the Crown Bill 2015, which abolishes male preference primogeniture, removes disqualification for marrying a Roman Catholic, and repeals the Royal Marriages Act 1772. The speaker also criticised the monarchy as out of step with Australian life, expressed hope for a future republic, and noted Queensland's initial opposition under the LNP government of Jarrod Bleijie."
+  },
+  {
+   "slug": "speech-307760",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The Succession to the Crown Bill 2015 updates archaic British laws by ensuring gender equality in royal succession and limiting marriage approval requirements to the six closest heirs, reflecting the enduring stability of the Westminster system."
+  },
+  {
+   "slug": "speech-307761",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The Succession to the Crown Bill 2015 removes male-preference primogeniture and allows the monarch to marry a Catholic, but still prohibits a Catholic from becoming monarch—a rule the speaker argued is disconnected from modern Australia."
+  },
+  {
+   "slug": "speech-307763",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Succession to the Crown Bill 2015, which removes the disqualification of marrying a Roman Catholic and ends male preference primogeniture, ensuring succession is determined by birth order regardless of sex."
+  },
+  {
+   "slug": "speech-307765",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Succession to the Crown Bill 2015, which removes male priority and the ban on heirs marrying Catholics, but argued the debate was a costly distraction from issues like education and health. They advocated for Australia becoming a republic, citing the 1999 referendum's 63.77% support in Canberra, and criticised the Prime Minister's knighthood for Prince Philip for overshadowing Rosie Batty's domestic violence campaign."
+  },
+  {
+   "slug": "speech-307766",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Succession to the Crown Bill for removing male preference and the Catholic marriage bar, but argued that debating British royal succession highlights how outdated the monarchy is and why Australia should become a republic."
+  },
+  {
+   "slug": "speech-307940",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The Succession to the Crown Bill 2015 ends male preference primogeniture, removes the bar on heirs who marry Catholics, and limits the requirement for sovereign consent to the first six in line to the throne. The speaker supported the reforms as a modernisation of the monarchy and expressed personal hope for a future Australian head of state, but stated that now is not the time to pursue a republic under Queen Elizabeth II’s reign."
+  },
+  {
+   "slug": "speech-307943",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the British monarchy is an elitist, discriminatory institution incompatible with Australian values, and called for a republic, noting that republican support stood at 57% in 2004. They supported the bill's removal of male preference primogeniture and the ban on marrying a Roman Catholic but criticised its retention of the requirement that the monarch be Anglican."
+  },
+  {
+   "slug": "speech-307944",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Succession to the Crown Bill 2015, which ends male-preference primogeniture and removes the ban on heirs marrying Catholics, and called for Australia to become a republic with an Australian head of state, praising Labor leader Bill Shorten for reviving the republic debate."
+  },
+  {
+   "slug": "speech-307948",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Succession to the Crown Bill 2015, which ends male preference in succession and allows heirs to marry Catholics without losing succession rights, but argued Australia should become a republic and criticised the Australia Day knighthood for Prince Philip. The speaker also called for constitutional recognition of Aboriginal and Torres Strait Islander peoples."
+  },
+  {
+   "slug": "speech-307949",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Succession to the Crown Bill 2015, which changes royal succession to be by birth order regardless of gender and removes the ban on heirs marrying a Catholic, but argued that Australia should become a republic and called for a reinvigorated debate on national identity."
+  },
+  {
+   "slug": "speech-307950",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued the Succession to the Crown Bill 2015 is a significant reform ending male preference primogeniture, implemented through only the third use of section 51(xxxviii) with bipartisan support from all state parliaments, and criticised opposition members for calling the bill anachronistic while supporting a republic."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Succession to the Crown Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00023",
+   "assent_date": "2015-03-24"
+  }
+ ]
+}

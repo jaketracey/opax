@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-s1471",
+ "title": "Online Safety and Other Legislation Amendment (My Face, My Rights) Bill 2025",
+ "short_title": "Online Safety and Other Legislation Amendment (My Face, My Rights) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-24",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen David",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "11009",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1471%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1471%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1471%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1471_ems_6b78644a-3a08-4850-911f-b9f9d6ade06e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1471%22",
+   "document_date": "2025-11-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-24",
+  "sentences": [
+   "The bill would combat the unauthorized creation and distribution of deepfake audio or visual content.",
+   "It would give the eSafety Commissioner power to issue removal notices and impose civil penalties for hosting such material.",
+   "Victims could seek civil remedies such as injunctions or damages under a new statutory cause of action in the Privacy Act."
+  ],
+  "changes": [
+   "Creates a complaints and enforcement regime for non-consensual deepfake material under the Online Safety Act 2021.",
+   "Establishes a new statutory cause of action for wrongful use or disclosure of deepfake material under the Privacy Act 1988.",
+   "Empowers the eSafety Commissioner to issue removal notices and impose civil penalties."
+  ],
+  "affected": "Individuals whose likeness or voice is used in deepfake content without consent, especially women, children, and other vulnerable groups.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1204088",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-06-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

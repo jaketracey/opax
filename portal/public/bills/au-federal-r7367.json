@@ -1,0 +1,271 @@
+{
+ "key": "au-federal-r7367",
+ "title": "Treasury Laws Amendment (Strengthening Financial Systems and Other Measures) Bill 2025",
+ "short_title": "Treasury Laws Amendment (Strengthening Financial Systems and Other Measures) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-09-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2025-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7367_ems_0d22fc57-2f56-42ae-ac0a-268664c3e535%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7367%22",
+   "document_date": "2025-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00072",
+   "document_date": "2025-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-09-04",
+  "sentences": [
+   "This bill would require companies listed on Australian financial markets to disclose who ultimately owns, controls, and receives profits from them.",
+   "It would strengthen the existing substantial holding and tracing notice regimes under the Corporations Act and expand ASIC's enforcement powers.",
+   "The changes would start 12 months after the bill receives royal assent."
+  ],
+  "changes": [
+   "Enhances beneficial ownership disclosure obligations for listed entities.",
+   "Broadens ASIC's regulatory enforcement powers regarding disclosure obligations.",
+   "Improves corporate transparency to show ultimate owners, controllers, and profit recipients."
+  ],
+  "affected": "Entities listed on Australia's financial markets and the Australian Securities and Investments Commission (ASIC).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9793",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "question": "The majority voted against a [second reading amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7367_amend_410231f9-d519-4b3b-9918-b630394a4a9e%22;rec=0) introduced by Mackellar MP [Sophie Scamps] (Independent), which means it failed. The amendment would have changed the words of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after “House” be omitted with a view to substituting the following words:* > > *(1) notes that the bill continues the practice of legislating the instant asset write-off measure annually, which creates uncertainty and discourages investment at a time when many small businesses are already struggling; and* > > *(2) calls on the Government to do more to support small businesses, including:* > >> *(a) making the instant asset write-off permanent; and* >> >> *(b) adopting a $20,000 tax-free threshold for small business operators with annual turnover of less than $10 million, as proposed by the member for Mackellar”.*",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 77
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 87
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-10-08/4"
+  },
+  {
+   "key": "federal-representatives-9794",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "question": "The majority voted against a [second reading amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7367_amend_e58277ba-36e4-4fbd-91bf-82583c9c8c60%22;rec=0) introduced by Fairfax MP [Ted O'Brien](https://theyvoteforyou.org.au/people/representatives/fairfax/ted_o'brien) (Liberal), which means it failed. The amendment would have changed the words of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after “That” be omitted with a view to substituting the following words:* > > *“whilst not declining to give the bill a second reading, the House notes that:* > >> *(1) the bill seeks to extend two successful Coalition policies;* >> >> *(2) the Government’s policies have seen energy prices increase by $1,300 more than promised and is now extending Coalition policy to ensure energy prices don’t increase even further;* >> >> *(3) the Government has only reluctantly decided to support business by extending the Instant Asset Write-Off under pressure from the Coalition ahead of the last election;* >> >> *(4) this Bill seeks to provide less frequent assessments of ASIC and APRA;* >> >> *(5) thousands of Australians have lost over $1 billion in superannuation due to alleged misconduct by First Guardian and Shield;* >> >> *(6) ASIC has been accused of major failures in responding to this crisis which the Government has been silent about;* >> >> *(7) the Government must explain to the thousands of victims why it is seeking to reduce accountability and transparency for ASIC at this time; and* >> >> *(8) this bill seeks to clean up a range of the Government’s mistakes including the application of GST to disability services.*",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 90,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 86
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-10-08/5"
+  },
+  {
+   "key": "federal-representatives-9795",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2025-10-08.133.2) introduced by Warringah MP [Zali Steggall](https://theyvoteforyou.org.au/people/representatives/warringah/zali_steggall) (Independent), which means they failed. ### Amendment text > *(2) Schedule 7, page 132 (line 1) to page 132 (line 13), omit the Schedule, substitute:* > > *Schedule 7 — instant asset write-off for small business entities* > > *Income Tax (Transitional Provisions) Act 1997* > > *1 Section 328-180 (heading)* > >> *Omit \"to 30 June 2025\".* > > *2 Subsection 328-180(1) (definition of increased access year )* > >> *Repeal the definition, substitute:* >> >>> *increased access year: an income year is an increased access year if any day of the year occurs on or after 12 May 2015.* > > *3 Subsection 328-180(4)* > >> *Omit \"Temporary increase\", substitute \"Increase\".* > > *4 Paragraph 328-180(4)(d)* > >> *Omit \"$20,000\", substitute \"50,000\".* > > *5 Paragraph 328-180(4)(d)* > >> *Omit \"and on or before 30 June 2025\" (wherever occurring).* > > *6 Paragraph 328-180(5)(e)* > >> *Repeal the paragraph, substitute:* >> >>> *(e) were a reference to $50,000, if the amount is so included at any time on or after 1 July 2023.* > > *7 Paragraph 328-180(6)(e)* > >> *Repeal the paragraph, substitute:* >> >>> *(e) were a reference to $50,000, in relation to a deduction for an income year that ends on or after 1 July 2023.*",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 64,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 73
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-10-08/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1197442",
+   "speaker": "Jo Briskey",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-08",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Strengthening Financial Systems and Other Measures) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00072",
+   "assent_date": "2025-12-04"
+  }
+ ]
+}

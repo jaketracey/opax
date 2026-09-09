@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-s1462",
+ "title": "Parliamentary Joint Committee on Public Consultancy and Services Contracts Bill 2025",
+ "short_title": "Parliamentary Joint Committee on Public Consultancy and Services Contracts Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-30",
+ "originating_house": "senate",
+ "sponsor": "COLBECK, Sen Richard",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10131",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1462%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1462%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1462_ems_eb765988-3a04-4b3a-a06c-039847c8a654%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1462%22",
+   "document_date": "2025-07-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-30",
+  "sentences": [
+   "This bill would create a parliamentary committee to review and report on consultancy and services contracts made by Commonwealth entities.",
+   "The committee would have eight members, four from each house, and could examine contracts referred by either house or the minister, with mandatory referral for contracts worth over $2 million.",
+   "The bill is a response to $3.272 billion spent on management advisory contracts in 2022–23, which the sponsor says lacks the oversight applied to major public works."
+  ],
+  "changes": [
+   "Establishes a joint parliamentary committee to scrutinise consultancy and services contracts.",
+   "Requires mandatory referral of contracts exceeding $2 million in value.",
+   "Empowers the committee to examine referred contracts and inquire into related systemic issues."
+  ],
+  "affected": "Commonwealth entities that enter into consultancy and services contracts, and the public who would gain oversight of such spending.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

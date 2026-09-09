@@ -1,0 +1,611 @@
+{
+ "key": "au-federal-r5684",
+ "title": "Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016",
+ "short_title": "Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-05-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-05-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5684_ems_42c172ff-6eb3-49d0-b310-7c6016682033%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5684_ems_3132d68c-fc7c-4427-bf00-5df8158688bf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5684%22",
+   "document_date": "2016-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00041",
+   "document_date": "2017-05-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-09-01",
+  "sentences": [
+   "This bill would cut the corporate tax rate for small businesses and eventually for all companies.",
+   "It would reduce the rate to 27.5% in 2016-17 for entities with turnover under $10 million, then extend the cut to all corporate tax entities by 2023-24.",
+   "The rate would fall further to 27% in 2024-25, 26% in 2025-26, and 25% from 2026-27 onward."
+  ],
+  "changes": [
+   "Reduces the corporate tax rate to 27.5% for small business entities in 2016-17.",
+   "Extends the lower rate to all corporate tax entities by 2023-24.",
+   "Cuts the rate to 27% in 2024-25, 26% in 2025-26, and 25% from 2026-27.",
+   "Makes consequential amendments to the ITAA 1936 and ITAA 1997."
+  ],
+  "affected": "Corporate tax entities, especially small business entities with aggregated turnover under $10 million.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:55Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4601",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016 - Second Reading - Don't agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-27/1"
+  },
+  {
+   "key": "federal-representatives-4602",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-27/2"
+  },
+  {
+   "key": "federal-representatives-4603",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 76,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-27/3"
+  },
+  {
+   "key": "federal-representatives-4667",
+   "date": "2017-05-09",
+   "house": "representatives",
+   "question": "Michael McCormack I move: That the amendments be agreed to. In recent weeks, during the parliamentary sitting recess, I have travelled to many locations listening to and hearing directly from hundreds of small business owners. Every day I have been encouraged by the positive response to the tax cut we have already delivered for small business and the anticipation for the tax cuts to go further and to be extended to more businesses. The government's enterprise tax plan will deliver tax relief for 3.2 million small and medium businesses, which employ more than 6½ million Australian workers. They are at the forefront of this amendment before the House today. We all want more jobs. We all want better opportunities. We all want higher wages. The government has accepted the Senate's amendments to the Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016. Small and medium businesses with turnovers of less than $50 million a year are set to benefit from their tax rate falling to 25 per cent. It will deliver new job opportunities and increase wages. This amendment will enable businesses with a turnover of less than $10 million to receive a reduction in their tax rate to 27½ per cent this financial year—the lowest it has been for many, many decades. Under our reforms, small businesses with turnovers of up to $10 million will also receive access to tax concessions, including immediate deductibility for assets costing less than $20,000 acquired before 30 June 2017—another tax simplification provision. Our plan is to cut taxes, put small businesses in the driver's seat and Australians in jobs. Above all, it is a plan to create new opportunities and secure Australia's future. It is small business, not government, which creates jobs and opportunities. This government is serious about energising enterprise. As a country MP, I think I am pretty fortunate. As local members we travel about towns, villages and communities in our large, diverse electorates, and locals will always stop",
+   "stage": "Consideration of Senate message",
+   "ayes": 77,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-05-09/1"
+  },
+  {
+   "key": "federal-representatives-4668",
+   "date": "2017-05-09",
+   "house": "representatives",
+   "question": "Tony Smith The question now is that the motion moved by the minister be agreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 77,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-05-09/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-342980",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": "The speaker argued for reducing Australia's corporate tax rate to 25% by 2026-27, citing support from Reserve Bank Governor Philip Lowe, Treasury Secretary John Fraser, and former Treasury Secretary Ken Henry, and gave historical examples from Australia, New Zealand, and Canada where corporate tax cuts led to increased revenue. He criticised the Labor Party and Greens for opposing the bill, accusing them of populism and misleading the public."
+  },
+  {
+   "slug": "speech-342981",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016, opposing tax cuts for businesses with turnovers up to $1 billion that would cost $50 billion over a decade. They stated Labor supports a 27.5% tax rate only for genuine small businesses with turnovers under $2 million, claiming the government prioritizes big business over health, education, and social security."
+  },
+  {
+   "slug": "speech-342982",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": "The member for Berowra supported the Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016, arguing it would cut the small business company tax rate from 28.5% to 27.5% and reduce the corporate rate to 25% for all companies by 2026, while criticising Labor for opposing the plan and for its $2 million turnover threshold."
+  },
+  {
+   "slug": "speech-342983",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the $50 billion enterprise tax plan for big business and banks, arguing it would cut revenue while wages stagnate, underemployment is at record levels, and low-paid workers face pay cuts, with independent experts sceptical of the policy's benefits."
+  },
+  {
+   "slug": "speech-343944",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016, stating it provides tax cuts primarily to small businesses, not handouts, and is not a $50 billion cost. They cited past Labor leaders who supported corporate tax cuts, accused Labor of abandoning bipartisanship for populism, and named specific small businesses in Brisbane that would benefit."
+  },
+  {
+   "slug": "speech-343945",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The 10-year enterprise tax plan, costing $48.2 billion over its ramp-up and $8 billion a year thereafter, would cut the company tax rate to 27.5 per cent for all companies by 2023-24 and to 25 per cent by 2026-27. Treasury modelling shows only a 0.1 per cent increase in jobs over 20 to 30 years, while beneficiaries would include large firms such as banks, Wesfarmers, Woolworths, Qantas and Aristocrat Leisure."
+  },
+  {
+   "slug": "speech-343953",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "Labor opposed the Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016, arguing it gives an unfunded $50 billion tax cut to big business and banks while ignoring housing tax distortions. Labor announced it would support only a reduced rate of 27.5% for businesses earning up to $2 million, and would not support the increase in the small business threshold to $10 million."
+  },
+  {
+   "slug": "speech-343954",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The Turnbull government's Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016 would immediately cut the company tax rate to 27.5% for 870,000 businesses with turnover up to $10 million, eventually reducing it to 25% by 2026-27, while also increasing the unincorporated small business tax discount to 16% and raising turnover thresholds for concessions. The speaker argued the bill is essential for job creation, investment, and global competitiveness, and criticised Labor and unions for opposing the tax cuts."
+  },
+  {
+   "slug": "speech-343956",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker opposed the $50 billion tax cut for large companies, arguing it would cost every Australian $162, add $4 billion in interest, and contribute less than 1% to growth, while supporting a $2 million small business threshold instead of $10 million and calling for education funding instead. They noted the budget deficit had blown out to $28.7 billion and that regional businesses, earning far less than those in capital cities like Wentworth ($61,000 average), would be disproportionately disadvantaged."
+  },
+  {
+   "slug": "speech-343958",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker strongly supported the Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016, which would progressively cut the company tax rate to 25% by 2026-27, arguing it would boost investment, jobs and wages, and criticised Labor for opposing the plan despite previously backing lower company taxes."
+  },
+  {
+   "slug": "speech-343959",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's $50 billion company tax cut is a sham and a scam, failing fiscal, economic, fairness, and political tests, and criticized the delay in debating the bill and the lack of a genuine plan for jobs and growth."
+  },
+  {
+   "slug": "speech-343961",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Enterprise Tax Plan, including company tax cuts, would boost investment, jobs, and wages, citing past support from Labor figures like the Leader of the Opposition and Shadow Treasurer. The speech referenced the UK's corporate tax reduction from 28% to 20% and OECD findings that corporate taxes harm growth, urging Labor to vote for the bill based on their own previous statements."
+  },
+  {
+   "slug": "speech-343968",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016, which cuts the company tax rate to 25% over 10 years at a cost of nearly $50 billion, will not boost jobs or growth, citing Treasury analysis showing only a 0.1% long-term employment improvement. They criticised the government for tripling the deficit, increasing debt by over $100 billion, cutting pensions and youth support, and failing to defend penalty rates, while noting unemployment rose to 5.9% with 1.1 million Australians underemployed."
+  },
+  {
+   "slug": "speech-344031",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016 will benefit small businesses, with 870,000 incorporated businesses receiving a 2.5 per cent tax cut rising to five per cent over 10 years, and 2.3 million unincorporated businesses also receiving a rate decrease, and cited local examples such as KLM Energy Services, Humphries and Fisk, Australian Off Road, and Geoff Lyons Solicitors to illustrate how the cuts would support investment, employment, and competitiveness."
+  },
+  {
+   "slug": "speech-344032",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016, arguing it would redefine small businesses as those earning up to $1 billion, give $50 billion in tax cuts to large companies and the big four banks, and force cuts to single parents and welfare recipients while companies like Glencore ($7.7 billion income) and Origin Energy ($12 billion income) paid no tax."
+  },
+  {
+   "slug": "speech-344033",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016, which would reduce the corporate tax rate to 27.5 per cent for businesses with a turnover under $10 million, eventually reaching 25 per cent for all businesses by 2026-27. The electorate of Dunkley has over 16,000 small businesses, the highest economic growth of any Victorian federal electorate, and a 5.1 per cent unemployment rate with 10.1 per cent youth unemployment."
+  },
+  {
+   "slug": "speech-344036",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment bill, arguing it provides $50 billion in tax cuts mostly to big business and banks, and advocated for Labor's alternative priorities including protecting penalty rates, maintaining the social compact, and reforming negative gearing and capital gains tax to address inequality and housing affordability."
+  },
+  {
+   "slug": "speech-344038",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Enterprise Tax Plan Bill, stating that lowering company tax rates increases total tax revenue, citing examples from the Hawke-Keating and Howard-Costello governments. He noted Australia's corporate tax rate is just below 30%, compared to the OECD average of 24% and the UK's 20%, and claimed Labor's opposition ignores this evidence."
+  },
+  {
+   "slug": "speech-344039",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016 would give big business and banks a $50 billion tax cut, worsening a deficit that has blown out by $10 billion and net debt that has increased by $100 billion since the government took office, while 670 large companies already pay no tax and the wage boost from the cuts would be only 1.1% after 20 years."
+  },
+  {
+   "slug": "speech-344044",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The Labor MP opposed the Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016, arguing the government's $50 billion company tax cut would benefit multinationals and big business at the expense of funding for Medicare, schools, family benefits, community legal centres and the NBN, citing $30 billion likely to go offshore, $7.4 billion to banks, $1.4 billion in family payment cuts, $30 billion in school cuts, and $180,000 in cuts to the Northern Rivers legal centre."
+  },
+  {
+   "slug": "speech-344048",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker opposed the $50 billion business tax cut in the Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016, arguing it would harm the budget and benefit big multinationals and banks, and supported amendments by the member for McMahon. They criticised the Treasurer and government for incompetence, noting the deficit had tripled and net debt had blown out by $133 billion since the coalition came to office."
+  },
+  {
+   "slug": "speech-344062",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Enterprise Tax Plan) Bill is essential for small and medium businesses, citing personal experience running a dairy farm during high interest rates. They claimed the bill would reduce the corporate tax rate to 27.5% for businesses with turnover under $10 million, benefiting 870,000 companies and 3.4 million workers, and that Labor’s opposition ignores the need for competitive tax rates in a global economy."
+  },
+  {
+   "slug": "speech-344066",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speech argued for passing the Treasury Laws Amendment (Enterprise Tax Plan) Bill 2016, proposing a company tax rate cut to 27.5 per cent for businesses with turnover under $10 million, an unincorporated small business tax discount increase to 8 per cent for turnover under $5 million, and raising the tax concession threshold to $10 million, claiming these measures would boost investment and jobs."
+  },
+  {
+   "slug": "speech-344403",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Enterprise Tax Plan) Bill is necessary to maintain Australia's 26 years of continuous economic growth, claiming corporate tax cuts to 25% would increase real wages by over 1%, boost business investment by 2.6%, and raise GDP by over 1%. The speaker criticised the Labor Party and shadow Treasurer for opposing the bill despite previously supporting corporate tax cuts, citing Treasury, KPMG, and IMF modelling, and warned that Australia's 30% corporate tax rate is uncompetitive compared to countries like the UK (20%), Singapore, and the US (moving to 15%)."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Enterprise Tax Plan) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00041",
+   "assent_date": "2017-05-19"
+  }
+ ]
+}

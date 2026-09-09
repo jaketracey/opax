@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5965",
+ "title": "Fair Work Amendment (Terminating Enterprise Agreements) Bill 2017",
+ "short_title": "Fair Work Amendment (Terminating Enterprise Agreements) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-11",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-05-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5965%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5965%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5965%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5965_ems_bf2265ce-bd8b-4c90-bb00-ee7c25bd9bc3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5965%22",
+   "document_date": "2017-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-11",
+  "sentences": [
+   "The bill would make it harder to end an enterprise agreement after its nominal expiry date.",
+   "The Fair Work Commission could not terminate an agreement if doing so would give any covered employee worse pay or conditions.",
+   "The bill would also void any termination decision made since 22 April 2015 that would not meet the new requirements."
+  ],
+  "changes": [
+   "Narrows the circumstances for terminating an expired enterprise agreement.",
+   "Prevents the Fair Work Commission from terminating an agreement that would worsen employee terms and conditions.",
+   "Invalidates certain termination decisions made from 22 April 2015 onward."
+  ],
+  "affected": "Employers and employees covered by enterprise agreements, and the Fair Work Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:33:38Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,210 @@
+{
+ "key": "au-federal-s1291",
+ "title": "Special Recreational Vessels Amendment Bill 2021",
+ "short_title": "Special Recreational Vessels Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-25",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development and Communications",
+ "status": "passed",
+ "status_as_of": "2021-06-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1291%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1291%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1291%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1291%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1291%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1291%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1291_ems_d5dea663-76c9-4b86-956a-894009720bf7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1291%22",
+   "document_date": "2021-02-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00043",
+   "document_date": "2021-06-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7193",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping unchanged the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is that the [bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1291) be read a second time (parliamentary jargon for agreeing with the main idea of the bill). This vote occurred after Ballarat MP [Catherine King](https://theyvoteforyou.org.au/people/representatives/ballarat/catherine_king) (Labor) proposed an [amendment](https://www.openaustralia.org.au/debate/?id=2021-06-03.25.1) that: > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes this Government's record of undermining the Australian shipping industry;* > > *(2) reaffirms that Australia's tourism industry, marine and coastal environment, and national security interests are best served by a viable and competitive shipping industry; and* > > *(3) commits to a thorough review of the Act at the revised sunset date of 30 June 2023\".*",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-03/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-407935",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-03",
+   "stage_hint": null,
+   "brief": "The speaker supported extending the Special Recreational Vessels Amendment Bill 2021 to 30 June 2023, allowing superyachts to operate charters in Australian waters, but warned it must not undermine local tourism operators or Australian seafarers' jobs. Labor successfully inserted a review and sunset clause into the original legislation, and the speaker moved a second reading amendment noting the government's record of undermining Australian shipping and committing to a thorough review by the revised sunset date."
+  },
+  {
+   "slug": "speech-407938",
+   "speaker": "George Christensen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Special Recreational Vessels Amendment Bill 2021 should pass to allow superyachts to bring $50,000–$60,000 per week per vessel to local economies, criticising Labor for falsely claiming negative impacts on local businesses and jobs. He noted that the bill extends the sunset clause to attract superyachts post-pandemic and that Queensland tourism regions are represented by Liberal National Party members."
+  },
+  {
+   "slug": "speech-407942",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-03",
+   "stage_hint": null,
+   "brief": "The speaker argued for extending the sunset clause of the Special Recreational Vessels Amendment Bill 2021 from 30 June 2021 to 30 June 2023, citing benefits from superyacht tourism and refit facilities. They highlighted investments of nearly $100 million by the Boat Works and a proposed $200 million redevelopment by Rivergate Marine, creating jobs and economic opportunities across Queensland."
+  },
+  {
+   "slug": "speech-407943",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-03",
+   "stage_hint": null,
+   "brief": "The speaker argued for extending the Special Recreational Vessels Act 2019 to 30 June 2023, highlighting that superyacht activity generated $100 million in economic benefit in 2020, a 150% increase from 2018, and cited local Gold Coast businesses like Riviera and the Boat Works as key employers."
+  },
+  {
+   "slug": "speech-407944",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-03",
+   "stage_hint": null,
+   "brief": "The Special Recreational Vessels Amendment Bill 2021 extends the repeal date of the Special Recreational Vessels Act 2019 beyond 30 June 2021, allowing superyachts to continue chartering in Australian waters to support tourism and regional communities."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Special Recreational Vessels Amendment Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00043",
+   "assent_date": "2021-06-10"
+  }
+ ]
+}

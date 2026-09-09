@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6400",
+ "title": "Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2019",
+ "short_title": "Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6400%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6400%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6400%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6400_ems_9454a3dc-a6ad-4bfa-996a-15ec252214e1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6400%22",
+   "document_date": "2019-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-11",
+  "sentences": [
+   "This bill would restrict relocation scholarships to students whose family home is in Australia and who study in Australia.",
+   "Students whose family home is outside Australia or who relocate overseas for part of their course would no longer qualify.",
+   "The bill also aligns the Pensioner Education Supplement and Education Entry Payment with the 2017-18 Budget measure."
+  ],
+  "changes": [
+   "Removes relocation scholarship eligibility for students whose parental family home is outside Australia.",
+   "Removes relocation scholarship eligibility for students who relocate outside Australia to study.",
+   "Aligns the Pensioner Education Supplement and Education Entry Payment."
+  ],
+  "affected": "Youth allowance students and recipients of the Pensioner Education Supplement and Education Entry Payment.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

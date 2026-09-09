@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r7067",
+ "title": "Electoral Legislation Amendment (Restoring Trust) Bill 2023",
+ "short_title": "Electoral Legislation Amendment (Restoring Trust) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-08-07",
+ "originating_house": "representatives",
+ "sponsor": "CHANEY, Kate, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10974",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-03-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-08-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7067%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7067%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7067%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7067_ems_deb28a0f-c2d9-47a7-b7f5-228c21a7328e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7067%22",
+   "document_date": "2023-08-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-08-07",
+  "sentences": [
+   "This bill would change Commonwealth electoral law to increase transparency, reduce financial influence, and level the political playing field.",
+   "It would lower the donation disclosure threshold to $1,000 and require real-time disclosure of donations above that threshold within 5 business days.",
+   "The bill would also prohibit misleading or deceptive electoral advertising and ban donations from entities that profit from social harm, such as tobacco, gambling, and liquor businesses."
+  ],
+  "changes": [
+   "Lowers the donation disclosure threshold from $16,300 to $1,000.",
+   "Requires real-time disclosure of donations above $1,000 within 5 business days.",
+   "Prohibits misleading or deceptive electoral advertising.",
+   "Bans donations from tobacco, gambling, and liquor businesses.",
+   "Prohibits donations from substantial Commonwealth government contractors.",
+   "Requires union and corporate member approval for donations."
+  ],
+  "affected": "Political parties, candidates, donors, government contractors, unions, corporations, and the Australian Electoral Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:22:01Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

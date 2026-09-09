@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1504",
+ "title": "Treasury Laws Amendment (Removing the Widows and Spouses Tax) Bill 2026",
+ "short_title": "Treasury Laws Amendment (Removing the Widows and Spouses Tax) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-13",
+ "originating_house": "senate",
+ "sponsor": "CANAVAN, Sen Matthew",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10827",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1504%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1504%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1504_ems_a05e88d7-a0bc-4dd9-9438-ce192e3da50c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1504%22",
+   "document_date": "2026-08-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 9,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-13",
+  "sentences": [
+   "This bill would protect people who lose grandfathered tax benefits when an asset changes from multiple to single ownership because of divorce, relationship breakdown, or a joint owner's death.",
+   "It would insert new exceptions into the tax law so that a surviving spouse or co-owner can keep using negative gearing or the 50% capital gains tax discount on a residential dwelling they acquire from the deceased.",
+   "The surviving spouse or co-owner must have acquired the ownership interest before 7.30pm (AEST) on 12 May 2026, or the dwelling must have been a new residential dwelling for the deceased."
+  ],
+  "changes": [
+   "The bill adds sections 26-156, 26-157 and 26-158 to the Income Tax Assessment Act 1997.",
+   "It allows a surviving spouse to treat the acquisition of a deceased spouse's ownership interest as having happened at the same time the deceased acquired it.",
+   "It allows a surviving co-owner who is not a spouse to treat the acquisition of a deceased co-owner's interest as having happened at the same time the deceased acquired it.",
+   "The bill switches off the default timing rules in subsections 128-15(2) and 128-50(2) for these exceptions.",
+   "It defines key terms such as 'spouse', 'ownership interest', 'acquire' and 'passes' by cross-referencing existing definitions in the tax law."
+  ],
+  "affected": "Surviving spouses and surviving co-owners of residential dwellings who would otherwise lose grandfathered negative gearing or CGT discount benefits after the death of a joint owner.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:52:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1205292",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-13",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

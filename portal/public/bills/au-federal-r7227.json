@@ -1,0 +1,133 @@
+{
+ "key": "au-federal-r7227",
+ "title": "Public Service Amendment Bill (No. 2) 2024",
+ "short_title": "Public Service Amendment Bill (No. 2) 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-08-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister and Cabinet",
+ "status": "passed",
+ "status_as_of": "2024-08-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7227%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7227%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7227%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7227%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7227%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7227%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7227%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7227_ems_44f3cbce-9249-4679-9ddc-05a556e86fb1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7227%22",
+   "document_date": "2024-08-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00076",
+   "document_date": "2024-08-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-08-14",
+  "sentences": [
+   "The bill would make clear that the Australian Public Service Commissioner can investigate and decide on code-of-conduct breaches by current and former agency heads.",
+   "It would give the Commissioner the same powers to hold agency heads accountable as already exist for other public servants.",
+   "The changes would apply to reviews started after 7 July 2023, including those related to the Robodebt Scheme."
+  ],
+  "changes": [
+   "Clarify the Commissioner's power to inquire into and determine code-of-conduct breaches by former agency heads.",
+   "Validate reviews of former agency heads' conduct that began after 7 July 2023.",
+   "Allow information and documents gathered in those reviews before the bill starts to continue being used."
+  ],
+  "affected": "Current and former agency heads of the Australian Public Service.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Public Service Amendment Act (No. 2) 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00076",
+   "assent_date": "2024-08-26"
+  }
+ ]
+}

@@ -116,17 +116,16 @@ def load_reports() -> list[dict]:
 
 
 def load_industries() -> list[dict]:
-    src = (PORTAL_PUBLIC / "money-map.js").read_text()
-    m = re.search(r'new Map\(\[\["parties",\{colour:(.*?)\]\]\)', src, re.S)
-    if not m:
-        sys.exit("could not find CLUSTER_COLOURS in portal/public/money-map.js")
-    groups = ["parties"] + re.findall(r'\],\["([^"]+)",\{colour', m.group(0))
+    """The money map's legend groups, from the palette source (portal/graph/palette.ts):
+    the built bundle is minified and its Map literal is not something to grep."""
+    src = (PORTAL_PUBLIC.parent / "graph" / "palette.ts").read_text()
+    groups = re.findall(r"^\s*\['([^']+)',\s*\{", src, re.M)
+    if not groups:
+        sys.exit("could not find the cluster list in portal/graph/palette.ts")
     return [
         {"question": f"What has parliament said about {g}?", "kind": "speech", "source": f"industry:{g}"}
-        for g in groups
-        if g not in INDUSTRY_NO_ASK
+        for g in groups if g not in INDUSTRY_NO_ASK
     ]
-
 
 SOURCES = {
     "chips": load_chips,

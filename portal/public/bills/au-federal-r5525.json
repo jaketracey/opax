@@ -1,0 +1,152 @@
+{
+ "key": "au-federal-r5525",
+ "title": "Australian Immunisation Register (Consequential and Transitional Provisions) Bill 2015",
+ "short_title": "Australian Immunisation Register (Consequential and Transitional Provisions) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2015-11-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5525_ems_02c41a43-9f4b-4e53-b187-cffecacd620a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5525%22",
+   "document_date": "2015-09-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00139",
+   "document_date": "2015-11-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-10",
+  "sentences": [
+   "This bill makes the legal changes needed when the new Australian Immunisation Register Act takes effect.",
+   "It would repeal old register rules in existing Acts, adjust definitions, and apply the new register law to several programs.",
+   "The bill starts when the main register bill receives Royal Assent, and its transitional rules begin in three phases, with nothing starting if the main bill never commences."
+  ],
+  "changes": [
+   "It would remove the childhood immunisation register provisions from the Health Insurance Act and update that Act's disclosure rules.",
+   "It would delete the HPV register provision from the National Health Act.",
+   "It would exempt register information from freedom of information requests by adding the new Act to the relevant schedule.",
+   "It would align the definition of a recognised immunisation provider with the new register bill.",
+   "It would update the healthcare identifiers law to refer to the new register instead of the old childhood register.",
+   "It would name the new register Act as a designated program Act under several human services and child support laws."
+  ],
+  "affected": "The affected parties are health care providers, individuals receiving vaccinations, and the agencies that manage immunisation records and related programs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:02Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-319678",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's strong support for the Australian Immunisation Register Bill 2015 and related bill, which establish a comprehensive national vaccination register covering all ages from birth to death, expand the childhood register to age 20, and enable the No Jab, No Pay policy. The bills were partly motivated by the deaths of Dana McCaffery and Riley Hughes from whooping cough."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Immunisation Register (Consequential and Transitional Provisions) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00139",
+   "assent_date": "2015-11-12"
+  }
+ ]
+}

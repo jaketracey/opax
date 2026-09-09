@@ -1,0 +1,233 @@
+{
+ "key": "au-federal-r5540",
+ "title": "Social Services Legislation Amendment (No Jab, No Pay) Bill 2015",
+ "short_title": "Social Services Legislation Amendment (No Jab, No Pay) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2015-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5540_ems_78b7b14d-fa5d-469e-a038-2840207a8f3e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5540%22",
+   "document_date": "2015-09-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00158",
+   "document_date": "2015-11-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-16",
+  "sentences": [
+   "From the start of 2016, families would need to show their children are fully vaccinated before receiving certain government payments.",
+   "The bill would set out which vaccinations count and who can confirm them, with the minister and the department head having roles in deciding special cases.",
+   "The checks would apply to children of every age, whereas currently they are limited to specific ages for different payments."
+  ],
+  "changes": [
+   "It would make full immunisation a condition for child care benefit, child care rebate, and the family tax benefit Part A supplement.",
+   "It would allow exemptions only for medical reasons certified by a doctor, plus temporary situations like vaccine shortages or approved studies.",
+   "It would extend the vaccination requirement to all children, not just those at ages one, two, five, or under seven."
+  ],
+  "affected": "Families receiving or applying for child care and family tax payments would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:52:29Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-321345",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the No Jab, No Pay Bill, which from 1 January 2016 will require children to be fully immunised for families to access childcare benefits and family tax supplement, with exceptions only for medical reasons, and argued that vaccines save lives and that the policy aims to increase immunisation rates."
+  },
+  {
+   "slug": "speech-321346",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Social Services Legislation Amendment (No Jab, No Pay) Bill 2015, which from 1 January 2016 removes conscientious objection as an exemption for family payments, including childcare benefit, childcare rebate and family tax benefit Part A supplement, allowing only medical exemptions. The speaker stated that 39,000 Australian children under seven are unvaccinated due to parental objection and proposed a national register for children with adverse reactions to immunisation."
+  },
+  {
+   "slug": "speech-321347",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the No Jab, No Pay Bill 2015, which requires children to meet immunisation requirements for families to access child care benefit, child care rebate, or family tax benefit Part A supplement. The speaker cited a Chief Scientist report showing severe side effects from vaccinations occur in 1 in 100,000 to 1 in 1 million cases, and noted that vaccines prevent 2 to 3 million deaths annually according to the World Health Organization."
+  },
+  {
+   "slug": "speech-321348",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Social Services Legislation Amendment (No Jab, No Pay) Bill 2015, which from 1 January 2016 would make family tax benefit part A and child care rebate conditional on children under seven being fully immunised, removing the conscientious objector exemption. The speaker cited $161.8 million for immunisation program improvements and $26.4 million for adolescent vaccination, and noted 39,000 unvaccinated children under seven due to parental objection, emphasising the policy aims to save lives and prevent disease spread, not save money."
+  },
+  {
+   "slug": "speech-321349",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (No Jab, No Pay) Bill 2015, which requires children to meet immunisation requirements for families to access childcare benefits, child care rebate, and family tax benefit A supplement. Labor offered bipartisan support, arguing that immunisation is safe and effective, and that only medical exemptions should apply."
+  },
+  {
+   "slug": "speech-321352",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that while vaccination is a critical public health measure, the government should improve adverse event reporting systems and avoid dismissing vaccine concerns as anti-science, citing experts like Natasha Crowcroft, Professor Collignon, and Professor Bryant Stokes. They supported the \"No Jab, No Pay\" bill but urged a more scientific, transparent approach to vaccine safety data and adjuvant research."
+  },
+  {
+   "slug": "speech-321353",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the No Jab, No Pay bill and argued it is a public health initiative, not a cost-saving measure, despite projected savings of $508.3 million. They expressed concern that this money should be redirected toward education and outreach to prevent parents from missing vaccinations due to oversight, citing 92% immunisation rates in Australia and the prevention of 2.5 million deaths per year from immunisation."
+  },
+  {
+   "slug": "speech-321354",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the No Jab, No Pay bill, which from 1 January 2016 ties immunisation to childcare benefits, rebates and family tax benefit supplements, with exemptions for medical reasons, natural immunity, overseas vaccinations, approved studies or temporary unavailability. They noted over 90% of Australian children are immunised, only about 2% of parents refuse due to concerns, and argued the focus should be on the 4-5% without access to immunisation programs."
+  },
+  {
+   "slug": "speech-321355",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The bill ties full immunisation to eligibility for childcare benefit, childcare rebate and the family tax benefit part A supplement, extending requirements from 1 January 2016 to children of all ages. Vaccine objections will no longer be grounds for these payments, with exceptions only for medical contraindications, approved vaccine studies, temporary vaccine unavailability, overseas immunisation equivalence, and case-by-case secretary discretion in unusual circumstances."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (No Jab, No Pay) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00158",
+   "assent_date": "2015-11-26"
+  }
+ ]
+}

@@ -1,0 +1,145 @@
+{
+ "key": "au-federal-r6786",
+ "title": "Treasury Laws Amendment (Laminaria and Corallina Decommissioning Cost Recovery Levy) Bill 2021",
+ "short_title": "Treasury Laws Amendment (Laminaria and Corallina Decommissioning Cost Recovery Levy) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6786%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6786%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6786%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6786%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6786%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6786%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6786%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6786%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6786%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6786%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6783_ems_f2a74b67-98a2-447a-95bf-ea6eee6da6a1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6786%22",
+   "document_date": "2021-10-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00024",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-413529",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The bill introduces a cost recovery levy for decommissioning the Laminaria and Corallina offshore oil fields, with full details in the explanatory memorandum."
+  },
+  {
+   "slug": "speech-419733",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "Labor supported two bills introducing a temporary levy of 48 cents per barrel of oil equivalent on offshore petroleum production to recover the Commonwealth's costs of decommissioning the Laminaria and Corallina oil fields, with the levy in place until costs are recovered or by 30 June 2030, and noted the $52 billion projected total future decommissioning liability for Australia's offshore oil and gas infrastructure."
+  },
+  {
+   "slug": "speech-419736",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the levy bill, which introduces a 48‑cent‑per‑barrel levy from July 2021 to July 2029 to recover nearly $1 billion in taxpayer costs from the decommissioning of the Laminaria and Corallina oilfields, following the sale by Woodside and Talisman Energy to Northern Oil and Gas Australia, which later collapsed. The speaker also argued for a permanent decommissioning fund and a climate disaster levy on oil and gas companies."
+  },
+  {
+   "slug": "speech-419737",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum (Laminaria and Corallina Decommissioning Cost Recovery Levy) Bill 2021 and Treasury Laws Amendment (Laminaria and Corallina Decommissioning Cost Recovery Levy) Bill 2021 impose a temporary levy of 48 cents per barrel of oil equivalent production, effective from 1 July 2021, to recover decommissioning costs for the Laminaria and Corallina oilfields and associated infrastructure, ensuring taxpayers are not left to pay."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Laminaria and Corallina Decommissioning Cost Recovery Levy) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00024",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

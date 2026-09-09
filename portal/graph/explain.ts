@@ -195,7 +195,7 @@ function injectStyles() {
 .explain-sources [data-scene-citation]:hover,.explain-sources [data-scene-citation]:focus-within {
   background:var(--bronze-wash); }
 .explain-narrative { --explain-pad:clamp(1.1rem,3vw,2.2rem); min-width:0; overflow:auto; overflow-x:hidden; padding:var(--explain-pad); }
-.explain-title { margin:0; font:700 clamp(1.7rem,3.2vw,2.45rem)/1.12 var(--serif); letter-spacing:-.018em; }
+.explain-title { margin:0 0 .85rem; font:700 clamp(1.7rem,3.2vw,2.45rem)/1.12 var(--serif); letter-spacing:-.018em; } /* air before the step heading */
 .explain-deck { margin:.55rem 0 1.25rem; color:var(--ink-soft); font:400 .93rem/1.55 var(--serif); }
 .explain-steps { display:flex; gap:.25rem; overflow:auto; margin:0 0 1.35rem; padding:0 0 .45rem;
   list-style:none; border-bottom:1px solid var(--bronze-rule); scrollbar-width:thin; }
@@ -1003,8 +1003,9 @@ class FlowScene {
       rows.length,
     )
     const matrix = new THREE.Matrix4()
+    // Positions and radii are built from the same rows in buildDestinations.
     rows.forEach((row, index) => {
-      matrix.compose(positions[index], new THREE.Quaternion(), new THREE.Vector3(radii[index], radii[index], 1))
+      matrix.compose(positions[index]!, new THREE.Quaternion(), new THREE.Vector3(radii[index], radii[index], 1))
       rings.setMatrixAt(index, matrix)
       rings.setColorAt(index, new THREE.Color(row.colour))
     })
@@ -1058,7 +1059,7 @@ class FlowScene {
       ))
       rows.forEach((row, index) => {
         ribbons.push({
-          from: this.destinationPositions[index], to: this.receiverPoint,
+          from: this.destinationPositions[index]!, to: this.receiverPoint,
           lift: 1.15 + index * .09,
           width: .028 + .21 * Math.sqrt(row.total / total), colour: row.colour,
         })
@@ -1079,7 +1080,7 @@ class FlowScene {
       ))
       rows.forEach((row, index) => {
         ribbons.push({
-          from: this.giverPoint, to: this.destinationPositions[index],
+          from: this.giverPoint, to: this.destinationPositions[index]!,
           lift: 1.25 + index * .08,
           width: .028 + .21 * Math.sqrt(row.total / total), colour: this.giverColour,
         })
@@ -1223,7 +1224,7 @@ class FlowScene {
       new THREE.PlaneGeometry(7.08, top - bottom),
       new THREE.MeshBasicMaterial({ color: 0x8a5a12, transparent: true, opacity: .045, side: THREE.DoubleSide }),
     ))
-    this.limitsGroup.children[0].position.set(0, (top + bottom) / 2, -.09)
+    this.limitsGroup.children[0]!.position.set(0, (top + bottom) / 2, -.09)
     const hatch: number[] = []
     for (let x = -4.05; x <= 3.5; x += .28) {
       const startX = THREE.MathUtils.clamp(x, -3.54, 3.54)
@@ -1260,7 +1261,7 @@ class FlowScene {
     for (let index = 0; index < this.historyTargets.length; index++) {
       const year = FIRST_YEAR + index
       const x = xAt(year)
-      const top = baselineY + (year <= cutoff ? this.historyTargets[index] * heightScale : 0)
+      const top = baselineY + (year <= cutoff ? this.historyTargets[index]! * heightScale : 0)
       this.historyPositions.set([
         x - halfWidth, baselineY, 0, x + halfWidth, baselineY, 0, x + halfWidth, top, 0,
         x - halfWidth, baselineY, 0, x + halfWidth, top, 0, x - halfWidth, top, 0,
@@ -1338,7 +1339,7 @@ class FlowScene {
       const labels: SceneLabel[] = visible.map((row, index) => {
         return {
           text: stageShortLabel(row.label),
-          position: this.destinationPositions[index].clone().add(new THREE.Vector3(this.destinationSide === 'left' ? .42 : -.42, 0, .08)),
+          position: this.destinationPositions[index]!.clone().add(new THREE.Vector3(this.destinationSide === 'left' ? .42 : -.42, 0, .08)),
           className: 'destination',
           align: (this.destinationSide === 'left' ? 'start' : 'end') as 'start' | 'end',
           offsetX: this.destinationSide === 'left' ? 5 : -5,
@@ -1346,7 +1347,7 @@ class FlowScene {
       })
       if (visible.length < this.destinationRows.length) {
         const index = this.destinationRows.length - 1
-        const position = this.destinationPositions[index].clone().add(new THREE.Vector3(this.destinationSide === 'left' ? .42 : -.42, 0, .08))
+        const position = this.destinationPositions[index]!.clone().add(new THREE.Vector3(this.destinationSide === 'left' ? .42 : -.42, 0, .08))
         labels.push({
           text: `+${this.destinationRows.length - visible.length} smaller`, position,
           className: 'destination destination-summary',
@@ -1485,7 +1486,7 @@ class FlowScene {
     this.giverGroup.position.x = step === 0 && this.detail.kind !== 'party' ? this.whoGiverPoint.x : this.giverPoint.x
     this.receiverGroup.visible = step !== 0 || this.detail.kind === 'party'
     this.arcMaterial.opacity = step === 4 ? .16 : step === 3 ? .27 : step === 0 ? .26 : .46
-    this.travellingMaterial.uniforms.uAlpha.value = step === 1 ? .58 : .22
+    this.travellingMaterial.uniforms.uAlpha!.value = step === 1 ? .58 : .22
     if (step === 1) {
       this.year = this.motion.matches ? LAST_YEAR : FIRST_YEAR
       this.yearAmount = this.flow.years.get(this.year)?.[0] || 0

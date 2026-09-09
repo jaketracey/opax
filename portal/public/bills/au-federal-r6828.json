@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r6828",
+ "title": "Ozone Protection and Synthetic Greenhouse Gas Management Amendment (Miscellaneous Measures) Bill 2021",
+ "short_title": "Ozone Protection and Synthetic Greenhouse Gas Management Amendment (Miscellaneous Measures) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-12-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6828%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6828%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6828%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6828_ems_41043417-540e-4a3a-a31d-dc85ee7c98dd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6828%22",
+   "document_date": "2021-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-12-02",
+  "sentences": [
+   "The bill would change how Australia controls ozone-depleting substances and synthetic greenhouse gases.",
+   "It would bring existing licence conditions into the law, clarify rules, and adopt standard enforcement powers from the Regulatory Powers Act 2014.",
+   "The bill would let the regulator require people to hand over information by issuing a formal demand."
+  ],
+  "changes": [
+   "Brings licence conditions like the ban on non-refillable containers into the legislation.",
+   "Clarifies licence and exemption requirements to reduce accidental non-compliance.",
+   "Extends deadlines for submitting reports and paying levies.",
+   "Replaces current enforcement provisions with standard Commonwealth regulatory powers.",
+   "Introduces information-gathering powers including the ability to demand documents.",
+   "Adds licence suspension as an alternative to cancellation or financial penalties."
+  ],
+  "affected": "Businesses that import, export or manufacture scheduled substances or products containing them, and individuals subject to the Act.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

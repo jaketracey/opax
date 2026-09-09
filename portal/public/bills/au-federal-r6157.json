@@ -1,0 +1,122 @@
+{
+ "key": "au-federal-r6157",
+ "title": "Aged Care Amendment (Staffing Ratio Disclosure) Bill 2018",
+ "short_title": "Aged Care Amendment (Staffing Ratio Disclosure) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-08-20",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6157%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6157%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6157%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6157%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6157%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6157_ems_7a4dd69c-5e50-4834-a371-550a1d02ddd4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6157%22",
+   "document_date": "2018-08-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-08-20",
+  "sentences": [
+   "The bill would require aged care providers to publish staff-to-resident ratios every three months.",
+   "Providers must report ratios for each staff category to the Secretary, who would make the information public.",
+   "Providers may include a 250-word explanation with their report, and must notify the Secretary within 28 days if a ratio changes by more than 10%."
+  ],
+  "changes": [
+   "Requires quarterly publication of staff-to-resident ratios for residential care services.",
+   "Requires providers to report ratios by staff category, counting part-time staff as fractions of full-time equivalents.",
+   "Requires providers to notify the Secretary within 28 days if a ratio changes by more than 10% between quarterly reports."
+  ],
+  "affected": "Approved providers of residential aged care services and the Secretary.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-367531",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Aged Care Amendment (Staffing Ratio Disclosure) Bill 2018, citing a constituent's account of chronic understaffing leading to preventable deaths and calling for legislated minimum nurse-to-resident ratios. In the electorate of Indi, 22% of residents are aged 50–64 and 21% are over 65, with 44 aged-care facilities, and the speaker urged the government to support an inquiry into sustainable, long-term services, especially for rural and regional areas."
+  },
+  {
+   "slug": "speech-374850",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-13",
+   "stage_hint": null,
+   "brief": "The motion acknowledged International Mother Language Day on 21 February, the work of the Ekushe Academy Australia and the Mother Language Conservation Movement, 2019 as the Year of Indigenous Languages, and that approximately 200 languages are spoken in Australia. It called on the Australian Government to observe the day, promote language preservation, strengthen multilingual education, and support community mother-language efforts."
+  },
+  {
+   "slug": "speech-375582",
+   "speaker": "Kerryn Phelps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "Urgent aged-care reforms must proceed alongside any royal commission, including passing the Aged Care Amendment (Staffing Ratio Disclosure) Bill 2018 to force residential facilities to publish staff-to-resident ratios quarterly. The speech cited an audit of eight Wentworth facilities averaging one registered nurse per 74 residents on night shift (worst 1:116) and noted six large for-profit providers received $2.17 billion in taxpayer subsidies."
+  },
+  {
+   "slug": "speech-375583",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Amendment (Staffing Ratio Disclosure) Bill 2018 for greater transparency in aged care, criticised the government for $1.2 billion in cuts and over a dozen unimplemented reviews, and welcomed the royal commission into aged care after the government reversed its opposition."
+  }
+ ],
+ "acts": []
+}

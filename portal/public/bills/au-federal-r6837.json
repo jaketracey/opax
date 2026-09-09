@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6837",
+ "title": "Transport Security Amendment (Critical Infrastructure) Bill 2022",
+ "short_title": "Transport Security Amendment (Critical Infrastructure) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6837%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6837%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6837%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6837_ems_51be1c86-45dc-45f0-b031-5f30a9aa9953%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6837%22",
+   "document_date": "2022-02-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-17",
+  "sentences": [
+   "The bill would update aviation and maritime security laws to address cyber threats and other evolving risks to critical transport infrastructure.",
+   "It would expand the definition of unlawful interference to cover cyber security incidents and operational interference, and give the minister power to declare critical industry participants.",
+   "The bill would also introduce improvement notices, expand inspector powers, and align security program requirements with the broader critical infrastructure risk management framework."
+  ],
+  "changes": [
+   "Expands the definition of unlawful interference in the Aviation Act and the Maritime Act to include cyber security incidents.",
+   "Inserts a new purpose of safeguarding against operational interference into both Acts.",
+   "Gives the minister power to declare critical industry participants with additional requirements.",
+   "Requires security programs to include a security assessment identifying and mitigating risks.",
+   "Introduces improvement notices that security inspectors can issue to enforce compliance.",
+   "Triggers investigation and civil penalty provisions from the Regulatory Powers Act."
+  ],
+  "affected": "Aviation and maritime industry participants regulated under the Aviation Act and the Maritime Act, including those declared critical by the minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-419144",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The Transport Security Amendment (Critical Infrastructure) Bill 2022 was introduced to strengthen aviation and maritime security by requiring regulated entities to identify, mitigate and report cybersecurity incidents, and allowing the Minister for Home Affairs to declare a subset as 'critical' with additional threat-reporting duties. The bill also modernises the compliance framework and aims to minimise administrative burden on industry."
+  }
+ ],
+ "acts": []
+}

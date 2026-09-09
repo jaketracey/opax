@@ -1,0 +1,236 @@
+{
+ "key": "au-federal-r5735",
+ "title": "Register of Foreign Ownership of Agricultural Land Amendment (Water) Bill 2016",
+ "short_title": "Register of Foreign Ownership of Agricultural Land Amendment (Water) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5735_ems_e3bdeea7-49a6-4817-8fa4-405d0cfc0579%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5735%22",
+   "document_date": "2016-10-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00096",
+   "document_date": "2016-12-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-12",
+  "sentences": [
+   "The bill would create a Water Register to track foreign ownership of water rights.",
+   "The Commissioner would run the register, which has a public statistical part and a full record that does not identify individuals.",
+   "The Commissioner must report annually to the Minister on the register's operation, and the Act would be treated as a taxation law for confidentiality purposes."
+  ],
+  "changes": [
+   "Establishes a Water Register for foreign-held water entitlements and rights.",
+   "Requires the Commissioner to publish a statistical part of the register online.",
+   "Requires the Commissioner to give the Minister an annual report on the register's operation."
+  ],
+  "affected": "Foreign persons holding certain water entitlements and rights.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-334851",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-12",
+   "stage_hint": null,
+   "brief": "The coalition government moved to establish a national register of foreign interests in Australian water entitlements, requiring foreign persons to register certain water rights with the Australian Taxation Office from 1 July 2017 to provide greater transparency and a comprehensive picture of foreign ownership levels."
+  },
+  {
+   "slug": "speech-336661",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to create a foreign water register but argued the government’s existing foreign land register is a ‘Clayton’s register’ that fails to provide meaningful transparency, and criticised the government for introducing discriminatory investment thresholds."
+  },
+  {
+   "slug": "speech-336779",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "The Register of Foreign Ownership of Agricultural Land Amendment (Water) Bill 2016 was supported, requiring transparency for foreign ownership of water entitlements. The speaker also argued for eliminating water speculators, requiring extraction point nomination, a 15% surcharge on carryover for non-consumptive users, and including private environmental water holdings within the 1,500 gigalitre cap."
+  },
+  {
+   "slug": "speech-336780",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Register of Foreign Ownership of Agricultural Land Amendment (Water) Bill 2016 but called it manifestly inadequate, arguing the existing land register lacks transparency—citing inaccurate data (e.g., Chinese farmland holdings possibly 2–3 million hectares versus the ATO’s 1.46 million), a weak $9,000 penalty, and vague definitions of farmland. They urged the government to ensure the proposed water register provides detailed, searchable information rather than repeating the land register’s failures."
+  },
+  {
+   "slug": "speech-336781",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Register of Foreign Ownership of Agricultural Land Amendment (Water) Bill 2016 is essential for transparency in water ownership, to dispel myths and address the negative effects of water trading on primary producers, including high input costs and low employment in almond plantations compared to horticulture (38 jobs per unit of water) and dairy (18–19 jobs)."
+  },
+  {
+   "slug": "speech-336782",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Register of Foreign Ownership of Agricultural Land Amendment (Water) Bill 2016, advocating for lowering the Foreign Investment Review Board’s scrutiny threshold to $5 million and adopting a New Zealand-style framework. They criticised the existing land register for lacking detail on the 13.6% of foreign-owned farmland, including dollar values and regional statistics, and stressed the need for greater transparency to protect Australian food security and jobs."
+  },
+  {
+   "slug": "speech-336783",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Register of Foreign Ownership of Agricultural Land Amendment (Water) Bill 2016 does not go far enough, as the current register is too secretive and fails to give the public confidence about who owns water rights. They called for a fully open and transparent register to prevent market manipulation and speculative buying of water entitlements, citing concerns about Chinese interests owning over 3 million hectares of agricultural land and weak penalties of only $9,000 for non-registration."
+  },
+  {
+   "slug": "speech-336784",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Register of Foreign Ownership of Agricultural Land Amendment (Water) Bill 2016, arguing that a register of foreign-owned water entitlements is needed to measure and manage such investment in the national interest."
+  },
+  {
+   "slug": "speech-336786",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "The bill only establishes a register of foreign water ownership without addressing water pricing or market speculation, and the speaker noted water prices spiked to $300 per megalitre before dropping to $62, with dairy farmers near Shepparton stating they would have sold their farms without recent rain."
+  },
+  {
+   "slug": "speech-336787",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "The government introduced the Register of Foreign Ownership of Agricultural Land Amendment (Water) Bill 2016 to create a register of foreign ownership of water entitlements, requiring foreign holders of registrable water entitlements and contractual water rights to notify the Commissioner of Taxation from 1 July 2017, with annual reports tabled in parliament."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Register of Foreign Ownership of Agricultural Land Amendment (Water) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00096",
+   "assent_date": "2016-12-07"
+  }
+ ]
+}

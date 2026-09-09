@@ -1,0 +1,221 @@
+{
+ "key": "au-federal-r5514",
+ "title": "Broadcasting Legislation Amendment (Primary Television Broadcasting Service) Bill 2015",
+ "short_title": "Broadcasting Legislation Amendment (Primary Television Broadcasting Service) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-08-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "passed",
+ "status_as_of": "2015-09-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5514_ems_37640e59-ab8c-4df4-8006-47d015d2e8f2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5514%22",
+   "document_date": "2015-08-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00127",
+   "document_date": "2015-09-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-08-19",
+  "sentences": [
+   "The bill would let commercial and national free-to-air television channels choose whether to broadcast their main channel in standard definition or high definition.",
+   "It removes the current legal requirement that the primary service must be in standard definition, and makes related changes to anti-siphoning and satellite licence rules.",
+   "The bill follows a 2015 review that found 96% of households can already receive high definition content."
+  ],
+  "changes": [
+   "Allows free-to-air broadcasters to offer their primary service in either SD or HD.",
+   "Updates the anti-siphoning regime to keep existing rules when a primary service is broadcast in HD.",
+   "Makes minor amendments to section 41CA and Schedule 2 of the Broadcasting Services Act 1992 for satellite-licence services."
+  ],
+  "affected": "Commercial and national free-to-air broadcasters and their viewers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:03Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-316707",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-19",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Primary Television Broadcasting Service) Bill 2015 removes the requirement for free-to-air broadcasters to transmit their primary service only in standard definition, allowing them to choose either standard or high definition for channels including ABC1, SBS ONE, 7, Prime7, Nine, WIN, Ten and Southern Cross. The speaker noted that 96% of households have HD-capable equipment and that the change would enable events such as the AFL and NRL grand finals to be broadcast in high definition."
+  },
+  {
+   "slug": "speech-317780",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The opposition supported the Broadcasting Legislation Amendment (Primary Television Broadcasting Service) Bill 2015, which removes the restriction requiring commercial broadcasters Seven, Nine, Ten, ABC and SBS to broadcast their primary channel only in standard definition, allowing high-definition broadcasts instead. The speaker noted that over 96% of Australian households now have HD-capable televisions, and the change will enable major sporting events like AFL and NRL grand finals to be shown in HD."
+  },
+  {
+   "slug": "speech-317781",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Primary Television Broadcasting Service) Bill 2015 removes the requirement for free-to-air broadcasters to transmit their primary channel in standard definition, allowing them to choose either standard or high definition. The change responds to 96% of households now having high-definition-capable receivers, ending a regulation that prevented marquee events like AFL and NRL grand finals from being broadcast in high definition."
+  },
+  {
+   "slug": "speech-317782",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Broadcasting Legislation Amendment (Primary Television Broadcasting Service) Bill 2015, which removes the requirement for free-to-air broadcasters to provide their primary service only in standard definition, allowing either SD or HD. The speaker also criticised the minister’s broadband policy, citing Presto’s statement that Australia’s internet speeds are too slow for 4K content due to the new NBN."
+  },
+  {
+   "slug": "speech-317783",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Broadcasting Legislation Amendment (Primary Television Broadcasting Service) Bill 2015, noting that over 50% of national digital TV reception complaints come from his electorate of Paterson, and announced $827,690 in funding from the federal government and Regional Broadcasters Australia Holdings for new transmission towers at Port Stephens/Gan Gan, Bulahdelah, and Wallaroo to improve coverage."
+  },
+  {
+   "slug": "speech-317784",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The Broadcasting Legislation Amendment (Primary Television Broadcasting Service) Bill 2015 was supported, allowing commercial and national free-to-air broadcasters to offer primary services in high definition; it also requires consequential antisiphoning amendments to maintain current rules. The speech noted high digital TV uptake and credited Ed Husic for campaigning for the reform."
+  },
+  {
+   "slug": "speech-317785",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Broadcasting Legislation Amendment (Primary Television Broadcasting Service) Bill 2015 as a common-sense update for the changing media landscape, and noted that former MP Paul Neville had experienced digital TV reception issues. The speaker also raised concern about the mandatory standard definition broadcast requirement for AFL and NRL finals, referencing a potential Queensland NRL grand final between the Brisbane Broncos and North Queensland Cowboys."
+  },
+  {
+   "slug": "speech-317787",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The member argued the Broadcasting Legislation Amendment (Primary Television Broadcasting Service) Bill 2015 would allow free-to-air networks and Foxtel to transmit in high definition, reducing red tape and benefiting regional areas like Townsville, where 200,000 people want to watch the Cowboys play the Broncos."
+  },
+  {
+   "slug": "speech-317789",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Broadcasting Legislation Amendment (Primary Television Broadcasting Service) Bill 2015 should be passed to allow free-to-air broadcasters to show their primary services in high definition, noting that 96 per cent of Australian households had HD-capable equipment by February 2014 and that the change would benefit viewers of NRL and AFL grand finals while helping broadcasters compete with pay TV and streaming services."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Broadcasting Legislation Amendment (Primary Television Broadcasting Service) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00127",
+   "assent_date": "2015-09-16"
+  }
+ ]
+}

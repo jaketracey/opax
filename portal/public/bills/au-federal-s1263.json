@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s1263",
+ "title": "Coronavirus Economic Support and Recovery (No-one Left Behind) Bill 2020",
+ "short_title": "Coronavirus Economic Support and Recovery (No-one Left Behind) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-11",
+ "originating_house": "senate",
+ "sponsor": "WATERS, Sen Larissa",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10764",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1263%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1263%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1263_ems_f1f5c08e-a1ea-444a-a5bb-e33f95f88a5f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1263%22",
+   "document_date": "2020-06-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-11",
+  "sentences": [
+   "This bill would create a fund for investing in arts, manufacturing and renewable energy, and expand coronavirus payments to more people.",
+   "The Finance Minister would be directed to set up the Coronavirus Economic Support and Recovery Fund, with rules in place by 30 June 2020, and the bill would expand the $550 per fortnight COVID-19 supplement to disability support pension and carer payment recipients while making temporary visa holders eligible for JobSeeker.",
+   "The bill would also require the Minister to extend JobKeeper eligibility to all casual employees regardless of employment period, all temporary visa holder employees, and intermittent workers with a demonstrated income history, and prevent excluding certain foreign government-owned entities and higher education providers as eligible employers."
+  ],
+  "changes": [
+   "The Finance Minister must create a fund to invest in arts, manufacturing and renewable energy, and cannot use it for fossil fuel projects.",
+   "The $550 per fortnight COVID-19 supplement is extended to disability support pension and carer payment recipients.",
+   "Temporary visa holders become eligible for JobSeeker payment if they otherwise meet criteria.",
+   "JobKeeper eligibility is extended to all casual employees, temporary visa holder employees, and intermittent workers with a demonstrated income history.",
+   "Certain foreign government-owned entities and higher education providers cannot be excluded as eligible JobKeeper employers.",
+   "Prompt back payment of newly eligible JobKeeper employees and employers must be facilitated."
+  ],
+  "affected": "People receiving disability support pension or carer payment, temporary visa holders, casual employees, intermittent workers, certain foreign government-owned entities, and higher education providers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:41:36Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

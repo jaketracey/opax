@@ -1,0 +1,68 @@
+{
+ "key": "au-federal-s1490",
+ "title": "Prime Agricultural Land Protection Bill 2026 (No. 2)",
+ "short_title": "Prime Agricultural Land Protection Bill 2026 (No. 2)",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-11",
+ "originating_house": "senate",
+ "sponsor": "CANAVAN, Sen Matthew",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10827",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-03-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1490%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1490%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1490_ems_d54f2fde-964d-486d-894c-e6caf74c1901%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1490%22",
+   "document_date": "2026-03-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-11",
+  "sentences": [
+   "The bill would create a national system to identify and shield Australia's most productive farmland.",
+   "It would set up an Agriculture Commissioner to resolve disputes and oversee projects, and restrict federal money for developments that harm farming or let foreign firms control Tier 2 or Tier 1 land.",
+   "The Act would start the day after it receives Royal Assent."
+  ],
+  "changes": [
+   "Classifies agricultural land into three tiers based on productivity.",
+   "Bans Commonwealth funding for projects that reduce Tier 1 land's farming output or allow foreign ownership.",
+   "Requires a social licence report and public consultation before federal funds flow to projects on Tier 2 land.",
+   "Creates a compensation mechanism for property acquisitions not on just terms."
+  ],
+  "affected": "Landowners, farmers, foreign investors, companies seeking Commonwealth funding, and the Agriculture Department.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

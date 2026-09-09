@@ -1,0 +1,104 @@
+{
+ "key": "au-federal-r6305",
+ "title": "Civil Aviation Amendment Bill 2019",
+ "short_title": "Civil Aviation Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Regional Development and Cities",
+ "status": "lapsed",
+ "status_as_of": "2019-04-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6305%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6305%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6305%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6305%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6305%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6305_ems_0dc328f9-c040-4a3b-845b-a2dd16c239ea%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6305%22",
+   "document_date": "2019-02-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-21",
+  "sentences": [
+   "This bill is part of a package that amends the Civil Aviation Act 1988 to require the Civil Aviation Safety Authority to consider costs and risk levels of different aviation sectors when setting safety standards.",
+   "It would write existing regulatory practice into law without changing the rule that safety is CASA's top priority.",
+   "The explanatory memorandum does not specify when the changes would start or which sections of the Act are amended."
+  ],
+  "changes": [
+   "CASA must consider the cost impacts of safety standards.",
+   "CASA must take into account the relative risk environment of different aviation industry sectors.",
+   "Existing regulatory practice is codified in legislation."
+  ],
+  "affected": "The Civil Aviation Safety Authority and the aviation industry sectors.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-376669",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "The opposition supported the Civil Aviation Amendment Bill 2019, which would require CASA to consider economic and cost impacts on the aviation sector when developing safety standards while keeping safety paramount. The bill was described as an imperfect but important step forward for general aviation, which employs over 3,500 Australians, and was welcomed by Regional Express (Rex)."
+  },
+  {
+   "slug": "speech-376670",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "The Civil Aviation Amendment Bill 2019 requires CASA to consider economic and cost impacts on industry and communities when developing aviation safety standards, while preserving its ability to make operational safety decisions such as grounding the Boeing 737 MAX."
+  }
+ ],
+ "acts": []
+}

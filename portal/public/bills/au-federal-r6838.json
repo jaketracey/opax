@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6838",
+ "title": "Treasury Laws Amendment (Tax Concession for Australian Medical Innovations) Bill 2022",
+ "short_title": "Treasury Laws Amendment (Tax Concession for Australian Medical Innovations) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6838%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6838%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6838%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6838_ems_02b56967-719e-4392-bebe-be9342be5972%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6838%22",
+   "document_date": "2022-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-10",
+  "sentences": [
+   "The bill would create a patent box regime that taxes income from medical and biotechnology patents at a lower rate.",
+   "Corporate taxpayers that meet eligibility criteria would pay a 17 per cent effective income tax rate on income from eligible patents, provided they do the research and development in Australia.",
+   "The regime applies to patents granted after 11 May 2021 for income years starting on or after 1 July 2022."
+  ],
+  "changes": [
+   "Introduces a patent box regime for medical and biotechnology patents.",
+   "Applies a 17 per cent effective income tax rate to eligible patent income.",
+   "Requires the taxpayer to undertake the research and development of the patent in Australia."
+  ],
+  "affected": "Corporate taxpayers that exploit medical or biotechnology patents and meet the eligibility criteria.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

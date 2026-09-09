@@ -1,0 +1,160 @@
+{
+ "key": "au-federal-r7051",
+ "title": "Biosecurity Amendment (Advanced Compliance Measures) Bill 2023",
+ "short_title": "Biosecurity Amendment (Advanced Compliance Measures) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "passed",
+ "status_as_of": "2023-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7051_ems_0d057ba3-c35f-41aa-96c9-104666890265%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7051%22",
+   "document_date": "2023-06-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00062",
+   "document_date": "2023-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-21",
+  "sentences": [
+   "The bill would update Australia's biosecurity law to better handle growing risks from travel, trade, and climate change.",
+   "It would give the Director of Biosecurity new powers to demand information and travel documents from incoming travellers, and to scan and keep that data.",
+   "It would also raise fines for breaking certain biosecurity rules, add new strict liability offences, and change how approved arrangements are varied, suspended, or revoked."
+  ],
+  "changes": [
+   "Allow the Director to require classes of incoming travellers to provide information for biosecurity risk checks.",
+   "Allow the Director to require and scan passports or travel documents for risk assessment and future profiling.",
+   "Create a new civil penalty for not producing a passport when required, subject to the infringement notice scheme.",
+   "Add a 14-day period for biosecurity industry participants to comment on proposed variations to their approved arrangements.",
+   "Introduce a reprimand as an alternative sanction for approved arrangement breaches.",
+   "Increase civil penalties for certain human health and false information offences."
+  ],
+  "affected": "Travellers entering Australia, operators of aircraft and vessels, and biosecurity industry participants with approved arrangements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:41Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Biosecurity Amendment (Advanced Compliance Measures) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00062",
+   "assent_date": "2023-09-13"
+  }
+ ]
+}

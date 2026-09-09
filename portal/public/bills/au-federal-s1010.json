@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-s1010",
+ "title": "Australian Government Boards (Gender Balanced Representation) Bill 2015",
+ "short_title": "Australian Government Boards (Gender Balanced Representation) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-24",
+ "originating_house": "senate",
+ "sponsor": "XENOPHON, Sen Nick",
+ "sponsor_party": "Independent Member",
+ "sponsor_person_id": "10717",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1010%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1010%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1010%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1010%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1010%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1010_ems_8aa0d31f-0426-43c9-8def-dcd86c9447e3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1010%22",
+   "document_date": "2015-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-24",
+  "sentences": [
+   "The bill would make it a legal requirement, not just a goal, for government boards to have balanced gender representation.",
+   "Officials appointing board members would have to ensure at least 40 per cent of members are men and at least 40 per cent are women.",
+   "Each portfolio department would have to report annually on the gender mix of its boards, and the Minister for Women would publish a consolidated report for Parliament."
+  ],
+  "changes": [
+   "Replaces the current aspirational target with a positive obligation for each board appointment.",
+   "Requires Commonwealth officials to ensure each board has at least 40 per cent men and 40 per cent women.",
+   "Mandates annual portfolio reports on board gender composition.",
+   "Requires the Minister for Women to publish and table a consolidated report in Parliament."
+  ],
+  "affected": "Commonwealth officials making appointments, portfolio departments, government boards, and the Minister for Women.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:50:27Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

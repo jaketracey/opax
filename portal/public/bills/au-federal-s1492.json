@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-s1492",
+ "title": "Commonwealth Environmental Water Holder Commission of Inquiry Bill 2026",
+ "short_title": "Commonwealth Environmental Water Holder Commission of Inquiry Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-31",
+ "originating_house": "senate",
+ "sponsor": "CADELL, Sen Ross",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "11004",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1492%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1492%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1492%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1492_ems_67767155-de6d-4dd4-85bc-fa9cd5616b30%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1492%22",
+   "document_date": "2026-03-31",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-31",
+  "sentences": [
+   "The bill would create a parliamentary inquiry into the Commonwealth Environmental Water Holder's conduct and results.",
+   "The inquiry would have the same powers as a Royal Commission, such as summoning witnesses and demanding documents, but would be set up by Parliament rather than the government.",
+   "The inquiry would report to Parliament with proposals to improve trust and openness in Murray-Darling Basin water management."
+  ],
+  "changes": [
+   "Establishes a Commission of Inquiry into the Commonwealth Environmental Water Holder.",
+   "Gives the Commission powers equal to a Royal Commission, including to compel witnesses and require documents.",
+   "Requires the Commission to report to Parliament with findings and recommendations."
+  ],
+  "affected": "The Commonwealth Environmental Water Holder, agricultural producers, regional economies, and communities in the Murray-Darling Basin.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1202350",
+   "speaker": "Alison Penfold",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202454",
+   "speaker": "Ross Cadell",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-04-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

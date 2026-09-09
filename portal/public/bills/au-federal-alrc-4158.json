@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-alrc-4158",
+ "title": "Voice for Animals (Independent Office of Animal Welfare) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2013-06-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-03",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-03",
+   "house": "representatives",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-272656",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274263",
+   "speaker": "Sid Sidebottom",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274264",
+   "speaker": "Barry Haase",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274267",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-03",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

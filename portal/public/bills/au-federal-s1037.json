@@ -1,0 +1,91 @@
+{
+ "key": "au-federal-s1037",
+ "title": "Social Security Amendment (Diabetes Support) Bill 2016",
+ "short_title": "Social Security Amendment (Diabetes Support) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-03",
+ "originating_house": "senate",
+ "sponsor": "MUIR, Sen Ricky",
+ "sponsor_party": "Australian Motoring Enthusiast Party",
+ "sponsor_person_id": "10834",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1037%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1037%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1037%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1037%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1037%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1037%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1037_ems_4c23333b-d380-4569-b56c-fa319d0ae499%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1037%22",
+   "document_date": "2016-03-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-03",
+  "sentences": [
+   "The bill would give people diagnosed with Type 1 Diabetes Mellitus access to medication and devices regardless of where they live or how much money they have.",
+   "It would amend the Social Security Act 1991 to add benefits for holders of a health care card established by the bill, on top of existing Commonwealth support.",
+   "The bill would start on the day it receives royal assent."
+  ],
+  "changes": [
+   "The bill creates a new health care card for people with Type 1 Diabetes Mellitus.",
+   "The bill ensures access to required medication and peripheral devices for those diagnosed with Type 1 Diabetes Mellitus.",
+   "The bill adds benefits for card holders to existing support such as chronic disease management, National Diabetes Services Scheme products, and Medicare Safety Net payments."
+  ],
+  "affected": "Individuals diagnosed with Type 1 Diabetes Mellitus.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

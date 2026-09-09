@@ -1,0 +1,240 @@
+{
+ "key": "au-federal-r5815",
+ "title": "Biosecurity Amendment (Ballast Water and Other Measures) Bill 2017",
+ "short_title": "Biosecurity Amendment (Ballast Water and Other Measures) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2017-05-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-05-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5815_ems_75db296e-defe-4f3f-8e5b-1c8c0a5e404f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5815_ems_71724ac2-6c5c-4112-abf7-144d17322d17%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5815_ems_38eb27e1-c39c-4e6b-8001-74416ec95b72%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5815%22",
+   "document_date": "2017-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00034",
+   "document_date": "2017-05-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-02-15",
+  "sentences": [
+   "This bill would change the Biosecurity Act 2015 to better protect Australia's marine life and people from pests and diseases.",
+   "It would apply the same ballast water discharge rules to Australian and foreign ships and let officials destroy disease-carrying insects on vessels and aircraft.",
+   "The changes would let Australia meet the international ballast water treaty when it starts on 8 September 2017."
+  ],
+  "changes": [
+   "Equalise ballast water offence exceptions for Australian and foreign vessels.",
+   "Create a power to update ballast water rules by legislative instrument instead of amending the Act.",
+   "Broaden the existing power to destroy insects that carry human diseases on arriving ships and planes.",
+   "Restore a power from the old Quarantine Act 1908 so health officials can direct private property owners to control disease-carrying insects."
+  ],
+  "affected": "Ship operators, human health officials, and the Australian community broadly.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:14:36Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-341486",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The Biosecurity Amendment (Ballot Water and Other Measures) Bill 2017 was moved to strengthen Australia's biosecurity system, including new powers to control disease-carrying mosquitoes at airports and seaports and to phase out ballast water exchange in favour of more effective treatment technologies, enabling ratification of the 2004 International Convention for the Control and Management of Ships' Ballast Water and Sediments."
+  },
+  {
+   "slug": "speech-344568",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Biosecurity Amendment (Ballast Water and Other Measures) Bill 2017, which updates ballast water management to reduce invasive marine pests, and criticised Minister Joyce for interfering in Queensland's sugar dispute and attempting to weaken the Inspector-General of Biosecurity. The opposition backs the bill but seeks clarification on late amendments."
+  },
+  {
+   "slug": "speech-344569",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The speaker apologised to the member for Hunter for incorrectly stating that his office hung up on constituents, clarifying the hang-up occurred in Senator Hinch’s office, while still criticising the member’s conduct during the backpacker tax debate. The speaker then turned to the Biosecurity Amendment (Ballast Water and Other Measures) Bill 2017."
+  },
+  {
+   "slug": "speech-344573",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Biosecurity Amendment (Ballast Water and Other Measures) Bill 2017, which aligns Australia with the international ballast water convention and adds powers to manage disease vectors like the Zika virus. The speech also recommended expanding the National Bee Pest Surveillance Program from 32 to 54 ports, citing the honey bee's $4 billion annual value and the program's $1.9 million cost, and criticised government delay for the white spot disease outbreak in prawns."
+  },
+  {
+   "slug": "speech-344574",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The Biosecurity Amendment (Ballast Water and Other Measures) Bill 2017 was commended for strengthening ballast water management to reduce invasive marine pests and enabling control of disease-carrying vectors such as mosquitoes that may transmit Zika, allowing Australia to ratify the ballast water convention. The bill was highlighted as vital for the O'Connor electorate’s ports of Albany and Esperance, which in 2016 saw 158 vessels moving over 4.5 million tonnes and 209 vessels moving over 50 million tonnes respectively, with flood recovery in Ravensthorpe also noted."
+  },
+  {
+   "slug": "speech-344575",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "Labor supported the Biosecurity Amendment (Ballast Water and Other Measures) Bill 2017, which implements the Ballast Water Convention, but criticised the government for not introducing it earlier. The speech also argued that the loss of Australian seafarers and reliance on foreign crews undermines the enforcement of biosecurity and environmental laws, citing 13,000 ships visiting from 600 ports and incidents like oil spills and the Great Barrier Reef."
+  },
+  {
+   "slug": "speech-344576",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The Biosecurity Amendment (Ballast Water and Other Measures) Bill 2017 provides additional powers to control disease-carrying pests at airports and seaports and strengthens ballast water management, enabling ratification of the International Convention for the Control and Management of Ships’ Ballast Water and Sediments. Agricultural exports are forecast to earn over $60 billion in 2016-17, and the speaker cited local examples including the Norco dairy co-op exporting fresh milk to China and a $14 million national centre of excellence for cooperatives at Southern Cross University."
+  },
+  {
+   "slug": "speech-344741",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Biosecurity Amendment (Ballast Water and Other Measures) Bill 2017, noting that white spot disease had been detected in prawns from Moreton Bay and that a three-month movement control order was in place, with rapid response funding provided by the coalition government. The bill enhances biosecurity powers at airports and seaports, including ballast water management, to align with the International Convention for the Control and Management of Ships' Ballast Water and Sediments."
+  },
+  {
+   "slug": "speech-344743",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The Biosecurity Amendment (Ballast Water and Other Measures) Bill 2017 strengthens Australia’s biosecurity system by introducing stricter ballast-water management for ships and new powers to control disease-carrying vectors like mosquitoes, including those that transmit Zika virus. The government has increased biosecurity funding to $749 million in 2016–17, a 24% rise since 2012–13, and is responding to the white spot disease outbreak in Queensland with $1.74 million in emergency funding and ongoing eradication efforts."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Biosecurity Amendment (Ballast Water and Other Measures) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00034",
+   "assent_date": "2017-05-17"
+  }
+ ]
+}

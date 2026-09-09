@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r6646",
+ "title": "Fair Work Amendment (Ten Days Paid Domestic and Family Violence Leave) Bill 2020",
+ "short_title": "Fair Work Amendment (Ten Days Paid Domestic and Family Violence Leave) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-07",
+ "originating_house": "representatives",
+ "sponsor": "BURNEY, Linda, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10858",
+ "portfolio": "(s) BURNEY, Linda, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-08-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6646%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6646%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6646%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6646_ems_778bf8e8-96fd-46b6-a16b-7dd1a00187cb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6646%22",
+   "document_date": "2020-12-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-07",
+  "sentences": [
+   "The bill would replace five days of unpaid domestic and family violence leave with ten days of paid leave under national workplace standards.",
+   "Eligible employees could take the leave at their ordinary hourly rate for the hours they would have worked, with the full ten days available at the start of each 12-month period.",
+   "The entitlement would not accumulate across years and would be adjusted proportionally for part-time and casual workers."
+  ],
+  "changes": [
+   "The bill would increase the existing domestic and family violence leave from five days unpaid to ten days paid.",
+   "It would require employers to pay workers at their base rate for the usual hours they would have worked during the leave.",
+   "It would allow workers and employers to agree on additional paid or unpaid leave beyond the ten days.",
+   "It would broaden the reasons for taking the leave to include steps to protect immediate and future safety.",
+   "It would strengthen confidentiality rules to clarify how personal employee information is handled in the workplace."
+  ],
+  "affected": "All types of employees, including casual workers, who experience domestic and family violence and need time off during ordinary work hours.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

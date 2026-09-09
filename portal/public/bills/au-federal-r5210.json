@@ -1,0 +1,215 @@
+{
+ "key": "au-federal-r5210",
+ "title": "Regulatory Powers (Standard Provisions) Bill 2014",
+ "short_title": "Regulatory Powers (Standard Provisions) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2014-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-07-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5210_ems_57e176e7-4fac-4da3-90d7-b238b01b7551%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5210_ems_badf180f-48e8-4c4f-a427-8c29ead70f6e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5210%22",
+   "document_date": "2014-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00093",
+   "document_date": "2014-07-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-20",
+  "sentences": [
+   "The bill would create a standard set of regulatory powers that Commonwealth agencies can use across different laws.",
+   "Agencies would gain monitoring and investigation powers, plus enforcement tools such as civil penalties, infringement notices, enforceable undertakings and injunctions.",
+   "The powers would be rolled out progressively, with new or amended laws needing to trigger the bill's provisions through primary legislation."
+  ],
+  "changes": [
+   "Establishes a framework of standard regulatory powers for Commonwealth agencies.",
+   "Provides monitoring powers to check compliance with legislation and the accuracy of information given to the Commonwealth.",
+   "Provides investigation powers to gather evidence about suspected offences and civil penalty provisions.",
+   "Allows enforcement through civil penalties, infringement notices, enforceable undertakings and injunctions.",
+   "Requires new or amended laws to trigger the bill's provisions to activate the powers.",
+   "Allows agencies to choose not to trigger the bill's provisions if the powers are not appropriate or sufficient."
+  ],
+  "affected": "Commonwealth regulatory agencies and the regulatory schemes they administer.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-286002",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292725",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292916",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292917",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293084",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293085",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Regulatory Powers (Standard Provisions) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00093",
+   "assent_date": "2014-07-21"
+  }
+ ]
+}

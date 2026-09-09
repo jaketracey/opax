@@ -30,7 +30,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'style.css']
+const STAMPED = ['app.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -131,8 +131,17 @@ function stamp({ check }) {
     )
     process.exit(1)
   }
+  // The standalone connections directory shares the immutable stylesheet.
+  const connectionsPath = join(PUBLIC, 'connections.html')
+  const connectionsBefore = readFileSync(connectionsPath, 'utf8')
+  const connectionsAfter = connectionsBefore.replace(/href="\/style\.css(?:\?v=[A-Za-z0-9._-]*)?"/g, `href="/style.css?v=${hashes['style.css']}"`)
+  if (!check && connectionsAfter !== connectionsBefore) writeFileSync(connectionsPath, connectionsAfter)
+  const communityPath = join(PUBLIC, 'community.html')
+  const communityBefore = readFileSync(communityPath, 'utf8')
+  const communityAfter = communityBefore.replace(/\/(style\.css|community\.css|community\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  if (!check && communityAfter !== communityBefore) writeFileSync(communityPath, communityAfter)
   if (check) {
-    if (after !== before) {
+    if (after !== before || connectionsAfter !== connectionsBefore || communityAfter !== communityBefore) {
       console.error('stamp_assets: index.html stamps are stale — run `node scripts/stamp_assets.mjs`.')
       process.exit(1)
     }

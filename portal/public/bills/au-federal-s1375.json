@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s1375",
+ "title": "Murdoch Media Inquiry Bill 2023",
+ "short_title": "Murdoch Media Inquiry Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-13",
+ "originating_house": "senate",
+ "sponsor": "HANSON-YOUNG, Sen Sarah",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10711",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1375%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1375%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1375_ems_83ac4090-07cd-422b-b15d-8e0e00b5db09%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1375%22",
+   "document_date": "2023-06-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-13",
+  "sentences": [
+   "The bill would create a parliamentary commission of inquiry into media diversity and the conduct of media outlets in Australia, focusing on the Murdoch media empire's impact on democracy.",
+   "The commission would have coercive powers to summon witnesses, compel evidence, and issue search and arrest warrants, with a judge as its sole member appointed by the Senate.",
+   "The commission must report to Parliament within one year of starting, with the possibility of an extension by Senate resolution."
+  ],
+  "changes": [
+   "Establishes the Murdoch Media Commission of Inquiry.",
+   "Gives the commission powers to summon witnesses and take evidence.",
+   "Allows the commission to issue search and arrest warrants.",
+   "Requires the commission to report to Parliament within one year."
+  ],
+  "affected": "The Murdoch media empire and other media outlets operating in Australia, as well as the Australian public and democracy.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:10:34Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

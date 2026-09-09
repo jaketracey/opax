@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r6712",
+ "title": "Independent Office of Animal Welfare Bill 2021",
+ "short_title": "Independent Office of Animal Welfare Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-24",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6712%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6712%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6712%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6712_ems_1782e6cb-1827-4dbe-9de7-6d68ed630010%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6712%22",
+   "document_date": "2021-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-24",
+  "sentences": [
+   "The bill creates a new federal body to lead animal welfare policy and carry out reviews and investigations.",
+   "This office would operate independently of the agriculture department, with an advisory committee of qualified members, and focus on specific issues like live exports, kangaroo culling, and animal imports.",
+   "The bill responds to criticism of current rules and concerns about regulatory capture, and it is limited by constitutional constraints to the listed matters."
+  ],
+  "changes": [
+   "Establishes a statutory authority for animal welfare policy.",
+   "Gives the office review and regulatory functions over specified Commonwealth animal welfare issues.",
+   "Requires the office to conduct inquiries, commission research, and prepare reports on topics such as live export, kangaroo killing, and animal imports.",
+   "Sets up an Animal Welfare Advisory Committee with members from animal welfare groups and professions.",
+   "Empowers the office to document and investigate allegations of animal cruelty."
+  ],
+  "affected": "The people affected include those involved in the live export trade, the agricultural sector, and the broader community concerned with animal welfare.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

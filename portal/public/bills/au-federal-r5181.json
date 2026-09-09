@@ -1,0 +1,218 @@
+{
+ "key": "au-federal-r5181",
+ "title": "Australian Citizenship and Other Legislation Amendment Bill 2014",
+ "short_title": "Australian Citizenship and Other Legislation Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5181%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5181%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5181%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5181%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5181%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5181_ems_9af0a8b7-ba3c-4913-9f98-0bd13f772fc1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5181%22",
+   "document_date": "2014-10-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-23",
+  "sentences": [
+   "The bill would make multiple changes to the rules for gaining and keeping Australian citizenship.",
+   "It would tighten character and residence requirements, expand cancellation and revocation powers, and allow personal information to be shared between citizenship and migration systems.",
+   "The maximum time the minister can postpone the citizenship pledge would be increased, and mandatory cancellation of approval would apply if the minister later finds the applicant would not pass identity, national security or criminal offence checks."
+  ],
+  "changes": [
+   "Extend good character requirements to all citizenship applicants including those under 18.",
+   "Allow the minister to cancel approval of citizenship if the applicant would no longer meet identity, national security or criminal offence rules before taking the pledge.",
+   "Give the minister discretion to revoke citizenship obtained by descent, conferral or intercountry adoption if it was gained by fraud or misrepresentation.",
+   "Increase the maximum period the minister can defer a person making the citizenship pledge.",
+   "Enable personal information collected under the Citizenship Act to be used or disclosed for Migration Act purposes.",
+   "Replace an automatic loss of citizenship by descent with a ministerial discretion to revoke it."
+  ],
+  "affected": "Australian citizenship applicants, current citizens, and the Department of Immigration and Border Protection.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:01:59Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3599",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "question": "Australian Citizenship and Other Legislation Amendment Bill 2014 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-11-24/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-299981",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301274",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301275",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301276",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301424",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301555",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301556",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

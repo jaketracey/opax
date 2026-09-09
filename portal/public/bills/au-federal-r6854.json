@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6854",
+ "title": "Australian Radioactive Waste Agency Bill 2022",
+ "short_title": "Australian Radioactive Waste Agency Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science, Energy and Resources",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6854%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6854%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6854%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6854_ems_8b8bd4d0-6923-4a53-b640-db569717dd0f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6854%22",
+   "document_date": "2022-02-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-16",
+  "sentences": [
+   "The bill would create a new federal agency to handle Australia's radioactive waste.",
+   "The agency would be a non-corporate Commonwealth entity with powers to manage waste and conduct activities at a designated facility.",
+   "The explanatory memorandum says the agency would also develop policy, give technical advice, educate the public, and keep a national inventory of radioactive material."
+  ],
+  "changes": [
+   "Establishes the Australian Radioactive Waste Agency as a non-corporate Commonwealth entity.",
+   "Authorises the agency to manage controlled material and conduct activities under the National Radioactive Waste Management Act 2012.",
+   "Gives the agency functions including policy development, technical advice, public education, and maintaining a national inventory."
+  ],
+  "affected": "The agency and the Australian public, who benefit from nuclear medicine that produces the waste.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-418787",
+   "speaker": "Keith Pitt",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The Australian Radioactive Waste Agency Bill 2022 transitions the agency from a departmental function to a separate non-corporate Commonwealth entity, establishing a dedicated body with a chief executive officer to manage the National Radioactive Waste Management Facility and oversee all stages of its design, construction, and operation."
+  }
+ ],
+ "acts": []
+}

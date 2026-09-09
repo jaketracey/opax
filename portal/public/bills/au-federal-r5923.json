@@ -1,0 +1,365 @@
+{
+ "key": "au-federal-r5923",
+ "title": "Telecommunications Legislation Amendment (Competition and Consumer) Bill 2018",
+ "short_title": "Telecommunications Legislation Amendment (Competition and Consumer) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5923_ems_2d2bbdcc-5b64-44cd-a16d-869ff38547cf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5923_ems_c0d41dda-050a-4984-9a1d-e854776d3462%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5923_ems_2c2c2d95-c631-4fb9-ac21-969a0f6a107b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5923_ems_38994f5b-e57b-41ec-8722-91d3a6cd00bc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5923%22",
+   "document_date": "2017-06-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-06-22",
+  "sentences": [
+   "This bill would change rules for superfast broadband networks to make structural separation clearer and create new commercial opportunities.",
+   "It would amend the Telecommunications Act 1997, the Competition and Consumer Act 2010 and the Telecommunications (Consumer Protection and Service Standards) Act 1999.",
+   "From 1 July 2018, new local access lines would be subject to structural or functional separation rules, while networks built between 1 January 2011 and 30 June 2018 would be grandfathered under existing obligations."
+  ],
+  "changes": [
+   "Reset the structural separation arrangements for superfast networks.",
+   "Establish functional separation arrangements as an alternative to wholesale-only operation.",
+   "Remove regulation of networks serving small business customers.",
+   "Allow the ACCC to approve functionally separated networks and exempt small start-up networks from separation rules.",
+   "Repeal Part 7 of the Telecommunications Act 1997 and associated provisions in the Competition and Consumer Act 2010.",
+   "Amend exemptions for network extensions and real estate development projects, with some expiring on 1 July 2018."
+  ],
+  "affected": "Operators of superfast fixed-line broadband networks serving residential and small business customers, the Australian Competition and Consumer Commission, and the Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:22:03Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-350207",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The bill reforms carrier separation rules to boost competition, establishes statutory infrastructure provider (SIP) obligations requiring NBN Co to connect premises with minimum speeds of 25 Mbps download and 5 Mbps upload, and creates the Regional Broadband Scheme (RBS) to fund regional satellite and fixed wireless services through a $7.10 per month charge on fixed-line broadband carriers."
+  },
+  {
+   "slug": "speech-350208",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The bill establishes the Regional Broadband Scheme, imposing a monthly charge on carriers from 1 July 2018, with a base component of $7.09 (indexed) and an administrative cost component, to fund NBN Co's losses on fixed wireless and satellite networks and cover enforcement costs for ACMA and the ACCC."
+  },
+  {
+   "slug": "speech-362014",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's proposed broadband levy is a direct consequence of its failed multi-technology mix NBN, which has cost taxpayers $49 billion—up from $29.5 billion—and will require expensive future upgrades while delivering slower speeds. They noted the levy would add $84 annually to bills for up to 450,000 households and called on the government to stop punishing consumers for its NBN failures."
+  },
+  {
+   "slug": "speech-362016",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker moved to refer the Telecommunications Legislation Amendment (Competition and Consumer) Bill 2017 and the Telecommunications (Regional Broadband Scheme) Charge Bill 2017 to the Federation Chamber."
+  },
+  {
+   "slug": "speech-362247",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications Legislation Amendment (Competition and Consumer) Bill 2017 and the Telecommunications (Regional Broadband Scheme) Charge Bill 2017 are necessary to enshrine universal NBN access in law and fund unprofitable regional services. He criticised the government's multi-technology mix for causing network problems, citing a 204% surge in TIO complaints and HFC services experiencing 30 times more downtime than fibre, while supporting the bills with reservations about unresolved consumer protections."
+  },
+  {
+   "slug": "speech-362248",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The bill establishes a statutory infrastructure provider to guarantee superfast broadband access for all Australians, with minimum speeds of 25/5 Mbps, and includes measures to improve competition and a regional broadband scheme to fund NBN Co's satellite and fixed wireless services for regional areas."
+  },
+  {
+   "slug": "speech-362253",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coalition government’s National Broadband Network is inferior, slow, and over budget—costing $49 billion versus the promised $29.9 billion—and that the two bills do not address these failures. They announced Labor will not oppose the bills, despite concerns that the $84 annual levy on up to 400,000 non-NBN users unfairly targets regional and rural Australians."
+  },
+  {
+   "slug": "speech-362258",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's statutory infrastructure provider regime and level-playing-field rules but argued it fails to address the government's NBN failures, including a $20 billion cost blowout, slow speeds, and inequitable access for regional areas. They highlighted that nearly 300,000 premises are classified as service class zero, and criticised the new $7.10 monthly internet tax on non-NBN networks."
+  },
+  {
+   "slug": "speech-362260",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker argued the coalition government ruined Labor’s original 2009 vision for the National Broadband Network (NBN), which would have delivered fibre-to-the-premises to 93% of homes, replacing it with a costly, inferior \"multi-technology mess\" that now only reaches 17%. They criticised the bill for not fixing the \"service class 0\" issue—nearly 300,000 premises left unconnected—and noted Labor supports the bill but introduced an amendment requiring NBN Co to notify and connect stranded households."
+  },
+  {
+   "slug": "speech-362264",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications Legislation Amendment (Competition and Consumer) Bill 2017 and the Telecommunications (Regional Broadband Scheme) Charge Bill 2017 legislate universal high-speed broadband access and introduce a $7.10 monthly levy (rising to $7.80 by 2021) on non-NBN networks, adding $84 per year to bills for up to 400,000 consumers and businesses. Labor supported the bills but criticised the levy as \"Turnbull's internet tax,\" blaming the Coalition's NBN cost blowouts—from $29.5 billion to $49 billion—and citing 490 complaints in the speaker's electorate about slow speeds, dropouts, and poor service."
+  },
+  {
+   "slug": "speech-362269",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The Federation Chamber orders of the day Nos 1 and 2, government business, relating to the Telecommunications Legislation Amendment (Competition and Consumer) Bill 2017 and the Telecommunications (Regional Broadband Scheme) Charge Bill 2017, were returned to the House for further consideration, with the bill ordered to be considered at a later hour that day."
+  },
+  {
+   "slug": "speech-362282",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Turnbull government's NBN rollout, citing 490 complaints handled by their office, a 203% surge in complaints, and Toukley as the top postcode for complaints. Labor supports sustainable NBN funding and competition but will not oppose the bill, while criticising the government's $80 billion tax cut and new $84 annual charge on non-NBN households."
+  },
+  {
+   "slug": "speech-362283",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The speech supported the amendment to the Telecommunications Legislation Amendment (Competition and Consumer) Bill 2017, arguing the Coalition's multi-technology NBN approach has caused service failures, digital divides (e.g., Queanbeyan/Jerrabomberra and the Barton Highway), satellite congestion, and cost overruns. It called for an independent expert review of the NBN satellite service, more fixed wireless towers, and cited examples such as birdsnest in Cooma and the original plan's estimated $60 billion economic benefit."
+  },
+  {
+   "slug": "speech-362284",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The member for Indi supported the Telecommunications Legislation Amendment (Competition and Consumer) Bill 2017 and the Telecommunications (Regional Broadband Scheme) Charge Bill 2017, arguing they would improve NBN Co's obligations and fund regional services. She highlighted constituent complaints about NBN failures, including a King Valley business with unresolved satellite issues, and called for a rural and regional reference group, better complaint handling, and greater equity between metro and regional areas."
+  },
+  {
+   "slug": "speech-362285",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The Coalition's NBN plan was condemned as a half-baked, second-rate effort compared to Labor’s original fibre-to-the-home proposal, which would have delivered connection to 93 per cent of Australians. Citing a Speedtest report ranking Australia 55th globally with an average download speed of 29.5 Mbps against Singapore’s 174.94 Mbps, the speech also acknowledged the bill’s Statutory Infrastructure Provider scheme as a positive step."
+  },
+  {
+   "slug": "speech-362287",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The coalition's broadband policy failures forced the current levy, which will charge up to 500,000 Australians up to $84 more per year, and the bills should be renamed \"the coalition's chickens coming home to roost.\" The speaker cited slower speeds than Kazakhstan, a $200 million annual operating cost increase, $300 million less revenue, and blamed Malcolm Turnbull's multi-technology mix for the NBN's problems."
+  },
+  {
+   "slug": "speech-362289",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "Greens MP Adam Bandt said the Bills should be split, with Schedule 4 considered separately, and criticised the Liberal government for deliberately botching the NBN for political differentiation. He cited Australia's 2017 ranking of 50th globally for internet speeds, 57th for fixed broadband affordability, and delays of six to nine months hitting eight Melbourne suburbs."
+  },
+  {
+   "slug": "speech-362291",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull government's NBN rollout has been a failure, citing cost blowouts from $29.5 billion to $49 billion plus a $19.5 billion loan, and a new broadband levy adding $84 annually to bills for up to 450,000 homes. The speaker criticised NBN Co for ignoring community and business concerns, noting that former CEO Bill Morrow did not respond to a request for a meeting with Brisbane businesses, and that complaints to the Telecommunications Industry Ombudsman have risen over 200 per cent."
+  },
+  {
+   "slug": "speech-362292",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The member for Paterson argued that Prime Minister Turnbull's National Broadband Network is inferior, citing a 60% user issue rate, $49 billion cost blowout, and 160% rise in complaints, and supported the bills to establish a statutory infrastructure provider and a regional broadband levy of $84 per year on up to 400,000 non-NBN consumers."
+  },
+  {
+   "slug": "speech-362294",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The MP supported the Telecommunications bills and the proposed amendment, arguing the NBN rollout under the Coalition has been inadequate and citing poor service in his electorate, including a personal story about his mother losing phone service for nearly 10 days. He also criticised the government's new broadband levy of $7.10 per month and the project's $49 billion cost and four-year delay."
+  },
+  {
+   "slug": "speech-362295",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The speaker sought leave to continue their remarks on the Telecommunications Legislation Amendment (Competition and Consumer) Bill 2017, after being cut off by a faulty clock in the Federation Chamber the previous day."
+  },
+  {
+   "slug": "speech-362298",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The government argued its telecommunications reform package—comprising the Telecommunications Legislation Amendment (Competition and Consumer) Bill 2017 and the Telecommunications (Regional Broadband Scheme) Charge Bill 2017—improves high-speed broadband through more flexible carrier separation rules, new statutory infrastructure provider obligations, and the Regional Broadband Scheme. The scheme requires fixed-line carriers to contribute $7.10 per month per premises to fund NBN Co’s satellite and fixed wireless services in regional areas, with baseline speeds of 25 Mbps download and 5 Mbps upload."
+  }
+ ],
+ "acts": []
+}

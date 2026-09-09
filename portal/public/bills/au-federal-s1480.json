@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-s1480",
+ "title": "Social Media Minimum Age Repeal Bill 2025",
+ "short_title": "Social Media Minimum Age Repeal Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-25",
+ "originating_house": "senate",
+ "sponsor": "BABET, Sen Ralph",
+ "sponsor_party": "United Australia Party (Clive Palmer",
+ "sponsor_person_id": "11003",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-11-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1480%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1480%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1480_ems_8c79a632-ab49-414c-9333-6d0a552ced8f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1480%22",
+   "document_date": "2025-11-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-25",
+  "sentences": [
+   "This bill would undo all changes made by a 2024 law that set a minimum age for social media.",
+   "It would remove the minimum age restrictions and penalties from the Online Safety Act 2021 and the related change to the Age Discrimination Act 2004.",
+   "The bill would take effect on the day it receives Royal Assent."
+  ],
+  "changes": [
+   "Repeals the minimum age restrictions and penalties in Part 4A of the Online Safety Act 2021.",
+   "Reverses the consequential amendment to the Age Discrimination Act 2004.",
+   "Includes transitional provisions for reversing amendments to sections 143 and 146 of the Online Safety Act 2021."
+  ],
+  "affected": "People and entities affected by the social media minimum age restrictions under the Online Safety Act 2021.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:25Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

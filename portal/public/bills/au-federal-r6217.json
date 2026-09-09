@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r6217",
+ "title": "National Integrity Commission Bill 2018",
+ "short_title": "National Integrity Commission Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-11-26",
+ "originating_house": "representatives",
+ "sponsor": "MCGOWAN, Cathy, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10798",
+ "portfolio": "(s) MCGOWAN, Cathy, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6217%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6217%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6217_ems_7c3180fe-5f29-4840-8da8-87fbe13f277d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6217%22",
+   "document_date": "2018-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-26",
+  "sentences": [
+   "This bill would create a national anti-corruption agency for the Commonwealth public sector.",
+   "The agency would be led by a judge or retired judge as commissioner, with powers like a royal commission to investigate corruption and refer findings for prosecution.",
+   "Federal judges are not covered initially, but the bill includes a process to review their inclusion later."
+  ],
+  "changes": [
+   "Establishes the Australian National Integrity Commission as an independent anti-corruption body.",
+   "Gives the commission royal commission powers to investigate corruption involving the Commonwealth government.",
+   "Creates a mandatory reporting requirement for public officials and agency heads to refer corruption issues.",
+   "Sets up a Whistleblower Protection Commissioner within the commission.",
+   "Subjects the commission to oversight by a parliamentary joint committee and a parliamentary inspector.",
+   "Operates alongside a second bill that would create codes of conduct and a standards commissioner for parliamentarians."
+  ],
+  "affected": "Federal politicians, the federal public sector, and private sector businesses regulated by the Commonwealth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,233 @@
+{
+ "key": "au-federal-r5367",
+ "title": "Telecommunications Legislation Amendment (Deregulation) Bill 2014",
+ "short_title": "Telecommunications Legislation Amendment (Deregulation) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "passed",
+ "status_as_of": "2015-04-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-04-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5367_ems_35acfc5b-37b9-4502-9ee4-7dc3356b17e0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5367_ems_f7996371-fc29-4d96-b7b7-9614b1f5b3b2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5367_ems_3f0ece8a-f7f8-4d80-bf3c-ab0fa90e4f50%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5367%22",
+   "document_date": "2014-10-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00038",
+   "document_date": "2015-04-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2014-10-22",
+  "sentences": [
+   "This bill is part of a package that aims to cut red tape by $1 billion each year and streamline telecommunications rules while keeping consumer protections in place.",
+   "It would abolish the Telecommunications Universal Service Management Agency and move its tasks to the Department of Communications, and also transfer rules about the industry levy to the Consumer Protection Act.",
+   "The Do Not Call Register would let people sign up their phone and fax numbers forever, without needing to renew their registration."
+  ],
+  "changes": [
+   "Abolishes the Telecommunications Universal Service Management Agency.",
+   "Transfers functions of the abolished agency to the Department of Communications.",
+   "Moves industry levy provisions to the Consumer Protection Act.",
+   "Makes the Do Not Call Register registration period permanent.",
+   "Relaxes pre-selection obligations on telecommunications providers.",
+   "Removes arrangements for registering e-marketing industry codes."
+  ],
+  "affected": "Telecommunications industry, consumers, and the Department of Communications.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:02:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-299708",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302233",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302236",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302237",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302238",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302241",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302243",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302245",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications Legislation Amendment (Deregulation) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00038",
+   "assent_date": "2015-04-13"
+  }
+ ]
+}

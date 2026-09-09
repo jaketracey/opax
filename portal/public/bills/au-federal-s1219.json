@@ -1,0 +1,170 @@
+{
+ "key": "au-federal-s1219",
+ "title": "Tertiary Education Quality and Standards Agency Amendment Bill 2019",
+ "short_title": "Tertiary Education Quality and Standards Agency Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-25",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2019-10-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1219_ems_5a735238-6e2d-4915-bc13-37547f3715be%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1219%22",
+   "document_date": "2019-07-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00098",
+   "document_date": "2019-10-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-25",
+  "sentences": [
+   "The bill would change the Tertiary Education Quality and Standards Agency Act 2011 to put into law recommendations from a review of that Act's impact on higher education.",
+   "It would simplify the standards framework, alter how TEQSA commissioners and the Higher Education Standards Panel are appointed, and expand when the regulator can share information.",
+   "The bill would let an overseas university that TEQSA has not registered use the word 'university' for its Australian operations without penalty, as long as the course is not mainly delivered from Australian premises."
+  ],
+  "changes": [
+   "Remove references to categories of non-threshold standards that have never been created.",
+   "Require TEQSA to tell the Minister and the Panel before starting a quality review that could affect most providers.",
+   "Let an unregistered overseas university offer a course not mainly from Australian premises and use 'university' without an offence.",
+   "Change quorum for TEQSA meetings to a majority of commissioners.",
+   "Expand the skills the Minister must ensure Panel members have and give the Panel oversight of TEQSA's strategic planning and deregulation.",
+   "Allow information disclosure without consent if the entity consents in writing, or to a complainant without the body's consent."
+  ],
+  "affected": "Higher education providers, TEQSA, the Higher Education Standards Panel, overseas universities, and the Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-384032",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The Tertiary Education Quality and Standards Agency Amendment Bill 2019 implements technical recommendations from a Deloitte Access Economics review, including simplifying the Higher Education Standards Framework, requiring TEQSA to inform the minister before major quality assessments, expanding the Higher Education Standards Panel’s skills and functions, and allowing TEQSA to disclose information to individual complainants."
+  },
+  {
+   "slug": "speech-384033",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tertiary Education Quality and Standards Agency Amendment Bill 2019, which implements minor changes from a 2016 review to simplify and strengthen TEQSA, but criticised the coalition government for delaying the reforms for almost three years and for cutting university funding, capping undergraduate places, and slashing $328.5 million from research."
+  },
+  {
+   "slug": "speech-384035",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The Tertiary Education Quality and Standards Agency Amendment Bill 2019 was presented to implement review recommendations from the impact of the TEQSA Act 2011. The amendments aim to improve the act’s administration, strengthen TEQSA's regulatory role, and clarify the Higher Education Standards Panel's role as the statutory advisory body."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tertiary Education Quality and Standards Agency Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00098",
+   "assent_date": "2019-10-30"
+  }
+ ]
+}

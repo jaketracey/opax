@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6947",
+ "title": "Commonwealth Electoral Amendment (Stop the Lies) Bill 2022",
+ "short_title": "Commonwealth Electoral Amendment (Stop the Lies) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-28",
+ "originating_house": "representatives",
+ "sponsor": "STEGGALL, Zali, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10941",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-08-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6947%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6947%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6947%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6947_ems_a8a8b786-1abc-45e9-bbc4-fee6af062812%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6947%22",
+   "document_date": "2022-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-28",
+  "sentences": [
+   "This bill is part of a package that would change the Commonwealth Electoral Act 1918 to stop false or misleading content in election and referendum materials.",
+   "It would ban statements of fact that are materially deceptive, and also ban pretending to be someone else or wrongly claiming material is from a candidate, party, or group.",
+   "The Electoral Commissioner could investigate, demand retractions, publish corrections, and take cases to court, with fines up to 50 penalty units for individuals and 250 for companies."
+  ],
+  "changes": [
+   "Prohibits electoral or referendum material that has a statement of fact which is materially misleading or deceptive.",
+   "Prohibits deceptively impersonating a person, candidate, campaigner, party, or entity, or falsely attributing material to them.",
+   "Gives the Electoral Commissioner power to investigate breaches, order retractions, publish corrections, and pursue complaints through courts."
+  ],
+  "affected": "Voters, candidates, campaigners, political parties, and bodies corporate involved in elections or referendums.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:22Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

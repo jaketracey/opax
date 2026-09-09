@@ -1,0 +1,181 @@
+{
+ "key": "au-federal-r5454",
+ "title": "Tax and Superannuation Laws Amendment (2015 Measures No. 1) Bill 2015",
+ "short_title": "Tax and Superannuation Laws Amendment (2015 Measures No. 1) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5454_ems_e18d7874-08d3-4d6f-a4b4-4358551b1843%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5454_ems_58911330-7003-46bb-b01e-b236076652bf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5454_ems_a0c72a2a-2ded-4961-b6be-b200a5f3cccc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5454%22",
+   "document_date": "2015-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00070",
+   "document_date": "2015-06-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-312904",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Tax and Superannuation Laws Amendment Bill 2015 but criticised the government for abolishing first home saver accounts, scrapping the dependent spouse tax offset, and failing to address housing affordability and multinational profit shifting, citing specific figures such as $1.1 billion given back to multinationals and $36 million spent on budget promotion."
+  },
+  {
+   "slug": "speech-312905",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tax and Superannuation Laws Amendment Bill 2015 and argued that Labor's proposed superannuation tax changes—including doubling tax on contributions over $250,000 and taxing retirement earnings above $75,000 without indexation—would breach a social contract, affect more people than claimed (over 125,000 by 2027 for the $75,000 threshold, and over 300,000 for the 30% surcharge), and impose over $20 million in annual administration costs. The speaker also criticised Labor's plans to target negative gearing and capital gains tax concessions, warning these policies would harm retirement savings and investment, particularly in Eden-Monaro where 32.5% of residents are over 55."
+  },
+  {
+   "slug": "speech-312906",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The bill abolishes Labor's first home saver account scheme and the dependent spouse tax offset, and extends tax-deductible gift recipient status for the Australian Peacekeeping Memorial Project and the National Boer War Memorial Association until 1 January 2018, with an estimated cost of $1.4 million over the forward estimates."
+  },
+  {
+   "slug": "speech-312907",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-16",
+   "stage_hint": null,
+   "brief": "The Tax and Superannuation Laws Amendment (2015 Measures No. 1) Bill 2015 extends deductible gift recipient status for the Australian Peacekeeping Memorial Project and the National Boer War Memorial Association for three years, alongside other tax and superannuation changes including abolition of the first home saver account scheme and dependent spouse tax offset."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (2015 Measures No. 1) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00070",
+   "assent_date": "2015-06-25"
+  }
+ ]
+}

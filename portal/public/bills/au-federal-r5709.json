@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5709",
+ "title": "Banking Commission of Inquiry Bill 2016",
+ "short_title": "Banking Commission of Inquiry Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-10",
+ "originating_house": "representatives",
+ "sponsor": "KATTER, Bob, Jnr, MP",
+ "sponsor_party": "&#34;Independent Members&#34;",
+ "sponsor_person_id": "10352",
+ "portfolio": "(s) KATTER, Bob, Jnr, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5709%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5709%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5709%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5709_ems_343fd1f8-84f7-4254-af69-f6dd4acce7c5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5709%22",
+   "document_date": "2016-10-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-10",
+  "sentences": [
+   "This bill would create a Banking Commission of Inquiry with the same powers as a Royal Commission.",
+   "A Treasurer-appointed Commissioner would investigate practices of authorised deposit-taking institutions (ADIs) such as not passing on full cash rate cuts, excessive mortgage margins, and lending that borrowers cannot service.",
+   "The Commission could also examine remuneration cultures, non-recourse lending, mortgage insurance regulation, and establishing a tribunal to oversee ADI behaviour and provide legal aid."
+  ],
+  "changes": [
+   "Establishes a Banking Commission of Inquiry with Royal Commission powers.",
+   "Empowers a Commissioner appointed by the Treasurer to investigate specified ADI and lending practices.",
+   "May lead to a tribunal with oversight and legal aid functions."
+  ],
+  "affected": "Authorised deposit-taking institutions (ADIs), their directors, managers, staff, and borrowers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,196 @@
+{
+ "key": "au-federal-r5565",
+ "title": "Amending Acts 1990 to 1999 Repeal Bill 2015",
+ "short_title": "Amending Acts 1990 to 1999 Repeal Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-11-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2016-02-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5565_ems_6e3d7d7f-3673-4bd0-8ed9-0dd177bf7052%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4216294%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5565%22",
+   "document_date": "2015-11-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00005",
+   "document_date": "2016-02-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-323097",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The government introduced three repeal bills to remove over 900 redundant Commonwealth acts, including the Wool International Act 1993, the Wool International Privatisation Act 1999, and the Papua and New Guinea Loan (International Bank) Act 1970, and to abolish the Medical Training Review Panel and the Fishing Industry Policy Council, while simplifying aged-care provider notifications to save $1.16 million annually in compliance costs."
+  },
+  {
+   "slug": "speech-323098",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The government moved the Amending Acts 1990 to 1999 Repeal Bill 2015, the fourth in a series that will repeal over 3,500 spent amending acts from 1901 to 1999, removing 877 acts from 1990–1999 without altering existing law."
+  },
+  {
+   "slug": "speech-325076",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-12-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's red tape repeal bills are largely symbolic, with only $6.9 million in claimed savings—1.4% of the $4.5 billion total—and that over half the measures are recycled from a previous bill. The speaker also announced Labor would reinstate the Commonwealth Cleaning Services Guidelines and criticised a measure reducing penalties for employers who fail to pay superannuation on time."
+  },
+  {
+   "slug": "speech-325082",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the three repeal bills—Omnibus Repeal Bill, Amending Acts 1990 to 1999 Repeal Bill, and Statute Law Revision Bill—would save approximately $6.17 million, $600,000 per year, and $50,000 per year respectively, and that the government has cut nearly $4.5 billion in red tape, repealed over 10,000 legislative instruments and around 2,700 Acts, and removed outdated laws such as the Wool International Act 1993 and the Fisheries Administration Act 1991."
+  },
+  {
+   "slug": "speech-325306",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The speech supported the Omnibus Repeal Day (Spring 2015), Amending Acts 1990-1999 Repeal, and Statute Law Revision (No. 3) bills as deregulation measures, opposing Labor's ETS as a cost-of-living increase and citing $1 billion in monthly interest on previous government debt. It argued overregulation had forced remittance businesses underground and that the Moorebank rail freight project would increase particulate matter nine-fold."
+  },
+  {
+   "slug": "speech-325309",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The speaker supported three repeal bills to cut red tape, citing a coalition commitment to reduce it by $1 billion annually and $4.5 billion in savings announced in the first two years."
+  },
+  {
+   "slug": "speech-325311",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The three repeal day bills repeal over 900 Commonwealth acts, with the government reporting $2 billion in red tape reductions and a $4.5 billion annual decrease in compliance costs since September 2013."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Amending Acts 1990 to 1999 Repeal Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00005",
+   "assent_date": "2016-02-11"
+  }
+ ]
+}

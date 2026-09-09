@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r5733",
+ "title": "Customs Tariff Amendment (2017 Harmonized System Changes) Bill 2016",
+ "short_title": "Customs Tariff Amendment (2017 Harmonized System Changes) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2016-11-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5733_ems_7a79f05e-2fd4-4428-8016-0018c8c74e3c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5733%22",
+   "document_date": "2016-10-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00078",
+   "document_date": "2016-11-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-13",
+  "sentences": [
+   "This bill updates Australia's import tariff classifications to match the latest international system.",
+   "It changes the Customs Tariff Act 1995 to adopt new product codes from the World Customs Organization's 2014 review.",
+   "The amendments take effect on 1 January 2017 and include new subheadings for items such as antimalarial products, certain chemicals and bamboo goods."
+  ],
+  "changes": [
+   "Amends the Customs Tariff Act 1995 to insert new subheadings and remove repealed ones.",
+   "Adds new product codes for forestry goods, antimalarial products and chemicals controlled under international conventions.",
+   "Maintains existing tariff protection and preference margins except for item 229, which may reduce some goods to a zero customs duty rate."
+  ],
+  "affected": "Importers and exporters of goods classified under the Harmonized System, particularly those dealing in forestry products, bamboo and rattan, antimalarial substances, chemicals covered by specific international conventions, and certain electronic goods.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:24:27Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-335111",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (2017 Harmonized System Changes) Bill 2016 was moved, containing about 950 amendments to update tariff classifications in line with the World Customs Organization’s fifth review, required by 1 January 2017. The bill creates new subheadings for chemicals and pharmaceutical preparations to monitor controlled substances, expands electronic integrated circuit classifications to reduce duty to free for multicomponent integrated circuits, and preserves existing industry protection and tariff preferences under Australia’s free trade agreements."
+  },
+  {
+   "slug": "speech-335112",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The bill amends the Customs Act 1901 to implement changes from the fifth review of the World Customs Organization's harmonized system and to collect import duties on biofuels and biofuel blends under the China-Australia Free Trade Agreement."
+  },
+  {
+   "slug": "speech-337088",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-08",
+   "stage_hint": null,
+   "brief": "The speaker summed up two bills implementing Australia's obligations from the World Customs Organization's fifth review of the Harmonized System, introducing about 150 amendments to the Customs Tariff Act 1995 and minor changes to the Customs Act 1901, including new tariff classifications for emerging technologies and provisions for collecting import duties on biofuels under the China-Australia Free Trade Agreement."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (2017 Harmonized System Changes) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00078",
+   "assent_date": "2016-11-23"
+  }
+ ]
+}

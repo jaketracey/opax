@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6910",
+ "title": "Crimes Legislation Amendment (Ransomware Action Plan) Bill 2022",
+ "short_title": "Crimes Legislation Amendment (Ransomware Action Plan) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-26",
+ "originating_house": "representatives",
+ "sponsor": "ANDREWS, Karen, MP",
+ "sponsor_party": "Liberal National Party of Queensland",
+ "sponsor_person_id": "10745",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-03-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6910%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6910%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6910%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6910_ems_07275fc9-a1a9-42a8-9203-943585f73930%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6910%22",
+   "document_date": "2022-09-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-26",
+  "sentences": [
+   "The bill would update criminal offences and procedures to address ransomware threats.",
+   "It would amend the Criminal Code Act 1995, the Crimes Act 1914 and the Proceeds of Crime Act 2002.",
+   "The bill implements parts of the Ransomware Action Plan announced on 13 October 2021."
+  ],
+  "changes": [
+   "Modernises criminal offences and procedures to respond to ransomware.",
+   "Implements key aspects of the Ransomware Action Plan.",
+   "Targets data theft, encryption, cyber extortion and Ransomware-as-a-Service."
+  ],
+  "affected": "Individuals and crime syndicates, including transnational syndicates, involved in ransomware attacks.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

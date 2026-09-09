@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r5654",
+ "title": "Industry Research and Development Amendment (Innovation and Science Australia) Bill 2016",
+ "short_title": "Industry Research and Development Amendment (Innovation and Science Australia) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-05-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-05-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5654%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5654%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5654%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5654_ems_8c628d94-a713-441b-9137-72a7b1459852%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5654%22",
+   "document_date": "2016-05-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-05-04",
+  "sentences": [
+   "This bill would replace Innovation Australia with a new independent body and create a legal framework for government spending on science and research programs.",
+   "The new body, Innovation and Science Australia, would give strategic advice across government, conduct audits, and develop a long-term national plan.",
+   "The framework would let the responsible Minister prescribe programs through legislative instruments subject to parliamentary scrutiny."
+  ],
+  "changes": [
+   "Transition Innovation Australia to become Innovation and Science Australia.",
+   "Insert a statutory framework for Commonwealth spending on industry, innovation, science and research programs.",
+   "Allow the responsible Minister to prescribe programs in disallowable legislative instruments.",
+   "Authorise a Minister, accountable authority, or delegate to make and administer arrangements for program activities.",
+   "Create a Deputy Chair position to be filled by Australia’s Chief Scientist."
+  ],
+  "affected": "Industry, innovation, science and research programs, the Commonwealth, and bodies like Innovation and Science Australia and the responsible Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:47:41Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

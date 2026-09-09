@@ -1,0 +1,170 @@
+{
+ "key": "au-federal-r6464",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment (Miscellaneous Measures) Bill 2019",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment (Miscellaneous Measures) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation and Science",
+ "status": "passed",
+ "status_as_of": "2020-05-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6465_ems_16ee027f-f585-4918-a071-b67ff8d163dc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6464%22",
+   "document_date": "2019-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00042",
+   "document_date": "2020-05-15",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-04",
+  "sentences": [
+   "This bill is part of a package that amends offshore petroleum and greenhouse gas laws to manage storage formations that cross state and Commonwealth boundaries, unify adjacent titles, and strengthen NOPSEMA's emergency powers.",
+   "The bill would amend the Levies Act to ensure levies apply to cross-boundary titles and that the Act binds state and territory governments, with retrospective effect.",
+   "The package would create a Cross-boundary Authority to grant titles and make the Commonwealth liable for long-term civil liability after site closure."
+  ],
+  "changes": [
+   "Ensures levies are effectively imposed on cross-boundary greenhouse gas titles.",
+   "Provides that the Levies Act binds the Crown in right of each state and the Northern Territory, with retrospective effect.",
+   "Makes a technical correction to section 2 of the Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment Act 2019."
+  ],
+  "affected": "Companies holding greenhouse gas titles, state and territory governments, NOPSEMA, and the Titles Administrator.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-386174",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The bill clarifies that regulatory levies apply to cross-boundary greenhouse gas titles, including parts in state or Northern Territory waters, and confirms the levies act applies to the Crown in right of each state and the Northern Territory, with retrospective effect to validate past levy payments by Victoria."
+  },
+  {
+   "slug": "speech-387805",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Offshore Petroleum and Greenhouse Gas Storage Amendment (Cross-Boundary Greenhouse Gas Titles and Other Measures) Bill 2019 simplifies cross-boundary greenhouse gas storage titles and strengthens the National Offshore Petroleum Safety Environmental Management Authority's response powers during oil spills. They highlighted the Morrison government's $500 million investment in hydrogen development, the National Hydrogen Strategy, and projects like CarbonNet and the Hydrogen Energy Supply Chain in Victoria's Latrobe Valley to support a carbon-neutral economy."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment (Miscellaneous Measures) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00042",
+   "assent_date": "2020-05-15"
+  }
+ ]
+}

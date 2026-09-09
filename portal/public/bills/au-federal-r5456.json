@@ -1,0 +1,147 @@
+{
+ "key": "au-federal-r5456",
+ "title": "Tax and Superannuation Laws Amendment (2015 Measures No. 3) Bill 2015",
+ "short_title": "Tax and Superannuation Laws Amendment (2015 Measures No. 3) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5456%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5456%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5456%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5456%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5456%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5456%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5456%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5456%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5456%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5456_ems_2d4a5057-acb5-4222-8d72-df312cbdb153%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5456%22",
+   "document_date": "2015-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3808",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "question": "Andrew Leigh Labor's position is to oppose this bill. Labor opposed these measures when they were included in the Superannuation Laws Amendment (2014 Measures No. 5) Bill 2014. Moving them from TSLAB 5 of 2014 to TSLAB 3 of 2015 in no way reduces Labor's in-principle opposition to these measures. We oppose the abolition of the seafarer tax offset and the reduction in the research and development tax credit. The abolition of the seafarer tax offset does not have the support of the Australian shipping community. As the Australian Shipowners Association has noted: The Seafarers Tax Offset … helped to reduce the operating costs of Australian vessels, increased the competitiveness of Australian shipping and provided significant opportunity for employment of Australians in international trades … the impact [of abolition] is severe with regard to future opportunity. The member for Grayndler will have more to say about this proposed abolition. Another part of this bill reduces the research and development tax offset by 1.5 percentage points. It is an interesting and somewhat curious story how this comes about. Members will recall that at the last election the coalition campaigned on a platform, in part, that they would introduce an unfair parental leave scheme. That unfair income-replacement parental leave scheme was to be funded by a 1.5 percentage point levy on large businesses. The parental leave scheme is now gone, and the government in the last budget said that the majority of its spending decisions were offset by savings decisions. What they mean is that the unfair parental leave scheme, which never went ahead, had $10.4 billion banked in the contingency reserve and that has now been taken out of the contingency reserve. The 1.5 percentage point levy on large businesses is now gone and is not going ahead, because the unfair parental leave scheme is not going ahead. Somewhat surprisingly, the government has nonetheless decided to proceed with a 1.5 percentage point red",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-06-17/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-313419",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Tax and Superannuation Laws Amendment (2015 Measures No. 3) Bill 2015 would return $826 million to the budget over the forward estimates, with $12 million from the seafarer's tax offset and $810 million from the R&D tax schedule, and criticised the opposition for opposing the bill without offering alternatives while planning to reintroduce the carbon tax."
+  },
+  {
+   "slug": "speech-313422",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-17",
+   "stage_hint": null,
+   "brief": "The bill abolishes the seafarer tax offset and reduces the research and development tax incentive by 1.5 percentage points, returning $826 million to the budget over the forward estimates to help repair the budget and reduce $123 billion in inherited debt."
+  }
+ ],
+ "acts": []
+}

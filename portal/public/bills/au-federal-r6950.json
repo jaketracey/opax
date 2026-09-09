@@ -1,0 +1,160 @@
+{
+ "key": "au-federal-r6950",
+ "title": "Treasury Laws Amendment (Consumer Data Right) Bill 2022",
+ "short_title": "Treasury Laws Amendment (Consumer Data Right) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2024-08-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6950_ems_8554d9e8-6126-4d11-ac3c-0ef16cec05ce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6950%22",
+   "document_date": "2022-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00075",
+   "document_date": "2024-08-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-827611",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-14",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Consumer Data Right) Bill 2022 and the Public Interest Disclosure Amendment (Review) Bill 2022 were referred to the Federation Chamber for further consideration at the adjournment of the second reading debate on each bill, unless otherwise ordered."
+  },
+  {
+   "slug": "speech-827612",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-02-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Consumer Data Right) Bill 2022, which expands the consumer data right to include action-initiation reforms, but raised concerns about the pace of implementation and potential burdens on small businesses, urging the government to consult with businesses and consumers to avoid a botched rollout."
+  },
+  {
+   "slug": "speech-827685",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2023-02-14",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Consumer Data Right) Bill 2022 was supported across the chamber, expanding consumers’ ability to direct accredited parties to take actions such as switching providers or updating personal details. Coalition speakers called for a Senate committee inquiry and a dedicated minister for the digital economy, while Labor criticised the previous government’s record on digital infrastructure and noted the scheme had been left unfunded."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Consumer Data Right) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00075",
+   "assent_date": "2024-08-26"
+  }
+ ]
+}

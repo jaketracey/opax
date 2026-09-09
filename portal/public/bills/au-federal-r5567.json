@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r5567",
+ "title": "Tax Laws Amendment (Gifts) Bill 2015",
+ "short_title": "Tax Laws Amendment (Gifts) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-11-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5567_ems_18cb1409-1b9f-40bd-ae68-7b0555b681d3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5567%22",
+   "document_date": "2015-11-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00177",
+   "document_date": "2015-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-324040",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The opposition supported the Tax Laws Amendment (Gifts) Bill 2015, granting deductible gift recipient status to the International Jewish Relief Fund Limited and the National Apology Foundation. The National Apology Foundation, founded by former Prime Minister Kevin Rudd with a $100,000 donation from Rudd and Therese Rein, aims to perpetuate the spirit of the 2008 apology to the Stolen Generations and monitor progress on closing the gap in Indigenous disadvantage, where progress has been patchy—for example, life expectancy for Indigenous Australians remains 10 years less than for non-Indigenous Australians."
+  },
+  {
+   "slug": "speech-324041",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The Tax Laws Amendment (Gifts) Bill 2015 grants deductible gift recipient status to International Jewish Relief Limited and the National Apology Foundation Ltd, with bipartisan support. The speaker also argued against scrapping the Australian Charities and Not-for-profits Commission, citing its 25% annual staff turnover and strong sector support, and urged the government to abandon that proposal."
+  },
+  {
+   "slug": "speech-324042",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The Tax Laws Amendment (Gifts) Bill 2015 adds the National Apology Foundation Ltd and International Jewish Relief Limited to the deductible gift recipient listings from 1 January 2015, allowing taxpayers to claim income tax deductions for gifts to these organisations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax Laws Amendment (Gifts) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00177",
+   "assent_date": "2015-12-11"
+  }
+ ]
+}

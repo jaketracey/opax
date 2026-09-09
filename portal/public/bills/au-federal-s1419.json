@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1419",
+ "title": "Digital ID Repeal Bill 2024",
+ "short_title": "Digital ID Repeal Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2024-06-26",
+ "originating_house": "senate",
+ "sponsor": "ANTIC, Sen Alex",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10954",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-08-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1419%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1419%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1419%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1419%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1419_ems_e346cfe3-9bab-4b51-9564-ea6d49ff28e3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1419%22",
+   "document_date": "2024-06-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-26",
+  "sentences": [
+   "This bill would remove the Digital ID Act 2024 and the Digital ID (Transitional and Consequential Provisions) Act 2024 from the statute book.",
+   "It would also adjust several other pieces of legislation, including the Privacy Act and the Taxation Administration Act 1953, to reflect the cancellations.",
+   "The repeal would start on the later of the day the bill receives royal assent or just after the Digital ID Act 2024 takes effect, ensuring no retroactive operation."
+  ],
+  "changes": [
+   "Repeals the Digital ID Act 2024.",
+   "Repeals the Digital ID (Transitional and Consequential Provisions) Act 2024.",
+   "Makes consequential amendments to the Administrative Decisions (Judicial Review) Act 1977, the Australian Security Intelligence Organisation Act 1979, the Privacy Act, and the Taxation Administration Act 1953."
+  ],
+  "affected": "The people and organisations subject to the Digital ID Act 2024 and the related transitional law, as well as those relying on the amended Acts, would be affected by this repeal.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:42:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

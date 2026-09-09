@@ -1,0 +1,103 @@
+{
+ "key": "au-federal-s997",
+ "title": "Defence Legislation Amendment (Parliamentary Approval of Overseas Service) Bill 2015",
+ "short_title": "Defence Legislation Amendment (Parliamentary Approval of Overseas Service) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2015-03-04",
+ "originating_house": "senate",
+ "sponsor": "LUDLAM, Sen Scott",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10713",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s997%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s997%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s997%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s997%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s997%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s997%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s997%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s997%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s997_ems_a77ff1ae-4512-4513-a8c1-452110df1240%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s997%22",
+   "document_date": "2015-03-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-04",
+  "sentences": [
+   "The bill would require approval from both houses of Parliament before Australian Defence Force personnel are sent overseas for warlike actions.",
+   "It would replace the current section 50C of the Defence Act 1903 with a new section imposing this requirement.",
+   "The bill would commence on the day it receives Royal Assent and has no direct financial impact."
+  ],
+  "changes": [
+   "Requires parliamentary approval for overseas warlike service of Defence Force personnel.",
+   "Replaces section 50C of the Defence Act 1903.",
+   "Provides more detailed provisions for emergency situations when Parliament is not meeting."
+  ],
+  "affected": "Australian Defence Force personnel and the Parliament.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:58:22Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

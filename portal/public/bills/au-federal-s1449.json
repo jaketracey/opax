@@ -1,0 +1,109 @@
+{
+ "key": "au-federal-s1449",
+ "title": "Right to Protest Bill 2025",
+ "short_title": "Right to Protest Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-02-13",
+ "originating_house": "senate",
+ "sponsor": "SHOEBRIDGE, Sen David",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "11010",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-08-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1449%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1449%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1449%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1449_ems_1c654206-4f2c-498e-8794-f48d974e5ccd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1449%22",
+   "document_date": "2025-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1194639",
+   "speaker": "David Shoebridge",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194656",
+   "speaker": "David Shoebridge",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195265",
+   "speaker": "Malcolm Roberts",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196477",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-08-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

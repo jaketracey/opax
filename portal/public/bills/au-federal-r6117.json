@@ -1,0 +1,273 @@
+{
+ "key": "au-federal-r6117",
+ "title": "Veterans’ Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2018-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6117_ems_748ad987-45b4-4eb7-9c7c-4612a4d49c2c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6117%22",
+   "document_date": "2018-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00070",
+   "document_date": "2018-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5221",
+   "date": "2018-05-31",
+   "house": "representatives",
+   "question": "Veterans' Affairs Legislation Amendment (Veteran-Centric Reforms No. 2) Bill 2018 - Second Reading - Let Wallace MP speak",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-05-31/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-363308",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-24",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018 was introduced, containing six schedules: maintaining full incapacity payments for veterans in full-time study as part of a rehabilitation plan; a Veteran Suicide Prevention pilot for up to 100 veterans; extending from six months to two years the time for partners to choose compensation under the Military Rehabilitation and Compensation Act 2004; extending the Long Tan Bursary to grandchildren of Vietnam veterans with operational service; deeming submarine service between 1978 and 1992 as operational service; and allowing oral claims for compensation under the Military Rehabilitation and Compensation Act 2004."
+  },
+  {
+   "slug": "speech-364026",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-31",
+   "stage_hint": null,
+   "brief": "Labor supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018, which includes measures such as maintaining incapacity payments at 100% for veterans in approved full-time study, a suicide prevention pilot, extended decision time for widowed partners, Long Tan Bursary eligibility for grandchildren of Vietnam veterans, and simplified compensation claims. Labor also announced a $121 million veterans employment program with training grants, tailored transition support, reduced service requirements for education assistance, and automatic skill recognition."
+  },
+  {
+   "slug": "speech-364028",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Veteran-Centric Reforms No. 2) Bill, highlighting schedule 1's proposal for incapacity payments at 100% of normal weekly earnings for veterans studying full-time under a DVA rehabilitation plan, and schedule 4's extension of the $12,000 Long Tan Bursary to grandchildren of Vietnam veterans. The speaker also noted Labor's $121 million veterans employment policy, cited veteran unemployment at 11.2% (double the national rate) and a 30% earnings gap, and urged support for the Pozieres Memorial Park memorial project led by Barry Gracey and Yvonne Gracey-Hall."
+  },
+  {
+   "slug": "speech-364029",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018 addresses high rates of mental illness and suicide among veterans, citing that 46.4% of transitioned ADF members experienced a mental disorder in the past 12 months and 325 suicides occurred from 2001 to 2015. He announced support for the Veteran Suicide Prevention Pilot in nine Brisbane hospitals and advocated for an assisted tertiary education program (ATEV) modelled on the US GI Bill."
+  },
+  {
+   "slug": "speech-364036",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-31",
+   "stage_hint": null,
+   "brief": "Labor fully supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018, which includes measures such as extending 100% incapacity payments for veterans undertaking study (costing $10.8 million, assisting about 150 people per year), a suicide prevention pilot, extending the decision period for compensation to two years for partners, expanding the Long Tan Bursary scheme to grandchildren of Vietnam veterans, deeming submariner service between 1978-1992 as operational, and simplifying compensation claims. The speech also noted that 30.2% of veterans who leave the ADF fail to find employment, and Labor committed to a $121 million Veterans' Employment Program."
+  },
+  {
+   "slug": "speech-364037",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-31",
+   "stage_hint": null,
+   "brief": "The member for Murray supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018, outlining six schedules including full pay during study for veterans, a veteran suicide prevention pilot in Brisbane, extending decision time for dependent partners to two years, expanding Long Tan Bursaries to grandchildren, covering submarine special operations personnel (1978–1992), and allowing oral claims. Specific figures cited include 903 veterans in Murray, a $7,000 grant for the Echuca-Moama Veterans Support Centre, and 900 submariners affected."
+  },
+  {
+   "slug": "speech-364304",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "Supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018, arguing it simplifies claim processes for veterans as long as it does not disadvantage them."
+  },
+  {
+   "slug": "speech-364305",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018, which includes measures such as increasing incapacity payments to 100% for veterans in full-time study (affecting about 150 veterans annually), a suicide prevention pilot at nine Brisbane hospitals, extending the decision period for widowed partners to two years, expanding Long Tan Bursary eligibility to grandchildren of Vietnam veterans, deeming submariner service (1978–1992) as operational, and allowing verbal compensation claims."
+  },
+  {
+   "slug": "speech-364401",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018 contains six schedules to improve support for veterans and their families, including increasing incapacity payments to 100% of normal weekly earnings during rehabilitation, preventing veteran suicide, extending the Long Tan Bursary to grandchildren of Vietnam veterans, recognising special submarine operations as operational service, and allowing oral claims for compensation. The speaker also highlighted the Beaudesert RSL's outreach caravan, funded by a $21,000 federal government contribution, and praised local figures including Errol Guilfoyle, Steve Monteath, David Kassulke, Mark King, Tony Paddock, and Dr Robbie Maher."
+  },
+  {
+   "slug": "speech-364402",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018, highlighting education, employment and suicide prevention measures, and noted Labor's $121 million veterans' employment program. They called for a dedicated mefloquine inquiry, a one-stop shop for veterans' services in Darwin, and acknowledged over 2,000 veterans in the Solomon electorate."
+  },
+  {
+   "slug": "speech-364403",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "Labor supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018, which maintains incapacity payments at 100% of normal weekly earnings for veterans undertaking approved full-time study (helping around 150 people per year) and introduces a suicide prevention pilot for veterans in regional and remote areas. The speaker also noted that veteran unemployment sits at over 30% and highlighted Labor's own $121 million veterans' employment package."
+  },
+  {
+   "slug": "speech-364405",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Bill 2018 allows veterans in rehabilitation and approved full-time study to retain 100% of incapacity payments, establishes a suicide prevention pilot for at-risk veterans, and gives partners more time to choose compensation payout options. The unemployment rate for veterans in the first 10 months after separation is about 8%, not 30%, and MyService lifestyle questions are optional and not used to determine compensation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans’ Affairs Legislation Amendment (Veteran-centric Reforms No. 2) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00070",
+   "assent_date": "2018-06-29"
+  }
+ ]
+}

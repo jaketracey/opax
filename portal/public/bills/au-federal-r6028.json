@@ -1,0 +1,191 @@
+{
+ "key": "au-federal-r6028",
+ "title": "Treasury Laws Amendment (2018 Measures No. 1) Bill 2018",
+ "short_title": "Treasury Laws Amendment (2018 Measures No. 1) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-03-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6028_ems_a381b436-fb32-4362-bdf8-556aa8e3a13e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6028%22",
+   "document_date": "2018-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00023",
+   "document_date": "2018-03-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-07",
+  "sentences": [
+   "This bill would change several Treasury-related laws to reduce regulatory burdens.",
+   "It would let the Tax Office send superannuation money to people who have a terminal illness, change reporting rules for companies with a receiver or controller, and delete outdated laws.",
+   "The explanatory memorandum does not specify the start date for these changes."
+  ],
+  "changes": [
+   "Allow the Commissioner to pay superannuation directly to terminally ill individuals.",
+   "Modify notification and reporting obligations for corporations with property in receivership or under a controller.",
+   "Repeal inoperative Acts and remove spent provisions from taxation law."
+  ],
+  "affected": "Individuals with terminal medical conditions, corporations with property in receivership or under a controller, and the Treasury portfolio laws.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:41:36Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5044",
+   "date": "2018-02-27",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/debates/?id=2018-02-27.96.1) that would have amended the normal [second reading](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) motion, which is *that the bill be read for a second time*. Agreeing to read a [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6028) for a second time is parliamentary jargon for agreeing with the main idea of the bill. After this vote, the House can discuss the bill in more detail. The amendment to the normal second reading motion was introduced by Labor MP [Andrew Leigh](https://theyvoteforyou.org.au/people/representatives/fenner/andrew_leigh). ### What was the amendment? > *That all words after 'That' be omitted with a view to substituting the following words:* > *'whilst not declining to give the bill a second reading, the House calls upon the Government to demonstrate it is completely committed to clamping down on phoenix activity by introducing legislation for a Directors Identification Number'.*",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-27/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-360227",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": "The bill makes regulatory improvements, extends tax relief for merging superannuation funds, provides ongoing funding for the superannuation transaction network, transfers the compassionate release of superannuation role from the Chief Executive Medicare to the Commissioner of Taxation, and combats phoenixing by requiring purchasers of new residential properties to remit GST directly to the ATO from 1 July 2018."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2018 Measures No. 1) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00023",
+   "assent_date": "2018-03-29"
+  }
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-s1421",
+ "title": "Tax Laws Amendment (Incentivising Food Donations to Charitable Organisations) Bill 2024",
+ "short_title": "Tax Laws Amendment (Incentivising Food Donations to Charitable Organisations) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-07-02",
+ "originating_house": "senate",
+ "sponsor": "SMITH, Sen Dean",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10768",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1421%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1421%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1421_ems_7c830e73-1a3a-40d9-949c-c42919d63f2e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1421%22",
+   "document_date": "2024-07-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-07-02",
+  "sentences": [
+   "The bill would create a tax offset for companies that donate food to registered charities.",
+   "The offset would be refundable for companies with annual turnover under $20 million and non-refundable for others.",
+   "The maximum offset is the lesser of $5 million or a percentage of donation costs, with an independent review after three years."
+  ],
+  "changes": [
+   "Introduces a food donations tax offset for constitutional corporations.",
+   "Sets a $20 million turnover threshold for refundability of the offset.",
+   "Caps the offset at $5 million or a specified percentage of expenditure.",
+   "Makes the offset temporary with a review after three years.",
+   "Includes integrity measures to prevent abuse."
+  ],
+  "affected": "Companies that are constitutional corporations and donate food to registered charities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:42Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

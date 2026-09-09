@@ -1,0 +1,161 @@
+{
+ "key": "au-federal-r5493",
+ "title": "Acts and Instruments (Framework Reform) (Consequential Provisions) Bill 2015",
+ "short_title": "Acts and Instruments (Framework Reform) (Consequential Provisions) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2015-09-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5493_ems_5f101e6b-7399-42f0-b04d-9fb8fd8c919d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5493%22",
+   "document_date": "2015-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00126",
+   "document_date": "2015-09-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-25",
+  "sentences": [
+   "This bill would update many Commonwealth laws to support the renaming of the Legislative Instruments Act to the Legislation Act and the Federal Register of Legislative Instruments to the Federal Register of Legislation.",
+   "It would remove sunsetting and disallowance exemptions from some enabling Acts, preserve their legal effect in the Legislation Act or the Legislative Instruments Regulation 2004, and clarify that state and territory court rules are not legislative instruments.",
+   "The bill would also amend the Family Law Act 1975 to remove an inconsistency in how its rules are treated under the Legislative Instruments Act, and make minor technical corrections to the Legislation Act."
+  ],
+  "changes": [
+   "Update references to the Legislative Instruments Act to the Legislation Act and to the Federal Register of Legislative Instruments to the Federal Register of Legislation.",
+   "Remove certain sunsetting and disallowance exemptions for legislative instruments from enabling Acts and preserve their legal effect elsewhere.",
+   "Clarify that state and territory court rules are not legislative instruments under the Legislation Act.",
+   "Amend the Family Law Act 1975 to remove an inconsistency in how its court rules are treated.",
+   "Make minor technical corrections to the Legislation Act and repeal spent provisions.",
+   "Clarify that section 14 of the Legislation Act does not apply to forms."
+  ],
+  "affected": "Commonwealth Acts, state and territory court rules, and the Family Law Act 1975 are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:48:32Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-314870",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The Acts and Instruments (Framework Reform) (Consequential Provisions) Bill 2015 was introduced to support the Acts and Instruments (Framework Reform) Act 2015, which received royal assent on 5 March 2015 and commences on 5 March 2016. It updates references to the Legislative Instruments Act, transfers exemptions from sunsetting and disallowance to the updated Legislative Instruments Regulation 2004, and makes minor clarifications (including to court rules and the Family Law Act 1975) to consolidate Commonwealth legislation registration into a single scheme under the renamed Legislation Act 2003."
+  },
+  {
+   "slug": "speech-316667",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-18",
+   "stage_hint": null,
+   "brief": "The Acts and Instruments (Framework Reform) (Consequential Provisions) Bill 2015 makes consequential amendments to correct references and provisions in Commonwealth legislation, clarifies that administrative forms and court rules are not legislative instruments, and supports the government's deregulation agenda. The bill was prepared by the Office of Parliamentary Counsel."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Acts and Instruments (Framework Reform) (Consequential Provisions) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00126",
+   "assent_date": "2015-09-10"
+  }
+ ]
+}

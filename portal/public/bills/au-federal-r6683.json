@@ -1,0 +1,469 @@
+{
+ "key": "au-federal-r6683",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6683%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6683%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6683%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6683%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6683%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6683%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6683%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6683%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6683%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6683%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6683_ems_61a29814-c876-4534-a41d-d91e7307b7d2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6683_ems_903a62c4-c7d6-4ca3-8fa5-4b2c5f072c31%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6683_ems_321d3e86-79f9-4377-b0a3-f679c8369899%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6683%22",
+   "document_date": "2021-02-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2021-02-25",
+  "sentences": [
+   "This bill would make approval agreements between the Commonwealth and the states and territories rely on national environmental standards, backed by oversight and assurance systems.",
+   "It would create a legal framework for setting and changing these standards, and establish an Environment Assurance Commissioner to monitor and audit how the agreements and Commonwealth approval processes operate.",
+   "It would also let all states and self-governing territories ask for and receive advice from the IESC, in line with that body's usual role."
+  ],
+  "changes": [
+   "The bill would establish a framework for making, varying, revoking and applying National Environmental Standards.",
+   "It would set up an Environment Assurance Commissioner to conduct monitoring or auditing of bilateral agreements and Commonwealth approval processes.",
+   "It would enable all states and self-governing territories to request and obtain advice from the IESC."
+  ],
+  "affected": "States, self-governing territories, and the Commonwealth agencies involved in environmental approvals and bilateral agreements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7311",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021 - Second Reading - Do not reject bill",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 81
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-23/8"
+  },
+  {
+   "key": "federal-representatives-7312",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "question": "The majority voted in favour of agreeing with the main idea of the bill. In parliamentary jargon, they voted to read it for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that they can now discuss it in more detail. ### What is the bill's main idea? The bill was introduced in order to amend the [Environment Protection and Biodiversity Conservation Act 1999](https://en.wikipedia.org/wiki/Environment_Protection_and_Biodiversity_Conservation_Act_1999) (EPBC Act) in order to establish: * *a framework for making, varying, revoking and applying National Environmental Standards and* * *an Environment Assurance Commissioner (EAC) to monitor and audit the operation of bilateral agreements with the states and territories as well as to oversee Commonwealth processes under the EPBC Act for making and enforcing approval decisions.* The [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd074) sets out the following 'Key Issues' relating to the bill: * *Industry groups broadly support the Bill, including the framework for National Environmental Standards and the proposed EAC. They consider this Bill, together with the Streamlining Bill, would provide certainty and clarity while addressing regulatory duplication in environmental approvals. However, several industry groups suggest that any National Environmental Standards made under the Bill should reflect the existing requirements of the EPBC Act.* * *Other stakeholders, including environmental, legal and scientific organisations, generally do not support the Bill, expressing considerable concern. Many noted the lack of a comprehensive government response to the Final Report of the Samuel Review, and suggested that the Government was ‘cherry picking’ recommendations and making piecemeal reforms, rather than implementing the full range of ‘tranche 1’ reforms identified in the Final Repor",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 60
+    },
+    "Liberal": {
+     "ayes": 39,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-23/9"
+  },
+  {
+   "key": "federal-representatives-7313",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debates/?id=2021-06-23.148.1) introduced by Warringah MP [Zali Steggall](https://theyvoteforyou.org.au/people/representatives/warringah/zali_steggall) (Independent), which means they failed. According to MP Steggall, these amendments would \"*ensure that measures to safeguard the environment are in place in relation to the Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021.*\" She explained the purpose of each one in detail in her [contribution to the debate](https://www.openaustralia.org.au/debate/?id=2021-06-23.148.2). ### Amendment text > *(1) Schedule 1, item 6, page 5 (line 6), omit \"may\", substitute \"must\".* > > *(2) Schedule 1, item 6, page 5 (line 13), omit \"may\", substitute \"must\".* > > *(3) Schedule 1, item 6, page 5 (after line 16), after subsection 65C(1), insert:* > >> *(1A) Without limiting subsection (1), the standards made under that subsection must include national standards for each of the following:* >> >>> *(a) matters of national environmental significance;* >>> >>> *(b) transparent processes and robust decisions, including:* >>> >>>> *(i) judicial review; and* >>>> >>>> *(ii) community consultation; and* >>>> >>>> *(iii) adequate assessment of impacts on matters of national environmental significance, including climate impacts; and* >>>> >>> *(iv) emissions profile disclosure; and* >>>> >>>> *(v) regional planning;* >>> >>> *(c) Indigenous engagement and involvement in environmental decision making;* >>> >>> *(d) compliance and enforcement;* >>> >>> *(e) data and information;* >>> >>> *(f) environmental monitoring and evaluation of outcomes;* >>> >>> *(g) environmental restoration, including offsets;* >>> >>> *(h) wildlife permits and trade.* >> >> *(1B) The Minister must take all reasonable steps to ensure that national environmental standards are in force, and comply with subsection (1A), at all times.",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 39,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-23/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-409371",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021 should be passed to modernise environmental laws through competitive federalism, balancing conservation with economic development, and criticised binary framings of environment versus commerce. He called on the Labor Party to support the bill, referencing Graeme Samuel's review and the need to advance Western Australian projects."
+  },
+  {
+   "slug": "speech-409372",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's EPBC Amendment Bill is a rehash of failed 2014 Abbott-era legislation, ignores the Samuel review's recommendations, and fails to provide stronger environmental protections or address delays in project approvals. He moved an amendment noting the government's failure to deliver durable reform and called for a genuine first-stage reform package with stronger standards, independent oversight, and adequate resourcing."
+  },
+  {
+   "slug": "speech-409374",
+   "speaker": "Garth Hamilton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021 should provide greater certainty and consistency in project approvals, citing the New Acland mine’s 14-year delay affecting 350 workers, and noted that all state and territory leaders have agreed to streamline approvals and develop national environmental standards."
+  },
+  {
+   "slug": "speech-409375",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-22",
+   "stage_hint": null,
+   "brief": "Labor opposed the Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021, arguing it weakens environmental laws during a biodiversity crisis. The speech cited Auditor-General findings that timely approval decisions dropped from 60% (2014–15) to 5% (2018–19) and 79% of approvals were non‑compliant, and called for stronger protections, a genuinely independent assurance commissioner, and adoption of Professor Graeme Samuel’s review recommendations."
+  },
+  {
+   "slug": "speech-409625",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021 would weaken environmental protections by replacing the stronger interim national standards recommended by Professor Graeme Samuel’s independent review with inferior government-drafted standards, allowing the minister to make decisions inconsistent with those standards if deemed in the public interest, and creating an environmental assurance commissioner with no power to investigate individual project decisions—all while Australia already has the world’s highest rate of mammal extinctions and faces escalating climate change impacts."
+  },
+  {
+   "slug": "speech-409627",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The EPBC Amendment (Standards and Assurance) Bill 2021 is inconsistent with the Samuel review and resurrects Tony Abbott's failed one-stop-shop approach. Citing ANAO data showing 95% of decisions are late and 79% noncompliant after 40% funding cuts, the bill was opposed in favour of the full Samuel package, including strong national standards, an independent regulator, and retained Commonwealth intervention powers."
+  },
+  {
+   "slug": "speech-409628",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill cements the government's poor environmental record, citing 22 policies in eight years, a divided government, and a lack of firm targets—calling the net-zero 2050 commitment a mere \"preference.\" They highlighted UNESCO's recommendation to list the Great Barrier Reef as endangered, criticised the government's response to Professor Graeme Samuel's review as falling short, and insisted on establishing an independent compliance watchdog with genuine enforcement powers."
+  },
+  {
+   "slug": "speech-409631",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's bill weakens environmental protections by rejecting expert recommendations, replacing \"best available information\" with \"adequate information,\" and shifting federal responsibility to states. They opposed the bill, citing the government's poor environmental record, including a 510% increase in job and investment delays and 79% of approvals containing errors."
+  },
+  {
+   "slug": "speech-409632",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The bill was opposed as insufficient and contrary to Graeme Samuel's review findings, with the public interest exemption (subclause 65H(7)) allowing circumvention of national standards and the absence of an independent Environment Assurance Commissioner cited as major flaws. Amendments will be moved during consideration in detail to strengthen the standards and require independent expert review."
+  },
+  {
+   "slug": "speech-409633",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021, arguing it would weaken environmental protections and hand federal responsibilities to under-resourced states. They cited over 500 community contacts opposing the bill, UNESCO’s draft decision to list the Great Barrier Reef as endangered, and Professor Graeme Samuel’s review calling for fundamental reform with legally enforceable national environmental standards."
+  },
+  {
+   "slug": "speech-409634",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021 fails to implement the strong national environmental standards and independent enforcement recommended by the government's own independent review, and that the proposed standards are not scientifically credible according to the Academy of Science. Australia is the world leader in mammal extinction, and the bill will not halt the extinction crisis and may accelerate it."
+  },
+  {
+   "slug": "speech-409639",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021 is dangerous because it sacrifices environmental protection for political gain, citing the government's failure to act on Graeme Samuel's review recommendations, including implementing national standards and an independent watchdog. The speaker noted that 35% of mammal extinctions since 1500 are Australian, 10 species were listed extinct in March 2021, 79% of EPBC decisions had compliance failures, and assessment times grew by 510%, while the bill does nothing to address these failures."
+  },
+  {
+   "slug": "speech-409640",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021 would weaken environmental protections, citing hundreds of community emails opposing the legislation, including one from constituent Christine. Concrete points included the government’s devolution of national decision-making to states without implementing Professor Samuel’s full recommendations, and the March 2021 gazettal of 10 species as extinct under the EPBC Act."
+  },
+  {
+   "slug": "speech-409787",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "Centre Alliance MP Rebekha Sharkie argued the government's EPBC Amendment Bill fails to deliver effective environmental standards, an independent regulator, or a response to the Samuel review, and announced she and Senator Stirling Griff cannot support the bill unless these three conditions are met."
+  },
+  {
+   "slug": "speech-409788",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Environment Protection and Biodiversity Conservation Amendment Bill ignores key recommendations from Professor Graeme Samuel's review, particularly the need for national environmental standards and an independent watchdog. The speaker also criticised the government's record on environmental protection, citing the withdrawal of the live exports bill and the return of Barnaby Joyce as Nationals leader, while promoting Labor's commitment to a complete rewrite of the EPBC Act and highlighting local environmental projects in the electorate of Macnamara."
+  },
+  {
+   "slug": "speech-409790",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The bill fails to adopt the robust national environmental standards recommended by the Samuel review, instead allowing the minister to set weak standards without parliamentary oversight for four years and with a public interest exemption to override environmental concerns. The proposed environmental assurance commissioner is also toothless, lacking power to audit individual decisions, compel documents, or operate independently from the minister."
+  },
+  {
+   "slug": "speech-409791",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021 fails to address the climate and extinction crises, citing a 40% cut to environment department funding, a 510% increase in project delays, and 79% of decisions being noncompliant or erroneous, while criticising the government for ignoring the Samuel review and lacking a genuine net zero commitment."
+  },
+  {
+   "slug": "speech-409792",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the EPBC Amendment (Standards and Assurance) Bill 2021, arguing it implements the Samuel review's 38 recommendations to cut regulatory duplication and project delays, citing costs up to $47 million per month for greenfields projects. The speaker stressed the need for interim national environmental standards, strengthened bilateral frameworks with states, and greater involvement of traditional owners, noting the current system fails both the environment and the economy."
+  },
+  {
+   "slug": "speech-409793",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's bill to devolve federal environmental powers to the states is hypocritical, citing previous insistence on Commonwealth control over international relations. They listed specific treaties (World Heritage, Ramsar, IUCN, Bond conventions) and examples of state failures (Great Barrier Reef mining, Franklin dam, Kakadu, Coronation Hill, Murray-Darling Basin Plan), and noted that approval delays stem from public service cuts, not state control—pointing to fast approvals under the last Labor government for projects like Wheatstone, Queensland gas, Prelude, and Olympic Dam."
+  },
+  {
+   "slug": "speech-409795",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The government defended the EPBC Amendment (Standards and Assurance) Bill 2021, arguing it establishes national environmental standards and an environmental assurance commissioner as part of a staged reform process following the Samuel review. It cited over $2 billion in environment spending and a 99 per cent on-time project assessment rate, while accusing Labor of obstruction and inconsistency over support for devolving approvals to the states."
+  },
+  {
+   "slug": "speech-409803",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "Amendments to the Environment Protection and Biodiversity Conservation Amendment (Standards and Assurance) Bill 2021 were argued to impose a positive duty on the minister to make National Environmental Standards, remove broad ministerial discretion to exclude decisions from standards, and limit exceptions to national security or emergencies, following recommendations from the Samuel review and the Law Council of Australia."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,99 @@
+{
+ "key": "au-federal-s1021",
+ "title": "Migration Amendment (Free the Children) Bill 2016",
+ "short_title": "Migration Amendment (Free the Children) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-03-02",
+ "originating_house": "senate",
+ "sponsor": "HANSON-YOUNG, Sen Sarah",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10711",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1021%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1021%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1021%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1021%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1021%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1021%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1021%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1021_ems_72b8d66d-3d69-485a-babd-5e020df13b3b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1021%22",
+   "document_date": "2016-03-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-02",
+  "sentences": [
+   "The bill would stop children being held in immigration detention centres and instead house them in community residential housing with their families.",
+   "It would require the Immigration Minister to decide within 30 days that a child must live in the community rather than in detention.",
+   "The bill also would prevent the transfer of children held in regional processing centres to any country that intends to detain them and would require the immediate return to Australia of any child held offshore."
+  ],
+  "changes": [
+   "End detention of children in immigration detention facilities and regional processing centres.",
+   "Place children with their immediate family or guardians in community residential housing during any required detention.",
+   "Expand the residence determination process to require the minister to decide within 30 days that a child reside in the community.",
+   "Prevent the minister from transferring children to any country that intends to detain them.",
+   "Require the immediate return to Australia of any child currently held in immigration detention offshore."
+  ],
+  "affected": "Children held under the Migration Act 1958 and their immediate family members or guardians, including those in Australia's regional processing centres.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:25:23Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

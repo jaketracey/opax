@@ -1,0 +1,367 @@
+{
+ "key": "au-federal-r6668",
+ "title": "Appropriation Bill (No. 4) 2020-2021",
+ "short_title": "Appropriation Bill (No. 4) 2020-2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2021-05-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-05-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6668_ems_56e9161d-63dc-4be1-9237-994016badda4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/7882189%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6668%22",
+   "document_date": "2021-02-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00038",
+   "document_date": "2021-05-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-402562",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "The bill seeks $141 million in additional appropriations, including $45.1 million for a digital passenger information platform, $21.6 million for Services Australia IT systems for COVID-19 vaccine rollout and employment services, and $12.4 million for investigating potential criminal matters in Afghanistan operations between 2005 and 2016."
+  },
+  {
+   "slug": "speech-404808",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-22",
+   "stage_hint": null,
+   "brief": "The speaker strongly supported the appropriation bills, criticised Labor MPs for opposing the JobKeeper program and industrial relations reforms, and detailed federal funding commitments for road upgrades in the Ryan electorate, including $50 million for the Indooroopilly roundabout, $12.5 million for the Kenmore roundabout, $112 million for the Centenary Bridge duplication, and $10 million for a Metroad 5 scoping study."
+  },
+  {
+   "slug": "speech-404809",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-22",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for accumulating a trillion dollars in debt with little to show for it, arguing that cuts to JobSeeker and JobKeeper will devastate communities like Fowler, where 2,300 businesses and 7,000 workers will be affected. They called for investment in social housing, childcare reform, and a national integrity system to ensure transparent distribution of public funds."
+  },
+  {
+   "slug": "speech-404813",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-22",
+   "stage_hint": null,
+   "brief": "The Labor MP condemned new reports of misconduct and a toxic culture of disrespect toward women in Parliament, apologising to staff and warning the behaviour undermines the nation’s leadership, while also voicing support for the resources industry, citing specific projects like the INPEX Ichthys LNG and the Super Pit goldmine."
+  },
+  {
+   "slug": "speech-404966",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government must take responsibility for the culture of misogyny and sexual harassment in Parliament, and criticised the return of ministers who resigned in disgrace, while calling for gender equality and more women in Parliament."
+  },
+  {
+   "slug": "speech-404975",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-23",
+   "stage_hint": null,
+   "brief": "The Morrison government has invested over $3.2 billion in Bruce Highway upgrades between the Sunshine Coast and Brisbane and offered $390 million for north coast rail duplication, while criticising Queensland state Labor minister Mark Bailey for contributing far less and failing to match federal funding or support key projects."
+  },
+  {
+   "slug": "speech-405113",
+   "speaker": "Anthony Byrne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian government failed to honour the sacrifices made by the public during the COVID-19 pandemic by not pursuing bold national reforms or a reimagined vision for the country. They specifically called for a 20% local content quota on streaming giants like Netflix to support the Australian film and television industry, citing that only 3% of actors were employed during the pandemic."
+  },
+  {
+   "slug": "speech-405115",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-23",
+   "stage_hint": null,
+   "brief": "The speech criticised the government's handling of the Appropriation Bill (No. 3) and (No. 4) 2020-2021, arguing it prioritises political management and failed to show leadership during the bushfires and pandemic. It cited a projected trillion dollars in debt, no major infrastructure or skills initiatives, no funding for public and community housing, one billion dollars spent on advertising, and the error of increasing JobSeeker without a wage subsidies program."
+  },
+  {
+   "slug": "speech-405120",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-23",
+   "stage_hint": null,
+   "brief": "The Morrison government is investing in a range of local infrastructure projects in the electorate of Robertson, including $1 million for new learning facilities at ET Australia Secondary College, a mobile base station under the $380 million Mobile Black Spot Program, $900,000 for a cycleway, and upgrades to sporting facilities, commuter parking, and roads—totalling $86.5 million for the Central Coast Roads Package—as part of the economic recovery from COVID-19."
+  },
+  {
+   "slug": "speech-405123",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-23",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Liberal government for partner visa delays of up to two years, illegal caps, and discrimination against fiancees and applicants from non-English-speaking countries, urging reform and compassion; they also acknowledged the Holi festival and the contributions of the Indian diaspora."
+  },
+  {
+   "slug": "speech-405167",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-405170",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the end of JobKeeper on 28 March, warning it would cost 100,000 to 250,000 jobs, and criticised the government for not holding an inquiry into Christian Porter’s alleged rape and for delaying a royal commission into veteran suicides, while highlighting the $8 billion Sun Cable renewable energy project in the Northern Territory and a letter from constituent Pamela Trotman urging the Prime Minister to reconsider."
+  },
+  {
+   "slug": "speech-405171",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia's early pandemic strategy of harsh restrictions and border closures saved lives and preserved livelihoods, citing a 3.8% economic contraction compared to the 5.5% OECD average, and highlighted $77 billion in JobKeeper payments, $267 billion in total economic and health support, and specific local infrastructure projects in the Barker electorate funded through programs like the Building Better Regions Fund and Local Roads and Community Infrastructure Program."
+  },
+  {
+   "slug": "speech-405172",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speech criticised the government's handling of aged care and the NDIS, citing $1.7 billion in aged-care cuts, 100,000 people on home-care waitlists, and 28,000 deaths while waiting, and argued for scrapping NDIS independent assessments and fully implementing the aged-care royal commission's 148 recommendations, including staff ratios and 24-hour registered nurses. It also raised the underfunding of carers—valued at $78 billion annually—and recounted cases such as Tania Giorgio's successful NDIS housing for her sister-in-law Angelina Giorgio and the speaker's grandmother Joan Handsaker's experience in aged care."
+  },
+  {
+   "slug": "speech-405173",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the appropriation bills, which allocate $701.2 million to the Department of Health, including $539.1 million for the COVID-19 vaccination rollout, and $158 million for expanding Joondalup Hospital to 1,020 beds. The speaker also called on the WA state government to plan a new major hospital in the Alkimos/Yanchep area and advocated for upgrades to Flynn Drive, Neaves Road, Lukin Drive, and the Whiteman to Yanchep highway, as well as grade separation of the Reid Highway and Erindale Road intersection."
+  },
+  {
+   "slug": "speech-405180",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "Successive governments have failed to adequately fund and address housing for First Nations Australians, particularly in the electorate of Lingiari. The Morrison government's $550 million pledge for the Northern Territory is insufficient, as research shows up to 76,000 additional dwellings are needed nationally, including about 21,000 in the Northern Territory costing roughly $5 billion."
+  },
+  {
+   "slug": "speech-405181",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The member for Grey detailed over $900 million in Commonwealth-funded road projects and numerous other grants for infrastructure, community programs, and services in the electorate, arguing that safe seats do not miss out on government support. He also highlighted challenges recruiting doctors and other professionals to rural areas, proposing a different payment structure for rural doctors funded by capping metropolitan overservicing."
+  },
+  {
+   "slug": "speech-405183",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The member for Forde argued that the government's economic response to the pandemic—including JobKeeper, $9 billion in tax cuts to 8.8 million Australians, HomeBuilder, and a 100,000 apprenticeship scheme—has driven job creation (89,000 full-time jobs in January, with 80% going to women) and reduced unemployment to 5.5%. He also highlighted infrastructure investments such as $75 million for the Mount Lindesay Highway duplication and $375 million for the M1 upgrade, and a Logan wastewater facility converting sewage into renewable energy and biochar."
+  },
+  {
+   "slug": "speech-405184",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for failing to create an equitable society, citing inaction on climate and energy, rising specialist gap fees, GP shortages in Macarthur, extended hospital waiting lists, and schools with over 30 demountable classrooms."
+  },
+  {
+   "slug": "speech-405373",
+   "speaker": "Maria Vamvakinou",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speaker urged the federal government to urgently fund a North and West Melbourne City Deal including 66 projects such as the Broadmeadows Railway Station redevelopment, Hume Central, and the Beveridge Intermodal Freight Terminal, and criticised the early end to JobKeeper, which Treasury figures show will affect 13,274 workers and 4,313 businesses in the electorate of Calwell. The speaker also praised CSL's AstraZeneca vaccine production in Broadmeadows and encouraged all constituents to get vaccinated."
+  },
+  {
+   "slug": "speech-405585",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's planned withdrawal of income support changes on 1 April, arguing it would harm hundreds of thousands of Australians, and condemned the government's handling of Indigenous deaths in custody, racism, and the treatment of women in Parliament, specifically criticising the Prime Minister's response to the allegation made by Ms Higgins."
+  },
+  {
+   "slug": "speech-405587",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that ending JobKeeper in three days is premature, as it will cut support from 2,480 businesses and 7,600 workers in Moreton while the government has only delivered 10% of its promised four million vaccinations, and criticised the waste of taxpayer funds on profitable firms like Premier Investments, which received $40 million in JobKeeper while paying $57 million in dividends."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 4) 2020-2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00038",
+   "assent_date": "2021-05-27"
+  }
+ ]
+}

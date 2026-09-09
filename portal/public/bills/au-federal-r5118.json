@@ -1,0 +1,215 @@
+{
+ "key": "au-federal-r5118",
+ "title": "Primary Industries (Customs) Charges Amendment (Australian Grape and Wine Authority) Bill 2013",
+ "short_title": "Primary Industries (Customs) Charges Amendment (Australian Grape and Wine Authority) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2013-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5118_ems_4b26316d-31aa-4373-b084-b68066d04a0e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5118%22",
+   "document_date": "2013-11-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00137",
+   "document_date": "2013-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-14",
+  "sentences": [
+   "This bill is part of a package of three bills that merge the Grape and Wine Research and Development Corporation and the Wine Australia Corporation into a new body called the Australian Grape and Wine Authority.",
+   "The new authority would start on 1 July 2014 and take over the existing functions of both organisations, with the same levy structure and amounts.",
+   "The explanatory memorandum says the merger would reduce red tape, for example by removing the need for ministerial approval of annual operational plans."
+  ],
+  "changes": [
+   "Amends the Primary Industries (Customs) Charges Act to make sure the new levy arrangements work as intended.",
+   "Creates the Australian Grape and Wine Authority to replace the two existing bodies.",
+   "Transfers assets, staff and functions from the old bodies to the new authority."
+  ],
+  "affected": "The wine industry, including grape growers and winemakers, and the two existing statutory authorities being merged.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:03Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-278422",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-11-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825496",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-11-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279714",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279956",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279957",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279958",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826815",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": "Moved to schedule non-controversial government bills for consideration from 12:45 pm, including amendments to the Australian Civilian Corps, Import Processing Charges, Grape and Wine Authority, Offshore Petroleum, Rural Research and Development, and Customs Anti-Dumping Commission. Also moved to set general business order for the day, prioritising Senator Moore's motion on pre-election commitments and government document orders."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Primary Industries (Customs) Charges Amendment (Australian Grape and Wine Authority) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00137",
+   "assent_date": "2013-12-13"
+  }
+ ]
+}

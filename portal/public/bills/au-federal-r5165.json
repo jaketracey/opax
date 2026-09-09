@@ -1,0 +1,367 @@
+{
+ "key": "au-federal-r5165",
+ "title": "Appropriation Bill (No. 3) 2013-2014",
+ "short_title": "Appropriation Bill (No. 3) 2013-2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2014-04-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-04-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5165_ems_69c3a184-078e-49b6-ad4d-f2049d93ee11%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5165%22",
+   "document_date": "2014-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00019",
+   "document_date": "2014-04-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-282481",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282482",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-283255",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-283261",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-283262",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-283263",
+   "speaker": "Michael Danby",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-283545",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-283550",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-283554",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-283808",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-283903",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-283906",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-283907",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-283908",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284074",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284075",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2014-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284077",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284078",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284082",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284084",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284411",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284416",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284422",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284425",
+   "speaker": "Bert van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 3) 2013-2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00019",
+   "assent_date": "2014-04-09"
+  }
+ ]
+}

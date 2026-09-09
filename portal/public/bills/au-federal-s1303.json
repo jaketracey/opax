@@ -1,0 +1,194 @@
+{
+ "key": "au-federal-s1303",
+ "title": "National Health Amendment (Decisions under the Continence Aids Payment Scheme) Bill 2021",
+ "short_title": "National Health Amendment (Decisions under the Continence Aids Payment Scheme) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-16",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2021-09-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1303_ems_6abd072a-6646-43ec-aa52-793d7c32f8b6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1303%22",
+   "document_date": "2021-06-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00102",
+   "document_date": "2021-09-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-16",
+  "sentences": [
+   "This bill would give the Administrative Appeals Tribunal power to review certain decisions made under the Continence Aids Payment Scheme.",
+   "The Minister could make a legislative rule that allows the Tribunal to review decisions of the Secretary about representation of a person receiving scheme payments.",
+   "The bill does not change the eligibility criteria or payment amounts under the scheme, which already provides annual or six-monthly payments to people aged five and over with severe incontinence."
+  ],
+  "changes": [
+   "The bill amends the National Health Act 1953 to clarify that a legislative instrument can allow AAT review of decisions not already covered by sections 14 and 15.",
+   "The bill provides express statutory support for the existing Continence Aids Payment Scheme, which was previously set out only in a legislative instrument.",
+   "The bill extends AAT review to decisions made by the Secretary about representation of a participant by another individual or organisation."
+  ],
+  "affected": "People aged five and over with permanent and severe incontinence who receive payments under the Continence Aids Payment Scheme, and organisations or individuals who represent them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-412798",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The bill amends the National Health Act 1953 to validate Administrative Appeals Tribunal review decisions under the Continence Aids Payment Scheme, following a 2020 instrument that introduced internal and external merits review for participants."
+  },
+  {
+   "slug": "speech-412799",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The bill was supported, allowing internal review or AAT appeal for decisions under the Continence Aids Payment Scheme. The speech also noted that incontinence affects one in four Australian adults and called for better aged care staffing and continence management."
+  },
+  {
+   "slug": "speech-412800",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speech supported the National Health Amendment (Decisions under the Continence Aids Payment Scheme) Bill 2021, arguing it expands access to continence aids and appeal rights. It highlighted costs such as $61 for a pack of 30 large nappies, noted that around 15 per cent of Australians experience continence issues, and called for more investment in continence clinics and better facilities for adults with disabilities."
+  },
+  {
+   "slug": "speech-412801",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The National Health Amendment (Decisions under the Continence Aids Payment Scheme) Bill 2021 will allow independent merits review by the Administrative Appeals Tribunal for decisions under the Continence Aids Payment Scheme, which provides over $620 annually to around 130,000 Australians with permanent severe incontinence. The speaker also noted the Morrison government’s record $121.4 billion health investment in 2021–22 and broader mental health and Medicare funding."
+  },
+  {
+   "slug": "speech-412802",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Health Amendment (Decisions under the Continence Aids Payment Scheme) Bill 2021, which introduces internal and independent merits review of CAPS decisions, and called for urgent review of the scheme’s payment adequacy, eligibility criteria, and funding, as well as improved continence care training for aged-care workers and restoration of postgraduate continence nursing courses."
+  },
+  {
+   "slug": "speech-412803",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speaker presented the National Health Amendment (Decisions under the Continence Aids Payment Scheme) Bill 2021, which amends the National Health Act 1953 to validate Administrative Appeals Tribunal review decisions made under the Continence Aids Payment Scheme Instrument."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Health Amendment (Decisions under the Continence Aids Payment Scheme) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00102",
+   "assent_date": "2021-09-10"
+  }
+ ]
+}

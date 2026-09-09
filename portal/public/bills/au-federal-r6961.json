@@ -1,0 +1,188 @@
+{
+ "key": "au-federal-r6961",
+ "title": "Private Health Insurance (Prostheses Application and Listing Fees) Amendment (Cost Recovery) Bill 2022",
+ "short_title": "Private Health Insurance (Prostheses Application and Listing Fees) Amendment (Cost Recovery) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2023-03-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-03-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6962_ems_7934ff76-4e63-4895-add9-416eaac395aa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6961%22",
+   "document_date": "2022-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00007",
+   "document_date": "2023-03-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-12-01",
+  "sentences": [
+   "This bill is part of a three-bill package that implements the 2021-22 Budget measure to modernise and improve the Prostheses List for private health insurance.",
+   "It would rename the Private Health Insurance (Prostheses Application and Listing Fees) Act and update its cost recovery arrangements, including imposing a levy on medical devices and human tissue products listed on the Prescribed List.",
+   "The levy amount would be specified in regulations, and the current application and listing fees would be removed."
+  ],
+  "changes": [
+   "Renames the Private Health Insurance (Prostheses Application and Listing Fees) Act.",
+   "Updates cost recovery arrangements under that Act.",
+   "Imposes a levy on each medical device and human tissue product on the Prescribed List.",
+   "Repeals existing application and listing fees.",
+   "Authorises regulations and rules for levy-related matters.",
+   "Renames the legislative instrument under the Act for consistency."
+  ],
+  "affected": "Sponsors of medical devices and human tissue products on the Prescribed List, and private health insurers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-826997",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "Several bills were referred to the Federation Chamber for further consideration, including amendments to private health insurance, therapeutic goods, and export control legislation."
+  },
+  {
+   "slug": "speech-826999",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The Coalition argued for three bills to modernise the Prostheses List, which sets minimum insurers’ payments for surgical implants, and allocated $22 million over four years to lower medical device costs and improve private health insurance affordability. The speaker criticised the Albanese Labor government for lacking transparency by leaving key details like eligibility criteria and cost recovery specifications to unsighted subordinate legislation."
+  },
+  {
+   "slug": "speech-827066",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The package of three bills modernises the Private Health Insurance Prostheses List to improve transparency and reduce costs for implantable medical devices, with hip replacements costing over $4,000 in Australia compared to under $2,000 in the UK and New Zealand. The reforms aim to lower private health insurance premiums by reducing device costs and updating cost recovery arrangements."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance (Prostheses Application and Listing Fees) Amendment (Cost Recovery) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00007",
+   "assent_date": "2023-03-16"
+  }
+ ]
+}

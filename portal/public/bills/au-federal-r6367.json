@@ -1,0 +1,219 @@
+{
+ "key": "au-federal-r6367",
+ "title": "Royal Commissions Amendment (Private Sessions) Bill 2019",
+ "short_title": "Royal Commissions Amendment (Private Sessions) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "passed",
+ "status_as_of": "2019-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6367_ems_a9242cde-4aa0-4eae-ad86-7207eed01861%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6367_ems_66d7acec-46bf-4b42-9dab-13e3d22a57ed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6367%22",
+   "document_date": "2019-07-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00064",
+   "document_date": "2019-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-25",
+  "sentences": [
+   "This bill would let future royal commissions hold private sessions where individuals can share personal experiences in a less formal setting.",
+   "A regulation would be needed to give a commission the power to hold private sessions, and senior staff could be authorised to run them under certain conditions.",
+   "The government intends to apply private sessions to the Disability Royal Commission and the Aged Care Royal Commission if the bill passes."
+  ],
+  "changes": [
+   "Enables a royal commission to hold private sessions if a regulation authorises it.",
+   "Allows the chair or sole commissioner to authorise assistant commissioners to hold private sessions.",
+   "Applies limits on using or disclosing information given in a private session.",
+   "Extends those limits to certain confidential information given to the Child Sexual Abuse Royal Commission outside private sessions."
+  ],
+  "affected": "People giving personal accounts to future royal commissions, particularly those involved with the Disability Royal Commission and the Aged Care Royal Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-378459",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "The government moved to extend the private sessions regime—previously used in the Royal Commission into Institutional Responses to Child Sexual Abuse, which heard over 8,000 personal stories—to the Royal Commission into Aged Care Quality and Safety and the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability, with chairs Richard Tracey and Ronald Sackville supporting the measure, and the bill preserving confidentiality protections and allowing assistant commissioners to hold sessions in certain circumstances."
+  },
+  {
+   "slug": "speech-379231",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The Royal Commissions Amendment (Private Sessions) Bill 2019 was supported to extend private sessions to other royal commissions, citing 8,013 private sessions and 42,041 calls from the Royal Commission into Institutional Responses to Child Sexual Abuse. The speaker stressed the need for witness support and representation, referencing the knowmore legal service funded with $18 million, and raised concerns about conflicts of interest for commissioners Barbara Bennett and John Ryan."
+  },
+  {
+   "slug": "speech-379232",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "Centre Alliance strongly supported the Royal Commissions Amendment (Private Sessions) Bill 2019, and will circulate amendments requiring reports to be tabled within 15 sitting days, consultation with Indigenous peoples, publication of administrative guidance and implementation updates, compliance with the Archives Act, legal cost payments, and referral of legal questions to the Federal Court."
+  },
+  {
+   "slug": "speech-379233",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "Private sessions should be allowed for royal commissions on aged care and disability to enable vulnerable people to share experiences safely; two senior public servants should be removed from the disability royal commission due to conflicts of interest."
+  },
+  {
+   "slug": "speech-379234",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The government argued the bill enables private sessions for royal commissions via regulation, proposing to make them available for the Royal Commission into Aged Care Quality and Safety and the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability. The bill extends limits on use and disclosure of private session information, excludes it from Freedom of Information access, and applies a 99-year closure under the Archives Act."
+  },
+  {
+   "slug": "speech-380342",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-10",
+   "stage_hint": null,
+   "brief": "The government moved amendments to the Royal Commissions Amendment (Private Sessions) Bill 2019 and will recommend to the Governor-General that private sessions be made available for the Royal Commission into Aged Care Quality and Safety and the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability. The amendments ensure only royal commissioners may hold private sessions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Royal Commissions Amendment (Private Sessions) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00064",
+   "assent_date": "2019-09-13"
+  }
+ ]
+}

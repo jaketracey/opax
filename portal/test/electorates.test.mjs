@@ -55,3 +55,32 @@ test('unknown representation is distinct from a verified vacancy, including futu
   assert.deepEqual(vacancy.members, []);
   assert.equal(representationAt(d, '2026-09-05').status, 'unknown');
 });
+
+test('shared navigation retains electorate, person, supplier and agency entry points', async () => {
+  await import('../public/navigation.js');
+  const navigation = globalThis.OpaxNavigation;
+  const links = navigation.sections.flatMap((section) => section.children || []).map(([href]) => href);
+  for (const href of ['/subject/electorate', '/subject/person', '/subject/supplier', '/subject/agency']) assert.ok(links.includes(href));
+  assert.equal(navigation.active('/subject/electorate'), 'people');
+});
+
+test('recorded affiliations link only to unique electorate pages in their stated chamber and jurisdiction', async () => {
+  const { recordedElectorate, recordedRepresentationHTML } = await import('../public/electorates.js');
+  const seats = index.electorates;
+  for (const jurisdiction of ['federal', 'vic', 'tas']) {
+    const chamber = { federal: 'representatives', vic: 'vic_la', tas: 'tas_ha' }[jurisdiction];
+    const representation = { jurisdiction, chamber, electorate: 'Bass', state: jurisdiction === 'vic' ? 'VIC' : 'TAS' };
+    const seat = recordedElectorate(representation, seats);
+    assert.equal(seat.jurisdiction, jurisdiction);
+    assert.equal(seat.chamber, chamber);
+    assert.ok(recordedRepresentationHTML(representation, seats).includes(`href="${seat.url}"`));
+  }
+  const senate = { jurisdiction: 'federal', chamber: 'senate', electorate: 'ACT', state: 'ACT' };
+  assert.equal(recordedElectorate(senate, seats).name, 'Australian Capital Territory');
+  const council = { jurisdiction: 'nsw', chamber: 'nsw_lc', electorate: 'Legislative Council district of New South Wales', state: 'NSW' };
+  assert.equal(recordedElectorate(council, seats).name, 'New South Wales');
+  assert.equal(recordedElectorate({ ...council, electorate: 'Werriwa' }, seats), null, 'a former House seat is not silently attributed to the Council');
+  assert.equal(recordedElectorate(senate, [...seats, recordedElectorate(senate, seats)]), null, 'ambiguous matches stay unlinked');
+  assert.ok(!recordedRepresentationHTML({ ...senate, electorate: '<script>unknown</script>' }, seats).includes('<script>'));
+  assert.ok(!recordedRepresentationHTML(senate, []).includes('<a'), 'missing reference data retains the source label');
+});

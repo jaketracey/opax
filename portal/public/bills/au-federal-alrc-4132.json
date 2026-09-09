@@ -1,0 +1,171 @@
+{
+ "key": "au-federal-alrc-4132",
+ "title": "Fair Work (Registered Organisations) Amendment (Towards Transparency) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "(s) ABBOTT, Tony, MP",
+ "status": "lapsed",
+ "status_as_of": "2013-05-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "representatives",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-2905",
+   "date": "2013-05-16",
+   "house": "representatives",
+   "question": "Fair Work (Registered Organisations) Amendment (Towards Transparency) Bill 2013 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 5
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-05-16/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-268852",
+   "speaker": "Tony Abbott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270981",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270983",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270996",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271002",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271003",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271004",
+   "speaker": "Mike Symon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822625",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823382",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-s1510",
+ "title": "Fair Work Amendment (Disqualified Officers) Bill 2026",
+ "short_title": "Fair Work Amendment (Disqualified Officers) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-19",
+ "originating_house": "senate",
+ "sponsor": "HUME, Sen Jane",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10853",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1510%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1510%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1510_ems_5dd94bee-c14c-4b24-a229-855714bbd6b5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1510%22",
+   "document_date": "2026-08-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-19",
+  "sentences": [
+   "The bill would remove the five-year maximum on the administrator's ability to expel members and disqualify officers of the CFMEU Construction and General Division.",
+   "It amends the Fair Work (Registered Organisations) Act 2009 to replace the current limit with a power to set any period, including an indefinite one.",
+   "The administrator would also have 12 months from commencement to reconsider existing disqualifications of more than four years."
+  ],
+  "changes": [
+   "Removes the five-year statutory limit on the administrator's disciplinary powers.",
+   "Allows the administrator to impose a longer or indefinite disqualification period.",
+   "Gives the administrator 12 months to review past disqualifications of more than four years."
+  ],
+  "affected": "The administrator of the CFMEU Construction and General Division and its officers and members.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-04T23:59:30Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

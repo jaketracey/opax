@@ -1,0 +1,170 @@
+{
+ "key": "au-federal-s1007",
+ "title": "Civil Law and Justice (Omnibus Amendments) Bill 2015",
+ "short_title": "Civil Law and Justice (Omnibus Amendments) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-25",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2015-10-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1007_ems_c44d08c5-af39-4df1-83c2-8ad2a06f7210%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1007%22",
+   "document_date": "2015-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00132",
+   "document_date": "2015-10-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-25",
+  "sentences": [
+   "This bill makes small, non-controversial adjustments to several civil justice laws to make them clearer and work better.",
+   "It would change the Administrative Appeals Tribunal Act, the Bankruptcy Act, the Evidence Act, the Federal Circuit Court Act, the Federal Court Act and the International Arbitration Act, plus other related Acts.",
+   "For the Federal Circuit Court, an arrester authorised by a warrant could use reasonable force to enter premises to make an arrest."
+  ],
+  "changes": [
+   "Ensure all parties to a review get notice that an application has been made.",
+   "Clarify confidentiality rules for bankrupts' statements of affairs.",
+   "Move journalist privilege provisions to a new part of the Evidence Act.",
+   "Give Federal Circuit Court arrester authority to use reasonable force when executing arrest warrants.",
+   "Streamline jury empanelment in the Federal Court.",
+   "Impose time limits for court review of Official Receiver's decisions."
+  ],
+  "affected": "People involved in tribunal reviews, bankrupts, journalists, police and arrestees, and court participants in the Federal Circuit and Federal Courts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:05Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-318790",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The Civil Law and Justice (Omnibus Amendments) Bill 2015 was presented, making minor and technical amendments to the Administrative Appeals Tribunal Act, Bankruptcy Act, Evidence Act, Federal Circuit Court of Australia Act, Federal Court of Australia Act, and International Arbitration Act to improve clarity, consistency, and efficiency—such as moving journalists' privilege provisions in the Evidence Act for uniform numbering, clarifying that police and sheriffs can use reasonable force to enter premises for arrest warrants, and introducing a 60-day time limit for court review of certain bankruptcy decisions."
+  },
+  {
+   "slug": "speech-318791",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "{\"summary\": \"The Civil Law and Justice (Omnibus Amendments) Bill 2015 was supported, containing minor technical changes to Commonwealth acts, including federal courts, the Administrative Appeals Tribunal, bankruptcy, and international arbitration; Labor backed the bill as uncontroversial.\"}"
+  },
+  {
+   "slug": "speech-318792",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The Civil Law and Justice (Omnibus Amendments) Bill 2015 makes minor technical amendments to improve civil justice legislation, including supporting the amalgamation of four Commonwealth merits review tribunals, reducing red tape in the Bankruptcy Act, and simplifying enforcement of foreign arbitral awards under the International Arbitration Act to comply with the New York Convention."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Civil Law and Justice (Omnibus Amendments) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00132",
+   "assent_date": "2015-10-13"
+  }
+ ]
+}

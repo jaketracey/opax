@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6598",
+ "title": "Commonwealth Parliamentary Standards Bill 2020",
+ "short_title": "Commonwealth Parliamentary Standards Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-26",
+ "originating_house": "representatives",
+ "sponsor": "HAINES, Helen, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10929",
+ "portfolio": "(s) HAINES, Helen, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-05-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6598%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6598%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6598%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6598_ems_45c0df26-026b-4a76-b60b-181f9a858acd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6598%22",
+   "document_date": "2020-10-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-26",
+  "sentences": [
+   "This bill would create a new integrity framework for the Commonwealth Parliament, including a statutory code of conduct and new oversight roles.",
+   "It would establish a Parliamentary Standards Commissioner with the same investigative powers as the Auditor-General to handle serious code breaches.",
+   "The bill is part of a package with the Australian Federal Integrity Commission Bill 2020, developed through the Beechworth Principles consultation process."
+  ],
+  "changes": [
+   "Creates a statutory code of conduct for parliamentarians and their staff.",
+   "Provides a statutory basis for existing registers of interests.",
+   "Establishes a Parliamentary Integrity Adviser to give advice on codes of conduct.",
+   "Establishes a Parliamentary Standards Commissioner to investigate serious breaches.",
+   "Gives the Commissioner powers equivalent to the Auditor-General's investigative powers.",
+   "Operates alongside the Australian Federal Integrity Commission Bill 2020."
+  ],
+  "affected": "Members of each House of Parliament, their staff, and the Parliamentary departments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-396872",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-10-26",
+   "stage_hint": null,
+   "brief": "The Commonwealth Parliamentary Standards Bill 2020 introduces a statutory ten-part code of conduct for MPs and their staff, a parliamentary integrity adviser, and a parliamentary standards commissioner with Auditor-General-level investigative powers. It complements the Australian Federal Integrity Commission Bill 2020 and enables the commissioner to refer serious breaches to that proposed commission, with the code based on Commonwealth Parliamentary Association recommendations."
+  }
+ ],
+ "acts": []
+}

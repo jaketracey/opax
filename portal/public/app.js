@@ -5,6 +5,11 @@
 
 const $ = (id) => document.getElementById(id);
 
+// Categories and counts only: never pass questions, answers or error messages.
+function trackOutcome(event, properties = {}) {
+  try { dispatchEvent(new CustomEvent("opax:analytics", { detail: { event, properties } })); } catch { /* optional */ }
+}
+
 // --- shared state -----------------------------------------------------------
 
 let corpusManifest = null; // /corpus.json
@@ -26,7 +31,10 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses"];
+const PANELS = ["money-records","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
+// /bills is the bill panel's index; it has no panel of its own, so isRoute has
+// to be told the word is ours before the click handler will follow it.
+const PANEL_ALIASES = { bills: "bill" };
 
 // --- helpers ----------------------------------------------------------------
 
@@ -83,6 +91,8 @@ function titleDateForms(value) {
 function titleSubject(rec) {
   const parts = String(rec?.title ?? "").trim().split(/(\s+—\s+)/);
   if (rec?.speaker && titleKey(parts[0]) === titleKey(rec.speaker)) parts.splice(0, 2);
+  else if (rec?.labels?.kind === "press_release" && rec?.metadata?.role &&
+      titleKey(parts[0]) === titleKey(rec.metadata.role)) parts.splice(0, 2);
   const dates = titleDateForms(rec?.date ?? rec?.metadata?.date);
   if (parts.length && dates.includes(titleKey(parts[parts.length - 1]))) parts.splice(-2);
   return parts.join("").trim();
@@ -223,6 +233,24 @@ function partyChipHTML(party) {
 }
 
 const STATE_NAMES = { federal: "Federal", nsw: "NSW", vic: "VIC", sa: "SA", qld: "QLD" };
+
+/* Committee transcripts name witnesses as the transcript does, usually a
+   surname behind an honorific ("Ms Lopez"), and the sync links no member to
+   them. A speaker whose every indexed document is committee evidence and who
+   is on no roster is one of those, and the entry must not dress them as a
+   parliamentarian. */
+const isCommitteeChamber = (chamber) => /committee/.test(String(chamber || "").toLowerCase());
+function committeeHouse(chamber) {
+  const c = String(chamber || "").toLowerCase();
+  return c.startsWith("senate") ? "Senate" : c.startsWith("house") || c.startsWith("reps") ? "House" : c.startsWith("joint") ? "Joint" : "Parliamentary";
+}
+/** "Lopez — Environment and Communications Legislation Committee - ... 27/05/2026 Estimates …" -> the committee. */
+function committeeOf(r) {
+  const t = String(r?.title || "");
+  const after = t.includes(" — ") ? t.slice(t.indexOf(" — ") + 3) : t;
+  const m = /^(.+?committee)\b/i.exec(after);
+  return (m ? m[1] : after.split(/ - /)[0]).trim().slice(0, 90);
+}
 const PARLIAMENT_NAMES = {
   federal: "Federal", nsw: "NSW", vic: "Victoria", sa: "South Australia", qld: "Queensland",
 };
@@ -431,6 +459,20 @@ async function readAskStream(body, signal, on) {
  * path retries inside the Worker, so its payload is taken as it comes.
  */
 async function askRecord(body, signal, on = {}) {
+  const started = performance.now();
+  const from_section = location.pathname.split("/")[1] || "home";
+  trackOutcome("opax_ask_started", { from_section });
+  try {
+    const data = await askRecordRequest(body, signal, on);
+    trackOutcome("opax_ask_completed", { from_section, duration_ms: Math.round(performance.now() - started), source_count: data.sources?.length || 0, has_answer: !!data.answer?.trim() });
+    return data;
+  } catch (err) {
+    trackOutcome("opax_ask_failed", { from_section, duration_ms: Math.round(performance.now() - started), cancelled: err.name === "AbortError" });
+    throw err;
+  }
+}
+
+async function askRecordRequest(body, signal, on = {}) {
   try {
     return await readAskStream(body, signal, on);
   } catch (err) {
@@ -591,7 +633,7 @@ function siteUrl(target) {
 // through the move off the hash router: renaming them would have churned a
 // hundred call sites for nothing.
 function askHash(q, kind) {
-  const scope = kind && kind !== "speech" ? `&kind=${encodeURIComponent(kind)}` : "";
+  const scope = kind && kind !== "all" ? `&kind=${encodeURIComponent(kind)}` : "";
   return `/ask?q=${encodeURIComponent(q)}${scope}`;
 }
 
@@ -661,6 +703,15 @@ function askFilterSummary(f) {
   return bits.join(" · ");
 }
 
+function searchResultHref(row) {
+  if (row.href?.startsWith("/") && !row.href.startsWith("//")) return row.href;
+  return safeUrl(row.href) || `/doc/${encodeURIComponent(row.slug)}`;
+}
+function searchResultUrl(row) {
+  const target = searchResultHref(row);
+  return target.startsWith("/") ? siteUrl(target) : target;
+}
+
 function opaxUrl(slug) {
   return siteUrl(`/doc/${slug}`);
 }
@@ -674,8 +725,8 @@ function bibtexFor(s) {
     `  title = {${(s.title || s.slug).replace(/[{}]/g, "")}}`,
     year ? `  year = {${year}}` : null,
     month ? `  month = {${month}}` : null,
-    `  howpublished = {Parliamentary record, via OPAX corpus v${corpusVersion()}}`,
-    `  url = {${opaxUrl(s.slug)}}`,
+    `  howpublished = {Public record, via OPAX corpus v${corpusVersion()}}`,
+    `  url = {${searchResultUrl(s)}}`,
     `  urldate = {${localISODate()}}`,
     (s.sourceUrl ?? s.url) ? `  note = {Official record: ${s.sourceUrl ?? s.url}}` : null,
   ].filter(Boolean);
@@ -688,7 +739,7 @@ function risFor(s) {
   if (s.speaker) lines.push(`AU  - ${family}, ${given}`);
   lines.push(`TI  - ${s.title || s.slug}`);
   if (s.date) lines.push(`PY  - ${s.date.slice(0, 4)}`, `DA  - ${s.date.slice(0, 10).replace(/-/g, "/")}`);
-  lines.push(`UR  - ${opaxUrl(s.slug)}`);
+  lines.push(`UR  - ${searchResultUrl(s)}`);
   const official = s.sourceUrl ?? s.url;
   lines.push(`N1  - Via OPAX corpus v${corpusVersion()}${official ? `; official record: ${official}` : ""}`);
   lines.push("ER  - ");
@@ -717,7 +768,7 @@ function sourcesCSV(rows, context) {
   const head = "slug,kind,title,speaker,party,state,date,score,snippet,opax_url,source_url";
   const body = rows.map((r) =>
     [r.slug, r.kind || (r.slug || "").split("-")[0], r.title, r.speaker, r.party, r.state, r.date,
-      r.score ?? "", (r.snippet || "").slice(0, 300), opaxUrl(r.slug), r.url || ""].map(csvCell).join(",")
+      r.score ?? "", (r.snippet || "").slice(0, 300), searchResultUrl(r), r.url || ""].map(csvCell).join(",")
   );
   return `${exportHeader(context)}\n${head}\n${body.join("\n")}\n`;
 }
@@ -726,6 +777,7 @@ function offerExport(rows, context, baseName) {
   if (!rows.length) return;
   const choice = (window.prompt(
     "Export format (type csv, bibtex or ris):", "csv") || "").trim().toLowerCase();
+  if (["csv", "bibtex", "bib", "ris"].includes(choice)) trackOutcome("opax_export", { format: choice === "bib" ? "bibtex" : choice, row_count: rows.length });
   if (choice === "csv") {
     download(`${baseName}.csv`, "text/csv;charset=utf-8", sourcesCSV(rows, context));
   } else if (choice === "bibtex" || choice === "bib") {
@@ -753,11 +805,23 @@ function focusEntry(id) {
 }
 
 function showPanel(name) {
+  if (name !== "money-records") { moneyRecordsGeneration++; moneyRecordsHandle?.destroy(); moneyRecordsHandle = null; }
+  for (const nav of document.querySelectorAll('[data-money-navigation]')) nav.innerHTML = OpaxNavigation.moneyNav(location.pathname, new URLSearchParams(location.search).get('jur'));
+
+  if (name !== "discover") destroyDiscoveryMap();
+  if (name !== "money") {
+    moneyJourneys?.destroy(); moneyJourneys = null;
+    moneyMapLoading = null; moneyMapGeneration += 1;
+    moneyMapHandle?.setPaused(true);
+  } else moneyMapHandle?.setPaused(false);
   // Methods and the expense-category glossary live under the About menu, so its
   // trigger stays lit there; the drawer has exact links of its own.
-  const headerName = name === "methods" || name === "expenses" ? "about" : name;
+  const headerName = OpaxNavigation.active('/' + parseHash().segs.join('/'), parseHash().params);
   for (const t of document.querySelectorAll("#primary-nav [data-panel], #nav-drawer [data-panel]")) {
-    const active = t.dataset.panel === (t.closest("#nav-drawer") ? name : headerName);
+    const href = t.getAttribute('href');
+    const active = t.closest('details.drawer-group') && href
+      ? location.pathname === href || location.pathname.startsWith(href + '/')
+      : t.dataset.panel === headerName;
     t.classList.toggle("active", active);
     if (t.tagName !== "A") continue; // aria-current marks pages, not disclosure buttons
     if (active) t.setAttribute("aria-current", "page");
@@ -779,17 +843,241 @@ const TITLES = {
   ask: "OPAX: ask what Australian politicians actually said",
   chat: "Keep asking · OPAX",
   search: "Search the record · OPAX",
+  discover: "Discover overlooked patterns · OPAX",
   money: "Money map · OPAX",
   reports: "Reports · OPAX",
   doc: "From the record · OPAX",
   subject: "OPAX encyclopedia",
-  declared: "Just declared · OPAX",
+  declared: "Registers of interests · OPAX",
   explore: "Explore · OPAX",
   about: "About · OPAX",
   methods: "Methods · OPAX",
   stats: "Corpus stats · OPAX",
   expenses: "What the expense categories mean · OPAX",
+  bill: "Bill · OPAX",
+  bills: "Bills · OPAX",
 };
+
+// --- discovery: choose an agency, see where the recorded money goes ----------
+const DISCOVERY_CATEGORIES = {
+  procurement_concentration: "Government contracts",
+  recipient_concentration: "Party funding",
+  donor_contract_overlap: "Companies in both",
+};
+const DISCOVERY_DEFAULT = "procurement_concentration";
+let discoveryData = null;
+let discoveryRequest = null;
+let discoveryRenderId = 0;
+let discoverySelected = null;
+let discoveryVisible = 8;
+let discoveryMapHandle = null;
+let discoveryMapObserver = null;
+let discoveryMapGeneration = 0;
+
+function discoveryMoney(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "Unavailable";
+  const amount = Math.abs(n);
+  const unit = amount >= 1e9 ? [1e9, "bn"] : amount >= 1e6 ? [1e6, "m"] : amount >= 1e3 ? [1e3, "k"] : [1, ""];
+  return `$${(n / unit[0]).toLocaleString("en-AU", { maximumFractionDigits: unit[0] === 1 ? 0 : 1 })}${unit[1]}`;
+}
+function discoveryPercent(value) {
+  return `${Number(value).toLocaleString("en-AU", { maximumFractionDigits: 1 })}%`;
+}
+function discoveryValue(signal, label) {
+  return Number(signal.metrics?.find((metric) => metric.label === label)?.value || 0);
+}
+function discoveryCategory() {
+  return $("discover-categories").value || DISCOVERY_DEFAULT;
+}
+function discoveryName(signal) {
+  return signal.chart?.group_label || signal.entity;
+}
+function discoveryShare(signal) {
+  return Number(signal.chart?.participants?.[0]?.share || 0);
+}
+function discoveryTotal(signal) {
+  return Number(signal.chart?.group_total || discoveryValue(signal, "Recorded contract value"));
+}
+function discoveryBarWidth(value) {
+  return Math.max(0, Math.min(100, Number(value) || 0));
+}
+function destroyDiscoveryMap() {
+  discoveryMapGeneration++;
+  discoveryMapObserver?.disconnect();
+  discoveryMapObserver = null;
+  discoveryMapHandle?.destroy();
+  discoveryMapHandle = null;
+}
+function discoveryUrl() {
+  const params = new URLSearchParams();
+  const category = discoveryCategory();
+  if (category !== DISCOVERY_DEFAULT) params.set("category", category);
+  const q = $("discover-query").value.trim();
+  if (q) params.set("q", q);
+  if ($("discover-sort").value === "share") params.set("sort", "share");
+  if (discoverySelected) params.set("item", discoverySelected);
+  return `/discover${params.size ? `?${params}` : ""}`;
+}
+function discoveryEvidenceHTML(signal) {
+  return `<details class="discovery-evidence"><summary>See the records</summary>
+    <p>Examples behind this comparison. Links open the source register.</p>
+    <ul>${(signal.evidence || []).map((evidence) => {
+      const url = safeUrl(evidence.url);
+      return `<li>${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(evidence.label)}<span class="visually-hidden"> (opens in a new tab)</span></a>` : esc(evidence.label)}</li>`;
+    }).join("")}</ul><p>${esc(signal.summary)}</p>
+    <ul>${(signal.caveats || []).map((text) => `<li>${esc(text)}</li>`).join("")}</ul>
+  </details>`;
+}
+function discoveryChartHTML(chart) {
+  const rows = [...chart.participants];
+  if (chart.other_total > 0) rows.push({ name: `Other ${chart.other_count.toLocaleString("en-AU")} ${chart.participant_label === "supplier" ? "suppliers" : "contributors"}`, value: chart.other_total, share: chart.other_share, other: true });
+  return `<div class="discovery-chart" role="group" aria-label="Share of recorded value">
+    ${rows.map((row, index) => `<div class="discovery-chart-row${index === 0 ? " is-leader" : ""}${row.other ? " is-other" : ""}">
+      <div class="discovery-chart-label"><span>${chart.participant_label === "supplier" && !row.other ? `<a href="/subject/supplier/${encodeURIComponent(row.name)}">${esc(row.name)}</a>` : esc(row.name)}</span><span><strong>${esc(discoveryMoney(row.value))}</strong> <span class="discovery-chart-share">${esc(discoveryPercent(row.share))}</span></span></div>
+      <div class="discovery-track" aria-hidden="true"><span style="width:${discoveryBarWidth(row.share)}%"></span></div>
+    </div>`).join("")}</div>`;
+}
+function discoveryDetailHTML(signal) {
+  const chart = signal.chart;
+  const contracts = signal.category === DISCOVERY_DEFAULT;
+  let main;
+  if (chart) {
+    const lead = chart.participants[0];
+    const years = chart.period?.from && chart.period?.to
+      ? chart.period.kind === "financial_year" ? `FY ${chart.period.from} to ${chart.period.to}` : `Contract start years ${String(chart.period.from).slice(0, 4)}–${String(chart.period.to).slice(0, 4)}` : "All available years";
+    const missingDates = Number(chart.period?.undated_records || 0) + Number(chart.period?.invalid_date_records || 0);
+    main = `<h2 id="discover-detail-title" tabindex="-1">${esc(chart.group_label)}</h2>
+      <p class="discovery-takeaway"><strong>${esc(discoveryPercent(lead.share))}</strong> ${contracts ? "of recorded contract value went to" : "of recorded receipts came from"} <b>${esc(lead.name)}</b>.</p>
+      <div class="discovery-chart-heading"><h3>${contracts ? "Who got the contracts?" : "Where did the funding come from?"}</h3><span>${esc(discoveryMoney(chart.group_total))} total</span></div>
+      ${discoveryChartHTML(chart)}
+      <p class="discovery-chart-note">${chart.record_count.toLocaleString("en-AU")} ${contracts ? "contracts" : "receipts"} · ${esc(years)}. ${contracts ? "Recorded contract values, not the agency’s whole budget." : "Party receipts include more than gifts."}${missingDates ? ` ${missingDates.toLocaleString("en-AU")} records have no valid date.` : ""}</p>`;
+  } else {
+    main = `<h2 id="discover-detail-title" tabindex="-1">${esc(signal.entity)}</h2>
+      <p class="discovery-takeaway">This name appears in both sets of records.</p>
+      <div class="discovery-flows" role="group" aria-label="Separate recorded money flows">
+        <div><span>Party receipts</span><strong>${esc(discoveryMoney(discoveryValue(signal, "Recorded party receipts")))}</strong><small>${discoveryValue(signal, "Party receipt records").toLocaleString("en-AU")} records</small></div>
+        <span class="discovery-flow-join" aria-hidden="true">&amp;</span>
+        <div><span>Government contracts</span><strong>${esc(discoveryMoney(discoveryValue(signal, "Recorded contract value")))}</strong><small>${discoveryValue(signal, "Contract records").toLocaleString("en-AU")} records</small></div>
+      </div><p class="discovery-chart-note">Different money flows and reporting periods. A shared name doesn’t show that one led to the other.</p>`;
+  }
+  return `<article class="discovery-detail-card">${main}
+    <div class="discovery-actions">${signal.category !== "recipient_concentration" ? `<a href="/subject/supplier/${encodeURIComponent(signal.entity)}">Explore supplier profile</a>` : ""}<a href="/search?kind=speech&q=${encodeURIComponent(signal.entity)}">Find mentions in parliament</a>${!contracts ? '<button type="button" id="discover-map-toggle" aria-expanded="false" aria-controls="discover-map-area">Explore connections on the money map</button>' : ""}</div>
+    ${!contracts ? '<div id="discover-map-area" hidden><p class="discovery-chart-note">Political funding connections from the money map. Its coverage differs from this comparison.</p><div id="discover-map-root" class="discovery-map"></div><a href="/money">Open the full money map</a></div>' : ""}
+    ${discoveryEvidenceHTML(signal)}</article>`;
+}
+async function mountDiscoveryMap(signal) {
+  const area = $("discover-map-area");
+  const button = $("discover-map-toggle");
+  if (!area.hidden) { area.hidden = true; button.setAttribute("aria-expanded", "false"); destroyDiscoveryMap(); return; }
+  area.hidden = false;
+  button.setAttribute("aria-expanded", "true");
+  const root = $("discover-map-root");
+  destroyDiscoveryMap();
+  const generation = discoveryMapGeneration;
+  const current = () => generation === discoveryMapGeneration && root.isConnected && document.documentElement.dataset.panel === "discover";
+  root.innerHTML = '<p role="status">Opening the money map…</p>';
+  try {
+    const data = await loadMoneyData();
+    if (!current()) return;
+    const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
+    if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
+    const { mountMoneyMap } = await import("/money-map.js?v=evidence-button-20260909");
+    if (!current()) return;
+    root.textContent = "";
+    const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
+      askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`) });
+    if (!current()) { handle.destroy(); return; }
+    discoveryMapHandle = handle;
+    if ("IntersectionObserver" in window) {
+      discoveryMapObserver = new IntersectionObserver((entries) => handle.setPaused(!entries[entries.length - 1].isIntersecting));
+      discoveryMapObserver.observe(root);
+    }
+  } catch {
+    if (current()) root.innerHTML = '<p class="status">The map couldn’t open here. Try the full money map below.</p>';
+  }
+}
+function selectDiscovery(signal, focus = false) {
+  destroyDiscoveryMap();
+  discoverySelected = signal.id;
+  for (const button of $("discover-results").querySelectorAll("[data-discovery-id]")) button.setAttribute("aria-pressed", String(button.dataset.discoveryId === signal.id));
+  $("discover-detail").innerHTML = discoveryDetailHTML(signal);
+  $("discover-map-toggle")?.addEventListener("click", () => mountDiscoveryMap(signal));
+  replaceRoute(discoveryUrl());
+  if (focus) {
+    const title = $("discover-detail-title");
+    title?.focus({ preventScroll: true });
+    if (matchMedia("(max-width: 700px)").matches) title?.scrollIntoView({ block: "start", behavior: "instant" });
+  }
+}
+function filterDiscoveries() {
+  if (!discoveryData) return;
+  destroyDiscoveryMap();
+  const category = discoveryCategory();
+  const query = $("discover-query").value.trim().toLocaleLowerCase();
+  const signals = discoveryData.signals.filter((signal) => signal.category === category &&
+    (!query || `${signal.entity} ${discoveryName(signal)}`.toLocaleLowerCase().includes(query)));
+  signals.sort((a, b) => ($("discover-sort").value === "share" ? discoveryShare(b) - discoveryShare(a) : discoveryTotal(b) - discoveryTotal(a)) || discoveryName(a).localeCompare(discoveryName(b)));
+  $("discover-count").textContent = `${signals.length} ${category === DISCOVERY_DEFAULT ? "agencies" : category === "recipient_concentration" ? "parties" : "companies"}`;
+  $("discover-sort").disabled = category === "donor_contract_overlap";
+  const selected = signals.find((signal) => signal.id === discoverySelected) || signals[0];
+  if (selected) discoveryVisible = Math.max(discoveryVisible, signals.indexOf(selected) + 1);
+  $("discover-results").innerHTML = signals.length ? signals.slice(0, discoveryVisible).map((signal) => `<button type="button" class="discovery-choice" data-discovery-id="${esc(signal.id)}" aria-pressed="${signal.id === selected?.id}" aria-controls="discover-detail">
+    <span class="discovery-choice-name">${esc(discoveryName(signal))}</span>
+    <span class="discovery-choice-measure">${signal.chart ? `<span class="discovery-mini-track" aria-hidden="true"><i style="width:${discoveryBarWidth(discoveryShare(signal))}%"></i></span><strong>${esc(discoveryPercent(discoveryShare(signal)))}</strong>` : `<span>${esc(discoveryMoney(discoveryTotal(signal)))} in contracts</span>`}</span>
+  </button>`).join("") + (signals.length > discoveryVisible ? '<button type="button" id="discover-more" class="discovery-more">Show more</button>' : "") : '<div class="discovery-empty"><p>No matches. Try another name.</p><button type="button" id="discover-clear">Clear search</button></div>';
+  $("discover-list-note").textContent = category === "donor_contract_overlap" ? "Companies found in both datasets." : `Bars show the biggest ${category === DISCOVERY_DEFAULT ? "supplier’s" : "contributor’s"} share.`;
+  $("discover-more")?.addEventListener("click", () => { const firstNew = discoveryVisible; discoveryVisible += 8; filterDiscoveries(); $("discover-results").querySelectorAll("[data-discovery-id]")[firstNew]?.focus(); });
+  $("discover-clear")?.addEventListener("click", () => { $("discover-query").value = ""; filterDiscoveries(); replaceRoute(discoveryUrl()); });
+  if (selected) selectDiscovery(selected);
+  else { discoverySelected = null; $("discover-detail").innerHTML = '<p class="discovery-detail-empty">Choose another name to see the comparison.</p>'; }
+}
+async function renderDiscoveryPage(params, manageFocus) {
+  const renderId = ++discoveryRenderId;
+  const category = Object.hasOwn(DISCOVERY_CATEGORIES, params.get("category")) ? params.get("category") : DISCOVERY_DEFAULT;
+  destroyDiscoveryMap();
+  discoverySelected = params.get("item");
+  discoveryVisible = 8;
+  $("discover-categories").value = category;
+  $("discover-query").value = params.get("q") || "";
+  $("discover-sort").value = params.get("sort") === "share" ? "share" : "value";
+  $("discover-query-label").textContent = category === DISCOVERY_DEFAULT ? "Find an agency or company" : category === "recipient_concentration" ? "Find a party or contributor" : "Find a company";
+  if (manageFocus) $("discover-categories").focus({ preventScroll: true });
+  $("discover-results").setAttribute("aria-busy", "true");
+  $("discover-results").innerHTML = '<p role="status">Loading comparisons…</p>';
+  $("discover-detail").innerHTML = "";
+  try {
+    discoveryRequest ??= fetch("/discovery.json?view=visual-1").then((response) => {
+      if (!response.ok) throw new Error("Discovery unavailable");
+      return response.json();
+    }).then((data) => {
+      if (!Array.isArray(data.signals) || !data.coverage || !Array.isArray(data.methodology)) throw new Error("Invalid discovery data");
+      return data;
+    }).catch((error) => { discoveryRequest = null; throw error; });
+    const data = await discoveryRequest;
+    if (renderId !== discoveryRenderId || document.documentElement.dataset.panel !== "discover") return;
+    discoveryData = data;
+    const snapshot = data.coverage.snapshot_at || data.generated_at;
+    $("discover-methodology-body").innerHTML = `<p>A concentration is a reason to look closer, not proof of wrongdoing. This page covers ${Number(data.coverage.contracts).toLocaleString("en-AU")} contracts and ${Number(data.coverage.donations).toLocaleString("en-AU")} party receipts.${snapshot ? ` Updated ${esc(fmtDate(String(snapshot).slice(0, 10)))}.` : ""}</p><ul>${data.methodology.map((method) => `<li>${esc(method)}</li>`).join("")}</ul>`;
+    filterDiscoveries();
+  } catch {
+    if (renderId !== discoveryRenderId || document.documentElement.dataset.panel !== "discover") return;
+    $("discover-results").innerHTML = '<div role="alert"><p>We couldn’t load the comparisons.</p><button type="button" id="discover-retry">Try again</button></div>';
+    $("discover-retry").addEventListener("click", () => renderDiscoveryPage(parseHash().params, false));
+  } finally {
+    if (renderId === discoveryRenderId) $("discover-results").setAttribute("aria-busy", "false");
+  }
+}
+$("discover-categories").addEventListener("change", () => {
+  goRoute(`/discover?category=${encodeURIComponent(discoveryCategory())}`);
+});
+$("discover-results").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-discovery-id]");
+  const signal = discoveryData?.signals.find((item) => item.id === button?.dataset.discoveryId);
+  if (signal) selectDiscovery(signal, true);
+});
+$("discover-query").addEventListener("input", () => { discoveryVisible = 8; filterDiscoveries(); replaceRoute(discoveryUrl()); });
+$("discover-sort").addEventListener("change", () => { discoverySelected = null; discoveryVisible = 8; filterDiscoveries(); });
 
 // --- money map (lazy-loaded 3D bundle) --------------------------------------
 // One export per jurisdiction, all in the same node/edge shape, loaded one at
@@ -804,7 +1092,7 @@ const STATE_NOT_SUMMED =
   "State and federal returns are not summed: AEC returns already include state branch receipts.";
 
 const MONEY_JURISDICTIONS = {
-  federal: { label: "Federal", file: "/graph/money.json" },
+  federal: { label: "Federal", file: "/graph/money.json?v=suppliers-1" },
   qld: { label: "Queensland", file: "/graph/money.qld.json" },
   vic: { label: "Victoria", file: "/graph/money.vic.json" },
   tas: { label: "Tasmania", file: "/graph/money.tas.json" },
@@ -826,7 +1114,7 @@ function moneyHash(jur, industry, keepView = false) {
   if (industry) p.set("industry", industry);
   if (keepView) {
     const current = parseHash().params;
-    for (const key of ["from", "to", "cpi"]) {
+    for (const key of ["from", "to", "cpi", "type", "party", "industry", "min", "q", "focus"]) {
       const value = current.get(key);
       if (value) p.set(key, value);
     }
@@ -838,11 +1126,8 @@ function moneyHash(jur, industry, keepView = false) {
 function renderMoneySwitch(jur) {
   const box = $("money-jur");
   if (!box) return;
-  box.innerHTML = Object.entries(MONEY_JURISDICTIONS).map(([k, c]) =>
-    `<button type="button" data-jur="${esc(k)}" aria-pressed="${k === jur ? "true" : "false"}">${esc(c.label)}</button>`).join("");
-  for (const btn of box.querySelectorAll("button")) {
-    btn.addEventListener("click", () => { goRoute(moneyHash(btn.dataset.jur, moneyMapIsolate, true)); });
-  }
+  box.innerHTML = `<select aria-label="Jurisdiction">${Object.entries(MONEY_JURISDICTIONS).map(([k,c]) => `<option value="${esc(k)}"${k === jur ? ' selected' : ''}>${esc(c.label)}</option>`).join('')}</select>`;
+  box.querySelector('select').addEventListener('change', e => goRoute(moneyHash(e.target.value, moneyMapIsolate, true)));
 }
 
 /** The panel fineprint, from the loaded file's meta block where it has one. */
@@ -873,44 +1158,135 @@ function moneyFineprintHTML(jur, meta) {
 }
 
 let moneyMapHandle = null;
+let moneyResearch = null;
+let moneyRecordsHandle = null;
+let moneyRecordsGeneration = 0;
+async function openMoneyRecords(kind, params) {
+  const generation = ++moneyRecordsGeneration;
+  moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
+  const grants = kind === 'grants';
+  $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
+  const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
+  try {
+    const mod = await import(grants ? '/grants.js?v=ia-ux-20260908-2' : '/ledger.js?v=ia-ux-20260908-2');
+    if (generation !== moneyRecordsGeneration) return;
+    body.replaceChildren();
+    moneyRecordsHandle = grants ? mod.mountGrants(body, { showHeading: false, displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, jurisdiction: params.get('jur') }) : mod.mountLedger(body, { jurisdiction: params.get('jur') });
+    if (grants && (params.get('open') || params.get('jur'))) moneyRecordsHandle.open?.(params.get('open'), params.get('jur') || undefined);
+  } catch { if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">These records could not load. <a href="'+(grants?'/money/grants':'/money/receipts')+'">Try again</a>.</p>'; }
+}
+let moneyMapGeneration = 0;
+let moneyJourneys = null;
+let moneyJourneyModule = null;
+let moneyJourneyData = null;
 let moneyMapJur = null;     // jurisdiction the mounted map shows
 let moneyMapLoading = null; // jurisdiction of the mount in flight
 let moneyMapIsolate = null; // industry cluster the route asked to isolate (/money?industry=)
 
-async function mountMoney(jurParam, industry) {
+function attachMoneyJourneys(params = new URLSearchParams()) {
+  if (!moneyMapHandle || !moneyJourneyModule || !moneyJourneyData) return;
+  moneyJourneys?.destroy();
+  moneyJourneys = moneyJourneyModule.mountMoneyJourneys($("money-journey-controls"), $("money-journey-story"), $("money-stage"), moneyJourneyData, moneyMapHandle, {
+    async loadStory(lens, focus, signal) {
+      const response = await fetch('/api/journey-story', {method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({jurisdiction:moneyMapJur || 'federal',lens,focus}),signal});
+      if (!response.ok) throw new Error('Story unavailable');
+      return response.json();
+    },
+    initialJourney: params.get("journey"), initialStep: params.get("step"), initialFocus: params.get("focus"),
+    onRoute(id, step, focus) {
+      $('money-journey-picker').open = false;
+      if (id) { $('money-map-root').classList.remove('show-key'); const key = $('money-map-root').querySelector('.mm-key-toggle'); if (key) { key.setAttribute('aria-expanded', 'false'); key.textContent = 'Map key'; } const legend = $('money-map-root').querySelector('.mm-legend'); if (legend) legend.inert = true; }
+      const next = new URLSearchParams(location.search);
+      if (id) { next.set("journey", id); next.set("step", String(step)); next.delete("industry"); }
+      else { next.delete("journey"); next.delete("step"); }
+      if (id && focus) next.set("focus", focus); else next.delete("focus");
+      replaceRoute(`/money${next.size ? `?${next}` : ""}`);
+    },
+  });
+}
+async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   const jur = MONEY_JURISDICTIONS[jurParam] ? jurParam : "federal";
   renderMoneySwitch(jur);
   const isolate = industry || null;
   if (moneyMapHandle && moneyMapJur === jur) {
     // A legend choice made on the page is left alone; only the route's own
     // parameter coming or going moves the map.
-    if (isolate !== moneyMapIsolate) moneyMapHandle.isolate?.(isolate);
+
     moneyMapIsolate = isolate;
+    moneyMapHandle.setPaused(false);
+    if (!moneyJourneys) attachMoneyJourneys(params);
+    else moneyJourneys.setRoute(params.get("journey"), params.get("step"), params.get("focus"));
+    if (!params.get("journey")) {
+      const { readMoneyFilters } = await import('/money-records.js?v=ia-ux-20260908-2');
+      moneyMapHandle.setFilters(readMoneyFilters(params), params);
+      if (params.get('focus')) moneyMapHandle.select(params.get('focus'));
+    }
     return;
   }
   moneyMapIsolate = isolate;
   if (moneyMapLoading === jur) return;
   moneyMapLoading = jur;
+  moneyResearch?.destroy(); moneyResearch = null;
+  const generation = ++moneyMapGeneration;
+  moneyJourneys?.destroy(); moneyJourneys = null;
   if (moneyMapHandle) { moneyMapHandle.destroy(); moneyMapHandle = null; moneyMapJur = null; }
   const root = $("money-map-root");
+  root.classList.remove("show-key");
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data] = await Promise.all([import("/money-map.js"), loadMoneyFile(jur)]);
-    if (moneyMapLoading !== jur) return; // switched again while loading
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=evidence-button-20260909"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
     root.textContent = "";
+    moneyResearch = researchModule.mountMapResearch($('money-research'), data, {
+      resultsContainer: $('money-research-results'),
+      onChange(filters) { moneyJourneys?.setRoute(null, null, null); const u = new URL(location.href); for (const key of ['journey','step','focus']) u.searchParams.delete(key); replaceRoute(u.pathname + u.search); moneyMapHandle?.setFilters(filters); },
+      onFocus(id) { moneyJourneys?.pause('map'); moneyMapHandle?.select(id); $('money-stage').scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }); },
+    });
     const handle = await mountMoneyMap(root, cfg.file, {
+      filters: recordsModule.readMoneyFilters(params),
+      focus: params.get('journey') ? undefined : params.get('focus') || undefined,
+      onViewChange: (view, filters, years) => {
+        moneyResearch?.update(view, filters, years);
+        const full = document.querySelector('#money-fineprint a[href^="/map"]');
+        if (full) full.href = '/map' + location.search;
+      },
+      onSelect: (node) => { if (!new URLSearchParams(location.search).get('journey')) { const u = new URL(location.href); if (node) u.searchParams.set('focus', node.id); else u.searchParams.delete('focus'); replaceRoute(u.pathname + u.search); } },
+      onInteract: () => moneyJourneys?.pause("map"),
       askUrl: (industry) =>
         askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
     });
-    if (moneyMapLoading !== jur) { handle.destroy(); return; }
+    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) { handle.destroy(); return; }
     moneyMapHandle = handle;
+    const legend = root.querySelector('.mm-legend');
+    if (legend) {
+      legend.id = 'money-map-key';
+      const key = document.createElement('button');
+      key.type = 'button'; key.className = 'mm-key-toggle'; key.textContent = 'Map key';
+      key.setAttribute('aria-expanded', 'false'); key.setAttribute('aria-controls', legend.id);
+      legend.inert = true;
+      const toggleKey = (open) => {
+        root.classList.toggle('show-key', open);
+        legend.inert = !open;
+        key.setAttribute('aria-expanded', String(open));
+        key.textContent = open ? 'Close key ×' : 'Map key';
+      };
+      key.addEventListener('click', () => { toggleKey(!root.classList.contains('show-key')); key.focus({preventScroll:true}); });
+      root.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && root.classList.contains('show-key')) {
+          event.preventDefault(); toggleKey(false); key.focus({preventScroll:true});
+        }
+      });
+      root.append(key);
+    }
     moneyMapJur = jur;
-    if (moneyMapIsolate) handle.isolate?.(moneyMapIsolate);
+    moneyJourneyModule = journeysModule; moneyJourneyData = data;
+    attachMoneyJourneys(params);
+    if (moneyMapIsolate && !params.get("journey")) handle.isolate?.(moneyMapIsolate);
   } catch (err) {
-    if (moneyMapLoading !== jur) return;
+    if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return;
     root.textContent = "";
     const p = document.createElement("p");
     p.className = "status error";
@@ -922,7 +1298,7 @@ async function mountMoney(jurParam, industry) {
     p.appendChild(a);
     root.appendChild(p);
   } finally {
-    if (moneyMapLoading === jur) moneyMapLoading = null;
+    if (moneyMapLoading === jur && generation === moneyMapGeneration) moneyMapLoading = null;
   }
 }
 
@@ -977,6 +1353,81 @@ function crumbLabel(s, max = 60) {
 }
 
 let firstRoute = true;
+let supplierPage = null;
+let supplierPageGeneration = 0;
+function destroySupplierPage() {
+  supplierPageGeneration += 1;
+  supplierPage?.destroy();
+  supplierPage = null;
+}
+async function openSupplierPage(name, params, manageFocus) {
+  const generation = supplierPageGeneration;
+  currentSubjectKey = `supplier:${name || "directory"}`;
+  destroySubjectMap();
+  activeDirectory = null;
+  const body = $("subject-body");
+  body.classList.remove("subject-person");
+  body.innerHTML = '<p role="status">Loading suppliers…</p>';
+  try {
+    const module = await import("/suppliers.js?v=austender-1");
+    if (generation !== supplierPageGeneration) return;
+    const helpers = {
+      params,
+      onTitle(title) {
+        if (generation !== supplierPageGeneration) return;
+        document.title = `${title} · OPAX`;
+        if (manageFocus) $("subject-title")?.focus();
+      },
+      onCanonical(id, label) {
+        if (generation !== supplierPageGeneration) return;
+        replaceRoute(`/subject/supplier/${encodeURIComponent(id)}${params.get("contract") ? "?"+new URLSearchParams({contract:params.get("contract")}) : ""}`);
+        setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }, { label }]);
+      },
+      onMentions: (label, container) => subjectMentions(label, container, "In parliament"),
+    };
+    supplierPage = name
+      ? module.mountSupplierProfile(body, name, helpers)
+      : module.mountSupplierDirectory(body, helpers);
+  } catch {
+    if (generation === supplierPageGeneration) body.innerHTML = '<p role="alert">Supplier records could not be loaded. <a href="/subject/supplier">Try again</a>.</p>';
+  }
+}
+
+
+async function openAgencyPage(name, params, manageFocus) {
+  const generation = supplierPageGeneration;
+  currentSubjectKey = `agency:${name || "directory"}`;
+  destroySubjectMap();
+  activeDirectory = null;
+  const body = $("subject-body");
+  body.classList.remove("subject-person");
+  body.innerHTML = '<p role="status">Loading agencies…</p>';
+  try {
+    const module = await import("/agencies.js?v=directory-type-1");
+    if (generation !== supplierPageGeneration) return;
+    const helpers = {
+      params,
+      mountSort: (root, onChange) => mountSearchSort(root, onChange, "Sort suppliers"),
+      onTitle(title) {
+        if (generation !== supplierPageGeneration) return;
+        document.title = `${title} · OPAX`;
+        if (manageFocus) $("subject-title")?.focus();
+      },
+      onCanonical(id, label) {
+        if (generation !== supplierPageGeneration) return;
+        replaceRoute(`/subject/agency/${encodeURIComponent(id)}`);
+        setCrumbs([{ label: "Agencies", href: "/subject/agency" }, { label }]);
+      },
+      onMentions: (label, container) => subjectMentions(label, container, "In parliament"),
+    };
+    supplierPage = name
+      ? module.mountAgencyProfile(body, name, helpers)
+      : module.mountAgencyDirectory(body, helpers);
+  } catch {
+    if (generation === supplierPageGeneration) body.innerHTML = '<p role="alert">Agency records could not be loaded. <a href="/subject/agency">Try again</a>.</p>';
+  }
+}
+
 
 function rawFragment() {
   // location.hash is percent-DECODED in Firefox; parse from href so encoded
@@ -1032,9 +1483,18 @@ function route() {
   const view = segs[0] || "ask";
   const manageFocus = !firstRoute;
   firstRoute = false;
+  destroySupplierPage();
 
   if (view !== "subject") { destroySubjectMap(); currentSubjectKey = null; }
-  if (view === "subject" && segs[1] === "topic") {
+  if (view === "subject" && segs[1] === "supplier") {
+    showPanel("subject");
+    setCrumbs([{ label: "Suppliers", href: "/subject/supplier" }]);
+    openSupplierPage(segs[2] ? decodeURIComponent(segs[2]) : null, params, manageFocus);
+  } else if (view === "subject" && segs[1] === "agency") {
+    showPanel("subject");
+    setCrumbs([{ label: "Agencies", href: "/subject/agency" }]);
+    openAgencyPage(segs[2] ? decodeURIComponent(segs[2]) : null, params, manageFocus);
+  } else if (view === "subject" && segs[1] === "topic") {
     showPanel("subject");
     document.title = TITLES.subject;
     if (segs[2]) {
@@ -1058,10 +1518,23 @@ function route() {
     document.title = `${DIRECTORY_KINDS[segs[1]]} · OPAX`;
     setCrumbs([{ label: DIRECTORY_KINDS[segs[1]] }]);
     openDirectory(segs[1], params, manageFocus);
+  } else if (view === "bill" || view === "bills") {
+    showPanel("bill");
+    // /bill/<key> is one bill; /bills and a bare /bill are the index.
+    const key = view === "bill" && segs[1] ? decodeURIComponent(segs[1]) : null;
+    if (key) {
+      document.title = TITLES.bill;
+      setCrumbs([{ label: "Bills", href: "/bills" }, { label: "Bill" }]);
+      openBill(key, manageFocus);
+    } else {
+      document.title = TITLES.bills;
+      setCrumbs([{ label: "Bills" }]);
+      openBillsIndex(params, manageFocus);
+    }
   } else if (view === "declared") {
     showPanel("declared");
     document.title = TITLES.declared;
-    setCrumbs([{ label: "Just declared" }]);
+    setCrumbs([{ label: "Registers of interests" }]);
     renderDeclaredPage(params, manageFocus);
   } else if (view === "doc" && segs[1]) {
     showPanel("doc");
@@ -1082,6 +1555,11 @@ function route() {
     setCrumbs([{ label: "Search" }]);
     applySearchParams(params);
     focusEntry("search-input");
+  } else if (view === "discover") {
+    showPanel("discover");
+    document.title = TITLES.discover;
+    setCrumbs([{ label: "Money", href: "/money" }, { label: "Government contracts" }]);
+    renderDiscoveryPage(params, manageFocus);
   } else if (view === "reports") {
     showPanel("reports");
     document.title = TITLES.reports;
@@ -1096,16 +1574,23 @@ function route() {
       setCrumbs([{ label: "Reports" }]);
       loadReportsList(manageFocus);
     }
+  } else if (view === "money" && ["receipts", "grants"].includes(segs[1])) {
+    showPanel("money-records");
+    const title = segs[1] === 'grants' ? 'Government grants' : 'Political receipts';
+    document.title = `${title} · OPAX`;
+    setCrumbs([{ label: 'Money', href: '/money' }, { label: title }]);
+    openMoneyRecords(segs[1], params);
   } else if (view === "money") {
     showPanel("money");
     document.title = TITLES.money;
     setCrumbs([{ label: "Money map" }]);
-    mountMoney(params.get("jur"), params.get("industry"));
+    mountMoney(params.get("jur"), params.get("industry"), params);
   } else if (view === "explore") {
     showPanel("explore");
     // A link into one module, and for the grants explorer into one recipient's
     // file: /explore?game=grants&jur=federal&open=abn:12345678901
     const game = params.get("game");
+    if (game && ["ledger", "grants"].includes(game)) { openGame(game, params); return; }
     if (game && GAMES[game]) openGame(game, params);
     document.title = TITLES.explore;
     // A game already open (e.g. reload with its dialog up) keeps its own crumb.
@@ -1121,6 +1606,7 @@ function route() {
     setCrumbs([{ label: "About", href: "/about" }, { label: "Methods & how to cite" }]);
   } else if (view === "stats") {
     showPanel("stats");
+    renderEvidenceStats();
     document.title = TITLES.stats;
     setCrumbs([{ label: "About", href: "/about" }, { label: "Corpus stats" }]);
   } else if (view === "expenses") {
@@ -1138,8 +1624,8 @@ function route() {
     else setCrumbs(q ? [{ label: "Ask" }] : null);
     if (view === "ask" && q && q !== lastAsk.question) {
       $("ask-input").value = q;
-      if ($("ask-wide")) $("ask-wide").checked = params.get("kind") === "all";
-      renderAskFilterChips(); // a shared &kind=all link arrives with a filter on
+      if ($("ask-wide")) $("ask-wide").checked = params.get("kind") !== "speech";
+      renderAskFilterChips(); // preserve an explicitly shared speech-only scope
       runAsk(q);
     } else if (!q && $("ask-result").hidden) {
       renderFrontPage();
@@ -1381,7 +1867,7 @@ const isRoute = (path) => {
   const bare = path.split("?")[0];
   if (ROUTE_FILE.test(bare)) return false;
   const first = bare.replace(/^\//, "").split("/")[0];
-  return first === "" || PANELS.includes(first);
+  return first === "" || PANELS.includes(first) || first in PANEL_ALIASES;
 };
 // One delegated listener owns in-app navigation. An anchor whose href is a
 // route of ours — the path form, or the "#/…" form still written by the app's
@@ -1415,6 +1901,22 @@ window.addEventListener("hashchange", () => {
   if (frag.startsWith("/")) replaceRoute(frag);
   route();
 });
+
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('[data-entry-mode]');
+  if (!link || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault(); event.stopImmediatePropagation();
+  if (link.dataset.entryMode === 'search') {
+    goRoute(searchHash($('ask-input').value.trim(), { ...askFilters(), kind: askKind() }));
+  } else {
+    const f = currentFilters();
+    for (const key of ['speaker','party','state','topic']) $('a-'+key).value = f[key] || '';
+    $('a-from').value = f.from || '1993'; $('a-to').value = f.to || '2026';
+    $('ask-wide').checked = f.kind !== 'speech';
+    updateAskYearsLabel();
+    goRoute(askHash($('search-input').value.trim(), f.kind === 'speech' ? 'speech' : 'all'));
+  }
+}, true);
 
 // --- masthead nav: megamenus + mobile drawer --------------------------------
 // Disclosure pattern (button + panel), not role=menu: Enter/Space toggles,
@@ -1559,14 +2061,25 @@ function closeNavDrawer() {
 {
   const drawer = $("nav-drawer");
   const toggle = $("nav-open");
+  const searchToggle = $("nav-search-open");
+  searchToggle.addEventListener("click", () => {
+    drawer.showModal();
+    $("drawer-q").focus({ preventScroll: true });
+    toggle.setAttribute("aria-expanded", "true");
+    searchToggle.setAttribute("aria-expanded", "true");
+  });
   toggle.addEventListener("click", () => {
     drawer.showModal();
     // The dialog itself takes focus, so a tap on the hamburger does not land
     // a focus ring on the first control; Tab still reaches everything.
     drawer.focus({ preventScroll: true });
     toggle.setAttribute("aria-expanded", "true");
+    searchToggle.setAttribute("aria-expanded", "true");
   });
-  drawer.addEventListener("close", () => toggle.setAttribute("aria-expanded", "false"));
+  drawer.addEventListener("close", () => {
+    toggle.setAttribute("aria-expanded", "false");
+    searchToggle.setAttribute("aria-expanded", "false");
+  });
   // Escape: run the same exit animation instead of the instant native close.
   drawer.addEventListener("cancel", (e) => { e.preventDefault(); closeNavDrawer(); });
   $("drawer-close").addEventListener("click", () => closeNavDrawer());
@@ -1590,7 +2103,7 @@ function closeNavDrawer() {
   });
   // Growing past the mobile breakpoint with the drawer open would strand a
   // modal over a page that now shows the full nav.
-  window.matchMedia("(min-width: 861px)").addEventListener("change", (e) => {
+  window.matchMedia("(min-width: 1440px)").addEventListener("change", (e) => {
     if (e.matches && drawer.open) drawer.close();
   });
 }
@@ -1906,12 +2419,16 @@ function askCitationText(text, sources) {
       if (!Number.isInteger(start) || !Number.isInteger(end) || start < 0 || end <= start || end > points.length) continue;
       let at = end;
       while (at > start && /\s/.test(points[at - 1])) at--;
+      // Keep footnotes outside the sentence punctuation and closing quotes.
+      // Only cross adjacent punctuation, never another word or paragraph.
+      const closing = points.slice(at).join("").match(/^[.!?,;:…"'”’)\]]+/);
+      if (closing) at += Array.from(closing[0]).length;
       if (!ends.has(at)) ends.set(at, new Set());
       ends.get(at).add(index + 1);
     }
   });
   for (const [at, numbers] of [...ends].sort((a, b) => b[0] - a[0])) {
-    points.splice(at, 0, [...numbers].map((n) => ` ⟦source:${n}⟧`).join(""));
+    points.splice(at, 0, [...numbers].map((n) => `⟦source:${n}⟧`).join(""));
   }
   return points.join("");
 }
@@ -1971,8 +2488,7 @@ function wireAskCitations(container, sources) {
 
 function sourceItem(s, num, passage = false) {
   const li = document.createElement("li");
-  const btn = document.createElement("button");
-  btn.type = "button";
+  const btn = document.createElement("a");
   btn.className = "link source-title";
   // A record titled only "Speaker — 2013-03-19" has no debate name to show:
   // the row leads with the speaker in words and the byline carries the rest,
@@ -1981,7 +2497,8 @@ function sourceItem(s, num, passage = false) {
   const nameOnly = !subject && s.speaker;
   btn.textContent = subject || String(s.title || s.slug || "");
   if (nameOnly) li.classList.add("source-name-only");
-  btn.addEventListener("click", () => { goRoute(`/doc/${s.slug}`); });
+  const target = new URL(searchResultHref(s), location.origin);
+  if (target.protocol === "https:" || (target.protocol === "http:" && target.origin === location.origin)) btn.href = target.href;
   if (num) {
     const numEl = document.createElement("span");
     numEl.className = "source-num";
@@ -2014,7 +2531,9 @@ function sourceItem(s, num, passage = false) {
       if (url && face) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
     });
   } else {
-    const meta = metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage });
+    const meta = s.resource?.startsWith("USER_CONTEXT_")
+      ? [s.source, s.dateLabel || (s.date ? fmtDate(s.date) : "")].filter(Boolean).map(esc).join(" · ")
+      : metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage });
     if (meta) {
       const span = document.createElement("span");
       span.className = "source-meta";
@@ -2144,7 +2663,7 @@ function renderAskDateRuler(sources, isCited) {
     `<line class="date-ruler-tick ${cited ? "is-cited" : "is-retrieved"}"
       x1="${point.x.toFixed(2)}" x2="${point.x.toFixed(2)}" y1="${cited ? 12 : 33}" y2="52"/>`).join("");
   box.innerHTML = `
-    <h3 class="date-ruler-heading">When the sources were spoken</h3>
+    <h3 class="date-ruler-heading">Dates of the sources</h3>
     <div class="date-ruler-frame">
       <svg class="date-ruler-svg" viewBox="0 0 680 82" role="img" aria-label="Sources placed on a timeline from 1993 to 2026">
         <line class="date-ruler-axis" x1="${RULER_LEFT}" x2="${RULER_RIGHT}" y1="52" y2="52"/>
@@ -2207,7 +2726,7 @@ function quoteCardHTML(s, i, n) {
 }
 
 function setQuoteRail(sources) {
-  quoteRail.sources = sources || [];
+  quoteRail.sources = (sources || []).filter(s => !s.resource?.startsWith("USER_CONTEXT_"));
   quoteRail.idx = -1;
   updateQuoteRail();
 }
@@ -2380,7 +2899,7 @@ function updateQuoteRail() {
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   quoteRail.swap = setTimeout(() => {
     card.innerHTML = quoteCardHTML(s, idx, n);
-    card.onclick = (e) => { e.preventDefault(); goRoute(`/doc/${s.slug}`); };
+    card.onclick = (e) => { e.preventDefault(); goRoute(searchResultHref(s)); };
     void card.offsetWidth; // restart the fade-up from the bottom
     card.classList.add("shown");
     loadPhotoMap().then(() => {
@@ -2414,7 +2933,7 @@ addEventListener("hashchange", () => updateQuoteRail());
 let moneyData = null;
 let moneyDataPromise = null;
 function loadMoneyData() {
-  moneyDataPromise ??= fetch("/graph/money.json")
+  moneyDataPromise ??= fetch("/graph/money.json?v=suppliers-1")
     .then((r) => r.json()).then((d) => (moneyData = d)).catch(() => null);
   return moneyDataPromise;
 }
@@ -2490,7 +3009,7 @@ function renderMoneyPanel(ind) {
     </div>
     <p class="fineprint">${esc(AEC_NOTE)}
       <a href="/money">Explore on the money map</a> ·
-      <a href="/graph/money.json">Download the data</a></p>`;
+      <a href="/graph/money.json?v=suppliers-1">Download the data</a></p>`;
   // Blocks rise in sequence (kicker, each figure, each chart, the note); fresh
   // nodes on every render, so a second question replays it. Motion is CSS-side.
   box.querySelectorAll(":scope > :not(.tiles, .money-charts), :scope > .tiles > .tile, :scope > .money-charts > .chart").forEach((el, i) => {
@@ -2810,6 +3329,23 @@ function declaredLedgerHTML(items, partyByName) {
     </section>`).join("")}</div>`;
 }
 
+function declaredPage(items, partyByName, { category = "", party = "", person = "", q = "", page = 1 } = {}) {
+  const normalise = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const terms = normalise(q).trim().split(/\s+/).filter(Boolean);
+  const matches = items.filter((item) => {
+    const itemParty = partyByName.get(String(item.name || "").toLowerCase()) || "";
+    if (category && item.bucket !== category || party && itemParty !== party || person && normalise(item.name) !== normalise(person)) return false;
+    const text = normalise([item.name, item.description, itemParty, item.kind, item.date,
+      DECLARED_BUCKET_LABELS[item.bucket] || item.bucket, item.jurisdiction, item.chamber,
+      ...(item.ties || []).map((tie) => tie.organisation)].join(" "));
+    return terms.every((term) => text.includes(term));
+  });
+  const pages = Math.max(1, Math.ceil(matches.length / 20));
+  const requested = Number(page);
+  const current = Math.min(pages, Math.max(1, Number.isFinite(requested) ? Math.floor(requested) : 1));
+  return { items: matches.slice((current - 1) * 20, current * 20), page: current, pages };
+}
+
 async function renderDeclaredPage(params, manageFocus) {
   const root = $("declared-list");
   root.innerHTML = `<p class="status">Opening the register ledger…</p>`;
@@ -2823,6 +3359,9 @@ async function renderDeclaredPage(params, manageFocus) {
   const bucket = params.get("category") || "";
   const party = params.get("party") || "";
   const person = params.get("person") || "";
+  const query = params.get("q") || "";
+  const searchInput = $("declared-query");
+  searchInput.value = query;
   const bucketSelect = $("declared-bucket");
   const partySelect = $("declared-party");
   const buckets = [...new Set(items.map((x) => x.bucket).filter(Boolean))]
@@ -2832,26 +3371,36 @@ async function renderDeclaredPage(params, manageFocus) {
   partySelect.innerHTML = `<option value="">all parties</option>${parties.map((p) => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}`;
   bucketSelect.value = buckets.includes(bucket) ? bucket : "";
   partySelect.value = parties.includes(party) ? party : "";
-  const filtered = items.filter((item) => (!bucketSelect.value || item.bucket === bucketSelect.value) &&
-    (!partySelect.value || partyByName.get(String(item.name || "").toLowerCase()) === partySelect.value) &&
-    (!person || String(item.name || "").toLowerCase() === person.toLowerCase()));
-  const reg = "https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results/Registers_of_Interests";
-  $("declared-summary").innerHTML = `${person ? `For <a href="${esc(subjectHash("person", person))}">${esc(person)}</a> · ` : ""}` +
-    `<a href="${reg}" rel="noopener" target="_blank"><b>${filtered.length.toLocaleString()}</b> of the newest ${items.length.toLocaleString()} alterations shown` +
-    (Number(data.meta?.available) > items.length ? ` (${Number(data.meta.available).toLocaleString()} dated alterations in the source export)` : "") + `</a>` +
-    `${person ? ` · <a href="/declared">view everyone</a>` : ""}`;
-  root.innerHTML = filtered.length ? declaredLedgerHTML(filtered, partyByName) : `<p class="status">No alterations match these filters.</p>`;
+  const result = declaredPage(items, partyByName, {
+    category: bucketSelect.value, party: partySelect.value, person, q: query, page: params.get("page") || 1,
+  });
+  $("declared-summary").hidden = !person;
+  $("declared-summary").innerHTML = person ? `For <a href="${esc(subjectHash("person", person))}">${esc(person)}</a> · <a href="/declared">View everyone</a>` : "";
+  const pageHref = (page) => {
+    const next = new URLSearchParams(params);
+    if (page > 1) next.set("page", String(page)); else next.delete("page");
+    return `/declared${next.size ? `?${next}` : ""}`;
+  };
+  const pager = (label) => `<nav class="declared-pagination" aria-label="${label}">
+    ${result.page > 1 ? `<a class="action-btn" href="${esc(pageHref(result.page - 1))}">Previous</a>` : `<button class="action-btn" disabled>Previous</button>`}
+    <span aria-live="polite">Page ${result.page} of ${result.pages}</span>
+    ${result.page < result.pages ? `<a class="action-btn" href="${esc(pageHref(result.page + 1))}">Next</a>` : `<button class="action-btn" disabled>Next</button>`}
+  </nav>`;
+  $("declared-pagination").innerHTML = result.items.length ? pager("Declarations pages") : "";
+  root.innerHTML = result.items.length ? declaredLedgerHTML(result.items, partyByName) + pager("Declarations pages, bottom") : `<p class="status" role="status">No alterations match these filters.</p>`;
   const navigate = () => {
     const next = new URLSearchParams();
     if (bucketSelect.value) next.set("category", bucketSelect.value);
     if (partySelect.value) next.set("party", partySelect.value);
     if (person) next.set("person", person);
+    if (searchInput.value.trim()) next.set("q", searchInput.value.trim());
     goRoute(`/declared${next.size ? `?${next}` : ""}`);
   };
   bucketSelect.onchange = navigate;
   partySelect.onchange = navigate;
-  $("declared-filters").onsubmit = (event) => event.preventDefault();
-  if (manageFocus) $("panel-declared").querySelector("h2")?.focus?.({ preventScroll: true });
+  $("declared-filters").onsubmit = (event) => { event.preventDefault(); navigate(); };
+  searchInput.onsearch = () => { if (!searchInput.value) navigate(); };
+  if (manageFocus) $("panel-declared").querySelector("h1")?.focus?.({ preventScroll: true });
 }
 
 // Declared interests on person pages: the registers of members' interests
@@ -3136,10 +3685,10 @@ async function mountSubjectMap(nodeId) {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js");
+    const { mountMoneyMap } = await import("/money-map.js?v=evidence-button-20260909");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
-    const handle = await mountMoneyMap(el, "/graph/money.json", {
+    const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       focus: nodeId,
       subject: nodeId, // this page IS the profile: its own card offers no "Full profile"
       chrome: "mini",
@@ -3948,8 +4497,10 @@ async function renderPersonVotes(name, personId, sections) {
   const side = (field) => recs
     .flatMap((r) => (Array.isArray(r[field]) ? r[field] : []).map((d) => ({ ...d, jur: d.jur || r.jurisdiction })))
     .sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 6);
+  // data-bill-name is what decoratePersonVoteBills matches on; until (and
+  // unless) the register names this bill, the row is exactly what it was.
   const billRow = (d) => `
-        <li><a class="source-title" href="${esc(searchHash(`"${d.name}"`, {}))}">${esc(d.name)}</a>
+        <li data-bill-name="${esc(d.name)}"><a class="source-title" href="${esc(searchHash(`"${d.name}"`, {}))}">${esc(d.name)}</a>
           <span class="result-meta">${[d.stage ? esc(d.stage) : "", esc(String(d.date || "").slice(0, 4)), jurChip(d.jur)].filter(Boolean).join(" · ")}</span></li>`;
   const col = (label, rows) => rows.length ? `
     <div>
@@ -3989,6 +4540,7 @@ async function renderPersonVotes(name, personId, sections) {
         searches the record for what was said about it.</p>
     </details>
     ${tvfy ? `<p class="action-row">${tvfy}</p>` : ""}`;
+  decoratePersonVoteBills(slot);
 }
 
 async function renderPersonTopics(name, sections) {
@@ -4067,6 +4619,18 @@ async function renderPersonTopics(name, sections) {
 }
 
 async function openSubject(kind, name, manageFocus, params = new URLSearchParams()) {
+  // A bare surname with one holder in the speaker index ("Albanese"; a state
+  // stub the roster has since named, so "Picton" is Chris Picton): open the
+  // full name, so an old link or a typed surname lands on the person.
+  if (kind === "person" && !String(name).trim().includes(" ")) {
+    const holders = ((await loadSpeakersDir())?.bySurname.get(speakerKey(name)) || [])
+      .filter(([n]) => speakerKey(n) !== speakerKey(name));
+    if (holders.length === 1) {
+      replaceRoute(subjectHash("person", holders[0][0]));
+      route();   // crumbs, title and the entry all from the full name
+      return;
+    }
+  }
   let key = `${kind}:${name}${kind === "electorate" ? `:${params.get("asof") || ""}` : ""}`;
   if (currentSubjectKey === key) { if (manageFocus) $("subject-title")?.focus(); return; }
   currentSubjectKey = key;
@@ -4128,7 +4692,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       subjectMentions(name, sections, "In parliament");
       return;
     }
-    const donors = moneyData.nodes.filter((n) => n.kind === node.kind);
+    // Rank runs over the donors the map picked by what they gave; a donor that
+    // is on the map for the public money it holds has no place in that order.
+    const donors = moneyData.nodes.filter((n) => n.kind === node.kind && !n.via);
     const rank = donors.sort((a, b) => (b.total || 0) - (a.total || 0)).findIndex((n) => n.id === node.id) + 1;
     const isParty = node.kind === "party";
     // The money data's spelling of the name is the entry's; the trail follows it.
@@ -4153,7 +4719,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       [isParty ? "Received (disclosed)" : "Given (disclosed)", `<b>${fmtMoney(node.total || 0)}</b>`],
       ["Donations counted", (node.count || 0).toLocaleString()],
       ["Active years", `${node.firstYear}–${node.lastYear}`],
-      ["Rank", `#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed donors"}`],
+      node.via === "public_money"
+        ? ["On the map for", `${fmtMoney(node.publicMoney || 0)} in Commonwealth contracts and grants`]
+        : ["Rank", `#${rank} of ${donors.length} ${isParty ? "parties" : "disclosed donors"}`],
       !isParty && fitsInfoRow(fits, "by_entity", node.label),
       // The registers spell one donor many ways; the totals above cover them all.
       // A merged donor can carry dozens of spellings, so the row shows three and
@@ -4181,24 +4749,38 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
             : `What has parliament said about ${industryLabel(node.industry)}?`),
         `Ask what parliament said about ${isParty ? "them" : (["individual", "other", ""].includes(String(node.industry || "").toLowerCase()) ? "this donor" : "this industry")}`),
       actionBtn("search", searchHash(`"${node.label}"`, {}), "Search mentions in the record"),
-      actionBtn("download", "/graph/money.json", "Download the data"),
+      actionBtn("download", "/graph/money.json?v=suppliers-1", "Download the data"),
     ]);
     sections.insertAdjacentHTML("beforeend", barList(flowRows, {
       fmt: fmtMoney,
       heading: isParty ? "Where it came from" : "Where the money went",
       linkTo: (nm) => subjectHash(isParty ? "donor" : "party", nm),
-      className: isParty ? "party-flow-bars" : "",
+      // The donor's split is already on the map card beside it; on a wide screen the
+      // bar list under the map says it twice, so it shows only where the map is small.
+      className: isParty ? "party-flow-bars" : "donor-flow-bars",
       detail: isParty ? (nm) => industryLabel(moneyData.nodes.find((n) => n.kind === "donor" && n.label === nm)?.industry || "Industry not recorded") : null,
       partyDots: !isParty, // donor page rows are parties; party page rows are donors
     }));
     if (!isParty) sections.insertAdjacentHTML("beforeend", donorBalanceHTML(flows));
+    if (!isParty && node.contracts) sections.insertAdjacentHTML("beforeend",
+      `<p class="fineprint"><a href="/subject/supplier?donor=${encodeURIComponent(node.id)}">Explore their supplier records →</a></p>`);
     sections.insertAdjacentHTML("beforeend",
       `<p class="fineprint">${esc(AEC_NOTE)}</p>`);
+    if (!isParty) {
+      const evidenceSlot = document.createElement('section');
+      evidenceSlot.hidden = true;
+      sections.appendChild(evidenceSlot);
+      import('/evidence.js').then(({mountEvidence}) => {
+        if (currentSubjectKey === key && evidenceSlot.isConnected)
+          return mountEvidence(evidenceSlot, {name: node.label}, {alive: () => currentSubjectKey === key && evidenceSlot.isConnected});
+      }).catch(() => {});
+    }
     if (!isParty) renderDonorInterests(node.label, sections);
     if (!isParty) renderDonorStateMoney(node.label, sections);
     if (isParty) {
       renderPartyMembers(node.label, body.querySelector(".subject-head"), key);
       renderPartyDebts(node.label, sections);
+      renderPartyBillDivisions(node.label, sections, key);
     }
     renderDonorAccess(node.label, sections);
     if (isParty) await renderPartyMentions(node.label, sections, key);
@@ -4241,27 +4823,73 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const roster = (await loadParliamentarians())?.people?.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
   if (currentSubjectKey !== key) return;
   const partyNow = roster?.party_now || null;
+  const { profileJurisdictions } = await import('/profile-jurisdictions.js?v=20260909-1');
+  if (currentSubjectKey !== key) return;
+  const representation = profileJurisdictions(roster);
   const party = partyNow || spokeAs;
   const formerly = partyNow && spokeAs && !samePartyLabel(partyNow, spokeAs) ? spokeAs : null;
   const dates = speeches.map((r) => r.date).filter(Boolean).sort();
   const chambers = [...new Set(speeches.map((r) => STATE_NAMES[r.state] || r.state).filter(Boolean))];
+  const witness = !roster && speeches.length > 0 &&
+    speeches.every((r) => r.speaker_type === "witness" || (isCommitteeChamber(r.chamber) && r.person_id == null));
+  if (witness) {
+    renderCommitteeWitness(name, key, body, box, sections, speeches, dates);
+    return;
+  }
+  // A name the index holds nothing under and no roster names: say so, rather
+  // than dress an unknown string as a parliamentarian with profile searches.
+  if (!roster && speeches.length === 0) {
+    // A bare surname the index once carried ("Perrett") now lives under the
+    // member's full name: one holder of the surname and the old link goes
+    // straight there; several, and the reader picks.
+    const holders = String(name).trim().includes(" ") ? [] :
+      ((await loadSpeakersDir())?.bySurname.get(speakerKey(name)) || []).filter(([n]) => speakerKey(n) !== speakerKey(name));
+    if (currentSubjectKey !== key) return;
+    const kicker = body.querySelector(".kicker");
+    if (kicker) kicker.textContent = "Not in the record";
+    document.title = `${name} · OPAX`;
+    subjectTag(body).innerHTML = `<span>No indexed speeches under this name</span>`;
+    box.innerHTML = infoboxHTML([
+      ["Type", "Name not found"],
+    ], "", [
+      actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for this name", { primary: true }),
+      actionBtn("entry", "/subject/person", "Browse parliamentarians"),
+    ]);
+    if (holders.length) {
+      box.insertAdjacentHTML("beforeend", `<p class="fineprint">People in the record with this surname:</p>
+        <ul class="subject-list">${holders.map(([n, c]) => `<li><a href="${esc(subjectHash("person", n))}">${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul>`);
+    }
+    box.insertAdjacentHTML("beforeend", `<p class="fineprint">The record names its speakers as the transcripts do,
+      so a person may be indexed under a fuller or shorter form of this name. The search looks across every spelling.</p>`);
+    return;
+  }
   subjectTag(body).innerHTML = [
     party ? partyChipHTML(party) : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
-    chambers.length ? `<span>${esc(chambers.join(" · "))} parliament</span>` : "",
+    representation.jurisdictions.length ? `<span>${esc(representation.jurisdictions.map(j=>j.label).join(" · "))}</span>` : "",
+    representation.chambers.length ? `<span>${esc(representation.chambers.join(" · "))}</span>` : "",
+    representation.representations.length === 1 ? `<span>${esc(representation.representations[0].electorate)}</span>` : "",
   ].filter(Boolean).join(" · ") || "<span>From the parliamentary record</span>";
   const q = encodeURIComponent(name);
-  const fits = await loadFits();
+  const [fits, electorateReference] = await Promise.all([
+    loadFits(),
+    loadElectorateModule().then(async (module) => ({ module, data: await module.loadIndex() })).catch(() => null),
+  ]);
   if (currentSubjectKey !== key) return;
+  const recordedRepresentation = (r) => electorateReference
+    ? electorateReference.module.recordedRepresentationHTML(r, electorateReference.data.electorates)
+    : `${esc(r.electorate)}${r.state && r.chamber !== 'senate' ? `, ${esc(r.state)}` : ''}`;
   box.innerHTML = infoboxHTML([
     ["Type", roster?.current ? "Sitting parliamentarian" : "Parliamentarian"],
     party && ["Party", partyChipHTML(party) + (formerly ? ` <span class="fineprint" style="display:inline">formerly ${esc(formerly)}</span>` : "")],
-    chambers.length && ["Parliament", esc(chambers.join(", "))],
+    representation.jurisdictions.length && ["Jurisdiction", representation.jurisdictions.map(j=>`<a href="${esc(searchHash('',{state:j.id,kind:'speech'}))}">${esc(j.label)}</a>`).join(', ')],
+    representation.chambers.length && ["Chamber", esc(representation.chambers.join(', '))],
+    representation.representations.length && ["Recorded representation", representation.representations.map(recordedRepresentation).join('<br>') + '<small class="representation-note">Roster affiliation; may include past seats.</small>'],
     dates.length && ["Indexed speeches span", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
     fitsInfoRow(fits, "people", name),
   ], "", [
-    actionBtn("speeches", searchHash("", { speaker: name }), "View all their speeches", { primary: true }),
-    actionBtn("external", `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliamentary profile", { external: true }),
+    actionBtn("speeches", searchHash("", { speaker: name, kind: "speech" }), "View all their speeches", { primary: true }),
+    ...(roster?.states?.includes('federal') ? [actionBtn("external", `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliamentary profile", { external: true })] : []),
     actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
   ]);
   renderPortraitCredit(name, key);
@@ -4274,7 +4902,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       <label for="subject-ask-topic">Ask about their speeches</label>
       <input id="subject-ask-topic" type="text" autocomplete="off"
              placeholder="Enter a topic…">
-      <button type="submit" class="secondary">Ask</button>
+      <button type="submit" class="primary">Ask</button>
     </form>`);
   $("subject-ask-form").addEventListener("submit", (e) => {
     e.preventDefault();
@@ -4310,7 +4938,56 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   refreshPersonJumps(sections);
 }
 
-async function renderPersonSpeeches(name, fallback, chambers, sections) {
+/* The entry for a committee witness: what the transcript calls them, the
+   committees they answered, the hearing dates, and their evidence. No party,
+   no seat, no profile searches on a surname: those would assert a person the
+   record does not name. */
+function renderCommitteeWitness(name, key, body, box, sections, speeches, dates) {
+  const houses = [...new Set(speeches.map((r) => committeeHouse(r.chamber)))];
+  const committees = [...new Set(speeches.map(committeeOf).filter(Boolean))];
+  const hearings = [...new Set(dates.map((d) => String(d).slice(0, 10)))];
+  // The skeleton labelled them a parliamentarian before the record said otherwise.
+  const kicker = body.querySelector(".kicker");
+  if (kicker) kicker.textContent = "Committee witness";
+  setCrumbs([{ label: "Committee witnesses" }, { label: name }]);
+  document.title = `${name}, committee witness · OPAX`;
+  // The newest transcript's attendance list is the best account of who they are.
+  const known = speeches.slice().sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).find((r) => r.role || r.organisation);
+  subjectTag(body).innerHTML = [
+    `<span>Committee witness</span>`,
+    known?.organisation ? `<span>${esc(known.organisation)}</span>` : `<span>${esc(houses.join(" and "))} ${houses.length > 1 ? "committees" : "committee"}</span>`,
+  ].join(" · ");
+  box.innerHTML = infoboxHTML([
+    ["Type", "Committee witness"],
+    known?.role && ["Position", esc(known.role)],
+    known?.organisation && ["Organisation", esc(known.organisation)],
+    committees.length && ["Appeared before", committees.slice(0, 4).map(esc).join("<br>") + (committees.length > 4 ? `<br><span class="fineprint" style="display:inline">and ${committees.length - 4} more</span>` : "")],
+    hearings.length && ["Hearings indexed", hearings.length === 1
+      ? esc(fmtDate(hearings[0]))
+      : `${hearings.length}, ${esc(fmtDate(hearings[0]))} – ${esc(fmtDate(hearings[hearings.length - 1]))}`],
+  ], "", [
+    actionBtn("speeches", searchHash("", { speaker: name, kind: "speech" }), "View their evidence", { primary: true }),
+  ]);
+  box.insertAdjacentHTML("beforeend", `<p class="fineprint">${known
+    ? "Position and organisation as the hearing's attendance list recorded them on the day. A witness answering a parliamentary committee, not a member of parliament."
+    : "Named as the transcript names them, usually a surname behind an honorific. A witness answering a parliamentary committee, not a member of parliament; the record here does not carry their full name or position."}</p>`);
+  sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav></div>`);
+  sections.insertAdjacentHTML("beforeend", `
+    <form class="query-line subject-ask-form" id="subject-ask-form">
+      <label for="subject-ask-topic">Ask about their evidence</label>
+      <input id="subject-ask-topic" type="text" autocomplete="off" placeholder="Enter a topic…">
+      <button type="submit" class="primary">Ask</button>
+    </form>`);
+  $("subject-ask-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const topic = $("subject-ask-topic").value.trim();
+    if (topic) goRoute(askHash(`What did ${name} say about ${topic}?`));
+  });
+  renderPersonTopics(name, sections).then(() => refreshPersonJumps(sections));
+  renderPersonSpeeches(name, speeches, [], sections, { evidence: true }).then(() => { refreshPersonJumps(sections); polishPersonSections(sections); });
+}
+
+async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {}) {
   const key = currentSubjectKey;
   const slot = document.createElement("section");
   slot.id = "person-speeches";
@@ -4327,20 +5004,21 @@ async function renderPersonSpeeches(name, fallback, chambers, sections) {
   if (currentSubjectKey !== key || !slot.isConnected) return;
   if (!newest.length) { slot.remove(); return; }
   const paint = (briefs) => {
-    slot.innerHTML = `<h3 class="subject-section-title">${latest ? "Latest indexed speeches" : "Indexed speeches"}</h3>
+    const noun = opts.evidence ? "evidence" : "speeches";
+    slot.innerHTML = `<h3 class="subject-section-title">${latest ? `Latest indexed ${noun}` : `Indexed ${noun}`}</h3>
       <ul class="speech-rows" role="list">${newest.map((r) => {
         const brief = typeof briefs[r.resource] === "string" ? briefs[r.resource].trim() : "";
-        const text = brief || String(r.snippet || "").trim();
+        const text = brief || cleanPassage(r.snippet);
         const where = chambers.length > 1 && r.state ? ` · ${STATE_NAMES[r.state] || r.state}` : "";
         return `<li><a class="person-speech-link" href="/doc/${esc(r.slug)}">
           <time datetime="${esc(String(r.date || "").slice(0, 10))}">${esc(r.date ? fmtDate(r.date) : "Undated")}${esc(where)}</time>
-          <span class="person-speech-body"><span class="speech-debate">${esc(titleSubject(r) || "Speech")}</span>
-            <span class="person-speech-kind">${brief ? "Machine brief" : "Passage"}</span>
+          <span class="person-speech-body"><span class="speech-debate">${esc(titleSubject(r) || (opts.evidence ? "Evidence" : "Speech"))}</span>
+            <span class="person-speech-kind">${brief ? "Machine brief" : "From the speech"}</span>
             <span class="person-speech-text">${esc(text || "Open the speech to read the record.")}</span>
           </span></a></li>`;
       }).join("")}</ul>
       <p class="fineprint">${latest ? "Newest results within the indexed retrieval window." : "Newest retrieval is unavailable; showing a sample of indexed matches."} Machine briefs are automated summaries; passages are extracts from the record.</p>
-      <p class="person-more"><a href="${esc(searchHash("", { speaker: name }, 1, "newest"))}">View all their speeches →</a></p>`;
+      <p class="person-more"><a href="${esc(searchHash("", { speaker: name }, 1, "newest"))}">View all their ${noun} →</a></p>`;
   };
   paint({});
   refreshPersonJumps(sections);
@@ -4488,20 +5166,102 @@ function topicTideHTML(data, slug, phrase) {
   </section>`;
 }
 
-function topicArcItemHTML(item, brief) {
+/* A passage as a reader should meet it. The index keeps each speech as the
+   record prints it, which opens with the reporter's banner ("Mr DAVID MEHAN
+   ( The Entrance ) ( 16:43 :38 ):", "Dr HUGH McDERMOTT ( Prospect )—") or,
+   on a committee transcript, the hearing's context block and the witness's
+   name ("[Legal and Constitutional … Police] Ms Barrett : Thank you"). None
+   of that is the speech. Display only; exports and citations quote the record. */
+function cleanPassage(text) {
+  let raw = String(text || "");
+  // A heading the source glued above the passage: "Gambling\n\nGambling is also…"
+  const head = /^\s*([^\n]{1,80}?)[ \t]*\n(?:[ \t]*\n)+/.exec(raw);
+  if (head && !/[.!?,;:]$/.test(head[1].trim()) && head[1].trim().split(/\s+/).length <= 8) raw = raw.slice(head[0].length);
+  let s = raw.replace(/\s+/g, " ").trim().replace(/^…\s*/, "");
+  s = s.replace(/^\[[^\]]{0,400}\]\s*/, "");
+  // The same block when the highlighter's window opens inside it:
+  // "PORTFOLIO Australian Communications and Media Authority] Given we know…"
+  s = s.replace(/^(?![^\]]*\.\s)[^\[\]]{0,300}\]\s*/, "");
+  // banner: honorific + name, one or more parentheticals, then a colon or dash
+  s = s.replace(/^(?:(?:the\s+)?hon\.?|mr|mrs|ms|miss|dr|prof\.?|professor|senator|madam|rev\.?)\s+[A-Za-z][A-Za-z'’.\-]*(?:\s+[A-Za-z][A-Za-z'’.\-]*){0,4}\s*(?:\([^)]{0,80}\)\s*)+(?:[:—–-]|\.-)\s*/i, "");
+  // banner: honorific + ALL-CAPS name, then a colon or dash
+  s = s.replace(/^(?:(?:the\s+)?hon\.?|mr|mrs|ms|miss|dr|prof\.?|senator|madam)\s+[A-Z][A-Z'’.\-]+(?:\s+[A-Z][A-Za-z'’.\-]+){0,4}\s*[:—–-]\s*/, "");
+  // committee turn: "Ms Barrett : " (a short name, then a colon)
+  s = s.replace(/^(?:mr|mrs|ms|miss|dr|prof\.?|senator|chair|the chair)\s+[A-Za-z][A-Za-z'’.\-]*(?:\s+[A-Za-z][A-Za-z'’.\-]*)?\s*:\s+/i, "");
+  s = s.replace(/^[:;,—–\-\s]+/, "");
+  return s;
+}
+
+/* "Legal and Constitutional Affairs Legislation Committee - Legal and … 28/05/2026
+   Estimates HOME AFFAIRS PORTFOLIO Australian Federal Police" -> the parts a
+   reader needs: that it was estimates, the committee, the department. */
+function committeeShortTitle(title) {
+  const t = String(title || "").replace(/\s+/g, " ").trim();
+  const m = /^(.+?committee)\b/i.exec(t);
+  if (!m) return t;
+  const committee = m[1].replace(/\s+Legislation Committee$/i, " Committee").replace(/\s+References Committee$/i, " References");
+  const est = /\bEstimates\b/i.test(t) ? "Estimates" : "";
+  const at = t.toLowerCase().lastIndexOf("portfolio");
+  const tail = at >= 0 ? t.slice(at + 9).trim() : "";
+  const dept = tail && tail.length < 120 && !/committee/i.test(tail) ? tail : "";
+  return [est, committee, dept].filter(Boolean).join(" · ");
+}
+
+// Debate headings that name a procedure rather than a subject.
+const GENERIC_DEBATE_RE = /^(?:bills?|constituency statements?|statements? by members|members'? statements?|private members'? (?:business|statements?)|community recognition statements?|adjournment(?: debate)?|matters? of public importance|questions?(?: without notice| on notice| time)?|answers to questions|ministerial statements?|motions?|committees?|documents?|business|statements?|second reading|consideration in detail|in committee|grievance debate|petitions?|notices?(?: of motion)?|condolences?|first speech|maiden speech|speech|debate|personal explanations?|take note of answers?|urgency motions?)$/i;
+
+function topicArcItemHTML(item, brief, showYear) {
   const date = String(item.date || "").slice(0, 10);
   const year = date.slice(0, 4) || "—";
-  const passage = String(item.snippet || "").trim() || "Open the speech to read the passage.";
-  return `<li class="topic-arc-item" data-arc-resource="${esc(item.resource || '')}">
-    <time class="topic-arc-year"${date ? ` datetime="${esc(date)}"` : ""}>${esc(year)}</time>
+  const committee = isCommitteeChamber(item.chamber);
+  const witness = item.speaker_type ? item.speaker_type === "witness" : (committee && item.person_id == null && !item.party);
+  // The debate heading is the title's subject. A procedural one ("Bills", "Adjournment")
+  // says nothing about the speech, so it rides on the byline instead of standing as a heading.
+  const subject = committee ? committeeShortTitle(titleSubject(item) || item.title) : titleSubject(item);
+  const generic = !committee && GENERIC_DEBATE_RE.test(subject.trim());
+  const heading = generic ? "" : subject;
+  const passage = cleanPassage(item.snippet);
+  const portrait = item.speaker && !witness ? photoUrlFor(item.speaker) : null;
+  const where = PARLIAMENT_NAMES[item.state] || STATE_NAMES[item.state] || item.state || "";
+  const role = witness ? [item.role, item.organisation].filter(Boolean).join(", ") : "";
+  return `<li class="topic-arc-item${showYear ? " topic-arc-item-first" : ""}" data-arc-resource="${esc(item.resource || '')}">
+    <time class="topic-arc-year"${date ? ` datetime="${esc(date)}"` : ""}${showYear ? "" : ' aria-hidden="true"'}>${showYear ? esc(year) : ""}</time>
     <div class="topic-arc-entry">
-      <a class="topic-arc-source" href="/doc/${encodeURIComponent(item.slug)}">${esc(displayTitle(item))}</a>
-      <span class="result-meta">${item.speaker ? `<a class="topic-arc-speaker" href="${esc(subjectHash('person', item.speaker))}">${item.party ? partyDotHTML(item.party) : ''}${esc(item.speaker)}</a>` : ''}${item.party ? `<span>${esc(item.party)}</span>` : ''}<span>${esc(PARLIAMENT_NAMES[item.state] || STATE_NAMES[item.state] || item.state || '')}${date ? ` · ${esc(fmtDate(date))}` : ''}</span></span>
+      <div class="topic-arc-who">
+        ${item.speaker ? `<a class="topic-arc-face" href="${esc(subjectHash('person', item.speaker))}" aria-hidden="true" tabindex="-1">${portrait ? `<img src="${esc(portrait)}" alt="" width="40" height="40" loading="lazy">` : ""}</a>` : `<span class="topic-arc-face topic-arc-face-none" aria-hidden="true"></span>`}
+        <span class="topic-arc-byline">
+          <span class="topic-arc-name">${item.speaker ? `<a href="${esc(subjectHash('person', item.speaker))}">${esc(item.speaker)}</a>` : "Speaker not named"}${item.party ? ` ${partyChipHTML(item.party)}` : ""}${witness ? ` <span class="topic-arc-witness">witness</span>` : ""}</span>
+          <span class="topic-arc-when">${role ? `${esc(role)} · ` : ""}${esc(where)}${committee ? " · committee" : ""}${date ? ` · <time datetime="${esc(date)}">${esc(fmtDate(date))}</time>` : ""}${generic ? ` · ${esc(subject.trim())}` : ""}</span>
+        </span>
+      </div>
+      ${heading ? `<a class="topic-arc-source" href="/doc/${encodeURIComponent(item.slug)}">${esc(heading)}</a>` : ""}
       ${brief
-        ? `<p class="topic-arc-brief">${esc(brief)}</p>`
-        : `<p class="topic-arc-passage"><span>Passage</span>${esc(passage)}</p>`}
+        ? `<p class="topic-arc-brief"><span class="topic-arc-tag">Machine brief</span>${esc(brief)}</p><a class="topic-arc-open action-btn" href="/doc/${encodeURIComponent(item.slug)}">Read the speech</a>`
+        : `<a class="topic-arc-passage" href="/doc/${encodeURIComponent(item.slug)}">${esc(passage || "Open the speech to read the passage.")}</a>`}
     </div>
   </li>`;
+}
+
+/* Who carried the debate in this window: parties by share of the matches,
+   the parliaments it ran in, and how many machine briefs are on hand. */
+function topicArcVoicesHTML(results, briefCount) {
+  const parties = new Map();
+  const parliaments = new Set();
+  let witnesses = 0;
+  for (const r of results) {
+    if (r.party) parties.set(r.party, (parties.get(r.party) || 0) + 1);
+    if (r.speaker_type === "witness") witnesses++;
+    if (r.state) parliaments.add(PARLIAMENT_NAMES[r.state] || STATE_NAMES[r.state] || r.state);
+  }
+  const top = [...parties.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4);
+  const chips = top.map(([party, n]) => `<span class="topic-arc-voice">${partyChipHTML(party)}<b>${Math.round(n / results.length * 100)}%</b></span>`).join("");
+  const bits = [
+    `<span>${results.length.toLocaleString()} labelled speeches in the window</span>`,
+    parliaments.size ? `<span>${esc([...parliaments].join(", "))}</span>` : "",
+    witnesses ? `<span>${witnesses} from committee witnesses</span>` : "",
+    briefCount ? `<span data-brief-count>${briefCount} with a machine brief</span>` : "",
+  ].filter(Boolean).join('<i aria-hidden="true">·</i>');
+  return `<div class="topic-arc-voices">${chips ? `<div class="topic-arc-voice-row" aria-label="Parties by share of these speeches">${chips}</div>` : ""}<p class="topic-arc-counts">${bits}</p></div>`;
 }
 
 async function renderTopicArc(slug, phrase, key, mount) {
@@ -4513,7 +5273,7 @@ async function renderTopicArc(slug, phrase, key, mount) {
       kind: "speech", mode: "hybrid",
     }, 1, "newest");
     params.set("per", String(SEARCH_EXPORT_MAX));
-    const data = await api(`/api/search?${params}`);
+    const [data] = await Promise.all([api(`/api/search?${params}`), loadPhotoMap()]);
     if (!active()) return;
     const results = (data.results || []).filter((item) => item.slug);
     if (!results.length) {
@@ -4545,23 +5305,48 @@ async function renderTopicArc(slug, phrase, key, mount) {
             const brief = briefs[row.dataset.arcResource];
             const passage = row.querySelector('.topic-arc-passage');
             if (brief && passage) {
-              passage.className = 'topic-arc-brief';
-              passage.textContent = brief;
+              const p = document.createElement("p");
+              p.className = "topic-arc-brief";
+              p.innerHTML = `<span class="topic-arc-tag">Machine brief</span>`;
+              p.appendChild(document.createTextNode(brief));
+              const open = document.createElement("a");
+              open.className = "topic-arc-open action-btn";
+              open.href = passage.getAttribute("href");
+              open.textContent = "Read the speech";
+              passage.replaceWith(p, open);
             }
+          }
+          const counts = mount.querySelector('.topic-arc-counts');
+          if (counts) {
+            const n = results.filter((r) => briefs[r.resource]).length;
+            const have = counts.querySelector('[data-brief-count]');
+            if (have) have.textContent = `${n} with a machine brief`;
+            else if (n) counts.insertAdjacentHTML('beforeend', `<i aria-hidden="true">·</i><span data-brief-count>${n} with a machine brief</span>`);
           }
         }
       });
     };
+    const rowsHTML = (items, prevYear = null) => {
+      let last = prevYear;
+      return items.map((item) => {
+        const y = String(item.date || "").slice(0, 4) || "—";
+        const first = y !== last;
+        last = y;
+        return topicArcItemHTML(item, briefs[item.resource], first);
+      }).join("");
+    };
     const paint = () => {
       const items = sorted().slice(0, visible);
+      const briefCount = results.filter((r) => briefs[r.resource]).length;
       mount.innerHTML = `<div class="topic-arc-head">
         <h3 class="topic-arc-heading">The arc of this debate</h3>
         <div class="quiet-toggle" role="group" aria-label="Debate chronology">
           <button type="button" data-arc-order="newest" aria-pressed="${order === 'newest'}">Newest</button>
           <button type="button" data-arc-order="oldest" aria-pressed="${order === 'oldest'}">Oldest</button>
         </div></div>
-        <p class="fineprint">A window of ${results.length.toLocaleString()} labelled matches, ordered by date. Available machine briefs replace passages as they arrive.</p>
-        <ol class="topic-arc-list">${items.map((item) => topicArcItemHTML(item, briefs[item.resource])).join('')}</ol>
+        ${topicArcVoicesHTML(results, briefCount)}
+        <ol class="topic-arc-list">${rowsHTML(items)}</ol>
+        <p class="fineprint topic-arc-note">Machine briefs are automated summaries and stand in for the passage where one exists; passages are extracts from the record, opened by the title. The window is the search index's newest labelled matches, not the whole debate.</p>
         <div class="topic-arc-footer"><p class="fineprint" role="status">Showing ${items.length} of ${results.length} matches.</p>
         ${items.length < results.length ? `<button type="button" data-arc-more>Show ${Math.min(30, results.length - items.length)} more</button>` : ''}
         <a href="${esc(searchHash(phrase, { topic: slug }, 1, 'newest'))}">Search the full debate</a></div>`;
@@ -4578,7 +5363,8 @@ async function renderTopicArc(slug, phrase, key, mount) {
         const from = visible;
         visible += 30;
         const next = sorted().slice(from, visible);
-        mount.querySelector('.topic-arc-list').insertAdjacentHTML('beforeend', next.map((item) => topicArcItemHTML(item, briefs[item.resource])).join(''));
+        const prevYear = String(sorted()[from - 1]?.date || "").slice(0, 4) || "—";
+        mount.querySelector('.topic-arc-list').insertAdjacentHTML('beforeend', rowsHTML(next, prevYear));
         const count = Math.min(visible, results.length);
         mount.querySelector('[role="status"]').textContent = `Showing ${count} of ${results.length} matches.`;
         const button = mount.querySelector('[data-arc-more]');
@@ -4829,7 +5615,7 @@ function topicIndexDescription(slug) {
 // DIR_CHUNK with a "Show more" button so 1,400 people stay instant.
 
 const DIRECTORY_KINDS = {
-  person: "Parliamentarians", party: "Parties", donor: "Donors",
+  person: "Parliamentarians", party: "Parties", donor: "Donors", supplier: "Suppliers", agency: "Agencies",
   campaigner: "Campaigners & third parties", electorate: "Electorates",
 };
 let electorateModulePromise;
@@ -4868,7 +5654,9 @@ function directoryHash(kind, state) {
   const p = new URLSearchParams();
   for (const [k, v] of Object.entries(state)) if (v) p.set(k, v);
   const q = p.toString();
-  return `/subject/${kind}${q ? `?${q}` : ""}`;
+  // Bills are not an encyclopedia kind: their index is /bills, not /subject/bill.
+  const base = kind === "bill" ? "/bills" : `/subject/${kind}`;
+  return `${base}${q ? `?${q}` : ""}`;
 }
 
 /** A year span for a row: "1998–2019", or the one year. */
@@ -4976,9 +5764,11 @@ let activeDirectory = null;
  *   spec.sorts     [[value, label, cmp]]; the first is the default
  *   spec.row(item) one <li>; spec.fineprint: HTML for the sources note
  *   spec.params    URLSearchParams from the hash
+ *   spec.mount     element id to render into (default the subject panel's body)
+ *   spec.kicker    the eyebrow over the heading (default "Encyclopedia")
  */
 function renderDirectory(spec) {
-  const body = $("subject-body");
+  const body = $(spec.mount || "subject-body");
   const state = { q: "", sort: spec.sorts[0][0] };
   for (const f of spec.filters) state[f.key] = "";
   const readParams = (params) => {
@@ -5001,7 +5791,7 @@ function renderDirectory(spec) {
           ${f.options.map(([v, l]) => `<option value="${esc(v)}"${state[f.key] === v ? " selected" : ""}>${esc(l)}</option>`).join("")}
         </select></label>`;
   body.innerHTML = `
-    <p class="kicker">Encyclopedia</p>
+    ${spec.kicker === null ? "" : `<p class="kicker">${esc(spec.kicker || "Encyclopedia")}</p>`}
     <div class="subject-head dir-head">
       <h2 id="subject-title" tabindex="-1">${esc(spec.title)}</h2>
       ${spec.lede ? `<p class="subject-tag"><span>${spec.lede}</span></p>` : ""}
@@ -5299,7 +6089,7 @@ async function buildPartiesDirectory() {
       jurs.length && p._first < 9999 ? esc(yearSpan(p._first, p._last)) : "",
     ].filter(Boolean).join(" · ");
     const figs = [
-      `${p.roster_only ? '<span class="dir-fig">From the member roster<br>Speech total not yet indexed</span>' : `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>`}`,
+      `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>`,
       `<span class="dir-fig"><b>${num(p.members)}</b>in the directory</span>`,
       ...jurs.map((j) => `<span class="dir-fig"><b>${esc(fmtMoney(p.money[j].total))}</b>${esc(sourceShort[j] || j)}</span>`),
     ].join("");
@@ -5404,7 +6194,7 @@ async function buildDonorsDirectory() {
     const shownParties = d._partyList.slice(0, 3);
     const more = d._partyList.length - shownParties.length;
     const partiesHTML = shownParties.length
-      ? `<span class="dir-parties">to ${shownParties.map((p) => `${anyPartyDotHTML(p, colours)}${esc(p)}`).join(", ")}${more > 0 ? ` and ${more} more` : ""}</span>`
+      ? `<span class="dir-parties"><span>to</span>${shownParties.map((p) => `<a class="dir-party-link" href="${esc(subjectHash("party", p))}">${anyPartyDotHTML(p, colours)}${esc(p)}</a>`).join("")}${more > 0 ? `<span>and ${more} more</span>` : ""}</span>`
       : "";
     const marks = [
       d._lobbyists ? `<span class="dir-mark" title="${esc(`${d._lobbyists} registered lobbying firm${d._lobbyists === 1 ? "" : "s"}`)}">lobbyists</span>` : "",
@@ -5801,6 +6591,1023 @@ async function renderCampaignerEntry(name, key) {
   await subjectMentions(e.name, sections, "In parliament");
 }
 
+/* --- bills ------------------------------------------------------------------
+   Two static files behind every touchpoint (docs/BILLS-CONTRACT.md):
+   /bills/index.json is the whole list, small enough to hold in memory and
+   search in the page; /bills/<key>.json is one bill's dates, summary,
+   divisions, speeches and Acts, fetched only when a reader asks for that bill.
+
+   The lookup rule is the registry's own: full normalised title, numbers and
+   bill year intact, no fuzzy fallback. A bill the index does not name is not
+   guessed at, and — the rule that outranks every feature here — a failed
+   lookup never removes anything the page was already showing. */
+
+let billsIndexPromise = null;
+let billsTitleIndex = null;
+const billFiles = new Map();
+// "bill:<key>" or "index": what #bill-body is currently holding.
+let billView = null;
+
+function loadBillsIndex() {
+  billsIndexPromise ??= fetch("/bills/index.json", { cache: "no-cache" })
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return billsIndexPromise;
+}
+
+/** One bill's full record; null when the projection has no such file. */
+function loadBill(key) {
+  if (!billFiles.has(key)) {
+    billFiles.set(key, fetch(`/bills/${encodeURIComponent(key)}.json`, { cache: "no-cache" })
+      .then((r) => (r.ok ? r.json() : null)).catch(() => null));
+  }
+  return billFiles.get(key);
+}
+
+/** Index entries keyed by exact normalised title (and any alias the projection carries). */
+async function billTitleIndex() {
+  if (billsTitleIndex) return billsTitleIndex;
+  const idx = await loadBillsIndex();
+  const map = new Map();
+  for (const b of idx?.bills || []) {
+    if (b?.title) map.set(titleKey(b.title), b);
+    for (const alias of b?.aliases || []) map.set(titleKey(alias), b);
+  }
+  billsTitleIndex = map;
+  return map;
+}
+
+/** The one bill a title names, or null. Exact match only, by design. */
+async function billForTitle(title) {
+  if (!title) return null;
+  const map = await billTitleIndex();
+  return map.get(titleKey(title)) || null;
+}
+
+const billHash = (key) => `/bill/${encodeURIComponent(key)}`;
+
+/* The projection writes the registry's own vocabulary: chambers as codes,
+   stages and statuses as the register's lowercase tokens, an outcome as the
+   division's recorded result. These four turn that into English without
+   changing what it says, and pass anything unrecognised through untouched
+   rather than dropping a fact the register did record. */
+const billHouse = (code) => CHAMBER_NAMES[String(code || "").toLowerCase()] || String(code || "");
+const sentenceCase = (s) => {
+  const t = String(s || "").replace(/_/g, " ").trim();
+  return t ? t[0].toUpperCase() + t.slice(1) : "";
+};
+/** A stage as the register wrote it; a parsed-out compound title is clipped, not shown whole. */
+function billStage(stage) {
+  const t = sentenceCase(stage);
+  return t.length > 60 ? `${t.slice(0, 57).trimEnd()}…` : t;
+}
+/* A division's question is the record's, but TheyVoteForYou writes its
+   editorial notes in Markdown, so a raw question can arrive as
+   "…available [here](https://…)" or "_[For privatising…]_". The link text is
+   what the note says; the URL and the emphasis marks are formatting for a
+   page this is not. Nothing is dropped but punctuation. */
+function billQuestion(text) {
+  return String(text || "")
+    .replace(/\[([^\]]+)\]\((?:[^)\s]+)(?:\s+"[^"]*")?\)/g, "$1")
+    .replace(/[*_]{1,3}(?=\S)([^*_]+?)(?<=\S)[*_]{1,3}/g, "$1")
+    .replace(/\s+/g, " ").trim();
+}
+/** 41st, 42nd, 43rd, 44th — a parliament is a number a reader says out loud. */
+function ordinal(n) {
+  const v = Number(n);
+  if (!Number.isFinite(v)) return String(n ?? "");
+  const rem100 = v % 100, rem10 = v % 10;
+  const suffix = rem100 >= 11 && rem100 <= 13 ? "th"
+    : rem10 === 1 ? "st" : rem10 === 2 ? "nd" : rem10 === 3 ? "rd" : "th";
+  return `${v}${suffix}`;
+}
+const BILL_OUTCOMES = { affirmative: "Agreed to", negative: "Negatived" };
+const billOutcome = (o) => BILL_OUTCOMES[String(o || "").toLowerCase()] || sentenceCase(o);
+/** The short title when the register carries one, else the title itself. */
+const billName = (b) => b?.short_title || b?.title || b?.key || "";
+
+/* The register writes a private member's bill's sponsor into the portfolio
+   field, in its own notation: "(s) WILKIE, Andrew, MP". That is a person, not
+   a department, and printing it as a portfolio invents a department called
+   "(s) BANDT, Adam, MP". Read back, it is the sponsor — which is otherwise
+   null on every bill in this projection. Anything that does not fit the
+   notation is left exactly as the register wrote it. */
+/** MCGOWAN → McGowan, O'BRIEN → O'Brien, HANSON-YOUNG → Hanson-Young. */
+function titleCaseName(surname) {
+  return String(surname || "").toLocaleLowerCase("en-AU")
+    .replace(/(^|[\s'’-])(\p{Ll})/gu, (_, sep, c) => sep + c.toLocaleUpperCase("en-AU"))
+    .replace(/\bMc(\p{Ll})/gu, (_, c) => `Mc${c.toLocaleUpperCase("en-AU")}`);
+}
+
+// The register runs co-sponsors together with no separator at all:
+// "(s) PHELPS, Kerryn, MPWILKIE, Andrew, MPBANDT, Adam, MP" is three members.
+const BILL_MEMBER = /([\p{Lu}][\p{Lu}'’\- ]*[\p{Lu}]),\s*([^,]+?),\s*(MP|Senator|Sen\.?)(?=\p{Lu}|$)/gu;
+
+function billSponsorFromPortfolio(portfolio) {
+  const raw = String(portfolio || "").trim();
+  if (!/^\(s\)\s*/i.test(raw)) return null;
+  const rest = raw.replace(/^\(s\)\s*/i, "").trim();
+  const found = [...rest.matchAll(BILL_MEMBER)]
+    .map((m) => ({ name: `${m[2].trim()} ${titleCaseName(m[1])}`, suffix: m[3].trim() }));
+  if (found.length) return found;
+  // Not the notation this expects: hand back the register's own words untouched.
+  return [{ name: rest, suffix: "" }];
+}
+/** What the portfolio slot should say: nothing when the field is really a sponsor. */
+const billPortfolio = (b) => (billSponsorFromPortfolio(b?.portfolio) ? "" : String(b?.portfolio || ""));
+/** "Kerryn Phelps MP", or "Andrew Wilkie MP and 2 others" — the rest are on the bill page. */
+function billMembersLabel(members, max = 1) {
+  if (!members?.length) return "";
+  const head = members.slice(0, max)
+    .map((m) => `${m.name}${m.suffix ? ` ${m.suffix}` : ""}`).join(", ");
+  const more = members.length - Math.min(max, members.length);
+  return more > 0 ? `${head} and ${more} other${more === 1 ? "" : "s"}` : head;
+}
+
+/** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
+function billStatusLine(b) {
+  const status = sentenceCase(b?.status) || "Status not recorded";
+  const as = b?.status_as_of ? `, as at ${fmtDate(b.status_as_of)}` : "";
+  return `${status}${as}`;
+}
+
+const BILL_SOURCE_NAMES = {
+  billhome: "Bill home", text: "Bill text", em: "Explanatory memorandum",
+  em_revised: "Revised explanatory memorandum", em_supp: "Supplementary explanatory memorandum",
+  digest: "Bills Digest", frl_act: "The Act on the Federal Register",
+};
+
+function billSourcesHTML(sources) {
+  const links = (sources || []).map((s) => {
+    const url = safeUrl(s?.url);
+    if (!url) return "";
+    const name = BILL_SOURCE_NAMES[s.kind] || s.kind || "Source";
+    return `<a href="${esc(url)}" rel="noopener" target="_blank">${esc(name)} ↗︎</a>`;
+  }).filter(Boolean);
+  return links.length ? links.join(" · ") : "";
+}
+
+/** The head of every bill list row: the name, then what it is and where it got to. */
+function billRowHTML(b) {
+  const year = String(b.introduced || "").slice(0, 4);
+  const members = billSponsorFromPortfolio(b.portfolio);
+  const figures = [
+    // Not "28 divisions": the index counts the register's division records, and
+    // the source records one division several times, so the bill page folds
+    // that same Medibank bill to eight. The list cannot fold — it would have to
+    // open every file — so it says which number this is instead of asserting a
+    // count the next page denies.
+    Number(b.divisions) ? `${b.divisions} division record${b.divisions === 1 ? "" : "s"}` : "",
+    Number(b.speeches) ? `${b.speeches} speech${b.speeches === 1 ? "" : "es"}` : "",
+    Number(b.acts) ? "became law" : "",
+  ].filter(Boolean);
+  return `<li>
+    <a class="source-title bill-row-title" href="${esc(billHash(b.key))}">${esc(billName(b))}</a>
+    <span class="result-meta bill-row-meta">${[
+      b.status ? `<b class="bill-row-status">${esc(sentenceCase(b.status))}</b>` : "",
+      year ? esc(year) : "",
+      b.sponsor_party ? partyChipHTML(billParty(b.sponsor_party)) : "",
+      members ? esc(billMembersLabel(members)) : esc(billPortfolio(b)),
+    ].filter(Boolean).join("&nbsp;· ")}</span>
+    ${b.short_title && b.short_title !== b.title ? `<p class="bill-row-long">${esc(b.title)}</p>` : ""}
+    ${figures.length ? `<p class="bill-row-figures">${figures.join(" · ")}</p>` : ""}
+  </li>`;
+}
+
+const BILLS_FINEPRINT =
+  `Bills, their dates and their divisions come from the parliamentary record; each bill page links the
+   official source it was read from. Summaries are written by a model from the explanatory memorandum or
+   the Bills Digest, are marked as such wherever they appear, and are not the record. A bill missing from
+   this list is not evidence it does not exist: the register is still being built. The source records
+   some divisions more than once, so a division record here is a row in the register rather than a
+   separate vote of the house; a bill page folds the duplicates and usually shows fewer.`;
+
+/** /bills — the whole list, searchable by name, filtered by parliament, status and year. */
+/** APH writes a sponsor as "SMITH, Sen Dean" or "BURKE, the Hon Tony, MP"; readers want "Dean Smith". */
+function billSponsorName(raw) {
+  const s = String(raw || "").replace(/&#39;/g, "'").replace(/&#34;|&quot;/g, '"').trim();
+  const m = s.match(/^([A-Za-z][A-Za-z'\- ]+),\s*(.+)$/); // the surname is upper case, bar the Mc and Mac prefixes
+  if (!m) return s;
+  const surname = m[1].toLowerCase().replace(/(^|[\s'\-])([a-z])/g, (_, a, b) => a + b.toUpperCase())
+    .replace(/^Mc([a-z])/, (_, c) => "Mc" + c.toUpperCase());
+  const given = m[2].replace(/\b(the Hon|Hon|Sen|Senator|Dr|Mr|Mrs|Ms|Miss|MP|AM|AO|OAM|QC|SC)\b\.?/g, "").replace(/[,\s]+/g, " ").trim();
+  return given ? `${given} ${surname}` : surname;
+}
+/** The registry's party strings, in the form the party chip and the party pages know. */
+function billPartyName(raw) {
+  const s = String(raw || "").replace(/&#39;/g, "'").replace(/&#34;|&quot;/g, "").trim();
+  const k = s.toLowerCase();
+  if (!k || /independent/.test(k)) return k ? "Independent" : "";
+  if (/liberal national party/.test(k)) return "LNP";
+  if (/country liberal/.test(k)) return "Country Liberal Party";
+  if (/liberal democrat/.test(k)) return "Liberal Democrats";
+  if (/^liberal|liberal party/.test(k)) return "Liberal";
+  if (/labor|^alp$/.test(k)) return "Labor";
+  if (/national/.test(k)) return "Nationals";
+  if (/green/.test(k)) return "Greens";
+  if (/one nation/.test(k)) return "One Nation";
+  if (/centre alliance|nick xenophon/.test(k)) return "Centre Alliance";
+  if (/katter/.test(k)) return "Katter's Australian Party";
+  if (/united australia|palmer/.test(k)) return "United Australia Party";
+  if (/lambie/.test(k)) return "JLN";
+  if (/family first/.test(k)) return "Family First";
+  if (/democrats/.test(k)) return "Australian Democrats";
+  return s;
+}
+
+async function openBillsIndex(params, manageFocus) {
+  if (billView === "index") {
+    activeDirectory?.setParams(params);
+    if (manageFocus) $("subject-title")?.focus();
+    return;
+  }
+  billView = "index";
+  const body = $("bill-body");
+  body.innerHTML = `
+    <div class="subject-head">
+      <h2 id="subject-title" tabindex="-1">Bills</h2>
+      <p class="subject-tag"><span id="bill-loader" class="subject-loader"></span></p>
+    </div>`;
+  if (manageFocus) $("subject-title")?.focus();
+  showPageLoader("bill-loader", "Opening the bill list.");
+  const idx = await loadBillsIndex();
+  if (billView !== "index") return;
+  clearPageLoader("bill-loader");
+  if (!idx?.bills?.length) {
+    subjectTag(body).innerHTML =
+      `<span>The bill list could not be loaded. The record's speeches, divisions and people are unaffected.</span>`;
+    return;
+  }
+  const items = idx.bills.slice();
+  for (const b of items) {
+    b._year = String(b.introduced || "").slice(0, 4);
+    b._sortName = foldText(billName(b));
+  }
+  const years = [...new Set(items.map((b) => b._year).filter(Boolean))].sort().reverse();
+  const statuses = [...new Set(items.map((b) => b.status).filter(Boolean))].sort();
+  const parliaments = [...new Set(items.map((b) => b.parliament).filter((p) => p != null))]
+    .sort((a, b) => b - a);
+  const countBy = (get, value) => items.filter((b) => get(b) === value).length;
+
+  renderDirectory({
+    kind: "bill", mount: "bill-body", kicker: null, params,
+    title: "Bills",
+    lede: `${items.length.toLocaleString()} bills from the federal record. Each one opens its dates, its divisions and what was said about it.`,
+    items,
+    name: billName,
+    text: (b) => [b.title, b.short_title, b.sponsor, b.portfolio, b.status, b._year].filter(Boolean).join(" "),
+    href: (b) => billHash(b.key),
+    hint: (b) => sentenceCase(b.status),
+    filters: [
+      { key: "parliament", label: "Parliament", any: "All parliaments",
+        options: parliaments.map((p) => countOpt(String(p), `${ordinal(p)} parliament`, countBy((b) => b.parliament, p))),
+        test: (b, v) => String(b.parliament) === v },
+      { key: "status", label: "Status", any: "All statuses",
+        options: statuses.map((s) => countOpt(s, sentenceCase(s), countBy((b) => b.status, s))),
+        test: (b, v) => b.status === v },
+      { key: "year", label: "Year", any: "All years",
+        options: years.map((y) => countOpt(y, y, countBy((b) => b._year, y))),
+        test: (b, v) => b._year === v },
+      { key: "divided", label: "Divided on", check: true, test: (b) => Number(b.divisions) > 0 },
+    ],
+    sorts: [
+      ["newest", "Newest first", (a, b) => String(b.introduced || "").localeCompare(String(a.introduced || ""))],
+      ["oldest", "Oldest first", (a, b) => String(a.introduced || "").localeCompare(String(b.introduced || ""))],
+      ["title", "By name", byName],
+      ["divisions", "Most division records", byNumDesc((b) => Number(b.divisions) || 0)],
+    ],
+    row: billRowHTML,
+    fineprint: BILLS_FINEPRINT,
+  });
+}
+
+/* The timeline. A bill's dates sit inside months, not decades, so the ruler is
+   drawn to the bill's own span rather than the record's: a hairline with one
+   notch per recorded stage, the two ends named, and the dates themselves read
+   as a list underneath. The ruler shows the shape of the passage; the list is
+   what a reader actually reads. */
+function billRulerHTML(dates) {
+  const points = dates.map((d) => Date.parse(`${String(d.date).slice(0, 10)}T00:00:00Z`))
+    .filter(Number.isFinite);
+  if (points.length < 2) return "";
+  const first = Math.min(...points), last = Math.max(...points);
+  const span = last - first || 1;
+  const x = (t) => 8 + ((t - first) / span) * 664;
+  const ticks = points.map((t) =>
+    `<line class="bill-ruler-tick" x1="${x(t).toFixed(2)}" x2="${x(t).toFixed(2)}" y1="10" y2="30"/>`).join("");
+  const label = (t, anchor) =>
+    `<text class="bill-ruler-label" x="${x(t).toFixed(2)}" y="45" text-anchor="${anchor}">${esc(fmtDate(new Date(t).toISOString().slice(0, 10)))}</text>`;
+  return `<svg class="bill-ruler" viewBox="0 0 680 52" role="img"
+    aria-label="The recorded stages of this bill, from ${esc(fmtDate(new Date(first).toISOString().slice(0, 10)))} to ${esc(fmtDate(new Date(last).toISOString().slice(0, 10)))}">
+    <line class="bill-ruler-axis" x1="8" x2="672" y1="30" y2="30"/>
+    ${ticks}${label(first, "start")}${label(last, "end")}
+  </svg>`;
+}
+
+/* The register records a stage on every day it was before the house, so a
+   second reading debated across seven sitting days arrives as seven rows. Set
+   one under another they read as seven second readings — the same mistake the
+   duplicated divisions made, the source's bookkeeping printed as parliament's
+   actions. A run of one stage in one chamber is one entry carrying its span.
+   The ruler above still draws every recorded date as its own tick, so nothing
+   is hidden: the density moves to where density belongs. */
+function billStageRuns(dates) {
+  const runs = [];
+  for (const d of dates) {
+    const stage = billStage(d.stage) || "Stage not named";
+    const house = billHouse(d.house);
+    const last = runs[runs.length - 1];
+    if (last && last.stage === stage && last.house === house) { last.dates.push(d); continue; }
+    runs.push({ stage, house, dates: [d] });
+  }
+  return runs;
+}
+
+/* A span in a column six characters wide breaks wherever it runs out, so
+   "25 Nov 2009 – 1 Dec 2009" came apart as "25 Nov 2009 –" and "1 Dec 2009"
+   with the dash orphaned. The two dates take a line each, the second saying
+   what it is, and the row reads the same at every width. */
+function billDateSpanHTML(dates) {
+  const first = dates[0]?.date, last = dates[dates.length - 1]?.date;
+  if (!last || first === last) return esc(fmtDate(first));
+  return `${esc(fmtDate(first))}<span class="bill-date-to">to ${esc(fmtDate(last))}</span>`;
+}
+
+function billTimelineHTML(bill) {
+  const dates = (bill.key_dates || []).filter((d) => d?.date)
+    .slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
+  if (!dates.length) {
+    return `<section class="bill-section"><h3 class="subject-section-title">How it moved</h3>
+      <p class="status">No dates recorded.</p></section>`;
+  }
+  const runs = billStageRuns(dates);
+  const folded = dates.length - runs.length;
+  const rows = runs.map((run) => {
+    const url = safeUrl(run.dates[0].url);
+    // "Royal assent · Assent": with no chamber to name, the register writes the
+    // stage into the house field, and the row says the same word twice.
+    const house = run.house && !run.stage.toLowerCase().includes(run.house.toLowerCase())
+      ? run.house : "";
+    const days = run.dates.length;
+    return `<li class="bill-date">
+      <span class="bill-date-when">${billDateSpanHTML(run.dates)}</span>
+      <span class="bill-date-what">${url
+        ? `<a href="${esc(url)}" rel="noopener" target="_blank">${esc(run.stage)} ↗︎</a>` : esc(run.stage)}${
+        house ? `<span class="bill-date-house">${esc(house)}</span>` : ""}${
+        days > 1 ? `<span class="bill-date-days">on ${days} recorded days</span>` : ""}</span>
+    </li>`;
+  }).join("");
+  return `<section class="bill-section">
+    <h3 class="subject-section-title">How it moved</h3>
+    ${billRulerHTML(dates)}
+    <ol class="bill-dates" role="list">${rows}</ol>
+    ${folded ? `<p class="fineprint">The register records a stage on each day it was before the house.
+      These ${runs.length} entries carry ${dates.length} such dates: a stage that ran across sitting days
+      is one entry with its span, not one entry a day. Every date is a tick on the ruler.</p>` : ""}
+  </section>`;
+}
+
+/* A division's party split, drawn as one pair of bars per party: ayes above,
+   noes below, both measured against the largest party in that division so the
+   party sizes read as well as the split inside each one. Party colour is a dot
+   and a name, never a bar — the bar says aye or no, nothing else. */
+/* One party carrying two votes should not take the same three rows as one
+   carrying twenty-two. The parties that decide the division are drawn; the
+   one- and two-member remainder is named on a single line, in full, so
+   nothing disappears — only the bars a reader cannot see anyway. */
+const BILL_SPLIT_DRAWN = 5;
+const BILL_SPLIT_SMALL = 2;
+
+function billSplitHTML(division) {
+  const splits = Object.entries(division.party_splits || {})
+    .map(([party, v]) => ({ party, ayes: Number(v?.ayes) || 0, noes: Number(v?.noes) || 0 }))
+    .filter((s) => s.ayes || s.noes)
+    .sort((a, b) => (b.ayes + b.noes) - (a.ayes + a.noes) || a.party.localeCompare(b.party));
+  if (!splits.length) return `<p class="fineprint bill-split-none">Party split not recorded for this division.</p>`;
+  let drawn = splits.filter((s, i) => i < BILL_SPLIT_DRAWN || s.ayes + s.noes > BILL_SPLIT_SMALL);
+  let folded = splits.slice(drawn.length);
+  if (folded.length === 1) { drawn = splits; folded = []; } // one line saved is no saving
+  const max = Math.max(...drawn.map((s) => Math.max(s.ayes, s.noes)), 1);
+  /* Name and figures on one line, the bars beneath them. The grid always said
+     so; the source order did not, and the grid places what it is given in the
+     order it is given, so "0–22" landed a row below its own bars and directly
+     above the next party's name — nearer the party it does not describe. */
+  const rows = drawn.map((s) => `
+    <li class="bill-split">
+      <span class="bill-split-party">${partyDotHTML(s.party)}${esc(billParty(s.party))}</span>
+      <span class="bill-split-n">${s.ayes}<span aria-hidden="true">–</span>${s.noes}<span class="visually-hidden"> ayes to noes</span></span>
+      <span class="bill-split-bars" aria-hidden="true">
+        <span class="bill-split-bar-track"><i class="bill-bar-aye" style="width:${((s.ayes / max) * 100).toFixed(1)}%"></i></span>
+        <span class="bill-split-bar-track"><i class="bill-bar-no" style="width:${((s.noes / max) * 100).toFixed(1)}%"></i></span>
+      </span>
+    </li>`).join("");
+  const rest = folded.length
+    ? `<p class="fineprint bill-split-rest">Also ${esc(folded
+      .map((s) => `${billParty(s.party)} ${s.ayes}–${s.noes}`).join(", "))}.</p>`
+    : "";
+  // What the attribution rests on, as a clause rather than a paragraph:
+  // party_coverage counts the votes carried by a party observed on or before
+  // the day against those falling back to a member's earliest or current one.
+  const named = splits.reduce((a, s) => a + s.ayes + s.noes, 0);
+  const total = (Number(division.ayes) || 0) + (Number(division.noes) || 0);
+  const cov = division.party_coverage || {};
+  const weak = (Number(cov.member) || 0) + (Number(cov.earliest) || 0) + (Number(cov.unknown) || 0);
+  const dated = Number(cov.dated) || 0;
+  const notes = [
+    total && named && named < total ? `${total - named} not placed with a party` : "",
+    weak > 0 && dated + weak > 0 ? `${weak} of ${dated + weak} inferred, not observed on the day` : "",
+    Number(division.paired) > 0 ? `${division.paired} paired` : "",
+  ].filter(Boolean);
+  return `<ul class="bill-splits" role="list">${rows}</ul>${rest}${
+    notes.length ? `<p class="fineprint bill-split-partial">${esc(notes.join(" · "))}</p>` : ""}`;
+}
+
+/** A division's own page in the record: the registry's key is the resource slug without its kind. */
+function billDivisionHref(d) {
+  const key = String(d?.key || "");
+  if (!key) return null;
+  return `/doc/${encodeURIComponent(key.startsWith("division-") ? key : `division-${key}`)}`;
+}
+
+/* A division's question field carries the motion put — but TheyVoteForYou
+   writes its editorial notes into the same field, so it can also hold a
+   700-character explanation or "This is a duplicate of an earlier division
+   available here." Set at heading size in the serif, a note reads as the
+   motion the House divided on. The first sentence stands as the heading;
+   whatever follows is a note and is set as one. Nothing is dropped. */
+/** Prose about a division rather than the motion put: it must not be set as a heading. */
+const BILL_DESCRIPTION = /^(this (is|division|motion|amendment)\b|the (majority|motion) )/i;
+
+/* The record's prose arrives as Markdown — "[motion](https://…)", "_[For
+   privatising government assets](/policies/21)_" — and flattening it to text
+   leaves "(Read more about these types of motions here. )": a pointer with
+   nothing behind it, several times in one note. Those links are the record
+   citing itself, so they are kept as links, relative ones resolved against the
+   site the field came from. Only the formatting marks are dropped. */
+const BILL_NOTE_BASE = "https://theyvoteforyou.org.au";
+const BILL_MD_LINK = /\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+/** Emphasis marks off; the words they wrapped stay. */
+const billPlain = (t) => String(t).replace(/[*_]{1,3}(?=\S)([^*_]+?)(?<=\S)[*_]{1,3}/g, "$1");
+/** The same field, as plain words: what the length and sentence tests judge. */
+const billFlat = (t) => billPlain(String(t || "").replace(BILL_MD_LINK, "$1")).trim();
+
+/* The source writes a quote straight onto its next bracket — '"the
+   guillotine"(Read more' — and leaves a space inside the closing one. Repaired
+   before anything is split, and never at "](", which would break a link. */
+function billNoteRepair(text) {
+  return String(text || "")
+    // Emphasis wrapped around a whole link leaves one mark on each side of it,
+    // and neither has a partner once the link becomes a link: "_For
+    // privatising government assets_" arrived as "the Policy _For … assets _.".
+    .replace(/([*_]{1,3})(\[[^\]]+\]\([^)\s]+\))\1/g, "$2")
+    .replace(/([^\s(\]])\(/g, "$1 (")
+    .replace(/\s+([.,;:])/g, "$1")
+    .replace(/\s+\)/g, ")")
+    .replace(/\s+/g, " ").trim();
+}
+
+/** A note as HTML: the record's own links live, everything else escaped. */
+function billNoteHTML(text) {
+  const raw = billNoteRepair(text);
+  let out = "", i = 0;
+  BILL_MD_LINK.lastIndex = 0;
+  for (let m = BILL_MD_LINK.exec(raw); m; m = BILL_MD_LINK.exec(raw)) {
+    out += esc(billPlain(raw.slice(i, m.index)));
+    const href = safeUrl(m[2].startsWith("/") ? BILL_NOTE_BASE + m[2] : m[2]);
+    const label = billPlain(m[1]);
+    // Inside running prose the mark must not be able to start a line of its own.
+    out += href
+      ? `<a href="${esc(href)}" rel="noopener" target="_blank">${esc(label)}&nbsp;↗︎</a>`
+      : esc(label);
+    i = m.index + m[0].length;
+  }
+  return out + esc(billPlain(raw.slice(i)));
+}
+
+/* The record writes "<Bill> - <Stage> - <Question>", and 164 of the fixture's
+   209 title-prefixed questions carry the division's own stage in that middle
+   segment. With the title gone the heading read "Second Reading - Read a
+   second time" directly above a meta line reading "Second reading · Senate ·
+   4 Dec 2006". The stage is the meta's job; the heading keeps the question. */
+function billStripStage(text, stage) {
+  const s = String(stage || "").trim();
+  const out = String(text || "").trim();
+  if (!s || !out.toLowerCase().startsWith(s.toLowerCase())) return out;
+  const rest = out.slice(s.length).replace(/^\s*[-–—:]\s*/, "").trim();
+  // Only when something is left: a division named by its stage alone keeps it.
+  return rest || out;
+}
+
+function billQuestionParts(division, bill) {
+  const raw = billStripStage(
+    billStripTitle(billNoteRepair(division?.question), bill), division?.stage);
+  const plain = billFlat(raw);
+  if (!plain) return { head: "", note: "" };
+  if (BILL_DESCRIPTION.test(plain)) return { head: "", note: raw };
+  if (plain.length <= 110) return { head: plain, note: "" };
+  // The first sentence stands as the heading, measured in words a reader sees
+  // rather than in a URL's characters; the rest is the note it is.
+  for (const m of raw.matchAll(/[.?!](\s|$)/g)) {
+    const head = billFlat(raw.slice(0, m.index + 1));
+    if (head.length < 20) continue;
+    if (head.length > 160) break;
+    return { head, note: raw.slice(m.index + 1).trim() };
+  }
+  return { head: `${plain.slice(0, 105).trimEnd()}…`, note: raw };
+}
+
+/* TheyVoteForYou records the same division several times — the Medibank bill's
+   third reading appears ten times, nine of them saying so in the question
+   field. Copied straight out, the page shows ten third readings and a reader
+   counts ten. Rows identical in day, stage and counts are one division; the
+   one that carries the motion is kept and the section says this is happening. */
+function billDedupeDivisions(divisions, bill) {
+  const groups = new Map();
+  for (const d of divisions || []) {
+    const k = [d.date, String(d.stage || "").toLowerCase(), d.ayes, d.noes].join("|");
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(d);
+  }
+  const kept = [];
+  let collapsed = 0;
+  for (const group of groups.values()) {
+    // Prefer a row whose question is the motion; then one that has a question at all.
+    const best = group.find((d) => billQuestionParts(d, bill).head)
+      || group.find((d) => d.question) || group[0];
+    kept.push(best);
+    collapsed += group.length - 1;
+  }
+  kept.sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+  return { divisions: kept, collapsed };
+}
+
+/* The record writes its questions as "<Bill> - <Stage> - <Question>", so on a
+   party page — where the bill's name is already the row's link — and on the
+   bill's own page — where the name is the headline — the leading title spends
+   the width saying it twice. It comes off in both places; on the bill page it
+   was costing a three-line heading whose first line and a half were the H1. */
+function billStripTitle(text, bill) {
+  let out = String(text || "").trim();
+  for (const t of [bill?.title, bill?.short_title]) {
+    const title = String(t || "").trim();
+    if (title && out.toLowerCase().startsWith(title.toLowerCase())) {
+      out = out.slice(title.length).replace(/^\s*[-–—:]\s*/, "").trim();
+    }
+  }
+  return out;
+}
+
+function billQuestionShort(division, bill, max = 104) {
+  // From the whole cleaned question, not the bill page's heading: clipping
+  // first and stripping the title afterwards throws away the useful end. The
+  // stage comes off for the same reason it does there — the row's meta line
+  // is already saying it, two lines up.
+  const text = billStripStage(
+    billStripTitle(billQuestion(division?.question), bill), division?.stage);
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max).lastIndexOf(" ");
+  return `${text.slice(0, cut > 40 ? cut : max).trimEnd()}…`;
+}
+
+/** The register's own codes for who is not a party. */
+const BILL_PARTY_LABELS = { PRES: "Presiding officer", SPK: "Speaker", "": "Not recorded" };
+const billParty = (p) => BILL_PARTY_LABELS[String(p || "").trim()] || billPartyName(p);
+
+function billDivisionHTML(d, bill) {
+  const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
+  const target = billDivisionHref(d);
+  const { head, note } = billQuestionParts(d, bill);
+  const official = safeUrl(d.url);
+  const stage = billStage(d.stage);
+  // With no motion in the field there is no heading to write. The division's
+  // own facts lead — its stage is the closest thing the record gives to a
+  // name for it — and the record's prose follows as the note it is.
+  const title = head || stage || "Division";
+  const meta = [
+    // The stage always names itself here now: the heading is the question with
+    // the stage taken off it, so the two no longer say the same words twice.
+    head && stage ? esc(stage) : "",
+    billHouse(d.house) ? esc(billHouse(d.house)) : "",
+    d.date ? esc(fmtDate(d.date)) : "",
+  ].filter(Boolean).join(" · ");
+  return `<li class="bill-division${head ? "" : " bill-division-unnamed"}">
+    ${target
+      ? `<a class="source-title bill-division-q" href="${esc(target)}">${esc(title)}</a>`
+      : `<span class="source-title bill-division-q">${esc(title)}</span>`}
+    <span class="result-meta">${meta}</span>
+    <p class="bill-division-out"><b>${esc(billOutcome(d.outcome) || "Outcome not recorded")}</b>
+      <span>${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes</span>${
+      official ? `<a class="bill-division-src" href="${esc(official)}" rel="noopener" target="_blank">The count ↗︎</a>` : ""}</p>
+    ${note ? `<p class="bill-division-note">${billNoteHTML(note)}</p>` : ""}
+    ${billSplitHTML(d)}
+  </li>`;
+}
+
+function billDivisionsHTML(bill) {
+  const { divisions: divs, collapsed } = billDedupeDivisions(bill.divisions, bill);
+  if (!divs.length) {
+    return `<section class="bill-section"><h3 class="subject-section-title">Divisions</h3>
+      <p class="status">No divisions recorded.</p>
+      <p class="fineprint">Most questions are decided on the voices and leave no per-member record, so a bill
+        with no division here was not necessarily unopposed.</p></section>`;
+  }
+  const head = divs.slice(0, 6), rest = divs.slice(6);
+  return `<section class="bill-section">
+    <h3 class="subject-section-title">Divisions</h3>
+    <ol class="bill-division-list" role="list" id="bill-divisions">${head.map((d) => billDivisionHTML(d, bill)).join("")}</ol>
+    ${rest.length ? `<p class="dir-more-row"><button type="button" class="secondary" id="bill-divisions-more"
+      data-rest="${esc(String(rest.length))}">Show more (${rest.length} more)</button></p>` : ""}
+    <p class="fineprint">Ayes and noes are the division's own totals. Party is each member's recorded
+      affiliation, not a reconstruction of who they sat with on the day, and a member the record does not
+      name is counted but not attributed. Only formal divisions leave a per-member record.${collapsed
+        ? ` The source records some divisions more than once; ${collapsed} row${collapsed === 1 ? "" : "s"}
+            identical in day, stage and counts ${collapsed === 1 ? "is" : "are"} shown here once.` : ""}</p>
+  </section>`;
+}
+
+function billSpeechesHTML(bill) {
+  const speeches = (bill.speeches || []).filter((s) => s?.slug);
+  if (!speeches.length) {
+    return `<section class="bill-section"><h3 class="subject-section-title">What was said</h3>
+      <p class="status">No speeches linked to this bill yet.</p></section>`;
+  }
+  // A speech the record leaves unattributed has one fact — its date — so the
+  // date is what opens it, rather than nine rows all reading the same absence.
+  const rows = speeches.slice(0, 24).map((s) => `<li>
+    <a class="source-title" href="/doc/${encodeURIComponent(s.slug)}">${
+      s.speaker ? esc(s.speaker) : `Speech${s.date ? ` on ${esc(fmtDate(s.date))}` : ", speaker not named"}`}</a>
+    <span class="result-meta">${[
+      s.party ? partyChipHTML(s.party) : "",
+      s.state && s.state !== "federal" ? esc(STATE_NAMES[s.state] || s.state) : "",
+      s.stage_hint ? esc(billStage(s.stage_hint)) : "",
+      s.speaker && s.date ? esc(fmtDate(s.date)) : "",
+    ].filter(Boolean).join(" · ")}</span>
+    ${s.brief ? `<p class="bill-speech-brief">${esc(s.brief)}</p>` : ""}
+  </li>`).join("");
+  const briefs = speeches.filter((s) => s.brief).length;
+  return `<section class="bill-section">
+    <h3 class="subject-section-title">What was said</h3>
+    <ul class="subject-list bill-speeches" role="list">${rows}</ul>
+    <p class="fineprint">Speeches the record attaches to this bill${
+      speeches.length > 24 ? `, the first 24 of ${speeches.length}` : ""}. ${briefs
+        ? "A brief under a name was written from that speech by a model, not by a person."
+        : "Open a speech to read it in full."}</p>
+  </section>`;
+}
+
+function billActsHTML(bill) {
+  const acts = (bill.acts || []).filter((a) => a?.title);
+  const passed = /passed|assent/i.test(String(bill.status || ""));
+  if (!acts.length) {
+    return passed
+      ? `<section class="bill-section"><h3 class="subject-section-title">What became law</h3>
+         <p class="status">No Act matched to this bill yet.</p></section>`
+      : "";
+  }
+  const rows = acts.map((a) => {
+    const url = safeUrl(a.frl_uri);
+    return `<li>
+      ${url ? `<a class="source-title" href="${esc(url)}" rel="noopener" target="_blank">${esc(a.title)} ↗︎</a>`
+        : `<span class="source-title">${esc(a.title)}</span>`}
+      <span class="result-meta">${a.assent_date ? `Assented ${esc(fmtDate(a.assent_date))}` : "Assent date not recorded"}</span>
+    </li>`;
+  }).join("");
+  return `<section class="bill-section">
+    <h3 class="subject-section-title">What became law</h3>
+    <ul class="subject-list" role="list">${rows}</ul>
+    <p class="fineprint">Act text on the Federal Register of Legislation, CC BY 4.0.</p>
+  </section>`;
+}
+
+function billSummaryHTML(bill) {
+  const s = bill.summary;
+  const sources = billSourcesHTML(bill.sources);
+  if (!s) {
+    return `<section class="bill-summary bill-summary-empty" aria-labelledby="bill-summary-head">
+      <div class="doc-brief-head"><h3 class="subject-section-title" id="bill-summary-head">In short</h3></div>
+      <p class="status">No summary yet.</p>
+      <p class="fineprint">Nothing has been written about this bill from its explanatory material. The dates,
+        divisions and speeches below are the record's own.${sources ? ` Official sources: ${sources}` : ""}</p>
+    </section>`;
+  }
+  const sentences = (s.sentences || []).filter(Boolean);
+  const changes = (s.changes || []).filter(Boolean);
+  return `<section class="bill-summary" aria-labelledby="bill-summary-head">
+    <div class="doc-brief-head">
+      <h3 class="subject-section-title" id="bill-summary-head">In short</h3>
+      <span class="doc-brief-tag">Machine summary</span>
+    </div>
+    <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
+    ${changes.length ? `<h4 class="bill-sub">What it changes</h4>
+      <ul class="bill-changes">${changes.map((c) => `<li>${esc(c)}</li>`).join("")}</ul>` : ""}
+    ${s.affected ? `<h4 class="bill-sub">Who is affected</h4><p class="bill-affected">${esc(s.affected)}</p>` : ""}
+    <p class="fineprint bill-attrib">${esc(s.attribution
+      || "Written by a model from the explanatory memorandum; not the record")}.${
+      s.describes_version ? ` Describes the bill ${esc(s.describes_version)}.` : ""}${
+      s.as_of ? ` Written from material dated ${esc(fmtDate(s.as_of))}.` : ""}${
+      sources ? ` Official sources: ${sources}` : ""}</p>
+  </section>`;
+}
+
+/** /bill/<key> — one bill, whole. */
+async function openBill(key, manageFocus) {
+  const view = `bill:${key}`;
+  if (billView === view) { if (manageFocus) $("bill-title")?.focus(); return; }
+  billView = view;
+  activeDirectory = null;
+  const body = $("bill-body");
+  body.innerHTML = `
+    <p class="kicker">Bill</p>
+    <div class="subject-head">
+      <h2 id="bill-title" tabindex="-1">Opening the bill…</h2>
+      <p class="subject-tag"><span id="bill-loader" class="subject-loader"></span></p>
+    </div>`;
+  if (manageFocus) $("bill-title")?.focus();
+  showPageLoader("bill-loader", "Opening the bill.");
+  const bill = await loadBill(key);
+  if (billView !== view) return;
+  clearPageLoader("bill-loader");
+  if (!bill) {
+    body.innerHTML = `
+      <p class="kicker">Bill</p>
+      <div class="subject-head">
+        <h2 id="bill-title" tabindex="-1">No bill with this identifier</h2>
+        <p class="subject-tag"><span>The register does not name <code>${esc(key)}</code>. It may not be
+          published yet, or the link may be old.</span></p>
+      </div>
+      <p class="action-row">${actionBtn("entry", "/bills", "Open the bill list", { primary: true })}
+        ${actionBtn("search", searchHash(key, {}), "Search the record")}</p>`;
+    if (manageFocus) $("bill-title")?.focus();
+    setCrumbs([{ label: "Bills", href: "/bills" }, { label: "Not found" }]);
+    return;
+  }
+  const title = bill.title || bill.short_title || key;
+  document.title = `${crumbLabel(billName(bill), 60)} · OPAX`;
+  setCrumbs([{ label: "Bills", href: "/bills" }, { label: crumbLabel(billName(bill), 48) }]);
+  const members = billSponsorFromPortfolio(bill.portfolio);
+  // Each co-sponsor is a person with an entry of their own, so each is a link.
+  const sponsorLinks = bill.sponsor
+    ? [`<a href="${esc(subjectHash("person", billSponsorName(bill.sponsor)))}">${esc(billSponsorName(bill.sponsor))}</a>`]
+    : (members || []).map((m) => `<a href="${esc(subjectHash("person", m.name))}">${esc(m.name)}</a>${
+      m.suffix ? ` ${esc(m.suffix)}` : ""}`);
+  const sponsorBits = [
+    sponsorLinks.length
+      ? `Introduced by ${sponsorLinks.slice(0, 3).join(", ")}${
+        sponsorLinks.length > 3 ? ` and ${sponsorLinks.length - 3} others` : ""}`
+      : "Sponsor not recorded",
+    billParty(bill.sponsor_party) ? partyChipHTML(billParty(bill.sponsor_party)) : "",
+    billPortfolio(bill) ? esc(billPortfolio(bill)) : "",
+  ].filter(Boolean);
+  const billhome = safeUrl((bill.sources || []).find((s) => s.kind === "billhome")?.url);
+  body.innerHTML = `
+    <p class="kicker">Bill</p>
+    <div class="subject-head bill-head">
+      <h2 id="bill-title" class="bill-title" tabindex="-1">${esc(title)}</h2>
+      ${bill.short_title && bill.short_title !== title
+        ? `<p class="bill-short">Known as the ${esc(bill.short_title)}</p>` : ""}
+      <p class="subject-tag bill-tag">${sponsorBits.join(" · ")}</p>
+      <p class="bill-status"><b>${esc(sentenceCase(bill.status) || "Status not recorded")}</b>${
+        bill.status_as_of ? `<span class="bill-status-as">as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}${
+        bill.introduced ? `<span class="bill-status-as">introduced ${esc(fmtDate(bill.introduced))}${
+          billHouse(bill.originating_house) ? ` in the ${esc(billHouse(bill.originating_house))}` : ""}</span>` : ""}</p>
+    </div>
+    ${billSummaryHTML(bill)}
+    ${billTimelineHTML(bill)}
+    ${billDivisionsHTML(bill)}
+    ${billSpeechesHTML(bill)}
+    ${billActsHTML(bill)}
+    <p class="action-row bill-actions">
+      ${actionBtn("search", searchHash(`"${title}"`, {}), "Search the record for this bill", { primary: true })}
+      ${actionBtn("ask", askHash(`What did parliament say about the ${billName(bill)}?`), "Ask about it")}
+      ${billhome ? actionBtn("external", billhome, "Official bill home", { external: true }) : ""}
+      ${actionBtn("entry", "/bills", "All bills")}
+    </p>
+    <p class="fineprint">${BILLS_FINEPRINT}</p>`;
+  if (manageFocus) $("bill-title")?.focus();
+  const more = $("bill-divisions-more");
+  if (more) {
+    more.addEventListener("click", () => {
+      const list = $("bill-divisions");
+      const first = list.children.length;
+      const divs = billDedupeDivisions(bill.divisions, bill).divisions.slice(6);
+      list.insertAdjacentHTML("beforeend", divs.map((d) => billDivisionHTML(d, bill)).join(""));
+      more.remove();
+      list.children[first]?.querySelector("a, .bill-division-q")?.focus?.();
+    });
+  }
+}
+
+/* --- bills on the person page ----------------------------------------------
+   renderPersonVotes has already drawn the voting record by the time the index
+   arrives. This walks the rows it drew and, only where a bill name is an exact
+   match, turns the row into a disclosure: three sentences and a way to the
+   bill page, or — with no summary written — the bill's dated status instead.
+   A row that matches nothing is left exactly as it was, a search of the record,
+   which is what makes a missing or broken index harmless here. */
+async function decoratePersonVoteBills(slot) {
+  const rows = [...slot.querySelectorAll("[data-bill-name]")];
+  if (!rows.length) return;
+  let map;
+  try { map = await billTitleIndex(); } catch { return; }
+  if (!map?.size || !slot.isConnected) return;
+  for (const row of rows) {
+    const entry = map.get(titleKey(row.dataset.billName));
+    if (!entry) continue;
+    const meta = row.querySelector(".result-meta")?.innerHTML || "";
+    const id = `bill-peek-${entry.key}-${Math.random().toString(36).slice(2, 7)}`;
+    row.innerHTML = `
+      <details class="bill-peek" data-bill-key="${esc(entry.key)}">
+        <summary class="bill-peek-summary" aria-describedby="${esc(id)}">
+          <span class="bill-peek-name">${esc(billName(entry))}</span>
+          <span class="result-meta">${meta}</span>
+        </summary>
+        <div class="bill-peek-body" id="${esc(id)}">
+          <p class="status bill-peek-status">Opening the summary…</p>
+        </div>
+      </details>`;
+    const details = row.querySelector("details");
+    details.addEventListener("toggle", () => {
+      if (!details.open || details.dataset.filled) return;
+      details.dataset.filled = "1";
+      fillBillPeek(details, entry);
+    }, { once: false });
+  }
+}
+
+async function fillBillPeek(details, entry) {
+  const box = details.querySelector(".bill-peek-body");
+  const foot = `<p class="bill-peek-link"><a class="action-btn" href="${esc(billHash(entry.key))}">${
+    iconSvg("entry")}<span>Bill page</span></a></p>`;
+  // No summary written: the dated status is the honest thing to show instead.
+  if (!entry.has_summary) {
+    box.innerHTML = `<p class="bill-peek-line">${esc(billStatusLine(entry))}. No summary yet.</p>${foot}`;
+    return;
+  }
+  const bill = await loadBill(entry.key);
+  if (!box.isConnected) return;
+  const sentences = (bill?.summary?.sentences || []).filter(Boolean);
+  if (!sentences.length) {
+    box.innerHTML = `<p class="bill-peek-line">${esc(billStatusLine(entry))}. No summary yet.</p>${foot}`;
+    return;
+  }
+  box.innerHTML = `
+    <div class="bill-peek-head"><span class="doc-brief-tag">Machine summary</span></div>
+    <div class="bill-sentences">${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}</div>
+    <p class="fineprint">${esc(bill.summary.attribution
+      || "Written by a model from the explanatory memorandum; not the record")}. ${esc(billStatusLine(entry))}.</p>
+    ${foot}`;
+}
+
+/* --- bills on the party page ------------------------------------------------
+   The party's own side of every bill division the projection holds. The index
+   names which bills carry divisions but not what the splits were, so the bill
+   files are read — newest first and capped, because this is a page, not a
+   report. The cap is stated in the note rather than hidden. */
+const PARTY_BILLS_SCAN = 96;   // most candidates ever asked for
+const PARTY_BILLS_ENOUGH = 32; // stop as soon as this many bill files have arrived
+const PARTY_BILLS_SHOW = 10;
+
+async function renderPartyBillDivisions(label, sections, key) {
+  // The section takes its place in the column before anything is fetched:
+  // where a reader finds it should not depend on how fast a file returns.
+  const slot = document.createElement("section");
+  slot.className = "party-bills";
+  slot.id = "party-bills";
+  slot.innerHTML = `<h3 class="subject-section-title">Bills they divided on</h3>
+    <p class="status">Reading the divisions…</p>`;
+  sections.appendChild(slot);
+  const idx = await loadBillsIndex();
+  if (currentSubjectKey !== key || !slot.isConnected) return;
+  if (!idx?.bills?.length) { slot.remove(); return; }
+  const candidates = idx.bills.filter((b) => Number(b.divisions) > 0)
+    .sort((a, b) => String(b.status_as_of || b.introduced || "").localeCompare(
+      String(a.status_as_of || a.introduced || ""))).slice(0, PARTY_BILLS_SCAN);
+  if (!candidates.length) { slot.remove(); return; }
+  // Read in small batches and stop as soon as enough bills have answered: a
+  // register entry need not have a file yet, and a page should not keep asking.
+  const files = [];
+  for (let i = 0; i < candidates.length && files.length < PARTY_BILLS_ENOUGH; i += 8) {
+    const batch = await Promise.all(candidates.slice(i, i + 8).map((b) => loadBill(b.key)));
+    if (currentSubjectKey !== key || !slot.isConnected) return;
+    files.push(...batch.filter(Boolean));
+  }
+  const rows = [];
+  for (const bill of files) {
+    // Same collapse as the bill page: a division the source recorded twice is
+    // one division, and listing it twice here would count it twice.
+    for (const d of billDedupeDivisions(bill.divisions, bill).divisions) {
+      const hit = Object.entries(d.party_splits || {})
+        .find(([party]) => samePartyLabel(party, label));
+      if (!hit) continue;
+      const [, split] = hit;
+      const ayes = Number(split?.ayes) || 0, noes = Number(split?.noes) || 0;
+      if (!ayes && !noes) continue;
+      rows.push({ bill, d, ayes, noes });
+    }
+  }
+  if (!rows.length) {
+    slot.innerHTML = `<h3 class="subject-section-title">Bills they divided on</h3>
+      <p class="status">No division in the ${files.length} most recent bills the register could open
+        records a vote by this party.</p>`;
+    return;
+  }
+  rows.sort((a, b) => String(b.d.date || "").localeCompare(String(a.d.date || "")));
+  const max = Math.max(...rows.map((r) => Math.max(r.ayes, r.noes)), 1);
+  /* A party often divides more than once on one bill, and loop 2 gave those
+     rows their questions to tell apart. What was left was the bill's name set
+     as a heading twice running. One bill is one entry: the name once, and
+     under it every division the party took on it. */
+  const groups = [];
+  for (const r of rows) {
+    const last = groups[groups.length - 1];
+    if (last && last.bill.key === r.bill.key) { last.rows.push(r); continue; }
+    groups.push({ bill: r.bill, rows: [r] });
+  }
+  const divHTML = (r) => `<li class="party-bill-div">
+    <span class="result-meta">${[
+      r.d.stage ? esc(billStage(r.d.stage)) : "", r.d.date ? esc(fmtDate(r.d.date)) : "",
+      r.d.outcome ? `<b>${esc(billOutcome(r.d.outcome))}</b>` : "",
+    ].filter(Boolean).join("&nbsp;· ")}</span>
+    ${billQuestionShort(r.d, r.bill)
+      ? `<span class="party-bill-q">${esc(billQuestionShort(r.d, r.bill))}</span>` : ""}
+    <span class="bill-split-n party-bill-n">${r.ayes} for, ${r.noes} against</span>
+    <span class="bill-split-bars party-bill-bars" aria-hidden="true">
+      <span class="bill-split-bar-track"><i class="bill-bar-aye" style="width:${((r.ayes / max) * 100).toFixed(1)}%"></i></span>
+      <span class="bill-split-bar-track"><i class="bill-bar-no" style="width:${((r.noes / max) * 100).toFixed(1)}%"></i></span>
+    </span>
+  </li>`;
+  const rowHTML = (g) => `<li class="party-bill">
+    <a class="source-title" href="${esc(billHash(g.bill.key))}">${esc(billName(g.bill))}</a>
+    ${g.rows.length > 1
+      ? `<span class="party-bill-count">${g.rows.length} divisions</span>` : ""}
+    <ul class="party-bill-divs" role="list">${g.rows.map(divHTML).join("")}</ul>
+  </li>`;
+  const head = groups.slice(0, PARTY_BILLS_SHOW), rest = groups.slice(PARTY_BILLS_SHOW);
+  slot.innerHTML = `
+    <h3 class="subject-section-title">Bills they divided on</h3>
+    <ul class="subject-list party-bill-list" role="list" id="party-bill-list">${head.map(rowHTML).join("")}</ul>
+    ${rest.length ? `<p class="dir-more-row"><button type="button" class="secondary" id="party-bills-more">Show more (${rest.length} more)</button></p>` : ""}
+    <p class="fineprint">This party's own ayes and noes, newest first, read from the ${files.length}
+      most recently decided bills the register could open — not the party's whole voting history, and not
+      every bill it divided on. Party is each member's recorded affiliation, not a reconstruction of who
+      they sat with on the day. A division on an amendment is not a vote on the bill itself.</p>`;
+  const more = $("party-bills-more");
+  if (more) {
+    more.addEventListener("click", () => {
+      const list = $("party-bill-list");
+      const first = list.children.length;
+      list.insertAdjacentHTML("beforeend", rest.map(rowHTML).join(""));
+      more.remove();
+      list.children[first]?.querySelector("a")?.focus();
+    });
+  }
+}
+
+/* --- the bill behind a speech ----------------------------------------------
+   Only when the debate a speech sat in IS a bill the register names, matched
+   in full and exactly. Anything less would attach the wrong bill to the right
+   speech, which is worse than attaching none. */
+async function renderDocBillPanel(doc, slug) {
+  const box = $("doc-bill");
+  if (!box) return;
+  box.hidden = true;
+  box.replaceChildren();
+  const subject = doc.metadata?.bill_ref || doc.metadata?.topic || doc.metadata?.debate || titleSubject(doc);
+  const entry = await billForTitle(subject);
+  if (!entry || currentDocSlug !== slug) return;
+  // The speech's own header is often the bill's title; printing it again
+  // directly beneath says nothing twice. Under a named speaker the headline is
+  // the speaker and the bill's title is the subject line under it, so the
+  // guard has to read both — checking the headline alone caught nothing on
+  // exactly the pages where the repetition happens.
+  const above = [$("doc-title")?.textContent, $("doc-topic")?.textContent]
+    .map((t) => titleKey(t || "")).filter(Boolean);
+  const repeats = above.some((h) => h === titleKey(entry.title) || h === titleKey(billName(entry)));
+  const line = `<p class="doc-bill-status">${esc(billStatusLine(entry))}</p>`;
+  const link = `<p class="doc-bill-link"><a href="${esc(billHash(entry.key))}">Bill page</a></p>`;
+  const head = `<div class="doc-brief-head">
+      <h3 class="subject-section-title" id="doc-bill-head">The bill</h3>
+      <span class="doc-brief-tag">Register</span>
+    </div>
+    ${repeats ? "" : `<p class="doc-bill-title">${esc(billName(entry))}</p>`}`;
+  box.innerHTML = `${head}${line}<p class="status doc-bill-sentence">Reading the summary…</p>${link}`;
+  box.hidden = false;
+  if (!entry.has_summary) {
+    box.querySelector(".doc-bill-sentence").outerHTML =
+      `<p class="fineprint doc-bill-none">No summary written for this bill yet.</p>`;
+    return;
+  }
+  const bill = await loadBill(entry.key);
+  if (currentDocSlug !== slug || !box.isConnected) return;
+  const first = (bill?.summary?.sentences || []).filter(Boolean)[0];
+  const el = box.querySelector(".doc-bill-sentence");
+  if (!el) return;
+  el.outerHTML = first
+    ? `<p class="doc-bill-sentence">${esc(first)}</p>
+       <p class="fineprint doc-bill-attrib">${esc(bill.summary.attribution
+         || "Written by a model from the explanatory memorandum; not the record")}.</p>`
+    : `<p class="fineprint doc-bill-none">No summary written for this bill yet.</p>`;
+}
+
 // --- explore (time machine + quiz) ------------------------------------------
 // Both are standalone lazy modules with a mount/destroy contract; the page
 // only owns the toggle. Modules are mounted once and kept alive per session.
@@ -5884,8 +7691,8 @@ const GAMES = {
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=ia-ux-20260908-2", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=ia-ux-20260908-2", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js", mount: "mountThenVsNow" },
@@ -5894,6 +7701,7 @@ const GAMES = {
 async function openGame(which, params = null) {
   const game = GAMES[which];
   if (!game) return;
+  if (which === 'ledger' || which === 'grants') { const q = params?.toString(); goRoute(`/money/${which === 'ledger' ? 'receipts' : 'grants'}${q ? '?'+q : ''}`); return; }
   if (!$(game.dialog).open) $(game.dialog).showModal();
   pauseSubjectMap("dialog", true);
   // The module is a page in its own right while it is up; the trail says so
@@ -6099,50 +7907,6 @@ function newsTopicSlug(headline) {
   return bestHits > 0 ? best : null;
 }
 
-async function renderFrontNews() {
-  const holder = $("front-news");
-  try {
-    const data = await api("/api/news");
-    const items = (data.items || []).filter((i) => safeUrl(i.url)).slice(0, 18);
-    if (!items.length) { $("mod-news").hidden = true; return; }
-    const srcName = { ABC: "ABC News", Guardian: "The Guardian" };
-    holder.innerHTML = `<ol class="news-list" role="list">${items.map((i, index) => {
-      // Search the subject rather than the headline.
-      // A headline that matches no topic gets no pivots. The old fallback took
-      // two words off the article's keyword string, which asked the record
-      // about phrases like "populist one" and retrieved nothing.
-      const slug = frontNewsTopic(i.title);
-      const subject = slug ? TOPICS[slug] : "";
-      const pivots = subject ? `<a class="news-record-chip" href="${esc(searchHash(subject, { topic: slug }))}">${esc(subject)} in the record <span aria-hidden="true">→</span></a>` : "";
-      const when = relTime(i.published);
-      return `<li${index >= 6 ? ' class="front-news-extra" hidden' : ""}>
-        <a class="news-headline" href="${esc(safeUrl(i.url))}" rel="noopener" target="_blank">${esc(i.title)}</a>
-        <span class="news-meta"><span class="news-source">${esc(srcName[i.source] || i.source || "")}</span>${when ? ` · ${esc(when)}` : ""}</span>
-        ${pivots}</li>`;
-    }).join("")}</ol>${items.length > 6 ? `<button type="button" class="action-btn" id="front-news-more" aria-expanded="false" aria-controls="front-news-list">More headlines (${items.length - 6})</button>` : ""}`;
-    holder.querySelector("ol").id = "front-news-list";
-    const more = $("front-news-more");
-    if (more) more.onclick = () => {
-      const expanded = more.getAttribute("aria-expanded") !== "true";
-      holder.querySelectorAll(".front-news-extra").forEach((row) => { row.hidden = !expanded; });
-      more.setAttribute("aria-expanded", String(expanded));
-      more.textContent = expanded ? "Fewer headlines" : `More headlines (${items.length - 6})`;
-    };
-  } catch {
-    $("mod-news").hidden = true;
-  }
-}
-
-function frontNewsTopic(headline) {
-  const fallback = newsTopicSlug(headline);
-  // Keep overseas coverage overseas; otherwise explicit subject phrases
-  // outrank incidental party names and words such as "budget".
-  if (fallback === "foreign-affairs") return fallback;
-  if (/\b(house prices?|home loans?|housing|mortgages?|rents?|renters?|negative gearing)\b/i.test(headline)) return "housing";
-  if (/\b(tobacco|vaping)\b/i.test(headline)) return "hospitality-alcohol";
-  return fallback;
-}
-
 function renderFrontNumbers() {
   const holder = $("front-numbers");
   const aec = (corpusManifest?.sources || []).find((x) => x.name.startsWith("AEC donations"));
@@ -6236,8 +8000,8 @@ async function renderFrontTopic() {
       <a href="/reports">All reports</a></p>`;
     $("mod-mw").hidden = false;
 
-    // Encyclopedia rail: the loudest voices across every report, today's
-    // topic leading. Needs the other reports too, so it fills in on its own.
+    // Encyclopedia rail: a daily shuffled selection across every report.
+    // Needs the other reports too, so it fills in on its own.
     renderFrontEncy(dayIdx, report, don).catch(() => { /* module stays hidden */ });
 
   } catch { /* modules stay hidden */ }
@@ -6262,11 +8026,22 @@ async function renderFrontReports() {
   } catch { /* The other front-page modules remain available. */ }
 }
 
-// The encyclopedia slider: one card per report's top speaker (today's topic
-// first, then the daily rotation order), deduped, filled from the second and
-// later ranks up to eight. Speakers without a portrait are skipped. Votes come
-// from the static export; a person missing from it simply has no vote block.
-// Today's top donor closes the row so the AEC half of the fineprint holds.
+// Stable daily shuffle, shared by all readers using Melbourne's calendar day.
+function dailyEncyShuffle(items, key, date = new Date()) {
+  const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Australia/Melbourne', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+  let seed = 2166136261;
+  for (const char of `ency:${day}`) seed = Math.imul(seed ^ char.charCodeAt(0), 16777619) >>> 0;
+  const shuffled = [...items].sort((a, b) => key(a).localeCompare(key(b), 'en'));
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    const j = Math.floor(seed / 4294967296 * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+// Sample the full portrait-backed report speaker pool each day, keeping richer
+// voting cards first. The donor card rotates through the available donor pool.
 async function renderFrontEncy(dayIdx, todayReport, don) {
   const n = reportsIndex.length;
   const order = reportsIndex.map((_, i) => reportsIndex[(dayIdx + i) % n]);
@@ -6283,10 +8058,10 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
   }));
   const seen = new Set();
   const pool = [];
-  for (let rank = 0; pool.length < 24 && ranked.some((r) => r.speakers[rank]); rank++) {
+  for (let rank = 0; ranked.some((r) => r.speakers[rank]); rank++) {
     for (const r of ranked) {
       const row = r.speakers[rank];
-      if (!row || seen.has(row[0]) || pool.length >= 24) continue;
+      if (!row || seen.has(row[0])) continue;
       seen.add(row[0]);
       pool.push({ name: row[0], count: row[1], topic: r.topic });
     }
@@ -6294,7 +8069,8 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
   // Cards with a voting record first: they carry the bill lists that give the
   // rail its shape, and a card with only a sentence would stand mostly empty.
   const fullCard = (p) => { const v = votesFor(p.name); return Boolean(v?.for?.length || v?.against?.length); };
-  const picks = [...pool.filter(fullCard), ...pool.filter((p) => !fullCard(p))].slice(0, 8);
+  const dailyPool = dailyEncyShuffle(pool, p => p.name);
+  const picks = [...dailyPool.filter(fullCard), ...dailyPool.filter((p) => !fullCard(p))].slice(0, 8);
 
   const voteList = (label, rows) => rows?.length ? `
     <div class="ency-votes-col">
@@ -6328,7 +8104,7 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
     </article>`;
   });
 
-  const topDonor = don?.top_donors?.[0];
+  const topDonor = dailyEncyShuffle(don?.top_donors || [], row => row[0])[0];
   if (topDonor) {
     const node = findMoneyNode("donor", topDonor[0]);
     cards.push(`<article class="report-card ency-card">
@@ -6417,14 +8193,58 @@ async function renderFrontDeclared() {
   } catch { /* stays hidden */ }
 }
 
+/* The newest bills before parliament, each with its machine summary: the
+   sentence that says what it does and the line that says who it touches. The
+   index only knows a bill HAS a summary, so the few files are fetched (they are
+   small and cached for the bill pages). A bill without a summary still earns
+   its place by being new; it says so instead of showing nothing. */
+async function renderFrontBills() {
+  try {
+    const idx = await loadBillsIndex();
+    const all = (idx?.bills || []).filter((b) => b.introduced);
+    if (!all.length) return;
+    all.sort((a, b) => String(b.introduced).localeCompare(String(a.introduced)));
+    const newest = all.slice(0, 8);
+    const picked = [...newest.filter((b) => b.has_summary), ...newest.filter((b) => !b.has_summary)].slice(0, 5)
+      .sort((a, b) => String(b.introduced).localeCompare(String(a.introduced)));
+    const files = await Promise.all(picked.map((b) => (b.has_summary ? loadBill(b.key) : Promise.resolve(null))));
+    const house = (b) => {
+      const h = String(b.originating_house || "").toLowerCase();
+      return h.includes("senate") ? "Senate" : (h.includes("rep") || h.includes("house")) ? "House" : "";
+    };
+    const items = picked.map((b, i) => {
+      const s = files[i]?.summary;
+      const sentences = (s?.sentences || []).filter(Boolean);
+      const lede = sentences.slice(0, 2).join(" ");
+      const figures = [
+        Number(b.divisions) ? `${b.divisions} division record${b.divisions === 1 ? "" : "s"}` : "",
+        Number(b.acts) ? "became law" : "",
+      ].filter(Boolean);
+      return `<li class="front-bill">
+        <a class="source-title bill-row-title" href="${esc(billHash(b.key))}">${esc(billName(b))}</a>
+        <span class="result-meta bill-row-meta">${[
+          `Introduced ${esc(fmtDate(b.introduced))}`,
+          house(b) ? esc(house(b)) : "",
+          b.sponsor_party ? partyChipHTML(billParty(b.sponsor_party)) : "",
+          b.status ? `<b class="bill-row-status">${esc(sentenceCase(b.status))}</b>` : "",
+        ].filter(Boolean).join("&nbsp;· ")}</span>
+        ${lede ? `<p class="front-bill-sum">${esc(lede)}</p>` : `<p class="front-bill-sum front-bill-none">No summary yet.</p>`}
+        ${s?.affected ? `<p class="front-bill-who"><b>Who it affects</b> ${esc(s.affected)}</p>` : ""}
+        ${figures.length ? `<p class="bill-row-figures">${figures.join(" · ")}</p>` : ""}
+      </li>`;
+    });
+    $("front-bills").innerHTML = items.join("");
+    $("mod-bills").hidden = false;
+  } catch { /* stays hidden */ }
+}
+
 function renderFrontPage() {
   setFrontPageHidden(false);
   renderFrontNumbers();
   resetFrontMap();
   if (frontRendered) return;
   frontRendered = true;
-  renderFrontNews();
-  onIdle(() => { mountFrontMaps(); renderFrontTopic(); renderFrontReports(); renderFrontAdded(); renderFrontDeclared(); });
+  onIdle(() => { mountFrontMaps(); renderFrontBills(); renderFrontTopic(); renderFrontReports(); renderFrontAdded(); renderFrontDeclared(); });
 }
 
 // --- the home maps ----------------------------------------------------------
@@ -6483,15 +8303,14 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=evidence-button-20260909"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
-    const handle = await mod.mountMoneyMap(root, "/graph/money.json", {
+    const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
+      overview: true,
       askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`),
-      onSelect: (node) => {
-        if (node) goRoute(subjectHash(node.kind === "party" ? "party" : "donor", node.label));
-      },
+
     });
     frontMapHandle = handle;
     frontMapObserver = new IntersectionObserver((entries) => handle.setPaused?.(!entries[entries.length - 1].isIntersecting));
@@ -6631,7 +8450,38 @@ function foldHero(folded) {
   heroFoldTimer = setTimeout(() => hero.classList.add("hero-folded"), 900);
 }
 
+// "How many donors have an OAM?" is a register question: the speeches cannot
+// count donors, and once read "donor" as blood donor. The registers can, so
+// the note under the answer says where.
+const REGISTER_COUNT_RE = /\b(how many|how much|count|number of|total|sum of|largest|biggest|top \d+|most)\b/i;
+const REGISTER_SUBJECT_RE = /\b(donor|donors|donation|donations|donated|gave|giving|contributor|contribution|grant|grants|contract|contracts|tender|tenders|supplier|suppliers)\b/i;
+function renderRegisterNote(question) {
+  const el = $("ask-register-note");
+  if (!el) return;
+  const q = String(question || "");
+  const on = REGISTER_COUNT_RE.test(q) && REGISTER_SUBJECT_RE.test(q);
+  el.hidden = !on;
+  if (!on) return;
+  const contracts = /\b(grant|grants|contract|contracts|tender|tenders|supplier|suppliers)\b/i.test(q);
+  el.innerHTML = contracts
+    ? `Counts and totals of public money are not in the speeches. The registers on this site hold them: <a href="/explore?game=grants">who gets the grants</a>, the <a href="/discover">contracts</a>, and the <a href="/money">money map</a>.`
+    : `Counts and totals of donors are not in the speeches. The registers on this site hold them: <a href="/subject/donor">the donors directory</a> (searchable by name), <a href="/explore?game=ledger">the ledger</a> of every disclosed flow, and the <a href="/money">money map</a>.`;
+}
+
+// Automatic name recognition is a speech request; explicit filter choices
+// keep their selected record type (for example a person's financial records).
+function askRequestBody(question, kind, filters, automaticSpeaker) {
+  const body = { question, kind };
+  for (const [key, value] of Object.entries(filters)) if (value) body[key] = value;
+  if (!body.speaker && automaticSpeaker) {
+    body.speaker = automaticSpeaker;
+    body.kind = "speech";
+  }
+  return body;
+}
+
 async function runAsk(question) {
+  renderRegisterNote(question);
   if (askAbort) askAbort.abort();
   const myAbort = new AbortController();
   askAbort = myAbort;
@@ -6680,18 +8530,11 @@ async function runAsk(question) {
       const canon = await resolveSpeaker(aSpeaker.value);
       if (canon) { aSpeaker.value = canon; renderAskFilterChips(); }
     } else if (speakerFilter) {
-      // A lone surname must resolve to be usable as a filter; an unresolved
-      // full name still passes through as typed.
-      speakerFilter = (await resolveSpeaker(speakerFilter)) ||
-        (speakerFilter.includes(" ") ? speakerFilter : null);
+      // Automatic filters require a resolved corpus name. Unresolved names
+      // remain in the question for the server to handle without a guessed filter.
+      speakerFilter = await resolveSpeaker(speakerFilter);
     }
-    const askBody = JSON.stringify((() => {
-      const f = askFilters();
-      if (!f.speaker && speakerFilter) f.speaker = speakerFilter;
-      const body = { question, kind: askKind() };
-      for (const [k, v] of Object.entries(f)) if (v) body[k] = v;
-      return body;
-    })());
+    const askBody = JSON.stringify(askRequestBody(question, askKind(), askFilters(), speakerFilter));
     // The answer streams into the page as it is written; the wombat leaves
     // on the first words. Sources, stamp and rail wait for the final payload.
     const live = streamRenderer($("ask-answer"), () => askAbort === myAbort);
@@ -6768,8 +8611,14 @@ async function runAsk(question) {
       retry.addEventListener("click", () => runAsk(question));
       $("ask-answer").replaceChildren(p, retry);
     }
+    const inferredScope = [data.scope?.speaker, data.scope?.party,
+      STATE_NAMES[data.scope?.state] || data.scope?.state,
+      data.scope?.chamber === "senate" ? "Senate" : data.scope?.chamber,
+      data.scope?.from || data.scope?.to ? `${data.scope.from || "…"}–${data.scope.to || "…"}` : "",
+    ].filter(Boolean).join(" · ");
     $("ask-stamp").textContent =
       `Viewed ${fmtDate(localISODate())}` +
+      (inferredScope ? ` · Records indexed under ${inferredScope}` : "") +
       (corpusVersion() !== "unversioned" ? ` · corpus v${corpusVersion()}` : "") +
       ((askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
         ? ` · filtered: ${askFilterSummary(askFilters()) || `${speakerFilter}'s speeches`}` : "");
@@ -6870,7 +8719,7 @@ function renderChips() {
 }
 
 function setFrontPageHidden(hidden) {
-  for (const id of ["front-map", "front-page"]) {
+  for (const id of ["front-map", "home-tasks", "front-page"]) {
     const el = $(id);
     if (el) el.hidden = hidden;
   }
@@ -6925,7 +8774,7 @@ function prefetchAskFollowups(ask) {
 // reload and navigation, and ends with the tab, like a conversation should.
 
 let chatThread = []; // {role: 'user'|'answer', text, sources?, next?}
-let chatKind = "speech";
+let chatKind = "all";
 let chatAbort = null;
 let chatFollowAbort = null;
 let chatTimer = null;
@@ -6941,7 +8790,7 @@ function loadChatSession() {
     const data = JSON.parse(sessionStorage.getItem("opax-chat") || "null");
     if (!data || !Array.isArray(data.thread)) return;
     chatThread = data.thread.filter((m) => m && typeof m.text === "string");
-    chatKind = data.kind === "all" ? "all" : "speech";
+    chatKind = data.kind === "speech" ? "speech" : "all";
   } catch { /* malformed storage reads as an empty thread */ }
 }
 
@@ -6960,7 +8809,7 @@ function initChat(manageFocus) {
           { role: "user", text: seed.question },
           { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined },
         ];
-        chatKind = seed.kind === "all" ? "all" : "speech";
+        chatKind = seed.kind === "speech" ? "speech" : "all";
         saveChatSession();
       }
     }
@@ -7297,7 +9146,7 @@ function fillMeter(boxId, textId, barId) {
   if (!$(boxId)) return;
   const indexed = liveStats.resources ?? 0;
   // NOTE: /api/stats counts every KB resource. corpus.json's expected_resources
-  // covers speeches+news only — it MUST be raised when the legal push is
+  // covers the official record only — it MUST be raised when the legal push is
   // approved, or this meter will hide while speeches are still incomplete.
   const expected = corpusManifest.expected_resources || 0;
   if (!expected) return;
@@ -7314,6 +9163,83 @@ function fillMeter(boxId, textId, barId) {
 
 // --- search / workbench -----------------------------------------------------
 
+function mountSearchSort(root, onChange, label = "Sort matches") {
+  const input = root.querySelector('input');
+  const trigger = root.querySelector('[aria-haspopup]');
+  const menu = root.querySelector('[role="menu"]');
+  const options = [...menu.querySelectorAll('[role="menuitemradio"]')];
+  function close(restoreFocus = false) {
+    menu.hidden = true;
+    trigger.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) trigger.focus();
+  }
+  function set(value) {
+    const selected = options.find(option => option.dataset.value === value) || options[0];
+    input.value = selected.dataset.value;
+    trigger.querySelector('.search-sort-label').textContent = selected.querySelector('strong').textContent;
+    trigger.setAttribute('aria-label', `${label}: ${selected.querySelector('strong').textContent}`);
+    for (const option of options) option.setAttribute('aria-checked', String(option === selected));
+    close();
+  }
+  function open(last = false) {
+    menu.hidden = false;
+    const box = trigger.getBoundingClientRect();
+    const below = document.documentElement.clientHeight - box.bottom;
+    const above = box.top;
+    const upward = below < 300 && above > below;
+    menu.classList.toggle('opens-up', upward);
+    menu.style.maxHeight = `${Math.max(100, Math.min(480, (upward ? above : below) - 20))}px`;
+    const alignLeft = box.right < menu.getBoundingClientRect().width + 16;
+    menu.style.left = alignLeft ? '0' : '';
+    menu.style.right = alignLeft ? 'auto' : '';
+    trigger.setAttribute('aria-expanded', 'true');
+    (last ? options.at(-1) : options.find(option => option.dataset.value === input.value) || options[0]).focus();
+  }
+  trigger.addEventListener('click', () => menu.hidden ? open() : close());
+  trigger.addEventListener('keydown', event => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); open(event.key === 'ArrowUp'); }
+  });
+  for (const option of options) option.addEventListener('click', () => {
+    const changed = input.value !== option.dataset.value;
+    set(option.dataset.value); trigger.focus();
+    if (changed) onChange();
+  });
+  menu.addEventListener('keydown', event => {
+    const index = options.indexOf(document.activeElement);
+    let next;
+    if (event.key === 'ArrowDown') next = (index + 1) % options.length;
+    if (event.key === 'ArrowUp') next = (index - 1 + options.length) % options.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = options.length - 1;
+    if (next !== undefined) { event.preventDefault(); options[next].focus(); }
+    if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(true); }
+    if (event.key === 'Tab') close(true);
+    if (event.key.length === 1 && /[a-z]/i.test(event.key)) {
+      const ordered = [...options.slice(index + 1), ...options.slice(0, index + 1)];
+      const match = ordered.find(option => option.querySelector('strong').textContent.toLowerCase().startsWith(event.key.toLowerCase()));
+      if (match) { event.preventDefault(); match.focus(); }
+    }
+  });
+  const outside = event => { if (!root.contains(event.target)) close(); };
+  document.addEventListener('pointerdown', outside);
+  root.addEventListener('focusout', event => { if (!root.contains(event.relatedTarget)) close(); });
+  set(input.value);
+  return { set, close, destroy() { close(); document.removeEventListener('pointerdown', outside); } };
+}
+const searchSortPicker = mountSearchSort($("search-sort-picker"), () => {
+  $("search-sort").dispatchEvent(new Event("change"));
+});
+
+const DOCUMENT_SEARCH_KINDS = new Set(["all", "speech", "division", "press_release", "legal", "news", "grant_invitation", "grant_award", "election_baseline", "parliamentary_profile", "research_report"]);
+function syncSearchDatasetControls() {
+  const mode = $("search-mode");
+  const documents = DOCUMENT_SEARCH_KINDS.has($("search-kind").value);
+  if (!documents) mode.value = "keyword";
+  else if (mode.disabled) mode.value = "hybrid";
+  mode.disabled = !documents;
+}
+$("search-kind").addEventListener("change", syncSearchDatasetControls);
+
 function currentFilters() {
   // Year sliders mirror the ask popover: crossed thumbs swap, and the full
   // range means "no year filter".
@@ -7328,6 +9254,7 @@ function currentFilters() {
     from,
     to,
     kind: $("search-kind").value,
+    scope: "all",
     mode: $("search-mode").value,
   };
 }
@@ -7350,7 +9277,7 @@ function searchHash(q, f, page, sort) {
   const p = new URLSearchParams();
   if (q) p.set("q", q);
   for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
-  if (f.kind && f.kind !== "speech") p.set("kind", f.kind);
+  if (f.kind && f.kind !== "all") p.set("kind", f.kind);
   if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
   if (sort && sort !== "relevance") p.set("sort", sort);
   if (page > 1) p.set("page", String(page));
@@ -7364,7 +9291,7 @@ const SEARCH_EXPORT_MAX = 200;
 
 function searchQueryParams(q, f, page, sort) {
   const p = new URLSearchParams({
-    q: q || f.speaker, kind: f.kind || "speech", mode: f.mode || "hybrid",
+    q: q || f.speaker, kind: f.kind || "all", mode: f.mode || "hybrid",
     page: String(page || 1), per: String(SEARCH_PER_PAGE), sort: sort || "relevance",
   });
   for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
@@ -7437,8 +9364,21 @@ function searchQueryParams(q, f, page, sort) {
 // renderer, and a per-page clear function behind each cross.
 
 const FILTER_KIND_LABELS = {
-  speech: "Speeches", news: "News", division: "Divisions", all: "Everything",
+  speech: "Speeches", division: "Divisions",
+  press_release: "Government transcripts and releases", all: "All records",
+  grant_invitation: "Grant invitations", grant_award: "Grant award records", election_baseline: "Election baselines", parliamentary_profile: "Recorded representation", research_report: "Research source notes",
+  person: "Person", party: "Political party", donor: "Donor", receipt: "Political receipts",
+  agency: "Government agency", supplier: "Supplier", contract: "Government contract", grant: "Grant", bill: "Bill",
+  interest: "Declared interest", expense: "Parliamentary expenses", access: "Meeting or lobbying register",
+  campaigner: "Campaigner or associated entity", report: "Research report",
 };
+function recordTypeHref(kind) {
+  const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/discover', grant:'/money/grants', bill:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports' };
+  return roots[kind] || '/search?' + new URLSearchParams({kind});
+}
+function recordTypeLink(kind) {
+  return `<a class="search-record-kind" href="${esc(recordTypeHref(kind))}">${esc(FILTER_KIND_LABELS[kind] || kind)}</a>`;
+}
 const FILTER_MODE_LABELS = { hybrid: "Hybrid", semantic: "Semantic", keyword: "Keyword" };
 
 /**
@@ -7458,8 +9398,8 @@ function filterChipSpecs(f) {
     const a = f.from || "1993", b = f.to || "2026";
     out.push({ id: "years", k: "Years", v: a === b ? a : `${a} to ${b}` });
   }
-  if (f.kind && f.kind !== "speech") {
-    out.push({ id: "kind", k: "Corpus", v: FILTER_KIND_LABELS[f.kind] || f.kind });
+  if (f.kind && f.kind !== (f.scope === "all" ? "all" : "speech")) {
+    out.push({ id: "kind", k: "Record type", v: FILTER_KIND_LABELS[f.kind] || f.kind });
   }
   if (f.mode && f.mode !== "hybrid") {
     out.push({ id: "mode", k: "Mode", v: FILTER_MODE_LABELS[f.mode] || f.mode });
@@ -7506,13 +9446,14 @@ const SEARCH_FILTER_RESETS = {
   state: () => { $("f-state").value = ""; },
   topic: () => { $("f-topic").value = ""; },
   years: () => { $("f-from").value = "1993"; $("f-to").value = "2026"; updateSearchYearsLabel(); },
-  kind: () => { $("search-kind").value = "speech"; },
+  kind: () => { $("search-kind").value = "all"; },
   mode: () => { $("search-mode").value = "hybrid"; },
 };
 
 function clearSearchFilter(id) {
   if (id === "all") for (const reset of Object.values(SEARCH_FILTER_RESETS)) reset();
   else SEARCH_FILTER_RESETS[id]?.();
+  syncSearchDatasetControls();
   searchFiltersChanged();
 }
 
@@ -7532,11 +9473,11 @@ function searchFiltersChanged() {
   goRoute(searchHash(q, f, 1, $("search-sort").value));
 }
 
-// The same three pieces for the ask page. Its scope checkbox ("Also search
-// recorded divisions") is the corpus filter under another name, so it
+// The same three pieces for the ask page. Its all-records checkbox
+// is the corpus filter under another name, so it
 // arrives as `kind` and earns the same Corpus chip search shows.
 function askChipFilters() {
-  return { ...askFilters(), kind: askKind() };
+  return { ...askFilters(), kind: askKind(), scope: "all" };
 }
 
 function renderAskFilterChips() {
@@ -7554,7 +9495,7 @@ const ASK_FILTER_RESETS = {
   state: () => { $("a-state").value = ""; },
   topic: () => { $("a-topic").value = ""; },
   years: () => { $("a-from").value = "1993"; $("a-to").value = "2026"; updateAskYearsLabel(); },
-  kind: () => { $("ask-wide").checked = false; },
+  kind: () => { $("ask-wide").checked = true; },
 };
 
 function clearAskFilter(id) {
@@ -7595,11 +9536,12 @@ function applySearchParams(params) {
     $("f-" + name).value = String(Math.min(RECORD_LAST_YEAR, Math.max(RECORD_FIRST_YEAR, Math.round(year))));
   }
   updateSearchYearsLabel();
-  $("search-kind").value = params.get("kind") || "speech";
+  $("search-kind").value = params.get("kind") || "all";
   $("search-mode").value = params.get("mode") || "hybrid";
-  if (!$("search-kind").value) $("search-kind").value = "speech";
+  if (!$("search-kind").value) $("search-kind").value = "all";
   if (!$("search-mode").value) $("search-mode").value = "hybrid";
-  $("search-sort").value = params.get("sort") === "newest" ? "newest" : "relevance";
+  searchSortPicker.set(params.get("sort") || "relevance");
+  syncSearchDatasetControls();
   renderFilterChips();
   if ($("search-input").value.trim() || $("f-speaker").value.trim()) {
     runSearch(Number(params.get("page")) || 1);
@@ -7626,6 +9568,7 @@ function clearSearchResults() {
     briefs: {}, briefsLoading: false,
   };
   $("search-results").replaceChildren();
+  $("search-coverage").hidden = true;
   $("results-bar").hidden = true;
   $("search-date-ruler").hidden = true;
   $("search-date-ruler").replaceChildren();
@@ -7639,7 +9582,7 @@ function clearSearchResults() {
 // Example searches for an empty search page. Plain phrases a reader might
 // actually wonder about, not jargon; each returns real passages.
 const SEARCH_EXAMPLES = [
-  "cost of living", "negative gearing", "poker machines", "rental crisis",
+  "Woodside", "Austal", "Qantas", "University of Tasmania", "housing", "renewable energy",
   "aged care", "childcare", "bulk billing", "student debt",
   "supermarket prices", "penalty rates", "climate change", "renewable energy",
   "housing affordability", "robodebt", "gambling advertising", "Uluru Statement",
@@ -7679,7 +9622,7 @@ function activeFilterSummary(f) {
 function syncSearchReadBar() {
   const bar = $("search-readbar");
   if (!bar) return;
-  bar.hidden = !lastSearch.results.length;
+  bar.hidden = !lastSearch.results.some(r => !r.href);
   $("search-read-passages").setAttribute("aria-pressed", String(searchReadMode === "passages"));
   $("search-read-briefs").setAttribute("aria-pressed", String(searchReadMode === "briefs"));
   const status = $("search-brief-status");
@@ -7687,7 +9630,7 @@ function syncSearchReadBar() {
   else if (lastSearch.briefsLoading) status.textContent = "Reading the available briefs…";
   else {
     const count = lastSearch.results.filter((result) => lastSearch.briefs[result.resource]).length;
-    status.textContent = `${count} of ${lastSearch.results.length} have briefs. Others show passages.`;
+    status.textContent = `${count} documents have briefs. Other results show record details.`;
   }
 }
 
@@ -7719,20 +9662,28 @@ function renderResults(results) {
   $("search-results").replaceChildren(
     ...results.map((r, index) => {
       const li = document.createElement("li");
+      if (r.href) {
+        li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
+          <div class="result-meta">${recordTypeLink(r.kind)}${r.source ? ` · ${esc(r.source)}` : ""}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}</div>
+          <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(r.snippet, lastSearch.query)}</p>
+          <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>`;
+        return li;
+      }
       const brief = lastSearch.briefs[r.resource];
       const text = searchReadMode === "briefs" && brief
         ? `<p id="search-passage-${index}" class="search-result-text search-result-brief"><span class="search-passage-tag">Brief</span>${esc(brief)}</p>`
-        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="search-passage-tag">Passage · ${lastSearch.briefsLoading ? "checking for a brief…" : "no brief available"}</span>` : ""}${highlightHTML(r.snippet || "", lastSearch.query)}</p>`;
+        : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="search-passage-tag">Passage · ${lastSearch.briefsLoading ? "checking for a brief…" : "no brief available"}</span>` : ""}${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>`;
       const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}` : displayTitle(r);
       const meta = [
         r.speaker ? `<a href="${esc(subjectHash("person", r.speaker))}">${esc(r.speaker)}</a>` : "",
         r.party ? partyChipHTML(r.party) : "",
+        isCommitteeChamber(r.chamber) ? `${esc(committeeHouse(r.chamber))} committee evidence` : "",
         r.state ? esc(STATE_NAMES[r.state] || r.state) : "",
         r.date ? `<time datetime="${esc(r.date)}">${esc(fmtDate(r.date))}</time>` : "",
       ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
       li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="/doc/${encodeURIComponent(r.slug)}">${esc(title)}</a></h3>
-        <div class="result-meta">${meta}</div>${text}
+        <div class="result-meta">${recordTypeLink(r.kind)}${meta ? ` · ${meta}` : ""}</div>${text}
         <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>
         ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a href="${esc(subjectHash("topic", topic))}">${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
       return li;
@@ -7787,13 +9738,13 @@ function resultsCountLine(s) {
   if (s.pageCount <= 1) {
     return s.truncated
       ? `The ${n} strongest matches. The record holds more.`
-      : `All ${n} ${s.total === 1 ? "match" : "matches"} in the record.`;
+      : `${n} ${s.total === 1 ? "match" : "matches"} in searched records.`;
   }
   const from = ((s.page - 1) * s.perPage + 1).toLocaleString();
   const to = Math.min(s.page * s.perPage, s.total).toLocaleString();
   return s.truncated
     ? `Showing ${from} to ${to} of the ${n} strongest matches. The record holds more.`
-    : `Showing ${from} to ${to} of ${n} matches in the record.`;
+    : `Showing ${from} to ${to} of ${n} matches in searched records.`;
 }
 
 // How many numbered slots the pager offers. Odd, so the page you are on sits in
@@ -8064,7 +10015,7 @@ async function runSearchAnswer(q, f, mySeq) {
     const question = looksLikeQuestion ? q
       : f.speaker ? `What did ${f.speaker} say about ${q}?`
       : `What has parliament said about ${q}?`;
-    const body = { question, kind: f.kind || "speech" };
+    const body = { question, kind: ["speech", "division", "bill", "press_release", "legal", "grant_invitation", "grant_award", "election_baseline", "parliamentary_profile", "research_report"].includes(f.kind) ? f.kind : "all" };
     for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) body[k] = f[k];
     // The answer streams into the rail; the loader leaves on the first words.
     const mine = () => mySeq === searchSeq && searchAnswerAbort === abort;
@@ -8132,11 +10083,14 @@ async function runSearch(page = 1) {
   // first is worth a new answer: the rail asks once per search, not per page.
   const fresh = key !== lastSearch.key;
   const mySeq = ++searchSeq;
+  const analyticsStarted = performance.now();
+  trackOutcome("opax_search_started", { page, filter_count: Object.values(f).filter(Boolean).length });
   if (fresh) {
-    searchAnswerWanted = !!q;
+    searchAnswerWanted = !!q && ["speech", "division", "press_release"].includes(f.kind);
+    searchAnswerAbort?.abort();
     $("search-answer").hidden = true;
     $("search-answer-empty").hidden = true;
-    runSearchAnswer(q, f, mySeq);
+    if (searchAnswerWanted) runSearchAnswer(q, f, mySeq);
   }
   const btn = $("search-form").querySelector('button[type="submit"]');
   btn.disabled = true;
@@ -8157,9 +10111,12 @@ async function runSearch(page = 1) {
   $("search-chips").hidden = true; // the examples step aside once a search runs
   $("search-empty").hidden = true;
   try {
-    const data = await api(`/api/search?${searchQueryParams(q, f, page, sort)}`);
+    const data = await api(`/api/search-all?${searchQueryParams(q, f, page, sort)}`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
     const results = data.results || [];
+    $("search-coverage").hidden = !data.coverage;
+    $("search-coverage").querySelector("p").textContent = data.coverage || "";
+    trackOutcome("opax_search_completed", { page, result_count: results.length, total_count: data.total ?? results.length, duration_ms: Math.round(performance.now() - analyticsStarted) });
     lastSearch = {
       key, query: q, filters: f, sort, results,
       page: data.page || 1,
@@ -8173,8 +10130,8 @@ async function runSearch(page = 1) {
     };
     if (!data.count) {
       hideLoader("search-wombat");
-      setStatus($("search-status"), "No results from the record.");
-      $("search-status").classList.add("visually-hidden"); // announced; the empty state carries the words
+      setStatus($("search-status"), data.warnings?.join(" ") || "No results from the record.");
+      $("search-status").classList.toggle("visually-hidden", !data.warnings?.length); // unavailable sources stay visible
       $("results-bar").hidden = true;
       $("search-date-ruler").hidden = true;
       $("search-readbar").hidden = true;
@@ -8185,7 +10142,7 @@ async function runSearch(page = 1) {
     } else {
       hideLoader("search-wombat");
       $("search-status").classList.remove("visually-hidden");
-      setStatus($("search-status"), "");
+      setStatus($("search-status"), data.warnings?.join(" ") || "");
       const first = (lastSearch.page - 1) * lastSearch.perPage + 1;
       const last = Math.min(lastSearch.page * lastSearch.perPage, lastSearch.total);
       $("results-count").innerHTML = `<span class="search-count-wide">${esc(resultsCountLine(lastSearch))}</span><span class="search-count-phone">${first}–${last} of ${lastSearch.total.toLocaleString()}${lastSearch.truncated ? " strongest matches" : " matches"}</span>`;
@@ -8210,6 +10167,7 @@ async function runSearch(page = 1) {
     }
   } catch (err) {
     if (mySeq !== searchSeq) return;
+    trackOutcome("opax_search_failed", { page, duration_ms: Math.round(performance.now() - analyticsStarted) });
     hideLoader("search-wombat");
     $("search-status").classList.remove("visually-hidden");
     setStatus($("search-status"), String(err.message || err), true);
@@ -8227,7 +10185,7 @@ function renderSearchRecovery(q, f) {
   box.innerHTML = `<h2 class="empty-title">No matches for “${esc(q || f.speaker)}”</h2>
     <p class="empty-lede">${filters ? `Searched with ${esc(filters)}. ` : ""}Try a broader phrase or a different part of the record.</p>
     <div class="empty-actions"><button type="button" class="action-btn" id="search-recovery-edit">${first ? `Remove ${esc(first.k.toLowerCase())} filter` : "Try fewer words"}</button>
-    <a class="action-btn" href="${esc(askHash(q || f.speaker, f.kind))}">Try in Ask</a>
+    <a class="action-btn" href="${esc(askHash(q || f.speaker, f.kind === "speech" ? "speech" : "all"))}">Try in Ask</a>
     <a class="action-btn" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>`;
   $("search-recovery-edit").addEventListener("click", () => {
     if (first) clearSearchFilter(first.id);
@@ -8278,7 +10236,7 @@ $("search-export").addEventListener("click", async (e) => {
     try {
       const params = searchQueryParams(s.query, s.filters, 1, s.sort);
       params.set("per", String(SEARCH_EXPORT_MAX));
-      const data = await api(`/api/search?${params}`);
+      const data = await api(`/api/search-all?${params}`);
       rows = data.results?.length ? data.results : rows;
     } catch {
       scope = `page ${s.page} of ${s.pageCount} only (collecting the rest failed)`;
@@ -8290,11 +10248,11 @@ $("search-export").addEventListener("click", async (e) => {
   const f = s.filters;
   offerExport(rows, [
     `# query: ${s.query}`,
-    `# filters: ${activeFilterSummary(f) || "none"} · corpus: ${f.kind || "speech"} · mode: ${f.mode || "hybrid"} · sort: ${s.sort}`,
+    `# filters: ${activeFilterSummary(f) || "none"} · record type: ${f.kind || "all"} · mode: ${f.mode || "hybrid"} · sort: ${s.sort}`,
     `# scope: ${scope}`,
     s.truncated
       ? `# retrieval reaches the ${s.total} strongest matches; the record holds more`
-      : `# retrieval reached every match in the record for this query`,
+      : `# all matches in the searched public-record snapshot and document retrieval window`,
   ], "opax-search");
 });
 
@@ -8333,7 +10291,8 @@ async function openDocPage(slug, manageFocus) {
   $("doc-speaker-links").hidden = true;
   $("doc-text").textContent = "";
   $("doc-brief").hidden = true;
-  $("doc-record-head").hidden = true;
+  $("doc-bill").hidden = true;
+  $("doc-bill").replaceChildren();
   $("doc-caveat").hidden = true;
   $("doc-cite-panel").hidden = true;
   $("doc-cite").setAttribute("aria-expanded", "false");
@@ -8345,8 +10304,12 @@ async function openDocPage(slug, manageFocus) {
   setStatus($("doc-status"), "Fetching the document…");
   try {
     const doc = await api(`/api/resource/${encodeURIComponent(slug)}`);
+    // Older browser-cached resources can outlive the corpus text repair.
+    if (typeof doc.text === "string") doc.text = doc.text.replace(/[ \t]*View the PC OA website[ \t]*$/gm, "").trimEnd();
     if (currentDocSlug !== slug) return; // user navigated away while fetching
     currentDoc = doc;
+    const isGovernmentRelease = doc.labels?.kind === "press_release";
+    const isResearchRecord = ["grant_invitation", "grant_award", "election_baseline", "parliamentary_profile", "research_report"].includes(doc.labels?.kind);
     setStatus($("doc-status"), "");
     // The headline is the speaker; the title repeats what the byline says, so
     // it only stands in when no speaker is attached, and then as its subject.
@@ -8382,7 +10345,9 @@ async function openDocPage(slug, manageFocus) {
       : CHAMBER_NAMES[String(doc.labels?.chamber || "").toLowerCase()];
     const state = doc.labels?.state;
     const stateName = state ? (STATE_NAMES[state] || state) : null;
-    const house = chamber
+    const house = isResearchRecord ? FILTER_KIND_LABELS[doc.labels.kind] : isGovernmentRelease
+      ? (state === "federal" ? "Australian Government" : state ? `${stateName} Government` : "Government release")
+      : chamber
       ? (state && state !== "federal" ? `${chamber}, ${stateName}` : chamber)
       : (state ? (state === "federal" ? "Federal Parliament" : `Parliament of ${stateName}`) : null);
     const origin = safeUrl(doc.url);
@@ -8406,7 +10371,15 @@ async function openDocPage(slug, manageFocus) {
     // Ways into this speaker's wider record. External links are SEARCHES, so
     // a shared name shows candidates rather than asserting the wrong person.
     const speakerLinks = $("doc-speaker-links");
-    if (doc.speaker) {
+    const docWitness = doc.labels?.speaker_type === "witness" || (isCommitteeChamber(doc.labels?.chamber) && doc.metadata?.person_id == null);
+    if (docWitness && (doc.metadata?.witness_position || doc.metadata?.witness_organisation)) {
+      $("doc-meta").insertAdjacentHTML("afterbegin",
+        `${[doc.metadata.witness_position, doc.metadata.witness_organisation].filter(Boolean).map(esc).join(", ")} · `);
+    }
+    if (doc.speaker && docWitness) {
+      speakerLinks.innerHTML = `Committee witness, named as the transcript names them. <a href="${esc(subjectHash("person", doc.speaker))}">Their evidence on OPAX</a>`;
+      speakerLinks.hidden = false;
+    } else if (doc.speaker) {
       const q = encodeURIComponent(doc.speaker);
       const ext = (href, label) =>
         `<a href="${href}" rel="noopener" target="_blank">${label} ↗︎</a>`;
@@ -8420,11 +10393,15 @@ async function openDocPage(slug, manageFocus) {
     if (doc.summary) {
       $("doc-brief-text").textContent = doc.summary;
       $("doc-brief").hidden = false;
-      // Only worth naming when something else stands above it.
-      $("doc-record-head").hidden = false;
     }
+    renderDocBillPanel(doc, slug);
     renderDocText(doc);
-    $("doc-ask").href = askHash(`What has parliament said about ${topic || doc.title}?`);
+    $("doc-ask").href = askHash(
+      isGovernmentRelease || isResearchRecord
+        ? `What does the record say about ${topic || doc.title}?`
+        : `What has parliament said about ${topic || doc.title}?`,
+      isGovernmentRelease || isResearchRecord ? "all" : undefined,
+    );
     $("doc-actions").hidden = false;
     $("doc-profile").hidden = !doc.speaker;
     $("doc-more").hidden = !doc.speaker;
@@ -8616,6 +10593,7 @@ function loadReportsIndex() {
 }
 
 async function loadReportsList(manageFocus) {
+  if ($('report-research')) $('report-research').hidden = true;
   const list = $("reports-list");
   currentReportSlug = null;
   $("report-view").hidden = true;
@@ -9154,8 +11132,7 @@ function reportSourceRow(s, num) {
   if (s.speaker) {
     const face = document.createElement("span");
     face.className = "report-source-face";
-    face.setAttribute("aria-hidden", "true");
-    face.textContent = reportInitials(s.speaker);
+    face.setAttribute("aria-hidden", "true"); // blank circle until the portrait lands; never initials
     loadPhotoMap().then(() => {
       const url = photoUrlFor(s.speaker);
       if (url) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
@@ -9186,7 +11163,9 @@ function reportSourceRow(s, num) {
 
   const where = document.createElement("p");
   where.className = "report-source-where";
-  const parliament = s.state ? PARLIAMENT_NAMES[s.state] || STATE_NAMES[s.state] || s.state : "";
+  const speech = !s.kind || s.kind === "speech";
+  const jurisdiction = s.state ? (speech ? PARLIAMENT_NAMES[s.state] : STATE_NAMES[s.state]) || STATE_NAMES[s.state] || s.state : "";
+  const parliament = [!speech ? FILTER_KIND_LABELS[s.kind] || s.kind.replaceAll("_", " ") : "", jurisdiction].filter(Boolean).join(" · ");
   if (!s.speaker && s.party) {
     // No 24px link where a 44px one will not fit: the party is stated, and the
     // record itself is one tap away.
@@ -9222,7 +11201,7 @@ function reportSourceRow(s, num) {
   const read = document.createElement("a");
   read.className = "report-source-read";
   read.href = `/doc/${s.slug}`;
-  read.textContent = "Read the speech";
+  read.textContent = speech ? "Read the speech" : "Read the record";
   body.appendChild(read);
 
   li.appendChild(body); // the portrait, when there is one, is already in place
@@ -9448,7 +11427,7 @@ function reportStatTiles(stats) {
       const a = document.createElement("a");
       a.href = `/doc/${s.slug}`;
       a.textContent = reportSourceLabel(s.source_title, { short: true })
-        || "Read the speech that said it";
+        || "Read the source record";
       if (s.source_title) a.title = s.source_title;
       src.appendChild(a);
       t.appendChild(src);
@@ -9490,7 +11469,7 @@ function reportPositions(positions, win) {
     const who = [p.speaker, fmtDate(p.date || "")].filter(Boolean).join(", ");
     const read = document.createElement("a");
     read.href = `/doc/${p.slug}`;
-    read.textContent = "read the speech";
+    read.textContent = p.kind && p.kind !== "speech" ? "read the record" : "read the speech";
     cite.append(who ? `${who} · ` : "", read);
     const earlier = win?.since && p.date && String(p.date) < String(win.since);
     if (earlier) cite.append(" · cited from earlier in the record");
@@ -9622,7 +11601,7 @@ function reportAllSources(report) {
   const det = document.createElement("details");
   det.className = "chat-sources report-sources report-all-sources";
   const sum = document.createElement("summary");
-  sum.textContent = `Every speech behind this report (${rows.length})`;
+  sum.textContent = `Every record behind this report (${rows.length})`;
   const ol = document.createElement("ol");
   ol.className = "report-source-list";
   det.append(sum, ol);
@@ -9689,9 +11668,9 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js");
+    const { mountMoneyMap } = await import("/money-map.js?v=evidence-button-20260909");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
-    const handle = await mountMoneyMap(el, "/graph/money.json", {
+    const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
       scrub: true, // the year window: watch the industry's money move
       askUrl: (industry) => askHash(`What has parliament said about ${industry.replace(/_/g, " ")}?`),
@@ -9921,6 +11900,21 @@ function renderReportV2(report, slug) {
 }
 
 async function openReport(slug, sectionNum, manageFocus) {
+  if ($('report-research')) $('report-research').hidden = true;
+  if (slug === 'grants-allocation') {
+    $('report-view').hidden = true;
+    $('reports-list').hidden = true;
+    setStatus($('reports-status'), '');
+    let root = $('report-research');
+    if (!root) { root = document.createElement('div'); root.id = 'report-research'; $('reports-list').after(root); }
+    root.hidden = false;
+    currentReportSlug = null;
+    setCrumbs([{label:'Reports',href:'/reports'},{label:'Where community funding goes'}]);
+    const { mountGrantsResearch } = await import('/grants-research.js?v=20260909-2');
+    if (!hereRoute().startsWith('/reports/grants-allocation')) return;
+    await mountGrantsResearch(root,{focus:manageFocus});
+    return;
+  }
   // Already rendered (e.g. Back from a cited document): just reveal it —
   // the DOM is intact under `hidden`, so scroll position and charts survive.
   if (currentReportSlug === slug) {
@@ -9950,14 +11944,14 @@ async function openReport(slug, sectionNum, manageFocus) {
   setCrumbs([{ label: "Reports", href: "/reports" }, { label: report.title }]);
   $("report-blurb").textContent = report.blurb;
   const provenance =
-    `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record · corpus v${corpusVersion()}`;
+    `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record`;
   $("report-meta").textContent = provenance;
   $("report-meta2").textContent = provenance;
   // The corpus totals under the money: how much record this report read.
   const corpusTotalsHTML = (st) => {
     const don = st?.donations;
     if (!st) return "";
-    return `${tile((st.speech_count ?? 0).toLocaleString(), "speeches on the record")}
+    return `${tile((st.speech_count ?? 0).toLocaleString(), st.speech_scope === "topic-labelled-corpus" ? "labelled speeches on this topic" : "speeches on the record")}
       ${tile((st.unique_speakers ?? 0).toLocaleString(), "parliamentarians spoke")}
       ${don ? tile(fmtMoney(don.total ?? 0), `donations: ${fmtIndustries(don.industries || [])}`) : ""}`;
   };
@@ -9989,7 +11983,7 @@ async function openReport(slug, sectionNum, manageFocus) {
       // count is not money and the part heading should not claim it is.
       $("report-stats").insertAdjacentHTML("afterbegin",
         `<h3 class="report-part-title" id="report-money-head" tabindex="-1">The money beside the words</h3>
-         <h4 class="report-sub-title report-corpus-title">How much record this reads</h4>
+         <h4 class="report-sub-title report-corpus-title">The parliamentary record</h4>
          <div class="tiles report-corpus-tiles">${corpusTotalsHTML(report.stats)}</div>`);
     } else {
       const figures = $("report-figures");
@@ -10066,21 +12060,130 @@ async function openReport(slug, sectionNum, manageFocus) {
 
 // --- boot -------------------------------------------------------------------
 
+// --- counting up ------------------------------------------------------------
+// A figure counts up from most of itself to its value over one beat, eased,
+// in tabular digits so the tile never jitters. Reduced motion sets it at
+// once. A later update counts on from the number showing, not from zero.
+function countUp(el, value, { duration = 1300 } = {}) {
+  const target = Math.round(Number(value) || 0);
+  if (!el) return;
+  const fmt = (n) => Math.round(n).toLocaleString();
+  const shown = Number(String(el.textContent).replace(/[^\d]/g, ""));
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches || target < 20 || shown === target) {
+    el.textContent = fmt(target);
+    return;
+  }
+  const from = shown > 0 && shown < target ? shown : Math.round(target * 0.62);
+  const t0 = performance.now();
+  const token = (el.dataset.countToken = String(t0));
+  const step = (now) => {
+    if (el.dataset.countToken !== token) return; // a newer count took over
+    const p = Math.min(1, (now - t0) / duration);
+    el.textContent = fmt(from + (target - from) * (1 - Math.pow(1 - p, 3)));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+// Figures count up only once the reader can see them: hidden panels are not
+// intersecting, so a tile rendered at boot waits for its page to open.
+const countUpWatchers = new WeakMap();
+function countUpWhenVisible(el, value) {
+  if (!el) return;
+  el.dataset.count = String(value);
+  if (!("IntersectionObserver" in window)) { countUp(el, value); return; }
+  let io = countUpWatchers.get(el);
+  if (!io) {
+    io = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      countUp(el, Number(el.dataset.count));
+    }, { threshold: 0.2 });
+    countUpWatchers.set(el, io);
+    io.observe(el);
+  } else if (el.getClientRects().length && el.closest(".panel:not([hidden])")) {
+    countUp(el, value); // already in view: count on from what shows
+  }
+}
+
+// --- the stats page: manifest figures first, the live index over them -------
+async function renderEvidenceStats() {
+  const slot = $("stats-connections");
+  if (!slot || slot.dataset.loaded) return;
+  try {
+    const [module, response] = await Promise.all([import('/evidence.js'), fetch('/evidence/stats.json')]);
+    if (!response.ok) return;
+    const meta = await response.json();
+    const html = module.evidenceStatsHTML(meta);
+    if (!html) return;
+    slot.innerHTML = html;
+    slot.hidden = false;
+    slot.dataset.loaded = 'true';
+  } catch { /* The live index figures remain usable if the optional dataset is unavailable. */ }
+}
+
+const STATS_PARLIAMENTS = [
+  ["federal", "Federal Parliament"], ["nsw", "NSW Parliament"], ["vic", "Victorian Parliament"],
+  ["qld", "Queensland Parliament"], ["sa", "South Australian Parliament"],
+];
+const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["press_release", "Government transcripts and releases"], ["legal", "Legislation"], ["grant_invitation", "Grant invitations"], ["grant_award", "Grant award records"], ["election_baseline", "Election baselines"], ["parliamentary_profile", "Recorded representation"], ["research_report", "Research source notes"]];
+
+/** One hero tile per key; the figure element is kept so a live update counts on in place. */
+function renderStatsHero() {
+  const hero = $("stats-hero");
+  if (!hero) return;
+  const m = corpusManifest || {};
+  const live = liveStats || {};
+  const donations = (m.sources || []).find((s) => s.name.startsWith("AEC donations"));
+  const tiles = [
+    { key: "speeches", value: live.kinds?.speech ?? m.collected_speeches ?? 0, label: "speeches indexed", live: live.kinds?.speech != null },
+    { key: "documents", value: live.resources, label: "documents in the index", live: true },
+    { key: "passages", value: live.paragraphs, label: "passages indexed", live: true },
+    { key: "parliaments", value: 5, label: "parliaments" },
+    donations ? { key: "donations", value: donations.docs, label: "donations classified" } : null,
+    donations ? { key: "coverage", text: donations.coverage, label: "coverage" } : null,
+  ].filter(Boolean);
+  // Every tile is made on the first render, in this order, so a live figure
+  // that arrives later counts up in its own place rather than joining the end.
+  for (const t of tiles) {
+    let tile = hero.querySelector(`[data-stat="${t.key}"]`);
+    if (!tile) {
+      tile = document.createElement("span");
+      tile.dataset.stat = t.key;
+      tile.innerHTML = `<span class="stat-figure"></span><span class="stat-label"></span>`;
+      hero.appendChild(tile);
+    }
+    const figure = tile.querySelector(".stat-figure");
+    const label = tile.querySelector(".stat-label");
+    label.textContent = t.label;
+    if (t.live) label.insertAdjacentHTML("beforeend", '<i class="stat-live" title="Read from the live index, refreshed every five minutes">live</i>');
+    if (t.text) figure.textContent = t.text;
+    else if (t.value == null) figure.textContent = "…"; // live figure still on its way
+    else countUpWhenVisible(figure, t.value);
+  }
+}
+
+/** The two live tables: speeches by parliament, documents by kind. */
+function renderStatsLiveTables() {
+  const live = liveStats || {};
+  const fill = (body, rows, counts) => {
+    if (!body) return;
+    if (!counts) { body.innerHTML = `<tr><td colspan="2">Live figures are unavailable right now.</td></tr>`; return; }
+    body.replaceChildren(...rows.filter(([k]) => counts[k] != null).map(([k, name]) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${esc(name)}</td><td class="stat-cell"><span class="stat-count"></span></td>`;
+      countUpWhenVisible(tr.querySelector(".stat-count"), counts[k]);
+      return tr;
+    }));
+  };
+  fill($("stats-parliaments"), STATS_PARLIAMENTS, live.speeches_by_state);
+  fill($("stats-kinds"), STATS_KINDS, live.kinds);
+}
+
 fetch("/corpus.json").then((r) => r.json()).then((m) => {
   corpusManifest = m;
   renderCorpusMeter();
   if (frontRendered) renderFrontNumbers();
-  // The stats page's hero figures come from the manifest, so a re-sync
-  // updates them in one place.
-  const donations = (m.sources || []).find((s) => s.name.startsWith("AEC donations"));
-  const stat = (figure, label) =>
-    `<span><span class="stat-figure">${figure}</span><span class="stat-label">${label}</span></span>`;
-  $("stats-hero").innerHTML = [
-    stat((m.collected_speeches ?? 0).toLocaleString(), "speeches collected"),
-    stat("5", "parliaments"),
-    donations ? stat(donations.docs.toLocaleString(), "donations classified") : "",
-    donations ? stat(esc(donations.coverage), "coverage") : "",
-  ].join("");
+  renderStatsHero();
   const statsBody = $("stats-sources");
   if (statsBody && m.sources) {
     statsBody.innerHTML = m.sources.map((s) =>
@@ -10109,20 +12212,34 @@ fetch("/suggestions.json").then((r) => r.json()).then((s) => {
   renderChips();
 }).catch(() => {});
 
-api("/api/stats")
-  .then((s) => {
-    liveStats = s;
-    const line = `${(s.resources ?? 0).toLocaleString()} documents · ` +
-      `${(s.paragraphs ?? 0).toLocaleString()} passages indexed · growing daily`;
-    $("stats").textContent = line;
-    $("stats-live").textContent = `Live index: ${line}.`;
-    renderCorpusMeter();
-    if (frontRendered) renderFrontNumbers();
-  })
-  .catch(() => {
-    $("stats").textContent = "corpus loading…";
-    $("stats-live").textContent = "Live index figures are unavailable right now.";
-  });
+// The endpoint is cached five minutes at the edge and in the browser, so a
+// payload without the facet counts (from before a deploy, or a facet that
+// failed) is asked for again a minute later, under a fresh query so the
+// browser does not answer from its own copy. The tables say "Counting…" in
+// the meantime rather than "unavailable".
+function loadLiveStats(attempt = 0) {
+  api(attempt ? `/api/stats?retry=${attempt}` : "/api/stats")
+    .then((s) => {
+      liveStats = s;
+      const line = `${(s.resources ?? 0).toLocaleString()} documents · ` +
+        `${(s.paragraphs ?? 0).toLocaleString()} passages indexed · growing daily`;
+      $("stats").textContent = line;
+      $("stats-live").textContent = "Figures marked live are read from the index itself and refresh every five minutes; the rest are from the corpus manifest.";
+      renderCorpusMeter();
+      if (frontRendered) renderFrontNumbers();
+      renderStatsHero();
+      if (s.kinds && s.speeches_by_state) renderStatsLiveTables();
+      else if (attempt < 6) setTimeout(() => loadLiveStats(attempt + 1), 60000);
+      else renderStatsLiveTables();
+    })
+    .catch(() => {
+      $("stats").textContent = "corpus loading…";
+      $("stats-live").textContent = "Live index figures are unavailable right now.";
+      if (attempt < 3) setTimeout(() => loadLiveStats(attempt + 1), 30000);
+      else renderStatsLiveTables();
+    });
+}
+loadLiveStats();
 
 // Legacy entry contract: /?ask=<question> (used by standalone map pages).
 {
@@ -10157,6 +12274,7 @@ const BOOT_META = {
 // Keeps the head's canonical/og:url on the current route after each route(),
 // and the title/description on the view now showing.
 const VIEW_DESCRIPTIONS = {
+  discover: "Explore overlaps and concentrations across recorded party receipts and government contracts, with evidence and limitations for every investigation lead.",
   search: "Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year.",
   money: "Disclosed political donations as territory you can spin: donors, parties and 28 years of returns.",
   reports: "Standing investigations pairing the money with the words, every claim cited to the record.",

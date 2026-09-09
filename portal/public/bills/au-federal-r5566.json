@@ -1,0 +1,139 @@
+{
+ "key": "au-federal-r5566",
+ "title": "Australian Institute of Aboriginal and Torres Strait Islander Studies Amendment Bill 2015",
+ "short_title": "Australian Institute of Aboriginal and Torres Strait Islander Studies Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-11-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2016-02-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5566_ems_13a3c23e-032b-4d0f-a066-2a5c72ba733b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5566%22",
+   "document_date": "2015-11-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00006",
+   "document_date": "2016-02-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-324684",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The Australian Institute of Aboriginal and Torres Strait Islander Studies Amendment Bill 2015 streamlines AIATSIS functions and amends council appointments to ensure a majority Indigenous membership. Labor supported the bill, noting AIATSIS holds the world’s largest collection of Indigenous Australian material, including 250 languages on UNESCO’s Memory of the World Register, and that the new AIATSIS Foundation will raise funds to extend its work."
+  },
+  {
+   "slug": "speech-324685",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-30",
+   "stage_hint": null,
+   "brief": "The Australian Institute of Aboriginal and Torres Strait Islander Studies Amendment Bill 2015 updates council appointment processes to prioritise skills and diversity while retaining an Indigenous majority, and reduces AIATSIS's functions from eight to five to focus on research, education, collection and preservation of its over one million items of cultural heritage. The measure continues the government's work with Professor Mick Dodson AM and the AIATSIS Council."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Institute of Aboriginal and Torres Strait Islander Studies Amendment Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00006",
+   "assent_date": "2016-02-11"
+  }
+ ]
+}

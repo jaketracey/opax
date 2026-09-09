@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6218",
+ "title": "International Human Rights and Corruption (Magnitsky Sanctions) Bill 2018",
+ "short_title": "International Human Rights and Corruption (Magnitsky Sanctions) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-03",
+ "originating_house": "representatives",
+ "sponsor": "DANBY, Michael, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10165",
+ "portfolio": "(s) DANBY, Michael, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6218%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6218%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6218%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6218_ems_30a6809f-ca12-453f-8e50-751c6be3a578%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6218%22",
+   "document_date": "2018-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-12-03",
+  "sentences": [
+   "The bill would let the minister impose sanctions for human rights abuses or serious corruption.",
+   "It would let the minister restrict commercial dealings, trades, and asset use in Australia by sanctioned people or entities.",
+   "The bill would also let the minister restrict immigration of people or groups who have violated international human rights law."
+  ],
+  "changes": [
+   "The bill creates a sanctions regime for gross human rights abuses and significant corruption.",
+   "The bill extends the minister's powers to restrict commercial activities and asset use.",
+   "The bill allows the minister to restrict immigration of violators."
+  ],
+  "affected": "Foreign persons and entities who have engaged in gross human rights abuses or significant corruption, and those who have violated international human rights law.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-373377",
+   "speaker": "Michael Danby",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The mover introduced the International Human Rights and Corruption (Magnitsky Sanctions) Bill 2018, arguing it would impose immigration, financial and trade sanctions on foreign officials involved in gross human rights violations and corruption, citing examples such as Russia’s role in the downing of MH17, China’s detention of Uyghurs, and other abuses in Sudan, North Korea, and Burma. He called on Australia to join the United States, United Kingdom, and Canada in adopting a global Magnitsky law to freeze assets and ban visas for perpetrators."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s1434",
+ "title": "National Organic Standard Bill 2024",
+ "short_title": "National Organic Standard Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-19",
+ "originating_house": "senate",
+ "sponsor": "MCKENZIE, Sen Bridget",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10758",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1434%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1434%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1434%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1434_ems_009b5045-0a5a-4f06-9273-9a84f3133663%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1434%22",
+   "document_date": "2024-11-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-19",
+  "sentences": [
+   "The bill would create a national regulatory framework for organic goods sold or imported into Australia.",
+   "Businesses selling organic produce would need an organic certificate from an issuing body, renewable every 12 months, with an exemption for resellers who do not alter the goods or packaging.",
+   "A transition period of 3 years from Royal Assent is provided, and an independent review is required after 6 years of operation."
+  ],
+  "changes": [
+   "Creates a legislative framework for a National Organic Standard.",
+   "Requires businesses selling organic produce to obtain an organic certificate from an issuing body.",
+   "Exempts resellers from the certificate requirement if they make no changes to the goods or packaging.",
+   "Requires importers to hold an organic certificate or equivalent from the exporting country.",
+   "Imposes civil penalties for selling organic goods without a required certificate.",
+   "Provides a 3-year transition period and mandates an independent review after 6 years."
+  ],
+  "affected": "Businesses that sell or import organic goods in Australia, including resellers and importers, as well as consumers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:57Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

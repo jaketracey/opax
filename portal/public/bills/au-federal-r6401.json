@@ -1,0 +1,352 @@
+{
+ "key": "au-federal-r6401",
+ "title": "Social Services Legislation Amendment (Payment Integrity) Bill 2019",
+ "short_title": "Social Services Legislation Amendment (Payment Integrity) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6401%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6401%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6401%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6401%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6401_ems_238cab20-feed-4e6b-acde-b7fd149d6514%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6401_ems_f6c5512f-ec0b-43f1-988a-2fe66a30d1e9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6401%22",
+   "document_date": "2019-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6085",
+   "date": "2019-12-02",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Payment Integrity) Bill 2019 - Second Reading - Disagree with bill",
+   "stage": "Second reading",
+   "ayes": 62,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-02/3"
+  },
+  {
+   "key": "federal-representatives-6086",
+   "date": "2019-12-02",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Payment Integrity) Bill 2019 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 60
+    },
+    "Liberal": {
+     "ayes": 41,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-02/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-385593",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "Labor moved to block the Social Services Legislation Amendment (Payment Integrity) Bill 2019, arguing it would cut pensions and Newstart. The bill would remove pensioner supplements after six weeks overseas, extend the pension residency requirement to 15 years, and extend the liquid assets waiting period for Newstart from 13 to 26 weeks, with Labor citing over $185 million in cuts to pensioners."
+  },
+  {
+   "slug": "speech-385597",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The bill tightens residency requirements for age and disability support pensions, suspends the pension supplement after six weeks overseas, and extends the liquid assets waiting period from 13 to 26 weeks for payments like youth allowance and Newstart, with estimated savings of over $290 million."
+  },
+  {
+   "slug": "speech-385598",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Payment Integrity Bill 2019 is a cover for cuts to social security, including increasing the residency requirement for pensions from 10 to 15 years, halting the age pension supplement after six weeks overseas, and extending the liquid assets waiting period for Newstart and other allowances. Labor opposed the bill, which was introduced for the third time."
+  },
+  {
+   "slug": "speech-385697",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment (Payment Integrity) Bill 2019 would increase the residency requirement for age and disability pensions from 10 to 15 years, stop the age pension supplement after six weeks overseas, and extend the liquid assets waiting period for allowances; the speaker argued it would cut $185 million from pensioners and disproportionately affect migrant pensioners and older job seekers."
+  },
+  {
+   "slug": "speech-385698",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Payment Integrity) Bill 2019, arguing it unfairly targets age pensioners and people on Newstart and youth allowance by increasing residency requirements from 10 to 15 years, cutting the overseas pension supplement after six weeks, and extending waiting periods for redundant workers, which would cut $185 million from pensioners and force people into poverty."
+  },
+  {
+   "slug": "speech-385699",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The bill cuts the age pension supplement by $185 million (equating to $11.88 per week for single pensioners) and doubles the Newstart waiting period from 13 to 26 weeks, affecting 13,800 Australians annually, with 11,000 forced to wait six months."
+  },
+  {
+   "slug": "speech-385701",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Payment Integrity) Bill 2019, arguing it would cut over $185 million from pensioners, increase residency requirements for age and disability pensions from 10 to 15 years, stop pension supplement after six weeks overseas, and extend the liquid assets waiting period for Newstart to up to 26 weeks, affecting around 2,300 people annually."
+  },
+  {
+   "slug": "speech-385702",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Payment Integrity) Bill 2019, arguing it would cut pension supplements for those overseas over six weeks, increase residency requirements from 10 to 15 years, and double the liquid assets waiting period to 26 weeks, affecting 13,800 Australians annually and removing $185 million from pensioners."
+  },
+  {
+   "slug": "speech-385703",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The bill would cut over $185 million from Australian pensioners, and the speaker argued it is an attack on the most vulnerable, comparable to the government’s robodebt scheme, which was recently ruled unlawful by the Federal Court."
+  },
+  {
+   "slug": "speech-385723",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Payment Integrity) Bill 2019, arguing it would cut $185 million from vulnerable Australians by tightening residency requirements for age and disability pensions, removing pension supplements for overseas absences over six weeks, and extending the liquid assets waiting period to 26 weeks, disproportionately affecting migrants, refugees, and low-income workers."
+  },
+  {
+   "slug": "speech-385724",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Payment Integrity) Bill 2019, arguing it would increase residency requirements for age and disability pensions from 10 to 15 years, stop pension supplements after six weeks overseas, and extend the liquid assets waiting period for Newstart and other allowances to 26 weeks. The speaker stated the bill would cut $185 million from pensioners, disproportionately affecting older migrants, and criticized the government for targeting vulnerable Australians to achieve a budget surplus."
+  },
+  {
+   "slug": "speech-385725",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Payment Integrity) Bill 2019, arguing it would cut age pension supplements for retirees after six weeks overseas and extend waiting periods for job search allowances, targeting migrant retirees and those with redundancy payments."
+  },
+  {
+   "slug": "speech-385726",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "Centre Alliance opposed the Social Services Legislation Amendment (Payment Integrity) Bill 2019 in its current form, specifically rejecting the six-week cut-off for the pension supplement for overseas pensioners (Schedule 2) and the doubling of the liquid assets waiting period for Centrelink payments (Schedule 3), while indicating openness to discussing changes."
+  },
+  {
+   "slug": "speech-385727",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued the Social Services Legislation Amendment (Payment Integrity) Bill 2019 would cut $185 million from pensioners and vulnerable Australians, including increasing the age pension residency requirement from 10 to 15 years, stopping the pension supplement after six weeks overseas, and extending the liquid assets waiting period for Newstart to 26 weeks. The speaker also criticised the government's robo-debt program, which was found illegal by the Federal Court, and listed multiple past coalition cuts to pensioner support."
+  },
+  {
+   "slug": "speech-385728",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Payment Integrity) Bill 2019, arguing it cuts payments to vulnerable Australians while giving tax cuts to the wealthy. Specific measures include increasing residency requirements for age and disability pensions from 10 to 15 years for those born outside Australia, stopping the age pension supplement after six weeks overseas, and extending the liquid assets waiting period for Newstart and other allowances, affecting thousands and saving over $185 million."
+  },
+  {
+   "slug": "speech-385729",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker, a Labor member, argued that the Social Services Legislation Amendment (Payment Integrity) Bill 2019 is unfair and attacks pensioners, specifically opposing a provision that would stop the pension supplement for pensioners spending more than six weeks overseas. The speaker claimed the government has a record of cutting pensions in every budget since 2013, referencing over $185 million in proposed cuts and earlier attempts to raise the pension age to 70, affecting migrants and vulnerable Australians in electorates like theirs."
+  },
+  {
+   "slug": "speech-385730",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment (Payment Integrity) Bill 2019 was opposed as a punitive bill that would rip over $185 million from pensioners. The social services minister was also criticised for saying that giving people more money would only benefit drug dealers and pubs."
+  },
+  {
+   "slug": "speech-385733",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Payment Integrity) Bill 2019, arguing it would increase the residential requirement for age and disability pensions by five years, stop the age pension supplement for overseas trips over six weeks, and raise the liquid assets waiting period for Newstart and youth allowance from 13 weeks to six months."
+  }
+ ],
+ "acts": []
+}

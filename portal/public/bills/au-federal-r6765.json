@@ -1,0 +1,177 @@
+{
+ "key": "au-federal-r6765",
+ "title": "Health Insurance Amendment (Enhancing the Bonded Medical Program and Other Measures) Bill 2021",
+ "short_title": "Health Insurance Amendment (Enhancing the Bonded Medical Program and Other Measures) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6765_ems_263c2e9c-507e-4638-b50f-8c53ee2240d1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6765%22",
+   "document_date": "2021-08-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00138",
+   "document_date": "2021-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-26",
+  "sentences": [
+   "This bill would change the Health Insurance Act 1973 to make the Bonded Medical Program work more flexibly.",
+   "It lets legacy scheme participants apply for up to six extra years to finish their return of service obligation, and removes penalty for serious disability or death.",
+   "The bill also replaces an automatic six-year Medicare ban for minor contract breaches with a more appropriate administrative penalty."
+  ],
+  "changes": [
+   "Allows legacy scheme participants to apply for an extended compliance determination of up to six additional years.",
+   "Permits a person to cease being a Bonded Participant without penalty due to serious disability or death.",
+   "Amends the administrative penalty for failing to provide information or documents on time.",
+   "Replaces the automatic six-year Medicare benefit suspension for inadvertent and minor MRBS contract breaches."
+  ],
+  "affected": "Participants in the Bonded Medical Program and legacy MRBS and BMP schemes, and the Department of Health.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-414485",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-26",
+   "stage_hint": null,
+   "brief": "The MP argued that a GP shortage on the Central Coast of NSW, caused by the government's refusal to grant Distribution Priority Area (DPA) status to the northern end, has led to dangerous care delays, citing patients like Kristy, David and Leonie's husband. They welcomed the recent DPA status for Wyoming‑Ourimbah and a new exceptional circumstances review, but said these do not fix the systemic problem, noting that 150 local practices (40% of the northern end) lost DPA status over three years."
+  },
+  {
+   "slug": "speech-414486",
+   "speaker": "Lucy Elizabeth Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-26",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Enhancing the Bonded Medical Program and Other Measures) Bill 2021 was supported for providing more flexibility in the Bonded Medical Program and Medical Rural Bonded Scholarship Scheme, including reducing breach penalties from $10,000 to $1,000, allowing waivers for legacy breaches, and permitting the minister to apply Medicare bans. The speaker highlighted the Central Coast’s GP shortage—339 GPs for 337,000 residents (100 per 100,000, below national average)—and noted 33 new GP registrars from August 2021, the $32.5 million federal contribution to the Central Coast Clinical School and Research Institute, and the DPA classification for suburbs such as Woy Woy, Ettalong, and Umina Beach."
+  },
+  {
+   "slug": "speech-414487",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill’s amendments but argued it would not solve doctor shortages, criticising the government for removing Newcastle from the Distribution Priority Area and transferring medical places from established programs like the University of Newcastle’s, while calling for backing of initiatives such as the proposed nursing-on-country program for First Nations people."
+  },
+  {
+   "slug": "speech-414488",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-10-26",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Enhancing the Bonded Medical Program and Other Measures) Bill 2021 adds flexibility to the Bonded Medical Program, introduces proportionate penalties, and improves breach administration under the legacy Medical Rural Bonded Scholarship Scheme. The bill is part of the government’s Stronger Rural Health Strategy to support a modern medical workforce in regional, rural and remote Australia."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Insurance Amendment (Enhancing the Bonded Medical Program and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00138",
+   "assent_date": "2021-12-13"
+  }
+ ]
+}

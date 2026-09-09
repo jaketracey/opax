@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-r7146",
+ "title": "Criminal Code Amendment (Telecommunications Offences for Suicide Related Material—Exception for Lawful Voluntary Assisted Dying) Bill 2024",
+ "short_title": "Criminal Code Amendment (Telecommunications Offences for Suicide Related Material—Exception for Lawful Voluntary Assisted Dying) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-02-12",
+ "originating_house": "representatives",
+ "sponsor": "CHANEY, Kate, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10974",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7146%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7146%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7146%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7146_ems_2aa41360-2812-4af2-a09e-911d783eb41c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7146%22",
+   "document_date": "2024-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

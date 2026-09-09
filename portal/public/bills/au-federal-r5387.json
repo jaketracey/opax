@@ -1,0 +1,387 @@
+{
+ "key": "au-federal-r5387",
+ "title": "Enhancing Online Safety for Children Bill 2014",
+ "short_title": "Enhancing Online Safety for Children Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "passed",
+ "status_as_of": "2015-03-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5387_ems_d2990172-46c7-4b35-9eff-364175a7fbef%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5387_ems_1385abb2-9970-4c75-b5ed-879465d2290c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5387%22",
+   "document_date": "2014-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00024",
+   "document_date": "2015-03-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-12-03",
+  "sentences": [
+   "This bill is one of a pair that fulfils government election promises to make the internet safer for children.",
+   "The package creates a new Children's e-Safety Commissioner and a system for swiftly removing cyber-bullying aimed at Australian children from major social media platforms.",
+   "The Commissioner, who would sit inside the Australian Communications and Media Authority, could order a person who posts such material to take it down, stop posting, or apologise, with a court injunction available for non-compliance."
+  ],
+  "changes": [
+   "Establishes the Children's e-Safety Commissioner with national leadership duties and a complaints-handling role.",
+   "Introduces a two-tiered scheme for rapid removal of cyber-bullying from large social media services, with tier 1 services facing no direct enforcement but possible loss of status, and tier 2 services subject to direct regulation and civil penalties.",
+   "Creates a special account to finance the Commissioner's work.",
+   "Allows the Commissioner to share information with teachers, principals, or parents to help resolve complaints."
+  ],
+  "affected": "Australian children, their parents and guardians, providers of large social media services, and the Australian Communications and Media Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:59:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-303647",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303648",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-303800",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305217",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305218",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305219",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305231",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305232",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305233",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305234",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305235",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305236",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305237",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305244",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305395",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305481",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305482",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305483",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305578",
+   "speaker": "Kate Ellis",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305579",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305581",
+   "speaker": "Warren Entsch",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305582",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305584",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305585",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Enhancing Online Safety Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00024",
+   "assent_date": "2015-03-24"
+  }
+ ]
+}

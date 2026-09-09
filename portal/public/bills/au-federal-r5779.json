@@ -1,0 +1,181 @@
+{
+ "key": "au-federal-r5779",
+ "title": "Transport Security Legislation Amendment Bill 2016",
+ "short_title": "Transport Security Legislation Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "passed",
+ "status_as_of": "2017-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5779_ems_80b61624-cf97-46c8-85d8-24e7fc73c278%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5779%22",
+   "document_date": "2016-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00018",
+   "document_date": "2017-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-12-01",
+  "sentences": [
+   "The bill would update aviation and maritime security laws to let screening happen inside secure zones at airports, not just at entry points.",
+   "It would give the department head power to name screening locations and to hand his duties to junior public servants, and let guards order people or their belongings out of a zone if they refuse screening or a weapon is found.",
+   "The bill also creates authority for regulations to set how this inside-zone screening is carried out."
+  ],
+  "changes": [
+   "The bill extends the purpose of screening to cover staying inside a secure airport zone.",
+   "The bill lets the department head specify where screening occurs via a notice.",
+   "The bill creates a rule-making power for how in-zone screening should be done.",
+   "The bill allows a screening officer to eject a person or remove their vehicle or goods from a secure zone after a screening refusal or weapon detection.",
+   "The bill lets the department head delegate his powers under both the aviation and maritime acts to lower-level public servants."
+  ],
+  "affected": "People, vehicles, and goods at security-controlled airports, along with the Department of Infrastructure and Regional Development and its staff.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:37:19Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-339647",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-12-01",
+   "stage_hint": null,
+   "brief": "The Transport Security Legislation Amendment Bill 2016 introduces random screening of people, vehicles and goods within airside areas at major international airports, along with security awareness training, to address insider threats; it also allows the departmental secretary to delegate powers to lower-level APS employees."
+  },
+  {
+   "slug": "speech-341081",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Transport Security Legislation Amendment Bill 2016, arguing it updates aviation security by allowing random screening of people, vehicles and goods already inside airport security zones, initially at nine airports including mainland capitals, Gold Coast and Cairns, while maintaining non-discriminatory screening and aligning with international standards."
+  },
+  {
+   "slug": "speech-341082",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The government argued the Transport Security Legislation Amendment Bill 2016 will strengthen aviation security by introducing airside screening for airport workers at major airports, with bipartisan support. The bill also allows the department secretary to delegate certain regulatory powers to lower-level public servants to improve efficiency."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Transport Security Legislation Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00018",
+   "assent_date": "2017-03-28"
+  }
+ ]
+}

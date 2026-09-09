@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-r7448",
+ "title": "Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2026",
+ "short_title": "Anti-Money Laundering and Counter-Terrorism Financing Amendment Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "before_parliament",
+ "status_as_of": "2026-03-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7448%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7448_ems_d3be5266-10e6-40d3-9c02-6bc9d8421a02%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7448%22",
+   "document_date": "2026-03-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

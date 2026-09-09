@@ -1,0 +1,87 @@
+{
+ "key": "au-federal-s1127",
+ "title": "Defence Amendment (Sovereign Naval Shipbuilding) Bill 2018",
+ "short_title": "Defence Amendment (Sovereign Naval Shipbuilding) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2018-05-09",
+ "originating_house": "senate",
+ "sponsor": "PATRICK, Sen Rex",
+ "sponsor_party": "Nick Xenophon Team",
+ "sponsor_person_id": "10903",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1127%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1127%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1127%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1127%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1127%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1127_ems_c1b34e17-068f-4431-b3c2-2642344c5613%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1127%22",
+   "document_date": "2018-05-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-09",
+  "sentences": [
+   "The bill would require new Royal Australian Navy vessels to be built in Australia by Australian-owned and controlled shipbuilders, except during war or defence emergencies.",
+   "It would amend the Defence Act 1903 to insert a new part that sets conditions for such construction, including that the shipbuilder must be incorporated in Australia, not controlled by foreign persons, and meet capability and financial standards.",
+   "The requirement would apply to vessels over 30 metres in length, covering major naval ships but excluding smaller craft like launches and lifeboats."
+  ],
+  "changes": [
+   "The bill would insert a new part into the Defence Act 1903 requiring that agreements for building Navy vessels mandate construction in Australia by an Australian shipbuilder.",
+   "It would require that such agreements provide the Commonwealth with intellectual property rights for maintenance, repair, and modification of the vessels.",
+   "It would require the Commonwealth to be satisfied that the shipbuilder has demonstrated capability, competitiveness, compliance with standards, and financial viability.",
+   "It would allow foreign shipbuilders to be prime contractors but require them to subcontract the entire build to an Australian-controlled shipbuilder.",
+   "It would allow overseas procurement during times of war or defence emergency."
+  ],
+  "affected": "Australian shipbuilders, foreign shipbuilders, and the Royal Australian Navy.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:58Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

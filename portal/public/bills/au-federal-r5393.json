@@ -1,0 +1,223 @@
+{
+ "key": "au-federal-r5393",
+ "title": "Private Health Insurance Amendment Bill (No. 2) 2014",
+ "short_title": "Private Health Insurance Amendment Bill (No. 2) 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2015-05-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-05-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5393_ems_918fd5ac-5412-47ee-bc75-aa1d2b74d94c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5393%22",
+   "document_date": "2014-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00057",
+   "document_date": "2015-05-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-303943",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-308431",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-19",
+   "stage_hint": null,
+   "brief": "The opposition supports the bill transferring Private Health Insurance Ombudsman functions to the Commonwealth Ombudsman but criticises the government for lacking detail and clarity, citing a chaotic budget and concerns that the Commonwealth Ombudsman, already overloaded with numerous responsibilities, will be less effective for health insurance consumers."
+  },
+  {
+   "slug": "speech-308950",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker argued against merging the Private Health Insurance Ombudsman with the Commonwealth Ombudsman, warning it would diminish specialised consumer protections. They moved amendments to reinstate five specific powers, including the minister's ability to intervene in complaints and the penalty for failing to participate in mediation, while noting the opposition would not block the bill outright in the House but would seek a Senate inquiry."
+  },
+  {
+   "slug": "speech-308952",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The Private Health Insurance Amendment Bill (No. 2) 2014 transfers the functions of the Private Health Insurance Ombudsman into the Commonwealth Ombudsman's office, saving at least $600,000 per year. The speaker highlighted the importance of private hospitals like Mayo Private Hospital in Taree and Port Macquarie Private Hospital in reducing pressure on the public system."
+  },
+  {
+   "slug": "speech-308953",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Private Health Insurance Amendment Bill (No. 2) 2014, arguing it removes consumer protections such as the ability for complaint subjects to request extra time and ministerial oversight, while reducing penalties from 30 to 10 penalty units. They also criticised the government’s health record, citing $50 billion in cuts to public health, closure of 61 Medicare Locals, and a 6.18% average increase in private health insurance premiums."
+  },
+  {
+   "slug": "speech-308954",
+   "speaker": "Andrew Southcott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The bill abolishes the Private Health Insurance Ombudsman and transfers its functions to the Commonwealth Ombudsman, saving an estimated $600,000 per year through a reduced levy on private health insurance funds. Over three-quarters of voters in the Boothby electorate hold private health insurance, with two-thirds holding hospital cover and over three-quarters holding general treatment cover."
+  },
+  {
+   "slug": "speech-309216",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Private Health Insurance Amendment Bill (No. 2) 2014, arguing that merging the Private Health Insurance Ombudsman into the Commonwealth Ombudsman would risk losing specialised staff and corporate knowledge, and criticised the government’s health policies—citing the two largest private health insurance premium increases in a decade, cuts to preventative programs like Healthy Together Wyndham (which reached 54,000 people), and uncertainty over bulk‑billing and Medicare Locals."
+  },
+  {
+   "slug": "speech-309217",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill transferring Private Health Insurance Ombudsman functions to the Commonwealth Ombudsman, arguing that resource cuts would undermine oversight while premium increases—already at record levels under the current government—drive rising complaint volumes (nearly 3,500 in 2013–14 handled by 12 staff)."
+  },
+  {
+   "slug": "speech-309219",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that transferring the Private Health Insurance Ombudsman to the Commonwealth Ombudsman would reduce accountability by removing the minister's ability to intervene in investigations and omitting provisions for request-based inquiries. The speaker also criticised the Abbott government for cutting over $57 billion from public hospitals, $197 million from flexible health funds, $368 million from preventative programs, and approving a 6.18% private health insurance premium increase, claiming the government cannot be trusted on health."
+  },
+  {
+   "slug": "speech-309220",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-26",
+   "stage_hint": null,
+   "brief": "The Private Health Insurance Amendment Bill (No. 2) 2014 transfers the functions of the Private Health Insurance Ombudsman to the Commonwealth Ombudsman from 1 July 2015 and repeals leftover base premium indexation provisions. Over 90% of staff (11 of 12) will transfer, ministerial intervention powers were not transferred to maintain independence, and mediation penalties were revised but retained."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00057",
+   "assent_date": "2015-05-26"
+  }
+ ]
+}

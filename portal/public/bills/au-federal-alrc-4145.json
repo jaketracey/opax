@@ -1,0 +1,147 @@
+{
+ "key": "au-federal-alrc-4145",
+ "title": "Broadcasting Legislation Amendment (News Media Diversity) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Broadband, Communications and the Digital Economy",
+ "status": "lapsed",
+ "status_as_of": "2013-03-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-270528",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270531",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822438",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271279",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271286",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271311",
+   "speaker": "Deb O'Neill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822741",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271411",
+   "speaker": "Deb O'Neill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271414",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271415",
+   "speaker": "Sid Sidebottom",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822855",
+   "speaker": "Deborah O'Neill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

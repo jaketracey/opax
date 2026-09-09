@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7061",
+ "title": "Housing Australia Future Fund Bill 2023 [No. 2]",
+ "short_title": "Housing Australia Future Fund Bill 2023 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-08-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7061%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7061%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7061%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7061_ems_f5ea28e7-2d21-456a-94ae-c4d73c22ff7d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7061%22",
+   "document_date": "2023-08-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-08-02",
+  "sentences": [
+   "This bill is part of a package that would establish the Housing Australia Future Fund to provide a funding source for social and affordable housing and other urgent housing needs, and create an independent advisory body on housing supply and affordability.",
+   "The Housing Australia Future Fund would be credited with $10 billion to fund 30,000 social and affordable homes and allocate $330 million to acute housing needs over the fund's first five years, with the fund's earnings and payments affecting the federal budget.",
+   "The Housing Australia Future Fund Bill would commence on a day fixed by Proclamation or six months after it receives Royal Assent, whichever comes first."
+  ],
+  "changes": [
+   "Establishes the Housing Australia Future Fund as a funding source for social and affordable housing and acute housing needs.",
+   "Creates the National Housing Supply and Affordability Council as an independent statutory advisory body to the government on housing policy.",
+   "Credits the fund with $10 billion to deliver 30,000 social and affordable homes and $330 million for acute housing needs over five years."
+  ],
+  "affected": "The package affects the federal government, the Future Fund Board, Indigenous communities, women, children, and veterans.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

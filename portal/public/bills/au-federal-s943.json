@@ -1,0 +1,125 @@
+{
+ "key": "au-federal-s943",
+ "title": "Defence Legislation Amendment (Woomera Prohibited Area) Bill 2013",
+ "short_title": "Defence Legislation Amendment (Woomera Prohibited Area) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-12-12",
+ "originating_house": "senate",
+ "sponsor": "FARRELL, Sen Don",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10708",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s943%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s943%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s943%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s943%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s943%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s943_ems_93660f54-1fe7-4680-a6aa-c226d784db8a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s943%22",
+   "document_date": "2013-12-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-12",
+  "sentences": [
+   "The bill would open the Woomera Prohibited Area for mining and other non-defence uses while keeping it a primary defence asset.",
+   "It would set up a permit system run by the Woomera Prohibited Area Coordination Office and an independent Advisory Board to manage access across three zones (red, amber, green).",
+   "The South Australian Government says about $35 billion worth of development, including iron ore and gold projects, could be possible over the next decade."
+  ],
+  "changes": [
+   "Creates a permit system for non-defence users to access the Woomera Prohibited Area.",
+   "Introduces offences and penalties for entering without permission or breaching permit conditions.",
+   "Authorises the Minister for Defence to make rules defining the area and its zones.",
+   "Provides for compensation for property acquisition under the new Part VIB of the Defence Act 1903.",
+   "Allows rules to limit compensation for loss or damage from testing war materiel.",
+   "Declares the Woomera Prohibited Area as defence premises under the Defence Act 1903."
+  ],
+  "affected": "Non-defence users including mining companies, pastoralists, Indigenous groups and other existing users of the Woomera Prohibited Area.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:05:09Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-826814",
+   "speaker": "Helen Kroger",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": "The Selection of Bills Committee presented its 11th report of 2013, recommending six bills be referred to specific committees for inquiry with set reporting dates, including the Environment Legislation Amendment Bill 2013 (report by 12 February 2014) and the Criminal Code Amendment (Harming Australians) Bill 2013 (report by 4 March 2014)."
+  },
+  {
+   "slug": "speech-826823",
+   "speaker": "Don Farrell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": "The speaker introduced the Defence Legislation Amendment (Woomera Prohibited Area) Bill 2013, which was read a first time, to amend legislation relating to defence and the Woomera Prohibited Area."
+  },
+  {
+   "slug": "speech-826824",
+   "speaker": "Don Farrell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": "The bill creates a coexistence scheme for defence and non-defence access to the Woomera Prohibited Area, allowing development of an estimated $35 billion in mineral resources while maintaining defence primacy. The government supports the intent but opposes the bill in its current form due to the lack of a regulatory impact statement and plans to introduce amendments in autumn 2014."
+  },
+  {
+   "slug": "speech-826872",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": "Senators were discharged and appointed to multiple committees as per a circulated document, including changes to the Abbott Government's Commission of Audit Select Committee, Education and Employment References Committee, and others. The speaker also noted that coalition Senate positions on the Joint Committee on Intelligence and Security were reduced from three to two, with Senator Parry volunteering to leave the committee."
+  }
+ ],
+ "acts": []
+}

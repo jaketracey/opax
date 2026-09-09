@@ -1,0 +1,286 @@
+{
+ "key": "au-federal-r5857",
+ "title": "Criminal Code Amendment (Protecting Minors Online) Bill 2017",
+ "short_title": "Criminal Code Amendment (Protecting Minors Online) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2017-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5857_ems_b581a351-3fa0-4520-a20c-7e54a4fc253b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/5296410%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5857%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00050",
+   "document_date": "2017-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-347539",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-347962",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Criminal Code Amendment (Protecting Minors Online) Bill 2017, known as 'Carly's law', which creates new offences for grooming or procuring children online, with penalties of up to 10 years imprisonment. The bill was prompted by the murder of 15-year-old Carly Ryan by Garry Francis Newman, a 50-year-old predator who pretended to be an 18-year-old online."
+  },
+  {
+   "slug": "speech-347963",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Criminal Code Amendment (Protecting Minors Online) Bill, known as Carly's Law, which criminalises online grooming and lying about age to a person under 16. The law is named after Carly Ryan, a 15-year-old murdered by Garry Newman, who had groomed her online without breaking existing laws."
+  },
+  {
+   "slug": "speech-347964",
+   "speaker": "Llew O'Brien",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Protecting Minors Online) Bill 2017, which introduces \"Carly's law\" creating an offence for preparing to cause harm to a minor, carrying a maximum penalty of 10 years imprisonment."
+  },
+  {
+   "slug": "speech-347965",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Protecting Minors Online) Bill 2017, which expands police powers to intervene in suspected grooming cases following the 2007 murder of 15-year-old Carly Ryan by an online predator, and praised the advocacy of Carly's mother Sonya Ryan and the Nick Xenophon Team."
+  },
+  {
+   "slug": "speech-348037",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-31",
+   "stage_hint": null,
+   "brief": "The speaker highlighted the government's record on child online safety, including the establishment of the Office of the Children's eSafety Commissioner, the Enhancing Online Safety for Children Bill (passed in 2015), and over 3.3 million visits to the office's website since June 2015. They also announced the introduction of the Criminal Code Amendment (Protecting Minors Online) Bill 2017, prompted by the Carly Ryan case, to prevent harm and sexual exploitation of children online."
+  },
+  {
+   "slug": "speech-348354",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (Protecting Minors Online) Bill 2017 was returned to the House for further consideration, with debate resumption set for a later hour."
+  },
+  {
+   "slug": "speech-348521",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Protecting Minors Online) Bill, known as Carly's Law, which creates an offence for using a carriage service to prepare or plan to cause harm or procure sexual activity with a person under 16, including misrepresenting age online. They noted the maximum penalty will be increased to 10 years, cited 11,000 child exploitation referrals to the AFP in 2015 and 750,000 online predators, and argued for regulating behaviour rather than the internet, alongside educating children about online safety."
+  },
+  {
+   "slug": "speech-348524",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Criminal Code Amendment (Protecting Minors Online) Bill should be supported as it creates a new offence targeting preparatory behaviour by adults using a carriage service to plan or prepare to harm a child under 16, punishable by up to 10 years imprisonment. They also criticised the Turnbull government for failing to enact Commonwealth legislation criminalising revenge porn despite Labor’s repeated bills and recommendations from the COAG advisory panel."
+  },
+  {
+   "slug": "speech-348525",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (Protecting Minors Online) Bill 2017 introduces an offence to criminalise acts to prepare or plan to cause harm to, procure, or engage in sexual activity with a person under 16 via a carriage service, citing the case of 15-year-old Carly Ryan and thanking Senator Xenophon for his work."
+  },
+  {
+   "slug": "speech-348526",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Criminal Code Amendment (Protecting Minors Online) Bill 2017, which introduces a new offence targeting preparatory conduct by online predators with a maximum penalty of 10 years imprisonment. The speaker referenced constituent Liz Walker from Porn Harms Kids and Sonya Ryan, whose daughter Carly was murdered by an online predator, and highlighted the need for law enforcement intervention before harm occurs."
+  },
+  {
+   "slug": "speech-348527",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor supports the Criminal Code Amendment (Protecting Minors Online) Bill 2017, which will allow police to investigate and intervene earlier against online child grooming, and rebutted the Minister for Justice’s claim that Labor delayed the bill, stating the government had multiple opportunities to bring it to debate."
+  },
+  {
+   "slug": "speech-348528",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Protecting Minors Online) Bill 2017 (Carly’s Law), which would criminalise planning to cause harm to, procure, or engage in sexual activity with a person under 16 via the internet, carrying up to 10 years imprisonment. The bill was named after Carly Ryan, a 15-year-old murdered in 2007 by Garry Newman, who posed as a teenager online."
+  },
+  {
+   "slug": "speech-348529",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Protecting Minors Online) Bill 2017, which creates new offences allowing police to intervene earlier when a person creates a fake identity to groom a minor, with a maximum penalty of 10 years' imprisonment. The bill was prompted by the murder of 15-year-old Carly Ryan, and the speaker thanked her mother Sonya for her advocacy through the Carly Ryan Foundation."
+  },
+  {
+   "slug": "speech-348769",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-14",
+   "stage_hint": null,
+   "brief": "The government introduced a world-first bill to cancel the passports of registered child sex offenders to prevent them travelling overseas to abuse children, and passed Carly’s law to give police new powers to intervene against online child predators."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Criminal Code Amendment (Protecting Minors Online) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00050",
+   "assent_date": "2017-06-22"
+  }
+ ]
+}

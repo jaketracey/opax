@@ -1,0 +1,182 @@
+{
+ "key": "au-federal-r5316",
+ "title": "True-up Shortfall Levy (Excise) (Carbon Tax Repeal) Bill 2014",
+ "short_title": "True-up Shortfall Levy (Excise) (Carbon Tax Repeal) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-07-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "passed",
+ "status_as_of": "2014-07-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-07-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-07-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5316_ems_57889714-0806-4f70-b905-bf2f3256ce7f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5316_ems_7abc27f2-8613-4610-afc4-18c59a506bed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5316%22",
+   "document_date": "2014-07-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00085",
+   "document_date": "2014-07-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2014-07-14",
+  "sentences": [
+   "This bill is part of a package that repeals the carbon tax and introduces new rules to prevent price exploitation.",
+   "The package would prohibit businesses from failing to pass on cost savings from the carbon tax repeal for key goods like electricity and gas, with penalties of up to 6,471 penalty units ($1,100,070) for a corporation.",
+   "Electricity and natural gas retailers and bulk synthetic greenhouse gas importers would have to provide statements to the ACCC estimating cost savings passed on to customers."
+  ],
+  "changes": [
+   "Prohibits price exploitation by requiring affected entities to pass through all cost savings from the carbon tax repeal.",
+   "Introduces new ACCC powers to monitor prices and issue substantiation notices to retailers and importers.",
+   "Requires electricity and natural gas retailers to prepare and communicate a statement to customers about estimated cost savings for the 2014-15 financial year."
+  ],
+  "affected": "Businesses that supply electricity, natural gas, or bulk synthetic greenhouse gases, and their customers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:59Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-294077",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294082",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-14",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "True-up Shortfall Levy (Excise) (Carbon Tax Repeal) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00085",
+   "assent_date": "2014-07-17"
+  }
+ ]
+}

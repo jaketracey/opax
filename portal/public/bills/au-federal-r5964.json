@@ -1,0 +1,178 @@
+{
+ "key": "au-federal-r5964",
+ "title": "Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2017",
+ "short_title": "Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Justice",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5964%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5964%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5964%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5964%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5964%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5964%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5964%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5964%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5964%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5964_ems_c2a0cb28-a1a7-4620-bb8d-81c2de53ce05%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/5619854%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5964%22",
+   "document_date": "2017-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-353898",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The bill introduces mandatory minimum sentences for serious child sex offences and reoffenders, increases penalties, presumes against bail, and criminalises online grooming and access to child abuse material, citing that since 2012 less than two-thirds of Commonwealth child sex offenders received imprisonment, with the most common sentence being 18 months and a six-month non-parole period."
+  },
+  {
+   "slug": "speech-355288",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "Labor will support the Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2017 but will move Senate amendments to introduce life imprisonment for aggravated child sex offenders, increase maximum sentences for the most serious offences to 20 and 25 years, and add new aggravated offences for organisers and inciters of abuse. Labor opposes the bill's mandatory minimum sentences, arguing they are opposed by legal and law enforcement experts and could force five-year jail terms for 18-year-olds in consensual relationships with 15-year-olds."
+  },
+  {
+   "slug": "speech-355290",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2017 is needed to strengthen laws against child sex offenders, citing that 41.3% of child abusers never serve prison time and the average sentence is six months. The bill introduces mandatory minimum sentences, restricts bail and cross-examination of victims, updates laws for digital crimes, and increases penalties for internet carriers that fail to report abuse material."
+  },
+  {
+   "slug": "speech-355291",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "Labor will move Senate amendments to increase maximum sentences and introduce aggravated offences for child abuse, but opposes mandatory minimum sentences because they risk penalising adolescents in consensual relationships and may reduce conviction rates. The speaker condemned Minister Keenan for implying Labor supports paedophilia, and highlighted Labor's record on child protection including the Royal Commission into Institutional Responses to Child Sexual Abuse."
+  },
+  {
+   "slug": "speech-355292",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The bill was supported for introducing mandatory minimum sentences for the most serious child sex offences and reoffenders, and for making community safety the primary consideration in sentencing. It also criminalises online grooming and addresses the fact that 269 Commonwealth child sex offenders were released without imprisonment over five years."
+  },
+  {
+   "slug": "speech-355293",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "Labor supports the Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill but opposes its mandatory minimum sentences, arguing they are ineffective and citing John Howard’s opposition. Police were commended for rescuing 85 children, and the cases of Shannon McCoole (35-year sentence) and David Cecchin (7 years 5 months) were noted."
+  },
+  {
+   "slug": "speech-355380",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2017, which introduces mandatory minimum sentences, longer jail terms, and new offences for providing electronic services to facilitate child abuse material and grooming third parties. He noted that only 58.7% of convicted Commonwealth child sex offenders received imprisonment since 2012, and cited cases including the deaths of Saliel Aplin and Olympia Jetson in New Zealand."
+  },
+  {
+   "slug": "speech-355381",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The bill's aim of protecting children from sexual abuse was supported, but mandatory minimum sentences were opposed as ineffective and likely to reduce convictions, with amendments proposed for higher maximum sentences including life imprisonment for the worst offenders and tougher penalties for overseas predators; the government was also criticised for cutting $184 million from the Australian Federal Police budget, leading to the loss of 151 officers."
+  },
+  {
+   "slug": "speech-355382",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Crimes Legislation Amendment (Sexual Crimes Against Children and Community Protection Measures) Bill 2017, which introduces mandatory minimum sentences, a presumption against bail, cumulative sentences, and other measures targeting child sex offenders, noting that only 58.7% of convicted Commonwealth child sex offenders since 2012 received imprisonment averaging six months."
+  }
+ ],
+ "acts": []
+}

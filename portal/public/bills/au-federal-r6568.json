@@ -1,0 +1,178 @@
+{
+ "key": "au-federal-r6568",
+ "title": "Biosecurity Amendment (Traveller Declarations and Other Measures) Bill 2020",
+ "short_title": "Biosecurity Amendment (Traveller Declarations and Other Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "passed",
+ "status_as_of": "2020-11-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-10-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-11-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6568_ems_c7a3c8c1-b5b6-4dbc-982b-f9a33e87d102%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6568%22",
+   "document_date": "2020-06-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00099",
+   "document_date": "2020-11-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-17",
+  "sentences": [
+   "This bill would change the Biosecurity Act to give officials more flexible ways to deal with travellers who break biosecurity rules.",
+   "The main change is to let regulations set different fine amounts for different types of breaches, and to allow the Director of Biosecurity to issue a list of goods that can attract higher fines.",
+   "The Director's list would last no more than 12 months and would not be subject to parliamentary disallowance because it is based on technical risk assessments."
+  ],
+  "changes": [
+   "The bill would allow different penalty amounts for different kinds of alleged contraventions under the Biosecurity Act.",
+   "It would permit the Director of Biosecurity to specify by legislative instrument which goods or classes of goods can have a higher infringement notice amount.",
+   "It would clarify that regulations can set different payment periods depending on the kind of goods involved.",
+   "It would make the Director's instrument not subject to parliamentary disallowance and limit its duration to 12 months.",
+   "It would allow regulations to incorporate references to the instrument as it changes over time."
+  ],
+  "affected": "Travellers, crew, biosecurity officers, Australian Border Force officers, and the Department of Agriculture, Water and the Environment are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:20:00Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-392793",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The Biosecurity Amendment (Traveller Declarations and Other Measures) Bill 2020 increases infringement notice amounts for travellers who fail to declare high biosecurity risk goods, with the Director of Biosecurity determining which goods pose such risk based on scientific evidence."
+  },
+  {
+   "slug": "speech-395435",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The opposition moved an amendment to the Biosecurity Amendment Bill, supporting the bill but condemning the government for implementing only four of the ten Commonwealth-responsibility recommendations from the 2017 Craik biosecurity review, including the proposed container levy. It also criticised the government for lacking a strategic plan to achieve its $100 billion agriculture industry target."
+  },
+  {
+   "slug": "speech-395444",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The Biosecurity Amendment (Traveller Declarations and Other Measures) Bill 2020 increases fines for failing to declare biosecurity risk goods from $444 to up to $2,664, aiming to protect Australian agriculture, fisheries and forestry valued at $60 billion and supporting over 330,000 jobs."
+  },
+  {
+   "slug": "speech-395446",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The Biosecurity Amendment (Traveller Declarations and Other Measures) Bill 2020 increases infringement notice penalties for failing to declare high-risk biosecurity goods, raising the maximum amount to $2,664 (12 penalty units) from the current $444 (2 penalty units), to strengthen compliance and protect Australia's biosecurity."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Biosecurity Amendment (Traveller Declarations and Other Measures) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00099",
+   "assent_date": "2020-11-20"
+  }
+ ]
+}

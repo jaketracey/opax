@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-r7478",
+ "title": "Carbon Credits (Carbon Farming Initiative) Amendment Bill 2026",
+ "short_title": "Carbon Credits (Carbon Farming Initiative) Amendment Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-22",
+ "originating_house": "representatives",
+ "sponsor": "PENFOLD, Alison, MP",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "11046",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7478%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7478%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7478_ems_62b1c6d8-33bd-43a1-98f1-41d6943ad7b7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7478%22",
+   "document_date": "2026-06-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,281 @@
+{
+ "key": "au-federal-r6065",
+ "title": "Social Services Legislation Amendment (Drug Testing Trial) Bill 2018",
+ "short_title": "Social Services Legislation Amendment (Drug Testing Trial) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6065%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6065%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6065%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6065%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6065%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6065%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6065%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6065%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6065%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6065%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6065_ems_5df415e5-bf55-4745-8db8-6d653265a900%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6065_ems_5b466110-7582-474e-878d-b2f089dbb602%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6065%22",
+   "document_date": "2018-02-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5326",
+   "date": "2018-08-13",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Drug Testing Trial) Bill 2018 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-08-13/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-362431",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "Labor opposed the Social Services Legislation Amendment (Drug Testing Trial) Bill 2018, which would have drug-tested 5,000 Newstart and youth allowance recipients in Canterbury Bankstown, Logan, and Mandurah, citing no evidence of effectiveness, opposition from medical and community experts, potential to increase crime and homelessness, and high testing costs."
+  },
+  {
+   "slug": "speech-362432",
+   "speaker": "Llew O'Brien",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the government's drug-testing trial for 5,000 Newstart and youth allowance recipients in Canterbury Bankstown, Logan, and Mandurah, arguing it would identify and help welfare recipients with substance abuse through income management and treatment, with refusal resulting in loss of benefits."
+  },
+  {
+   "slug": "speech-366537",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment (Drug Testing Trial) Bill 2018 would drug test 5,000 Newstart and youth allowance recipients in three locations including Logan, Queensland, but lacks evidence and will harm vulnerable Australians, contrasting with an $80 billion tax handout to big business. No health or community organizations support the trial."
+  },
+  {
+   "slug": "speech-366638",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Social Services Legislation Amendment (Drug Testing Trial) Bill 2018, which would drug test 5,000 new Newstart and youth allowance recipients in Canterbury Bankstown, Logan, and Mandurah over two years, with a $10 million treatment fund to help those who test positive get clean and into work."
+  },
+  {
+   "slug": "speech-366639",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment (Drug Testing Trial) Bill 2018, which would establish drug testing trials for welfare recipients in Canterbury Bankstown, Mandurah, and Logan City, was opposed as a punitive and evidence-free measure that would further marginalise vulnerable people, with no expert or community support and undisclosed costs."
+  },
+  {
+   "slug": "speech-366640",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Drug Testing Trial Bill 2018 should be passed, applying random drug tests to new Newstart and youth allowance recipients in Mandurah and two other trial sites, with positive results leading to income management and referral to treatment. They cited local support, a $10 million boost for drug treatment services, and existing government investments in Mandurah including $2 million for a youth health hub, $581 million for the Tonkin Highway extension, and a drop in unemployment from 11.6% to 6.5%."
+  },
+  {
+   "slug": "speech-366644",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Drug Testing Trial) Bill 2018, arguing it is arbitrary, cruel, and lacks evidence, and that drug addiction should be treated as a health issue rather than a punitive measure. They noted the trial would randomly test 5,000 Newstart and youth allowance recipients, with payment cancellation for refusal, and cited opposition from medical experts and community organisations, as well as long waits for rehabilitation."
+  },
+  {
+   "slug": "speech-366645",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Social Services Legislation Amendment (Drug Testing Trial) Bill 2018, which would introduce drug testing for Newstart and youth allowance recipients in trial sites at Logan (Queensland), Mandurah (Western Australia) and Canterbury-Bankstown (New South Wales). The speaker stated the trial is not about punishment but about identifying and supporting people with drug dependencies through counselling, rehabilitation and a $10 million treatment fund, and noted that around 2,500 people would be tested over two years."
+  },
+  {
+   "slug": "speech-366646",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Drug Testing Trial) Bill 2018, arguing it would stigmatise jobseekers, lacked evidence, and was costly, with only 100 to 120 people expected to test positive a second time across the three trial sites in Canterbury Bankstown, Logan, and Mandurah."
+  },
+  {
+   "slug": "speech-366647",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Social Services Legislation Amendment (Drug Testing Trial) Bill 2018, a trial of 5,000 people in Canterbury-Bankstown, Logan, and Mandurah, where Newstart and youth allowance recipients would face drug testing, with first failure leading to 80% of income on a BasicsCard and second failure triggering referral to medical assessment and rehabilitation, funded by $10 million."
+  },
+  {
+   "slug": "speech-366648",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "Labor opposed the Social Services Legislation Amendment (Drug Testing Trial) Bill 2018, arguing it is based on flawed assumptions and would harm vulnerable people. The party cited evidence from medical and welfare experts, including 982 health professionals, that drug testing welfare recipients is ineffective and costly, with trials in New Zealand and the US returning very few positive results."
+  },
+  {
+   "slug": "speech-366649",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker argued for the drug testing trial in the Social Services Legislation Amendment (Drug Testing Trial) Bill 2018, describing it as a non-punitive, world-leading measure to break intergenerational welfare dependency and drug addiction, citing 83% coalition voter support and 65% Labor voter support, and referencing the $685 million national ice initiative and $10 million for trial areas."
+  },
+  {
+   "slug": "speech-366651",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "Centre Alliance maintained its opposition to the Social Services Legislation Amendment (Drug Testing Trial) Bill 2018, arguing it is a rebadged version of a previously rejected bill with no published costings, and citing US evidence that such programs are ineffective and expensive. The party called on parliament to again reject the legislation, stating that existing addiction services are underfunded and that the bill is a populist attempt to demonise welfare recipients."
+  },
+  {
+   "slug": "speech-366652",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Drug Testing Trial) Bill 2018, arguing it would drive up crime and demonise welfare recipients, citing the opposition of a former Australian Federal Police commissioner and the lack of any credible expert support."
+  },
+  {
+   "slug": "speech-366660",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-08-13",
+   "stage_hint": null,
+   "brief": "The bill introduces a two-year drug testing trial for 5,000 new Newstart and youth allowance recipients in Canterbury Bankstown, Logan, and Mandurah, with income management for positive tests and a $10 million treatment fund. The speaker argued the trial identifies jobseekers with drug abuse issues and helps them access treatment and employment."
+  }
+ ],
+ "acts": []
+}

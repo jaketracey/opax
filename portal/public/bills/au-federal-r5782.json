@@ -1,0 +1,177 @@
+{
+ "key": "au-federal-r5782",
+ "title": "Superannuation Amendment (PSSAP Membership) Bill 2016",
+ "short_title": "Superannuation Amendment (PSSAP Membership) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2017-06-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5782_ems_ccb1b6fe-7ab6-485c-a285-a6c2965840f5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5782%22",
+   "document_date": "2016-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00068",
+   "document_date": "2017-06-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-12-01",
+  "sentences": [
+   "The bill would let people who used to contribute to the Public Sector Superannuation Accumulation Plan (PSSAP) keep contributing after they move to state or territory government jobs, private sector jobs, or certain offices.",
+   "To qualify, a person must already be a PSSAP member, have been an ordinary employer-sponsored member for at least 12 continuous months of Commonwealth service, meet other conditions, and elect to join with the Commonwealth Superannuation Corporation (CSC).",
+   "The bill also clarifies that employers of these former Commonwealth members are not required to make contributions to the PSSAP."
+  ],
+  "changes": [
+   "Extends PSSAP membership to former contributing members who move to certain non-Commonwealth employment.",
+   "Sets out eligibility criteria, including a 12-month continuous Commonwealth service requirement.",
+   "Requires eligible persons to elect to become a contributory member with the CSC.",
+   "Excludes employers of these former members from the obligation to contribute to the PSSAP."
+  ],
+  "affected": "Former PSSAP contributing members who move to state or territory government jobs, private sector jobs, or certain offices, and their employers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-339648",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-12-01",
+   "stage_hint": null,
+   "brief": "The Superannuation Amendment (PSSAP Membership) Bill 2016 was moved for second reading, enabling Public Sector Superannuation Accumulation Plan members who move to non-Commonwealth employment to remain contributory members, subject to a 12-month continuous Commonwealth employment requirement and employer superannuation guarantee obligations."
+  },
+  {
+   "slug": "speech-341096",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Superannuation Amendment (PSSAP Membership) Bill 2016, which allows PSSap members moving to non-Commonwealth employment to continue contributions, affecting nearly 90,000 contributing members and 40,000 inactive accounts. The speaker also opposed the government’s superannuation tax loopholes, proposing a lower non-concessional contributions cap of $75,000 and a high-income threshold of $200,000, and criticised the Coalition’s record on superannuation, including freezing the superannuation guarantee and removing the low-income superannuation contribution."
+  },
+  {
+   "slug": "speech-341097",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The Superannuation Amendment (PSSAP Membership) Bill 2016 allows former public sector employees who leave for non-public sector jobs to remain contributory members of the Public Sector Superannuation Accumulation Plan. The bill imposes restrictions requiring at least 12 months continuous Commonwealth employment and a new employer with a superannuation guarantee obligation."
+  },
+  {
+   "slug": "speech-341098",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The Superannuation Amendment (PSSAP Membership) Bill 2016 allows Public Sector Superannuation Accumulation Plan members to maintain contributory membership if they move to non-Commonwealth employment, subject to a 12-month continuous service requirement and the new employer having superannuation guarantee obligations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Superannuation Amendment (PSSAP Membership) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00068",
+   "assent_date": "2017-06-23"
+  }
+ ]
+}

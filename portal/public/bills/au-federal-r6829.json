@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6829",
+ "title": "Brisbane Airport Curfew and Demand Management Bill 2022",
+ "short_title": "Brisbane Airport Curfew and Demand Management Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-14",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6829%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6829%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6829%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6829_ems_69ea29d2-0bd7-4517-a8f6-24e461129979%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6829%22",
+   "document_date": "2022-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-418159",
+   "speaker": "Adam Paul Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The Brisbane Airport Curfew and Demand Management Bill 2022 proposes a 10 pm to 6 am curfew, a cap of 45 flights per hour, and a long‑term operating plan to reduce aircraft noise over Brisbane, citing a survey where 81% of residents reported sleep disruption and 68% suffered mental distress. The bill follows community campaigning by the Brisbane Flight Path Community Alliance, Greens candidates Max Chandler‑Mather and Stephen Bates, and aims to force the minister to shift more flights over Moreton Bay and distribute traffic fairly."
+  }
+ ],
+ "acts": []
+}

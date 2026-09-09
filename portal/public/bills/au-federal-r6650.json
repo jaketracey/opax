@@ -1,0 +1,156 @@
+{
+ "key": "au-federal-r6650",
+ "title": "Data Availability and Transparency (Consequential Amendments) Bill 2020",
+ "short_title": "Data Availability and Transparency (Consequential Amendments) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime MInister",
+ "status": "passed",
+ "status_as_of": "2022-03-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6650_ems_ebfc3432-7f9b-4977-a09f-9e280ae4a3d9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6650_ems_234758bf-10ea-46b9-b320-37dd2292cef1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6650%22",
+   "document_date": "2020-12-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00012",
+   "document_date": "2022-03-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-09",
+  "sentences": [
+   "This bill changes several existing laws so that the main data sharing scheme works properly.",
+   "It allows ASIO to give security advice about accreditation decisions and limits some review rights for foreign entities.",
+   "The bill also lets the Information Commissioner transfer privacy complaints to the new National Data Commissioner."
+  ],
+  "changes": [
+   "Amends the ASIO Act to let ASIO provide advice on accreditation decisions under the main bill.",
+   "Excludes some accreditation decisions based on ASIO security assessments from judicial review for foreign entities.",
+   "Clarifies how the FOI Act interacts with the main data sharing scheme.",
+   "Enables the Information Commissioner to send complaints to the National Data Commissioner."
+  ],
+  "affected": "Commonwealth bodies, accredited users, foreign entities, and the Information Commissioner.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-400589",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The Data Availability and Transparency (Consequential Amendments) Bill amends the ASIO Act, the ADJR Act, the Privacy Act and the FOI Act to support the principal data sharing scheme, including allowing ASIO to advise on accreditation, limiting foreign entities' notice and review rights, enabling complaint transfers between commissioners, and preserving FOI protections for shared data."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Data Availability and Transparency (Consequential Amendments) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00012",
+   "assent_date": "2022-03-31"
+  }
+ ]
+}

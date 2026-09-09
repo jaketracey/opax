@@ -1,0 +1,89 @@
+{
+ "key": "au-federal-s1472",
+ "title": "Climate Change Amendment (Duty of Care and Intergenerational Climate Equity) Bill 2025",
+ "short_title": "Climate Change Amendment (Duty of Care and Intergenerational Climate Equity) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-28",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen David",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "11009",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-10-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1472%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1472%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1472_ems_23ffef1a-4acb-4db4-a9a2-0b1a3b1d6f0a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1472%22",
+   "document_date": "2025-10-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-28",
+  "sentences": [
+   "This bill would require officials to weigh the effects of major climate-related choices on the welfare of today's and tomorrow's children.",
+   "It would add two legal duties for such choices, including a ban on approving coal, oil, or gas projects that could seriously hurt children's health.",
+   "The duties would apply to decisions made under several existing laws, such as the Environment Protection and Biodiversity Conservation Act 1999 and the Offshore Petroleum and Greenhouse Gas Storage Act 2006."
+  ],
+  "changes": [
+   "Adds a duty to treat children's welfare as the top concern when deciding on projects with large emissions.",
+   "Adds a ban on approving fossil-fuel extraction or exploration that could seriously harm children's health.",
+   "Extends these duties to decisions under several named Acts."
+  ],
+  "affected": "Officials making significant climate-related decisions under the named Acts, and Australian children, both current and future.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:37:22Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1197751",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-10-29",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

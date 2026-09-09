@@ -1,0 +1,143 @@
+{
+ "key": "au-federal-r6808",
+ "title": "Fair Work Amendment (Same Job, Same Pay) Bill 2021",
+ "short_title": "Fair Work Amendment (Same Job, Same Pay) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-11-22",
+ "originating_house": "representatives",
+ "sponsor": "ALBANESE, Anthony, MP",
+ "sponsor_party": "Australian Labor Party",
+ "sponsor_person_id": "10007",
+ "portfolio": "(s) ALBANESE, Anthony, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6808%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6808%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6808%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6808%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6808_ems_b880a24f-c0ac-4512-b762-5da47eef9238%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6808%22",
+   "document_date": "2021-11-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-11-22",
+  "sentences": [
+   "This bill would change the Fair Work Act so that workers hired through labour hire companies must be paid at least as much as directly hired workers doing the same job.",
+   "It would stop labour hire firms from undercutting pay rates set by enterprise agreements, which the government says has been used to cut costs and exploit workers.",
+   "Small businesses with fewer than 15 employees or meeting a tax law definition would be exempt from the new rules."
+  ],
+  "changes": [
+   "Requires labour hire workers to receive the same pay as directly employed workers doing the same or similar work.",
+   "Exempts small businesses from the new pay equality requirement.",
+   "Protects the integrity of enterprise agreements by preventing wage arbitrage through labour hire arrangements."
+  ],
+  "affected": "Workers employed through labour hire companies, their host employers, and labour hire businesses.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-415309",
+   "speaker": "Meryl Jane Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Fair Work Amendment (Same Job, Same Pay) Bill 2021, arguing that the Morrison government has allowed inequality in industries like mining, nursing and construction, and cited a miner earning $50,000 less than permanent colleagues, costing his family over $300,000 in lost wages."
+  },
+  {
+   "slug": "speech-416176",
+   "speaker": "Meryl Jane Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The MP supported the Fair Work Amendment (Same Job, Same Pay) Bill 2021, arguing labour-hire workers are exploited and paid less for the same work. They outlined Labor’s workplace reforms: a fair test for casual classification, abolishing the Registered Organisations Commission and the Australian Building and Construction Commission, and extending Fair Work Commission powers to gig economy workers."
+  },
+  {
+   "slug": "speech-416177",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Amendment (Same Job, Same Pay) Bill 2021, arguing it was a rehashed policy rejected by voters (citing a 5% swing against Labor in the member for Paterson's electorate) and that it would cost thousands of jobs, remove labour-hire flexibility needed for surge capacity in mining, and serve union interests rather than workers."
+  },
+  {
+   "slug": "speech-416178",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Same Job, Same Pay) Bill 2021 would require labour hire workers to receive no less pay than directly employed workers doing the same job, targeting exploitative labour hire practices that create two-tier wages and insecure work."
+  },
+  {
+   "slug": "speech-416185",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Same Job, Same Pay) Bill 2021 is a simple fairness measure ensuring equal pay for equal work, and criticised labour hire practices that leave young people in the electorate of Lalor without job security, unable to plan their futures, and earning less than colleagues on the same site."
+  },
+  {
+   "slug": "speech-416187",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Fair Work Amendment (Same Job, Same Pay) Bill 2021, which targets large and medium businesses misusing labour hire, not small businesses with 15 or fewer employees. The bill aims to ensure labour hire workers receive the same pay and conditions as directly employed workers doing the same job, addressing systemic underpayment in sectors like manufacturing, mining, cleaning, and security."
+  },
+  {
+   "slug": "speech-416189",
+   "speaker": "Libby Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Same Job, Same Pay) Bill 2021 was argued to require labour hire workers to receive the same pay as directly employed workers doing the same job, with wage differences of up to $500 per week cited, and the Morrison government was criticised for allowing such exploitation."
+  }
+ ],
+ "acts": []
+}

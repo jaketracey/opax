@@ -1,0 +1,68 @@
+{
+ "key": "au-federal-r7511",
+ "title": "Human Rights (Children Born Alive Protection) Bill 2026",
+ "short_title": "Human Rights (Children Born Alive Protection) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-17",
+ "originating_house": "representatives",
+ "sponsor": "O'BRIEN, Llew, MP",
+ "sponsor_party": "Liberal National Party of Queensland",
+ "sponsor_person_id": "10892",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7511%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7511%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7511_ems_b2898728-4e37-4683-8f79-057bd41946d7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7511%22",
+   "document_date": "2026-08-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-17",
+  "sentences": [
+   "The bill would make it a criminal offence for doctors to deny medical care to a baby born alive after an abortion.",
+   "Health practitioner registration boards would handle breaches of this duty in the same way as other professional misconduct.",
+   "The bill would also require doctors to notify authorities of live births from terminations so that statistics can be collected, and it would exempt mothers from prosecution."
+  ],
+  "changes": [
+   "Creates an offence for health practitioners who fail to provide medical care to a child born alive after a termination.",
+   "Requires health practitioner registration boards to treat breaches of this duty like any other alleged breach.",
+   "Requires health practitioners to report live births from terminations for statistical purposes.",
+   "Exempts mothers from prosecution under the bill."
+  ],
+  "affected": "Health practitioners, mothers, and babies born alive as a result of terminations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

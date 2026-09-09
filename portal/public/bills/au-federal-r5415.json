@@ -1,0 +1,344 @@
+{
+ "key": "au-federal-r5415",
+ "title": "Migration Amendment (Maintaining the Good Order of Immigration Detention Facilities) Bill 2015",
+ "short_title": "Migration Amendment (Maintaining the Good Order of Immigration Detention Facilities) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-02-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5415%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5415%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5415%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5415%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5415%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5415%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5415%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5415%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5415%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5415%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5415%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5415_ems_ee49724e-c47c-4ac0-aeb6-1eebfe0f6f95%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5415%22",
+   "document_date": "2015-02-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-02-25",
+  "sentences": [
+   "The bill would change the Migration Act 1958 to let authorised officers use reasonable force in immigration detention facilities to protect people, maintain order, or prevent escapes.",
+   "Officers could use force they believe is necessary for specific purposes, such as stopping self-harm, preventing property damage, or moving detainees, but only for incidents at these facilities.",
+   "The bill sets limits on this power, including a ban on using force to give food or fluids, and requires officers to meet training standards set by the Minister."
+  ],
+  "changes": [
+   "The bill would allow authorised officers to use reasonable force in immigration detention facilities.",
+   "The bill would define immigration detention facilities and limit the use of force to incidents at those facilities.",
+   "The bill would prohibit using force to administer nourishment or fluids to detainees.",
+   "The bill would require officers to meet training and qualification requirements determined by the Minister.",
+   "The bill would create a complaints mechanism for people to complain to the Secretary about the use of force.",
+   "The bill would bar legal action against the Commonwealth for good-faith use of force, except for High Court jurisdiction."
+  ],
+  "affected": "Authorised officers, detainees, and other people in immigration detention facilities, as well as the Department of Immigration and Border Protection.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:59:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3770",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "question": "Richard Marles The Migration Amendment (Maintaining the Good Order of Immigration Detention Facilities) Bill 2015 seeks to define and regulate the use of force in detention facilities by amending the Migration Act 1958. The use of force in facilities such as Villawood and Maribyrnong is currently undefined and unregulated by any statute and therefore operates under the common law. Labor supports the general intent of this bill, however we have a number of concerns regarding the specific provisions of it. These concerns are shared by the Australian Human Rights Commission, which provided a comprehensive submission to the Senate inquiry into this bill which is currently underway. The Human Rights Commission submission makes nine recommendations which seek to address its concerns with the bill and Labor is now proposing to move amendments to the bill to give effect to those recommendations. At the outset, let me say that, in the event these amendments do not pass, Labor will not be in a position to support the bill. I do say again, however, that Labor supports the underlying premise of this bill: to put in place a legislative framework for the use of reasonable force in detention facilities rather than allowing the use of force to continue to operate under the common law. Operating under the common law means that the officers employed in detention centres, either as Commonwealth employees or as employees of detention service providers, have the same common law powers to deal with public order disturbances as do private citizens. It is considered undesirable, both by the government and by the staff working in the detention facilities, for reliance on the common law to continue. The fundamental problem with using the common law in this context is that it is very difficult to determine, at the time the decision on whether to use force or not has to be made, whether it is reasonable in the circumstances. Often the answer to that question only becomes apparent after the eve",
+   "stage": "Second reading",
+   "ayes": 81,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-05-13/1"
+  },
+  {
+   "key": "federal-representatives-3771",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "question": "Richard Marles by leave—I move opposition amendments (1) to (11), as circulated in my name, together: (1) Schedule 1, item 5, page 4 (after line 1), after the heading to Division 7B, insert: Subdivision A—Maintaining the good order etc. of immigration detention facilities (2) Schedule 1, item 5, page 4 (lines 4 to 6), omit \"such reasonable force against any person or thing, as the authorised officer reasonably believes is necessary,\", substitute \"such force against any person or thing as is necessary and reasonable\". (3) Schedule 1, item 5, page 4 (lines 11 to 13), omit \"such reasonable force as the authorised officer reasonably believes is necessary under that subsection\", substitute \"under that subsection such force as is necessary and reasonable\". (4) Schedule 1, item 5, page 5 (lines 7 and 8), omit \"the authorised officer reasonably believes is necessary\", substitute \"is necessary and reasonable\". (5) Schedule 1, item 5, page 5 (after line 14), after subsection (5), insert: (5A) An authorised officer must not use force against a person under subsection (1) except: (a) as a measure of last resort, taking into account other available alternatives such as negotiation and de-escalation; and (b) for the shortest amount of time that is necessary. (5B) An authorised officer must not use force against a person under subsection (1): (a) in a way that amounts to: (i) cruel, inhuman or degrading treatment; or (ii) punishment; or (b) if the force is beyond that which is necessary and reasonablein the circumstances, including: (i) force where none is needed; (ii) more force than is needed; (iii) force, or a level of force, that continues after the necessity for it has ended; (iv) a knowingly wrongful use of force. (5C) An authorised officer must not exercise the power under subsection (1) to move a detainee within an immigration detention facility unless: (a) an authorised officer has requested the detainee to move to another part of the facility; and (b) the request is made",
+   "stage": "Consideration in detail",
+   "ayes": 50,
+   "noes": 82,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-05-13/2"
+  },
+  {
+   "key": "federal-representatives-3772",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "question": "Craig Kelly The question now is that the bill be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 79,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-05-13/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-305986",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-309640",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "Labor supports the bill's intent to legislate the use of force in immigration detention but will move amendments addressing concerns about subjective reasonableness, unspecified training, inadequate complaint oversight, and broad immunity; without these amendments, Labor will not support the bill."
+  },
+  {
+   "slug": "speech-309641",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment Bill 2015 is necessary to allow authorised personnel to use reasonable force in immigration detention facilities to maintain order and protect safety, citing 2011 riots at Christmas Island and Villawood. They contrasted conditions in Australian detention centres favourably with refugee camps in Thailand, criticised those who bypassed the UNHCR system by paying people smugglers, and endorsed the bill as a means to prevent taxpayer-funded damage and restore a fair immigration system."
+  },
+  {
+   "slug": "speech-309642",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment Bill 2015 should not be passed without significant amendments, citing concerns over excessive discretionary powers for contractors like Serco, subjective standards for using force, inadequate training, no independent complaints mechanism, and a partial bar on litigation. They supported four amendments: an objective test of reasonableness and necessity for using force, clearer limits including on force against children, oversight by the Commonwealth Ombudsman for complaints, and removal of the Commonwealth's immunity from litigation."
+  },
+  {
+   "slug": "speech-309643",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Maintaining the Good Order of Immigration Detention Facilities) Bill 2015 is needed to clean up Labor's mismanagement of immigration detention, citing 800 boats and 50,000 arrivals under Labor, overcrowding at facilities like Christmas Island, Villawood, Curtin, Scherger, Inverbrackie, and Yongah Hill, and the Hawke-Williams report's findings on security failures and worker safety."
+  },
+  {
+   "slug": "speech-309646",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment Bill 2015 is needed to establish a statutory framework for the use of force in immigration detention facilities. They noted that Australia provides about 22 cents per $100 in foreign aid, which is set to decrease, and that private individuals are more generous than the government in contributing to poorer countries."
+  },
+  {
+   "slug": "speech-309648",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Maintaining the Good Order of Immigration Detention Facilities) Bill 2015, arguing it grants guards an overly broad and subjective power to use force with insufficient safeguards, immunity from liability for excessive force used in good faith, and lacks independent oversight. The speaker noted the bill removes the Commonwealth's liability, does not mandate adequate training or public accountability, and fails to address systemic issues in immigration detention such as overcrowding, lengthy detention, and reported abuses."
+  },
+  {
+   "slug": "speech-309649",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Maintaining the Good Order of Immigration Detention Facilities) Bill 2015, arguing its immunity provision (section 197BF) would remove the right of detainees to sue private operators like Serco for negligence or assault, citing reports of excessive force at Maribyrnong detention centre. They contended this would eliminate financial incentives for safety and urged amendments consistent with recommendations from the Australian Human Rights Commission."
+  },
+  {
+   "slug": "speech-309650",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Maintaining the Good Order of Immigration Detention Facilities) Bill 2015 but argued it needed amendments to strike the right balance on use of force. Shadow Minister Richard Marles will move amendments adopting Human Rights Commission proposals to include objective tests of reasonableness, limit force to the shortest time necessary, and prohibit cruel or excessive force."
+  },
+  {
+   "slug": "speech-309651",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued the Migration Amendment Bill fails to clarify lawful use of force in detention centres, citing unresolved ambiguities, inadequate officer training (Certificate II), and incompatibility with human rights obligations. They supported Labor amendments to improve the bill, criticised the government’s reliance on the Hawke-Williams report despite its lack of force-related recommendations, and questioned the necessity of the legislation given declining detention populations."
+  },
+  {
+   "slug": "speech-309653",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Maintaining the Good Order of Immigration Detention Facilities) Bill 2015 would allow authorised officers to use reasonable force to protect life, health, safety, and good order in immigration detention facilities, following 2011 independent review recommendations on incidents at Christmas Island and Villawood centres. The bill includes safeguards such as mandatory training, incident reporting, a complaints process to the department secretary, and a partial legal bar on proceedings for good-faith actions, while explicitly prohibiting lethal force and excessive force."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-s1475",
+ "title": "Fair Work Amendment (Right to Work from Home) Bill 2025",
+ "short_title": "Fair Work Amendment (Right to Work from Home) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-05",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen Barbara",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "11008",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-11-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1475%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1475%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1475_ems_f13e6ec1-c871-4e46-9ac0-d5647b7d5f11%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1475%22",
+   "document_date": "2025-11-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

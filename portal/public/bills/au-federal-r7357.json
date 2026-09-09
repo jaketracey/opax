@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-r7357",
+ "title": "Higher Education Support Amendment (Fair Study and Opportunity) Bill 2025",
+ "short_title": "Higher Education Support Amendment (Fair Study and Opportunity) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-08-25",
+ "originating_house": "representatives",
+ "sponsor": "LE, Dai, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10978",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-08-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7357%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7357%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7357_ems_26fa3ccd-ecae-44ef-86ca-f928ce237e2d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7357%22",
+   "document_date": "2025-08-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

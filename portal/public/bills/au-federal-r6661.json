@@ -1,0 +1,265 @@
+{
+ "key": "au-federal-r6661",
+ "title": "Education Legislation Amendment (2021 Measures No. 1) Bill 2021",
+ "short_title": "Education Legislation Amendment (2021 Measures No. 1) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2021-05-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6661%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6661%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6661%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6661%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6661%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6661%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6661%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6661%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6661%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6661%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-05-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6661%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6661_ems_ff6d3202-3c20-4fac-a5d0-a55c6770ca7a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6661%22",
+   "document_date": "2021-02-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00039",
+   "document_date": "2021-05-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 8,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-03",
+  "sentences": [
+   "This bill would update funding caps for Australian Research Council programs and change the status of the University of Notre Dame Australia.",
+   "It would apply current indexation rates to existing appropriation amounts in the ARC Act and re-categorise the university as a Table A provider under the Higher Education Support Act.",
+   "The bill would add an extra $855.0 million in appropriations for the period from 1 July 2020 to 30 June 2024."
+  ],
+  "changes": [
+   "Apply current indexation rates to existing appropriation amounts in the ARC Act from July 2023.",
+   "Re-categorise the University of Notre Dame Australia as a Table A provider from 2021.",
+   "Give UNDA access to new funding arrangements under the Job-ready Graduates reforms."
+  ],
+  "affected": "The Australian Research Council, the University of Notre Dame Australia, and students at that university.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:50:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7627",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion unchanged. The usual second reading motion is \"*that the bill be read a second time*\" and to read a bill for a second time is to agree with its main idea. This vote occurred in response to an [amendment](https://www.openaustralia.org.au/debates/?id=2021-02-24.20.1) (see below). Because this vote was successful, the amendment failed. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes:* > > *(1) the Government has damaged Australia's world-class higher education system, abandoning university workers during the pandemic, and threatening Australia's capacity to produce high-quality research; and* > > *(2) the Government's actions will make it harder for Australia to recover from the COVID recession\".*",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-24/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-401361",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The bill updates funding caps for the Australian Research Council until 30 June 2024, providing over $3 billion for research projects, and recategorises the University of Notre Dame as a table A provider, investing $27.2 million over four years to expand Commonwealth supported places."
+  },
+  {
+   "slug": "speech-403310",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's administrative changes and the reclassification of the University of Notre Dame as a Table A provider, but argued the Morrison government had damaged higher education by abandoning universities during COVID, leading to $1.8 billion in losses and over 17,300 job losses, and criticised the Job-ready Graduates legislation for increasing student fees."
+  },
+  {
+   "slug": "speech-403312",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The bill increases Australian Research Council funding caps in line with inflation and reclassifies the University of Notre Dame as a Table A provider, with $27.2 million committed over four years and $133.3 million over ten years to support its students and access to Commonwealth supported places."
+  },
+  {
+   "slug": "speech-403313",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that political interference in Australian Research Council grants by ministers Brendan Nelson and Simon Birmingham undermined academic freedom and peer review, citing 11 vetoed humanities projects. They called for removing or transparently regulating the ministerial veto to protect the ARC's independence."
+  },
+  {
+   "slug": "speech-403314",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Education Legislation Amendment (2021 Measures No. 1) Bill 2021 to underwrite research via the Australian Research Council, and advocated for more Commonwealth support places for regional degrees, citing La Trobe University’s Rural Medical Pathway and Federation University’s proposed Bachelor of Nursing in Horsham. They also backed the Higher Education Support Amendment (Freedom of Speech) Bill 2020 to protect academic freedom."
+  },
+  {
+   "slug": "speech-403315",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill elevating the University of Notre Dame Australia to a Table A provider, arguing it would address equity issues by providing Commonwealth supported places for students in Western Australia and New South Wales, including Broome, with a $133 million investment over 10 years."
+  },
+  {
+   "slug": "speech-403318",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Education Legislation Amendment (2021 Measures No. 1) Bill 2021, which increases Australian Research Council funding caps in line with inflation and extends forward estimates to June 2024. They highlighted research at the University of Queensland, including the Centre of Excellence for Children and Families over the Life Course led by Professor Janeen Baxter and the Centre of Excellence for Plant Success in Nature and Agriculture led by Christine Beveridge, and thanked researchers involved in the COVID-19 vaccine project."
+  },
+  {
+   "slug": "speech-403319",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The member for Boothby supported the Education Legislation Amendment (2021 Measures No. 1) Bill 2021, which updates the ARC funding cap and extends forward estimates to June 2024, and highlighted ARC-funded research projects at Flinders University and the University of Adelaide, including work on autonomous systems, marine biofilms, domestic violence workforce support, intestinal stem cells, wine production, and plant energy biology."
+  },
+  {
+   "slug": "speech-403320",
+   "speaker": "Michelle Landry",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The bill amends the Australian Research Council Act 2001 to ensure continuity of ARC funding and the Higher Education Support Act 2003 to re-categorise the University of Notre Dame Australia as a Table A provider, increasing ARC funding caps by $855 million over 2020–21 to 2023–24."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education Legislation Amendment (2021 Measures No. 1) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00039",
+   "assent_date": "2021-05-27"
+  }
+ ]
+}

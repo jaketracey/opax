@@ -1,0 +1,293 @@
+{
+ "key": "au-federal-r5179",
+ "title": "Farm Household Support Bill 2014",
+ "short_title": "Farm Household Support Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2014-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5179_ems_8d4dff27-798d-4eb9-8c05-f91459c73f7d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5179%22",
+   "document_date": "2014-03-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00012",
+   "document_date": "2014-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-06",
+  "sentences": [
+   "The bill would create a new payment called the Farm Household Allowance for farmers and their partners experiencing financial difficulty.",
+   "The allowance would provide time-limited income support and funding for advice and training, and would be aligned with social security payments like newstart and youth allowances.",
+   "The Farm Household Allowance would replace the Exceptional Circumstances Relief Payment and be available regardless of the cause of hardship, unlike the current drought policy that relies on a climatic trigger."
+  ],
+  "changes": [
+   "Establishes the Farm Household Allowance as a new form of financial assistance.",
+   "Replaces the existing Exceptional Circumstances Relief Payment.",
+   "Shifts the focus of farmer assistance from crisis response to preparedness and risk management."
+  ],
+  "affected": "Farmers and their partners in financial hardship.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-284775",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284777",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285356",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285358",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285360",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285361",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285362",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285365",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285587",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285593",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285596",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285602",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285609",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285610",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285611",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285616",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285620",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Farm Household Support Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00012",
+   "assent_date": "2014-03-28"
+  }
+ ]
+}

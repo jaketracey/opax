@@ -1,0 +1,230 @@
+{
+ "key": "au-federal-r5168",
+ "title": "Tax and Superannuation Laws Amendment (2014 Measures No. 1) Bill 2014",
+ "short_title": "Tax and Superannuation Laws Amendment (2014 Measures No. 1) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-02-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2014-03-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5168_ems_3b4fd6f8-bfad-4a3c-b17f-58abb7638cdc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5168%22",
+   "document_date": "2014-02-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00011",
+   "document_date": "2014-03-18",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-26",
+  "sentences": [
+   "This bill would make it illegal to promote schemes that illegally release superannuation savings early.",
+   "It creates a new civil penalty in the Superannuation Industry (Supervision) Act 1993, enforceable by the Commissioner of Taxation for self-managed super funds or the Australian Prudential Regulation Authority for other funds.",
+   "The explanatory memorandum notes that promoters have previously taken up to half of a member's super balance or stolen the entire amount."
+  ],
+  "changes": [
+   "Creates a new civil penalty provision in the Superannuation Industry (Supervision) Act 1993.",
+   "Gives regulators the power to pursue penalties for promoting illegal early release schemes.",
+   "Targets promoters who exploit people by encouraging rollovers into fraudulent funds."
+  ],
+  "affected": "Promoters of illegal early release schemes and members of superannuation funds.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:32:50Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-283230",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284386",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284388",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284394",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284400",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284401",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284402",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284406",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284407",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284408",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (2014 Measures No. 1) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00011",
+   "assent_date": "2014-03-18"
+  }
+ ]
+}

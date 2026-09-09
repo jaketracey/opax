@@ -1,0 +1,185 @@
+{
+ "key": "au-federal-r5936",
+ "title": "Education Services for Overseas Students (TPS Levies) Amendment Bill 2017",
+ "short_title": "Education Services for Overseas Students (TPS Levies) Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2017-09-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5936_ems_e033270b-6b10-492a-8523-5180ffb0d84b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5936%22",
+   "document_date": "2017-08-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00098",
+   "document_date": "2017-09-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-10",
+  "sentences": [
+   "The bill would let the Minister for Education and Training adjust fees in the Overseas Students Tuition Fund to respond quickly to changes in the international education market.",
+   "It would give the minister power to set the administrative and base fee parts of the annual levy paid by education providers, with the aim of keeping the fund balance between $30 million and $50 million.",
+   "The explanatory memorandum says the change is a one-off reduction and fee settings may not be updated every year."
+  ],
+  "changes": [
+   "The bill gives the minister authority to manage the fund's balance proactively.",
+   "It allows the minister to set lower administrative and base fees to reduce the fund's reserves.",
+   "It removes the need for the fund to stay within its current target range by letting the minister adjust fees as needed."
+  ],
+  "affected": "International education providers registered under the Education Services for Overseas Students Act 2000 would pay different levy fees set by the minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:34:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-350953",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The bill reduces the administrative and base fees of the Tuition Protection Service levy to keep the fund within a $30–50 million target range, while giving the minister power to set those fees through a legislative instrument and capping them at current indexed levels."
+  },
+  {
+   "slug": "speech-352747",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "Labor supported the Education Services for Overseas Students (TPS Levies) Amendment Bill 2017, noting that international student enrolments reached 583,243 in June 2017 and contributed over $21 billion to the economy. The opposition also warned that the government's proposed higher education funding cuts could undermine university quality and international competitiveness, particularly for regional universities."
+  },
+  {
+   "slug": "speech-353119",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-06",
+   "stage_hint": null,
+   "brief": "Support was expressed for the Education Services for Overseas Students (TPS Levies) Amendment Bill 2017 as sensible changes to the Tuition Protection Service. Reference was made to the TPS's introduction in 2012 under Labor Minister Chris Evans, responding to the 2009 international education crisis, including dodgy private providers such as Melbourne cooking schools with no kitchens."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education Services for Overseas Students (TPS Levies) Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00098",
+   "assent_date": "2017-09-14"
+  }
+ ]
+}

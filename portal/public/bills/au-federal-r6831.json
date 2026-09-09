@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-r6831",
+ "title": "Social Media (Anti-Trolling) Bill 2022",
+ "short_title": "Social Media (Anti-Trolling) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6831%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6831%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6831%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6831%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6831_ems_d8a044e1-2ac3-4f15-b90a-7cf5d57b4b2e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6831%22",
+   "document_date": "2022-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-417904",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-10",
+   "stage_hint": null,
+   "brief": "The government introduced the Social Media (Anti-Trolling) Bill to protect page owners from defamation liability for third-party posts, make social media platforms liable as publishers, and create mechanisms to unmask anonymous trolls via a complaints scheme and court orders, while requiring foreign platforms to establish an Australian nominated entity."
+  },
+  {
+   "slug": "speech-419888",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-31",
+   "stage_hint": null,
+   "brief": "The speaker argued the Social Media (Anti-Trolling) Bill 2022 was a publicity stunt introduced after the Senate had risen, ensuring it could not pass before the election, and criticised the government for scheduling only 10 House sitting days in four months. They noted the bill’s title was misleading, calling it a defamation measure that could worsen trolling, and referenced a 1,200-day delay on a national anticorruption commission, as well as evidence from Sonya Ryan and barrister Sue Chrysanthou SC."
+  }
+ ],
+ "acts": []
+}

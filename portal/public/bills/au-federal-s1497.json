@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-s1497",
+ "title": "Workplace Relations Legislation Amendment (Clearing the Fair Work Commission Backlog) Bill 2026",
+ "short_title": "Workplace Relations Legislation Amendment (Clearing the Fair Work Commission Backlog) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-24",
+ "originating_house": "senate",
+ "sponsor": "HUME, Sen Jane",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10853",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1497%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1497_ems_91b59a30-9d92-4e51-bcc5-f934558e4636%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1497%22",
+   "document_date": "2026-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

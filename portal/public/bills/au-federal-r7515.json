@@ -1,0 +1,85 @@
+{
+ "key": "au-federal-r7515",
+ "title": "Social Security and Other Legislation Amendment (Technical Changes No. 2) Bill 2026",
+ "short_title": "Social Security and Other Legislation Amendment (Technical Changes No. 2) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-07-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "before_parliament",
+ "status_as_of": "2026-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7515%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7515%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7515%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7515%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7515%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7515_ems_06478206-42a5-47fd-8756-221f857b8e20%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7515%22",
+   "document_date": "2026-07-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-07-01",
+  "sentences": [
+   "The bill aims to allow automatic processing of some social security and family assistance payments.",
+   "It would set rules for using tax data provided by the Commissioner of Taxation for family payment reconciliations and child support assessments.",
+   "People who must declare their adjusted taxable income but miss the deadline would face the same consequences as those who fail to lodge a tax return on time."
+  ],
+  "changes": [
+   "Provide a legal basis for automating advance payments of social security or family assistance.",
+   "Clarify when the Child Support Registrar may use pre-issue income data from the tax commissioner for child support assessments.",
+   "Amend family assistance law so that the penalty for not declaring adjusted taxable income matches the penalty for not lodging a tax return."
+  ],
+  "affected": "People receiving social security, family tax benefit, child care subsidy, single income family supplement, or involved in child support assessments are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:03:16Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

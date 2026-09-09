@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7064",
+ "title": "National Housing Supply and Affordability Council Bill 2023 [No. 2]",
+ "short_title": "National Housing Supply and Affordability Council Bill 2023 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-08-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7064%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7064%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7064%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7061_ems_f5ea28e7-2d21-456a-94ae-c4d73c22ff7d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7064%22",
+   "document_date": "2023-08-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-08-02",
+  "sentences": [
+   "This bill is part of a package that would establish the Housing Australia Future Fund to provide a funding source for social and affordable housing and other housing needs, and create an independent advisory body on housing supply and affordability.",
+   "The Housing Council Bill would set up the National Housing Supply and Affordability Council as a statutory advisory body to give independent advice to the government on improving housing supply and affordability.",
+   "The Housing Council Bill would commence on 1 July 2023, and the package would allocate $10 billion to the fund to deliver 30,000 social and affordable homes and $330 million to acute housing needs over the first five years."
+  ],
+  "changes": [
+   "Establishes the Housing Australia Future Fund as a funding source for social and affordable housing and other acute housing needs.",
+   "Creates the National Housing Supply and Affordability Council as an independent statutory advisory body.",
+   "Provides $10 billion to the fund to deliver 30,000 social and affordable homes and $330 million for acute housing needs over the first five years."
+  ],
+  "affected": "The package would affect people needing social and affordable housing, Indigenous communities, women, children, and veterans, as well as the government and the Future Fund Board.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

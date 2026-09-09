@@ -1,0 +1,208 @@
+{
+ "key": "au-federal-r5649",
+ "title": "Financial System Legislation Amendment (Resilience and Collateral Protection) Bill 2016",
+ "short_title": "Financial System Legislation Amendment (Resilience and Collateral Protection) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-03-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-05-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5649_ems_c328f26e-49d6-4a9e-8cc3-a5371f4711fe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5649%22",
+   "document_date": "2016-03-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00043",
+   "document_date": "2016-05-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-16",
+  "sentences": [
+   "This bill would let Australian financial institutions meet global rules for managing risk in over-the-counter derivatives trades.",
+   "It would update the Payment Systems and Netting Act 1998 and other laws to allow institutions to give and enforce rights over collateral provided as security.",
+   "The bill would also clarify how Australian law applies to termination rights and approved settlement systems in all market conditions."
+  ],
+  "changes": [
+   "Amends the Payment Systems and Netting Act 1998 and associated provisions in other Acts.",
+   "Ensures financial institutions can comply with internationally-agreed margining requirements for OTC derivatives.",
+   "Provides legal certainty about termination rights under certain financial market transactions.",
+   "Provides legal certainty about approved RTGS systems, netting arrangements and netting markets in all market conditions.",
+   "Makes consequential amendments to the Banking Act, Business Transfer Act, Insurance Act, Life Insurance Act, and PHI Act."
+  ],
+  "affected": "Financial institutions in Australia that deal in over-the-counter derivatives.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:29Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-330568",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-16",
+   "stage_hint": null,
+   "brief": "The Financial System Legislation Amendment (Resilience and Collateral Protection) Bill 2016 was introduced to amend six Acts, enabling Australian entities to meet new international margin requirements for non-centrally cleared derivatives (phased in from 1 September 2016) and strengthening legal protections for payment systems and central counterparties. The bill also resolves inconsistencies in close-out netting laws and includes regulatory powers to respond to financial market upheaval."
+  },
+  {
+   "slug": "speech-331690",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The mover proposed resuming proceedings on five lapsed bills: the Tax Laws Amendment (Tax Incentives for Innovation) Bill 2016, Financial System Legislation Amendment (Resilience and Collateral Protection) Bill 2016, National Disability Insurance Scheme Amendment Bill 2016, National Disability Insurance Scheme Savings Fund Special Account Bill 2016, and Omnibus Repeal Day (Autumn 2015) Bill 2015."
+  },
+  {
+   "slug": "speech-331702",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "Labor supported the Financial System Legislation Amendment (Resilience and Collateral Protection) Bill, which implements international margining requirements for over-the-counter derivatives to improve financial stability and reduce compliance costs by $3.9 million annually."
+  },
+  {
+   "slug": "speech-331703",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Financial System Legislation Amendment (Resilience and Collateral Protection) Bill 2016 is needed to allow Australian entities to comply with international margining requirements for over-the-counter derivatives from September 2016, clarifying domestic law on termination rights and netting contracts. He also criticised the previous Labor government's GFC response, claiming it wasted billions on pink batts, school halls, and border protection, leaving a debt costing a person on $80,000 income $628 in annual interest."
+  },
+  {
+   "slug": "speech-331704",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The bill implements Australia’s 2009 G20 commitments to reform over‑the‑counter derivatives markets by enhancing transparency, promoting financial stability and supporting detection of market abuse. It amends six existing Acts to clarify domestic regulation, align with international margining requirements, and strengthen protections for payment systems and central counterparties."
+  },
+  {
+   "slug": "speech-331705",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "The Financial System Legislation Amendment (Resilience and Collateral Protection) Bill 2016 was argued to implement international margin requirements for non-centrally cleared derivatives, phased in from September 2016, to reduce contagion risks from the global financial crisis. It also clarifies close-out rights for counterparties against Australian financial entities under resolution and provides legal certainty for real-time gross settlement systems and netting arrangements."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Financial System Legislation Amendment (Resilience and Collateral Protection) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00043",
+   "assent_date": "2016-05-04"
+  }
+ ]
+}

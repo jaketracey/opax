@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1308",
+ "title": "Human Rights (Targeted Sanctions) Bill 2021",
+ "short_title": "Human Rights (Targeted Sanctions) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-10",
+ "originating_house": "senate",
+ "sponsor": "RICE, Sen Janet",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10836",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1308%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1308%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1308%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1308_ems_7e4cf221-7cd6-4fd4-a39c-10114a1a58f5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1308%22",
+   "document_date": "2021-08-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-10",
+  "sentences": [
+   "The bill would let Parliament ask the Foreign Minister whether the government will impose targeted sanctions on people accused of serious human rights abuses or corruption.",
+   "Parliament or its committees could pass a resolution requiring the minister to prepare a statement on whether sanctions would apply to a named person.",
+   "The minister would also have to make a statement within 30 days about people involved in the 2021 Myanmar coup, including ministers and military officers."
+  ],
+  "changes": [
+   "Parliament can require the Foreign Minister to state whether targeted sanctions will be imposed on a person.",
+   "The minister must make a statement about people responsible for the 2021 Myanmar coup.",
+   "The bill would start the day after it receives royal assent."
+  ],
+  "affected": "The Foreign Minister and people nominated for serious human rights abuses or serious corruption.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

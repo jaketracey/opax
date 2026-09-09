@@ -1,0 +1,113 @@
+{
+ "key": "au-federal-s1446",
+ "title": "Lobbying (Improving Government Honesty and Trust) Bill 2025",
+ "short_title": "Lobbying (Improving Government Honesty and Trust) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-02-12",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen David",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "11009",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-09-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1446%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1446%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1446%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1446_ems_1055d066-95ae-46be-bc56-2b9526429d48%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1446%22",
+   "document_date": "2025-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-12",
+  "sentences": [
+   "This bill would tighten rules on who can lobby the federal government and what they must disclose.",
+   "It would expand the lobbyist register, ban unregistered lobbying, require quarterly reports of meetings, publish ministers' diaries, and extend the ban on former ministers lobbying to three years.",
+   "The National Anti-Corruption Commission would be able to investigate breaches, with penalties including fines and suspension or cancellation of registration."
+  ],
+  "changes": [
+   "Extends the register to cover lobbyists for third parties, services firms, and in-house lobbyists for businesses and industry bodies.",
+   "Requires lobbyists to submit quarterly returns listing meetings with MPs and advisers, including topics discussed and names of attendees.",
+   "Bans lobbying by anyone not on the register, making it an offence.",
+   "Compels disclosure of ownership structure, major shareholders, and client names for some lobbyists.",
+   "Restricts gifts and hospitality from lobbyists to government representatives.",
+   "Bans lobbying where a close relationship with the official could create a sense of obligation."
+  ],
+  "affected": "Professional lobbyists, in-house lobbyists, former ministers and senior government officials and advisers, and government representatives.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195261",
+   "speaker": "Wendy Askew",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197313",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-09-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

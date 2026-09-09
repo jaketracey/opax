@@ -1,0 +1,256 @@
+{
+ "key": "au-federal-r6666",
+ "title": "Health Insurance Amendment (Prescribed Fees) Bill 2021",
+ "short_title": "Health Insurance Amendment (Prescribed Fees) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-05-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6666%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6666%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6666%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6666%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6666%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6666%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6666%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6666%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6666%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6666%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-05-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6666%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6666_ems_8172fa93-fa73-4475-9789-01f3274141e1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6666%22",
+   "document_date": "2021-02-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00040",
+   "document_date": "2021-05-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-17",
+  "sentences": [
+   "The bill would remove the $30 fee that specialists and consultant physicians must pay to be recognised for Medicare purposes.",
+   "It would end the requirement for medical practitioners to send a cheque or money order with their application to Services Australia for higher Medicare rebates.",
+   "The change would take effect from a date to be set by proclamation or six months after royal assent, whichever comes first."
+  ],
+  "changes": [
+   "Removes the $30 prescribed fee for recognition of specialists and consultant physicians.",
+   "Eliminates the need to pay by cheque or money order for Medicare recognition applications.",
+   "Reduces administrative burden on Services Australia by no longer processing the fee."
+  ],
+  "affected": "Specialists, consultant physicians, and Services Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7095",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the usual second reading motion unchanged. The usual second reading motion is “*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*”, which is parliamentary jargon for agreeing with the main idea of the bill. This vote happened after Hindmarsh MP [Mark Butler](https://theyvoteforyou.org.au/people/representatives/hindmarsh/mark_butler) (Labor) proposed an [amendment](https://www.openaustralia.org.au/debates/?id=2021-05-12.20.2). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House urges the Government to implement policies to better protect Australians' health\".*",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 40,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-05-12/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-402318",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Prescribed Fees) Bill 2021 removes the $30 prescribed fee (payable by cheque or money order) for new specialists and consultant physicians applying for higher Medicare rebates, citing inefficiencies exposed during COVID-19 and the disproportionate cost of upgrading payment methods."
+  },
+  {
+   "slug": "speech-405746",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The opposition supported the Health Insurance Amendment (Prescribed Fees) Bill to remove the $30 fee paid by cheque or money order for specialist registration, calling it a sensible fix to an outdated system. The speaker also argued the government should permanently maintain phone telehealth consults and address workforce shortages in areas like the Central Coast not covered by the Modified Monash Model."
+  },
+  {
+   "slug": "speech-405751",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Prescribed Fees) Bill 2021 removes the $30 fee for new specialists and consultant physicians applying for higher Medicare rebates, cutting red tape and improving patient access. The Morrison government argues the change will reduce processing delays, as the fee—required via money order or cheque—proved impractical during COVID-19 restrictions, and notes the GP bulk-billing rate reached 89.3% in 2020."
+  },
+  {
+   "slug": "speech-405752",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Prescribed Fees) Bill 2021 aims to modernise payment schemes, with the speaker criticising the continued use of cheques and money orders. The speaker, aged 42, noted they have never used a money order."
+  },
+  {
+   "slug": "speech-405755",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The member for Dunkley supported the Health Insurance Amendment (Prescribed Fees) Bill 2021 but raised concerns about GP shortages in outer suburban areas like Dunkley, citing the removal of Medicare incentive payment 10981 and difficulties sponsoring overseas doctors. They also urged government funding for the Menzies Paediatricians in Schools Outreach Program, which provided 323 appointments in term 1 of 2021 across schools in Frankston and Flinders electorates."
+  },
+  {
+   "slug": "speech-405756",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The bill to remove the $30 prescribed fee for specialist and consultant physician recognition was supported, but the government was criticised for failing on vaccine rollout—missing targets of 4 million by March and 6 million by May, with only 2.5 million doses administered—and for failures in aged care vaccination, quarantine, and preventive health, with Prime Minister Scott Morrison blamed for poor delivery."
+  },
+  {
+   "slug": "speech-405757",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Prescribed Fees) Bill 2021 was supported for waiving a $30 fee for newly registered specialists, and the 2021 federal budget was highlighted for including $2.3 billion in mental health initiatives, $17.7 billion for aged care, and increased bulk-billing incentives for rural and remote areas."
+  },
+  {
+   "slug": "speech-405758",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Prescribed Fees) Bill 2021 removes the prescribed application fee for new specialists and consultant physicians seeking Medicare recognition, eliminating the requirement to pay by cheque or money order. The change reduces costs and administrative burden for applicants and Services Australia while ensuring patients can access higher Medicare rebates without delays."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Insurance Amendment (Prescribed Fees) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00040",
+   "assent_date": "2021-05-27"
+  }
+ ]
+}

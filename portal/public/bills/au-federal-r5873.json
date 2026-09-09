@@ -1,0 +1,197 @@
+{
+ "key": "au-federal-r5873",
+ "title": "Statute Update (Winter 2017) Bill 2017",
+ "short_title": "Statute Update (Winter 2017) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2017-08-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5873_ems_88e849ff-dd48-4770-8c19-f0303f614684%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5873%22",
+   "document_date": "2017-05-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00093",
+   "document_date": "2017-08-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-25",
+  "sentences": [
+   "The bill would fix mistakes in Acts caused by drafting and clerical errors.",
+   "It would repeal about 46 pages of outdated provisions and update language in some laws.",
+   "The amendments aim to make the statute book more consistent and easier to read and use."
+  ],
+  "changes": [
+   "Corrects technical drafting and clerical errors in Acts.",
+   "Repeals spent and obsolete provisions and Acts.",
+   "Modernises language and makes other technical amendments in certain legislation."
+  ],
+  "affected": "The Commonwealth statute book and those who read and administer it.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:37:21Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-347049",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-25",
+   "stage_hint": null,
+   "brief": "The Statute Update (Winter 2017) Bill 2017 was moved for second reading, making minor and technical corrections to 17 principal acts, updating cross-references in six acts, and repealing 19 spent provisions and four redundant acts to improve the accuracy and clarity of the Commonwealth statute book."
+  },
+  {
+   "slug": "speech-351780",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The Statute Update (Winter 2017) Bill 2017 performs routine technical corrections and repeals obsolete provisions, not substantive deregulation. Previous government claims of $100,000 and $50,000 annual savings from similar bills were not independently verified, as the Australian National Audit Office and the Joint Committee of Public Accounts and Audit had recommended."
+  },
+  {
+   "slug": "speech-352047",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The government's repeal days exaggerated minor regulatory savings—$1.8 million total, with one item saving only $3,000—and the NBN rollout was called an absolute disgrace."
+  },
+  {
+   "slug": "speech-352048",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-352050",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Statute Update (Winter 2017) Bill 2017 as uncontroversial but argued the government should not count it towards deregulation targets, and called for independent verification of the government's claimed $4.5 billion in deregulation savings."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Statute Update (Winter 2017) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00093",
+   "assent_date": "2017-08-23"
+  }
+ ]
+}

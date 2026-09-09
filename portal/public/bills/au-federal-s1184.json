@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s1184",
+ "title": "Australian Sports Anti-Doping Authority Amendment (Enhancing Australia's Anti-Doping Capability) Bill 2019",
+ "short_title": "Australian Sports Anti-Doping Authority Amendment (Enhancing Australia's Anti-Doping Capability) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-14",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Regional Services, Sport, Local Government and Decentralisation",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1184%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1184%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1184%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1184_ems_fc223637-2abe-401f-a0c0-f4116d38a33f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1184%22",
+   "document_date": "2019-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "The bill would help the Australian Sports Anti-Doping Authority (ASADA) handle more complex doping threats.",
+   "It would make changes to the ASADA Act based on recommendations from the Wood Review, including streamlining the early part of the doping violation process.",
+   "The bill would also extend legal protection to people carrying out anti-doping rule violation functions and strengthen ASADA's disclosure notice powers."
+  ],
+  "changes": [
+   "Streamline the early stage of the anti-doping rule violation process.",
+   "Extend legal protection to additional people performing anti-doping rule violation functions.",
+   "Improve how ASADA and National Sporting Organisations share information by increasing legal protections for that information.",
+   "Strengthen ASADA's disclosure notice system."
+  ],
+  "affected": "The Australian Sports Anti-Doping Authority, National Sporting Organisations, and people exercising anti-doping rule violation functions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:20:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

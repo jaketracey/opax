@@ -1,0 +1,227 @@
+{
+ "key": "au-federal-r5132",
+ "title": "True-up Shortfall Levy (Excise) (Carbon Tax Repeal) Bill 2013",
+ "short_title": "True-up Shortfall Levy (Excise) (Carbon Tax Repeal) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "lapsed",
+ "status_as_of": "2014-03-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5132_ems_a99b58c0-4c7e-4fbc-9154-1603981a12a7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5132%22",
+   "document_date": "2013-11-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "This bill is part of a package that repeals the carbon tax and introduces measures to prevent price exploitation after the repeal.",
+   "The package would prohibit businesses from engaging in carbon-specific price exploitation for key goods like electricity and gas, with penalties of up to 6,471 penalty units for corporations and 1,295 penalty units for individuals.",
+   "It would also give the ACCC new powers to monitor prices and assess the effect of the carbon tax repeal on certain goods."
+  ],
+  "changes": [
+   "Introduces a new prohibition on price exploitation related to the carbon tax repeal for key goods.",
+   "Gives the ACCC monitoring powers to assess the effect of the carbon tax repeal on prices.",
+   "Introduces a new prohibition on false or misleading representations about the carbon tax repeal's effect on prices."
+  ],
+  "affected": "Businesses and consumers, particularly in markets for key goods such as electricity and gas.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:08:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-278154",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825379",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278597",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278606",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825612",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825613",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825990",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": "The True-up Shortfall Levy (Excise) Carbon Tax Repeal) Bill 2013 was moved for a second reading. It imposes a levy to recover the value of over-allocated free carbon units under the Jobs and Competitiveness Program for 2013-14, applying only where it is not a duty of customs or excise."
+  }
+ ],
+ "acts": []
+}

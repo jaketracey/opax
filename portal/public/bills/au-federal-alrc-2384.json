@@ -1,0 +1,312 @@
+{
+ "key": "au-federal-alrc-2384",
+ "title": "Australian Jobs Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation, Climate Change, Science, Research and Tertiary Education",
+ "status": "passed",
+ "status_as_of": "2013-06-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-28",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-27",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00069",
+   "document_date": "2013-06-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-1091",
+   "date": "2013-05-28",
+   "house": "representatives",
+   "question": "Sophie Mirabella I rise to speak on the so-called Australian Jobs Bill 2013. In doing so I wish to express my frustration with not only the content of the bill but the government's lack of accountability in explaining and justifying the reasons for its introduction and its apparent determination to yet again push through legislation that will increase regulatory and compliance costs for Australian businesses. Given that it has misled the Australian people hundreds and hundreds of times, it is difficult to take almost anything that this government says at face value. But it is even harder to find reason to support one of its bills when there is so little clarification around even the very basic details in the legislation—the precise reasons for the change and exactly how those changes will be financed. Prior to February this year, I cannot recall in my time as a shadow minister ever having been refused a briefing by the government. In February was when my office asked Minister Combet's office if I could receive a briefing from the government following the release of the so-called Industry Innovation Statement—otherwise described as a 'jobs plan', another Orwellian phrase—of which these changes form a part. That request was pointedly refused. One of a number of reasons why I sought that briefing was to try and obtain more detail about the changes to which this bill potentially would give effect. Such conduct points not only to a disturbing lack of accountability on the part of the minister but also to a complete arrogant disregard for accepted protocol, good governance and accountability—especially when a staff member in the minister's office tells a staff member in mine that the basic reason for the refusal is that I apparently had the temerity, the gall, the nerve, to make some public criticisms of a number of elements of the government's policies in this area. 'How dare I criticise the government or question its policies' was effectively what was being said at a ti",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-05-28/2"
+  },
+  {
+   "key": "federal-senate-2962",
+   "date": "2013-06-25",
+   "house": "senate",
+   "question": "Richard Colbeck Prior to question time I was making some comments in relation to the Australian Jobs Bill 2013. In my comments I did not say that the opposition are opposing this piece of legislation, but I did put on the record some of the reasons why we might be doing that. One reason in particular is that this legislation imposes additional costs on industry and on business, which, as I said earlier, is a hallmark of this government. I talked about the fact that this government has imposed the carbon tax on Australian business. The government claims that it has only a small impact, but it does its calculations on an economy-wide basis—it ignores sectoral specifics of the cost of a carbon tax on industry. I know one business, for example, that has spent $17 million to mitigate the cost of the carbon tax on its business. It did receive some government assistance to put a co-generation plant in as a part of that project. That will reduce their energy costs, but not in a net sense. After they have spent that $17 million, after they have received $4 million in taxpayers' assistance to spend that money, they will still have a $7 million a year bill over and above what they had before the carbon tax came in. The government talks about its food and foundries program. Government members were in Wynyard in Tasmania with a company recently, talking about the fact that that company was going to save $140,000 a year on its energy bills, but they did not say what the net cost to the company of the energy bills was. That is what the opposition has been complaining about the whole time: the government talks about the saving but it does not talk about what the overall cost is going to be. As I said, one business spent $17 million to reduce its energy costs, which it has done, but in a net sense it is still $7 million a year worse off. These are costs being imposed on industry by government. When I go around talking to business and industry here in Australia, I hear that the cost",
+   "stage": "Second reading",
+   "ayes": 2,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 2,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-25/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-273240",
+   "speaker": "Sophie Mirabella",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273248",
+   "speaker": "Darren Cheeseman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273249",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273255",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273256",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273257",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273259",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273261",
+   "speaker": "Yvette D'Ath",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273268",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273274",
+   "speaker": "Sophie Mirabella",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825011",
+   "speaker": "Richard Colbeck",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": "The Australian Jobs Bill 2013 was opposed as unlikely to create jobs, with the government's carbon tax, mining tax, and increased costs blamed for job losses in the steel, car, and food-processing industries."
+  },
+  {
+   "slug": "speech-825039",
+   "speaker": "Richard Colbeck",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": "The Australian Jobs Bill 2013 was debated, with opposition senators arguing it imposes additional costs and bureaucracy on business and cuts $1.1 billion from R&D, while crossbench senators Xenophon and Madigan supported lowering the major project threshold from $500 million to $20 million and adding anti-dumping requirements; the bill passed a second reading after the Greens withdrew their amendments."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Jobs Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00069",
+   "assent_date": "2013-06-27"
+  }
+ ]
+}

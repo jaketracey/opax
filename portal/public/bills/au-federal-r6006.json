@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6006",
+ "title": "Commonwealth Redress Scheme for Institutional Child Sexual Abuse Bill 2017",
+ "short_title": "Commonwealth Redress Scheme for Institutional Child Sexual Abuse Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-10-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6006%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6006%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6006%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6006_ems_4a12d8b2-12fa-40e7-9709-f72fcf515cd5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6006%22",
+   "document_date": "2017-10-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-26",
+  "sentences": [
+   "This bill is part of a package that creates a federal compensation program for people sexually abused as children in institutional settings run by the Commonwealth, a territory, or a non-government body that opts in.",
+   "The program would offer up to $150,000, counselling, and a personal apology from the responsible institution, and would run from 1 July 2018 for 10 years.",
+   "A person would be eligible if the abuse occurred before 1 July 2018, and a review of the program would start no earlier than the eighth year after the cut-off date and no sooner than two years after the program begins."
+  ],
+  "changes": [
+   "Establishes the Commonwealth Redress Scheme for Institutional Child Sexual Abuse.",
+   "Sets the maximum monetary payment at $150,000.",
+   "Requires survivors to release participating institutions from liability if they accept an offer.",
+   "Ensures redress payments are not counted as income for social security or veterans' entitlements.",
+   "Quarantines payments from bankruptcy proceedings.",
+   "Exempts Scheme decisions from judicial review under the Administrative Decisions (Judicial Review) Act 1977."
+  ],
+  "affected": "Survivors of institutional child sexual abuse, Commonwealth institutions, Territory and non-government institutions that opt in, and agencies administering social security, veterans' entitlements, and bankruptcy laws.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:07Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-356426",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The companion bill to the Commonwealth Redress Scheme for Institutional Child Sexual Abuse Bill 2017 ensures payments are not income tested, will not reduce income support payments under the Social Security Act 1991 and Veterans' Entitlements Act 1986, and are quarantined from bankruptcy property. It also removes external review mechanisms and allows disclosure of spent, quashed and pardoned convictions to maintain the scheme's integrity as a non-legalistic, survivor-focused process."
+  }
+ ],
+ "acts": []
+}

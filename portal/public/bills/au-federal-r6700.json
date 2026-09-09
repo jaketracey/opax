@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-r6700",
+ "title": "Liability for Climate Change Damage (Make the Polluters Pay) Bill 2021",
+ "short_title": "Liability for Climate Change Damage (Make the Polluters Pay) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-24",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6700%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6700%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6700%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6700_ems_23093c95-be1a-45ed-9383-a42c2534867f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6700%22",
+   "document_date": "2021-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-24",
+  "sentences": [
+   "The bill would make fossil fuel companies legally responsible for damage caused by climate change.",
+   "Companies that emit over 1 million tonnes of greenhouse gases in any 12-month period starting on or after 1 September 2020 would be liable, and the Federal Court could order them to reduce emissions or pay damages.",
+   "A person harmed by climate change, or a state or federal attorney-general, could sue, and the court may assume the emitter's share of damage matches their share of global emissions."
+  ],
+  "changes": [
+   "Fossil fuel companies would be liable for climate change damage.",
+   "Major emitters with emissions over 1 million tonnes in a 12-month period would be liable.",
+   "The Federal Court could grant injunctions to reduce or stop activities causing future climate change damage.",
+   "The court could determine damages and assume the emitter's share of damage equals their share of global emissions."
+  ],
+  "affected": "Fossil fuel companies, major greenhouse gas emitters, bushfire survivors, and people who suffered climate change damage.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:09Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

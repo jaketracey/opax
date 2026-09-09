@@ -1,0 +1,185 @@
+{
+ "key": "au-federal-r6045",
+ "title": "Social Services Legislation Amendment (14-month Regional Independence Criteria) Bill 2018",
+ "short_title": "Social Services Legislation Amendment (14-month Regional Independence Criteria) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2018-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6045_ems_43dfe565-e1c2-4fdc-b3e4-9a920edbd716%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6045%22",
+   "document_date": "2018-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00022",
+   "document_date": "2018-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-15",
+  "sentences": [
+   "This bill makes the 14-month regional work requirement for Youth Allowance students apply to all applicants and current recipients.",
+   "It removes an inconsistency where existing recipients used an 18-month period while new claimants from 1 January 2018 used 14 months.",
+   "The change starts the day after the bill becomes law and protects people already granted independence under the 18-month rule."
+  ],
+  "changes": [
+   "Ensure the 14-month regional workforce independence criteria apply to both new claimants and existing Youth Allowance recipients.",
+   "Rectify the inconsistency created by a previous amendment that gave different time periods to different groups.",
+   "Save the independence status of people already assessed under the 18-month period."
+  ],
+  "affected": "Youth Allowance student applicants and existing recipients who rely on regional workforce independence criteria.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359678",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The bill corrects an unintended consequence of the Simplifying Student Payments Act 2017, ensuring that the reduced 14-month workforce independence period for youth allowance applies to all regional and remote tertiary students, including approximately 300 students who were previously left under the old 18-month rule."
+  },
+  {
+   "slug": "speech-360468",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to extend the 14-month regional independence criteria for youth allowance to students who applied before 1 January 2018, correcting a drafting error and helping around 300 young Australians. The speech also criticised the government's $2.2 billion university funding cuts, the proposed lowering of the HECS-HELP repayment threshold to $45,000, and estimated 10,000 students would miss out on university places."
+  },
+  {
+   "slug": "speech-360469",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill corrects a transitional gap for regional students qualifying for independent youth allowance, reducing the work requirement from 18 to 14 months. He noted regional students make up only 18.8% of university entrants despite being over 25% of the population, cited an extra $25,000 annual cost for country students, and welcomed the upcoming Halsey review into rural education."
+  },
+  {
+   "slug": "speech-360470",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill reduces the youth allowance independence criteria from 18 to 14 months, assisting 300 students from rural and regional areas, and criticised the former Labor government for excluding inner-regional students and redirecting funds to city seats, as well as the WA state Labor government for cutting $64 million from regional education, including $50,000 annually from the Harvey agricultural school."
+  },
+  {
+   "slug": "speech-360472",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The bill corrects an unintended consequence of the 2017 act to ensure the reduced 14-month workforce independence period for youth allowance applies consistently to all regional and remote tertiary students, including approximately 300 previously left under the 18-month rule."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (14-month Regional Independence Criteria) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00022",
+   "assent_date": "2018-03-28"
+  }
+ ]
+}

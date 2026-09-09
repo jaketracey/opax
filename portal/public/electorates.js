@@ -27,6 +27,31 @@ export function findPerson(people, name) {
   const matches = people.filter((p) => [p.name, ...(p.aliases || [])].some((n) => n.toLocaleLowerCase() === key));
   return matches.length === 1 ? matches[0] : null;
 }
+// Recorded affiliations can be historical and can contain legacy labels.
+// Only one match in the stated parliament/chamber may become a profile link.
+export function recordedElectorate(representation, electorates) {
+  const fold = (value) => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+  const stateCode = (value) => Object.entries(JURISDICTIONS).find(([code, label]) => code !== 'federal' && [fold(code), fold(label)].includes(fold(value)))?.[0];
+  const r = representation;
+  const state = r.state ? stateCode(r.state) : null;
+  if (!r.jurisdiction || !r.chamber || (r.state && !state)) return null;
+  let name = fold(r.electorate);
+  if (r.chamber === 'senate') {
+    const region = stateCode(r.electorate);
+    if (region) name = fold(JURISDICTIONS[region]);
+  } else if (r.chamber.endsWith('_lc')) {
+    name = name.replace(/^legislative council district of /, '');
+  }
+  const matches = electorates.filter((e) => e.jurisdiction === r.jurisdiction && e.chamber === r.chamber &&
+    (!state || e.state_code === state) && [e.name, ...(e.aliases || [])].some((alias) => fold(alias) === name));
+  return matches.length === 1 ? matches[0] : null;
+}
+export function recordedRepresentationHTML(representation, electorates) {
+  const entry = recordedElectorate(representation, electorates);
+  const label = esc(representation.electorate);
+  const name = entry ? `<a href="${esc(entry.url)}">${label}</a>` : label;
+  return name + (representation.state && representation.chamber !== 'senate' ? `, ${esc(representation.state)}` : '');
+}
 export function personLinksHTML(person) {
   if (!person?.electorates?.length) return '';
   return `<section class="person-section electorate-person-links"><h3 class="subject-section-title">Electorates represented</h3><ul>${person.electorates.map((e) => `<li><a href="${esc(e.url)}">${esc(e.name)}</a> · ${esc(CHAMBERS[e.chamber] || e.chamber)}${e.current ? ` · verified ${esc(date(e.as_of))}${e.party ? ` · ${esc(e.party)}` : ''}` : ' · historical service'}${e.periods?.length ? `<div class="fineprint">${e.periods.map((p) => `${esc(date(p.start))}–${p.end ? esc(date(p.end)) : 'end not recorded'}`).join('; ')}</div>` : ''}</li>`).join('')}</ul><p class="fineprint">These links describe parliamentary service. The speech record on this page can span several electorates.</p></section>`;

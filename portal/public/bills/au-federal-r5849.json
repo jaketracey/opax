@@ -1,0 +1,169 @@
+{
+ "key": "au-federal-r5849",
+ "title": "Ozone Protection and Synthetic Greenhouse Gas Management Legislation Amendment Bill 2017",
+ "short_title": "Ozone Protection and Synthetic Greenhouse Gas Management Legislation Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Energy",
+ "status": "passed",
+ "status_as_of": "2017-06-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5849_ems_0f1a8c1e-7146-494b-9529-2df892f85ff1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5849%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00067",
+   "document_date": "2017-06-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "The bill would update Australia's system for managing ozone-depleting substances and synthetic greenhouse gases, aligning it with new international commitments.",
+   "It would introduce a phase-down of certain hydrofluorocarbons starting in 2018, ahead of the global schedule, and add two newly regulated gases to the existing regime.",
+   "The bill would also ease reporting and fee obligations for businesses, including a lower size at which charges stop applying."
+  ],
+  "changes": [
+   "It would start phasing down HFC imports, exports, and production from 2018.",
+   "It would ban new HCFC use from 2020, except for allowed purposes.",
+   "It would regulate nitrogen trifluoride and PFC-9-1-18 as new synthetic greenhouse gases.",
+   "It would harmonize equipment ban rules across all regulated entities.",
+   "It would allow licence renewals, cut reporting frequency, and create a fee exemption threshold."
+  ],
+  "affected": "Businesses holding licences for ozone-depleting substances and synthetic greenhouse gases, plus entities subject to equipment bans.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-348532",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "Labor supported the Ozone Protection and Synthetic Greenhouse Gas Management Legislation Amendment Bill 2017, implementing a phase-down of hydrofluorocarbons (HFCs) starting in 2018, one year earlier than the international target, with industry backing. The speech also argued that the coalition government's climate policies are insufficient, citing rising emissions and a projected failure to meet the 26-28% reduction target by 2030, and contrasted Labor's 45% target."
+  },
+  {
+   "slug": "speech-348533",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "Labor supported the Ozone Protection and Synthetic Greenhouse Gas Management Legislation Amendment Bill 2017, which implements a phase-down of HFC imports starting in 2018, reducing emissions by 85% between 2018 and 2036. The speaker argued Australia’s current climate policies are insufficient to meet its 2030 emissions target of 26–28% below 2005 levels, and criticised the government’s energy policy for ignoring that modern coal plants would increase energy costs by 45%."
+  },
+  {
+   "slug": "speech-348534",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-13",
+   "stage_hint": null,
+   "brief": "The bill implements an 85% reduction in hydrofluorocarbon imports from 2018 to 2036 via a quota scheme, reducing business licence requirements by one-third, halving reporting obligations, and cutting invoices by 94%. It aligns with the Kigali Amendment to the Montreal Protocol, aiming to cut emissions by up to 80 million tonnes of CO2 equivalent by 2030."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Ozone Protection and Synthetic Greenhouse Gas Management Legislation Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00067",
+   "assent_date": "2017-06-23"
+  }
+ ]
+}

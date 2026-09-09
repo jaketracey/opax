@@ -1,0 +1,45 @@
+{
+ "key": "au-federal-alrc-5046",
+ "title": "Marriage Equality Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-25",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2013-02-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-25",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-821848",
+   "speaker": "Sarah Hanson-Young",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-02-25",
+   "stage_hint": null,
+   "brief": "The Marriage Equality Amendment Bill 2013 was introduced to redefine marriage as between two people regardless of sex, sexual orientation or gender identity, removing the restriction to a man and a woman. The bill was supported by 62% of Australians according to a national survey, and previous votes were blocked by both the Opposition Leader refusing a conscience vote and the Prime Minister not enforcing party policy."
+  }
+ ],
+ "acts": []
+}

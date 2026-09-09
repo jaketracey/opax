@@ -1,0 +1,212 @@
+{
+ "key": "au-federal-r6637",
+ "title": "National Collecting Institutions Legislation Amendment Bill 2020",
+ "short_title": "National Collecting Institutions Legislation Amendment Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications, Cyber Safety and the Arts",
+ "status": "passed",
+ "status_as_of": "2021-03-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6637_ems_a61f6b7d-93e5-45c6-b0ef-30dc8bd594af%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6637%22",
+   "document_date": "2020-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00020",
+   "document_date": "2021-03-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-03",
+  "sentences": [
+   "The bill would give six national collecting institutions broader investment powers for donated funds.",
+   "It would allow each institution to develop its own investment policy for donated revenue, rather than being limited to low-risk options under the Public Governance, Performance and Accountability Act 2013.",
+   "The bill would amend six Acts, including the Australian National Maritime Museum Act 1990 and the National Gallery Act 1975, but does not specify a start date."
+  ],
+  "changes": [
+   "Provide broader investment powers for donated revenue to six national collecting institutions.",
+   "Allow institutions to develop investment policies for donated funds to improve financial sustainability.",
+   "Address minor administrative inconsistencies between the six Acts."
+  ],
+  "affected": "Six national collecting institutions and their donors.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-399719",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The National Collecting Institutions Legislation Amendment Bill allows six national collecting institutions—the Australian National Maritime Museum, National Film and Sound Archive, National Gallery of Australia, National Library of Australia, National Museum of Australia, and National Portrait Gallery—to invest philanthropic donations in higher-yielding assets, and makes minor administrative amendments to improve consistency and reduce inefficiency across their enabling acts."
+  },
+  {
+   "slug": "speech-403513",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Collecting Institutions Legislation Amendment Bill 2020 but moved an amendment calling on the government to address structural underfunding of the six national collecting institutions, expressing concern that changes to investment mandates and ministerial powers could enable further withdrawal of public funds."
+  },
+  {
+   "slug": "speech-403515",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The National Collecting Institutions Legislation Amendment Bill 2020 would grant six national collecting institutions—the National Gallery of Australia, National Museum of Australia, National Portrait Gallery, National Library of Australia, National Film and Sound Archive, and Australian National Maritime Museum—greater investment powers over private and philanthropic donations, allowing them to set publicly accessible investment policies, while standardising governance and removing ministerial approval for routine transactions. The government cited $249 million in 2020-21 funding for the institutions and approximately $14 million in donations received in 2019-20."
+  },
+  {
+   "slug": "speech-403516",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker criticised the coalition government's record on arts funding, citing job losses at the National Gallery of Australia and arguing the National Collecting Institutions Legislation Amendment Bill 2020 raises concerns over reduced government support. They supported the bill's changes—including a $2 million disposal threshold for most institutions and $10 million for the National Gallery—but stressed the need for mandatory consultation with First Nations communities before disposing of Indigenous artefacts and called for the repatriation of items like the Gweagal shield from British museums."
+  },
+  {
+   "slug": "speech-403517",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Collecting Institutions Legislation Amendment Bill 2020, arguing it would improve philanthropy by giving boards greater investment flexibility, harmonise governance across institutions, and align board service terms with best practice. They also praised Canberra's design and noted that co-designer Marion Mahony Griffin remains insufficiently credited."
+  },
+  {
+   "slug": "speech-403519",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker opened debate on the National Collecting Institutions Legislation Amendment Bill 2020 by congratulating Minister Tudge on his 50th birthday, stating he has entered the age of wisdom and that the government is generous."
+  },
+  {
+   "slug": "speech-403523",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Collecting Institutions Legislation Amendment Bill 2020, which allows six national collecting institutions to invest donated funds in higher-return options and streamlines administrative processes. The government provided over $250 million to these institutions in the previous year."
+  },
+  {
+   "slug": "speech-403524",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-25",
+   "stage_hint": null,
+   "brief": "The National Collecting Institutions Legislation Amendment Bill 2020 was commended to the House, offering immediate opportunities and efficiencies for six national collecting institutions, with all institutions unanimously welcoming the proposed changes to investment powers and administrative amendments."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Collecting Institutions Legislation Amendment Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00020",
+   "assent_date": "2021-03-02"
+  }
+ ]
+}

@@ -1,0 +1,94 @@
+{
+ "key": "au-federal-r6387",
+ "title": "Identity-matching Services Bill 2019",
+ "short_title": "Identity-matching Services Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6387%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6387%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6387%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6387_ems_f8e7bb62-e2bd-420b-8597-8881422b4b8f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6387%22",
+   "document_date": "2019-07-31",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-31",
+  "sentences": [
+   "This bill would let the Department of Home Affairs run systems for sharing identity information between governments.",
+   "It sets up a hub and a national driver licence facial recognition database, with rules for what can be shared and with whom.",
+   "The bill also includes penalties for unauthorized use of information and requires annual reports and a review."
+  ],
+  "changes": [
+   "The bill gives the Department of Home Affairs legal authority to collect, use, and share identity information.",
+   "It establishes an interoperability hub for data sharing between agencies.",
+   "It creates a National Driver Licence Facial Recognition Solution.",
+   "It defines the scope of identity-matching services, including their functions and allowed users.",
+   "It introduces accountability measures like annual reporting and penalties for unauthorized disclosure."
+  ],
+  "affected": "Commonwealth, state, and territory government agencies, and private sector organizations that use identity-matching services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-379228",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The bill amends the Australian Passports Act 2005 to allow the foreign minister to automate sharing of passport data with Commonwealth, state and territory agencies for national security and identity-matching purposes, following a 2017 COAG decision. It aims to enable real-time detection of identity fraud and terrorist threats while maintaining privacy safeguards."
+  },
+  {
+   "slug": "speech-379229",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The Identity‑matching Services Bill 2019 was moved to implement the Intergovernmental Agreement on Identity Matching Services, enabling facial‑image sharing for national security, law enforcement, community safety and road safety via a Face Verification Service and a Face Identification Service (banned from live facial recognition and criminal watchlists). The bill includes privacy safeguards, annual parliamentary reporting, and a statutory review within five years; identity crime affects one in four Australians costing over $2 billion annually, and five states have already passed similar legislation."
+  }
+ ],
+ "acts": []
+}

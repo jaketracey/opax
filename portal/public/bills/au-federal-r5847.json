@@ -1,0 +1,166 @@
+{
+ "key": "au-federal-r5847",
+ "title": "Prime Minister and Cabinet Legislation Amendment (2017 Measures No. 1) Bill 2017",
+ "short_title": "Prime Minister and Cabinet Legislation Amendment (2017 Measures No. 1) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Indigenous Affairs",
+ "status": "passed",
+ "status_as_of": "2018-02-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-02-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5847_ems_0b3e54a7-a3b6-44fc-ae34-96df559b3ec1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5847_ems_40456d5b-7e7f-4585-a65e-b83671f6c7c0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/5443802%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5847%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00002",
+   "document_date": "2018-02-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-345191",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The bill amends legislation in the Prime Minister and Cabinet and Indigenous Affairs portfolios, including allowing the Commonwealth to waive consent for Indigenous organisations to dispose of land interests, streamlining reporting for Indigenous Business Australia, repealing two redundant acts, and amending the Royal Commissions Act 1902 to allow commissions to require written statements and increase penalties for non-compliance."
+  },
+  {
+   "slug": "speech-350605",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-08",
+   "stage_hint": null,
+   "brief": "Labor supported the bill, which allows consenting authorities to waive consent for disposal of up to 4,500 Indigenous-held assets, and increases royal commission penalties to two years imprisonment or $25,200, but argued that the second reading speech and consultation were inadequate for protecting public investment. The speaker also criticised the $25 million Hanger royal commission as worthless and renewed calls for a royal commission into banks."
+  },
+  {
+   "slug": "speech-350606",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-08",
+   "stage_hint": null,
+   "brief": "The bill amends several acts to reduce red tape for Indigenous land management, streamline reporting requirements, repeal redundant legislation, align Auditor-General annual reporting with parliament, and amend the Royal Commissions Act. Key changes include allowing the Commonwealth to waive consent over certain Indigenous land assets and removing the requirement to table Indigenous Business Australia corporate plans."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Prime Minister and Cabinet Legislation Amendment (2017 Measures No. 1) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00002",
+   "assent_date": "2018-02-20"
+  }
+ ]
+}

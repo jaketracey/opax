@@ -1,0 +1,276 @@
+{
+ "key": "au-federal-r6559",
+ "title": "Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020",
+ "short_title": "Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6559%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6559%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6559%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6559%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6559%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6559%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6559%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6559%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6559%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6559%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6559_ems_b6612e12-dac0-411a-9055-a22c4d714941%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6559%22",
+   "document_date": "2020-05-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-14",
+  "sentences": [
+   "This bill would let the Minister decide what items are banned in immigration detention facilities and give new powers to search those places.",
+   "The Department of Home Affairs would gain stronger authority to seize items like illegal drugs, phones not prescribed to the holder, and devices that connect to the internet.",
+   "Officers would receive training and must follow binding written directions from the Minister when deciding to seize items such as mobile phones or SIM cards."
+  ],
+  "changes": [
+   "Allows the Minister to determine prohibited things for immigration detention facilities and detainees.",
+   "Creates a new power to search Commonwealth-run detention facilities without a warrant.",
+   "Strengthens existing search and seizure powers for detainees and people entering detention facilities.",
+   "Allows the Minister to issue binding written directions on how officers exercise seizure powers."
+  ],
+  "affected": "Detainees, staff, and visitors in immigration detention facilities, as well as authorised officers and the Department of Home Affairs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6562",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "question": "Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 36,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 6,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-02/18"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-394373",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020 grants sweeping, unnecessary ministerial powers to ban items like mobile phones in immigration detention, with inadequate justification and safeguards. Labor opposes the bill, noting only three of 135 Senate inquiry submissions supported it (from the Department of Home Affairs, Serco and IHMS), and calling for case-by-case handling and respect for detainees’ human rights."
+  },
+  {
+   "slug": "speech-394376",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020 is needed because current laws prevent officers from searching for or seizing illegal drugs, mobile phones and child exploitation material, citing that 70% of detainees have criminal records and there have been 600 reports of phone misuse in four years. The bill would give the minister power to prohibit items and allow authorised officers to search facilities, including with detector dogs."
+  },
+  {
+   "slug": "speech-394377",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020 should not be passed in its current form, as banning mobile phones would harm the health and wellbeing of detainees at the Kangaroo Point motel alternative place of detention (APOD) in their electorate. They urged the government to consider Senator Kristina Keneally's correspondence and not politicise the issue, citing cramped conditions, prolonged detention of people needing medical attention, and difficulty even getting an electric guitar into the facility."
+  },
+  {
+   "slug": "speech-394378",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "Labor opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020, arguing it grants excessive powers to ban items like mobile phones, which detainees—including asylum seekers at the Mantra hotel in Cooper—rely on for family contact, legal advice, and public oversight. The speaker noted Labor's seven recommendations to withdraw or rewrite the bill, citing concerns over indefinite detention, mental health deterioration, and the government's failure to prove existing laws insufficient."
+  },
+  {
+   "slug": "speech-394379",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020 gives the minister overly broad powers to ban items and conduct searches without reasonable suspicion, and that the government has not justified the need for such sweeping measures. Labor opposes the bill in its current form and supports amendments to define prohibited things in legislation, require reasonable suspicion for searches, and protect detainees' rights, including access to mobile phones."
+  },
+  {
+   "slug": "speech-394380",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020 gives the government excessive powers to confiscate communication devices from immigration detainees who have not committed any crime, violating their basic liberties and human rights. The speaker called for the bill to be rejected, advocated ending mandatory detention, and proposed increasing Australia's humanitarian intake."
+  },
+  {
+   "slug": "speech-394382",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The Labor MP opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020 as a cruel and unnecessary measure that would deny basic communication items like mobile phones to non-criminal detainees, and criticised the government for wasting $185 million opening the Christmas Island detention centre to detain a single family of four. She affirmed Labor would have ended indefinite detention, removed temporary protection visas, and increased the humanitarian intake."
+  },
+  {
+   "slug": "speech-394383",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020 grants the minister excessive powers, noted the government backflipped to make the ban list a disallowable instrument, and said only two of 135 submissions supported the bill—from the minister’s department and Serco. They stated that of 1,373 people in closed detention, 45% were held under section 501 visa cancellations, 37% were asylum seekers, and 17% had non-criminal visa breaches, and that the bill applies to all detainees, not just the worst offenders."
+  },
+  {
+   "slug": "speech-394809",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020, arguing it would allow confiscation of phones from all detainees—including asylum seekers and visa overstayers, such as the Biloela family—and grant detention staff powers exceeding those of police. They highlighted that 180,000 people were waiting for partner visas, over 66,500 cases were before the Administrative Appeals Tribunal, and 281,000 were on bridging visas, while criticising the Morrison government's immigration oversight."
+  },
+  {
+   "slug": "speech-394810",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020, citing 154,340 petition signatories against it and arguing the bill lacks justification, grants excessive discretionary powers to the minister and detention centre managers, and violates detainees' rights to legal advice and family contact. They also urged the government to accept New Zealand’s offer to resettle the remaining 360-plus refugees from Manus Island and Papua New Guinea, and to release those in alternative places of detention."
+  },
+  {
+   "slug": "speech-394811",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020, arguing it grants the minister unchecked power to ban items like phones and permits strip searches without suspicion, while existing laws already prohibit dangerous items. They criticised the government for failing to justify the bill, calling it a power grab by Ministers Tudge and Dutton, and noted that 42% of detainees have been held over a year and 26% over two years."
+  },
+  {
+   "slug": "speech-394924",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020, arguing it would allow the minister to ban mobile phones in detention without evidence, enable strip searches and facility searches without cause, and compound the isolation of detainees. They cited a father’s story of maintaining contact with his children via Skype from detention, and pointed to alternative community-based models in Sweden and Spain."
+  },
+  {
+   "slug": "speech-394925",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2020 is necessary because current laws only allow Border Force to seize weapons, escape items and migration documents, not drugs, extremist material or child exploitation materials—situations that have already occurred in detention facilities. Over 70% of the 1,558 people in immigration detention are foreign criminals being deported under section 501, not asylum seekers."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,238 @@
+{
+ "key": "au-federal-r6507",
+ "title": "Therapeutic Goods Amendment (2020 Measures No. 1) Bill 2020",
+ "short_title": "Therapeutic Goods Amendment (2020 Measures No. 1) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-03-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2020-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6507_ems_0ccb15b7-90ea-46dc-98fa-2faac66b5552%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6507%22",
+   "document_date": "2020-03-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00075",
+   "document_date": "2020-06-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-03-04",
+  "sentences": [
+   "This bill would change the Therapeutic Goods Act 1989 in several ways.",
+   "It would update medical device definitions to match European Union rules, allow the Secretary to give early scientific advice to medicine sponsors, and create data protection for certain listed medicines.",
+   "The bill also includes minor amendments to cut red tape and fix an access issue for provisionally registered medicines."
+  ],
+  "changes": [
+   "Aligns medical device definitions with the European Union.",
+   "Lets the Secretary give early scientific advice to sponsors of registrable medicines.",
+   "Introduces data protection for clinical trial data used for indications of assessed listed medicines.",
+   "Makes minor amendments to reduce regulatory burden and remove an access barrier for provisionally registered medicines."
+  ],
+  "affected": "Sponsors of medicines and medical devices, the Secretary, Australian consumers, and the complementary medicines industry.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:20Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6423",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the original [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) unchanged, which is \"*that the bill be read for a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This vote took place after Dobell MP [Emma McBride](https://theyvoteforyou.org.au/people/representatives/dobell/emma_mcbride) moved the following amendment: > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes Australia's substantial reliance on global supply chains for medicines and medical devices;* > > *(2) further notes the supply issues that Australians have experienced during the COVID-19 pandemic, particularly for common medicines; and* > > *(3) calls on the Government to consider stronger domestic supply capabilities as part of Australia's post‑COVID‑19 response\".*",
+   "stage": "Second reading",
+   "ayes": 60,
+   "noes": 44,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 103
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-17/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-390006",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "The bill aligns Australian medical device definitions with the European Union, enables the TGA to provide early scientific advice on prescription medicines, and introduces a five-year data protection regime for clinical trial information in assessed complementary medicines. It also includes minor measures to reduce regulatory burden, such as easing provisional registration variations and allowing changes to clinical trial approvals."
+  },
+  {
+   "slug": "speech-391309",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-14",
+   "stage_hint": null,
+   "brief": "The mover proposed an amendment to the bill while supporting its second reading, noting Australia’s reliance on global medicine supply chains, supply issues worsened by COVID-19 for common medicines, and calling for stronger domestic supply capabilities. The bill includes minor technical amendments to the Therapeutic Goods Act, such as aligning device definitions with the EU, allowing early TGA guidance to medicine sponsors, creating a five-year data protection regime for assessed listed medicines, and removing an offence that hindered addressing medicine shortages."
+  },
+  {
+   "slug": "speech-392814",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to align medical device definitions with the EU, enable early scientific advice for medicine sponsors, and introduce data protection for complementary medicines, noting that over 2,400 new medicines worth $11.6 billion have been listed on the PBS, including Avastin for brain cancer which now costs $6.60 per script for concession card holders."
+  },
+  {
+   "slug": "speech-392815",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The minister thanked members for their contributions to the Therapeutic Goods Amendment (2020 Measures No. 1) Bill 2020, announced that the matter of antidepressants raised by the member for Bruce had been referred to the TGA, and highlighted that over 2,400 medicines have been listed on the PBS under the government. He also publicly called out Eli Lilly for \"improper and inappropriate\" astroturfing practices, accusing the company of denying patients access to the migraine medicine Emgality by refusing to meet legal requirements set by the PBAC."
+  },
+  {
+   "slug": "speech-392943",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The speaker questioned whether the Speaker would grant a right of reply under the 1997 resolution to Migraine Australia, Eli Lilly, or chronic migraine sufferers, after the Health Minister accused their campaign for PBS listing of Emgality of being an 'astroturf' campaign."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Therapeutic Goods Amendment (2020 Measures No. 1) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00075",
+   "assent_date": "2020-06-25"
+  }
+ ]
+}

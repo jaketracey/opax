@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1270",
+ "title": "Interactive Gambling Amendment (Prohibition on Credit Card Use) Bill 2020",
+ "short_title": "Interactive Gambling Amendment (Prohibition on Credit Card Use) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-25",
+ "originating_house": "senate",
+ "sponsor": "GRIFF, Sen Stirling",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10851",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1270%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1270%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1270%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1270_ems_0eb014f1-029d-4ac4-9c89-e771bbf5b593%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1270%22",
+   "document_date": "2020-08-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-25",
+  "sentences": [
+   "The bill would ban the use of credit cards for online betting in Australia.",
+   "Operators of regulated interactive gambling services would be prohibited from accepting credit card payments, either directly or through payment methods that use a credit card as a backing.",
+   "The ban would take effect after a six-month transition period, and the Australian Communications and Media Authority would review it after three years."
+  ],
+  "changes": [
+   "Creates a criminal offence and a civil penalty for accepting, facilitating or promoting credit card payments for online bets.",
+   "Allows a six-month transition period before the prohibition starts.",
+   "Requires the Australian Communications and Media Authority to conduct a statutory review after three years."
+  ],
+  "affected": "Operators of regulated interactive gambling services and their customers who bet online.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:16:04Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,45 @@
+{
+ "key": "au-federal-alrc-5057",
+ "title": "Interactive Gambling Amendment (Virtual Credits) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-16",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2013-05-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-823454",
+   "speaker": "Nick Xenophon",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": "The Interactive Gambling Amendment (Virtual Credits) Bill 2013 was moved to close a loophole by redefining \"gambling service\" to include virtual tokens, credits, or coins purchased with real money, citing examples like DoubleDown Casino and Zynga Poker where consumers could not cash out winnings. The amendment aims to improve consumer protection and prevent children’s access to such games."
+  }
+ ],
+ "acts": []
+}

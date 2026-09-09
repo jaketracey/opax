@@ -1,0 +1,317 @@
+{
+ "key": "au-federal-r6412",
+ "title": "Family Assistance Legislation Amendment (Building on the Child Care Package) Bill 2019",
+ "short_title": "Family Assistance Legislation Amendment (Building on the Child Care Package) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2019-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6412_ems_2315b08a-64a5-4ab4-8aeb-cd14d03be0b5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6412_ems_03e7ff22-df42-4fea-bb09-cb2cc0ea7105%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6412_ems_a5a1c291-094f-4b2e-ae80-d3e94dadbfc7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6412%22",
+   "document_date": "2019-09-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00125",
+   "document_date": "2019-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5994",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debates/?id=2019-11-25.105.1) introduced by Kingston MP [Amanda Rishworth](https://theyvoteforyou.org.au/people/representatives/kingston/amanda_rishworth) (Labor), which means they failed. Ms Rishworth [explained that](https://www.openaustralia.org.au/debates/?id=2019-11-25.105.1): > *... we are concerned about the removal of the 28-day grace period. We do welcome the minister's foreshadowed amendments, but on the whole we think it would be much simpler to just continue with the 28-day grace period for families to provide their tax file number and bank account details.* > > *The government has claimed that the provision in this bill will simplify the system for families and providers, but unfortunately this is not supported with evidence. The amendments in the substantive bill require bank account details and a tax file number to be provided at the time the claim is made for the CCS [child care subsidies] and not at any other time. As previously mentioned, currently an individual has 28 days after the CCS claim is submitted to provide these details. When CCS payments are made without that information being provided within the required time frame, it can result in a debt for families.* > > *While the government argues it's trying to avoid families acquiring this debt, Labor notes that these families are indeed eligible for the childcare subsidy and for early learning and care, but may be unable to access urgent care because they don't have immediate access to their personal information. This has been substantiated and backed up by an overwhelming concern from the sector about the negative impacts that this change will have on families in particularly difficult circumstances who do not have immediate access to their personal documents. This could be families fleeing domestic violence or natural disasters who do not have time to grab their paperwork as they leave their house, but want their childr",
+   "stage": "Consideration in detail",
+   "ayes": 63,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-25/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-381650",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The Family Assistance Legislation Amendment (Building on the Child Care Package) Bill 2019 extends enrolment non-attendance periods from eight to 14 weeks, removes limits on at-risk child certifications for higher subsidy rates, and allows third-party payments to support vulnerable families. The government’s childcare package has reduced out-of-pocket costs by 7.9% from their 2018 peak, with annual investment reaching around $10 billion for 1.1 million families."
+  },
+  {
+   "slug": "speech-384266",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "The member argued in support of the Family Assistance Legislation Amendment (Building on the Child Care Package) Bill 2019, which extends the non-attendance enrolment timeframe from 8 to 14 weeks, removes the 50% limit on additional childcare subsidy for at-risk children, and allows third-party payments to reduce gap fees for vulnerable families."
+  },
+  {
+   "slug": "speech-384350",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The Labor member supported most of the bill, which extends the non-attendance enrolment timeframe from 8 to 14 weeks and improves third-party payment calculations, but will move an amendment to retain the 28-day grace period for families to provide bank and tax details, which the bill would remove. The member criticised the government for failing to address broader issues including the activity test, a 21% drop in children receiving the child wellbeing subsidy in the first six months of the new system, and over 91,000 families hit with debt notices."
+  },
+  {
+   "slug": "speech-384351",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's childcare system has caused administrative burdens and rising costs, with fees up 30% and 63% of parents not understanding the payment system. They criticised the removal of a 28-day registration period for tax file numbers and the activity test that disadvantages low-income families, and called for secure long-term funding and expanded early education for three-year-olds."
+  },
+  {
+   "slug": "speech-384353",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the Family Assistance Legislation Amendment Bill fails to address Australia's childcare crisis, citing high costs, poor integration, and inadequate educator pay. They criticised removing the 28-day grace period for providing tax file numbers and bank details, warning it will harm vulnerable families, and highlighted that Western Australia has the highest proportion of early childhood services with lower National Quality Standard ratings."
+  },
+  {
+   "slug": "speech-384450",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the childcare subsidy system has serious design faults, with 91,840 families (16%) hit with debts, fees rising 7% in the past year and 30% since the Coalition took office. The speaker opposed the amendment requiring families to provide bank details and tax file numbers at the time of claim, supporting instead a 28-day grace period to protect vulnerable families."
+  },
+  {
+   "slug": "speech-384451",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The speaker supported parts of the bill that reduce administrative burdens on families, including increasing automatic enrolment cessation weeks and removing the 50% self-certification limit, but opposed removing the 28-day period for providing personal information, arguing it would harm vulnerable families such as those escaping domestic violence. They also criticised the government's childcare system, citing that one in four families are worse off, fees have risen 30% under the current government, and 9.5% in the Richmond electorate."
+  },
+  {
+   "slug": "speech-384452",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Family Assistance Legislation Amendment (Building on the Child Care Package) Bill, noting that while it makes welcome changes—such as extending the enrolment lapse rule to 14 weeks, scrapping the 50% child wellbeing certificate cap, and making providers liable for overpayments—it also raises concerns about removing the 28-day period for providing bank details and tax file numbers. The speaker urged further reforms, including increasing the base subsidised hours from 24 to 36 per fortnight, improving the activity test, and ensuring the hourly subsidy rate keeps pace with award wage increases."
+  },
+  {
+   "slug": "speech-384453",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Morrison government's childcare subsidy system, noting that 91,840 families (16% of users) received debt notices and that vulnerable children's access to early childhood education declined. They supported the bill's changes to extend enrolment grace periods and remove the 50% cap on child wellbeing payments, but opposed removing the 28-day period for providing tax file numbers and bank details, arguing it would harm families in crisis."
+  },
+  {
+   "slug": "speech-384454",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The bill increases the non-attendance period from 8 to 14 weeks, removes the 50% cap on self-certified children at risk, and adjusts third-party contribution rules, but keeps a requirement to provide tax file numbers within 28 days. The speaker criticised the government for lacking vision, highlighted that 91,840 families (16%) have incurred childcare subsidy debts due to a complex system, and compared the situation to the government's flawed robodebt scheme."
+  },
+  {
+   "slug": "speech-384455",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The Family Assistance Legislation Amendment (Building on the Child Care Package) Bill 2019 extends the child care enrolment cancellation period from eight to 14 weeks and introduces amendments allowing discretion for vulnerable claimants in exceptional circumstances when the 28-day grace period for providing tax file numbers and bank account details is removed."
+  },
+  {
+   "slug": "speech-384456",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The member for Indi supported the Family Assistance Legislation Amendment (Building on the Child Care Package) Bill 2019, which extends the enrolment non-attendance timeframe from 8 to 14 weeks and removes the 50 per cent cap on additional childcare subsidy certifications. She recommended extending childcare subsidy to children needing a second year of kindergarten whose parents do not meet the activity test, and noted the Community Child Care Fund’s $333 million support for regional providers."
+  },
+  {
+   "slug": "speech-384457",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The government will amend the childcare subsidy bill to allow families to provide their tax file number up to 28 days after making a claim, or obtain an indefinite exemption in special circumstances such as domestic violence, homelessness, hospitalisation, or natural disasters. The bill also extends enrolment cessation due to non-attendance from eight to 14 weeks, removes the limit on at-risk children eligible for higher subsidy, and enables third-party payments and subsidies for ill children."
+  },
+  {
+   "slug": "speech-384459",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-25",
+   "stage_hint": null,
+   "brief": "The opposition moved amendments to retain the 28-day grace period for families to provide tax file numbers and bank account details for Child Care Subsidy claims, arguing its removal would harm vulnerable families such as those fleeing domestic violence or natural disasters and recent migrants. The amendments were opposed by Early Childhood Australia, Goodstart Early Learning, the Australian Childcare Alliance, and the Early Learning and Care Council of Australia."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Family Assistance Legislation Amendment (Building on the Child Care Package) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00125",
+   "assent_date": "2019-12-12"
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1212",
+ "title": "Constitution Alteration (Freedom of Expression and Freedom of the Press) 2019",
+ "short_title": "Constitution Alteration (Freedom of Expression and Freedom of the Press) 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "senate",
+ "sponsor": "GRIFF, Sen Stirling",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10851",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1212%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1212%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1212%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1212_ems_64ae0ecf-c63d-40b3-a1ab-b08e16d57ff4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1212%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill would add a right to free expression and free press to Australia's Constitution.",
+   "It would insert a new chapter and section that forbid the Commonwealth, states and territories from limiting these freedoms unless a law's restriction is judged reasonable and necessary in a democratic society.",
+   "The explanatory memorandum says the protection would be similar to the US First Amendment and would apply to all media, but does not specify when the change would start or which existing laws it would affect."
+  ],
+  "changes": [
+   "The bill would create an explicit constitutional right to freedom of expression and freedom of the press.",
+   "It would allow governments to limit that right only if the limit is reasonable and justifiable in a democratic society.",
+   "The bill would give the High Court the power to review any such limitation."
+  ],
+  "affected": "Everyone in Australia, including the media, and all Commonwealth, state and territory governments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:01Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

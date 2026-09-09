@@ -1,0 +1,196 @@
+{
+ "key": "au-federal-r5921",
+ "title": "Education and Training Legislation Repeal Bill 2017",
+ "short_title": "Education and Training Legislation Repeal Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2017-08-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5921_ems_b478df6c-f5d1-450a-a317-e036320358a8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5921%22",
+   "document_date": "2017-06-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00088",
+   "document_date": "2017-08-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-350209",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The Education and Training Legislation Repeal Bill 2017 repeals four spent and redundant Commonwealth acts: the Australian Research Council (Consequential and Transitional Provisions) Act 2001, the Australian Technical Colleges (Flexibility in Achieving Australia's Skills Needs) Act 2005, the Skilling Australia's Workforce Act 2005, and the Skilling Australia's Workforce (Repeal and Transitional Provisions) Act 2005, as part of the government's effort to reduce red tape and remove obsolete legislation."
+  },
+  {
+   "slug": "speech-351777",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Education and Training Legislation Repeal Bill 2017 as a non-controversial repeal of four obsolete acts, while arguing the government has failed on skills training, citing 148,000 fewer apprentices overall and a 22% drop in trade apprentices since 2013, and criticising cuts to trade training centres and the replacement of the Tools for Your Trade grant with a loan."
+  },
+  {
+   "slug": "speech-351778",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Education and Training Legislation Repeal Bill 2017 to remove obsolete acts, but argued the Coalition has failed vocational education and training, citing 148,000 fewer apprentices nationally, a 22% drop in trade training, TAFE fee increases over 500% in Western Australia, and the expired National Partnership Agreement on Skills Reform."
+  },
+  {
+   "slug": "speech-351779",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-352037",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Technical Colleges Program, established under the Howard government, was a wasteful failure costing $585 million for 28 campuses, with $70,000 per student spent, poor teacher conditions using AWAs, and a 42% drop in apprenticeships in Lalor from 2013 to 2016. The speaker noted the program failed to attract students and teachers, undermined unions and state education, and that the Harvester Technical College in Sunshine was salvaged by the Victorian government."
+  },
+  {
+   "slug": "speech-352039",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Education and Training Legislation Repeal Bill 2017, arguing that the Howard government's Australian Technical Colleges were a failure, and announced that a future Shorten Labor government would reverse $637 million in TAFE cuts, guarantee at least two-thirds of public vocational education funding for TAFE, and create a $100 million TAFE for the Future Fund."
+  },
+  {
+   "slug": "speech-352045",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The minister defended the Coalition's $1.5 billion skills fund over four years, contrasting it with Labor's $600 million over five years for direct training, and cited a 22% drop in apprentices in 2012-13 due to $1.2 billion in employer incentive cuts. The Education and Training Legislation Repeal Bill 2017 repeals four spent acts, including the Skilling Australia's Workforce Act 2005, to reduce red tape."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education and Training Legislation Repeal Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00088",
+   "assent_date": "2017-08-23"
+  }
+ ]
+}

@@ -1,0 +1,193 @@
+{
+ "key": "au-federal-r6842",
+ "title": "Appropriation Bill (No. 4) 2021-2022",
+ "short_title": "Appropriation Bill (No. 4) 2021-2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6842_ems_29e0cab0-f80b-41a4-a49d-477206d5e155%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/8485040%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6842%22",
+   "document_date": "2022-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00020",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-417906",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-10",
+   "stage_hint": null,
+   "brief": "The government introduced the additional estimates appropriation bills for 2021-22, seeking just over $11.9 billion in total. Key allocations include nearly $2.9 billion for the Department of Health (mostly COVID-19 response), $2.8 billion for the NDIS, $1.4 billion for education and employment programs, and nearly $1.3 billion for Defence."
+  },
+  {
+   "slug": "speech-417907",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-10",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 4) 2021‑2022 seeks $4.033 billion, including $2.493 billion for additional personal protective equipment for the National Medical Stockpile from April to June 2022, $424 million for the Hunter Power Project by Snowy Hydro Ltd, and further funds for national resilience centres in Melbourne, Brisbane and Perth."
+  },
+  {
+   "slug": "speech-419367",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The coalition government has wasted billions on rorts including an estimated $20 billion on JobKeeper to profitable companies, $1 billion on robodebt, and targeted funds like the $660 million car park fund and $100 million sports rorts, while mismanaging COVID, aged care, housing, and the NBN; it is time for an Albanese-led Labor government."
+  },
+  {
+   "slug": "speech-419371",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's support for the appropriation bills but criticised the Morrison government for mismanagement, sports rorts, and corruption, citing Newcastle Olympic Football Club's loss of $500,000 in funding and the Building Better Regions Fund directing $270 million to Coalition-held seats. Specific failures highlighted include the government's inaction on Afghan humanitarian visas (only 15,000 over four years from existing quotas), mobile blackspots in Stockton, GP shortages due to removed bulk-billing incentives, and a housing crisis with five-to-ten-year social housing waiting lists in Newcastle."
+  },
+  {
+   "slug": "speech-419372",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Morrison government for prioritising wedge politics over meaningful policy, citing failures in vaccine rollout, aged care, NDIS funding, and infrastructure like the North-South Motorway. They argued the government doubled debt before the pandemic, collects $4,500 more per Australian than in 2013, and attacked Medicare and pensions, while Labor proposed investment in training, energy, and infrastructure."
+  },
+  {
+   "slug": "speech-419391",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "Moved the third reading of Appropriation Bill (No. 3) and (No. 4) 2021-2022, seeking parliamentary authority for additional expenditure from the Consolidated Revenue Fund to continue government programs and meet Commonwealth obligations for the remainder of the financial year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 4) 2021-2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00020",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

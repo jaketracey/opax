@@ -1,0 +1,192 @@
+{
+ "key": "au-federal-r5818",
+ "title": "Education and Other Legislation Amendment Bill (No. 1) 2017",
+ "short_title": "Education and Other Legislation Amendment Bill (No. 1) 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2017-04-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-04-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5818_ems_bcdf115f-f6ad-4223-9db8-449b1325ddbc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5818%22",
+   "document_date": "2017-02-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00031",
+   "document_date": "2017-04-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-16",
+  "sentences": [
+   "The bill would create a VET Student Loans Ombudsman and update indexation on funding caps for the Australian Research Council.",
+   "It would insert a new Part IIE into the Ombudsman Act to establish the ombudsman's office and make consequential changes to related Acts.",
+   "The bill would also amend the Australian Research Council Act 2001 to include an additional forward estimate amount for appropriated funding."
+  ],
+  "changes": [
+   "Establishes the office of the VET Student Loans Ombudsman under the Ombudsman Act.",
+   "Makes consequential amendments to the Ombudsman Act and the VET Student Loans Act 2016.",
+   "Updates indexation against appropriation funding caps in the Australian Research Council Act 2001.",
+   "Includes an additional forward estimate amount in the Australian Research Council Act 2001."
+  ],
+  "affected": "Students and course providers in the vocational education and training sector, and the Australian Research Council.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:39:14Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-343696",
+   "speaker": "Kate Ellis",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to establish a VET Ombudsman, arguing it was necessary to address the $1.2 billion in unrecoverable loans and widespread rorts under the VET FEE-HELP scheme. The party criticised the government for inaction since 2014, noted a 21% decline in TAFE enrolments and 30% fewer apprentices under Liberal rule, and committed to rebuilding TAFE as the centre of the VET system."
+  },
+  {
+   "slug": "speech-343778",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to establish a VET Student Loans Ombudsman, but argued it lacks strong powers and is only a start after Labor’s long push for it. He cited $2.9 billion in VET FEE‑HELP loans in 2015, 420,000 apprentices in 2013 dropping to 280,000, and 75,000 manufacturing jobs lost over ten years, and said Labor will hold the government accountable for the ombudsman’s effectiveness."
+  },
+  {
+   "slug": "speech-343779",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill establishing a VET student loans ombudsman was a long-overdue reform, but criticised the government for initially failing to include an ombudsman and for acting only after Labor pushed for it. The speaker noted the ombudsman lacks binding powers and does not cover the entire VET system, and cited figures including 130,000 fewer apprentices under the Liberals, up to 40% of dodgy loans never being repaid, and $215,000 paid per successful graduate at the 10 largest private providers."
+  },
+  {
+   "slug": "speech-343780",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Turnbull government's mismanagement of the VET FEE-HELP scheme, citing loan blowouts from $700 million in 2013 to $2.9 billion in 2015, and argued the new VET Student Loans Ombudsman has insufficient powers. They also noted a 45% decline in apprenticeships between 2012 and 2016, blaming government decisions such as abolishing the Tools for Your Trade program and undermining TAFE."
+  },
+  {
+   "slug": "speech-343781",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The Turnbull government defended the Education and Other Legislation Amendment Bill (No. 1) 2017, arguing Labor’s criticisms were inaccurate and that the Coalition is the strongest defender of vocational education, while accusing the opposition of a poor record on TAFE funding."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education and Other Legislation Amendment Act (No. 1) 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00031",
+   "assent_date": "2017-04-12"
+  }
+ ]
+}

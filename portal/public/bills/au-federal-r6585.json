@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-r6585",
+ "title": "Competition and Consumer Amendment (Exploitation of Indigenous Culture) Bill 2020",
+ "short_title": "Competition and Consumer Amendment (Exploitation of Indigenous Culture) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-31",
+ "originating_house": "representatives",
+ "sponsor": "KATTER, Bob, Jnr, MP",
+ "sponsor_party": "Katter&#39;s Australian Party",
+ "sponsor_person_id": "10352",
+ "portfolio": "(s) KATTER, Bob, Jnr, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-03-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6585%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6585%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6585%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6585_ems_4b91d83e-83d6-42e8-b18e-0dac7cf30fd9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6585%22",
+   "document_date": "2020-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-31",
+  "sentences": [
+   "The bill would stop non-Indigenous Australians and foreign businesses from making money off Indigenous art, souvenirs and other cultural expressions.",
+   "It would amend the Competition and Consumer Act 2010 to set up a new committee, funded from normal budget supply.",
+   "The bill would start the day after it receives Royal Assent."
+  ],
+  "changes": [
+   "The bill creates a new committee.",
+   "The bill prevents non-Indigenous and foreign entities from profiting from Indigenous cultural products.",
+   "The bill amends the Competition and Consumer Act 2010."
+  ],
+  "affected": "Non-Indigenous Australians, foreign businesses, and Aboriginal and Torres Strait Islander people.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-394230",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Competition and Consumer Amendment (Exploitation of Indigenous Culture) Bill 2020 would create 200–300 jobs by cracking down on fake Indigenous souvenirs, citing that 32 of 35 Indigenous-style items for sale in Cairns shops were made overseas. He also stated that First Australians have the world’s lowest life expectancy, highest stolen children and incarceration rates, and that for every dollar allocated to Indigenous people, three dollars go to non-Indigenous people."
+  },
+  {
+   "slug": "speech-394231",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The Competition and Consumer Amendment (Exploitation of Indigenous Culture) Bill 2020 was argued to be necessary to prevent exploitation of Indigenous culture and ensure fair compensation, noting that up to 80% of souvenir market products are made overseas with little benefit to Indigenous artists, and that Birubi Art continued selling Indigenous-style products under a new name after prosecution."
+  }
+ ],
+ "acts": []
+}

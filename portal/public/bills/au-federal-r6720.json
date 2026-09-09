@@ -1,0 +1,166 @@
+{
+ "key": "au-federal-r6720",
+ "title": "Treasury Laws Amendment (2021 Measures No. 4) Bill 2021",
+ "short_title": "Treasury Laws Amendment (2021 Measures No. 4) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6720_ems_954f39b7-4d76-441a-997d-707ac4bb040a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6720%22",
+   "document_date": "2021-05-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00072",
+   "document_date": "2021-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-408823",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The speaker argued for supporting the Treasury Laws Amendment Bill, particularly the extension of the low and middle income tax offset (LMITO), which both sides support. However, they raised concerns that the offset ends just after the next election, potentially leading to a tax hike, and criticised the government's economic record on wages, jobs, and national income, citing a Productivity Commission report showing the slowest per-person economic growth in six decades."
+  },
+  {
+   "slug": "speech-408827",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the one-year extension of the low- to middle-income tax offset (LMITO) at a cost of $7.8 billion is temporary, while high-income earners receive permanent tax cuts, and criticised the government for declining living standards, falling real wages, and a deal with One Nation to raise the high-income superannuation concessional contributions cap for those aged 67 and over, benefiting politicians including Pauline Hanson."
+  },
+  {
+   "slug": "speech-408837",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The bill was supported for measures addressing homelessness, with the speaker citing a 14,000 increase in homelessness over five years and a 31% rise among older women, and noting government spending of over $6 billion annually on housing affordability, including the $2.7 billion HomeBuilder program."
+  },
+  {
+   "slug": "speech-408844",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The bill extends the low- and middle-income tax offset for 2021-22, providing up to $1,080 per individual and $2,160 per household, benefiting 10.2 million taxpayers at a cost of $7.8 billion. It also introduces fringe benefits tax exemptions for retraining, a capital gains tax exemption for formal granny flat arrangements, and expanded ASIC product intervention powers."
+  },
+  {
+   "slug": "speech-408845",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the one-year extension of the low and middle income tax offset (up to $1,080 for incomes up to $126,000) but criticised the government for making that relief temporary while permanent tax cuts benefit high-income earners, leaving workers earning under $88,000 worse off under stage 3 cuts."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2021 Measures No. 4) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00072",
+   "assent_date": "2021-06-30"
+  }
+ ]
+}

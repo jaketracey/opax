@@ -1,0 +1,386 @@
+{
+ "key": "au-federal-r5273",
+ "title": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 1) Bill 2014",
+ "short_title": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 1) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2014-10-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5273%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5273%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5273%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5273%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5273%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5273%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5273%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5273%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5273%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5273%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5273%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5273_ems_458be65a-34f6-4881-b13b-cc8fd6bf1d3e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5273_ems_ea1e2947-bd4f-4c9d-83b8-7d4ac102d5b1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5273%22",
+   "document_date": "2014-06-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-18",
+  "sentences": [
+   "This bill enacts a range of savings and benefit changes from the 2014 Budget, mostly affecting welfare recipients and family payments.",
+   "It alters payment rules, including freezing some income thresholds, changing how certain payments are indexed, and adjusting eligibility and portability conditions.",
+   "It also adds a recent Western Australian pay equity decision to the special account, enabling Commonwealth support for affected service providers."
+  ],
+  "changes": [
+   "It stops the seniors supplement for holders of two specified health cards in June 2014.",
+   "It renames the clean energy supplement and stops its annual increases permanently from July 2014.",
+   "It pauses for three years the indexation of income and asset limits for most working-age allowances and family tax benefit free areas.",
+   "It changes parenting payment single indexation to the consumer price index and removes the link to male average earnings.",
+   "It limits overseas portability for student payments to six weeks and extends the ordinary waiting period for working-age payments.",
+   "It freezes certain family tax benefit rates for two years and adds the specified pay equity decision to the special account."
+  ],
+  "affected": "Recipients of working-age allowances, student payments, family tax benefits, parenting payment single, seniors supplement, and service providers affected by the Western Australian pay equity decision.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:48Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3258",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "question": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 1) Bill 2014 and related bill - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 85,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-24/12"
+  },
+  {
+   "key": "federal-representatives-3259",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "question": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 1) Bill 2014 and related bill - Consideration in Detail - Remove certain measures",
+   "stage": "Consideration in detail",
+   "ayes": 48,
+   "noes": 83,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 45,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-24/13"
+  },
+  {
+   "key": "federal-representatives-3260",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "question": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 1) Bill 2014 and related bill - Consideration in Detail - Agree to the bills",
+   "stage": "Consideration in detail",
+   "ayes": 84,
+   "noes": 47,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-24/14"
+  },
+  {
+   "key": "federal-representatives-3261",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "question": "Social Services and Other Legislation Amendment (2014 Budget Measures No. 1) Bill 2014 and related bill - Third Reading - Read a third time",
+   "stage": "Third reading",
+   "ayes": 84,
+   "noes": 47,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-24/15"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-291927",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293134",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293329",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293332",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293335",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293336",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293337",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293338",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293339",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293346",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

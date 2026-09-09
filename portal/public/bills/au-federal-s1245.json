@@ -1,0 +1,204 @@
+{
+ "key": "au-federal-s1245",
+ "title": "Agriculture Legislation Amendment (Streamlining Administration) Bill 2019",
+ "short_title": "Agriculture Legislation Amendment (Streamlining Administration) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-02",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2021-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1245_ems_3d3fb98f-a96c-404f-b9ac-1e85119a6b2a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1245%22",
+   "document_date": "2019-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00016",
+   "document_date": "2021-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6963",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-02-17.19.4) to keep the usual second reading motion unchanged. In parliamentary jargon, they voted \"*that the words proposed to be omitted stand part of the question.*\" The usual second reading motion is \"*that the bill be read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/),*\" which is parliamentary jargon for agreeing with the main idea of the bill. This vote took place after Franklin MP [Julie Collins](https://theyvoteforyou.org.au/people/representatives/franklin/julie_collins) (Labor) proposed the amendment below. ### Proposed amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes:* > > *(1) the importance of ensuring computerised systems are only used in simple and uniform cases to guarantee consistency and accuracy; and* > > *(2) that the Coalition Government has backflipped on its plan to introduce the biosecurity imports levy.\"*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-17/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-402334",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The Agriculture Legislation Amendment (Streamlining Administration) Bill 2019 was introduced to authorise automated decision-making by computer programs for biosecurity and imported food decisions, aiming to improve efficiency amid threats like brown marmorated stink bug and African swine fever, with the Department of Agriculture processing 45,000 commercial cargo referrals monthly."
+  },
+  {
+   "slug": "speech-402335",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The bill amends the Biosecurity Act 2015 and Imported Food Control Act 1992 to allow automated, computerised decision-making for imported food and goods, with provisions for officer override and merits review. The speaker criticised the government’s poor record with automated systems, citing the 2016 census crash, ATO and myGov website failures, My Aged Care letters to deceased individuals, and the robodebt disaster."
+  },
+  {
+   "slug": "speech-402341",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The Agriculture Legislation Amendment (Streamlining Administration) Bill 2019 provides a statutory basis for automated decision-making under the Biosecurity Act 2015 and Imported Food Control Act 1992, aiming to improve efficiency amid 45,000 monthly commercial cargo referrals and threats like African swine fever virus and khapra beetle."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Agriculture Legislation Amendment (Streamlining Administration) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00016",
+   "assent_date": "2021-03-01"
+  }
+ ]
+}

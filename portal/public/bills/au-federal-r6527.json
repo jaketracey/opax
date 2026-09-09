@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r6527",
+ "title": "Supply (Parliamentary Departments) Bill (No. 1) 2020-2021",
+ "short_title": "Supply (Parliamentary Departments) Bill (No. 1) 2020-2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-03-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2020-03-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6527_ems_271fc3cb-2f34-4248-b865-b5a305752ddf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6527%22",
+   "document_date": "2020-03-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00032",
+   "document_date": "2020-03-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-03-23",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for the Parliamentary Departments.",
+   "It would provide funding equal to 7/12ths of the estimated 2020-21 annual appropriations for those departments.",
+   "The bill is one of three Supply Bills, each covering different types of government services as required by the Constitution."
+  ],
+  "changes": [
+   "Appropriates money from the Consolidated Revenue Fund for the Parliamentary Departments.",
+   "Sets the appropriation at 7/12ths of the estimated 2020-21 annual amount.",
+   "Separates the Parliamentary Departments' funding from ordinary annual services appropriations."
+  ],
+  "affected": "The Parliamentary Departments are affected by this bill.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-390587",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The three supply bills—Supply Bill (No. 1) 2020‑2021 ($76.3 billion), Supply Bill (No. 2) 2020‑2021 ($6.7 billion), and Supply (Parliamentary Departments) Bill (No. 1) 2020‑2021 ($150 million)—were moved to fund government operations for the first seven months of 2020‑21, with the federal budget rescheduled to 6 October 2020 due to coronavirus uncertainty. The bills include advance to the finance minister provisions of $16 billion and $24 billion for urgent expenditure, subject to additional transparency measures."
+  },
+  {
+   "slug": "speech-390589",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the supply bills, highlighting an unprecedented advance to the finance minister with new transparency measures requiring a press release for each use and opposition approval via Senator Gallagher for advances over $1 billion, and urged the government to release updated economic and budget forecasts to avoid a 10-month gap."
+  },
+  {
+   "slug": "speech-390598",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued for the passage of three supply bills appropriating just under $83.2 billion for the first seven months of 2021, emphasising that the funding is interim and includes no new 2020-21 budget measures, only adjustments for COVID-19 and prior decisions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Supply (Parliamentary Departments) Act (No. 1) 2020-2021",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00032",
+   "assent_date": "2020-03-24"
+  }
+ ]
+}

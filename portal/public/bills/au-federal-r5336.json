@@ -1,0 +1,290 @@
+{
+ "key": "au-federal-r5336",
+ "title": "Aged Care and Other Legislation Amendment Bill 2014",
+ "short_title": "Aged Care and Other Legislation Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2014-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5336_ems_5f3e061f-12e3-4b86-b7f6-82c06d29d382%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5336%22",
+   "document_date": "2014-09-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00126",
+   "document_date": "2014-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-09-25",
+  "sentences": [
+   "This bill is part of a package that also includes the Health and Other Services (Compensation) Care Charges (Amendment) Bill 2014.",
+   "The package would change aged care funding by redirecting money from a workforce supplement into general subsidies for providers, and would allow a new online portal to use Medicare identifiers to verify client identities.",
+   "The package would also fix a problem in recovering past care costs for home care when a recipient gets compensation, making the rules the same as for residential care."
+  ],
+  "changes": [
+   "The bill would remove the workforce supplement from the list of supplements that can be given under the subsidy principles of the Aged Care Act 1997.",
+   "The bill would change the Healthcare Identifiers Act 2010 to let data be collected, used and disclosed for the My Aged Care portal.",
+   "The bill would make minor clarifications and technical fixes to aged care and health laws."
+  ],
+  "affected": "Providers of residential, home and flexible aged care, aged care clients, and the Commonwealth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:32:50Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-298158",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299997",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300000",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300001",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300002",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300004",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300005",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300006",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300007",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300008",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300010",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300016",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300168",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300170",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300262",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300263",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care and Other Legislation Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00126",
+   "assent_date": "2014-12-04"
+  }
+ ]
+}

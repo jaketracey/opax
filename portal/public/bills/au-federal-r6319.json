@@ -1,0 +1,107 @@
+{
+ "key": "au-federal-r6319",
+ "title": "Appropriation Bill (No. 1) 2019-2020",
+ "short_title": "Appropriation Bill (No. 1) 2019-2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-04-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6319%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6319%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6319%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6319%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6319_ems_a174ba94-f4a8-4784-88df-80d31c6cde4d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6319%22",
+   "document_date": "2019-04-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-04-02",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for the government's ordinary annual services.",
+   "It would provide about seven-twelfths of the estimated annual appropriations for 2019-20, plus new budget measures.",
+   "A separate supply bill would cover the remaining five-twelfths to ensure enough funding for the start of the financial year."
+  ],
+  "changes": [
+   "Proposes appropriations from the Consolidated Revenue Fund for ordinary annual services.",
+   "Sets the appropriation amount at seven-twelfths of estimated annual needs plus budget measures.",
+   "Works with a supply bill to cover the remaining five-twelfths for early 2019-20."
+  ],
+  "affected": "The government and its departments receiving ordinary annual services funding.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-376569",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The bill seeks approval for $40.8 billion in interim funding from the Consolidated Revenue Fund, based on five-twelfths of estimated 2019-20 annual appropriations, to ensure continuity of program and service delivery from 1 July 2019 until budget appropriation bills are passed."
+  },
+  {
+   "slug": "speech-376621",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 1) 2019‑2020 seeks approval for $58.5 billion from the Consolidated Revenue Fund, with major allocations including $19.8 billion for Defence (supporting operations Okra, Accordion, Highroad, Resolute and Manitou), $5.7 billion for Social Services (including expanding the cashless debit card and establishing the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability), $6.3 billion for Health (including the Medical Research Future Fund and expansion of headspace), $3.2 billion for Foreign Affairs and Trade, $2.7 billion for Human Services, $2.2 billion for Home Affairs, and $2.1 billion for the Australian Taxation Office (continuing the Corporate Tax Avoidance Taskforce and expanding Single Touch Payroll)."
+  },
+  {
+   "slug": "speech-376622",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "Appropriation Bill (No. 2) 2019-20 was moved for second reading, seeking $7.4 billion in appropriations, while the Parliamentary Departments bill seeks $162 million, including $127 million for Parliament House maintenance and upgrades to the auxiliary power system and mobile phone antenna."
+  }
+ ],
+ "acts": []
+}

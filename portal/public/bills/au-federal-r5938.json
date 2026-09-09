@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-r5938",
+ "title": "Australian Bill of Rights Bill 2017",
+ "short_title": "Australian Bill of Rights Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-14",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-02-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5938%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5938%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5938%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5938_ems_1a1c9f60-e5c8-4301-9c8b-a0a9b9f855b7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5938%22",
+   "document_date": "2017-08-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-14",
+  "sentences": [
+   "This bill would create a Bill of Rights in Australian law.",
+   "It would invalidate any Commonwealth, state or territory law that conflicts with the Bill of Rights and require those laws to be interpreted consistently with it.",
+   "The Australian Human Rights Commission could investigate acts or practices that may breach a right or freedom in the Bill of Rights and handle complaints about such breaches."
+  ],
+  "changes": [
+   "Invalidate inconsistent Commonwealth, state and territory laws.",
+   "Require Commonwealth, state and territory laws to be interpreted consistently with the Bill of Rights.",
+   "Allow the Australian Human Rights Commission to investigate acts or practices that may infringe a right or freedom.",
+   "Allow complaints to be made to the Commission alleging an infringement of a right or freedom."
+  ],
+  "affected": "Commonwealth, state and territory governments and the Australian Human Rights Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:34:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-351214",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-08-14",
+   "stage_hint": null,
+   "brief": "Seconded the Australian Bill of Rights Bill, arguing the government's postal survey on LGBTI rights and citizenship rule changes infringe human rights, and called for a national approach to human rights legislation."
+  }
+ ],
+ "acts": []
+}

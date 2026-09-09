@@ -1,0 +1,90 @@
+{
+ "key": "au-federal-alrc-4147",
+ "title": "News Media (Self-regulation) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Broadband, Communications and the Digital Economy",
+ "status": "lapsed",
+ "status_as_of": "2013-03-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-14",
+   "house": "representatives",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-270529",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270530",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270531",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270698",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822440",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822441",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

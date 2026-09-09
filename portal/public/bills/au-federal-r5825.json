@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r5825",
+ "title": "Fair Work Amendment (Protecting Weekend Pay and Penalty Rates) Bill 2017",
+ "short_title": "Fair Work Amendment (Protecting Weekend Pay and Penalty Rates) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-20",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "&#34;Australian Greens&#34;",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-10-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5825%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5825%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5825%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5825_ems_de7b378f-08e5-4414-9b5b-1871132152de%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5825%22",
+   "document_date": "2017-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-343170",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2017-03-20",
+   "stage_hint": null,
+   "brief": "The Greens introduced the Fair Work Amendment (Protecting Weekend Pay and Penalty Rates) Bill 2017 to block the Fair Work Commission’s penalty rate cuts for young and low-paid workers, arguing weekend and public holiday rates are essential for living wages. The bill would prevent rates from falling below their start-of-2017 levels, and the Greens challenged Senators Hinch, Xenophon and Hanson to support it."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,290 @@
+{
+ "key": "au-federal-r5613",
+ "title": "Tax and Superannuation Laws Amendment (2016 Measures No. 1) Bill 2016",
+ "short_title": "Tax and Superannuation Laws Amendment (2016 Measures No. 1) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-05-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-05-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-05-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-05-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5613_ems_80fe4701-d459-4971-9100-126d942757f1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5613_ems_114dc357-9cd1-4265-ba53-0ce83f0ea59f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5613%22",
+   "document_date": "2016-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00052",
+   "document_date": "2016-05-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-10",
+  "sentences": [
+   "This bill would extend the goods and services tax (GST) to digital products and services supplied by foreign businesses to Australian consumers.",
+   "It would make supplies of digital products and services connected with the indirect tax zone (ITZ) when made to an Australian consumer, and allow responsibility for GST to be shifted to operators of electronic distribution platforms.",
+   "The changes are modelled on similar rules in the European Union and Norway, and would allow affected suppliers to elect limited registration with simplified reporting."
+  ],
+  "changes": [
+   "Extends GST to digital products and services supplied by foreign businesses to Australian consumers.",
+   "Shifts GST liability to operators of electronic distribution platforms in certain circumstances.",
+   "Allows limited registration and simplified reporting for affected suppliers."
+  ],
+  "affected": "Foreign suppliers of digital products and services, operators of electronic distribution platforms, and Australian consumers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:17:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-328725",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "Labor will refer schedules 1 and 2 of the Tax and Superannuation Laws Amendment Bill to the Senate Economics Legislation Committee for further scrutiny, supporting their intent but leaving open the option of amendments. The speech criticised the Treasurer’s haphazard tax reform approach, floated GST changes, and outlined Labor’s policies including $7.2 billion in multinational tax savings, $32 billion from negative gearing and capital gains tax changes, and grandfathered arrangements for existing property investors."
+  },
+  {
+   "slug": "speech-328726",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The speaker criticised Labor's handling of the live export trade, saying it hurt cattle markets in the south-east, and argued that reducing investor demand for existing housing would lower prices, harming homeowners."
+  },
+  {
+   "slug": "speech-328728",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The government should focus on ending unfair tax breaks for the wealthy and large companies, such as negative gearing and capital gains tax concessions, rather than extending the GST to digital services like Netflix, which is a regressive tax that would hurt everyday Australians. The bill needs proper scrutiny, and tax reform should start at the top, not the bottom."
+  },
+  {
+   "slug": "speech-328729",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The bill doubles the maximum farm management deposit from $400,000 to $800,000, allows deposits to be used as offset accounts against debt, and permits earlier withdrawal during drought, aiming to improve financial self-reliance for primary producers."
+  },
+  {
+   "slug": "speech-328730",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The coalition government argued for amendments to the GST law requiring overseas vendors to collect and remit GST on digital products and services sold to Australian consumers, ensuring local businesses are not disadvantaged."
+  },
+  {
+   "slug": "speech-330108",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's GST on digital downloads is a trivial response to multinational tax avoidance, calling it a \"fig leaf\" and a \"joke\" that fails to address serious revenue erosion. They contrasted this with Labor's proposed policies, which they claimed would raise over $7 billion by increasing ATO resources and tackling profit shifting and transfer pricing."
+  },
+  {
+   "slug": "speech-330114",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill's attempt to collect GST on digital goods is a good start but likely unenforceable, and announced Labor will refer the relevant schedules to a Senate inquiry; they also noted the government took two and a half years to act on a rapidly changing digital economy."
+  },
+  {
+   "slug": "speech-330115",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The speaker opposed Labor's proposed changes to negative gearing and capital gains tax, arguing they would increase rents by up to 10 percent ($2,600 annually), reduce housing supply by 60,000 homes over a decade, cause a net job loss of 175,000, and cost the budget $1.65 billion per year, citing a BIS Shrapnel report."
+  },
+  {
+   "slug": "speech-330116",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for lacking a coherent tax reform plan, citing internal divisions, the failure to deliver a promised tax white paper, and inaction on multinational tax avoidance. They outlined Labor's alternative policies, including raising $7.2 billion from multinational tax avoidance, taxing superannuation balances over $1.5 million, increasing tobacco excise to raise $3.8 billion, and reforming negative gearing."
+  },
+  {
+   "slug": "speech-330117",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's aim to extend GST to digital goods from foreign suppliers but argued it is confusing and potentially costly to enforce, calling for a Senate inquiry to assess whether implementation costs would outweigh revenue. They also criticised the government for broken tax reform promises and the Treasurer for incompetence, citing a discredited report on negative gearing."
+  },
+  {
+   "slug": "speech-330118",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill to extend GST to overseas digital products is primarily about revenue, not fairness, and criticised the government for not ensuring local businesses can compete internationally. They highlighted that Australian businesses face an uneven playing field due to low-cost overseas production, citing steelmakers like Arrium in Whyalla, and called for stronger enforcement of standards and procurement policies to support local industry."
+  },
+  {
+   "slug": "speech-331526",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "A motion was moved requesting the Senate to resume consideration of 14 specified bills from the previous session, with each request to be conveyed in a separate message. The bills covered water amendment, managed investment trusts, social services, crime commission, deaths registration, tax and superannuation, crowd-sourced funding, firearms trafficking, and parliamentary entitlements."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (2016 Measures No. 1) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00052",
+   "assent_date": "2016-05-05"
+  }
+ ]
+}

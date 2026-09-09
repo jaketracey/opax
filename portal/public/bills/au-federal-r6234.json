@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6234",
+ "title": "Sex Discrimination Amendment (Removing Discrimination Against Students) Bill 2018 [No. 2]",
+ "short_title": "Sex Discrimination Amendment (Removing Discrimination Against Students) Bill 2018 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-03",
+ "originating_house": "representatives",
+ "sponsor": "SHORTEN, Bill, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10580",
+ "portfolio": "(s) SHORTEN, Bill, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6234%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6234%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6234%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6234_ems_f73efbe2-df8c-457b-b66b-7bee0302ba69%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6234%22",
+   "document_date": "2018-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-12-03",
+  "sentences": [
+   "This bill would stop religious schools from treating students differently because of their sexual orientation, gender identity or intersex status.",
+   "It would remove existing exemptions in the Sex Discrimination Act 1984 that currently allow those schools to discriminate on those grounds.",
+   "The bill would not change how the Act handles indirect discrimination, so faith-based schools could still impose reasonable conditions based on their religious doctrines."
+  ],
+  "changes": [
+   "Removes exemptions from the Sex Discrimination Act 1984 that let religious schools discriminate against students on grounds of sexual orientation, gender identity or intersex status.",
+   "Leaves the indirect discrimination provisions of the Sex Discrimination Act 1984 unchanged.",
+   "Does not address discrimination against staff employed by religious schools."
+  ],
+  "affected": "Students attending religious schools in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

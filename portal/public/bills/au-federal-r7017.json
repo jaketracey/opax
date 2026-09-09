@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7017",
+ "title": "Commonwealth Electoral Amendment (Lowering the Donation Disclosure Threshold) Bill 2023",
+ "short_title": "Commonwealth Electoral Amendment (Lowering the Donation Disclosure Threshold) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-04",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-03-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7017%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7017%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7017%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7017_ems_003e780c-8830-47d1-bf1f-cdc24946ffb9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7017%22",
+   "document_date": "2023-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-09-04",
+  "sentences": [
+   "This bill would lower the threshold for reporting political donations from $16,300 to $1,000 per year and stop automatic adjustments for inflation.",
+   "Political parties would have to provide the Australian Electoral Commission with annual returns detailing donations over the new $1,000 threshold.",
+   "The bill would also expand the definition of a gift to include electoral spending, gifts-in-kind worth $1,000 or more, and payments to attend fundraisers."
+  ],
+  "changes": [
+   "Lowers the donation disclosure threshold from $16,300 to $1,000 per year.",
+   "Removes ongoing indexation of the disclosure threshold.",
+   "Expands the definition of a gift to include electoral expenditure, gifts-in-kind, and fundraiser attendance payments."
+  ],
+  "affected": "Political parties and donors who give to political entities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

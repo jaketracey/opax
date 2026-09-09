@@ -1,0 +1,164 @@
+{
+ "key": "au-federal-r6377",
+ "title": "National Sports Tribunal Bill 2019",
+ "short_title": "National Sports Tribunal Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Youth and Sport",
+ "status": "passed",
+ "status_as_of": "2019-09-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6377_ems_f7052f19-2141-4859-b4db-821b4290c530%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6377_ems_627e1d23-46a3-495c-a169-f6929f782e1f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6377%22",
+   "document_date": "2019-07-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00068",
+   "document_date": "2019-09-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-24",
+  "sentences": [
+   "This bill is part of a package that would create the National Sports Tribunal to resolve disputes in Australian sport.",
+   "The tribunal would handle disputes through private arbitration, mediation, conciliation or case appraisal, with its powers set by agreement between parties.",
+   "The tribunal would operate as a two-year pilot, with a two-year time limit on applications unless extended by legislative instrument."
+  ],
+  "changes": [
+   "Establishes the National Sports Tribunal with several divisions.",
+   "Provides for appointment of members and a chief executive officer.",
+   "Sets out application processes for arbitration and alternative dispute resolution.",
+   "Allows the minister to make rules by legislative instrument.",
+   "Imposes a two-year time limit on applications, extendable by instrument.",
+   "Amends other Acts to allow evidence sharing and secrecy protections."
+  ],
+  "affected": "The Australian sporting community, including sports organisations and individuals involved in sporting disputes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:33:47Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-378203",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "The bill was introduced as a companion to the National Sports Tribunal Bill 2019, providing for consequential amendments and transitional arrangements to transfer sports dispute resolution functions to the new National Sports Tribunal."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Sports Tribunal Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00068",
+   "assent_date": "2019-09-19"
+  }
+ ]
+}

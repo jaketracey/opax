@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6323",
+ "title": "Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019",
+ "short_title": "Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-04-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Regional Services, Sport, Local Government and Decentralisation",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6323%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6323%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6323%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6323_ems_c6acb289-e3d1-471e-973c-ff1ca8106cac%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6323%22",
+   "document_date": "2019-04-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-04-04",
+  "sentences": [
+   "The bill would set up a new federal agency to handle sports integrity issues across Australia.",
+   "It would merge anti-doping, integrity monitoring, and betting oversight functions currently split across several bodies into one organisation.",
+   "The new body would also take on enhanced capabilities such as a whistleblower scheme and better match-fixing detection, once it is operational."
+  ],
+  "changes": [
+   "Establishes Sport Integrity Australia as a single national body.",
+   "Moves functions from the Australian Sports Anti-Doping Authority, the National Integrity of Sport Unit, and Sport Australia into the new agency.",
+   "Expands the agency’s role to include match-fixing detection, suspicious wagering alerts, and a whistleblower scheme."
+  ],
+  "affected": "The Australian Sports Anti-Doping Authority, the National Integrity of Sport Unit, and Sport Australia, as well as organisations and people involved in Australian sport.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:28:47Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

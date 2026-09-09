@@ -1,0 +1,250 @@
+{
+ "key": "au-federal-r6785",
+ "title": "Telstra Corporation and Other Legislation Amendment Bill 2021",
+ "short_title": "Telstra Corporation and Other Legislation Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications, Urban Infrastructure, Cities and the Arts",
+ "status": "passed",
+ "status_as_of": "2021-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6785%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6785%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6785%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6785%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6785%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6785%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6785%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6785%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6785%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6785%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6785%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6785_ems_3ec21faf-1280-499a-9d07-fe6df7f08a2f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6785%22",
+   "document_date": "2021-10-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00140",
+   "document_date": "2021-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-21",
+  "sentences": [
+   "This bill would update laws so that obligations on Telstra continue to apply to its new corporate structure after a planned restructure.",
+   "It would create new legal categories for Telstra's successor companies and give the minister and the ACMA powers to direct them to meet their duties.",
+   "Entities without a carrier licence would be deemed to hold one for up to five days while they apply, to prevent service disruptions."
+  ],
+  "changes": [
+   "Creates the concepts of 'Telstra successor company' and 'designated Telstra successor company' to re-point existing obligations.",
+   "Closes a loophole that could let carriers avoid facilities access obligations by transferring assets to subsidiaries.",
+   "Provides powers for the minister and the ACMA to direct Telstra subsidiaries to meet obligations or assist other subsidiaries.",
+   "Deems unlicensed entities that own or operate network units to hold a carrier licence for up to five days while they apply for one.",
+   "Requires an entity with a deemed carrier licence to submit a licence application within five days.",
+   "Transfers carrier licence conditions from InfraCo to ServeCo as part of the deemed licence."
+  ],
+  "affected": "Telstra Corporation Limited and its restructured group, including Telstra Group Limited, Telstra InfraCo Limited, Amplitel, and Telstra Limited (ServeCo), as well as other carriers and consumers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7664",
+   "date": "2021-11-29",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debates/?id=2021-11-29.35.2) to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion \"*That this bill be now read a second time,*\" which is parliamentary jargon for agreeing with the main idea of the bill. This means that the amendment failed. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) this bill seeks to preserve the operation of a range of regulatory obligations imposed on Telstra following its privatisation;* >> >> *(b) it was the Liberal-National government that privatised Telstra;* >> >> *(c) the privatisation of Telstra, in the view of many communities, had an adverse impact on regional telecommunications services; and* >> >> *(d) that Labor's decision to structurally separate Telstra, and establish a wholesale-only National Broadband Network, was a response to these failures of privatisation policy; and* > > *(2) calls on all members of the House to acknowledge the Liberal-National privatisation of Telstra, as a vertically integrated monopoly, was not in the national interest\"*",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 127
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-11-29/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-413782",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-21",
+   "stage_hint": null,
+   "brief": "The Telstra Corporation and Other Legislation Amendment Bill 2021 maintains Telstra-specific regulatory obligations—including the universal service obligation and infrastructure access—after its proposed restructure by re-pointing them to successor entities, closing a loophole that lets carriers avoid tower access obligations, and requiring Telstra to notify the Australian Communications and Media Authority of future asset transfers."
+  },
+  {
+   "slug": "speech-415967",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Liberal-National coalition's privatisation of Telstra as a vertically integrated monopoly was a flawed policy that damaged competition and regional services, while Labor's structural separation and NBN creation were necessary corrections. They announced a Labor policy to keep the NBN in public ownership and invest $2.4 billion to expand fibre access to 1.5 million additional homes and businesses, aiming for 90% of the fixed-line footprint to have gigabit speeds by 2025."
+  },
+  {
+   "slug": "speech-416211",
+   "speaker": "Lucy Elizabeth Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The bill upholds Telstra's regulatory obligations during its corporate restructure, ensuring continued delivery of the universal service obligation and triple 0 emergency services, with new ministerial directions powers. It also maintains foreign investment limits on Telstra subsidiaries and extends the tower access framework, while highlighting $300 million for the Mobile Black Spot Program and specific base station funding in the Robertson electorate."
+  },
+  {
+   "slug": "speech-416213",
+   "speaker": "Katie Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telstra Corporation and Other Legislation Amendment Bill 2021 ensures Telstra’s restructuring maintains regulatory equivalence and closes legal loopholes, while preserving a 35% foreign ownership cap (max 5% per individual investor) and continuing obligations such as the universal service obligation and emergency call services. Also noted were nearly $300 million for the Mobile Black Spot Program, over $200 million for the Regional Connectivity Program, and $4.5 billion for the NBN."
+  },
+  {
+   "slug": "speech-416214",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the Telstra Corporation and Other Legislation Amendment Bill 2021 to ensure that Telstra's universal service obligation and competition access requirements apply to any subsidiaries it establishes, and declared a minor shareholding in Telstra."
+  },
+  {
+   "slug": "speech-416215",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telstra Corporation and Other Legislation Amendment Bill 2021 is needed to ensure Telstra's regulatory obligations—including consumer protections, universal service, and triple‑0 emergency call services—continue to apply after its restructure, and to maintain foreign ownership limits of 35% for a group and 5% for a single foreign person on Telstra and its successor entities."
+  },
+  {
+   "slug": "speech-416216",
+   "speaker": "Nola Bethwyn Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The Telstra Corporation and Other Legislation Amendment Bill 2021 is supported to maintain existing telecommunications consumer safeguards and competition obligations after Telstra's restructure, including the universal service obligation, customer service guarantee, network reliability framework, priority assistance, and triple 0 emergency call service. These obligations would otherwise risk becoming ineffective or ceasing to apply to Telstra's successor entities."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telstra Corporation and Other Legislation Amendment Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00140",
+   "assent_date": "2021-12-13"
+  }
+ ]
+}

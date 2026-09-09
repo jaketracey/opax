@@ -6,7 +6,7 @@ Implemented 9 September 2026. Funding is outside this feature. The design and la
 
 - `/subject/electorate`: searchable directory with parliament, chamber, state, source status, party and results filters, all encoded in the URL.
 - `/subject/electorate/<slug>`: dated representatives, historical representation lookup (`?asof=YYYY-MM-DD`), election timeline with complete imported candidate lists and primary/TCP counts, boundary outline, Census context, related upper-house constituencies and source/download links.
-- Reciprocal person links and directory entries for verified representatives below the speech export's inclusion threshold. Their speech totals remain unknown, rather than being presented as zero. Existing person URLs and speech counts are preserved.
+- Recorded representation labels on parliamentarian profiles link to a unique electorate in the stated jurisdiction, chamber and state. Missing historical seats and conflicting source labels remain text. Reciprocal person links and directory entries support verified representatives below the speech export's inclusion threshold. Their speech totals remain unknown, rather than being presented as zero. Existing person URLs and speech counts are preserved.
 - Worker metadata, canonical URLs, factual prerendering, share-card metadata, sitemap entries and genuine unknown-electorate 404s.
 - Additive SQLite reference storage, portable JSON bundles, transactional imports, temporal lookup helpers, source-key crosswalks and immutable static releases. No production database has been migrated or changed by this implementation.
 

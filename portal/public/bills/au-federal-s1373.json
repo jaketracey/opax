@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1373",
+ "title": "Criminal Code Amendment (Prohibition of Nazi Symbols) Bill 2023",
+ "short_title": "Criminal Code Amendment (Prohibition of Nazi Symbols) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-23",
+ "originating_house": "senate",
+ "sponsor": "CASH, Sen Michaelia",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10707",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1373%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1373%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1373_ems_91232319-cf16-4b2f-abc6-14280601b1bb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1373%22",
+   "document_date": "2023-03-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-23",
+  "sentences": [
+   "This bill is part of a package that would make it a federal offence to knowingly display a Nazi symbol in public without a reasonable excuse.",
+   "The offence would apply in Commonwealth places, the seat of government, defence land and the territories, with exceptions for religious use of the swastika and for legitimate scientific, educational, artistic, journalistic or public interest purposes.",
+   "The explanatory memorandum does not specify the penalty for the offence or the date the ban would start."
+  ],
+  "changes": [
+   "Creates a new criminal offence for knowingly displaying a Nazi symbol in public without a reasonable excuse.",
+   "Provides exceptions for religious use of the swastika and for displays done in good faith for legitimate scientific, educational, artistic, journalistic or public interest purposes.",
+   "Limits the offence to Commonwealth places, the seat of government, defence land and the territories."
+  ],
+  "affected": "Anyone who displays a Nazi symbol in a Commonwealth place, the seat of government, defence land or a territory.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

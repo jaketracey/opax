@@ -1,0 +1,212 @@
+{
+ "key": "au-federal-s1293",
+ "title": "Royal Commissions Amendment (Protection of Information) Bill 2021",
+ "short_title": "Royal Commissions Amendment (Protection of Information) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-17",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2021-09-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1293_ems_0dff3218-cd87-403d-a2e1-f0c5cf628a62%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1293_ems_151ce798-80cd-4576-a7a6-0de5c87290f3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1293_ems_5dc9b5cf-ff19-4142-ab93-3023fe116555%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1293%22",
+   "document_date": "2021-03-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00103",
+   "document_date": "2021-09-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2021-03-17",
+  "sentences": [
+   "The bill would let the Royal Commission keep certain information about widespread harm confidential.",
+   "Confidentiality would cover accounts of systemic violence, abuse, neglect or exploitation, including those given on someone else's behalf.",
+   "The Commission could only use such confidential information in a report if it was provided under a summons or if identifying details are removed."
+  ],
+  "changes": [
+   "Extend confidentiality protections to accounts of systemic forms of harm.",
+   "Apply protections to information given on behalf of another person, covering both the giver and the represented person.",
+   "Allow confidential information in reports only if given under summons or de-identified."
+  ],
+  "affected": "People giving accounts of systemic violence, abuse, neglect or exploitation, and those on whose behalf such accounts are given.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-412261",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The government presented the Royal Commissions Amendment (Protection of Information) Bill 2021, which expands confidentiality protections for sensitive information given to the Disability Royal Commission, backed by a $527.9 million commitment and requested by Chair Ronald Sackville AO QC and disability advocates."
+  },
+  {
+   "slug": "speech-412361",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "Labor supported the Royal Commissions Amendment (Protection of Information) Bill 2021, which extends confidentiality protections for witnesses, particularly those giving evidence to the Disability Royal Commission. The speaker criticised the Morrison government for taking over six months to respond to Chair Ronald Sackville’s request for these protections and for failing to adequately vaccinate people with disability against COVID-19."
+  },
+  {
+   "slug": "speech-412363",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The Royal Commissions Amendment (Protection of Information) Bill 2021 extends confidentiality protections to all information provided on a confidential basis to the Disability Royal Commission, not just private sessions, making such information inadmissible in court and securely held by the Secretary of the Attorney-General's Department. The government has committed $527 million to the commission, which has received 2,857 submissions and held 482 private sessions as of August 2021, with a final report due by 29 September 2023."
+  },
+  {
+   "slug": "speech-412365",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Royal Commissions Amendment (Protection of Information) Bill 2021, which provides confidentiality protections for information given to the disability royal commission, with offences for unauthorised disclosure carrying up to 12 months imprisonment and ensuring such information is not admissible against the provider in criminal or civil proceedings. The bill aims to encourage people with disability and their advocates to come forward with evidence of violence, abuse, neglect and exploitation."
+  },
+  {
+   "slug": "speech-412366",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The Royal Commissions Amendment (Protection of Information) Bill 2021 extends confidentiality protections to evidence given to the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability, covering letters, emails, submissions and statements. It creates an offence of up to 12 months' imprisonment for unauthorised disclosure, prevents evidence being used against witnesses in criminal cases, and restricts open access to records for up to 99 years."
+  },
+  {
+   "slug": "speech-412367",
+   "speaker": "Michelle Landry",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The Royal Commissions Amendment (Protection of Information) Bill 2021 strengthens and expands confidentiality protections for sensitive information given to the disability royal commission, including making such information inadmissible in court and creating offences for unauthorised disclosure, while also streamlining evidence-sharing with state commissions and enabling urgent non-publication directions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Royal Commissions Amendment (Protection of Information) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00103",
+   "assent_date": "2021-09-10"
+  }
+ ]
+}

@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6204",
+ "title": "Agricultural and Veterinary Chemicals Legislation Amendment (Streamlining Regulation) Bill 2018",
+ "short_title": "Agricultural and Veterinary Chemicals Legislation Amendment (Streamlining Regulation) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-10-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6204%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6204%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6204%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6204_ems_4b8627d2-4075-4191-9af9-0977b5cf229b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6204%22",
+   "document_date": "2018-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-10-18",
+  "sentences": [
+   "The bill would change multiple laws that regulate agricultural and veterinary chemicals to make the system work better.",
+   "It would give the Australian Pesticides and Veterinary Medicines Authority and industry more options, such as simpler processes for low-risk products and new ways to handle information.",
+   "The bill would also repeal the Agricultural and Veterinary Chemicals Legislation Amendment (Removing Re-approval and Re-registration) Act 2014."
+  ],
+  "changes": [
+   "Allow simpler regulatory processes for low-risk chemical products.",
+   "Give the APVMA and industry more flexibility with new information in applications.",
+   "Extend limitation and protection periods to encourage registration of minor uses.",
+   "Support computerised decision-making by the APVMA.",
+   "Let the APVMA create a scheme for accredited third-party assessment services.",
+   "Improve transparency of voluntary recalls and harmonise obligations to inform the APVMA of new safety information."
+  ],
+  "affected": "The APVMA, chemical companies, holders and applicants of agvet chemical products, and state and territory governments under the National Registration Scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:51Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-371177",
+   "speaker": "David Littleproud",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-18",
+   "stage_hint": null,
+   "brief": "The Agricultural and Veterinary Chemicals Legislation Amendment (Streamlining Regulation) Bill 2018 introduces risk-based assessment processes, incentives for minor and priority uses on labels through extended data protection, and a framework for accredited third-party assessment providers, while maintaining safety safeguards and improving recall transparency."
+  }
+ ],
+ "acts": []
+}

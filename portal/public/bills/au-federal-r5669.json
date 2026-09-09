@@ -1,0 +1,89 @@
+{
+ "key": "au-federal-r5669",
+ "title": "Appropriation Bill (No. 1) 2016-2017",
+ "short_title": "Appropriation Bill (No. 1) 2016-2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-05-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-05-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5669%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5669%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5669%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5669%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5669_ems_c9450dfd-39e8-42bb-821f-e38cf97bb3a8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5669%22",
+   "document_date": "2016-05-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-05-03",
+  "sentences": [
+   "This bill would take money from the Consolidated Revenue Fund to pay for the government's everyday running costs.",
+   "It would provide about seven-twelfths of the estimated annual funding for the 2016-2017 financial year, plus full-year budget measures.",
+   "A separate bill, Supply Bill (No. 1) 2016-2017, would cover the remaining five-twelfths to ensure enough money for the first part of the year."
+  ],
+  "changes": [
+   "Proposes appropriations from the Consolidated Revenue Fund for ordinary annual services.",
+   "Sets the appropriation at seven-twelfths of estimated annual funding plus full-year budget measures.",
+   "Works with Supply Bill (No. 1) 2016-2017 to cover the residual five-twelfths."
+  ],
+  "affected": "The government and its departments that receive ordinary annual services funding.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:47:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-332074",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-03",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 2) 2016-2017 seeks just under $9 billion for non‑ordinary annual services, including $4.9 billion for the National Broadband Network, $1.4 billion for defence (with an additional $700 million for the 2016 defence white paper), $544 million for infrastructure programs such as Roads to Recovery and Western Sydney airport, and $310 million for agriculture, including a $50 million national water infrastructure loan facility."
+  }
+ ],
+ "acts": []
+}

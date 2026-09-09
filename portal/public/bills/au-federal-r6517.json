@@ -1,0 +1,314 @@
+{
+ "key": "au-federal-r6517",
+ "title": "Broadcasting Services Amendment (Regional Commercial Radio and Other Measures) Bill 2020",
+ "short_title": "Broadcasting Services Amendment (Regional Commercial Radio and Other Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications, Cyber Safety and the Arts",
+ "status": "passed",
+ "status_as_of": "2020-11-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-11-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6517_ems_f1472e12-5a3a-4da3-93de-2adf9a5a6192%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6517%22",
+   "document_date": "2020-06-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00100",
+   "document_date": "2020-11-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-11",
+  "sentences": [
+   "The bill would change rules for regional commercial radio and television broadcasters. ",
+   "It would let radio stations split exemption periods from local news obligations into two periods totalling up to five weeks, and simplify compliance after ownership changes. ",
+   "For regional television, it would allow licensees to be deemed compliant with Australian content quotas if they broadcast at least as much Australian content on their multi-channels as the equivalent metropolitan multi-channel does in the same year."
+  ],
+  "changes": [
+   "Regional commercial radio licensees could split exemption periods from local news and information obligations into two periods. ",
+   "The compliance regime for minimum service standards after a trigger event would be simplified. ",
+   "A deeming provision would let regional and remote commercial television licensees count as meeting the Australian content multi-channel quota if their multi-channel Australian content is not less than the amount on the equivalent metropolitan multi-channel. "
+  ],
+  "affected": "Regional commercial radio broadcasting licensees and regional and remote commercial television broadcasting licensees.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-391775",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-11",
+   "stage_hint": null,
+   "brief": "The Broadcasting Services Amendment (Regional Commercial Radio and Other Measures) Bill 2020 introduces greater flexibility for regional commercial radio licensees to meet local content obligations and amends multi-channel quota obligations for regional and remote commercial television licensees to assist those with affiliation agreements that limit control over Australian content, without reducing current local content levels or affecting metropolitan licensees' obligations."
+  },
+  {
+   "slug": "speech-392750",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Broadcasting Services Amendment (Regional Commercial Radio and Other Measures) Bill 2020 as providing minor regulatory relief but argued it is late, inadequate, and fails to address structural problems in regional media, accusing the government of years of inaction. They moved an amendment noting the decline in regional media, including 106 local newspaper closures between 2008 and 2018 and over 200 contractions since January 2019, and stating the government has failed to reform the legislative framework or deliver effective support."
+  },
+  {
+   "slug": "speech-394937",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The speaker argued the Broadcasting Services Amendment (Regional Commercial Radio and Other Measures) Bill 2020 is inadequate housekeeping rather than the major reform needed to secure regional media, citing the loss of hit91.9 Bendigo and the Bendigo Weekly, and criticising the government for cutting ABC funding and failing to advertise in smaller independent outlets."
+  },
+  {
+   "slug": "speech-394938",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Broadcasting Services Amendment (Regional Commercial Radio and Other Measures) Bill 2020 would strengthen regional media by removing burdensome regulations, allowing broadcasters to split five-week exemptions over two periods and average 62.5 minutes of local content per week instead of 12.5 minutes daily. The speaker noted that 12 broadcasters (19% of regional broadcasters) breached local content obligations in 2017, and that regional advertising revenue was forecast to decline by 11%, with measures including tax relief, $50 million for regional journalism, and $5 million from the Regional and Small Publishers Innovation Fund already introduced."
+  },
+  {
+   "slug": "speech-394939",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Broadcasting Services Amendment (Regional Commercial Radio and Other Measures) Bill 2020 offers only minor regulatory relief and fails to address the crisis in regional media, which they attribute to government cuts and inaction. They specifically criticised the Morrison government and the National Party for cutting $783 million from the ABC since 2013, leading to 800 job losses, and noted the closure of 106 local and regional newspaper titles between 2008 and 2018, including News Corp papers on the NSW North Coast such as the Ballina Shire Advocate, Tweed Daily News, Byron Shire News, and The Northern Star."
+  },
+  {
+   "slug": "speech-394942",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The member supported the Broadcasting Services Amendment Bill’s minor regulatory relief for regional broadcasters but argued it was too late and inadequate, failing to address structural media problems and the government’s cuts to the ABC—over $780 million in funding reductions from 2013‑2022, 1,000 job losses, and a real‑terms funding decline of 7.7 to 10.6 percent per year—alongside 106 local newspaper closures from 2008‑2018."
+  },
+  {
+   "slug": "speech-394945",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The government has failed to support regional media, with 106 local newspaper closures from 2008–2018 and 200 more since January 2019, 800 ABC staff cut since 2014, and a $83.7 million budget cut; the bill lacks a comprehensive plan, and the speaker supports the amendment by the member for Gellibrand."
+  },
+  {
+   "slug": "speech-394946",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The Labor MP argued the Broadcasting Services Amendment Bill is late, inadequate, and sells regional Australia short, noting it relaxes Australian content requirements rather than supporting broadcasters. They cited 106 local newspaper closures between 2008 and 2018, 200 title closures since January 2019, and 800 ABC staff cuts since 2014 as evidence of the government's failure to address the regional media crisis."
+  },
+  {
+   "slug": "speech-394947",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Broadcasting Services Amendment Bill but expressed concerns, noting that 125 News Corp newspapers have closed or gone digital-only, over 200 mastheads have been lost in the past year, and ABC has lost 800 jobs since 2013 with a 60% reduction in factual reporting. They argued that local media is essential for democracy and called for greater government and council support to protect it."
+  },
+  {
+   "slug": "speech-398059",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government is worsening regional media crises by cutting ABC funding, with 800 jobs lost since 2014, a 60% drop in factual programming, and $84 million in cuts over three years, while criticising the government's approach to children's TV funding as ineffective. The speaker also praised community radio stations in the Northern Territory, including Hot 100, Mix FM, Radio Larrakia, Territory FM, Top Country, and Darwin's 97 FM, for their local service."
+  },
+  {
+   "slug": "speech-398060",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Broadcasting Services Amendment (Regional Commercial Radio and Other Measures) Bill 2020, arguing it would not reduce local content, and praised local commercial radio stations (2ST, Power FM, 2EC, Wave FM, i98 FM) and TV stations (WIN Television, 9News Illawarra) for their critical role during the 2019-20 bushfires."
+  },
+  {
+   "slug": "speech-398061",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "Labor supported the Broadcasting Services Amendment (Regional Commercial Radio and Other Measures) Bill 2020 but criticised the government for cutting ABC funding, which led to the cessation of shortwave radio in the Northern Territory in 2017, and for the closure of The Centralian Advocate in Alice Springs in June 2020 after 73 years."
+  },
+  {
+   "slug": "speech-398062",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "Centre Alliance supported the Broadcasting Services Amendment Bill 2020, arguing it provides flexibility for regional broadcasters to meet local content obligations and helps sustain regional media voices. The speaker also announced that the government agreed to change regulations to allow parliamentarians' office budgets to fund community radio advertising, following their request."
+  },
+  {
+   "slug": "speech-398063",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued the Broadcasting Services Amendment (Regional Commercial Radio and Other Measures) Bill 2020 provides regulatory and cost relief to regional broadcasters, citing digital platforms like Google and Facebook drawing away advertising revenue. Concrete measures include allowing a five-week local content exemption to be split into two periods over holiday seasons, removing the mandatory three-yearly statutory review, and adjusting trigger events, with examples given from the Lyne electorate including Great Lakes FM and Bucketts Radio."
+  },
+  {
+   "slug": "speech-398064",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that strong, independent media is essential, especially in 2020, and called for proper funding and protection of the ABC as a trusted national broadcaster. They also highlighted the importance of local media in outer suburban areas like Dunkley, citing examples such as RPP FM, LOCKDOWN Radio, and GameFace, while noting that these cannot replace robust mainstream journalism."
+  },
+  {
+   "slug": "speech-398065",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Broadcasting Services Amendment (Regional Commercial Radio and Other Measures) Bill 2020 but argued the government had failed to act for three years despite 12 regional stations missing content quotas in 2017, and noted that over 125 News Corp papers are closing or digitising, including 22 in Queensland."
+  },
+  {
+   "slug": "speech-398066",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the decline of local media in regional areas like Tasmania reduces community scrutiny and emergency broadcasting quality, citing COVID-19 hardship grant allegations and bushfire coverage. They called for stronger legislation to require Australian media to produce and broadcast more local content, especially drama, rather than relying on cheap reruns or imported programming."
+  },
+  {
+   "slug": "speech-398068",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The bill reduces regulatory burdens on regional radio and TV licensees by increasing flexibility in local content obligations, removing public holiday minimum service standards, eliminating local content plan requirements, and creating a deeming provision for multichannel Australian content compliance based on metropolitan affiliate broadcasts."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Broadcasting Services Amendment (Regional Commercial Radio and Other Measures) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00100",
+   "assent_date": "2020-11-20"
+  }
+ ]
+}

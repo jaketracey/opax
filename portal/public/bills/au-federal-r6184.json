@@ -1,0 +1,217 @@
+{
+ "key": "au-federal-r6184",
+ "title": "Treasury Laws Amendment (Design and Distribution Obligations and Product Intervention Powers) Bill 2019",
+ "short_title": "Treasury Laws Amendment (Design and Distribution Obligations and Product Intervention Powers) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6184_ems_45d91dd5-0e85-4166-8753-006baf09524c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6184_ems_7fc96af7-d357-4c49-a401-3ed747ace526%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6184_ems_8006c124-21ef-4334-bf20-8c28d0a22214%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6184%22",
+   "document_date": "2018-09-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00050",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2018-09-20",
+  "sentences": [
+   "This bill would make issuers and distributors of financial products more accountable by setting new rules for how those products are designed and sold.",
+   "It would also give the Australian Securities and Investments Commission (ASIC) the ability to step in and ban or restrict financial products that harm consumers.",
+   "The new design and distribution rules would start two years after the bill becomes law, while the product intervention power would start immediately."
+  ],
+  "changes": [
+   "It would require issuers to define who a product is for and to publish that definition for free.",
+   "It would ban distributors from selling a product unless that definition is current.",
+   "It would let ASIC issue stop orders and ask courts to make orders for consumers harmed by breaches.",
+   "It would create a new offence for ignoring an intervention order.",
+   "It would allow people who lose money because of a breach to sue for compensation."
+  ],
+  "affected": "Financial product issuers, distributors, and consumers, as well as ASIC and the Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:51Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-370160",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Design and Distribution Obligations and Product Intervention Powers) Bill 2018 was moved to implement two Financial System Inquiry recommendations, requiring financial product issuers to identify target markets and giving ASIC powers to intervene in product distribution to prevent consumer harm."
+  },
+  {
+   "slug": "speech-371973",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "Labor supported the bill's general principles but argued it must be amended to include consumer credit products (e.g., credit cards) and buy now, pay later providers (e.g., Afterpay) under ASIC's new powers, and to allow retrospective consumer redress for those harmed before ASIC intervenes. The opposition also criticized the government for excluding these areas and for its past opposition to the financial services royal commission."
+  },
+  {
+   "slug": "speech-371974",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Design and Distribution Obligations and Product Intervention Powers) Bill 2018, arguing ASIC requested these powers to strengthen consumer protections in financial products. He referenced the banking royal commission’s findings on misconduct, the need for competition, and the alignment of incentives to prioritise consumer interests."
+  },
+  {
+   "slug": "speech-371978",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment Bill 2018 and referred it to a Senate inquiry, but argued the government had rushed the reforms to avoid a royal commission and had cut nearly $200 million from ASIC's budget over five years. The speaker also accused the government of opposing FOFA reforms and voting against a banking royal commission on 26 occasions."
+  },
+  {
+   "slug": "speech-371979",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment Bill 2018 will require financial products to be targeted to the right consumers and give ASIC powers to intervene when products are inappropriately sold, citing the royal commission’s evidence of harm. She supported the bill as a step to restore trust and ensure customer-focused practices, referencing her own experience with bank manager Mr Roenfeldt, who provided sound advice when she and her husband bought their first dairy farm with $12,000 equity and $118,000 debt."
+  },
+  {
+   "slug": "speech-371980",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Design and Distribution Obligations and Product Intervention Powers) Bill 2018, referencing a meeting with bank customers in their electorate and agreeing with the member for Forrest’s observations on the loss of trust in banking."
+  },
+  {
+   "slug": "speech-376592",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government’s amendments to the Treasury Laws Amendment Bill were originally proposed by Labor and include bringing consumer credit products, buy-now pay-later, and funeral expenses under design and distribution obligations, as well as closing a loophole on compensation when no target market determination is made. The speaker also criticised the government for delaying the bill and for previously opposing a financial services royal commission while pushing $17 billion in tax cuts for big banks."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Design and Distribution Obligations and Product Intervention Powers) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00050",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

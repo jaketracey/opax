@@ -112,6 +112,15 @@ for (const [group, centre] of centres) {
   assert.ok(dist > parties.r, `${group} ring sits outside the party blob (${dist.toFixed(0)})`)
 }
 
+// Public-money sources have a separate territory, with no parties in its count.
+assert.equal(graph.groupStyles.get('parties').count, raw.nodes.filter(n => n.kind === 'party').length)
+assert.equal(graph.groupStyles.get('public money').count, raw.nodes.filter(n => n.kind === 'grantor').length)
+for (const aspect of [0.8, 1.2, 1.9]) {
+  const layout = clusterCentres3D(ordered, aspect, 'parties')
+  const source = layout.get('public money'), centre = layout.get('parties')
+  assert.ok(Math.hypot(source.x, source.y, source.z) > source.r + centre.r, `public money clears parties at aspect ${aspect}`)
+}
+
 // The force simulation settles to finite, spread-out positions.
 const sim = new ForceSim3D({
   nodes: graph.nodes.map((n) => ({
@@ -136,29 +145,44 @@ assert.ok(spread > 200, `layout spread out (max radius ${spread.toFixed(0)})`)
 assert.equal(formatMoney(1_234_567), '$1.2m')
 assert.equal(formatMoney(45_600), '$46k')
 
-// The grants layer: a grantor at the centre, grant flows out to donors that the
+// The grants layer: separate public-money sources, grant flows out to donors that the
 // grant register resolves to the same entity, each donor carrying its own
 // grants block that re-sums like every other figure.
 {
   const grantors = raw.nodes.filter((n) => n.kind === 'grantor')
   assert.equal(grantors.length, raw.meta.grantor_nodes ?? 0, 'grantor nodes match meta')
-  const grantEdges = raw.edges.filter((e) => e.grant)
+  // Two hubs share the layer: grants (no flow tag) and Commonwealth contracts
+  // (flow 'contracts'); each donor block matches its own hub's flow.
+  const grantEdges = raw.edges.filter((e) => e.grant && e.flow !== 'contracts')
+  const contractEdges = raw.edges.filter((e) => e.grant && e.flow === 'contracts')
   assert.equal(grantEdges.length, raw.meta.donors_with_grants ?? 0, 'one grant flow per donor with grants')
+  assert.equal(contractEdges.length, raw.meta.donors_with_contracts ?? 0, 'one contract flow per donor with contracts')
   for (const g of grantors) {
-    assert.equal(g.group, 'parties', 'grantor sits at the centre')
+    assert.equal(graph.nodes.find((n) => n.id === g.id).group, 'public money', 'grantor uses its own public money territory')
     assert.ok(g.colour, 'grantor carries its colour')
   }
   const donorIds = new Set(raw.nodes.filter((n) => n.kind === 'donor').map((n) => n.id))
-  let sum = 0
-  for (const e of grantEdges) {
-    assert.ok(e.source.startsWith('grantor:') && donorIds.has(e.target), `grant flow endpoints ${e.source} -> ${e.target}`)
+  const sums = { grants: 0, contracts: 0 }
+  for (const e of [...grantEdges, ...contractEdges]) {
+    assert.ok(e.source.startsWith('grantor:') && donorIds.has(e.target), `public-money flow endpoints ${e.source} -> ${e.target}`)
     const donor = raw.nodes.find((n) => n.id === e.target)
-    assert.ok(donor.grants && donor.grants.total === e.total, `grants block on ${e.target} matches its flow`)
-    sum += e.total
+    const block = e.flow === 'contracts' ? donor.contracts : donor.grants
+    assert.ok(block && block.total === e.total, `${e.flow ?? 'grants'} block on ${e.target} matches its flow`)
+    sums[e.flow === 'contracts' ? 'contracts' : 'grants'] += e.total
+  }
+  for (const hub of grantors) {
+    const kind = hub.flow === 'contracts' ? 'contracts' : 'grants'
+    const n = kind === 'contracts' ? contractEdges.length : grantEdges.length
+    assert.ok(Math.abs(sums[kind] - hub.total) <= n, `${hub.id} total is its flows summed`)
   }
   if (grantors.length) {
-    assert.ok(Math.abs(sum - grantors[0].total) <= grantEdges.length, 'grantor total is the flows summed')
     checkCells(raw.nodes.filter((n) => n.grants).map((n) => ({ ...n.grants, id: `grants:${n.id}` })), 'grants blocks')
+    checkCells(raw.nodes.filter((n) => n.contracts).map((n) => ({ ...n.contracts, id: `contracts:${n.id}` })), 'contracts blocks')
+  }
+  // A donor on the map for its public money says so and clears the floor.
+  for (const n of raw.nodes.filter((n) => n.via === 'public_money')) {
+    assert.ok(n.publicMoney >= (raw.meta.public_money_floor ?? 0), `${n.id} clears the public-money floor`)
+    assert.ok(n.grants || n.contracts, `${n.id} carries the public money that brought it`)
   }
 }
 

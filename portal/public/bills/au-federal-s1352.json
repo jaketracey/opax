@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s1352",
+ "title": "National Energy Transition Authority Bill 2022",
+ "short_title": "National Energy Transition Authority Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-27",
+ "originating_house": "senate",
+ "sponsor": "ALLMAN-PAYNE, Sen Penny",
+ "sponsor_party": "Queensland Greens",
+ "sponsor_person_id": "11002",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1352%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1352%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1352%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1352_ems_3afea937-d08a-426b-a9be-a7ca16b154d9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1352%22",
+   "document_date": "2022-09-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-27",
+  "sentences": [
+   "This bill sets up a new federal body to manage the shift from fossil fuels to renewable energy and to assist those impacted by it.",
+   "The new authority would have powers to review and suggest changes to various laws, give guidance to different levels of government, and oversee a fund for transition-related projects.",
+   "The authority would be run by a board of five to seven members with expertise in areas like energy, engineering, or economics, and the board would hire a chief executive to carry out its plans."
+  ],
+  "changes": [
+   "The bill establishes an independent statutory body to coordinate the energy transition.",
+   "The authority would support workers and communities when coal mines or power stations shut down, such as by attracting new investment.",
+   "It would help employers share workers across companies where skills are similar.",
+   "It would plan with workers and agencies to help near-retirees move into a secure retirement.",
+   "The authority would review and propose amendments to relevant laws, consult with governments, and publish its findings.",
+   "It would provide advice on renewable energy sources, investment models, workforce planning, and replacing coal and gas exports."
+  ],
+  "affected": "Workers, their families, and communities in fossil fuel producing regions, as well as businesses and governments across Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,140 @@
+{
+ "key": "au-federal-r7022",
+ "title": "Health Insurance Amendment (Professional Services Review Scheme) Bill 2023",
+ "short_title": "Health Insurance Amendment (Professional Services Review Scheme) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2023-09-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7022_ems_345da20b-29b8-4ee7-b7c7-54aef208f11b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7022%22",
+   "document_date": "2023-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00082",
+   "document_date": "2023-09-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-24",
+  "sentences": [
+   "The bill would change how senior staff of the Professional Services Review are appointed and how document production notices are issued.",
+   "It would remove the requirement for the Australian Medical Association to agree to the Director's appointment and let the Minister consult directly with peak bodies for other positions.",
+   "A new Associate Director role would be created, and the Chief Executive Medicare would no longer need to consult stakeholder groups before issuing a notice to produce documents."
+  ],
+  "changes": [
+   "Removes the Australian Medical Association's veto power over the Director of the Professional Services Review.",
+   "Allows direct consultation with relevant peak bodies for appointing Deputy Directors, Panel members, and Determining Authority members.",
+   "Establishes the statutory office of Associate Director of the Professional Services Review.",
+   "Removes the requirement for the Chief Executive Medicare to consult stakeholder groups before issuing a notice to produce documents."
+  ],
+  "affected": "The Australian Medical Association, the Minister, the Director of the Professional Services Review, health professionals, and stakeholder groups are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:42:49Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Health Insurance Amendment (Professional Services Review Scheme) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00082",
+   "assent_date": "2023-09-28"
+  }
+ ]
+}

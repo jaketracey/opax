@@ -1,0 +1,217 @@
+{
+ "key": "au-federal-r7195",
+ "title": "Nature Positive (Environment Law Amendments and Transitional Provisions) Bill 2024",
+ "short_title": "Nature Positive (Environment Law Amendments and Transitional Provisions) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "lapsed",
+ "status_as_of": "2025-02-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7195_ems_9a3d1e8f-a38b-4eb5-8ad5-be61486cd664%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7195%22",
+   "document_date": "2024-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-05-29",
+  "sentences": [
+   "This bill would set up transitional rules for creating a new national environment regulator and a new information officer.",
+   "The new regulator, Environment Protection Australia, would take over permitting, compliance and enforcement duties from several existing laws.",
+   "Penalties for serious breaches of the Environment Protection and Biodiversity Conservation Act 1999 would increase, with a new formula using the greater of 5,000 penalty units or three times the benefit gained."
+  ],
+  "changes": [
+   "Establishes Environment Protection Australia as a statutory Commonwealth entity.",
+   "Creates the statutory position of Head of Environment Information Australia.",
+   "Transfers compliance and enforcement powers from the EPBC Act to the CEO of EPA.",
+   "Introduces environment protection orders and expands audit powers.",
+   "Increases criminal and civil penalties for serious contraventions under the EPBC Act.",
+   "Confers powers to the Director of National Parks for Commonwealth reserves and conservation zones."
+  ],
+  "affected": "Proponents of actions under national environment laws, businesses, and the community affected by environmental regulation.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9468",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-07-04.48.1) to read the bill for a second time, which is parliamentary jargon for agreeing with the main idea of the bill. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd075), the [Nature Positive (Environmental Law Amendments and Transitional Provisions) Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7195): > *amends 9 environmental laws to transfer certain functions and powers from the Minister (or in some cases the Secretary) to the CEO (and in some cases the staff of the EPA). These include the issuing of permit and licences and the undertaking of compliance and enforcement activities.* > > *The Bill also amends the EPBC Act to:* > > * *allow the Minister and Secretary to delegate some or all of their functions and powers to the CEO and EPA staff* > * *confer compliance and enforcement powers and functions on the Director of National Parks, where these relate to Commonwealth reserves* > * *increase criminal and civil penalties* > * *introduce new compliance and enforcement powers* > * *provide that a proponent can object to the ‘stopping of the clock’ when the Minister requests additional information to enable the Minister to make an informed decision about a proposed action under the EPBC Act.* The CEO referred to is the Chief Executive Officer of a statutory agency to be known as Environment Protection Australia (EPA), which was to be created by [Nature Positive (Environment Protection Australia) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7192%22).",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 136,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-07-04/10"
+  },
+  {
+   "key": "federal-representatives-9469",
+   "date": "2024-07-04",
+   "house": "representatives",
+   "question": "Nature Positive (Environment Law Amendments and Transitional Provisions) Bill 2024 - Consideration in Detail - Protect critical habitat",
+   "stage": "Consideration in detail",
+   "ayes": 11,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-07-04/11"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,160 @@
+{
+ "key": "au-federal-r5956",
+ "title": "Foreign Acquisitions and Takeovers Fees Imposition Amendment (Vacancy Fees) Bill 2017",
+ "short_title": "Foreign Acquisitions and Takeovers Fees Imposition Amendment (Vacancy Fees) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5956_ems_5132e870-9895-4f44-bf6a-b2a355654433%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5956%22",
+   "document_date": "2017-09-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00127",
+   "document_date": "2017-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-355280",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's housing tax integrity bills are minor, ineffective tinkering that will not improve affordability, and contrasted them with Labor's plan to reform negative gearing and capital gains tax. The bills disallow travel expense deductions for rental properties, limit plant and equipment deductions, and impose a vacancy fee on foreign owners, measures the speaker called a \"sham\" without substantial reform."
+  },
+  {
+   "slug": "speech-355284",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Housing Tax Integrity) Bill 2017 and the Foreign Acquisitions and Takeovers Fees Imposition Amendment (Vacancy Fees) Bill 2017 will improve rental market integrity by disallowing travel expense deductions for rental property visits and preventing depreciation claims on assets included in property purchases. The speaker also announced that foreign investors must rent out new properties for at least six months a year or face vacancy fees (e.g., $5,500 for a $600,000 property, $22,300 for a $2 million property), and noted the coalition has ordered 61 forced sales of illegally acquired properties totalling over $107 million."
+  },
+  {
+   "slug": "speech-355285",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's housing affordability bills are ineffective and that any genuine solution must include reforms to negative gearing and the capital gains tax discount. The speaker supported an amendment by the member for McMahon stating that a housing package without these reforms is a sham, and criticised the government's First Home Super Saver Scheme for potentially worsening affordability and undermining superannuation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Foreign Acquisitions and Takeovers Fees Imposition Amendment (Vacancy Fees) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00127",
+   "assent_date": "2017-11-30"
+  }
+ ]
+}

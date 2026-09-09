@@ -1,0 +1,137 @@
+{
+ "key": "au-federal-r5611",
+ "title": "Corporations Amendment (Life Insurance Remuneration Arrangements) Bill 2016",
+ "short_title": "Corporations Amendment (Life Insurance Remuneration Arrangements) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5611%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5611%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5611%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5611%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5611%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5611%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5611%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5611%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5611%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5611_ems_82e13b89-08d8-493e-88fa-6d8eef045ba6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5611%22",
+   "document_date": "2016-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-11",
+  "sentences": [
+   "This bill would change the rules on how life insurance advisers are paid to better protect consumers.",
+   "It would remove an exemption that allows conflicted payments for life risk products and let the corporate regulator set conditions for permitted commissions.",
+   "The changes would start on 1 July 2016 or the day after Royal Assent, whichever comes later."
+  ],
+  "changes": [
+   "The bill removes the current exemption from the ban on conflicted remuneration for life risk insurance products.",
+   "It introduces a prohibition on volume-based payments in life risk products.",
+   "It allows ASIC to make a legislative instrument permitting certain benefits if requirements on commission amounts and clawback arrangements are met."
+  ],
+  "affected": "Life insurance companies, financial advisers, and consumers of life risk insurance products.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:17:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-330122",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "Labor supported the Life Insurance Remuneration Bill but raised concerns about clawback periods and commission calculations on stamp duty, citing ASIC's 2018 review as critical for assessing reform impact. The party noted 45% noncompliant advice under upfront commissions and urged adequate ASIC resourcing."
+  },
+  {
+   "slug": "speech-330125",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Corporations Amendment (Life Insurance Remuneration Arrangements) Bill 2016, arguing it would unfairly penalise independent financial advisers while benefiting insurers and banks. They cited concerns that commission caps—starting at 80% in 2016 and reducing to 60% by 2018—and extended clawback arrangements fail to address the root causes of poor advice, such as inadequate training and supervision, and could drive consumers toward lower-quality direct or vertically aligned advice channels."
+  },
+  {
+   "slug": "speech-330129",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-03",
+   "stage_hint": null,
+   "brief": "The speaker defended the Liberal Party’s approach to internal disagreement, contrasting it with the Labor Party’s treatment of Joe Bullock, and noted that Labor supports the Corporations Amendment (Life Insurance Remuneration Arrangements) Bill 2016."
+  }
+ ],
+ "acts": []
+}

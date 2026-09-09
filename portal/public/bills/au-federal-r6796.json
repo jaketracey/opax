@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-r6796",
+ "title": "Aged Care Amendment (Making Aged Care Fees Fairer) Bill 2021",
+ "short_title": "Aged Care Amendment (Making Aged Care Fees Fairer) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-25",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6796%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6796%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6796%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6796_ems_ec099d82-b5e3-4ad4-93d8-4e00b8843cca%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6796%22",
+   "document_date": "2021-10-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-25",
+  "sentences": [
+   "The bill would change the Aged Care Act 1997 to make home care fees fairer and give older people and their families more choice and control over their care and costs.",
+   "It would define 'administration and management' fees as costs directly linked to managing home care, cap these fees at 25% for lower-level packages and 20% for higher-level ones, and ban exit fees.",
+   "Providers would also have to give prospective care recipients a schedule of fees from at least five local providers, or all if fewer than five exist."
+  ],
+  "changes": [
+   "Defines 'administration and management' fees as directly attributable costs.",
+   "Caps administration and management fees at 25% of home care fees for level one or two packages and 20% for level three or four packages.",
+   "Prohibits approved providers from charging exit fees when a recipient leaves their service.",
+   "Requires providers to give prospective recipients a fee schedule for at least five local approved providers, or all if fewer than five exist."
+  ],
+  "affected": "Approved providers of home care, older people receiving home care, and their families.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}
