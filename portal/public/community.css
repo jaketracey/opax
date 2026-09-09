@@ -25,3 +25,5 @@
  .community-header nav a{font-size:.85rem;min-height:44px}
 }
 @media(max-width:350px){.community-header{padding-inline:1rem}.community-brand{font-size:1.15rem}.community-mark{width:34px;height:34px}}
+
+.community-form[data-form="key"]{margin-top:1.5rem}
