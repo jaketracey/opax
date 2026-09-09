@@ -23,9 +23,10 @@ if (enabled) {
       respect_dnt: true,
       before_send: beforeSend,
     });
-    addEventListener('opax:analytics', ({ detail }) => {
+    addEventListener('opax:measured', ({ detail }) => {
       try {
-        const properties = cleanEvent(detail?.event, detail?.properties);
+        const clean = cleanEvent(detail?.event, detail?.properties);
+        const properties = clean && { ...clean, page_path: detail.properties.page_path, page_section: detail.properties.page_section };
         if (!properties) return;
         if (detail.event === 'opax_view') {
           posthog.capture('$pageview', {

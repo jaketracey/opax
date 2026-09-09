@@ -166,10 +166,17 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     disposePicker = () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('focusin', outside); };
   }
 
+  function trackJourney(action) {
+    if (!active) return;
+    try { dispatchEvent(new CustomEvent('opax:analytics', { detail: {
+      event: 'opax_journey', properties: { action, lens: active.id, step: step + 1, step_count: active.steps.length },
+    } })); } catch { /* optional measurement */ }
+  }
   function present() {
     if (!active?.steps.length || destroyed) return;
     const shown = map.presentScene(active.steps[step].scene);
-    if (shown === false) { playing = false; reason = 'This view is unavailable in the 3D map. You can still read each step and open its records.'; stopTimer(); render(); }
+    if (shown === false) { trackJourney('unavailable'); playing = false; reason = 'This view is unavailable in the 3D map. You can still read each step and open its records.'; stopTimer(); render(); }
+    else trackJourney(step === active.steps.length - 1 ? 'completed' : 'step');
   }
   function schedule() {
     stopTimer();
@@ -185,6 +192,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
   }
   function pause(why = '') {
     if (destroyed || !active || (!playing && !why)) return;
+    trackJourney('paused');
     playing = false; stopTimer(); map.pauseScene?.();
     reason = why === 'map' ? 'Map paused for you to explore. Continue to return to this step.' : '';
     render();
@@ -197,9 +205,11 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     step = Math.max(0, Math.min(journey.steps.length - 1, Math.trunc(Number(requestedStep)) || 0));
     render();
     if (active.steps.length) { present(); loadStory(); } else { pendingStory?.controller.abort(); pendingStory=null; map.clearScene(); }
+    if (!active.steps.length) trackJourney('opened');
     if (announce) options.onRoute?.(active.id, step, active.selection || '');
   }
   function exit() {
+    trackJourney('exited');
     pendingStory?.controller.abort(); pendingStory=null; stopTimer(); playing = false; active = null; reason = ''; render(); map.clearScene(); options.onRoute?.(null, 0, '');
   }
   function move(next) {
@@ -221,6 +231,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
       case 'play':
         if (playing) { pause(); break; }
         if (!active?.steps.length || reduced.matches || document.hidden) break;
+        trackJourney('played');
         if (step === active.steps.length - 1) step = 0;
         else if (step === 0 && !reason) step = 1;
         playing = step < active.steps.length - 1; reason = ''; render(); present(); schedule(); options.onRoute?.(active.id, step, active.selection || ''); break;
@@ -248,6 +259,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     selections[id] = active.choices.some(choice => choice.value === select.value) ? select.value : '';
     journeys = buildMoneyJourneys(data, selections);
     choose(id, 0);
+    trackJourney('focus_selected');
     story.querySelector('[data-focus]')?.focus({ preventScroll: true });
   }
   function onKey(event) {
