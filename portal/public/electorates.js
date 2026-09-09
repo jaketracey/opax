@@ -52,9 +52,24 @@ export function recordedRepresentationHTML(representation, electorates) {
   const name = entry ? `<a href="${esc(entry.url)}">${label}</a>` : label;
   return name + (representation.state && representation.chamber !== 'senate' ? `, ${esc(representation.state)}` : '');
 }
-export function personLinksHTML(person) {
-  if (!person?.electorates?.length) return '';
-  return `<section class="person-section electorate-person-links"><h3 class="subject-section-title">Electorates represented</h3><ul>${person.electorates.map((e) => `<li><a href="${esc(e.url)}">${esc(e.name)}</a> · ${esc(CHAMBERS[e.chamber] || e.chamber)}${e.current ? ` · verified ${esc(date(e.as_of))}${e.party ? ` · ${esc(e.party)}` : ''}` : ' · historical service'}${e.periods?.length ? `<div class="fineprint">${e.periods.map((p) => `${esc(date(p.start))}–${p.end ? esc(date(p.end)) : 'end not recorded'}`).join('; ')}</div>` : ''}</li>`).join('')}</ul><p class="fineprint">These links describe parliamentary service. The speech record on this page can span several electorates.</p></section>`;
+export function personElectorateLinksHTML(person, representations = [], electorates = []) {
+  const seats = person?.electorates || [];
+  const current = seats.filter((e) => e.current);
+  if (seats.length) return (current.length ? current : seats).map((e) => `<a href="${esc(e.url)}">${esc(e.name)}</a>`).join(', ');
+  return representations.map((r) => recordedRepresentationHTML(r, electorates)).join(', ');
+}
+export function personRepresentationRows(person, representations = [], electorates = []) {
+  const seats = person?.electorates || [];
+  const current = seats.filter((e) => e.current);
+  const historical = seats.filter((e) => !e.current);
+  const link = (e) => `<a href="${esc(e.url)}">${esc(e.name)}</a>`;
+  const recorded = representations.filter((r) => !seats.some((e) => e.url === recordedElectorate(r, electorates)?.url));
+  return [
+    current.length && [current.length === 1 ? 'Electorate' : 'Electorates', current.map((e) =>
+      `${link(e)}<small class="representation-note">Verified ${esc(date(e.as_of))}</small>`).join('<br>')],
+    historical.length && ['Representation history', historical.map(link).join('<br>') + '<small class="representation-note">Historical service records</small>'],
+    recorded.length && ['Recorded representation', recorded.map((r) => recordedRepresentationHTML(r, electorates)).join('<br>') + '<small class="representation-note">Roster affiliation; may include past seats.</small>'],
+  ].filter(Boolean);
 }
 export async function directorySpec() {
   const data = await loadIndex();

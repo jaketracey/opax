@@ -24,6 +24,29 @@ test('ambiguous person names never auto-join', () => {
 const manifest = JSON.parse(readFileSync(new URL('../public/electorates/manifest.json', import.meta.url)));
 const publicFile = (path) => new URL(`../public${path}`, import.meta.url);
 const index = JSON.parse(readFileSync(publicFile(manifest.index_url)));
+test('profile facts keep current and historical seats linked without duplicating recorded affiliations', async () => {
+  const { personRepresentationRows, personElectorateLinksHTML } = await import('../public/electorates.js');
+  const people = JSON.parse(readFileSync(publicFile(manifest.people_url))).people;
+  const pocock = findPerson(people, 'David Pocock');
+  const recorded = [{ jurisdiction: 'federal', chamber: 'senate', electorate: 'ACT', state: 'ACT' }];
+  const rows = personRepresentationRows(pocock, recorded, index.electorates);
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0][0], 'Electorate');
+  assert.ok(rows[0][1].includes(pocock.electorates[0].url));
+  assert.match(rows[0][1], /Verified/);
+  assert.ok(personElectorateLinksHTML(pocock).includes(pocock.electorates[0].url));
+  const morrison = findPerson(people, 'Scott Morrison');
+  assert.match(personElectorateLinksHTML(morrison), />Cook<\/a>/);
+  assert.equal(personRepresentationRows(morrison)[0][0], 'Representation history');
+  const henderson = findPerson(people, 'Sarah Henderson');
+  assert.match(personElectorateLinksHTML(henderson), />Victoria<\/a>/);
+  assert.doesNotMatch(personElectorateLinksHTML(henderson), /Corangamite/);
+  assert.equal(personRepresentationRows(henderson).length, 2);
+  assert.match(personRepresentationRows(null, recorded, index.electorates)[0][1], /<a href=/);
+  const unsafe = [{ ...recorded[0], electorate: '<img src=x>' }];
+  assert.ok(!personElectorateLinksHTML(null, unsafe, index.electorates).includes('<img'));
+  assert.deepEqual(personRepresentationRows(null), []);
+});
 test('released electorates render complete candidate lists, safe HTML and distinct count labels', () => {
   for (const name of ['Farrer', 'Corangamite', 'Southern Metropolitan', 'Bass']) {
     const entry = index.electorates.find((e) => e.name === name);
