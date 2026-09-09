@@ -14,7 +14,7 @@ Original URLs and PDF hashes are in `portal/public/research/mlci.json`. Raw PDFs
 
 ## Corpus access
 
-`scripts/publish_grants_research.py` creates deterministic resources in the existing KB, checks the source identity, and reads every body back before writing a verified receipt. It makes no model calls. On 9 September all 1,451 records passed: 227 invitations, 89 awards, 150 electoral baselines, 983 roster affiliations and two research notes. All award source fields are retained in corpus metadata, including the recorded selection method (22 awards) and delivery postcode (21); these fields are also in searchable text with no electorate inference. The CPI note is a short attributed summary with the original report linked, not a copy of the full PDF.
+`scripts/publish_grants_research.py` creates deterministic resources in the existing KB, checks the source identity, and reads every body back before writing a verified receipt. It makes no model calls. On 9 September all 1,451 records passed: 227 invitations, 89 awards, 150 electoral baselines, 983 roster affiliations and two research notes. All six CPI comparison groups and the eight independently calculated state totals are included in the corpus and catalogue. Federal House affiliations retain the represented state where the seat baseline supplies it. All award source fields are retained in corpus metadata, including the recorded selection method (22 awards) and delivery postcode (21); these fields are also in searchable text with no electorate inference. The CPI note is a short attributed summary with the original report linked, not a copy of the full PDF.
 
 Live retrieval found the Chisholm Cricket project, CPI note, Bullwinkel baseline and David Pocock roster entry. Live counters at verification showed 620,066 resources; the manifest distinguishes this tranche from 242 other records added since the previous snapshot. Existing collected-source counts and enrichment relationship totals are separate from live KB resource totals.
 
@@ -33,3 +33,5 @@ Each task carries its evidence requirements. Claim pending tasks transactionally
 ## Validation
 
 Data checks reconcile all amounts and seat counts, distinguish AEC notional margins from by-election substitutions, reject cross-jurisdiction namesakes and prevent roster tenure inference. Browser checks cover chart lenses, state/stage filters, seat selection and compact layouts. The test Ask answer retrieved both program totals and cited them while keeping the stages separate. Public research summaries must not be presented as verbatim departmental wording.
+
+The report card and Reports menu share a community-hall icon. The project search field uses the shared form typography and padding. On phones, profile section links keep their own spacing above the money-map link and Ask form; narrow phones stack the input and primary button. Browser checks include 320px and 390px phones, 601px compact layouts and the desktop Reports menu.

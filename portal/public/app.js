@@ -1931,6 +1931,7 @@ const hoverFine = window.matchMedia("(hover: hover) and (pointer: fine)");
 // get no glyph. First Nations is the continent (Country) with an open ring at
 // its heart: no sacred or ceremonial symbols, no dot-painting imitation.
 const REPORT_GLYPHS = {
+  'grants-allocation': '<path d="M3 10l9-7 9 7M5 8.5V21h14V8.5M3 21h18M10 21v-6h4v6"/><circle cx="12" cy="9" r="1.5"/>',
   climate: '<circle cx="12" cy="10" r="1.3"/><path d="M12 8.4C9.9 6.6 10.2 3.4 12 2 13.8 3.4 14.1 6.6 12 8.4Z"/><path d="M12 8.4C9.9 6.6 10.2 3.4 12 2 13.8 3.4 14.1 6.6 12 8.4Z" transform="rotate(120 12 10)"/><path d="M12 8.4C9.9 6.6 10.2 3.4 12 2 13.8 3.4 14.1 6.6 12 8.4Z" transform="rotate(240 12 10)"/><path d="M12 11.3V21M8.5 21h7"/>',
   gambling: '<path d="M11 9V4.6a1.6 1.6 0 0 1 1.6-1.6h6.8A1.6 1.6 0 0 1 21 4.6v6.8a1.6 1.6 0 0 1-1.6 1.6H15"/><circle cx="13.9" cy="5.9" r=".7"/><circle cx="18.1" cy="10.1" r=".7"/><rect x="3" y="9" width="12" height="12" rx="1.6"/><circle cx="6.2" cy="12.2" r=".7"/><circle cx="9" cy="15" r=".7"/><circle cx="11.8" cy="17.8" r=".7"/>',
   housing: '<path d="M3 11.2L12 3.2l9 8"/><path d="M5.2 9.3V21h13.6V9.3"/><path d="M10.94 14.87A1.9 1.9 0 1 1 13.06 14.87L13.5 18.5H10.5Z"/>',

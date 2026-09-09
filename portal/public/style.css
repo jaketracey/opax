@@ -3415,13 +3415,17 @@ textarea.grow-field.is-collapsed { white-space: nowrap; }
 .subject-ask-form { margin: 0 0 0.4rem; }
 @media (max-width: 700px) {
   .subject-person .subject-grid { row-gap: 1.5rem; }
-  .subject-person .person-jumps { margin: 0 0 1.25rem; padding: 0.1rem 0; }
-  .subject-person .person-money-link { margin: 0 0 1.5rem; }
-  .subject-person .subject-ask-form { margin: 0 0 2rem; }
-  .subject-person .subject-ask-form label { margin: 0 0 0.15rem; }
+  .subject-person #subject-ask-form { gap: .75rem; margin: 0 0 2rem; }
+  .subject-person #subject-ask-form label { margin: 0; font-size: 1.125rem; }
+  .subject-person #subject-ask-form :is(input, button) { min-height: 52px; }
   .subject-person .person-topics { margin-top: 0; }
+  .subject-person #subject-ask-form + .person-topics .subject-section-title { margin-top: 0; }
   .subject-person .person-topics-head { margin-bottom: 0.9rem; }
   .subject-person .subject-section-title { margin-top: 2rem; }
+}
+@media (max-width: 480px) {
+  .subject-person #subject-ask-form { grid-template-columns: minmax(0, 1fr); }
+  .subject-person #subject-ask-form :is(input, button) { width: 100%; }
 }
 
 /* ==== chat: the thread owns the foot of the page ==== */
@@ -3444,12 +3448,28 @@ html[data-panel="chat"] footer { display: none; }
 /* ==== subject pages on wide screens ==== */
 /* Air between the header and the two-column body. */
 @media (min-width: 901px) { .subject-grid { margin-top: 1.25rem; } }
-/* The person page's jump links and the money map button share one ruled row
-   on wide screens; on phones the wrapper dissolves and they stack as before. */
+/* Keep the profile links together on phones so their spacing does not collapse
+   into the Ask form. Wide screens use a single ruled row. */
 .person-jumps-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-block: 1px solid var(--line); padding: 0.35rem 0; margin: 0 0 1rem; }
 .person-jumps-row .person-jumps { flex: 1 1 auto; border: 0; margin: 0; }
 .person-jumps-row .person-money-link { flex: 0 0 auto; margin: 0; }
-@media (max-width: 700px) { .person-jumps-row { display: contents; } }
+@media (max-width: 700px) {
+  .person-jumps-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; border: 0; padding: 0; margin-bottom: 1.75rem; }
+  .subject-person .person-jumps-row .person-jumps {
+    gap: .25rem; margin: 0; padding: .25rem;
+    background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 4px;
+  }
+  .subject-person .person-jumps-row .person-jumps a {
+    flex: 1 1 auto; justify-content: center; margin: 0; padding: .5rem .375rem;
+    color: var(--navy); font-weight: 600; text-decoration: none; border-radius: 2px;
+  }
+  .subject-person .person-jumps-row .person-jumps a:hover { background: var(--paper-raised); }
+  .person-jumps-row .person-money-link .action-btn { width: 100%; min-height: 52px; padding: .75rem 1rem; }
+  .person-jumps-row .person-money-link .action-btn > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+}
+@media (max-width: 360px) {
+  .subject-person .person-jumps-row .person-jumps:not([hidden]) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 
 /* ==== the tide: air between the switchers and the chart ==== */
 .tide-view { margin-top: var(--space-4); }
@@ -4865,6 +4885,13 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .allocation-controls { display:flex; flex-wrap:wrap; align-items:end; gap:1rem; margin-block:1.5rem; }
 .allocation-controls label,.allocation-seat-picker { display:grid; gap:.5rem; font-weight:600; font-size:.9rem; min-width:0; }
 .allocation-controls select,.allocation-controls input,.allocation-seat-picker select { width:100%; min-height:48px; margin:0; }
+.allocation-controls input[type="search"] {
+  padding:.6rem .8rem; font:400 1rem/1.3 var(--sans);
+  color:var(--ink); background:var(--paper-raised);
+  border:1px solid var(--line-strong); border-radius:4px;
+  -webkit-appearance:none; appearance:none;
+}
+.allocation-controls input[type="search"]::placeholder { font-weight:400; color:var(--ink-faint); opacity:1; }
 .allocation-search { flex:1; }
 .allocation-bars { display:grid; gap:1.3rem; max-width:52rem; }
 .allocation-bar-label { display:flex; justify-content:space-between; gap:1rem; margin-bottom:.55rem; }
