@@ -14,7 +14,7 @@ function notice(text){
 }
 function loadingButton(button,kind){
  const original=button.innerHTML;
- const label={signin:'Sending link…',consume:'Signing in…',profile:'Saving…',thread:'Posting…',reply:'Posting…',key:'Creating token…'}[kind]||'Saving…';
+ const label={signin:'Sending link…',consume:'Signing in…',profile:'Saving…',thread:'Posting…',reply:'Posting…',key:'Creating API key…'}[kind]||'Saving…';
  button.disabled=true;
  button.setAttribute('aria-busy','true');
  button.classList.add('btn-loading');
@@ -26,7 +26,81 @@ function go(view,extra=''){history.pushState(null,'',link(view,extra));message.t
 function accountNav(){return `<nav class="community-subnav" aria-label="Your community"><a href="${link('account')}">Your account</a><a href="${link('lists')}">Reading lists</a><a href="${link('tools')}">Connected tools</a></nav>`}
 function signin(){return `<div class="community-columns"><section><h1>A place in the community.</h1><p class="community-lede">Save your reading, compare notes and follow the public record together.</p>${signInToken?'<form class="community-form" data-form="consume"><p>Your email link is ready. Continue to sign in.</p><button class="community-button">Continue to Opax</button></form>':`<form class="community-form" data-form="signin"><label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com"></label><button class="community-button" ${!state.enabled?'disabled':''}>Email me a sign-in link</button><small>No password to remember. Your link works once and expires in 15 minutes. Joining is free.</small><small>By joining, you agree to the <a href="${link('guidelines')}">community guidelines</a>. <a href="${link('privacy')}">How we use your account details</a>.</small></form>`}</section><aside class="community-note"><h2>The record stays open.</h2><p>You do not need an account to search Opax, read a speech or explore the money map.</p><p>Your account brings reading lists, discussions and connected tools together.</p></aside></div>`}
 function threadRow(t){return `<article class="community-row"><h3><a href="${link('thread','&id='+encodeURIComponent(t.id))}">${esc(t.title)}</a></h3><p class="community-meta"><a href="${link('member','&id='+encodeURIComponent(t.member_id))}">${esc(t.display_name||'Community member')}</a> · ${date(t.created_at)} · ${t.replies} ${t.replies===1?'reply':'replies'}</p><p>${esc(t.body.slice(0,200))}${t.body.length>200?'…':''}</p></article>`}
-async function render(){const version=++revision,view=params().get('view')||'home';root.setAttribute('aria-busy','true');try{
+// Full API keys live only in this page's memory, never in URLs or browser storage.
+const toolNames={claude:'Claude Code',codex:'Codex',cursor:'Cursor',other:'Other tools'};
+const toolSetup={tool:'claude',key:null,keys:[]};
+const copyIcon='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>';
+const setupDocs={claude:'https://code.claude.com/docs/en/mcp',codex:'https://developers.openai.com/codex/mcp',cursor:'https://cursor.com/docs/mcp'};
+function setupConfig(key){
+ const url=state.mcp_url;
+ if(toolSetup.tool==='claude')return 'claude mcp add --scope user --transport http opax '+url+' --header "Authorization: Bearer '+key+'"';
+ if(toolSetup.tool==='codex')return '[mcp_servers.opax]\nurl = '+JSON.stringify(url)+'\nhttp_headers = { Authorization = '+JSON.stringify('Bearer '+key)+' }';
+ return JSON.stringify({mcpServers:{opax:{url,headers:{Authorization:'Bearer '+key}}}},null,2);
+}
+function setupCopyButton(kind,label,disabled=false){return `<button type="button" class="community-button secondary setup-copy" data-action="copy-setup" data-copy="${kind}" data-copy-label="${label}" ${disabled?'disabled':''}>${copyIcon}<span>${label}</span></button>`}
+function setupInstructions(){
+ if(!toolSetup.key)return '<p class="community-small setup-pending">Your setup instructions will appear here once you have an API key.</p>';
+ const tool=toolSetup.tool;
+ const instructions={
+  claude:'Open your computer’s terminal. Copy and run this command to add Opax to Claude Code.',
+  codex:'Open <code>~/.codex/config.toml</code> on your computer and add this section. If it already has an Opax section, replace that section only.',
+  cursor:'Open <code>~/.cursor/mcp.json</code> on your computer. Add the settings below. If the file already has servers, add just the <code>opax</code> entry inside <code>mcpServers</code>.',
+  other:'In your tool’s MCP settings, add a server named <strong>Opax</strong>. Choose <strong>Streamable HTTP</strong> and paste this server URL.'
+ };
+ const finish={claude:'Restart Claude Code, then type /mcp to check that Opax is connected.',codex:'Save the file and restart Codex. Type /mcp to check that Opax is connected.',cursor:'Save the file, then check that Opax is enabled in Cursor’s MCP settings.'};
+ return `<p>${instructions[tool]}</p>${tool==='other'?`<div class="setup-field"><span class="setup-field-label">Server URL</span><div class="setup-copy-row"><code>${esc(state.mcp_url)}</code>${setupCopyButton('url','Copy URL')}</div></div><p>Choose <strong>Bearer token</strong> authentication and paste your API key from step 2.</p><details class="setup-help"><summary>My tool asks for a header instead</summary><p>Add a header named <code>Authorization</code>. Copy the value below; it includes the word <code>Bearer</code>.</p><div class="setup-copy-row"><code>Bearer opax_••••••••</code>${setupCopyButton('header','Copy header value')}</div></details><p class="community-small">Your tool needs to support remote MCP with an API key or custom headers.</p>`:`<div class="setup-code"><pre tabindex="0" aria-label="${tool==='claude'?'Setup command':'Setup settings'} preview, API key hidden"><code>${esc(setupConfig('YOUR_OPAX_API_KEY'))}</code></pre>${setupCopyButton('config',tool==='claude'?'Copy command with API key':'Copy settings with API key')}</div><p class="community-small">The copy button fills in your API key. Keep the copied ${tool==='claude'?'command':'settings'} private.</p><p>${finish[tool]}</p><details class="setup-help"><summary>Just need the server URL?</summary><div class="setup-copy-row"><code>${esc(state.mcp_url)}</code>${setupCopyButton('url','Copy URL')}</div></details>`}<div class="setup-try"><h3>Try asking your tool</h3><p>“Use Opax to find records about housing affordability and link to the sources.”</p></div>${setupDocs[tool]?`<a class="community-small" href="${setupDocs[tool]}" target="_blank" rel="noopener noreferrer">${toolNames[tool]} setup guide <span aria-hidden="true">↗</span></a>`:''}`;
+}
+function setupKeyForm(){
+ const active=toolSetup.keys.filter(k=>!k.revoked_at&&k.expires_at>Date.now()/1000).length;
+ if(toolSetup.key)return `<div class="setup-key-ready"><h3 id="setup-key-ready" tabindex="-1">Your API key is ready</h3><p class="community-small">Copy it now. You won’t be able to see it again after leaving this page.</p><div class="setup-copy-row"><input id="setup-api-key" type="password" value="${esc(toolSetup.key.token)}" readonly aria-label="Your Opax API key" autocomplete="off" spellcheck="false">${setupCopyButton('key','Copy API key')}</div><button type="button" class="setup-text-button" data-action="show-key" aria-controls="setup-api-key" aria-pressed="false">Show API key</button></div>`;
+ return `${active<3?`<form class="community-form" data-form="key"><label>Name this connection <span class="setup-optional">(optional)</span><input name="name" maxlength="60" placeholder="${esc(toolNames[toolSetup.tool]==='Other tools'?'My AI tool':toolNames[toolSetup.tool])}" autocomplete="off"></label><button class="community-button">Create API key</button><small>Valid for 90 days. You can remove it at any time.</small></form>`:'<p>You have three active API keys. <a href="#setup-saved-keys" data-action="manage-keys">Remove an old key</a> to create another, or use a key you’ve already saved.</p>'}<details class="setup-help"><summary>I already have an API key</summary><form class="community-form" data-form="existing-key"><label>Paste your Opax API key<input name="token" type="password" required maxlength="80" autocomplete="off" spellcheck="false" placeholder="opax_…"></label><small>Use the full key you saved, not the shortened version in your key list.</small><button class="community-button secondary">Use this API key</button></form></details>`;
+}
+function setupSavedKeys(){return `<details class="setup-saved-keys" id="setup-saved-keys"><summary>Manage your API keys <span>(${toolSetup.keys.length})</span></summary><p class="community-small">Full keys are only shown when you create them. If you’ve lost one, remove it and create a replacement.</p><ul class="community-key-list">${toolSetup.keys.map(k=>`<li><div><strong>${esc(k.name)}</strong><p class="community-small">${esc(k.prefix)}… · ${k.revoked_at?'Removed':k.expires_at<Date.now()/1000?'Expired':'Expires '+date(k.expires_at)}</p></div>${!k.revoked_at&&k.expires_at>Date.now()/1000?`<button class="community-button secondary" data-action="revoke-key" data-id="${esc(k.id)}" aria-label="Remove API key for ${esc(k.name)}">Remove key</button>`:''}</li>`).join('')||'<li>No API keys yet.</li>'}</ul>${toolSetup.key?'<button type="button" class="community-button secondary" data-action="another-key">Set up another connection</button>':''}</details>`}
+function toolsPage(){return `${accountNav()}<div class="community-tools"><div class="setup-intro"><h1>Use Opax in your AI tool.</h1><p class="community-lede">Connect once, then ask your tool to search the public record and show its sources.</p></div><ol class="setup-steps"><li><h2><span aria-hidden="true">1</span>Choose your tool</h2><fieldset class="setup-tool-picker"><legend class="visually-hidden">Choose your tool</legend>${Object.entries(toolNames).map(([value,label])=>`<label><input type="radio" name="setup-tool" value="${value}" ${toolSetup.tool===value?'checked':''}><span>${label}</span></label>`).join('')}</fieldset></li><li><h2><span aria-hidden="true">2</span>Get your API key</h2><div id="setup-key-area">${setupKeyForm()}</div></li><li><h2 id="setup-add-heading"><span aria-hidden="true">3</span>Add Opax to ${toolSetup.tool==='other'?'your tool':toolNames[toolSetup.tool]}</h2><div id="setup-instructions">${setupInstructions()}</div></li></ol><p id="setup-copy-status" class="community-small" role="status" aria-live="polite"></p>${setupSavedKeys()}<p class="community-small setup-scope">Your API key lets your tool read public records. It can’t access your account or post to the community.</p></div>`}
+function refreshSetup(){
+ document.querySelector('#setup-key-area').innerHTML=setupKeyForm();
+ document.querySelector('#setup-add-heading').innerHTML='<span aria-hidden="true">3</span>Add Opax to '+(toolSetup.tool==='other'?'your tool':toolNames[toolSetup.tool]);
+ document.querySelector('#setup-instructions').innerHTML=setupInstructions();
+ document.querySelector('#setup-saved-keys').outerHTML=setupSavedKeys();
+}
+function showSetupKey(key){
+ toolSetup.key=key;refreshSetup();
+ const heading=document.querySelector('#setup-key-ready');
+ heading.focus({preventScroll:true});heading.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+}
+async function copySetup(button){
+ const kind=button.dataset.copy,key=toolSetup.key?.token;
+ if(kind!=='url'&&!key)return;
+ const value=kind==='url'?state.mcp_url:kind==='key'?key:kind==='header'?'Bearer '+key:setupConfig(key);
+ const status=document.querySelector('#setup-copy-status');
+ try{
+  await navigator.clipboard.writeText(value);
+  document.querySelector('#setup-copy-fallback')?.remove();
+  const label=button.querySelector('span'),original=button.dataset.copyLabel;
+  label.textContent='Copied';setTimeout(()=>{if(label.isConnected)label.textContent=original},2200);
+  status.textContent=kind==='key'?'API key copied.':kind==='url'?'Server URL copied.':kind==='header'?'Header value copied.':'Setup copied with your API key included.';
+ }catch{
+  // A selectable fallback also works in browsers that block clipboard access.
+  let fallback=document.querySelector('#setup-copy-fallback');
+  if(!fallback){fallback=document.createElement('textarea');fallback.id='setup-copy-fallback';fallback.className='setup-copy-fallback';fallback.readOnly=true;fallback.setAttribute('aria-label','Select and copy this value');button.closest('.setup-copy-row,.setup-code').after(fallback)}
+  fallback.value=value;fallback.focus();fallback.select();
+  status.textContent='Automatic copying was blocked. The value is selected: copy it using your browser or keyboard.';
+ }
+}
+root.addEventListener('change',event=>{
+ if(!event.target.matches('[name="setup-tool"]'))return;
+ toolSetup.tool=event.target.value;
+ const name=document.querySelector('[data-form="key"] input[name="name"]');
+ if(name)name.placeholder=toolSetup.tool==='other'?'My AI tool':toolNames[toolSetup.tool];
+ document.querySelector('#setup-add-heading').innerHTML='<span aria-hidden="true">3</span>Add Opax to '+(toolSetup.tool==='other'?'your tool':toolNames[toolSetup.tool]);
+ document.querySelector('#setup-instructions').innerHTML=setupInstructions();
+ document.querySelector('#setup-copy-fallback')?.remove();
+ document.querySelector('#setup-copy-status').textContent='';
+});
+window.addEventListener('pagehide',()=>{toolSetup.key=null;document.querySelectorAll('#setup-api-key,#setup-copy-fallback,[data-form="existing-key"] input').forEach(el=>{el.value='';el.removeAttribute('value')})});
+window.addEventListener('pageshow',event=>{if(event.persisted&&params().get('view')==='tools')render()});
+
+async function render(){const version=++revision,view=params().get('view')||'home';if(view!=='tools'||!state.member)toolSetup.key=null;root.setAttribute('aria-busy','true');try{
  if(view==='signin'){root.innerHTML=state.member&&!signInToken?accountNav()+'<h1>You’re signed in.</h1><p>Continue to your account or explore the community.</p>':signin();return}
  if(view==='guidelines'){root.innerHTML=`<h1>Follow the evidence. Make room for each other.</h1><p class="community-lede">This community helps people understand the public record.</p><section class="community-section"><h2>Bring a source</h2><p>Link to the record you are discussing. Distinguish what it says from your interpretation, and be open to corrections.</p><h2>Discuss ideas with care</h2><p>No harassment, threats, discrimination, personal information about others, spam or unsupported accusations. A recorded connection is not proof of influence or wrongdoing.</p><h2>Keep it useful</h2><p>Discussions and reading lists are written by members. They are separate from Opax’s source records. Moderators can remove content that breaks these guidelines.</p><h2>Flag a concern</h2><p>Use Report on a discussion or reply to send a concern to moderators. You can remove your own discussions and replies.</p></section><a href="/community">Back to the community</a>`;return}
  if(view==='privacy'){root.innerHTML=`<h1>Your community account.</h1><p>We use your email address to send sign-in links and identify your account. Your email is not shown on your public profile.</p><p>Your display name, bio, discussions and replies are public. Reading lists are private until you choose to share them. You can change a list back to private or delete it.</p><p>Sign-in links expire after 15 minutes. Sessions last up to 30 days, and you can sign out on all devices from your account. Access tokens expire after 90 days and can be revoked earlier.</p><p>Community pages do not load analytics scripts. Source records remain accessible without an account.</p><a href="${link('account')}">Your account</a>`;return}
@@ -38,7 +112,7 @@ async function render(){const version=++revision,view=params().get('view')||'hom
  if(view==='account'){root.innerHTML=`${accountNav()}<h1>Your place in Opax.</h1><p class="community-lede">${esc(state.member.email)}</p><div class="community-account-grid"><section class="community-card"><h2>Your public profile</h2><form class="community-form" data-form="profile"><label>Display name<input name="name" autocomplete="nickname" value="${esc(state.member.name==='Community member'?'':state.member.name)}" required minlength="2" maxlength="60"></label><label>A little about your interests<textarea name="bio" maxlength="280">${esc(state.member.bio)}</textarea></label><small>Your email stays private. Your display name and bio are public.</small><button class="community-button">Save profile</button></form></section><section class="community-card"><h2>Your community</h2><p>Keep reading lists, join discussions and explore the record with your own tools.</p><a class="community-button secondary" href="${link('lists')}">Your reading lists</a><a class="community-button secondary" href="${link('tools')}">Connect your tools</a></section></div><section class="community-section"><div class="community-actions"><button class="community-button secondary" data-action="logout">Sign out</button><button class="community-button secondary" data-action="logout-all">Sign out on all devices</button>${state.member.role==='moderator'?`<a href="${link('moderation')}">Moderation reports</a>`:''}</div></section>`;return}
  if(view==='lists'){const d=await api('lists');if(version!==revision)return;root.innerHTML=`${accountNav()}<h1>Your reading lists.</h1><p class="community-lede">Keep a trail through the record, for yourself or to share.</p><div class="community-columns"><section>${d.lists.map(l=>`<article class="community-row"><h3><a href="${link('list','&id='+l.id)}">${esc(l.title)}</a></h3><p class="community-meta">${l.count} saved records · ${l.public?'Shared':'Private'}</p><p>${esc(l.description)}</p></article>`).join('')||'<p>No reading lists yet. Start with a topic you are following.</p>'}</section><section class="community-card"><h2>Start a reading list</h2>${listForm()}</section></div>`;return}
  if(view==='new-thread'){root.innerHTML=`<h1>Bring a question to the record.</h1><p>Give people enough context to explore it with you. Member discussions are separate from source records.</p><form class="community-form" data-form="thread"><label>What would you like to discuss?<input name="title" required minlength="5" maxlength="140"></label><label>Your opening note<textarea name="body" required minlength="10" maxlength="5000"></textarea></label><label>Link to the Opax record (optional)<input name="source_path" placeholder="https://opax.com.au/doc/…"></label><small>Keep it sourced, respectful and open to correction.</small><button class="community-button">Start discussion</button></form>`;return}
- if(view==='tools'){const d=await api('keys');if(version!==revision)return;root.innerHTML=`${accountNav()}<h1>Take the record into your own tools.</h1><p class="community-lede">MCP lets compatible AI tools search Opax and open source records.</p>${`<section class="community-section"><h2>Connect with an access token</h2><p>Use this address in a tool that supports remote MCP with a bearer token.</p><div class="community-token">${esc(state.mcp_url)}</div><form class="community-form" data-form="key"><label>Name this connection<input name="name" required minlength="2" maxlength="60" placeholder="My research assistant"></label><button class="community-button">Create access token</button><small>Tokens expire in 90 days. You can revoke one at any time.</small></form><div class="community-token" id="new-access-token" hidden></div><ul class="community-key-list">${d.keys.map(k=>`<li><strong>${esc(k.name)}</strong><p class="community-small">${esc(k.prefix)}… · ${k.revoked_at?'Revoked':k.expires_at<Date.now()/1000?'Expired':'Expires '+date(k.expires_at)}</p>${!k.revoked_at?`<button class="community-button secondary" data-action="revoke-key" data-id="${k.id}">Revoke token</button>`:''}</li>`).join('')}</ul></section>`}<h2>What your tool can do</h2><p>Search public records, open a source, find connections and check corpus coverage. These tools read public information; they cannot post to the community or manage your account.</p>`;return}
+ if(view==='tools'){const d=await api('keys');if(version!==revision)return;toolSetup.keys=d.keys;root.innerHTML=toolsPage();return}
  if(view==='moderation'){const d=await api('reports');if(version!==revision)return;root.innerHTML=`<h1>Community reports.</h1>${d.reports.map(r=>`<article class="community-row"><h3>${esc(r.reason)}</h3><p class="community-body">${esc(r.body)}</p><p class="community-small">${r.hidden?'Already removed':'Awaiting review'}</p>${!r.hidden?`<button class="community-button danger" data-action="remove-content" data-kind="${r.kind}" data-id="${r.target_id}">Remove content</button>`:''}</article>`).join('')||'<p>No reports to review.</p>'}`;return}
  root.innerHTML='<h1>This page is unavailable.</h1><a href="/community">Return to the community</a>';
  }catch(e){if(version===revision){root.innerHTML='<h1>We could not open this page.</h1><a href="/community">Back to the community</a>';notice(e.message)}}finally{if(version===revision)root.removeAttribute('aria-busy')}}
@@ -54,15 +128,26 @@ case 'reply':await api('threads/'+form.dataset.id,'POST',d);await render();notic
 case 'list':{const r=await api('lists','POST',{...d,public:form.elements.public.checked});go('list','&id='+r.id);break}
 case 'edit-list':await api('lists/'+form.dataset.id,'PATCH',{...d,public:form.elements.public.checked});await render();notice('List settings saved.');break;
 case 'add-item':await api('lists/'+form.dataset.id+'/items','POST',{...d,path:normalisePath(d.path)});await render();notice('Saved to your list.');break;
-case 'key':{const r=await api('keys','POST',d);await render();const slot=document.querySelector('#new-access-token');slot.hidden=false;slot.textContent='Copy this token now. It will not be shown again.\n\n'+r.token+'\n\nUse it in the Authorization header as: Bearer '+r.token;slot.scrollIntoView({block:'nearest'});break}
+case 'key':{
+ const name=d.name.trim()||(toolSetup.tool==='other'?'My AI tool':toolNames[toolSetup.tool]);
+ if(name.length<2)throw new Error('Use at least two characters for the connection name.');
+ const started=revision,r=await api('keys','POST',{name});
+ if(started!==revision||!form.isConnected)return;
+ toolSetup.keys.unshift({id:r.id,name,prefix:r.token.slice(0,12),expires_at:r.expires_at});
+ showSetupKey(r);break;
+}
+case 'existing-key':{const token=d.token.trim();if(!/^opax_[A-Za-z0-9_-]{43}$/.test(token))throw new Error('Paste the full Opax API key you saved. It starts with opax_.');showSetupKey({token});break;}
 }}catch(e){notice(e.message)}finally{stopLoading()}});
-root.addEventListener('click',async event=>{const button=event.target.closest('[data-action]');if(!button)return;button.disabled=true;try{switch(button.dataset.action){
+root.addEventListener('click',async event=>{const button=event.target.closest('[data-action]');if(!button)return;if(button.dataset.action==='manage-keys'){event.preventDefault();const keys=document.querySelector('#setup-saved-keys');keys.open=true;keys.querySelector('summary').focus();return}button.disabled=true;try{switch(button.dataset.action){
+case 'copy-setup':await copySetup(button);break;
+case 'show-key':{const field=document.querySelector('#setup-api-key'),show=field.type==='password';field.type=show?'text':'password';button.textContent=show?'Hide API key':'Show API key';button.setAttribute('aria-pressed',String(show));break}
+case 'another-key':toolSetup.key=null;refreshSetup();document.querySelector('#setup-key-area input')?.focus();break;
 case 'logout':case 'logout-all':await api('auth/logout','POST',{everywhere:button.dataset.action==='logout-all'});await refresh();go('signin');break;
 case 'remove-content':if(confirm('Remove this '+button.dataset.kind+' from the community?')){await api((button.dataset.kind==='thread'?'threads/':'replies/')+button.dataset.id,'DELETE');if(button.dataset.kind==='thread'&&params().get('view')!=='moderation')go('home');else await render()}break;
 case 'report':{const reason=prompt('What should a moderator review?');if(reason){await api('reports','POST',{target:button.dataset.id,reason});notice('Your report has been sent to moderators.')}break}
 case 'remove-item':await api('items/'+button.dataset.id,'DELETE');await render();break;
 case 'delete-list':if(confirm('Delete this reading list and its saved links?')){await api('lists/'+button.dataset.id,'DELETE');go('lists')}break;
-case 'revoke-key':await api('keys/'+button.dataset.id,'DELETE');await render();notice('Access token revoked.');break;
+case 'revoke-key':await api('keys/'+button.dataset.id,'DELETE');if(toolSetup.key?.id===button.dataset.id||!toolSetup.key?.id)toolSetup.key=null;await render();document.querySelector('#setup-saved-keys').open=true;notice('API key removed. Tools using it can no longer connect.');break;
 }}catch(e){notice(e.message)}finally{if(button.isConnected)button.disabled=false}});
 window.addEventListener('popstate',render);
 window.addEventListener('hashchange',()=>{const token=new URLSearchParams(location.hash.slice(1)).get('token');if(token){signInToken=token;history.replaceState(null,'','/community?view=signin');render()}});
