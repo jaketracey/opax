@@ -9,14 +9,16 @@
     "og:portraits": "node og/build.mjs portraits",
     "og:default": "node og/build.mjs default",
     "og:preview": "node og/build.mjs preview",
-    "deploy": "npm run build:search && npm run build:grants-map && npm run build:analytics && node ../scripts/stamp_assets.mjs && wrangler deploy",
+    "deploy": "npm run build:search && npm run build:grants-map && npm run build:analytics && npm run build:voice && node ../scripts/stamp_assets.mjs && wrangler deploy",
     "types": "wrangler types",
     "check": "wrangler types && tsc --noEmit && node ../scripts/stamp_assets.mjs --check",
     "build:analytics": "node analytics/build.mjs",
-    "deploy:staging": "npm run build:search && npm run build:grants-map && npm run build:graph && npm run build:analytics && node ../scripts/stamp_assets.mjs && wrangler deploy --env staging",
+    "deploy:staging": "npm run build:search && npm run build:grants-map && npm run build:graph && npm run build:analytics && npm run build:voice && node ../scripts/stamp_assets.mjs && wrangler deploy --env staging",
     "build:search": "node ../scripts/build_search_catalog.mjs",
     "test:community": "node --test test/community.test.mjs",
-    "build:grants-map": "node grants-map/build.mjs"
+    "build:grants-map": "node grants-map/build.mjs",
+    "build:voice": "node voice/build.mjs",
+    "test": "node --test test/*.test.mjs"
   },
   "devDependencies": {
     "@types/three": "^0.185.4",
@@ -27,6 +29,8 @@
     "wrangler": "^4.0.0"
   },
   "dependencies": {
+    "@alexanderolsen/libsamplerate-js": "2.1.2",
+    "@elevenlabs/client": "1.25.0",
     "@modelcontextprotocol/sdk": "^1.30.0",
     "@resvg/resvg-wasm": "^2.6.2",
     "leaflet": "1.9.4",

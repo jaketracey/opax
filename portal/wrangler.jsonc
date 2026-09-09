@@ -17,6 +17,8 @@
   "d1_databases": [{"binding":"COMMUNITY_DB","database_name":"opax-community","database_id":"ea0ca399-189f-4fc0-83f8-66a41204a180","migrations_dir":"migrations"}],
   "send_email": [{"name":"COMMUNITY_EMAIL"}],
 
+  "secrets": {"required":["ARAG_KB_ID","ARAG_KB_TOKEN","ELEVENLABS_API_KEY","VOICE_TOOL_SECRET"]},
+
   "observability": {
     "enabled": true,
     "logs": { "head_sampling_rate": 1 }
@@ -35,6 +37,9 @@
   //   npx wrangler secret put ARAG_KB_TOKEN
   //   npx wrangler secret put ARAG_KB_ID
   "vars": {
+    "VOICE_ENABLED": "true",
+    "VOICE_AGENT_ID": "agent_9901m22sz1chfpbtqb7r2kkxdskv",
+    "VOICE_MONTHLY_SECONDS": "40000",
     "COMMUNITY_ORIGIN": "https://opax.com.au",
     "COMMUNITY_EMAIL_FROM": "hello@login.opax.com.au",
     "COMMUNITY_ENABLED": "true",
@@ -69,12 +74,13 @@
   "env": {
     "staging": {
       "name": "opax-portal-staging",
+      "secrets": {"required":["ELEVENLABS_API_KEY","VOICE_TOOL_SECRET"]},
       "d1_databases": [{"binding":"COMMUNITY_DB","database_name":"opax-community-staging","database_id":"033d5775-4443-4757-a984-326f2914ac7f","migrations_dir":"migrations"}],
       "send_email": [{"name":"COMMUNITY_EMAIL"}],
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-09-grant-place-evidence" },
+      "vars": { "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-09-grant-place-evidence" },
       "ratelimits": [],
       "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/*"] }
     }

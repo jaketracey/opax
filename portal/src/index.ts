@@ -17,6 +17,7 @@ import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteR
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
 import { communityMcp } from './community-mcp'
+import { voiceRoute } from './voice'
 import { proxyPostHog } from './posthog'
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
@@ -3803,7 +3804,7 @@ const BASE_SECURITY_HEADERS: Record<string, string> = {
   'x-content-type-options': 'nosniff',
   'referrer-policy': 'strict-origin-when-cross-origin',
   'x-frame-options': 'DENY',
-  'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+  'permissions-policy': 'camera=(), microphone=(self), geolocation=(), payment=(), usb=()',
   'cross-origin-opener-policy': 'same-origin',
 }
 
@@ -3824,11 +3825,11 @@ const GTM = 'https://www.googletagmanager.com'
 const GA = 'https://*.google-analytics.com https://*.analytics.google.com'
 const CSP_PAGE = [
   "default-src 'self'",
-  `script-src 'self' ${GTM}`,
+  `script-src 'self' 'wasm-unsafe-eval' ${GTM}`,
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: https://tile.openstreetmap.org ${GTM} ${GA}`, // data: for the stylesheet's inline SVG glyphs (a select's chevron); images, never script
   "font-src 'self'",
-  `connect-src 'self' ${GTM} ${GA}`,
+  `connect-src 'self' wss://opax.com.au wss://staging.opax.com.au ${GTM} ${GA}`,
   "worker-src 'self'",
   "manifest-src 'self'",
   `frame-src ${GTM}`,
@@ -3854,10 +3855,10 @@ function withSecurityHeaders(res: Response, url: URL): Response {
   const isApi = url.pathname.startsWith('/api/')
   // Responses from the ASSETS binding are immutable; re-wrap to edit headers.
   // res.body is passed through unread, so SSE keeps streaming.
-  const out = new Response(NULL_BODY_STATUS.has(res.status) ? null : res.body, res)
+  const out = new Response(NULL_BODY_STATUS.has(res.status) ? null : res.body, { status: res.status, statusText: res.statusText, headers: res.headers, ...(res.webSocket ? { webSocket: res.webSocket } : {}) })
   for (const [k, v] of Object.entries(BASE_SECURITY_HEADERS)) out.headers.set(k, v)
   out.headers.set('content-security-policy', isApi ? CSP_API : CSP_PAGE)
-  if (url.pathname.startsWith('/api/community/') || url.pathname === '/mcp') { out.headers.set('cache-control', 'no-store'); out.headers.set('referrer-policy', 'no-referrer') }
+  if (url.pathname.startsWith('/api/community/') || url.pathname.startsWith('/api/voice/') || url.pathname === '/mcp') { out.headers.set('cache-control', 'no-store'); out.headers.set('referrer-policy', 'no-referrer') }
   if (url.pathname === '/community' || url.pathname === '/community.html') out.headers.set('referrer-policy', 'no-referrer')
   if (NO_STORE_PATHS.has(url.pathname) && !out.headers.has('cache-control')) {
     out.headers.set('cache-control', 'no-store')
@@ -4078,6 +4079,13 @@ export default {
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     if (url.pathname.startsWith('/api/community/')) return communityResponse(await communityRoute(request, env))
+    if (url.pathname.startsWith('/api/voice/')) return communityResponse(await voiceRoute(request, env, ctx, async path => {
+      const target = new URL(path, env.COMMUNITY_ORIGIN)
+      const local = new Request(target, { headers: { 'cf-connecting-ip': 'voice-tools' } })
+      if (target.pathname === '/api/search-all') return apiUnifiedSearch(local, target, env, ctx)
+      if (env.STAGING_API) return env.STAGING_API.fetch(local)
+      return route(local, target, env, ctx)
+    }))
     if (url.pathname === '/mcp') return communityResponse(await communityMcp(request, env, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
       const local = new Request(target, { headers: { 'cf-connecting-ip': request.headers.get('cf-connecting-ip') || 'mcp' } })
