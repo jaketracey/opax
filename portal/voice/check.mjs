@@ -21,7 +21,7 @@ const server = createServer(async (req, res) => {
       res.setHeader('Content-Type', 'text/html');
       res.setHeader('Permissions-Policy', 'camera=(), microphone=(self)');
       res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; worker-src 'self'; connect-src 'self'; object-src 'none'");
-      res.end('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/voice.css"></head><body><main style="padding:24px"><h1>The public record, in daylight.</h1><a href="/money">Explore the record</a></main><script type="module" src="/voice.js"></script></body></html>');
+      res.end('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/voice.css"></head><body><header style="height:200px"><strong>Opax sticky masthead</strong></header><main style="padding:24px;min-height:1200px"><h1>The public record, in daylight.</h1><a href="/money">Explore the record</a></main><script type="module" src="/voice.js"></script></body></html>');
       return;
     }
     const allowed = pathname.startsWith('/chunks/') || pathname.startsWith('/voice-assets/') || ['/style.css', '/voice.css', '/voice.js'].includes(pathname);
@@ -108,6 +108,7 @@ try {
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       const box = await page.locator('#opax-voice-panel').boundingBox();
       assert.ok(box.x >= 0 && box.y >= 0 && box.x + box.width <= page.viewportSize().width + 1 && box.y + box.height <= page.viewportSize().height);
+      assert.equal(await page.locator('.opax-voice-close').evaluate(el => { const r=el.getBoundingClientRect(); return !!document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.closest('#opax-voice-panel'); }),true,'The sticky masthead must not cover the voice close control');
     };
     for (const width of [320, 390, 768, 1440]) {
       const f = await fixture(width), p = f.page;
@@ -132,6 +133,8 @@ try {
       });
       assert.equal(await p.locator('.opax-voice-transcript img').count(), 0);
       assert.equal(await p.locator('.opax-voice-sources a').count(), 3);
+      assert.equal(await p.locator('.opax-voice-sources').getAttribute('open'),null,'Evidence stays folded until requested');
+      await p.locator('.opax-voice-sources summary').click();
       assert.equal(await p.locator('.opax-voice-sources').getByText('Bad external').count(), 0);
       await fits(p);
       await p.screenshot({ path: join(tmpdir(), `opax-voice-active-${browserName}-${width}.png`) });
