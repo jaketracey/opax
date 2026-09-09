@@ -13,7 +13,7 @@
  *  - exclude da-* fields from citations (enrichment output must not cite itself)
  */
 
-import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
+import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
 import { communityMcp } from './community-mcp'
@@ -720,7 +720,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
       'Question: {question}\n\n' +
       (integrityQuestion(question || '') ? 'For this question, use a passage about an institution only if it explicitly identifies a corruption or integrity body. A generic national commissioner, frontline services, or service agencies without that identification does not establish a position on a federal anti-corruption commission. Omit that material entirely, even if it appears in the retrieved context. ' : '') +
       (party ? `This retrieval is restricted to records indexed under ${party}. A combined debate can still contain other parties' speakers. Unless the passages explicitly establish the speaker's affiliation, frame the answer as evidence in records indexed under ${party}, not as verified statements by ${party} MPs. Do not present a passage explicitly speaking for a different party as this group's position. ` : '') +
-      'Instructions: If the question contains a follow-up, answer the latest follow-up; the earlier user question only supplies its subject. Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
+      'Instructions: If the question contains a follow-up, answer the latest follow-up; the earlier user question only supplies its subject. Give a concise, cited explanation in your own words from whichever passages address the question. Use direct quotations only when their exact wording helps answer the question or the reader asks for quotes. ' +
       'When the question names a particular institution, commission, bill or policy, exclude passages about other institutions sharing generic words such as commission or reform. For example, a not-for-profit regulator or another national commissioner is not evidence about a federal anti-corruption commission. ' +
       'Ignore passages that are off-topic; answer from the ones that apply even if only a few do or they address it only in part. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
       'Begin with the answer itself. Never open with a preamble such as "Based on the provided context", "According to the passages" or "The context shows": the reader knows the answer comes from the record. ' +
@@ -741,7 +741,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
 }
 
 /** The portal's answer payload: the same shape from the sync and streamed paths. */
-function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string } {
+function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string; evidence_excerpts?: { resource: string; text: string }[] } {
   const resources = Object.fromEntries(Object.entries(answer.retrieval_results?.resources ?? {})
     .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')))
   const knownContexts = new Set<string>(records.records.map((_, i) => `USER_CONTEXT_${i}`))
@@ -855,22 +855,48 @@ function hasUnsupportedQuotes(payload: AskPayload, raw: AskAnswer): boolean {
   return unsupportedQuotes(payload.answer, [...text.values()].map(parts => parts.join('\n'))).length > 0
 }
 
-/** If a bounded retry still invents quotations, return the record itself. */
-function evidenceOnlyAnswer(payload: AskPayload): AskPayload {
+/** If recovery fails, select original passages independently of the failed draft. */
+function evidenceOnlyAnswer(payload: AskPayload, raw: AskAnswer, question: string): AskPayload {
   type Source = { resource: string; snippet?: string; cited?: boolean }
   const sources = payload.sources as Source[]
-  const selected = sources.filter(s => s.cited && s.snippet).slice(0, 3)
-  let answer = 'I could not verify the quotations in the generated answer. These retrieved passages may help; they are not a complete answer to your question.'
+  const known = new Set(sources.map(s => s.resource))
+  const candidates = new Map<string, { resource: string; id: string; text: string; relevance: number; score: number }>()
+  const add = (id: string, value: string, score = 0) => {
+    const resource = id.split('/')[0]
+    if (!known.has(resource) || !originalContext(id)) return
+    const excerpt = evidenceExcerpt(value, question)
+    if (!excerpt.text || !excerpt.relevance) return
+    const current = candidates.get(resource)
+    if (!current || excerpt.relevance > current.relevance || (excerpt.relevance === current.relevance && score > current.score)) {
+      candidates.set(resource, { resource, id, ...excerpt, score })
+    }
+  }
+  for (const resource of Object.values(raw.retrieval_results?.resources ?? {})) {
+    for (const field of Object.values(resource.fields ?? {})) {
+      for (const [id, paragraph] of Object.entries(field.paragraphs ?? {})) add(id, paragraph.text, calibrate(paragraph.score, paragraph.score_type))
+    }
+  }
+  for (const [id, block] of Object.entries({ ...raw.augmented_context?.paragraphs, ...raw.augmented_context?.fields })) {
+    if (typeof block.text === 'string') add(id, block.text)
+  }
+  for (const source of sources) {
+    if (/^USER_CONTEXT_\d+$/.test(source.resource) && source.snippet) add(source.resource, source.snippet)
+  }
+  const selected = [...candidates.values()].sort((a, b) => b.relevance - a.relevance || b.score - a.score).slice(0, 3)
+  let answer = selected.length
+    ? 'I couldn’t verify a summary this time. These passages may help you explore the question.'
+    : 'I couldn’t verify an answer from these results. Try a more specific question, or browse the retrieved sources.'
   const citations: Record<string, number[][]> = {}
-  for (const source of selected) {
-    answer += `\n\n${source.snippet}`
+  for (const excerpt of selected) {
+    answer += `\n\n> ${excerpt.text}`
     const end = Array.from(answer).length
-    const id = Object.keys(payload.citations).find(key => key.split('/')[0] === source.resource)
-    if (id) citations[id] = [[end - 1, end]]
+    citations[excerpt.id] = [[end - 1, end]]
   }
   const used = new Set(Object.keys(citations).map(id => id.split('/')[0]))
   return { ...payload, answer, citations, answer_status: 'evidence_only',
-    sources: sources.map(s => ({ ...s, cited: used.has(s.resource) })) }
+    evidence_excerpts: selected.map(({ resource, text }) => ({ resource, text })),
+    sources: sources.map(s => ({ ...s, cited: used.has(s.resource),
+      ...(used.has(s.resource) ? { snippet: candidates.get(s.resource)!.text } : {}) })) }
 }
 
 /**
@@ -1030,10 +1056,11 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   }
   let payload = askPayload(answer, records, scope)
   if (!isRefusal(answer) && payload.sources.length && (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer))) {
-    const fallback = await askOnce(legacyCitationsAsk(body), ASK_SYNC_TIMEOUT_MS)
+    const retryBody = Object.keys(payload.citations).length ? body : legacyCitationsAsk(body)
+    const fallback = await askOnce(hasUnsupportedQuotes(payload, answer) ? quoteRecoveryAsk(retryBody) : retryBody, ASK_SYNC_TIMEOUT_MS)
     if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope) }
   }
-  if (hasUnsupportedQuotes(payload, answer)) payload = evidenceOnlyAnswer(payload)
+  if (hasUnsupportedQuotes(payload, answer) || (!isRefusal(answer) && !Object.keys(payload.citations).length)) payload = evidenceOnlyAnswer(payload, answer, String(body.query ?? ''))
   store(payload)
   return withCacheStatus(json(payload), status, false)
 }
@@ -1301,13 +1328,14 @@ function apiAskStream(
         if (!clientGone && !isRefusal(result) && payload.sources.length && (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, result))) {
           await send('retry', { reason: 'citations' })
           try {
-            const fallback = await streamAskGuarded(env, legacyCitationsAsk(body), send, upstream.signal, ASK_STALL_MS)
+            const retryBody = Object.keys(payload.citations).length ? body : legacyCitationsAsk(body)
+            const fallback = await streamAskGuarded(env, hasUnsupportedQuotes(payload, result) ? quoteRecoveryAsk(retryBody) : retryBody, send, upstream.signal, ASK_STALL_MS)
             if (!isRefusal(fallback)) { result = fallback; payload = askPayload(fallback, opts.records, opts.scope) }
           } catch {
             // The final quotation check below falls back to evidence if recovery fails.
           }
         }
-        if (hasUnsupportedQuotes(payload, result)) payload = evidenceOnlyAnswer(payload)
+        if (hasUnsupportedQuotes(payload, result) || (!isRefusal(result) && !Object.keys(payload.citations).length)) payload = evidenceOnlyAnswer(payload, result, String(body.query ?? ''))
         await send('done', payload)
         // Cached from the `done` payload — the same bytes the reader got —
         // even when the reader left early (the answer was paid for).

@@ -51,12 +51,49 @@ test('quotations in uncited documents cannot validate a cited answer',()=>{
 });
 
 test('failed quote recovery replaces prose with original passages and valid citations',()=>{
- const raw=fixture();const p=api.askPayload(raw);const safe=api.evidenceOnlyAnswer(p);
+ const raw=fixture();const p=api.askPayload(raw);const safe=api.evidenceOnlyAnswer(p,raw,'Original passage');
  assert.equal(safe.answer_status,'evidence_only');
- assert.match(safe.answer,/could not verify/);assert.match(safe.answer,/Original passage/);
+ assert.match(safe.answer,/couldn’t verify/);assert.match(safe.answer,/Original passage/);
  assert.ok(!safe.answer.includes('A fact'));
  for(const spans of Object.values(safe.citations))for(const [start,end] of spans){assert.ok(start>=0);assert.ok(end<=Array.from(safe.answer).length)}
  assert.ok(safe.sources.some(s=>s.cited));
+});
+
+test('quote recovery changes generation instructions while preserving filters and history',()=>{
+ const body=api.buildAskBody({question:'Q',speaker:'Example MP',context:[{text:'Earlier'}]});
+ const retry=exports.quoteRecoveryAsk(body);
+ assert.match(retry.prompt.user,/fresh, concise answer in your own words/);
+ assert.match(retry.prompt.user,/Do not use direct quotations/);
+ assert.equal(retry.citations,'llm_footnotes');
+ assert.deepEqual(retry.filter_expression,body.filter_expression);
+ assert.deepEqual(retry.chat_history,body.chat_history);
+ assert.deepEqual(retry.extra_context,body.extra_context);
+});
+
+test('excerpts skip procedural openings and retain original words near the subject',()=>{
+ const text='I move: That the Senate take note of the answers given by ministers today. '.repeat(12)+'Negative gearing remains a tax concession for property investors. The proposal would limit it to newly built homes. '+ 'Other business followed. '.repeat(30);
+ const excerpt=exports.evidenceExcerpt(text,'How have MPs described negative gearing over the years?');
+ assert.match(excerpt.text,/Negative gearing remains/);
+ assert.doesNotMatch(excerpt.text,/I move/);
+ assert.equal(excerpt.relevance,2);
+ assert.ok(excerpt.text.length<=444);
+ assert.ok(text.includes(excerpt.text.replace(/^… /,'').replace(/ …$/,'')));
+});
+
+test('evidence fallback chooses on-topic original contexts even when the draft has no valid citations',()=>{
+ const raw=fixture(); raw.answer='An unsupported summary.';raw.citation_footnote_to_context={};
+ raw.retrieval_results.resources.r1.fields['t/transcript'].paragraphs[id].text='Routine procedural opening.';
+ raw.augmented_context.paragraphs[neighbour].text='Negative gearing is a tax concession for property investors.\n\nDOCUMENT CLASSIFICATION LABELS:\n speech';
+ raw.augmented_context.paragraphs[generated]={text:'Negative gearing tax investors: invented enrichment.'};
+ const safe=api.evidenceOnlyAnswer(api.askPayload(raw),raw,'How has negative gearing changed?');
+ assert.equal(safe.evidence_excerpts.length,1);
+ assert.ok(safe.citations[neighbour]); assert.equal(safe.citations[id],undefined);
+ assert.doesNotMatch(safe.answer,/Routine|CLASSIFICATION|enrichment|unsupported summary/);
+ assert.equal(safe.sources[0].snippet,safe.evidence_excerpts[0].text);
+ const empty=api.evidenceOnlyAnswer(api.askPayload(raw),raw,'Explain fisheries quotas');
+ assert.equal(empty.evidence_excerpts.length,0);
+ assert.equal(Object.keys(empty.citations).length,0);
+ assert.ok(empty.sources.every(s=>!s.cited));
 });
 
 

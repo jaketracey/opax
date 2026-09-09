@@ -2336,7 +2336,49 @@ function appendEmphasis(el, text) {
   if (last < text.length) el.appendChild(document.createTextNode(text.slice(last)));
 }
 
-function renderAnswer(container, text) {
+function renderEvidenceAnswer(container, text, response) {
+  container.replaceChildren();
+  const note = document.createElement("p");
+  note.className = "evidence-notice";
+  note.textContent = String(text).split("\n\n")[0];
+  container.appendChild(note);
+  for (const excerpt of response.evidence_excerpts || []) {
+    const source = (response.sources || []).find(s => s.resource === excerpt.resource);
+    if (!source) continue;
+    const card = document.createElement("section");
+    card.className = "evidence-passage";
+    const meta = document.createElement("p");
+    meta.className = "evidence-passage-meta";
+    meta.textContent = [source.date ? fmtDate(source.date) : source.dateLabel,
+      source.state ? STATE_NAMES[source.state] || source.state : null].filter(Boolean).join(" · ");
+    const quote = document.createElement("blockquote");
+    quote.textContent = excerpt.text;
+    const link = document.createElement("a");
+    link.className = "evidence-passage-link";
+    const target = new URL(searchResultHref(source), location.origin);
+    if (target.protocol === "https:" || (target.protocol === "http:" && target.origin === location.origin)) link.href = target.href;
+    link.textContent = "Read the original record";
+    if (source.title) link.setAttribute("aria-label", `Read the original record: ${source.title}`);
+    if (meta.textContent) card.appendChild(meta);
+    card.append(quote, link);
+    container.appendChild(card);
+  }
+  if (response.onRetry) {
+    const retry = document.createElement("button");
+    retry.type = "button";
+    retry.className = "action-btn";
+    retry.textContent = "Try the answer again";
+    retry.addEventListener("click", response.onRetry);
+    container.appendChild(retry);
+  }
+}
+
+function renderAnswer(container, text, response = {}) {
+  container.classList.toggle("answer-evidence", response.answer_status === "evidence_only");
+  if (response.answer_status === "evidence_only" && Array.isArray(response.evidence_excerpts)) {
+    renderEvidenceAnswer(container, text, response);
+    return;
+  }
   const evidence = container.askEvidence || [];
   text = askCitationText(String(text), evidence);
   container.replaceChildren();
@@ -8549,6 +8591,7 @@ async function runAsk(question) {
           // The result block still holds the previous answer and its
           // trimmings; the first paint is a timer tick away.
           $("ask-answer").replaceChildren();
+          $("ask-result").querySelector(".kicker").textContent = "Answer";
           $("ask-stamp").textContent = "";
           $("ask-sources").hidden = true;
           $("ask-result").querySelector(".action-row").hidden = true;
@@ -8589,17 +8632,18 @@ async function runAsk(question) {
     const citedList = cited.length ? cited : sources;
     const alsoList = cited.length ? retrieved : [];
     $("ask-answer").askEvidence = citedList;
-    lastAsk = { question, answer: answerText, sources, kind: askKind() };
+    lastAsk = { question, answer: answerText, sources, kind: askKind(), answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts };
     prefetchAskFollowups(lastAsk);
 
     hideWombat();
-    setStatus($("ask-status"), `Answer ready: ${sources.length} sources.`);
+    setStatus($("ask-status"), data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
     revealAskResult();
     $("ask-result").querySelector(".action-row").hidden = false;
+    $("ask-result").querySelector(".kicker").textContent = data.answer_status === "evidence_only" ? "From the record" : "Answer";
     if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
-      renderAnswer($("ask-answer"), answerText);
+      renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question) });
     } else {
       // Both attempts came back blank (it happens under model load). Own it
       // plainly and hand the reader a retry, rather than a bare sources list.
@@ -8808,7 +8852,7 @@ function initChat(manageFocus) {
           !(chatThread[0]?.text === seed.question && chatThread[1]?.text === seed.answer)) {
         chatThread = [
           { role: "user", text: seed.question },
-          { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined },
+          { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts },
         ];
         chatKind = seed.kind === "speech" ? "speech" : "all";
         saveChatSession();
@@ -8883,7 +8927,7 @@ function chatAnswerEl(msg) {
   body.className = "answer";
   const citedSources = (msg.sources || []).filter((s) => s.cited);
   body.askEvidence = citedSources.length ? citedSources : (msg.sources || []);
-  renderAnswer(body, msg.text || "(no answer)");
+  renderAnswer(body, msg.text || "(no answer)", msg);
   wrap.appendChild(body);
   const sources = msg.sources || [];
   if (sources.length) {
@@ -9089,6 +9133,8 @@ async function sendChat(question, carry) {
     chatThread.push({
       role: "answer",
       text: (data.answer || "").trim() || "(no answer)",
+      answer_status: data.answer_status,
+      evidence_excerpts: data.evidence_excerpts,
       sources: (data.sources || []).map((source) => ({
         ...source,
         cited: source.cited ?? Object.keys(data.citations || {}).some((key) => key.split("/")[0] === source.resource),
@@ -10049,14 +10095,14 @@ async function runSearchAnswer(q, f, mySeq) {
     clearTimeout(searchAnswerStill);
     hideLoader("search-answer-wombat");
     setStatus($("search-answer-status"), "");
-    renderAnswer($("search-answer-body"), answer);
+    renderAnswer($("search-answer-body"), answer, data);
     foldSearchAnswer();
     const cited = (data.sources || []).filter((x) => x.cited).slice(0, 3);
     $("search-answer-sources").replaceChildren(...cited.map((x, i) => sourceItem(x, i + 1)));
     $("search-answer-sum").textContent = `Sources (${cited.length})`;
     $("search-answer-fold").hidden = !cited.length;
     $("search-answer-more").innerHTML =
-      `Generated from the retrieved passages. <a href="${esc(askHash(question, f.kind))}">Open in Ask</a> for the full sources.`;
+      `${data.answer_status === "evidence_only" ? "Passages from the record." : "Generated from the retrieved passages."} <a href="${esc(askHash(question, f.kind))}">Open in Ask</a> for the full sources.`;
   } catch (err) {
     if (err.name === "AbortError" || mySeq !== searchSeq) return;
     box.hidden = true;

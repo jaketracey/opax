@@ -737,6 +737,24 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
   padding: 0.7rem 0.9rem; font-size: 0.8125rem; line-height: 1.5;
 }
 .answer .about-table { font-size: 0.9375rem; }
+.answer .evidence-notice {
+  font: 400 0.9375rem/1.6 var(--sans); color: var(--ink-soft);
+}
+.answer .evidence-passage {
+  padding: 1rem 1.125rem; border: 1px solid var(--line);
+  border-radius: 6px; background: var(--paper-raised, #fff); overflow-wrap: anywhere;
+}
+.answer .evidence-passage-meta {
+  margin: 0 0 0.625rem; font: 500 0.8125rem/1.5 var(--sans); color: var(--ink-soft);
+}
+.answer .evidence-passage blockquote {
+  margin: 0 0 0.75rem; padding: 0; background: none;
+  font: 400 1rem/1.65 var(--serif); color: var(--ink);
+}
+.answer .evidence-passage-link {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font: 600 0.875rem/1.4 var(--sans); color: var(--bronze-ink);
+}
 .answer sup { line-height: 0; }
 .answer .cite {
   background: none; border: none; cursor: pointer; padding: 2px 3px;
