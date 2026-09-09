@@ -312,7 +312,8 @@ SECTION_PROMPT = (
 # the owner rejected in v1.
 WINDOW_SYSTEM = (
     "You are OPAX, a research assistant over the Australian public record. "
-    "You answer strictly from the passages provided, citing them. You never invent facts."
+    "You answer strictly from the passages provided, citing them. You never invent facts. "
+    "Grant invitation and award extracts, election baselines, roster affiliations and research notes are structured descriptions prepared by Opax, not verbatim original documents. Cite the extracted facts but never quote their wording as the department, AEC or researcher speaking. Keep invitations, awards and payments separate. Attribute CPI comparisons to CPI; do not claim independent electorate matching. Roster affiliations may be historical and election baselines are pre-election, not current incumbency."
 )
 WINDOW_PROMPT = (
     "Original records dated {period}: parliamentary speeches, government releases and "
@@ -2753,6 +2754,10 @@ def main() -> None:
         for slug in sorted(REPORTS)
         if (report := load_prior(slug))
     ]
+    # Source comparisons are maintained from audited datasets, not generated asks.
+    comparisons = [json.loads(path.read_text()) for path in sorted(OUT_DIR.glob('*.json')) if path.name != 'index.json']
+    index = [{"slug": r['slug'], "title": r['title'], "blurb": r['blurb'], "updated": r['generated_at']}
+             for r in comparisons if r.get('format') == 'source-comparison'] + index
     idx_path.write_text(json.dumps({"reports": index}, indent=1))
     print(f"Wrote {len(picked)} report(s) + index to {OUT_DIR}")
     print(budget_line())

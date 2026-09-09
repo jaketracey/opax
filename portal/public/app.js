@@ -4793,6 +4793,9 @@ async function openSubject(kind, name, manageFocus) {
   const roster = (await loadParliamentarians())?.people?.find((p) => p.name.toLowerCase() === String(name).toLowerCase());
   if (currentSubjectKey !== key) return;
   const partyNow = roster?.party_now || null;
+  const { profileJurisdictions } = await import('/profile-jurisdictions.js?v=20260909-1');
+  if (currentSubjectKey !== key) return;
+  const representation = profileJurisdictions(roster);
   const party = partyNow || spokeAs;
   const formerly = partyNow && spokeAs && !samePartyLabel(partyNow, spokeAs) ? spokeAs : null;
   const dates = speeches.map((r) => r.date).filter(Boolean).sort();
@@ -4833,7 +4836,9 @@ async function openSubject(kind, name, manageFocus) {
   subjectTag(body).innerHTML = [
     party ? partyChipHTML(party) : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
-    chambers.length ? `<span>${esc(chambers.join(" · "))} parliament</span>` : "",
+    representation.jurisdictions.length ? `<span>${esc(representation.jurisdictions.map(j=>j.label).join(" · "))}</span>` : "",
+    representation.chambers.length ? `<span>${esc(representation.chambers.join(" · "))}</span>` : "",
+    representation.representations.length === 1 ? `<span>${esc(representation.representations[0].electorate)}</span>` : "",
   ].filter(Boolean).join(" · ") || "<span>From the parliamentary record</span>";
   const q = encodeURIComponent(name);
   const fits = await loadFits();
@@ -4841,12 +4846,14 @@ async function openSubject(kind, name, manageFocus) {
   box.innerHTML = infoboxHTML([
     ["Type", roster?.current ? "Sitting parliamentarian" : "Parliamentarian"],
     party && ["Party", partyChipHTML(party) + (formerly ? ` <span class="fineprint" style="display:inline">formerly ${esc(formerly)}</span>` : "")],
-    chambers.length && ["Parliament", esc(chambers.join(", "))],
+    representation.jurisdictions.length && ["Jurisdiction", representation.jurisdictions.map(j=>`<a href="${esc(searchHash('',{state:j.id,kind:'speech'}))}">${esc(j.label)}</a>`).join(', ')],
+    representation.chambers.length && ["Chamber", esc(representation.chambers.join(', '))],
+    representation.representations.length && ["Recorded representation", representation.representations.map(r=>`${esc(r.electorate)}${r.state && r.chamber!=='senate' ? `, ${esc(r.state)}` : ''}`).join('<br>') + '<small class="representation-note">Roster affiliation; may include past seats.</small>'],
     dates.length && ["Indexed speeches span", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
     fitsInfoRow(fits, "people", name),
   ], "", [
     actionBtn("speeches", searchHash("", { speaker: name, kind: "speech" }), "View all their speeches", { primary: true }),
-    actionBtn("external", `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliamentary profile", { external: true }),
+    ...(roster?.states?.includes('federal') ? [actionBtn("external", `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}`, "Parliamentary profile", { external: true })] : []),
     actionBtn("external", `https://en.wikipedia.org/w/index.php?search=${q}%20Australian%20politician`, "Wikipedia", { external: true }),
   ]);
   renderPortraitCredit(name, key);
@@ -9163,7 +9170,7 @@ const searchSortPicker = mountSearchSort($("search-sort-picker"), () => {
   $("search-sort").dispatchEvent(new Event("change"));
 });
 
-const DOCUMENT_SEARCH_KINDS = new Set(["all", "speech", "division", "press_release", "legal", "news"]);
+const DOCUMENT_SEARCH_KINDS = new Set(["all", "speech", "division", "press_release", "legal", "news", "grant_invitation", "grant_award", "election_baseline", "parliamentary_profile", "research_report"]);
 function syncSearchDatasetControls() {
   const mode = $("search-mode");
   const documents = DOCUMENT_SEARCH_KINDS.has($("search-kind").value);
@@ -9299,6 +9306,7 @@ function searchQueryParams(q, f, page, sort) {
 const FILTER_KIND_LABELS = {
   speech: "Speeches", division: "Divisions",
   press_release: "Government transcripts and releases", all: "All records",
+  grant_invitation: "Grant invitations", grant_award: "Grant award records", election_baseline: "Election baselines", parliamentary_profile: "Recorded representation", research_report: "Research source notes",
   person: "Person", party: "Political party", donor: "Donor", receipt: "Political receipts",
   agency: "Government agency", supplier: "Supplier", contract: "Government contract", grant: "Grant", bill: "Bill",
   interest: "Declared interest", expense: "Parliamentary expenses", access: "Meeting or lobbying register",
@@ -9947,7 +9955,7 @@ async function runSearchAnswer(q, f, mySeq) {
     const question = looksLikeQuestion ? q
       : f.speaker ? `What did ${f.speaker} say about ${q}?`
       : `What has parliament said about ${q}?`;
-    const body = { question, kind: ["speech", "division", "bill", "press_release", "legal"].includes(f.kind) ? f.kind : "all" };
+    const body = { question, kind: ["speech", "division", "bill", "press_release", "legal", "grant_invitation", "grant_award", "election_baseline", "parliamentary_profile", "research_report"].includes(f.kind) ? f.kind : "all" };
     for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) body[k] = f[k];
     // The answer streams into the rail; the loader leaves on the first words.
     const mine = () => mySeq === searchSeq && searchAnswerAbort === abort;
@@ -10241,6 +10249,7 @@ async function openDocPage(slug, manageFocus) {
     if (currentDocSlug !== slug) return; // user navigated away while fetching
     currentDoc = doc;
     const isGovernmentRelease = doc.labels?.kind === "press_release";
+    const isResearchRecord = ["grant_invitation", "grant_award", "election_baseline", "parliamentary_profile", "research_report"].includes(doc.labels?.kind);
     setStatus($("doc-status"), "");
     // The headline is the speaker; the title repeats what the byline says, so
     // it only stands in when no speaker is attached, and then as its subject.
@@ -10276,7 +10285,7 @@ async function openDocPage(slug, manageFocus) {
       : CHAMBER_NAMES[String(doc.labels?.chamber || "").toLowerCase()];
     const state = doc.labels?.state;
     const stateName = state ? (STATE_NAMES[state] || state) : null;
-    const house = isGovernmentRelease
+    const house = isResearchRecord ? FILTER_KIND_LABELS[doc.labels.kind] : isGovernmentRelease
       ? (state === "federal" ? "Australian Government" : state ? `${stateName} Government` : "Government release")
       : chamber
       ? (state && state !== "federal" ? `${chamber}, ${stateName}` : chamber)
@@ -10328,10 +10337,10 @@ async function openDocPage(slug, manageFocus) {
     renderDocBillPanel(doc, slug);
     renderDocText(doc);
     $("doc-ask").href = askHash(
-      isGovernmentRelease
+      isGovernmentRelease || isResearchRecord
         ? `What does the record say about ${topic || doc.title}?`
         : `What has parliament said about ${topic || doc.title}?`,
-      isGovernmentRelease ? "all" : undefined,
+      isGovernmentRelease || isResearchRecord ? "all" : undefined,
     );
     $("doc-actions").hidden = false;
     $("doc-profile").hidden = !doc.speaker;
@@ -10524,6 +10533,7 @@ function loadReportsIndex() {
 }
 
 async function loadReportsList(manageFocus) {
+  if ($('report-research')) $('report-research').hidden = true;
   const list = $("reports-list");
   currentReportSlug = null;
   $("report-view").hidden = true;
@@ -11830,6 +11840,21 @@ function renderReportV2(report, slug) {
 }
 
 async function openReport(slug, sectionNum, manageFocus) {
+  if ($('report-research')) $('report-research').hidden = true;
+  if (slug === 'grants-allocation') {
+    $('report-view').hidden = true;
+    $('reports-list').hidden = true;
+    setStatus($('reports-status'), '');
+    let root = $('report-research');
+    if (!root) { root = document.createElement('div'); root.id = 'report-research'; $('reports-list').after(root); }
+    root.hidden = false;
+    currentReportSlug = null;
+    setCrumbs([{label:'Reports',href:'/reports'},{label:'Where community funding goes'}]);
+    const { mountGrantsResearch } = await import('/grants-research.js?v=20260909-2');
+    if (!hereRoute().startsWith('/reports/grants-allocation')) return;
+    await mountGrantsResearch(root,{focus:manageFocus});
+    return;
+  }
   // Already rendered (e.g. Back from a cited document): just reveal it —
   // the DOM is intact under `hidden`, so scroll position and charts survive.
   if (currentReportSlug === slug) {
@@ -12040,7 +12065,7 @@ const STATS_PARLIAMENTS = [
   ["federal", "Federal Parliament"], ["nsw", "NSW Parliament"], ["vic", "Victorian Parliament"],
   ["qld", "Queensland Parliament"], ["sa", "South Australian Parliament"],
 ];
-const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["press_release", "Government transcripts and releases"], ["legal", "Legislation"]];
+const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["press_release", "Government transcripts and releases"], ["legal", "Legislation"], ["grant_invitation", "Grant invitations"], ["grant_award", "Grant award records"], ["election_baseline", "Election baselines"], ["parliamentary_profile", "Recorded representation"], ["research_report", "Research source notes"]];
 
 /** One hero tile per key; the figure element is kept so a live update counts on in place. */
 function renderStatsHero() {

@@ -16,6 +16,7 @@
     { id: 'bills', label: 'Bills', href: '/bills' },
     { id: 'reports', label: 'Reports', children: [
       ['/reports', 'All reports', 'Sourced reading paths through the record.'],
+      ['/reports/grants-allocation', 'Where community funding goes', 'Grant invitations, awards and seat competitiveness.'],
       ['/reports/climate', 'Climate & energy', 'Targets, coal and renewables.'],
       ['/reports/gambling', 'Gambling', 'Pokies, wagering and reform.'],
       ['/reports/housing', 'Housing', 'Affordability, tax and supply.'],
