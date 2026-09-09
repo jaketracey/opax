@@ -11859,7 +11859,7 @@ async function openReport(slug, sectionNum, manageFocus) {
   setCrumbs([{ label: "Reports", href: "/reports" }, { label: report.title }]);
   $("report-blurb").textContent = report.blurb;
   const provenance =
-    `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record · corpus v${corpusVersion()}`;
+    `Generated ${fmtDate(report.generated_at || "")} · every claim cited to the record`;
   $("report-meta").textContent = provenance;
   $("report-meta2").textContent = provenance;
   // The corpus totals under the money: how much record this report read.
