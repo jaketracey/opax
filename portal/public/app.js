@@ -2412,12 +2412,16 @@ function askCitationText(text, sources) {
       if (!Number.isInteger(start) || !Number.isInteger(end) || start < 0 || end <= start || end > points.length) continue;
       let at = end;
       while (at > start && /\s/.test(points[at - 1])) at--;
+      // Keep footnotes outside the sentence punctuation and closing quotes.
+      // Only cross adjacent punctuation, never another word or paragraph.
+      const closing = points.slice(at).join("").match(/^[.!?,;:…"'”’)\]]+/);
+      if (closing) at += Array.from(closing[0]).length;
       if (!ends.has(at)) ends.set(at, new Set());
       ends.get(at).add(index + 1);
     }
   });
   for (const [at, numbers] of [...ends].sort((a, b) => b[0] - a[0])) {
-    points.splice(at, 0, [...numbers].map((n) => ` ⟦source:${n}⟧`).join(""));
+    points.splice(at, 0, [...numbers].map((n) => `⟦source:${n}⟧`).join(""));
   }
   return points.join("");
 }
