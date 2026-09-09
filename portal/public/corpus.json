@@ -132,7 +132,12 @@
         "baseline_reconciliation": 1,
         "representation_reviews": 574
       },
-      "verified_live_resources": 620066
+      "verified_live_resources": 620066,
+      "award_detail_fields": {
+        "selection_process": 22,
+        "delivery_postcode": 21,
+        "source_fields_preserved": 89
+      }
     }
   },
   "enrichment": {
