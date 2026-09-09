@@ -44,11 +44,12 @@ interface FindResource {
 
 const SLUG_RE = /^(speech|legal|news)-(\d+)$/
 const PRESS_SLUG_RE = /^press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+$/
+const RESEARCH_SLUG_RE = /^(?:mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/
 // Division records (parli.ingest.votes_ingest) carry composite ids:
 // division-nsw-la-2025-12-22-3, division-federal-senate-10113. Public too.
 const DIVISION_SLUG_RE = /^division-[a-z0-9-]+$/
 const isPublicSlug = (slug: string): boolean =>
-  SLUG_RE.test(slug) || DIVISION_SLUG_RE.test(slug) || PRESS_SLUG_RE.test(slug)
+  SLUG_RE.test(slug) || DIVISION_SLUG_RE.test(slug) || PRESS_SLUG_RE.test(slug) || RESEARCH_SLUG_RE.test(slug)
 
 /**
  * Build a /find//ask filter_expression from the portal's filter vocabulary.
@@ -2462,6 +2463,7 @@ interface Person {
   first: number | null
   last: number | null
   pid?: string
+  representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[]
 }
 interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person> }
 
@@ -3100,7 +3102,8 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const where = p.chambers.length === 1 && CHAMBER_NAMES[p.chambers[0]]
     ? `${p.states.length === 1 && p.states[0] !== 'federal' ? `${STATE_NAMES[p.states[0]]?.replace(' parliament', '') ?? p.states[0]} ` : ''}${CHAMBER_NAMES[p.chambers[0]]}`
     : p.states.map((s) => STATE_NAMES[s] ?? s).join(' and ')
-  const who = [p.party, where].filter(Boolean).join(', ')
+  const represented = [...new Set((p.representation ?? []).map(r => r.electorate))].join(', ')
+  const who = [p.party, where, represented ? `recorded representation: ${represented}` : ''].filter(Boolean).join(', ')
   const facts = `${display}${who ? ` (${who})` : ''}: ${num(p.speeches)} speeches in the Australian parliamentary record, ${years(p.first, p.last)}.`
   const tail = 'What they said, and who funds them.'
   const federal = p.states.includes('federal')
@@ -3421,6 +3424,14 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
         lines: [[r.speaker, r.metadata.role].filter(Boolean).join(' · '), 'Read the official source text on OPAX.'],
       },
     }
+  }
+  if (RESEARCH_SLUG_RE.test(slug)) {
+    const names: Record<string,string> = { grant_invitation:'Grant invitation', grant_award:'Published grant award', election_baseline:'Pre-election seat baseline', parliamentary_profile:'Recorded parliamentary representation', research_report:'Research source note' }
+    const kind = names[r.labels.kind] || 'Source record'
+    const description = clip(`${r.title}. ${kind} with source provenance on OPAX. ${typeof r.metadata.date_meaning === 'string' ? r.metadata.date_meaning : 'Invitations, awards and payments are distinct stages.'}`)
+    return { ...generic, title:`${r.title} · OPAX`, description,
+      jsonLd:{'@context':'https://schema.org','@type':'CreativeWork',name:r.title,description,url:canonical,publisher},
+      card:{kicker:kind,title:r.title,lines:['Read the record and its source on OPAX.']} }
   }
   const speaker = r.speaker ?? 'Unknown speaker'
   // A committee transcript's speaker may be a witness, named as the transcript
@@ -3765,7 +3776,7 @@ const MAX_PARTY_CHARS = 64
 const MIN_YEAR = 1900
 const MAX_YEAR = 2100
 
-const KINDS = new Set(['speech', 'legal', 'division', 'bill', 'press_release', 'all'])
+const KINDS = new Set(['speech', 'legal', 'division', 'bill', 'press_release', 'grant_invitation', 'grant_award', 'election_baseline', 'parliamentary_profile', 'research_report', 'all'])
 const STATES = new Set(['federal', 'nsw', 'vic', 'sa', 'qld'])
 const MODES = new Set(['hybrid', 'semantic', 'keyword'])
 // Party labels are the KB's own facet values (served by /api/parties) and grow

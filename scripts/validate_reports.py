@@ -243,6 +243,15 @@ def main() -> None:
         if args.reports and path.stem not in args.reports:
             continue
         report = json.loads(path.read_text())
+        if report.get('format') == 'source-comparison':
+            check(path.stem == 'grants-allocation', f'{path.stem}: unknown source comparison', problems)
+            data = json.loads((REPORT_DIR.parent / 'research' / 'mlci.json').read_text())
+            active = [p for p in data['projects'] if p['status'] != 'Withdrawn']
+            check(len(active) == 226 and sum(p['value'] for p in active) == 559241712,
+                  f'{path.stem}: invitation totals do not reconcile', problems)
+            check(len(data['seats']) == 150 and bool(data['sources'].get('cpi')), f'{path.stem}: incomplete sources', problems)
+            checked.append((path.stem, 0, len(data['cpi_comparison'])))
+            continue
         found = validate_report(path.stem, report, problems)
         slugs += found
         checked.append((path.stem, len(report.get("now", {}).get("sections") or []),

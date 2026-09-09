@@ -1,6 +1,15 @@
 {
  "reports": [
   {
+   "slug": "grants-allocation",
+   "title": "Where community funding goes",
+   "blurb": "Explore community infrastructure invitations, published grants and the Centre for Public Integrity\u2019s seat comparison.",
+   "updated": "2026-09-09",
+   "generated_at": "2026-09-09T02:00:00Z",
+   "format": "source-comparison",
+   "sections": []
+  },
+  {
    "slug": "climate",
    "title": "Climate & Energy",
    "blurb": "Targets, coal, renewables and carbon pricing across the public record.",

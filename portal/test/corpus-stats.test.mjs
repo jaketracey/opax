@@ -15,8 +15,8 @@ test("corpus manifest includes the cleaned PM transcript tranche", () => {
     docs: 614,
     coverage: "2025–2026",
   });
-  assert.equal(corpus.version, "2026-09-08");
-  assert.equal(corpus.expected_resources, 618373);
+  assert.equal(corpus.version, "2026-09-09");
+  assert.equal(corpus.expected_resources, 620066);
   assert.equal(
     Object.values(corpus.expected_resources_breakdown).reduce((sum, value) => sum + value, 0),
     corpus.expected_resources,

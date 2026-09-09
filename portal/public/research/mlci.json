@@ -1,0 +1,4747 @@
+{
+  "as_of": "2026-09-09",
+  "invitation_snapshot": "2025-11-14",
+  "sources": {
+    "department": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf",
+    "aec": "https://www.aec.gov.au/media/files/Seat-status-fact-sheet-2025-federal-election.pdf",
+    "cpi": "https://publicintegrity.org.au/wp-content/uploads/2026/09/Public-money-political-advantage.pdf",
+    "cpi_landing": "https://publicintegrity.org.au/research_papers/community-infrastructure-grants-marginal-seats/"
+  },
+  "source_hashes": {
+    "department.pdf": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+    "aec.pdf": "648eb577292a2cd6ba3d4529f3727ef10754a53609f98db05fc73968cf210874",
+    "cpi.pdf": "11d8dac961339bf6585b057d032b5665e8176279880c29db55782751cd9e1b4e"
+  },
+  "projects": [
+    {
+      "id": "mlci-invitation-001",
+      "state": "ACT",
+      "title": "Chisholm Cricket Facilities Upgrade",
+      "lga": "Unincorporated ACT",
+      "value": 960820,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-002",
+      "state": "ACT",
+      "title": "Margaret Timpson Park Upgrade",
+      "lga": "Unincorporated ACT",
+      "value": 1500000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-003",
+      "state": "ACT",
+      "title": "Carter Field Upgrade at the National Hockey Centre in Lyneham",
+      "lga": "Unincorporated ACT",
+      "value": 1554500,
+      "status": "Under Assessment",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-004",
+      "state": "NSW",
+      "title": "Upgrades at Halekulani Oval",
+      "lga": "Central Coast (NSW)",
+      "value": 35000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-005",
+      "state": "NSW",
+      "title": "Upgrade of Callen Avenue Reserve in San Remo",
+      "lga": "Central Coast (NSW)",
+      "value": 110000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-006",
+      "state": "NSW",
+      "title": "Upgrade of Tom Burke Reserve in Lake Munmorah",
+      "lga": "Central Coast (NSW)",
+      "value": 110000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-007",
+      "state": "NSW",
+      "title": "Upgrades at Charlestown Netball",
+      "lga": "Lake Macquarie",
+      "value": 130000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-008",
+      "state": "NSW",
+      "title": "Windale Junior Rugby League Club Upgrades",
+      "lga": "Lake Macquarie",
+      "value": 220000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-009",
+      "state": "NSW",
+      "title": "Cardiff Netball Courts Upgrade",
+      "lga": "Lake Macquarie",
+      "value": 275000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-010",
+      "state": "NSW",
+      "title": "Upgrade Jack Edwards Oval",
+      "lga": "Lake Macquarie",
+      "value": 275000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-011",
+      "state": "NSW",
+      "title": "Upgrades at Lisle Carr Oval in Whitebridge",
+      "lga": "Lake Macquarie",
+      "value": 275000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-012",
+      "state": "NSW",
+      "title": "Upgrades at Bernie Goodwin Oval",
+      "lga": "Lake Macquarie",
+      "value": 300000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-013",
+      "state": "NSW",
+      "title": "Upgrades of Douglas Street Fields for Dora Creek Swampies Rugby League",
+      "lga": "Lake Macquarie",
+      "value": 300000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-014",
+      "state": "NSW",
+      "title": "Upgrades to Lighting Improvements to Four Courts at Rathmines Tennis Club",
+      "lga": "Lake Macquarie",
+      "value": 300000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-015",
+      "state": "NSW",
+      "title": "Upgrades at Slade Park",
+      "lga": "Central Coast (NSW)",
+      "value": 325000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-016",
+      "state": "NSW",
+      "title": "Upgrades at Lyall Peacock Field",
+      "lga": "Lake Macquarie",
+      "value": 340000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-017",
+      "state": "NSW",
+      "title": "David Campese Oval - Netting and Fencing Infrastructure Upgrade",
+      "lga": "Queanbeyan-Palerang",
+      "value": 370000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-018",
+      "state": "NSW",
+      "title": "Upgrades at John Balcomb Oval",
+      "lga": "Lake Macquarie",
+      "value": 420000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-019",
+      "state": "NSW",
+      "title": "PCYC Goulburn Upgrades",
+      "lga": "Goulburn Mulwaree",
+      "value": 500000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-020",
+      "state": "NSW",
+      "title": "Bellingara Netball Courts Upgrades",
+      "lga": "Sutherland",
+      "value": 500000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-021",
+      "state": "NSW",
+      "title": "Kiama Surf Life Saving Club Upgrades",
+      "lga": "Kiama",
+      "value": 512000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-022",
+      "state": "NSW",
+      "title": "Berkeley Vale Panthers",
+      "lga": "Central Coast (NSW)",
+      "value": 544000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-023",
+      "state": "NSW",
+      "title": "Upgrades to Lighting at Three Fields at Taylor Park",
+      "lga": "Lake Macquarie",
+      "value": 550000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-024",
+      "state": "NSW",
+      "title": "Pambula Village Playground Upgrade",
+      "lga": "Bega Valley",
+      "value": 750000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-025",
+      "state": "NSW",
+      "title": "Medowie Youth Facilities and Skate Park",
+      "lga": "Port Stephens",
+      "value": 750000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-026",
+      "state": "NSW",
+      "title": "Boronia Park Upgrades",
+      "lga": "Hunters Hill",
+      "value": 800000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-027",
+      "state": "NSW",
+      "title": "Gerringong District All Sports Clubhouse Upgrade",
+      "lga": "Kiama",
+      "value": 840000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-028",
+      "state": "NSW",
+      "title": "Upgrades at Water Board Oval in Blackalls Park",
+      "lga": "Lake Macquarie",
+      "value": 880000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-029",
+      "state": "NSW",
+      "title": "Gosford City Indoor Sports Stadium Upgrades (Breakers Indoor Sports Stadium)",
+      "lga": "Central Coast (NSW)",
+      "value": 985000,
+      "status": "Under Assessment",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-030",
+      "state": "NSW",
+      "title": "Hoxton Park Reserve",
+      "lga": "Liverpool",
+      "value": 1026400,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-031",
+      "state": "NSW",
+      "title": "Upgrades to Emu Plains and Emu Heights Recreation Facilities",
+      "lga": "Penrith",
+      "value": 1100000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-032",
+      "state": "NSW",
+      "title": "Sir Thomas Mitchell Reserve Upgrade",
+      "lga": "Parramatta",
+      "value": 1200000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-033",
+      "state": "NSW",
+      "title": "Redevelopment of the Mallabula Sports Complex",
+      "lga": "Port Stephens",
+      "value": 1200000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-034",
+      "state": "NSW",
+      "title": "Creative Quarter Project Expanding Lane Cove’s Cultural Hub",
+      "lga": "Lane Cove",
+      "value": 1370000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-035",
+      "state": "NSW",
+      "title": "Marine Rescue",
+      "lga": "Shoalhaven",
+      "value": 1390000,
+      "status": "Under Assessment",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-036",
+      "state": "NSW",
+      "title": "Queen Elizabeth Park Amenities Block Upgrade",
+      "lga": "Canada Bay",
+      "value": 1500000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-037",
+      "state": "NSW",
+      "title": "Yulunga Reserve Playspace",
+      "lga": "Parramatta",
+      "value": 1500000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-038",
+      "state": "NSW",
+      "title": "The LIVVING Room",
+      "lga": "Canada Bay",
+      "value": 1600000,
+      "status": "Under Assessment",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-039",
+      "state": "NSW",
+      "title": "Queanbeyan Bowls Club Upgrades",
+      "lga": "Queanbeyan-Palerang",
+      "value": 1600000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-040",
+      "state": "NSW",
+      "title": "Jerrabomberra Community Infrastructure Upgrades",
+      "lga": "Queanbeyan-Palerang",
+      "value": 1645000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-041",
+      "state": "NSW",
+      "title": "Ettalong Foreshore Upgrades",
+      "lga": "Central Coast (NSW)",
+      "value": 1800000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-042",
+      "state": "NSW",
+      "title": "Christie Park Master Plan Stage 2A",
+      "lga": "Ryde",
+      "value": 1900000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-043",
+      "state": "NSW",
+      "title": "Greta Central Oval Redevelopment",
+      "lga": "Cessnock",
+      "value": 2000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-044",
+      "state": "NSW",
+      "title": "Urban Greening in the Dubbo CBD",
+      "lga": "Dubbo",
+      "value": 2000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-045",
+      "state": "NSW",
+      "title": "Leichhardt Women's Community Health Centre Upgrades",
+      "lga": "Inner West",
+      "value": 2070000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-046",
+      "state": "NSW",
+      "title": "Beaches Shared Pathway - Avoca Pathway",
+      "lga": "Central Coast (NSW)",
+      "value": 2100000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-047",
+      "state": "NSW",
+      "title": "Upgrade at Leonay Sports Oval",
+      "lga": "Penrith",
+      "value": 2250000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-048",
+      "state": "NSW",
+      "title": "Additional Crisis and Transitional Accommodation",
+      "lga": "Inner West",
+      "value": 2432000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-049",
+      "state": "NSW",
+      "title": "Ford Park Pavilion Upgrade",
+      "lga": "Bega Valley",
+      "value": 2500000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-050",
+      "state": "NSW",
+      "title": "Dunc Gray Velodrome Upgrades",
+      "lga": "Canterbury-Bankstown",
+      "value": 2500000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-051",
+      "state": "NSW",
+      "title": "Minto Indoor Sports Centre",
+      "lga": "Campbelltown (NSW)",
+      "value": 2600000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-052",
+      "state": "NSW",
+      "title": "Batemans Bay Seahawks Australian Football Club Redevelopment",
+      "lga": "Eurobodalla",
+      "value": 3000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-053",
+      "state": "NSW",
+      "title": "Wallsend’s Upper Reserve Upgrades",
+      "lga": "Newcastle",
+      "value": 3000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-054",
+      "state": "NSW",
+      "title": "Southern Highlands Sports Field Lighting Upgrades",
+      "lga": "Wingecarribee",
+      "value": 3000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-055",
+      "state": "NSW",
+      "title": "Cooma Mountain Bike Trails",
+      "lga": "Snowy Monaro",
+      "value": 3100000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-056",
+      "state": "NSW",
+      "title": "Maroubra Surf Life Saving Club Redevelopment",
+      "lga": "Randwick",
+      "value": 3500000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-057",
+      "state": "NSW",
+      "title": "Binalong Park Upgrades",
+      "lga": "Parramatta",
+      "value": 3600000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-058",
+      "state": "NSW",
+      "title": "Jamison Park Netball Facilities Upgrades",
+      "lga": "Penrith",
+      "value": 4000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-059",
+      "state": "NSW",
+      "title": "Belmont Sports Complex Redevelopment – Stage 2",
+      "lga": "Lake Macquarie",
+      "value": 4600000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-060",
+      "state": "NSW",
+      "title": "Shared Pathway Missing Link",
+      "lga": "Central Coast (C) (NSW)",
+      "value": 4770000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-061",
+      "state": "NSW",
+      "title": "Bidwill Reserve Improvements",
+      "lga": "Blacktown",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-062",
+      "state": "NSW",
+      "title": "Coleman Park Upgrade",
+      "lga": "Cumberland",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-063",
+      "state": "NSW",
+      "title": "Marrickville Golf Club Upgrades",
+      "lga": "Inner West",
+      "value": 6050000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-064",
+      "state": "NSW",
+      "title": "Carss Park Pool",
+      "lga": "Georges River",
+      "value": 10000000,
+      "status": "Under Assessment",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-065",
+      "state": "NSW",
+      "title": "Southern Suburbs Community Centre and Library",
+      "lga": "Wollongong",
+      "value": 10000000,
+      "status": "Under Assessment",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-066",
+      "state": "NSW",
+      "title": "Bega Pool",
+      "lga": "Bega Valley",
+      "value": 16000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-067",
+      "state": "NT",
+      "title": "Jabiru Swimming Pool – Sanitation System Upgrade",
+      "lga": "West Arnhem",
+      "value": 250000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-068",
+      "state": "NT",
+      "title": "Improved Irrigation at Gunbalanya Oval",
+      "lga": "West Arnhem",
+      "value": 250000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-069",
+      "state": "NT",
+      "title": "New Fence and Electronic Scoreboard at Brockman Oval in Jabiru",
+      "lga": "West Arnhem",
+      "value": 275000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-070",
+      "state": "NT",
+      "title": "Jabiru Swimming Pool – Gym Refurbishment",
+      "lga": "West Arnhem",
+      "value": 375000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-071",
+      "state": "NT",
+      "title": "Tracy Village Masterplan",
+      "lga": "Darwin",
+      "value": 3000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-072",
+      "state": "NT",
+      "title": "Gunbalanya Youth Centre",
+      "lga": "West Arnhem",
+      "value": 3000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-073",
+      "state": "NT",
+      "title": "Elliott Community Centre Stage 1",
+      "lga": "Barkly",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-074",
+      "state": "NT",
+      "title": "Zuccoli Community Hub",
+      "lga": "Palmerston",
+      "value": 10000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-075",
+      "state": "QLD",
+      "title": "Upgrades at Holloways Beach Sport Complex",
+      "lga": "Cairns",
+      "value": 135000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-076",
+      "state": "QLD",
+      "title": "Old Bridge Football Club Lighting Upgrades",
+      "lga": "Brisbane",
+      "value": 190327,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-077",
+      "state": "QLD",
+      "title": "Gibson Park Lighting and Water Tank Upgrade",
+      "lga": "Brisbane",
+      "value": 350000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-078",
+      "state": "QLD",
+      "title": "Centenary Stormers Field and Grandstand",
+      "lga": "Brisbane",
+      "value": 355000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-079",
+      "state": "QLD",
+      "title": "Forest Lake Water Play Park",
+      "lga": "Brisbane",
+      "value": 450000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-080",
+      "state": "QLD",
+      "title": "Wynnum Manly and District Men's Shed Expansion",
+      "lga": "Brisbane",
+      "value": 500000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-081",
+      "state": "QLD",
+      "title": "Zillmere Community Centre Upgrades",
+      "lga": "Brisbane",
+      "value": 500000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-082",
+      "state": "QLD",
+      "title": "Samford Ranger Football Club",
+      "lga": "Moreton Bay",
+      "value": 547000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-083",
+      "state": "QLD",
+      "title": "Brisbane North Hockey Centre Improvement",
+      "lga": "Brisbane",
+      "value": 602000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-084",
+      "state": "QLD",
+      "title": "Souths Juniors Change Rooms Upgrade",
+      "lga": "Brisbane",
+      "value": 693000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-085",
+      "state": "QLD",
+      "title": "Springfield YMCA Upgrades",
+      "lga": "Ipswich",
+      "value": 700000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-086",
+      "state": "QLD",
+      "title": "Woody Point Foreshore - Tourism Event Activation",
+      "lga": "Moreton Bay",
+      "value": 750000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-087",
+      "state": "QLD",
+      "title": "Wynnum Manly District Cricket Club Upgrade",
+      "lga": "Brisbane",
+      "value": 1000000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-088",
+      "state": "QLD",
+      "title": "Kele Park Sporting Precinct Upgrades",
+      "lga": "Rockhampton",
+      "value": 1300000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-089",
+      "state": "QLD",
+      "title": "Kumbartcho Sanctuary Upgrade",
+      "lga": "Moreton Bay",
+      "value": 1600000,
+      "status": "Awaiting Application",
+      "page": 160,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160"
+    },
+    {
+      "id": "mlci-invitation-090",
+      "state": "QLD",
+      "title": "Fernvale Sports Park Netball Upgrades",
+      "lga": "Somerset",
+      "value": 1600000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-091",
+      "state": "QLD",
+      "title": "Cloncurry Pump Track & Skate Park",
+      "lga": "Cloncurry",
+      "value": 1700000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-092",
+      "state": "QLD",
+      "title": "Black Gully Linear Reserve and Captain Cook Reserve",
+      "lga": "Toowoomba",
+      "value": 1800000,
+      "status": "Under Assessment",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-093",
+      "state": "QLD",
+      "title": "River Heads New Boat Ramp",
+      "lga": "Fraser Coast",
+      "value": 2500000,
+      "status": "Under Assessment",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-094",
+      "state": "QLD",
+      "title": "Valley District Cricket Club",
+      "lga": "Brisbane",
+      "value": 2700000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-095",
+      "state": "QLD",
+      "title": "Brisbane City Football Club",
+      "lga": "Brisbane",
+      "value": 2780000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-096",
+      "state": "QLD",
+      "title": "Maryborough Eskdale Park Upgrades",
+      "lga": "Fraser Coast",
+      "value": 3000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-097",
+      "state": "QLD",
+      "title": "2 Toovey Street Caboolture Upgrades",
+      "lga": "Moreton Bay",
+      "value": 3000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-098",
+      "state": "QLD",
+      "title": "Lowood Swimming Pool Upgrade",
+      "lga": "Somerset",
+      "value": 4050000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-099",
+      "state": "QLD",
+      "title": "Upgrades at Endeavour Park",
+      "lga": "Cairns",
+      "value": 4100000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-100",
+      "state": "QLD",
+      "title": "New Ripley Rugby League and Sports Centre",
+      "lga": "Ipswich",
+      "value": 4500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-101",
+      "state": "QLD",
+      "title": "Eastern Suburbs Football Redevelopment",
+      "lga": "Brisbane",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-102",
+      "state": "QLD",
+      "title": "Ipswich Basketball Stadium Upgrades",
+      "lga": "Ipswich",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-103",
+      "state": "SA",
+      "title": "Hope Valley Bowling Club Upgrades",
+      "lga": "Tea Tree Gully",
+      "value": 300000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-104",
+      "state": "SA",
+      "title": "Norwood Football Club Redevelopment",
+      "lga": "Norwood Payneham and St",
+      "value": 310000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-105",
+      "state": "SA",
+      "title": "Blackwood Recreation Centre",
+      "lga": "Mitcham",
+      "value": 500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-106",
+      "state": "SA",
+      "title": "Foxfield Oval Hall Redevelopment",
+      "lga": "Campbelltown (SA)",
+      "value": 1500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-107",
+      "state": "SA",
+      "title": "Linear Park Upgrades (Adelaide)",
+      "lga": "Port Adelaide Enfield",
+      "value": 1875000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-108",
+      "state": "SA",
+      "title": "Pooraka Football Club Clubroom and Changeroom Upgrade",
+      "lga": "Salisbury",
+      "value": 2000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-109",
+      "state": "SA",
+      "title": "Tea Tree Gully Football Club",
+      "lga": "Tea Tree Gully",
+      "value": 2000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-110",
+      "state": "SA",
+      "title": "Four Surf Lifesaving Clubs Upgrades",
+      "lga": "West Torrens",
+      "value": 2000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-111",
+      "state": "SA",
+      "title": "Steve Woodcock Sports Centre - Campbelltown City Soccer",
+      "lga": "Campbelltown (SA)",
+      "value": 3000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-112",
+      "state": "SA",
+      "title": "Glenelg Football Club Female Friendly Change Room Facilities",
+      "lga": "Holdfast Bay",
+      "value": 3528500,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-113",
+      "state": "SA",
+      "title": "Sturt Football Club Female Friendly Change Rooms",
+      "lga": "Unley",
+      "value": 3528500,
+      "status": "Under Assessment",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-114",
+      "state": "SA",
+      "title": "Sturt Reserve Precinct Upgrades",
+      "lga": "Murray Bridge",
+      "value": 4850000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-115",
+      "state": "SA",
+      "title": "Adelaide Jaguars Women's Soccer Club Redevelopment",
+      "lga": "Charles Sturt",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-116",
+      "state": "SA",
+      "title": "Cove Sports & Community Club Stage 2 Redevelopment",
+      "lga": "Marion",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-117",
+      "state": "SA",
+      "title": "South Adelaide Panthers Women's Football Club Redevelopment",
+      "lga": "Onkaparinga",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-118",
+      "state": "TAS",
+      "title": "Rocherlea Football Club Upgrades",
+      "lga": "Launceston",
+      "value": 80000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-119",
+      "state": "TAS",
+      "title": "Phoenix Community House Upgrade Facility",
+      "lga": "King Island",
+      "value": 81123,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-120",
+      "state": "TAS",
+      "title": "Ravenswood Neighbourhood House & Men's Shed",
+      "lga": "Launceston",
+      "value": 97000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-121",
+      "state": "TAS",
+      "title": "Pipers Park Wesley Vale",
+      "lga": "Latrobe (Tas.)",
+      "value": 150000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-122",
+      "state": "TAS",
+      "title": "Ulverstone Recreation Ground",
+      "lga": "Central Coast (Tas.)",
+      "value": 300000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-123",
+      "state": "TAS",
+      "title": "Latrobe Recreation Ground",
+      "lga": "Latrobe (Tas.)",
+      "value": 350000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-124",
+      "state": "TAS",
+      "title": "Port Sorell Surf Club",
+      "lga": "Latrobe (Tas.)",
+      "value": 545000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-125",
+      "state": "TAS",
+      "title": "Ulverstone Kennel and Poultry Club",
+      "lga": "Central Coast (Tas.)",
+      "value": 800000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-126",
+      "state": "TAS",
+      "title": "Kingston Beach Surf Life Saving Club Upgrades",
+      "lga": "Kingborough",
+      "value": 910000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-127",
+      "state": "TAS",
+      "title": "Clifton Beach Surf Life Saving Club Upgrades",
+      "lga": "Clarence",
+      "value": 980000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-128",
+      "state": "TAS",
+      "title": "Shorewell Park Redevelopment",
+      "lga": "Burnie",
+      "value": 1000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-129",
+      "state": "TAS",
+      "title": "North-West Tasmania’s Shared Coastal Pathway Network",
+      "lga": "Burnie",
+      "value": 1300000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-130",
+      "state": "TAS",
+      "title": "Somerset Sharks Clubroom",
+      "lga": "Waratah-Wynyard",
+      "value": 1650000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-131",
+      "state": "TAS",
+      "title": "Bicheno Surf Life Saving Club Upgrade",
+      "lga": "Glamorgan-Spring Bay",
+      "value": 1895000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-132",
+      "state": "TAS",
+      "title": "Churchill Park and West Launceston Community Park Upgrades",
+      "lga": "Launceston",
+      "value": 2040000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-133",
+      "state": "TAS",
+      "title": "Upgrades to the Community Space and Relocate the Local Men’s Shed",
+      "lga": "Sorell",
+      "value": 2250000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-134",
+      "state": "TAS",
+      "title": "Brighton Community Precinct (Seymour Street)",
+      "lga": "Brighton",
+      "value": 3200000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-135",
+      "state": "TAS",
+      "title": "Deloraine Football Club Redevelopment",
+      "lga": "Meander Valley",
+      "value": 3600000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-136",
+      "state": "TAS",
+      "title": "Liprini Nayri Good House Project Upgrades",
+      "lga": "Hobart",
+      "value": 3740000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-137",
+      "state": "TAS",
+      "title": "Legana Indoor Basketball Facility",
+      "lga": "West Tamar",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-138",
+      "state": "TAS",
+      "title": "Domain Tennis Centre Upgrades",
+      "lga": "Hobart",
+      "value": 8000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-139",
+      "state": "TAS",
+      "title": "Don River Railway Upgrades",
+      "lga": "Devonport",
+      "value": 13000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-140",
+      "state": "VIC",
+      "title": "Whittlesea Football Netball Club Upgrades",
+      "lga": "Whittlesea",
+      "value": 185000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-141",
+      "state": "VIC",
+      "title": "Caroline Springs Recreation Reserve Upgrades",
+      "lga": "Melton",
+      "value": 186000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-142",
+      "state": "VIC",
+      "title": "Save Old Warrandyte Fire House",
+      "lga": "Manningham",
+      "value": 187500,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-143",
+      "state": "VIC",
+      "title": "Ballam Park Lighting Upgrade",
+      "lga": "Frankston",
+      "value": 225000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-144",
+      "state": "VIC",
+      "title": "Narre Warren Football Netball Club",
+      "lga": "Casey",
+      "value": 250000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-145",
+      "state": "VIC",
+      "title": "Somerville Netball Facilities",
+      "lga": "Mornington Peninsula",
+      "value": 250000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-146",
+      "state": "VIC",
+      "title": "Lighting Upgrade for Southern Road Reserve",
+      "lga": "Kingston (Vic.)",
+      "value": 270000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-147",
+      "state": "VIC",
+      "title": "Max Pawsey Reserve",
+      "lga": "Casey",
+      "value": 400000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-148",
+      "state": "VIC",
+      "title": "Fotheringham Reserve Sports Field Lighting Upgrade",
+      "lga": "Greater Dandenong",
+      "value": 400000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-149",
+      "state": "VIC",
+      "title": "Port Phillip EcoCentre Redevelopment",
+      "lga": "Port Phillip",
+      "value": 400000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-150",
+      "state": "VIC",
+      "title": "Upgrades to the Rye Cricket Club",
+      "lga": "Mornington Peninsula",
+      "value": 450000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-151",
+      "state": "VIC",
+      "title": "Altona Hockey Club Upgrades",
+      "lga": "Hobsons Bay",
+      "value": 462000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-152",
+      "state": "VIC",
+      "title": "Ballarat Continuous Voices Memorial",
+      "lga": "Ballarat",
+      "value": 500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-153",
+      "state": "VIC",
+      "title": "Bairnsdale Senior Citizens Space",
+      "lga": "East Gippsland",
+      "value": 500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-154",
+      "state": "VIC",
+      "title": "Kangaroo Flat Skate Park",
+      "lga": "Greater Bendigo",
+      "value": 500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-155",
+      "state": "VIC",
+      "title": "Ashburton Women's Football Facility Upgrade",
+      "lga": "Boroondara",
+      "value": 550000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-156",
+      "state": "VIC",
+      "title": "Harley Hammond Reserve, Broadford - Female Friendly Upgrade",
+      "lga": "Mitchell",
+      "value": 580000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-157",
+      "state": "VIC",
+      "title": "Lionheart Reserve and Keilor Recreation Reserve Oval Lighting Upgrades",
+      "lga": "Brimbank",
+      "value": 600000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-158",
+      "state": "VIC",
+      "title": "Darebin Women's Sports Falcons",
+      "lga": "Darebin",
+      "value": 700000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-159",
+      "state": "VIC",
+      "title": "Modernise Kyneton Skatepark",
+      "lga": "Macedon Ranges",
+      "value": 750000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-160",
+      "state": "VIC",
+      "title": "Bailey Reserve (Glen Eira) Female Facilities and Lighting",
+      "lga": "Glen Eira",
+      "value": 900000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-161",
+      "state": "VIC",
+      "title": "Ross Reserve (Greater Dandenong) Inclusive Changerooms and Athletics Track Shade",
+      "lga": "Greater Dandenong",
+      "value": 900000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-162",
+      "state": "VIC",
+      "title": "Namatjira Reserve (Kingston) Park Lighting and Outdoor Gym",
+      "lga": "Kingston (Vic.)",
+      "value": 900000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-163",
+      "state": "VIC",
+      "title": "Princes Highway Reserve (Monash) Accessible Playground",
+      "lga": "Monash",
+      "value": 900000,
+      "status": "Under Assessment",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-164",
+      "state": "VIC",
+      "title": "Truscott Reserve Pavilion Upgrades",
+      "lga": "Greater Bendigo",
+      "value": 1000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-165",
+      "state": "VIC",
+      "title": "Grovedale Football Netball Club Burdoo Reserve Facility Upgrade",
+      "lga": "Greater Geelong",
+      "value": 1000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-166",
+      "state": "VIC",
+      "title": "Gladstone Park Bowls Club Upgrades",
+      "lga": "Hume",
+      "value": 1000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-167",
+      "state": "VIC",
+      "title": "Hepburn Shire Community Soccer Upgrades",
+      "lga": "Hepburn",
+      "value": 1200000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-168",
+      "state": "VIC",
+      "title": "Essendon District Bowls Club Redevelopment",
+      "lga": "Moonee Valley",
+      "value": 1200000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-169",
+      "state": "VIC",
+      "title": "Upgrades to the Hastings Recreation Reserve",
+      "lga": "Mornington Peninsula",
+      "value": 1300000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-170",
+      "state": "VIC",
+      "title": "Sydney Pargeter Reserve",
+      "lga": "Casey",
+      "value": 1400000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-171",
+      "state": "VIC",
+      "title": "Dandenong Parks and Sports Grounds",
+      "lga": "Greater Dandenong",
+      "value": 1440000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-172",
+      "state": "VIC",
+      "title": "Ballarat Showgrounds New Event and Exhibition Centre",
+      "lga": "Ballarat",
+      "value": 1500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-173",
+      "state": "VIC",
+      "title": "Upgrades at Edwin Flack Reserve",
+      "lga": "Casey",
+      "value": 1500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-174",
+      "state": "VIC",
+      "title": "Preston Lion's Football Club",
+      "lga": "Darebin",
+      "value": 1500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-175",
+      "state": "VIC",
+      "title": "Don Wallace Recreation Reserve Upgrades",
+      "lga": "Golden Plains",
+      "value": 1500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-176",
+      "state": "VIC",
+      "title": "Monash Aquatic Centre",
+      "lga": "Monash",
+      "value": 1500000,
+      "status": "Under Assessment",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-177",
+      "state": "VIC",
+      "title": "Fish Creek Football Netball Club Upgrades",
+      "lga": "South Gippsland",
+      "value": 1500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-178",
+      "state": "VIC",
+      "title": "Moonee Valley City Council Recreation Reserves Upgrades",
+      "lga": "Moonee Valley",
+      "value": 1550000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-179",
+      "state": "VIC",
+      "title": "Upgrades to the Frankston Bowling Club Dome Roof",
+      "lga": "Frankston",
+      "value": 1750000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-180",
+      "state": "VIC",
+      "title": "Sandringham Football Club Women’s Changerooms",
+      "lga": "Bayside (Vic.)",
+      "value": 1800000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-181",
+      "state": "VIC",
+      "title": "Carrington Park Reserve Pavilion Redevelopment",
+      "lga": "Knox",
+      "value": 1800000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-182",
+      "state": "VIC",
+      "title": "Upgrades at Hume Hockey Centre",
+      "lga": "Hume",
+      "value": 1900000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-183",
+      "state": "VIC",
+      "title": "Ivanhoe Park Upgrades: Netball Courts and Croquet Club",
+      "lga": "Banyule",
+      "value": 2000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-184",
+      "state": "VIC",
+      "title": "North Ringwood Reserve Pavilion Upgrade",
+      "lga": "Maroondah",
+      "value": 2000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-185",
+      "state": "VIC",
+      "title": "Redevelop Len Phelps Pavilion at Carrum Downs Recreation Reserve",
+      "lga": "Frankston",
+      "value": 2500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-186",
+      "state": "VIC",
+      "title": "Upgrades at Eric Boardman Stadium",
+      "lga": "Hume",
+      "value": 2500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-187",
+      "state": "VIC",
+      "title": "Central Deborah Gold Mine Revitalisation – Stage 2",
+      "lga": "Greater Bendigo",
+      "value": 2915000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-188",
+      "state": "VIC",
+      "title": "Thornbury Aboriginal Women and Girls Sport and Wellness Centre",
+      "lga": "Darebin",
+      "value": 3000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-189",
+      "state": "VIC",
+      "title": "North Bendigo Recreation Reserve",
+      "lga": "Greater Bendigo",
+      "value": 3000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-190",
+      "state": "VIC",
+      "title": "Templeton Reserve Pavilion Redevelopment",
+      "lga": "Knox",
+      "value": 3000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-191",
+      "state": "VIC",
+      "title": "Gillon Oval Redevelopment",
+      "lga": "Merri-bek",
+      "value": 3325000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-192",
+      "state": "VIC",
+      "title": "St Albans Churchill Reserve Upgrades",
+      "lga": "Brimbank",
+      "value": 3500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-193",
+      "state": "VIC",
+      "title": "Bulleen Templestowe Basketball Club",
+      "lga": "Manningham",
+      "value": 3500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-194",
+      "state": "VIC",
+      "title": "Linear Parklands Precinct Upgrades (Melbourne)",
+      "lga": "Yarra",
+      "value": 3700000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-195",
+      "state": "VIC",
+      "title": "Sparks Reserve Upgrade",
+      "lga": "Whitehorse",
+      "value": 3935575,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-196",
+      "state": "VIC",
+      "title": "Windsor Park Facility Redevelopment",
+      "lga": "Greater Geelong",
+      "value": 4000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-197",
+      "state": "VIC",
+      "title": "Kalkallo's Dwyer Street Reserve Upgrades",
+      "lga": "Hume",
+      "value": 4000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-198",
+      "state": "VIC",
+      "title": "Maryborough Pool Redevelopment",
+      "lga": "Central Goldfields",
+      "value": 4500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-199",
+      "state": "VIC",
+      "title": "Nick Ascenzo Reserve Upgrades",
+      "lga": "Whittlesea",
+      "value": 4500000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-200",
+      "state": "VIC",
+      "title": "Fawkner Netball Courts Upgrades",
+      "lga": "Merri-bek",
+      "value": 4561000,
+      "status": "Under Assessment",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-201",
+      "state": "VIC",
+      "title": "Bruce Park Pavilion Redevelopment",
+      "lga": "Frankston",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-202",
+      "state": "VIC",
+      "title": "Ocean Grove Soccer Club Redevelopment",
+      "lga": "Greater Geelong",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-203",
+      "state": "VIC",
+      "title": "Soldiers Reserve Pavilion Upgrades",
+      "lga": "Wyndham",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-204",
+      "state": "VIC",
+      "title": "Saltwater Reserve – Point Cook Community Hub",
+      "lga": "Wyndham",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 161,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161"
+    },
+    {
+      "id": "mlci-invitation-205",
+      "state": "VIC",
+      "title": "Drysdale Recreation Reserve Upgrades",
+      "lga": "Greater Geelong",
+      "value": 5452260,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-206",
+      "state": "VIC",
+      "title": "Casey Fields Boutique Stadium",
+      "lga": "Casey",
+      "value": 10680000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-207",
+      "state": "VIC",
+      "title": "Bacchus Marsh Acquatic Centre",
+      "lga": "Moorabool",
+      "value": 25000000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-208",
+      "state": "VIC",
+      "title": "Nunawading Indoor Sports Centre Redevelopment",
+      "lga": "Whitehorse",
+      "value": 45000000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-209",
+      "state": "WA",
+      "title": "Bluegum Tennis Club",
+      "lga": "Melville",
+      "value": 105000,
+      "status": "Under Assessment",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-210",
+      "state": "WA",
+      "title": "Peet Park Lighting Upgrades",
+      "lga": "Belmont",
+      "value": 700000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-211",
+      "state": "WA",
+      "title": "Rounding the Cape",
+      "lga": "Augusta Margaret River",
+      "value": 1250000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-212",
+      "state": "WA",
+      "title": "Thornlie Bowling Club Upgrades",
+      "lga": "Gosnells",
+      "value": 1400000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-213",
+      "state": "WA",
+      "title": "Beasley Reserve Upgrades",
+      "lga": "Melville",
+      "value": 1500000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-214",
+      "state": "WA",
+      "title": "Nash Field and Davis Oval Project",
+      "lga": "Mosman Park",
+      "value": 1500000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-215",
+      "state": "WA",
+      "title": "Leederville Oval Redevelopment",
+      "lga": "Vincent",
+      "value": 1500000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-216",
+      "state": "WA",
+      "title": "Coolgardie Main Street Upgrades",
+      "lga": "Coolgardie",
+      "value": 1656000,
+      "status": "Withdrawn",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-217",
+      "state": "WA",
+      "title": "Maniana Reserve Change Room Upgrades",
+      "lga": "Canning",
+      "value": 1750000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-218",
+      "state": "WA",
+      "title": "MacNaughton Park Clubrooms Upgrade",
+      "lga": "Joondalup",
+      "value": 2000000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-219",
+      "state": "WA",
+      "title": "South Beach Dog Exercise Area Upgrades",
+      "lga": "Fremantle",
+      "value": 2461707,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-220",
+      "state": "WA",
+      "title": "Kwinana Loop Trail",
+      "lga": "Kwinana",
+      "value": 2500000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-221",
+      "state": "WA",
+      "title": "Ellenbrook District Open Space Pavilion Upgrade",
+      "lga": "Swan",
+      "value": 2500000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-222",
+      "state": "WA",
+      "title": "Jubilee Reserve Development",
+      "lga": "Bassendean",
+      "value": 2593500,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-223",
+      "state": "WA",
+      "title": "Stage 2B of the Hartfield Park Redevelopment",
+      "lga": "Kalamunda",
+      "value": 2900000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-224",
+      "state": "WA",
+      "title": "Mandurah Aquatic Centre Basketball Courts",
+      "lga": "Mandurah",
+      "value": 4000000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-225",
+      "state": "WA",
+      "title": "Heathridge Park Master Plan",
+      "lga": "Joondalup",
+      "value": 5000000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-226",
+      "state": "WA",
+      "title": "Girrawheen Hub Precinct",
+      "lga": "Wanneroo",
+      "value": 5500000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    },
+    {
+      "id": "mlci-invitation-227",
+      "state": "WA",
+      "title": "Canning Vale Sports Complex",
+      "lga": "Canning",
+      "value": 10000000,
+      "status": "Awaiting Application",
+      "page": 162,
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162"
+    }
+  ],
+  "awards": [
+    {
+      "ga_id": "GA544984",
+      "activity": "The project will deliver a full pitch replacement of the Carter Field at the National Hockey Centre in Lyneham, including a new International Category 1 surface, along with upgrades to the irrigation and fencing.",
+      "value": 1554500.0,
+      "publish_date": "2026-03-20",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA552173",
+      "activity": "The project will deliver the installation of a solar power system and battery storage including solar panels, inverters, concrete platform and smart meter.",
+      "value": 105000.0,
+      "publish_date": "2026-04-17",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA561707",
+      "activity": "The project will deliver the upgrade of Wallsend's Upper Reserve, including enhanced utility infrastructure, playing surface upgrades for upper fields 1 to 6, and resurfacing and linemarking on the existing car park.",
+      "value": 3000000.0,
+      "publish_date": "2026-05-22",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA560848",
+      "activity": "The project will deliver upgrades to existing light poles at Lionheart Reserve, and installation of new poles at Keilor Recreation Reserve.",
+      "value": 600000.0,
+      "publish_date": "2026-05-19",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA559327",
+      "activity": "The project will deliver the construction of footpaths, play equipment, public amenities, sport and recreation infrastructure, gathering spaces, picnic and BBQ area, lighting, signage, landscaping and car parking.",
+      "value": 4500000.0,
+      "publish_date": "2026-05-08",
+      "source_url": "https://www.grants.gov.au/Ga/Show/22b1f6a9-5451-47d7-80ca-261a47cf8666",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "VIC",
+      "delivery_postcode": "3074",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA559891",
+      "activity": "The project will deliver upgrades of Linear Park at each Capital Works Site - Windsor Grove Reserve, Beefacres Reserve, Ramsey Reserve, Linear Park Lighting and OG Pedestrian Boardwalk.",
+      "value": 1875000.0,
+      "publish_date": "2026-05-08",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA559896",
+      "activity": "The project will deliver upgrades to sports fields lighting at Church Road, Moss Vale and David Wood Playing Fields, Bowral, and a children's play area at Hampden Park, Robertson.",
+      "value": 3000000.0,
+      "publish_date": "2026-05-11",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA561704",
+      "activity": "The project will deliver the construction of the Bacchus Marsh Aquatic Centre comprising an aquatic pool hall including change facilities and kiosk/servery area and health and fitness facilities.",
+      "value": 25000000.0,
+      "publish_date": "2026-05-21",
+      "source_url": "https://www.grants.gov.au/Ga/Show/5e94976d-87b7-4176-9e2e-914e4b38b779",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "VIC",
+      "delivery_postcode": "3340",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA559893",
+      "activity": "The project will deliver the construction of the new three-storey Southern Suburbs Community Centre and Library, including amenities, office spaces, kitchen/café, learning spaces, and auditorium.",
+      "value": 10000000.0,
+      "publish_date": "2026-05-11",
+      "source_url": "https://www.grants.gov.au/Ga/Show/70b382f9-6663-4036-95fe-2f4294e79fda",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "NSW",
+      "delivery_postcode": "2502",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA560849",
+      "activity": "The project will deliver the construction of an additional level on top of the existing single-story building including function room, amenities, air conditioning, lift, security and PA systems.",
+      "value": 840000.0,
+      "publish_date": "2026-05-19",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA561706",
+      "activity": "The project will deliver the upgrade of Black Gully Linear Reserve and Captain Cook Reserve, including lighting, pathways and furnishings, new play items, disc golf course, new accessible toilet and construction of a new dog park.",
+      "value": 1800000.0,
+      "publish_date": "2026-05-22",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA561708",
+      "activity": "The project will deliver the upgrade of lighting to the netball courts and upgrade the switchboard.",
+      "value": 500000.0,
+      "publish_date": "2026-05-22",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA559895",
+      "activity": "The project will deliver upgrades to the Mandurah Aquatic and Recreation Centre, expanding the existing building to include 3 additional indoor multi-use courts with associated amenities and new spectator seating.",
+      "value": 4000000.0,
+      "publish_date": "2026-05-08",
+      "source_url": "https://www.grants.gov.au/Ga/Show/d00d4c39-513d-483e-b044-cd51cb73a058",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "WA",
+      "delivery_postcode": "6210",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA561705",
+      "activity": "The project will deliver the construction of a play space with a giant Murray Cod climbing/play structure and various play equipment, furniture, artworks, lighting and landscaping.",
+      "value": 4850000.0,
+      "publish_date": "2026-05-22",
+      "source_url": "https://www.grants.gov.au/Ga/Show/d5c09276-46a7-4bfe-8c34-f71d7885b3fc",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "SA",
+      "delivery_postcode": "5253",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA566034",
+      "activity": "The project will deliver the construction of a roof structure to cover outdoor courts and resurface the existing courts and install safety barriers, seating and compliance equipment.",
+      "value": 4561000.0,
+      "publish_date": "2026-06-23",
+      "source_url": "https://www.grants.gov.au/Ga/Show/06df1f82-31b4-4d96-b5cb-b33e523ee668",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "VIC",
+      "delivery_postcode": "3060",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA566357",
+      "activity": "The project will deliver the design and construction of Stage 1 including two new play areas with a rural-themed and nature-based playground, extension of the carpark, installation of a new building with toilets.",
+      "value": 1000000.0,
+      "publish_date": "2026-06-23",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA566135",
+      "activity": "The project will deliver construction of a new facility including changerooms, kiosk, first aid room, outdoor heated pools, leisure water area, seating and viewing areas, plant and chemical storage room, shading, lighting, car park and landscaping.",
+      "value": 16000000.0,
+      "publish_date": "2026-06-23",
+      "source_url": "https://www.grants.gov.au/Ga/Show/249ff132-0c7a-4418-adfa-41a6b31a372f",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "NSW",
+      "delivery_postcode": "2550",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA564583",
+      "activity": "The project will deliver upgrades to stadium internal lighting, electrical board and roof rectification work, replacement of hot water system, resurfacing of indoor courts and installation of solar panels, heating, ventilation and air conditioning.",
+      "value": 985000.0,
+      "publish_date": "2026-06-17",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA566356",
+      "activity": "The project will deliver the construction of a sports pavilion including change spaces, toilet facilities, kiosk, club social rooms, covered outdoor area and storage areas, landscaping and pedestrian paths.",
+      "value": 2500000.0,
+      "publish_date": "2026-06-23",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA564671",
+      "activity": "The project will deliver the construction and fitout of a ground floor and first floor extension including players' change rooms, kiosk and bar, storage rooms and timekeeping and trainers office.",
+      "value": 1800000.0,
+      "publish_date": "2026-06-17",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA563790",
+      "activity": "The project will deliver the installation of playground equipment including picnic tables, benches, BBQ, drink fountain, bike racks, landscaping.",
+      "value": 900000.0,
+      "publish_date": "2026-06-09",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA565895",
+      "activity": "The project will deliver a new two storey surf lifesaving club to include administration office, change room facilities, storage areas, lift, gym, members lounge, kitchen, bar and outdoor deck area.",
+      "value": 3500000.0,
+      "publish_date": "2026-06-23",
+      "source_url": "https://www.grants.gov.au/Ga/Show/5f82897c-b6eb-4870-b2e5-0186e69c2fe6",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "NSW",
+      "delivery_postcode": "2035",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA563792",
+      "activity": "The project will deliver a fully operational café including commercial kitchen fit-out with indoor and outdoor seating. Landscaping and accessible footpaths.",
+      "value": 1600000.0,
+      "publish_date": "2026-06-09",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA566353",
+      "activity": "The project will deliver upgrades to the kiln room, workroom, kitchenette and gallery, roof repair and ceiling installation and external access and painting.",
+      "value": 187500.0,
+      "publish_date": "2026-06-23",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA563789",
+      "activity": "The project will deliver the design and construction of a new sports amenity facility including a modular building with changerooms, umpires and officials' amenities, kiosk, first aid room, storage and supporting external infrastructure.",
+      "value": 3000000.0,
+      "publish_date": "2026-06-09",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA563788",
+      "activity": "The project will deliver upgraded lighting at Carmichael Park, Bill Albury Oval and Ian Droney Oval including installation of electrical switchboards and new lighting poles.",
+      "value": 1000000.0,
+      "publish_date": "2026-06-09",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA565597",
+      "activity": "The project will deliver an upgrade to the bowling facility which includes installation of all-weather PVC membrane dome, new synthetic bowling green, canopy lighting, scoreboard and tiered seating.",
+      "value": 1750000.0,
+      "publish_date": "2026-06-23",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA566354",
+      "activity": "This project will deliver changerooms with amenities and new lighting poles and lighting control system.",
+      "value": 700000.0,
+      "publish_date": "2026-06-23",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA566033",
+      "activity": "The project will deliver fencing and netting infrastructure upgrades at David Campese Oval, Queanbeyan NSW.",
+      "value": 370000.0,
+      "publish_date": "2026-06-23",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575255",
+      "activity": "The project will deliver multi use facilities including; a new playground, soccer pavilion and toilet upgrades, sports ground lighting, a bus shelter, BBQ area, car parking, bike and walking loop, landscaping and other supporting infrastructure.",
+      "value": 3200000.0,
+      "publish_date": "2026-07-20",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575250",
+      "activity": "The project will deliver the construction of a single-storey senior citizens' club room, adjacent to the existing Picnic Point Hall in Bairnsdale, including kitchen and meeting facilities.",
+      "value": 500000.0,
+      "publish_date": "2026-07-20",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575781",
+      "activity": "The project will deliver upgraded facilities at Buff Point Oval.",
+      "value": 545000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575779",
+      "activity": "The project will deliver a hybrid turf playing field and public amenities at Casey Fields Sports Precinct.",
+      "value": 10680000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/Show/0f0d20db-a995-4ee9-8d4c-957da20d72bd",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "VIC",
+      "delivery_postcode": "3977",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA575778",
+      "activity": "The project will deliver lighting upgrades to three fields at Taylors Park, including improved electrical capacity, and installation of new poles with LED fittings.",
+      "value": 550000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575871",
+      "activity": "The project will deliver the design and upgrade of outdated lighting at Southern Road Reserve to modern, energy efficient LED sports lighting.",
+      "value": 270000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575257",
+      "activity": "The project will upgrade the existing Pambula Village and George Street Reserve local playspaces. Work will include installation of contemporary and nature-based play equipment, pathways, seating and associated landscaping and amenities.",
+      "value": 750000.0,
+      "publish_date": "2026-07-20",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575768",
+      "activity": "The project will deliver comprehensive electrical upgrades at Boronia Park including a new substation, solar panels and battery, along with upgraded sports lighting, and improvements to support EV chargers, air conditioning, and digital scoreboards.",
+      "value": 800000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575780",
+      "activity": "The project will deliver a new enclosed pool and a new clubhouse/recreation facility at the Lowood Swimming Pool, including associated infrastructure, improved disability access, and demolition of the existing clubhouse.",
+      "value": 4050000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/Show/249d1a0f-9fb6-47a0-8520-ae77252cdcf1",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "QLD",
+      "delivery_postcode": "4306",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA575769",
+      "activity": "The project will deliver an upgrade to the Don Wallace Recreation Reserve, including the design and construction of a new female-friendly change facility and upgrades to the existing social pavilion.",
+      "value": 1500000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575774",
+      "activity": "The project will deliver a new, purpose-built two-storey pavilion to include four change rooms, amenities, umpire rooms, first aid room, kiosk, cool room, and dedicated internal and external storage.",
+      "value": 5000000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/Show/3764313e-98b4-42ef-9e56-710a0811dcf4",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "VIC",
+      "delivery_postcode": "3030",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA575764",
+      "activity": "The project will deliver the design and construct a purpose-built community and sporting pavilion, incorporating an umpire change room, function facilities, a kitchen and kiosk with an undercover viewing area at North Bendigo Recreation Reserve.",
+      "value": 3000000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA574192",
+      "activity": "The project will deliver the design, construction and upgrade of the Saltwater Reserve Community Sporting Hub. Stage 1 - New Changeroom Pavilion and Stage 2 - Upgrade of the existing Pavilion and including external works.",
+      "value": 5000000.0,
+      "publish_date": "2026-07-09",
+      "source_url": "https://www.grants.gov.au/Ga/Show/5405bef8-c36e-47ed-8b25-185677b22d47",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "VIC",
+      "delivery_postcode": "3030",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA575770",
+      "activity": "The project will deliver upgraded drainage and re-level the sporting field at Douglass Street Fields.",
+      "value": 300000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575765",
+      "activity": "The project will deliver the fit out for the mezzanine level of the existing pavilion with dedicated function, meeting and office space at Narre Warren Football Netball Club.",
+      "value": 250000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575247",
+      "activity": "The project will deliver a synthetic hockey pitch and associated infrastructure at the Hume Hockey Centre including; new lighting, player shelters and benches, fencing, netting, storage and landscaping.",
+      "value": 1900000.0,
+      "publish_date": "2026-07-20",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575777",
+      "activity": "The project will deliver the design and construction of the Grovedale Football Netball Club Burdoo Reserve Facility Upgrade, including two new netball courts and supporting infrastructure.",
+      "value": 1000000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575782",
+      "activity": "The project will deliver the design and construction of new lighting poles and lighting to the Cardiff Netball courts.",
+      "value": 275000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575253",
+      "activity": "The project will deliver an asphalt pump track integrated with a skate park to create a multi-disciplinary public space.",
+      "value": 1700000.0,
+      "publish_date": "2026-07-20",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575251",
+      "activity": "The project will deliver upgrades to the Yulunga Reserve Playspace, including new inclusive play equipment, upgraded pathway lighting, and accessible pathways.",
+      "value": 1500000.0,
+      "publish_date": "2026-07-20",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575766",
+      "activity": "The project will deliver the design and construction of a new sporting pavilion at Truscott Recreation Reserve with new player amenities, change rooms and community facilities.",
+      "value": 1000000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575256",
+      "activity": "The project will deliver the upgrade the Central Deborah Gold Mine which includes a fully refurbished visitor centre, a refurbished artificial creek, new perimeter fencing, relocated video safety briefing room and design development for stage 2 works.",
+      "value": 2915000.0,
+      "publish_date": "2026-07-20",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA574196",
+      "activity": "The project will deliver the installation of sports flood lights on new poles at Field 1 and 3 and raise existing pole footings at Field 2.",
+      "value": 602000.0,
+      "publish_date": "2026-07-09",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575763",
+      "activity": "The project will deliver upgraded surface drainage, irrigation system, turfing and fencing at Edwin Flack Reserve.",
+      "value": 1500000.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575254",
+      "activity": "The project will deliver an upgrade of the River Heads barge landing by demolishing the current barge landing ramp and replacing with a new 8-metre-wide barge landing ramp to improve capacity and safety issues for passengers and vehicles.",
+      "value": 2500000.0,
+      "publish_date": "2026-07-20",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575252",
+      "activity": "The project will deliver upgrades to the historic A.R. Glenn Grandstand, sports field lighting and build new unisex netball changerooms with toilets at Gillon Oval, Brunswick.",
+      "value": 3325000.0,
+      "publish_date": "2026-07-20",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575872",
+      "activity": "This project will deliver LED sports field floodlighting at Fotheringham Reserve soccer field in line with Australian Standards.",
+      "value": 321844.0,
+      "publish_date": "2026-07-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576236",
+      "activity": "The project will deliver two competition-compliant courts with lighting, run-off areas and line marking. It will also construct a dedicated warm-up and shooting area and redevelop the ageing amenities building.",
+      "value": 5452260.0,
+      "publish_date": "2026-08-05",
+      "source_url": "https://www.grants.gov.au/Ga/Show/160b65ea-3b16-481b-9d5b-d7e1bdbb6a3f",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "VIC",
+      "delivery_postcode": "3222",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA576943",
+      "activity": "The project will deliver the upgrade of Sparks Reserve West soccer field, including replacement of the existing natural turf with synthetic, new lighting and improved pedestrian access.",
+      "value": 3935575.0,
+      "publish_date": "2026-08-14",
+      "source_url": "https://www.grants.gov.au/Ga/Show/190ccecf-3dee-4260-861d-fbe935e3c64d",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "VIC",
+      "delivery_postcode": "3128",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA576945",
+      "activity": "The project will deliver Stage 1 of the Active Open Space redevelopment at Devlins Road Reserve including the construction of a full-size natural turf soccer pitch, a multipurpose pavilion and a car park.",
+      "value": 5000000.0,
+      "publish_date": "2026-08-13",
+      "source_url": "https://www.grants.gov.au/Ga/Show/2cfae6b0-58f0-43f6-97ff-99280737e1c9",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "VIC",
+      "delivery_postcode": "3226",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA577030",
+      "activity": "The project will deliver a new, inclusive nature and waterplay facility including walking paths, playgrounds and picnic facilities.",
+      "value": 450000.0,
+      "publish_date": "2026-08-17",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576472",
+      "activity": "The project will deliver the design and upgrade of North-West Tasmania's Shared Coastal Pathway Network.",
+      "value": 1300000.0,
+      "publish_date": "2026-08-07",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576097",
+      "activity": "The project will deliver the design and construction of new facilities at the South Beach Dog Beach including accessible toilets, and path networks.",
+      "value": 2461707.0,
+      "publish_date": "2026-08-04",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576471",
+      "activity": "The project will deliver upgrades to Coleman Park, including construction of a playspace and informal recreation facilities, including outdoor fitness equipment, and construction of a multi-purpose sports court.",
+      "value": 5000000.0,
+      "publish_date": "2026-08-07",
+      "source_url": "https://www.grants.gov.au/Ga/Show/3e232b07-4ece-4256-881d-753e4089834e",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "NSW",
+      "delivery_postcode": "2141",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA578158",
+      "activity": "The project will deliver a new purpose-designed, state of the art Emergency Services base and training facility for Volunteer Marine Rescue NSW.",
+      "value": 1390000.0,
+      "publish_date": "2026-08-31",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575783",
+      "activity": "The project will deliver critical repairs and upgrades of community recreational infrastructure at David Madew Memorial Park in the suburb of Jerrabomberra, including a new playground and repairs to the tennis courts.",
+      "value": 1645000.0,
+      "publish_date": "2026-08-04",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576944",
+      "activity": "The project will deliver upgraded recreation facilities across three reserves in Emu Plains and Emu Heights, including revitalised playgrounds, a resurfaced multi-sport court and accessible pathways.",
+      "value": 1100000.0,
+      "publish_date": "2026-08-13",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576235",
+      "activity": "The project will deliver the design and construction of four new parks for Fairfield, with inclusive, age-appropriate equipment, informal recreation areas, and public amenities, where applicable.",
+      "value": 9500000.0,
+      "publish_date": "2026-08-05",
+      "source_url": "https://www.grants.gov.au/Ga/Show/77891ca9-65ff-4e94-84d6-083d7d0cad0e",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "NSW",
+      "delivery_postcode": null,
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA578157",
+      "activity": "The project will deliver the upgrade of the Kumbartcho Sanctuary, including construction of a new amenities building, storage shed and café, and upgrades to the carpark and playground.",
+      "value": 1600000.0,
+      "publish_date": "2026-08-28",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576102",
+      "activity": "The project will deliver an upgrade to the paved steps at Charlestown Netball Courts in front of court 15 and 16, including construction of tiered concrete seating.",
+      "value": 130000.0,
+      "publish_date": "2026-08-04",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576234",
+      "activity": "The project will deliver a new 2-storey Tea Tree Gully Sporting Club Room. This will include four unisex changerooms, an umpire room, medical rooms and an undercover viewing area.",
+      "value": 2000000.0,
+      "publish_date": "2026-08-05",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576106",
+      "activity": "The project will deliver upgrades to the Monash Aquatic and Recreation Centre, including construction of a fit-for-purpose outdoor change pavilion, accessible connecting pathways, and supporting infrastructure upgrades for future expansion.",
+      "value": 1500000.0,
+      "publish_date": "2026-08-04",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576237",
+      "activity": "The project will deliver the design and upgrade of the Ellenbrook Open Space North Building Pavilion. The project includes construction of a new function building, and upgrades to the existing pavilion.",
+      "value": 2500000.0,
+      "publish_date": "2026-08-05",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA575784",
+      "activity": "The project will deliver the design and construction of a secure perimeter fence along the Noella Place frontage of Halekulani Oval, including the installation of controlled inclusive access gates.",
+      "value": 35000.0,
+      "publish_date": "2026-08-04",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576103",
+      "activity": "The project will deliver upgraded sports field lighting at Water Board Oval in Blackalls Park, NSW.",
+      "value": 880000.0,
+      "publish_date": "2026-08-04",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576101",
+      "activity": "The project will deliver upgrade drainage at the Hunter Barnett Fields in Windale, NSW.",
+      "value": 220000.0,
+      "publish_date": "2026-08-04",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576105",
+      "activity": "The project will deliver the upgrades at Whittlesea Showgrounds by replacing existing light towers and installing new sports field lighting at the oval and resurfacing the netball courts in the Chandler Pavilion.",
+      "value": 185000.0,
+      "publish_date": "2026-08-04",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576100",
+      "activity": "The project will deliver the design and construction of in-ground and above-ground services infrastructure at Woody Point Foreshore.",
+      "value": 750000.0,
+      "publish_date": "2026-08-04",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA576104",
+      "activity": "The project will deliver the remaining design, and construction works for Stages 2a and 2c at the Belmont Sports Complex.",
+      "value": 4600000.0,
+      "publish_date": "2026-08-04",
+      "source_url": "https://www.grants.gov.au/Ga/Show/da8d32a2-c2ce-4ecd-8aac-b6e78e940196",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "NSW",
+      "delivery_postcode": "2280",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA576470",
+      "activity": "The project will deliver the redevelopment of the Girrawheen Hub, including construction of a new library, and a combined senior centre and community hub.",
+      "value": 5500000.0,
+      "publish_date": "2026-08-07",
+      "source_url": "https://www.grants.gov.au/Ga/Show/e88ceea7-cf60-47eb-974e-831987bab61f",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "WA",
+      "delivery_postcode": "6064",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA576098",
+      "activity": "The project will deliver the design and construction of the Canning Vale Sports Complex, including natural turf sporting fields, new clubroom and changeroom building, storage, lighting and carparking.",
+      "value": 10000000.0,
+      "publish_date": "2026-08-04",
+      "source_url": "https://www.grants.gov.au/Ga/Show/e9126e0f-dbe9-4596-b943-dcb789b3f20e",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "WA",
+      "delivery_postcode": "6155",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA576942",
+      "activity": "The project will deliver lighting upgrades at the John Balcomb Fields located in Dudley.",
+      "value": 420000.0,
+      "publish_date": "2026-08-13",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA578174",
+      "activity": "The project will deliver the redevelopment of Windsor Park with lighting over two new netball courts, new cricket nets, improvements to the main pavilion, vehicle and pedestrian access, open space and ancillary sporting infrastructure.",
+      "value": 4000000.0,
+      "publish_date": "2026-09-03",
+      "source_url": "https://www.grants.gov.au/Ga/Show/119f23ff-8203-4db3-988e-479fc25305a5",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "VIC",
+      "delivery_postcode": "3214",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA578169",
+      "activity": "The project will deliver the redevelopment of the Kogarah War Memorial Pool, commonly known as the Carss Park Pool. Works will include a new ancillary building, a 50m outdoor pool, and a 20m outdoor Learn to Swim pool.",
+      "value": 10000000.0,
+      "publish_date": "2026-09-02",
+      "source_url": "https://www.grants.gov.au/Ga/Show/35d105c0-aca8-47d8-878e-6ca8fed5df8c",
+      "go_id": "GO7867",
+      "program": "Major and Local Community Infrastructure Program",
+      "delivery_state": "NSW",
+      "delivery_postcode": "2221",
+      "selection_process": "Closed Non-Competitive"
+    },
+    {
+      "ga_id": "GA578171",
+      "activity": "The project will deliver new lighting over four tennis courts at Rathmines Tennis Courts.",
+      "value": 300000.0,
+      "publish_date": "2026-09-02",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA578785",
+      "activity": "The project will deliver flood lights at Jack Edwards Oval, Argenton, NSW",
+      "value": 275000.0,
+      "publish_date": "2026-09-04",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA578173",
+      "activity": "The project will upgrade the Queanbeyan Bowls Club through the installation of an all-weather canopy, security fencing and lighting, and improvements to concrete pathways, spectator seating and stormwater infrastructure.",
+      "value": 1600000.0,
+      "publish_date": "2026-09-03",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA578170",
+      "activity": "The project will deliver upgraded drainage to the sporting field at Bernie Goodwin Oval.",
+      "value": 300000.0,
+      "publish_date": "2026-09-02",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA578172",
+      "activity": "The project will deliver upgrades to the sports field lighting at Lyall Peacock Field in Toronto, NSW.",
+      "value": 340000.0,
+      "publish_date": "2026-09-03",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    },
+    {
+      "ga_id": "GA578885",
+      "activity": "The project will deliver new amenities at Greta Central Oval including change rooms, canteen, and first aid.",
+      "value": 2000000.0,
+      "publish_date": "2026-09-04",
+      "source_url": "https://www.grants.gov.au/Ga/List",
+      "go_id": "GO7867",
+      "program": null,
+      "delivery_state": null,
+      "delivery_postcode": null,
+      "selection_process": null
+    }
+  ],
+  "seats": [
+    {
+      "name": "Adelaide",
+      "state": "SA",
+      "party": "ALP",
+      "status": "S",
+      "margin": 11.91,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Aston",
+      "state": "VIC",
+      "party": "LP",
+      "status": "M",
+      "margin": 2.61,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Ballarat",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "S",
+      "margin": 12.98,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Banks",
+      "state": "NSW",
+      "party": "LP",
+      "status": "M",
+      "margin": 2.64,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Barker",
+      "state": "SA",
+      "party": "LP",
+      "status": "S",
+      "margin": 16.62,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Barton",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "S",
+      "margin": 11.99,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Bass",
+      "state": "TAS",
+      "party": "LP",
+      "status": "M",
+      "margin": 1.43,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Bean",
+      "state": "ACT",
+      "party": "ALP",
+      "status": "S",
+      "margin": 12.95,
+      "page": 12,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Bendigo",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "S",
+      "margin": 11.21,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Bennelong",
+      "state": "NSW",
+      "party": "LP",
+      "status": "M",
+      "margin": 0.04,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Berowra",
+      "state": "NSW",
+      "party": "LP",
+      "status": "FS",
+      "margin": 7.56,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Blair",
+      "state": "QLD",
+      "party": "ALP",
+      "status": "M",
+      "margin": 5.23,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Blaxland",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "S",
+      "margin": 13.04,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Bonner",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "M",
+      "margin": 3.41,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Boothby",
+      "state": "SA",
+      "party": "ALP",
+      "status": "M",
+      "margin": 3.28,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Bowman",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "M",
+      "margin": 5.51,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Braddon",
+      "state": "TAS",
+      "party": "LP",
+      "status": "FS",
+      "margin": 8.03,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Bradfield",
+      "state": "NSW",
+      "party": "LP",
+      "status": "M",
+      "margin": 3.4,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Brand",
+      "state": "WA",
+      "party": "ALP",
+      "status": "S",
+      "margin": 17.07,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Brisbane",
+      "state": "QLD",
+      "party": "GRN",
+      "status": "M",
+      "margin": 3.73,
+      "page": 14,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Bruce",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "M",
+      "margin": 5.31,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Bullwinkel",
+      "state": "WA",
+      "party": "ALP",
+      "status": "M",
+      "margin": 3.35,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Burt",
+      "state": "WA",
+      "party": "ALP",
+      "status": "S",
+      "margin": 13.29,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Calare",
+      "state": "NSW",
+      "party": "NP",
+      "status": "FS",
+      "margin": 9.68,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Calwell",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "S",
+      "margin": 12.39,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Canberra",
+      "state": "ACT",
+      "party": "ALP",
+      "status": "S",
+      "margin": 12.2,
+      "page": 14,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Canning",
+      "state": "WA",
+      "party": "LP",
+      "status": "M",
+      "margin": 1.2,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Capricornia",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "FS",
+      "margin": 6.59,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Casey",
+      "state": "VIC",
+      "party": "LP",
+      "status": "M",
+      "margin": 1.43,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Chifley",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "S",
+      "margin": 13.65,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Chisholm",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "M",
+      "margin": 3.33,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Clark",
+      "state": "TAS",
+      "party": "IND",
+      "status": "S",
+      "margin": 20.82,
+      "page": 14,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Cook",
+      "state": "NSW",
+      "party": "LP",
+      "status": "S",
+      "margin": 11.62,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Cooper",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 8.92,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Corangamite",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 7.84,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Corio",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "S",
+      "margin": 12.49,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Cowan",
+      "state": "WA",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 9.94,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Cowper",
+      "state": "NSW",
+      "party": "NP",
+      "status": "M",
+      "margin": 2.4,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Cunningham",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "S",
+      "margin": 15.07,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Curtin",
+      "state": "WA",
+      "party": "IND",
+      "status": "M",
+      "margin": 1.32,
+      "page": 14,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Dawson",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "S",
+      "margin": 10.42,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Deakin",
+      "state": "VIC",
+      "party": "LP",
+      "status": "M",
+      "margin": 0.02,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Dickson",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "M",
+      "margin": 1.7,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Dobell",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 6.56,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Dunkley",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 6.77,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Durack",
+      "state": "WA",
+      "party": "LP",
+      "status": "M",
+      "margin": 4.66,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Eden-Monaro",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 6.08,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Fadden",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "S",
+      "margin": 10.63,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Fairfax",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "FS",
+      "margin": 8.95,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Farrer",
+      "state": "NSW",
+      "party": "LP",
+      "status": "S",
+      "margin": 16.35,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Fenner",
+      "state": "ACT",
+      "party": "ALP",
+      "status": "S",
+      "margin": 15.69,
+      "page": 12,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Fisher",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "FS",
+      "margin": 8.67,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Flinders",
+      "state": "VIC",
+      "party": "LP",
+      "status": "FS",
+      "margin": 6.16,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Flynn",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "M",
+      "margin": 3.82,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Forde",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "M",
+      "margin": 4.23,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Forrest",
+      "state": "WA",
+      "party": "LP",
+      "status": "M",
+      "margin": 4.19,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Fowler",
+      "state": "NSW",
+      "party": "IND",
+      "status": "M",
+      "margin": 1.8,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Franklin",
+      "state": "TAS",
+      "party": "ALP",
+      "status": "S",
+      "margin": 13.7,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Fraser",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "S",
+      "margin": 16.56,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Fremantle",
+      "state": "WA",
+      "party": "ALP",
+      "status": "S",
+      "margin": 16.93,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Gellibrand",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "S",
+      "margin": 11.2,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Gilmore",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "M",
+      "margin": 0.17,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Gippsland",
+      "state": "VIC",
+      "party": "NP",
+      "status": "S",
+      "margin": 20.57,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Goldstein",
+      "state": "VIC",
+      "party": "IND",
+      "status": "M",
+      "margin": 1.8,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Gorton",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 9.98,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Grayndler",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "S",
+      "margin": 13.97,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Greenway",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 7.94,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Grey",
+      "state": "SA",
+      "party": "LP",
+      "status": "S",
+      "margin": 10.07,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Griffith",
+      "state": "QLD",
+      "party": "GRN",
+      "status": "S",
+      "margin": 10.46,
+      "page": 14,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Groom",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "FS",
+      "margin": 6.89,
+      "page": 14,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Hasluck",
+      "state": "WA",
+      "party": "ALP",
+      "status": "S",
+      "margin": 10.04,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Hawke",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 7.62,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Herbert",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "S",
+      "margin": 11.77,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Hindmarsh",
+      "state": "SA",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 8.95,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Hinkler",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "S",
+      "margin": 10.07,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Holt",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 7.11,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Hotham",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "S",
+      "margin": 11.59,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Hughes",
+      "state": "NSW",
+      "party": "LP",
+      "status": "M",
+      "margin": 3.46,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Hume",
+      "state": "NSW",
+      "party": "LP",
+      "status": "FS",
+      "margin": 6.87,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Hunter",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "M",
+      "margin": 4.78,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Indi",
+      "state": "VIC",
+      "party": "IND",
+      "status": "FS",
+      "margin": 8.94,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Isaacs",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 9.51,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Jagajaga",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "S",
+      "margin": 12.21,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Kennedy",
+      "state": "QLD",
+      "party": "KAP",
+      "status": "S",
+      "margin": 13.1,
+      "page": 14,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Kingsford Smith",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "S",
+      "margin": 13.31,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Kingston",
+      "state": "SA",
+      "party": "ALP",
+      "status": "S",
+      "margin": 16.35,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Kooyong",
+      "state": "VIC",
+      "party": "IND",
+      "status": "M",
+      "margin": 2.52,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "La Trobe",
+      "state": "VIC",
+      "party": "LP",
+      "status": "FS",
+      "margin": 8.43,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Lalor",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "S",
+      "margin": 12.79,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Leichhardt",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "M",
+      "margin": 3.44,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Lilley",
+      "state": "QLD",
+      "party": "ALP",
+      "status": "S",
+      "margin": 10.54,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Lindsay",
+      "state": "NSW",
+      "party": "LP",
+      "status": "FS",
+      "margin": 6.11,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Lingiari",
+      "state": "NT",
+      "party": "ALP",
+      "status": "M",
+      "margin": 1.6,
+      "page": 12,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Longman",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "M",
+      "margin": 3.08,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Lyne",
+      "state": "NSW",
+      "party": "NP",
+      "status": "S",
+      "margin": 13.8,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Lyons",
+      "state": "TAS",
+      "party": "ALP",
+      "status": "M",
+      "margin": 0.92,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Macarthur",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 9.76,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Mackellar",
+      "state": "NSW",
+      "party": "IND",
+      "status": "M",
+      "margin": 1.77,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Macnamara",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "S",
+      "margin": 12.17,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Macquarie",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 6.33,
+      "page": 5,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Makin",
+      "state": "SA",
+      "party": "ALP",
+      "status": "S",
+      "margin": 10.8,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Mallee",
+      "state": "VIC",
+      "party": "NP",
+      "status": "S",
+      "margin": 18.99,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Maranoa",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "S",
+      "margin": 22.12,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Maribyrnong",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "S",
+      "margin": 13.03,
+      "page": 7,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Mayo",
+      "state": "SA",
+      "party": "CA",
+      "status": "S",
+      "margin": 12.26,
+      "page": 14,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "McEwen",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "M",
+      "margin": 3.82,
+      "page": 8,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "McMahon",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "S",
+      "margin": 10.48,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "McPherson",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "FS",
+      "margin": 9.34,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Melbourne",
+      "state": "VIC",
+      "party": "GRN",
+      "status": "M",
+      "margin": 5.58,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Menzies",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "M",
+      "margin": 0.42,
+      "page": 8,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Mitchell",
+      "state": "NSW",
+      "party": "LP",
+      "status": "S",
+      "margin": 10.49,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Monash",
+      "state": "VIC",
+      "party": "LP",
+      "status": "M",
+      "margin": 2.9,
+      "page": 8,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Moncrieff",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "S",
+      "margin": 11.19,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Moore",
+      "state": "WA",
+      "party": "LP",
+      "status": "M",
+      "margin": 0.91,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Moreton",
+      "state": "QLD",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 9.09,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "New England",
+      "state": "NSW",
+      "party": "NP",
+      "status": "S",
+      "margin": 15.21,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Newcastle",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "S",
+      "margin": 17.94,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Nicholls",
+      "state": "VIC",
+      "party": "NP",
+      "status": "M",
+      "margin": 2.32,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Oxley",
+      "state": "QLD",
+      "party": "ALP",
+      "status": "S",
+      "margin": 11.59,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "O’Connor",
+      "state": "WA",
+      "party": "LP",
+      "status": "FS",
+      "margin": 6.69,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Page",
+      "state": "NSW",
+      "party": "NP",
+      "status": "S",
+      "margin": 10.65,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Parkes",
+      "state": "NSW",
+      "party": "NP",
+      "status": "S",
+      "margin": 18.15,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Parramatta",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "M",
+      "margin": 3.72,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Paterson",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "M",
+      "margin": 2.6,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Pearce",
+      "state": "WA",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 8.84,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Perth",
+      "state": "WA",
+      "party": "ALP",
+      "status": "S",
+      "margin": 14.42,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Petrie",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "M",
+      "margin": 4.44,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Rankin",
+      "state": "QLD",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 9.09,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Reid",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "M",
+      "margin": 5.19,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Richmond",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 8.23,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Riverina",
+      "state": "NSW",
+      "party": "NP",
+      "status": "FS",
+      "margin": 9.71,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Robertson",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "M",
+      "margin": 2.23,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Ryan",
+      "state": "QLD",
+      "party": "GRN",
+      "status": "M",
+      "margin": 2.65,
+      "page": 14,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Scullin",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "S",
+      "margin": 15.43,
+      "page": 8,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Shortland",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 6.0,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Solomon",
+      "state": "NT",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 8.4,
+      "page": 12,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Spence",
+      "state": "SA",
+      "party": "ALP",
+      "status": "S",
+      "margin": 12.9,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Sturt",
+      "state": "SA",
+      "party": "LP",
+      "status": "M",
+      "margin": 0.45,
+      "page": 11,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Swan",
+      "state": "WA",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 9.43,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Sydney",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "S",
+      "margin": 16.22,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Tangney",
+      "state": "WA",
+      "party": "ALP",
+      "status": "M",
+      "margin": 2.85,
+      "page": 10,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Wannon",
+      "state": "VIC",
+      "party": "LP",
+      "status": "M",
+      "margin": 3.5,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Warringah",
+      "state": "NSW",
+      "party": "IND",
+      "status": "S",
+      "margin": 10.53,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Watson",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "S",
+      "margin": 15.16,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Wentworth",
+      "state": "NSW",
+      "party": "IND",
+      "status": "M",
+      "margin": 0.58,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Werriwa",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "M",
+      "margin": 5.34,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Whitlam",
+      "state": "NSW",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 8.31,
+      "page": 6,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Wide Bay",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "S",
+      "margin": 11.34,
+      "page": 9,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Wills",
+      "state": "VIC",
+      "party": "ALP",
+      "status": "FS",
+      "margin": 9.03,
+      "page": 13,
+      "baseline": "2025 notional"
+    },
+    {
+      "name": "Wright",
+      "state": "QLD",
+      "party": "LNP",
+      "status": "S",
+      "margin": 10.89,
+      "page": 9,
+      "baseline": "2025 notional"
+    }
+  ],
+  "cpi_comparison": [
+    {
+      "name": "Labor safe",
+      "actual": 125125027,
+      "expected": 137946289
+    },
+    {
+      "name": "Labor fairly safe",
+      "actual": 144931587,
+      "expected": 82022118
+    },
+    {
+      "name": "Marginal, Labor competitive",
+      "actual": 223128975,
+      "expected": 156587679
+    },
+    {
+      "name": "Marginal, Labor non-competitive",
+      "actual": 5230000,
+      "expected": 37282781
+    },
+    {
+      "name": "Other parties fairly safe",
+      "actual": 28276123,
+      "expected": 55924171
+    },
+    {
+      "name": "Other parties safe",
+      "actual": 32550000,
+      "expected": 89478674
+    }
+  ],
+  "comparison_provenance": {
+    "publisher": "Centre for Public Integrity",
+    "page": 11,
+    "table": 3,
+    "note": "Published comparison, not independently reproduced by Opax. Baseline is proportional to the number of seats. CPI uses notional 2025 boundaries, four by-election results and a Brisbane competitiveness exception."
+  }
+}

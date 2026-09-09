@@ -1,79 +1,106 @@
 {
-  "version": "2026-09-08",
-  "expected_resources": 618373,
+  "version": "2026-09-09",
+  "expected_resources": 620066,
   "expected_resources_breakdown": {
     "live_index_before_refresh": 617126,
     "removed_news_articles": -36,
     "new_nsw_ministerial_releases": 6,
     "new_prime_minister_statements": 1,
-    "previously_unindexed_bill_records": 1276
+    "previously_unindexed_bill_records": 1276,
+    "grants_seats_and_recorded_representation": 1451,
+    "other_verified_index_growth": 242
   },
   "collected_speeches": 595763,
   "sources": [
     {
       "name": "Federal Hansard: House of Representatives (zenodo)",
       "docs": 283020,
-      "coverage": "1998–2022"
+      "coverage": "1998\u20132022"
     },
     {
       "name": "NSW Parliament",
       "docs": 109393,
-      "coverage": "2015–2026"
+      "coverage": "2015\u20132026"
     },
     {
       "name": "Senate committee hearings",
       "docs": 72868,
-      "coverage": "2025–2026"
+      "coverage": "2025\u20132026"
     },
     {
       "name": "Victorian Parliament",
       "docs": 49567,
-      "coverage": "2018–2026"
+      "coverage": "2018\u20132026"
     },
     {
       "name": "SA Parliament",
       "docs": 37971,
-      "coverage": "2020–2024"
+      "coverage": "2020\u20132024"
     },
     {
       "name": "Federal Hansard: Senate + recent House (openaustralia)",
       "docs": 32981,
-      "coverage": "2006–2026"
+      "coverage": "2006\u20132026"
     },
     {
       "name": "QLD Parliament",
       "docs": 9790,
-      "coverage": "2024–2026"
+      "coverage": "2024\u20132026"
     },
     {
       "name": "Recorded divisions (TheyVoteForYou + state Hansard)",
       "docs": 13867,
-      "coverage": "1998–2026"
+      "coverage": "1998\u20132026"
     },
     {
       "name": "Prime Minister transcripts and releases (PM&C)",
       "docs": 614,
-      "coverage": "2025–2026"
+      "coverage": "2025\u20132026"
     },
     {
       "name": "NSW Government ministerial releases",
       "docs": 5150,
-      "coverage": "2024–2026"
+      "coverage": "2024\u20132026"
     },
     {
       "name": "AEC donations (27+ industries classified)",
       "docs": 199233,
-      "coverage": "1998–2026"
+      "coverage": "1998\u20132026"
+    },
+    {
+      "name": "MLCI departmental invitation records",
+      "docs": 227,
+      "coverage": "14 Nov 2025 snapshot"
+    },
+    {
+      "name": "MLCI GrantConnect award source records",
+      "docs": 89,
+      "coverage": "9 Sep 2026 snapshot"
+    },
+    {
+      "name": "AEC notional seat baselines",
+      "docs": 150,
+      "coverage": "Before the 2025 election"
+    },
+    {
+      "name": "Recorded parliamentary representation",
+      "docs": 983,
+      "coverage": "Historical roster; not current tenure"
+    },
+    {
+      "name": "Grant research notes and source totals",
+      "docs": 2,
+      "coverage": "2025\u20132026"
     }
   ],
-  "inclusion": "Speeches from 1993-03-13 (the election that seated the longest-serving current federal MP), at least 200 characters, deduplicated across overlapping sources, procedural rows removed (division roll-calls, chair interjections, day indexes). External statements require an official source URL, a valid date, an open licence, at least 200 characters and a unique body. News articles are excluded from ingestion and retrieval; headline links are external only.",
+  "inclusion": "Speeches from 1993-03-13 (the election that seated the longest-serving current federal MP), at least 200 characters, deduplicated across overlapping sources, procedural rows removed (division roll-calls, chair interjections, day indexes). External statements require an official source URL, a valid date, an open licence, at least 200 characters and a unique body. News articles are excluded from ingestion and retrieval; headline links are external only. Structured grant, election and roster records retain source provenance and snapshot dates; research notes are attributed summaries, not copies of full reports.",
   "models": {
     "embeddings": "multilingual-2024-05-06",
     "generation": "gemini-2.5-flash-lite"
   },
   "known_defects": [
     "openaustralia-derived texts: roughly a quarter contain missing-space concatenation artefacts ('toSenator'); verify wording against the official record before quoting.",
-    "Member biographical linkage is unreliable for 151 members (~35K speeches); OPAX makes no members-derived biographical claims.",
+    "Member biographical linkage is unreliable for 151 members (~35K speeches); Representation enrichment uses exact-name, jurisdiction and chamber agreement, not person ID alone; affiliations may be historical and roster service dates are not used.",
     "AEC donation disclosure: amounts under the indexed threshold are not reported; donation totals are a floor, not a ceiling.",
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
@@ -87,7 +114,26 @@
     "source_limitations": [
       "SA Hansard refresh blocked by source HTTP 403; stored coverage ends 2024-11-12.",
       "OpenAustralia has not yet supplied the 7-8 September sitting records; stored federal Hansard ends 2026-08-20."
-    ]
+    ],
+    "grants_research": {
+      "checked_at": "2026-09-09",
+      "read_back_verified": 1451,
+      "counts": {
+        "grant_invitation": 227,
+        "research_report": 2,
+        "election_baseline": 150,
+        "grant_award": 89,
+        "parliamentary_profile": 983
+      },
+      "cpi_content": "Short attributed research note and source link; full paper not copied",
+      "pending_enrichment": {
+        "project_locations": 226,
+        "invitation_award_matches": 89,
+        "baseline_reconciliation": 1,
+        "representation_reviews": 574
+      },
+      "verified_live_resources": 620066
+    }
   },
   "enrichment": {
     "generated_at": "2026-09-08T09:21:53.082961+00:00",

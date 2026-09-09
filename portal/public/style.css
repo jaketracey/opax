@@ -4845,3 +4845,47 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 
 /* Retrieved records can contain long source URLs; keep the report within its column. */
 #report-view .answer, #report-view .report-source-passage { overflow-wrap: anywhere; }
+
+.representation-note { display:block; color:var(--ink-soft); font-size:.78rem; line-height:1.5; margin-top:.4rem; }
+
+/* Source-based grants research shares the public report shell. */
+#report-research { max-width:68rem; margin-inline:auto; }
+.allocation-intro { max-width:48rem; margin-bottom:2rem; }
+.allocation-intro h1 { font-family:var(--serif); color:var(--navy); font-size:clamp(2rem,5vw,3.4rem); line-height:1.18; margin-bottom:1rem; }
+.allocation-section h2 { font-family:var(--serif); color:var(--navy); }
+.allocation-intro > p { font-size:1.15rem; line-height:1.65; }
+.allocation-source { display:grid; gap:.45rem; margin-top:1.4rem; color:var(--ink-soft); font-size:.9rem; }
+.allocation-summary { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); border-block:1px solid var(--line-strong); padding-block:1.5rem; gap:1.5rem; }
+.allocation-summary > div { display:grid; gap:.7rem; }
+.allocation-summary strong { color:var(--navy); font:700 clamp(2rem,5vw,3rem)/1.2 var(--serif); }
+.allocation-summary span,.allocation-note { color:var(--ink-soft); font-size:.9rem; line-height:1.6; }
+.allocation-note { max-width:48rem; margin-block:1rem 2.5rem; }
+.allocation-section { margin-block:3rem; }
+.allocation-section > h2 { margin-bottom:1.2rem; }
+.allocation-controls { display:flex; flex-wrap:wrap; align-items:end; gap:1rem; margin-block:1.5rem; }
+.allocation-controls label,.allocation-seat-picker { display:grid; gap:.5rem; font-weight:600; font-size:.9rem; min-width:0; }
+.allocation-controls select,.allocation-controls input,.allocation-seat-picker select { width:100%; min-height:48px; margin:0; }
+.allocation-search { flex:1; }
+.allocation-bars { display:grid; gap:1.3rem; max-width:52rem; }
+.allocation-bar-label { display:flex; justify-content:space-between; gap:1rem; margin-bottom:.55rem; }
+.allocation-track { position:relative; height:12px; background:var(--paper-sunken); border-radius:3px; }
+.allocation-track span { display:block; height:100%; background:var(--navy); border-radius:3px; }
+.allocation-track i { position:absolute; top:-5px; bottom:-5px; width:3px; background:var(--bronze); transform:translateX(-2px); }
+.allocation-bar-row small { display:block; margin-top:.65rem; color:var(--ink-soft); line-height:1.6; }
+#allocation-chart-note { margin-top:1.6rem; max-width:52rem; }
+.allocation-project { display:flex; gap:1rem; justify-content:space-between; padding-block:1.3rem; border-bottom:1px solid var(--line); }
+.allocation-project h3 { font:600 1rem/1.5 var(--sans); margin:0 0 .45rem; }
+.allocation-project p { margin:0; color:var(--ink-soft); font-size:.86rem; line-height:1.5; }
+.allocation-project > strong { color:var(--navy); white-space:nowrap; }
+#allocation-more { margin-top:1.2rem; }
+.allocation-seat-picker { max-width:28rem; margin-block:1.2rem; }
+.allocation-seat-facts { display:grid; gap:.6rem; padding:1.5rem; border-left:3px solid var(--bronze); background:var(--paper-sunken); }
+.allocation-method { border-top:1px solid var(--line); padding-block:1.5rem; max-width:54rem; line-height:1.7; }
+.allocation-method summary { cursor:pointer; font-weight:600; min-height:44px; }
+@media(max-width:600px) {
+  .allocation-summary { grid-template-columns:1fr; gap:1.4rem; }
+  .allocation-summary > div+div { padding-top:1.3rem; border-top:1px solid var(--line); }
+  .allocation-controls { display:grid; grid-template-columns:1fr; }
+  .allocation-project { flex-direction:column; gap:.6rem; }
+  .allocation-section { margin-block:2.25rem; }
+}
