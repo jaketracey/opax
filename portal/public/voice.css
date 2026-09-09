@@ -1,6 +1,7 @@
 /* The voice surface shares Opax's public-record typography and palette. */
 body.opax-voice-ready { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
-.opax-voice { position:fixed; z-index:45; right:max(20px, env(safe-area-inset-right, 0px)); bottom:max(18px, env(safe-area-inset-bottom, 0px)); color:var(--ink, #23271f); font:400 14px/1.55 var(--sans, "Public Sans", sans-serif); }
+/* Above the sticky masthead (50); native modal dialogs retain their top layer. */
+.opax-voice { position:fixed; z-index:70; right:max(20px, env(safe-area-inset-right, 0px)); bottom:max(18px, env(safe-area-inset-bottom, 0px)); color:var(--ink, #23271f); font:400 14px/1.55 var(--sans, "Public Sans", sans-serif); }
 .opax-voice *, .opax-voice *::before, .opax-voice *::after { box-sizing:border-box; }
 .opax-voice [hidden] { display:none !important; }
 .opax-voice button, .opax-voice a { -webkit-tap-highlight-color:transparent; }
@@ -37,7 +38,7 @@ body.opax-voice-ready { padding-bottom: calc(76px + env(safe-area-inset-bottom, 
 .opax-voice-turn p { margin:0; white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; line-height:1.6; }
 .opax-voice a { color:var(--bronze-ink, #8a5a12); text-decoration:underline; text-underline-offset:3px; }
 .opax-voice-sources { padding:0 0 5px; margin:0; }
-.opax-voice-sources h3 { margin:0 0 7px; font:600 12px/1.5 var(--sans, sans-serif); color:var(--navy, #142a43); }
+.opax-voice-sources summary { padding:8px 0; min-height:44px; cursor:pointer; font:600 12px/1.5 var(--sans, sans-serif); color:var(--navy, #142a43); }
 .opax-voice-sources ol { margin:0 0 9px; padding-left:20px; }
 .opax-voice-sources li { font-size:12px; line-height:1.6; padding-bottom:6px; overflow-wrap:anywhere; }
 .opax-voice-controls { display:flex; align-items:center; gap:9px; padding:10px 23px 0; flex:none; }

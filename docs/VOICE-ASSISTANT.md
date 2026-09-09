@@ -44,3 +44,9 @@ Official references: [JavaScript SDK](https://elevenlabs.io/docs/eleven-agents/l
 ## Operator-approved unlimited calls
 
 `voice_access` contains only explicit member entitlements. Setting `unlimited=1` permits a fresh reservation after a call ends; it does not extend a running call, clear usage history, waive authentication, or bypass monthly budgets and concurrency limits. There is no public API to grant this access. Provision an exact verified member ID through an operator database change. Set `unlimited=0` to restore the standard lifetime allowance. Apply migration 0004 before deploying code that reads this table.
+
+## Receipt questions and panel layering
+
+The panel sits above the sticky masthead, with the close and call controls kept inside the viewport. Supporting sources are collapsed by default so the conversation remains prominent. Responsive checks include an overlapping sticky header and expanded evidence.
+
+For monetary questions with a recognised donor, party or industry, `search_records` (all/receipt kinds) and `find_connections` can return a computed receipt answer directly from the published money graph. They sum donor-to-party edges once, never node totals or grant/contract flows. Explicit year windows sum dated cells and exclude undated receipts; relative periods require an explicit window. Results contain party subtotals, the source period, methodology and a filtered map link. The result is the published map selection, not an exhaustive industry total or money paid to government or individual MPs. Explicit speech and grant searches retain their own retrieval paths. No provider prompt, voice or spending limits are changed by this refinement.

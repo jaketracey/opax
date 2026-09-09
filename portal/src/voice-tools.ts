@@ -1,5 +1,6 @@
 import {CommunityError, text} from './community-core'
 import {CATALOG_KINDS} from './catalog-search'
+import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptJurisdiction} from './voice-money'
 
 type Data = Record<string, unknown>
 export type PublicReader = (path: string) => Promise<Response>
@@ -70,10 +71,24 @@ function compact(value: unknown, budget = {left: 15_000}, depth = 0): unknown {
 export async function runVoiceTool(name: string, args: Data, env: Env, readPublic: PublicReader): Promise<Data> {
   const origin = env.COMMUNITY_ORIGIN
   const asset = async (path: string, limit: number) => boundedJson(await env.ASSETS.fetch(new Request(origin + path)), limit)
+  const receipts = async (query:string) => {
+    if(/\b(?:grants?|contracts?|expenditure|expenses?|government spending|public funding)\b/i.test(query)) return null
+    const jurisdiction=receiptJurisdiction(query)
+    if(!jurisdiction) return null
+    const file=jurisdiction==='federal'?'money.json':`money.${jurisdiction}.json`
+    const graph=await asset('/graph/'+file,2_000_000)
+    if(!isReceiptGraph(graph)) return null
+    const found=receiptAnswer(graph,query,jurisdiction,origin)
+    return found ? {source_notice:evidenceNotice, sources:found.sources, data:compact(found)} : null
+  }
   let data: Data, url: string
   if (name === 'search_records') {
     const query = text(args.query, 2, 300, 'Search'), kind = args.kind ?? 'all'
     if (typeof kind !== 'string' || (!['all','speech','press_release','division','legal'].includes(kind) && !CATALOG_KINDS.has(kind))) throw new CommunityError(400, 'Choose a supported record kind.')
+    if(kind==='receipt'||(kind==='all'&&moneyQuestion(query))) {
+      const found=await receipts(query)
+      if(found) return found
+    }
     const params = new URLSearchParams({q: query, kind, per: '6', page: '1'})
     data = await boundedJson(await readPublic('/api/search-all?' + params))
     data.results = rows(data, 'results').slice(0, 6).map(row => ({...row, ...(/^catalog-\d+$/.test(String(row.slug)) && /^[a-f0-9]{16}$/.test(String(data.index_version)) ? {slug:String(row.slug).replace('catalog-', 'catalog-' + data.index_version + '-')} : {}), opax_url: safeLink(origin, row)}))
@@ -98,6 +113,8 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
     }
   } else if (name === 'find_connections') {
     const query = text(args.query, 2, 120, 'Search').toLowerCase()
+    const found=await receipts(query)
+    if(found) return found
     const index = await asset('/evidence/index.json', 8_000_000)
     url = origin + '/connections'
     data = {coverage: index.meta, connections: rows(index, 'entities').filter(e => typeof e.name === 'string' && e.name.toLowerCase().includes(query)).slice(0, 10).map(e => ({...e, opax_url: url + '?entity=' + encodeURIComponent(String(e.id))}))}

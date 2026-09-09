@@ -133,9 +133,10 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
   transcript.setAttribute('aria-relevant', 'additions text');
   transcript.tabIndex = 0;
   transcript.hidden = true;
-  const sourceSection = element('section', 'opax-voice-sources');
+  const sourceSection = element('details', 'opax-voice-sources');
   sourceSection.hidden = true;
-  sourceSection.append(element('h3', '', 'From the record'));
+  const sourceHeading = element('summary', '', 'Sources');
+  sourceSection.append(sourceHeading);
   const sourceList = element('ol');
   sourceSection.append(sourceList);
   body.append(introduction, activity, allowance, notice, transcript, sourceSection);
@@ -253,6 +254,7 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
     const href = sourceUrl(source.href || source.destination || source.url);
     if (!href || sources.has(href) || sources.size >= 12) return;
     sources.add(href);
+    sourceHeading.textContent = `Sources (${sources.size})`;
     const li = element('li');
     const link = element('a', '', String(source.title || source.label || 'Open the source record').slice(0, 220));
     link.href = href;
@@ -315,6 +317,7 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
     ++statusGeneration;
     loading = false;
     messages.clear(); sources.clear();
+    sourceSection.open = false;
     transcript.replaceChildren(); sourceList.replaceChildren();
     transcript.hidden = true; sourceSection.hidden = true; introduction.hidden = false;
     showNotice('');

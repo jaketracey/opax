@@ -1,0 +1,98 @@
+type Node = { id:string; label:string; kind:string; industry?:string; group?:string; aliases?:string[] }
+type Edge = { source:string; target:string; total:number; count:number; firstYear?:number; lastYear?:number; byYear?:Record<string,number[]> }
+export type ReceiptGraph = { meta:Record<string,unknown>; nodes:Node[]; edges:Edge[] }
+export function isReceiptGraph(data:Record<string,unknown>): data is Record<string,unknown>&ReceiptGraph {
+  return !!data.meta&&typeof data.meta==='object'&&Array.isArray(data.nodes)&&Array.isArray(data.edges)
+    &&data.nodes.every(n=>n&&typeof n==='object'&&typeof n.id==='string'&&typeof n.label==='string'&&typeof n.kind==='string')
+    &&data.edges.every(e=>e&&typeof e==='object'&&typeof e.source==='string'&&typeof e.target==='string'&&typeof e.total==='number'&&typeof e.count==='number')
+}
+const normal = (s:string) => s.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()
+const aliases:Record<string,string[]> = {
+  gambling:['gambling','wagering','betting','casino','casinos','pokies','poker machines'],
+  property:['property','real estate','property developers'], finance:['finance','banking','banks'],
+  fossil_fuels:['fossil fuels','coal','oil and gas','energy'], mining:['mining'],
+  unions:['unions','trade unions'], defence:['defence','defense'], health:['health','healthcare'],
+  pharmacy:['pharmacy','pharmaceutical','pharma'], tech:['technology','tech'], media:['media'],
+  agriculture:['agriculture','agricultural','farming'], hospitality:['hospitality','hotels'],
+}
+const scaffolding = new Set('how much how many money political donations donation funding funded fund funds receipts receipt gave given give has have did does do from to the a an of for in on by and or all total totals industry industries sector government parties party over years year between since before after flowed flow show me please federal australian australia queensland qld victoria vic tasmania tas'.split(' '))
+const contains = (q:string, phrase:string) => (' '+q+' ').includes(' '+normal(phrase)+' ')
+export const moneyQuestion = (q:string) => /\b(?:money|donat\w*|receipts?|funding|funded|contributions?)\b/i.test(q)
+export function receiptJurisdiction(query:string): string | null {
+  const q=normal(query)
+  const matched=[['qld','queensland'],['vic','victoria'],['tas','tasmania'],['nsw','new south wales'],['wa','western australia'],['sa','south australia'],['nt','northern territory'],['act','australian capital territory']].filter(names=>names.some(n=>contains(q,n)))
+  if(matched.length>1 || (matched.length && /\bfederal\b/.test(q))) return null
+  const jur=matched[0]?.[0] || 'federal'
+  return ['federal','qld','vic','tas'].includes(jur) ? jur : null
+}
+
+/** Sum only donor-to-party receipt edges; node totals and public-money flows never enter the sum. */
+export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:string, origin:string) {
+  if(!Array.isArray(graph.nodes)||!Array.isArray(graph.edges)) return null
+  const q=normal(query), nodes=new Map(graph.nodes.map(n=>[n.id,n]))
+  let industries=[...new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.industry).filter((v):v is string=>!!v))].filter(ind=>(aliases[ind]||[ind.replaceAll('_',' ')]).some(term=>contains(q,term)))
+  const words=q.split(' ').filter(w=>!scaffolding.has(w)&&!/^\d+$/.test(w))
+  const nameMatches=(n:Node) => [n.label,...(n.aliases||[])].some(label=>contains(q,label) || (words.length>0 && words.every(w=>normal(label).split(' ').includes(w))))
+  const exactDonors=graph.nodes.filter(n=>n.kind==='donor'&&[n.label,...(n.aliases||[])].some(label=>contains(q,label)))
+  if(exactDonors.length) industries=[]
+  const donors=exactDonors.length?exactDonors:graph.nodes.filter(n=>n.kind==='donor' && (industries.length ? industries.includes(n.industry||'') : nameMatches(n)))
+  const lnp=/\bliberal national party\b|\blnp\b/.test(q)
+  const parties=graph.nodes.filter(n=>n.kind==='party' && (lnp?['LNP','Liberal National Party'].includes(n.label):(nameMatches(n) || (n.label==='Labor' && /\balp\b/.test(q)) || (n.label==='Nationals' && /\bnational party\b/.test(q)))))
+  const all=/\b(?:all|total) (?:political )?(?:receipts|donations|party funding)\b/.test(q)
+  if(!donors.length&&!parties.length&&!all) return null
+  // Ambiguous relative periods cannot silently become lifetime totals.
+  if(/\b(?:last|past|recent|latest|this year|last year|decade)\b/.test(q)) return {needs_period:true,answer:'Choose the financial years for this comparison so I can give the right subtotal.',sources:[],jurisdiction}
+  const years=[...query.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>Number(m[0]))
+  let from:number|undefined,to:number|undefined
+  if(years.length>2) return {needs_period:true,answer:'Please choose one start and end financial year.',sources:[],jurisdiction}
+  if(years.length===2) { from=Math.min(...years);to=Math.max(...years) }
+  if(years.length===1) {
+    if(/\b(?:since|from|after)\b/.test(q)) from=years[0]+(/\bafter\b/.test(q)?1:0)
+    else if(/\b(?:before|until|through)\b/.test(q)) to=years[0]-(/\bbefore\b/.test(q)?1:0)
+    else from=to=years[0]
+  }
+  const donorIds=new Set(donors.map(n=>n.id)),partyIds=new Set(parties.map(n=>n.id))
+  const totals=new Map<string,{name:string,total_aud:number,receipts:number}>()
+  let cents=0,count=0,first=Infinity,last=-Infinity,matching=0
+  for(const edge of graph.edges) {
+    const donor=nodes.get(edge.source),party=nodes.get(edge.target)
+    if(donor?.kind!=='donor'||party?.kind!=='party'||(donors.length&&!donorIds.has(donor.id))||(parties.length&&!partyIds.has(party.id))) continue
+    // A named industry with no visible donors must never select every industry.
+    if(industries.length&&!donors.length) continue
+    let amount=0,receipts=0
+    if(from!==undefined||to!==undefined) {
+      for(const [year,value] of Object.entries(edge.byYear||{})) {
+        const y=Number(year);if(y<(from??0)||y>(to??9999)||!Number.isFinite(value[0])||!Number.isFinite(value[1]))continue
+        amount+=Math.round(value[0]*100);receipts+=value[1];first=Math.min(first,y);last=Math.max(last,y)
+      }
+    } else {
+      if(!Number.isFinite(edge.total)||!Number.isFinite(edge.count))continue
+      amount=Math.round(edge.total*100);receipts=edge.count
+      if(Number.isFinite(edge.firstYear))first=Math.min(first,edge.firstYear!)
+      if(Number.isFinite(edge.lastYear))last=Math.max(last,edge.lastYear!)
+    }
+    if(!receipts&&!amount)continue
+    matching++;cents+=amount;count+=receipts
+    const previous=totals.get(party.id)||{name:party.label,total_aud:0,receipts:0}
+    previous.total_aud+=amount/100;previous.receipts+=receipts;totals.set(party.id,previous)
+  }
+  const params=new URLSearchParams({jur:jurisdiction})
+  if(industries.length===1)params.set('industry',donors[0]?.group||industries[0])
+  if(parties.length===1)params.set('party',parties[0].label)
+  if(donors.length===1&&!industries.length)params.set('focus',donors[0].id)
+  if(from!==undefined)params.set('from',String(from))
+  if(to!==undefined)params.set('to',String(to))
+  const url=origin+'/money?'+params
+  const subject=industries.length?industries.map(i=>i.replaceAll('_',' ')).join(' and '):donors.length?donors.map(n=>n.label).slice(0,3).join(', '):parties.map(n=>n.label).join(', ')||'all donors shown'
+  const period=Number.isFinite(first)?`${first}–${String(first+1).slice(-2)} to ${last}–${String(last+1).slice(-2)}`:null
+  const amount=new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(cents/100)
+  return {
+    answer:matching?`The ${jurisdiction} records shown on Opax list ${amount} in disclosed party receipts for ${subject}, across ${count} receipts${period?' in '+period:''}. This is the published map selection, not an exhaustive industry total.`:'No matching receipts are shown in this selection and period. This does not establish that no funding occurred.',
+    total_aud:cents/100,receipts:count,period,requested_years:{from:from??null,to:to??null},jurisdiction,subject,
+    by_party:[...totals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
+    scope:'Only donor-to-party receipts shown on the published Opax map; excludes off-map donors and public money. Do not present as all industry funding, payments to government, or personal payments to MPs.',
+    period_note:'Years use the first year of a financial year; election returns may use the polling year. Undated receipts are excluded when a year filter is requested. Dollar amounts are nominal, not inflation-adjusted.',
+    coverage:graph.meta.coverage,methodology:graph.meta.methodology,generated:graph.meta.generated,
+    sources:[{title:`${subject}: disclosed party receipts`,url}],
+  }
+}
