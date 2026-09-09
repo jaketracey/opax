@@ -27,13 +27,16 @@ def records(data, directory=None):
           'The study examines MLCI invitations against pre-election seat competitiveness. Its Table 3 reports '
           'AUD 223,128,975 for marginal seats where Labor was competitive, against AUD 156,587,679 under '
           'a seat-count proportional baseline. These are the Centre’s findings, not an independent Opax replication or a finding about individual project merit.')
-    yield resource('research-cpi-mlci-2026','Public money, political advantage? — research note',text,data['sources']['cpi_landing'],'2026-09-08','research_report','centre_for_public_integrity',{'record_type':'Attributed research note','full_report_url':data['sources']['cpi']})
+    text+=' Full Table 3 comparison (invitation value; proportional baseline): '+ '; '.join(f"{r['name']}: AUD {r['actual']:,}; AUD {r['expected']:,}" for r in data['cpi_comparison'])+'.'
+    yield resource('research-cpi-mlci-2026','Public money, political advantage? — research note',text,data['sources']['cpi_landing'],'2026-09-08','research_report','centre_for_public_integrity',{'record_type':'Attributed research note','full_report_url':data['sources']['cpi'],'comparison':data['cpi_comparison'],'provenance':data['comparison_provenance']})
     active=[p for p in data['projects'] if p['status']!='Withdrawn']
     text=(f"Major and Local Community Infrastructure Program (MLCIP): the departmental list dated {data['invitation_snapshot']} has {len(data['projects'])} invitation projects. "
           f"Excluding one withdrawn proposal leaves {len(active)} active invitations totalling AUD {sum(p['value'] for p in active):,}. "
           f"Separately, Opax's GrantConnect snapshot at {data['as_of']} contains {len(data['awards'])} published program awards totalling AUD {sum(p['value'] for p in data['awards']):,}. "
           "Invitations, awards and payments are different stages; do not add these totals together. Project-level electorate matches have not yet been verified; the CPI seat comparison is an attributed external analysis.")
-    yield resource('research-mlci-program-2026','MLCI program — invitation and award coverage',text,data['sources']['department'],data['invitation_snapshot'],'research_report','departmental_grants_list',{'record_type':'Derived source totals','report_url':'https://opax.com.au/reports/grants-allocation'})
+    state_totals={state:sum(p['value'] for p in active if p['state']==state) for state in sorted({p['state'] for p in active})}
+    text+=' Active invitation totals by state, calculated by Opax from this list: '+ '; '.join(f'{state}: AUD {value:,}' for state,value in state_totals.items())+'.'
+    yield resource('research-mlci-program-2026','MLCI program — invitation and award coverage',text,data['sources']['department'],data['invitation_snapshot'],'research_report','departmental_grants_list',{'record_type':'Derived source totals','invitation_totals_by_state':state_totals,'report_url':'https://opax.com.au/reports/grants-allocation'})
     for s in data['seats']:
         status={'M':'Marginal','FS':'Fairly safe','S':'Safe'}[s['status']]
         text=(f"{s['name']}, {s['state']}: AEC notional seat baseline before the 2025 federal election. "
@@ -45,12 +48,13 @@ def records(data, directory=None):
     for a in data['awards']:
         text=(f"{a['ga_id']}: {a['activity']}. Major and Local Community Infrastructure Program. "
               f"Published grant award value: AUD {a['value']:,}. Publication date: {a['publish_date']}. "
-              f"Recorded delivery state: {a.get('delivery_state') or 'not recorded'}. An award is not a payment. "
+              f"Grant opportunity: {a['go_id']}. Recorded selection process: {a.get('selection_process') or 'not recorded'}. "
+              f"Recorded delivery state: {a.get('delivery_state') or 'not recorded'}. Recorded delivery postcode: {a.get('delivery_postcode') or 'not recorded'}. An award is not a payment. "
               "This record has not been matched to a specific invitation or electorate; do not infer a project site from a recipient address.")
-        yield resource('mlci-award-'+a['ga_id'].lower(),a['activity']+' — '+a['ga_id'],text,a['source_url'],a['publish_date'],'grant_award','grantconnect',{'stage':'award','record_id':a['ga_id'],'value_aud':a['value'],'delivery_state':a.get('delivery_state')})
+        yield resource('mlci-award-'+a['ga_id'].lower(),a['activity']+' — '+a['ga_id'],text,a['source_url'],a['publish_date'],'grant_award','grantconnect',{'stage':'award','record_id':a['ga_id'],'value_aud':a['value'],'delivery_state':a.get('delivery_state'),'source_fields':a})
     for p in (directory or {}).get('people',[]):
         if not p.get('representation'):continue
-        facts='; '.join(f"{r['jurisdiction']} / {r['chamber']}: {r['electorate']}" for r in p['representation'])
+        facts='; '.join(f"{r['jurisdiction']} / {r['chamber']}: {r['electorate']}"+(f", {r['state']}" if r.get('state') and r['jurisdiction']=='federal' and r['chamber']=='representatives' else '') for r in p['representation'])
         text=(f"{p['name']} — recorded parliamentary representation in Opax's roster: {facts}. "
               "Matched by exact full name, compatible jurisdiction and chamber, not person ID alone. "
               "These are recorded affiliations and may include past seats; they do not establish current tenure, service dates or the electorate at the time of a particular speech.")
@@ -66,8 +70,12 @@ def resource(slug,title,text,url,date,kind,source,metadata):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--data',type=Path,required=True)
-    p.add_argument('--receipts',type=Path,required=True);p.add_argument('--directory',type=Path);p.add_argument('--workers',type=int,default=4);p.add_argument('--write',action='store_true');a=p.parse_args()
+    p.add_argument('--receipts',type=Path,required=True);p.add_argument('--directory',type=Path);p.add_argument('--workers',type=int,default=4);p.add_argument('--write',action='store_true')
+    p.add_argument('--kind',choices=['grant_invitation','grant_award','election_baseline','parliamentary_profile','research_report'])
+    p.add_argument('--update-owned',action='store_true',help='Update text/metadata only after confirming this publisher owns the source')
+    a=p.parse_args()
     rows=list(records(json.loads(a.data.read_text()),json.loads(a.directory.read_text()) if a.directory else None))
+    if a.kind:rows=[r for r in rows if {'labelset':'kind','label':a.kind} in r['usermetadata']['classifications']]
     if not a.write:print(json.dumps({'records':len(rows),'mode':'dry run'}));return
     from parli.arag import AragConfig,AragError,KbClient
     kb=KbClient(AragConfig.from_env());a.receipts.parent.mkdir(parents=True,exist_ok=True)
@@ -77,7 +85,7 @@ def main():
         try:kb.create_resource(row)
         except AragError as e:
             if e.status!=409:raise
-        current=kb.get_resource_by_slug(row['slug'],show='origin');rid=current['id']
+        current=kb.get_resource_by_slug(row['slug'],show='origin&show=extra');rid=current['id']
         if current.get('origin',{}).get('source_id') != row['origin']['source_id']:
             raise RuntimeError('Source identity mismatch: '+row['slug'])
         if current.get('origin',{}).get('url') != row['origin']['url']:
@@ -85,6 +93,11 @@ def main():
             if kb.get_resource_by_slug(row['slug'],show='origin').get('origin',{}).get('url') != row['origin']['url']:
                 raise RuntimeError('Source URL read-back mismatch: '+row['slug'])
         live=kb.get_resource_text(rid,'t-body')
+        if a.update_owned and (live.get('value',{}).get('body') != row['texts']['t-body']['body'] or current.get('extra') != row['extra']):
+            kb.patch_resource_by_slug(row['slug'],{'texts':row['texts'],'extra':row['extra']})
+            live=kb.get_resource_text(rid,'t-body')
+            if kb.get_resource_by_slug(row['slug'],show='extra').get('extra') != row['extra']:
+                raise RuntimeError('Metadata read-back mismatch: '+row['slug'])
         if live.get('value',{}).get('body')!=row['texts']['t-body']['body']:raise RuntimeError('Read-back mismatch: '+row['slug'])
         time.sleep(.3)
         return row['slug'],rid,'verified',time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())
