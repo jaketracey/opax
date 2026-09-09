@@ -5022,6 +5022,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .allocation-intro > p { font-size:.9rem; line-height:1.55; }
   .allocation-stage-note { font-size:.8rem; margin-bottom:var(--space-4); }
 }
+@media(pointer:coarse) { #allocation-move { display:block; } }
 @media(prefers-reduced-motion:reduce) { #allocation-map .leaflet-zoom-animated { transition:none!important; } }
 
 /* Electorate reference directory and timeline. */
