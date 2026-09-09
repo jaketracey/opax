@@ -26,4 +26,4 @@ export async function member(req:Request,env:Env):Promise<Member|null>{
 }
 export async function requireMember(req:Request,env:Env){const m=await member(req,env);if(!m)throw new CommunityError(401,'Sign in to continue.');return m}
 export function publicMember(m:Member){return {id:m.id,name:m.display_name||'Community member',bio:m.bio,joined_at:m.created_at}}
-export function sourcePath(value:unknown){if(value==null||value==='')return null;const path=text(value,1,600,'Record link');if(!/^\/(?:doc|subject|search|money|bills?|reports|connections)(?:[/?#]|$)/.test(path)||/[\\\u0000-\u0020]/.test(path))throw new CommunityError(400,'Use a link to a record or page on Opax.');return path}
+export function sourcePath(value:unknown){if(value==null||value==='')return null;const path=text(value,1,600,'Record link');if(!/^\/(?:doc|subject|search|money|bills?|reports|connections|explore|discover|declared)(?:[/?#]|$)/.test(path)||/[\\\u0000-\u0020]/.test(path))throw new CommunityError(400,'Use a link to a record or page on Opax.');return path}

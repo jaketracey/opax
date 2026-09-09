@@ -10,7 +10,7 @@ const folder=mkdtempSync(join(tmpdir(),'opax-community-test-'));
 await build({entryPoints:[new URL('../src/community.ts',import.meta.url).pathname,new URL('../src/community-mcp.ts',import.meta.url).pathname,new URL('../src/community-core.ts',import.meta.url).pathname],outdir:folder,bundle:true,platform:'node',format:'esm',packages:'bundle'});
 const {communityRoute}=await import(pathToFileURL(join(folder,'community.js')));
 const {communityMcp}=await import(pathToFileURL(join(folder,'community-mcp.js')));
-const {digest}=await import(pathToFileURL(join(folder,'community-core.js')));
+const {digest,sourcePath}=await import(pathToFileURL(join(folder,'community-core.js')));
 function fixture(){const db=new DatabaseSync(':memory:');db.exec(readFileSync(new URL('../migrations/0001_community.sql',import.meta.url),'utf8'));db.exec(readFileSync(new URL('../migrations/0002_free_community.sql',import.meta.url),'utf8'));const outbox=[];const statement=(sql,args=[])=>({bind(...values){return statement(sql,values)},async first(){return db.prepare(sql).get(...args)||null},async all(){return {results:db.prepare(sql).all(...args)}},async run(){const result=db.prepare(sql).run(...args);return {success:true,meta:{changes:Number(result.changes)}}}});const env={COMMUNITY_DB:{prepare:statement,async batch(stmts){db.exec('BEGIN');try{const results=[];for(const stmt of stmts)results.push(await stmt.run());db.exec('COMMIT');return results}catch(e){db.exec('ROLLBACK');throw e}}},COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_EMAIL_FROM:'hello@login.opax.test',COMMUNITY_EMAIL:{async send(mail){outbox.push(mail);return {messageId:'test'}}},ASSETS:{async fetch(){return Response.json({entities:[],sources:[]})}}};
 const request=(path,method='GET',data,cookie='',headers={})=>new Request('https://opax.test/api/community/'+path,{method,headers:{origin:'https://opax.test',...(data?{'content-type':'application/json'}:{}),...(cookie?{cookie}:{}),...headers},body:data?JSON.stringify(data):undefined});
 const call=(...args)=>communityRoute(request(...args),env);
@@ -25,6 +25,36 @@ test('logging out on all devices revokes every session',async()=>{const f=fixtur
 test('private reading lists stay private and are owner controlled',async()=>{const f=fixture(),a=await f.login(),b=await f.login('second@example.com');const created=await f.call('lists','POST',{title:'Housing records'},a.cookie),{id}=await created.json();assert.equal(created.status,201);assert.equal((await f.call('lists/'+id)).status,404);assert.equal((await f.call('lists/'+id,'GET',undefined,b.cookie)).status,404);assert.equal((await f.call('lists/'+id,'PATCH',{title:'Hijacked',public:true},b.cookie)).status,404);assert.equal((await f.call('lists/'+id+'/items','POST',{title:'Fake',path:'//evil.test/x'},a.cookie)).status,400);assert.equal((await f.call('lists/'+id+'/items','POST',{title:'Speech',path:'/doc/speech-123'},a.cookie)).status,201);await f.call('lists/'+id,'PATCH',{title:'Housing records',public:true},a.cookie);assert.equal((await f.call('lists/'+id)).status,200);await f.call('lists/'+id,'DELETE',undefined,a.cookie);assert.equal(f.db.prepare('SELECT count(*) n FROM reading_list_items').get().n,0);f.db.close()});
 test('public profiles do not expose email addresses or billing IDs',async()=>{const f=fixture(),a=await f.login();const payload=await (await f.call('members/'+a.member.id)).json();assert.equal(payload.member.email,undefined);assert.equal(payload.member.stripe_customer,undefined);f.db.close()});
 test('discussions require a signed-in profile and support report/removal',async()=>{const f=fixture(),a=await f.login(),b=await f.login('b@example.com');const data={title:'A useful question',body:'What does this sourced record show?',source_path:'/doc/speech-123'};assert.equal((await f.call('threads','POST',data)).status,401);assert.equal((await f.call('threads','POST',data,a.cookie)).status,400);await f.call('profile','PATCH',{name:'A reader',bio:''},a.cookie);const {id}=await (await f.call('threads','POST',data,a.cookie)).json();assert.equal((await f.call('threads/'+id,'DELETE',undefined,b.cookie)).status,404);assert.equal((await f.call('reports','POST',{target:id,reason:'Please review this'},b.cookie)).status,200);assert.equal((await f.call('reports','GET',undefined,b.cookie)).status,403);await f.call('threads/'+id,'DELETE',undefined,a.cookie);assert.equal((await f.call('threads/'+id)).status,404);f.db.close()});
+test('discussion sources preserve the specific topic, publication, speech and data point',async()=>{
+ const f=fixture(),a=await f.login();
+ try{
+  await f.call('profile','PATCH',{name:'A reader',bio:''},a.cookie);
+  const paths=[
+   '/subject/topic/housing',
+   '/doc/publication-community-funding#findings',
+   '/doc/speech-123#:~:text=community%20funding',
+   '/reports/grants-allocation?collection=history&year=2024#projects',
+   '/money?focus=party%3ALabor',
+   '/bills/example-bill',
+   '/explore?game=grants&jur=federal&open=abn%3A12345678901',
+   '/discover?category=contracts&agency=example',
+   '/declared?person=David%20Pocock'
+  ];
+  for(const path of paths){
+   const created=await f.call('threads','POST',{title:'A question about this source',body:'What does this particular source tell us?',source_path:path},a.cookie);
+   assert.equal(created.status,201,path);
+   const {id}=await created.json();
+   const result=await (await f.call('threads/'+id)).json();
+   assert.equal(result.thread.source_path,path);
+  }
+ }finally{f.db.close()}
+});
+test('source links stay optional and limited to Opax record pages',()=>{
+ for(const blank of [null,undefined,''])assert.equal(sourcePath(blank),null);
+ for(const invalid of ['https://evil.test/doc/123','//evil.test/doc/123','javascript:alert(1)','/api/community/status','/explorer','/doc/has space','/doc/\\evil.test']){
+  assert.throws(()=>sourcePath(invalid),error=>error.status===400,invalid);
+ }
+});
 test('disabled accounts cannot retain sessions',async()=>{const f=fixture(),a=await f.login();f.db.exec('UPDATE members SET disabled=1');assert.equal((await f.call('lists','GET',undefined,a.cookie)).status,401);f.db.close()});
 test.after(()=>rmSync(folder,{recursive:true,force:true}));
 
