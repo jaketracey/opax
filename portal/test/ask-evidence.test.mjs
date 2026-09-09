@@ -24,7 +24,7 @@ test('request preserves scope and clips current chat history; cache is versioned
 test('stream hides markers and definitions across every chunk boundary',()=>{for(const raw of [fixture().answer,'Fact[1].\n\n[1]: block-AA\n','Fact[^block-AA].\n'])for(let size=1;size<=raw.length;size++){const stream=new FootnoteStream();let text='';for(let i=0;i<raw.length;i+=size)text+=stream.push(raw.slice(i,i+size));text+=stream.push('',true);assert.doesNotMatch(text,/block-|\[\^|\[1\]/);assert.match(text,/fact|Fact/)}});
 test('NDJSON and synchronous payloads agree, including augmented evidence',async()=>{const f=fixture();const items=[{type:'answer',text:f.answer},{type:'retrieval',results:f.retrieval_results},{type:'footnote_citations',footnote_to_context:f.citation_footnote_to_context},{type:'augmented_context',augmented:f.augmented_context},{type:'status',code:'0'}];const encoded=new TextEncoder().encode(items.map(item=>JSON.stringify({item})).join('\n'));streamBody=new ReadableStream({start(c){for(let i=0;i<encoded.length;i+=7)c.enqueue(encoded.slice(i,i+7));c.close()}});const events=[];const a=await api.streamAskOnce({ARAG_KB_TOKEN:'test'},{citations:'llm_footnotes'},async(e,d)=>events.push([e,d]),new AbortController().signal);assert.deepEqual(plain(api.askPayload(a)),plain(api.askPayload(f)));assert.doesNotMatch(events.filter(([e])=>e==='delta').map(([,d])=>d.text).join(''),/block-|\[\^/)});
 test('stream preserves normal markdown links and incomplete ordinary brackets',()=>{for(const raw of ['Read [bill](https://example.test).','An ordinary [bracket remains open','Code [1, 2, 3] is an array']){const f=new FootnoteStream();let out='';for(const c of raw)out+=f.push(c);out+=f.push('',true);assert.equal(out,raw)}});
-test('UI places normalized citations at the supported claims',()=>{const s=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');const fn=s.slice(s.indexOf('function askCitationText('),s.indexOf('function wireAskCitations('));const render=runInNewContext(fn+';askCitationText');const p=api.askPayload(fixture());const text=render(p.answer,[{answerRanges:Object.values(p.citations).flat()}]);assert.equal(text,'😀 A fact ⟦source:1⟧. Another fact ⟦source:1⟧.')});
+test('UI places normalized citations at the supported claims',()=>{const s=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');const fn=s.slice(s.indexOf('function askCitationText('),s.indexOf('function wireAskCitations('));const render=runInNewContext(fn+';askCitationText');const p=api.askPayload(fixture());const text=render(p.answer,[{answerRanges:Object.values(p.citations).flat()}]);assert.equal(text,'😀 A fact.⟦source:1⟧ Another fact.⟦source:1⟧')});
 
 test('legacy fallback removes footnote instructions but retains scope and context',()=>{const b=api.buildAskBody({question:'Q',speaker:'Example MP',context:[{text:'Earlier'}]});const fallback=exports.legacyCitationsAsk(b);assert.equal(fallback.citations,'default');assert.doesNotMatch(fallback.prompt.user,/define EVERY reference/);assert.deepEqual(fallback.filter_expression,b.filter_expression);assert.deepEqual(fallback.rag_strategies,b.rag_strategies);assert.deepEqual(fallback.chat_history,b.chat_history)});
 
@@ -57,4 +57,24 @@ test('failed quote recovery replaces prose with original passages and valid cita
  assert.ok(!safe.answer.includes('A fact'));
  for(const spans of Object.values(safe.citations))for(const [start,end] of spans){assert.ok(start>=0);assert.ok(end<=Array.from(safe.answer).length)}
  assert.ok(safe.sources.some(s=>s.cited));
+});
+
+
+test('UI keeps footnotes after punctuation and closing quotes without crossing prose',()=>{
+ const s=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
+ const fn=s.slice(s.indexOf('function askCitationText('),s.indexOf('function wireAskCitations('));
+ const render=runInNewContext(fn+';askCitationText');
+ for(const [text,end,expected] of [
+  ['A fact. Next sentence.',6,'A fact.⟦source:1⟧ Next sentence.'],
+  ['“A fact”. Next sentence.',7,'“A fact”.⟦source:1⟧ Next sentence.'],
+  ['“A fact.” Next sentence.',7,'“A fact.”⟦source:1⟧ Next sentence.'],
+  ['A fact (confirmed). Next.',17,'A fact (confirmed).⟦source:1⟧ Next.'],
+  ['A fact, with a qualification.',6,'A fact,⟦source:1⟧ with a qualification.'],
+  ['A fact and another claim.',6,'A fact⟦source:1⟧ and another claim.'],
+  ['A fact "with a quote".',6,'A fact⟦source:1⟧ "with a quote".'],
+  ['A fact\n\n“New paragraph.”',6,'A fact⟦source:1⟧\n\n“New paragraph.”'],
+ ]) assert.equal(render(text,[{answerRanges:[[0,end]]}]),expected);
+ assert.equal(render('A fact.',[
+  {answerRanges:[[0,6],[0,7]]},{answerRanges:[[0,7]]}
+ ]),'A fact.⟦source:1⟧⟦source:2⟧');
 });

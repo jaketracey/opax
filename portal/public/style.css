@@ -2769,9 +2769,9 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   content: ""; position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; transform: translate(-50%, -50%);
 }
 #panel-ask .source-list li, #panel-chat .source-list li { border-bottom: 1px solid var(--line); padding: 12px 0; scroll-margin-block: 90px; }
-#panel-ask .source-list .source-title, #panel-chat .source-list .source-title { min-height: 44px; text-align: left; }
+#panel-ask .source-list .source-title, #panel-chat .source-list .source-title { min-height: 24px; text-align: left; }
 #panel-ask .source-meta, #panel-chat .source-meta { font: 400 0.8125rem/1.6 var(--sans); font-variant-numeric: tabular-nums; }
-#panel-ask .source-meta a, #panel-chat .source-meta a { display: inline-flex; align-items: center; min-height: 44px; }
+#panel-ask .source-meta a, #panel-chat .source-meta a { display: inline-flex; align-items: center; min-height: 24px; }
 #panel-ask .ask-source-passage, #panel-chat .ask-source-passage {
   grid-column: 2; font: 400 0.875rem/1.65 var(--serif); color: var(--ink-soft); margin: 6px 0 0;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
