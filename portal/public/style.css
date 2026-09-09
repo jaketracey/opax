@@ -50,6 +50,12 @@
   --serif: "Merriweather", Georgia, "Times New Roman", serif;
   --sans:  "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
+  /* Heading roles share the home page's type and colour across routes. */
+  --heading-page: 400 clamp(1.9rem, 4.5vw, 2.75rem)/1.25 var(--serif);
+  --heading-section: 600 1.4rem/1.35 var(--serif);
+  --heading-subsection: 600 1.125rem/1.35 var(--serif);
+  --heading-tracking: 0.005em;
+
   /* ---- vertical rhythm --------------------------------------------------
      One scale, ratio ~1.6 — the same step the type takes. Every vertical gap
      on an entry, index or report page is drawn from it; nothing on those
@@ -491,8 +497,8 @@ main:focus { outline: none; }
 
 .hero-intro h1 {
   margin: 1.6rem 0 2rem;
-  font: 400 clamp(1.9rem, 4.5vw, 2.75rem)/1.25 var(--serif);
-  letter-spacing: 0.005em;
+  font: var(--heading-page);
+  letter-spacing: var(--heading-tracking);
 }
 main.compact .hero-intro { display: none; }
 /* Once an ask is under way the masthead line has done its work: it fades and
@@ -4887,8 +4893,8 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .representation-note { display:block; color:var(--ink-soft); font-size:.78rem; line-height:1.5; margin-top:.4rem; }
 
 /* Community grants: places first, with the wider analysis one step away. */
-#report-research { max-width:76rem; margin-inline:auto; }
-.allocation-intro { max-width:52rem; margin-bottom:var(--space-5); }
+#report-research { width:100%; min-width:0; }
+.allocation-intro { margin-bottom:var(--space-5); }
 .allocation-intro h1 { color:var(--navy); font:700 clamp(1.9rem,4vw,3rem)/1.25 var(--serif); margin:0 0 var(--space-4); }
 .allocation-intro > p { color:var(--ink-soft); font-size:1.08rem; line-height:1.65; margin:0; }
 .allocation-explorer { margin-block:var(--space-6); }
@@ -5077,4 +5083,52 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
  .el-demographics { grid-template-columns:repeat(2,minmax(0,1fr)); }
  .el-election > summary time { min-width:7rem; }
  .el-election > summary strong { font-size:.9rem; }
+}
+
+
+/* One page-title role, including older routes that use an h2 for their title. */
+h1, .hero-intro h1, #subject-title, #bill-title, #report-view #report-title,
+#panel-doc #doc-title, #panel-declared > h1, .tide-shell > h1,
+.allocation-intro h1, .connections-page h1, .ballot-tool .ballot-intro h2,
+#panel-about > h2:first-of-type, #panel-methods > h2:first-of-type,
+#panel-expenses > h2:first-of-type {
+  font:var(--heading-page); color:var(--ink);
+  letter-spacing:var(--heading-tracking); overflow-wrap:break-word;
+}
+/* Section headings retain their local spacing and share the home-page scale. */
+h2, .subject-section-title, #front-page .front-mod > .subject-section-title,
+#front-map .subject-section-title, .report-section h3,
+.report-part-title, #report-money-head, #panel-about h2, #panel-methods h2,
+#panel-expenses h2, .connections-page h2, .allocation-detail h2,
+.allocation-comparison h2, .allocation-results-heading,
+.subject-person #subject-sections .subject-section-title,
+.person-topics-head h3, .person-topics > h3 {
+  font:var(--heading-section); color:var(--ink); letter-spacing:normal;
+}
+h3, #panel-methods h3, #panel-expenses h3 {
+  font:var(--heading-subsection); color:var(--ink); letter-spacing:normal;
+}
+/* A reference page's first heading is its title, not a body section. */
+#panel-about > h2:first-of-type, #panel-methods > h2:first-of-type,
+#panel-expenses > h2:first-of-type { font:var(--heading-page); letter-spacing:var(--heading-tracking); margin-bottom:var(--space-5); }
+
+/* Home shortcuts: the same bronze line icons used in navigation and reports. */
+.front-way-heading { display:flex; align-items:center; gap:.65rem; margin-bottom:.4rem; }
+.front-way-heading .card-glyph { flex:0 0 26px; width:26px; height:26px; margin:0; }
+.front-way-heading .card-kicker { margin:0; }
+
+/* The live total belongs beside the Topics title, with the detail tucked away. */
+.topic-index-head { display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:.65rem 1.5rem; margin-bottom:var(--space-5); }
+.topic-index-head .subject-tag { margin:0 0 0 auto; font:400 .8125rem/1.5 var(--sans); color:var(--ink-faint); }
+.topic-index-total { white-space:nowrap; font-variant-numeric:tabular-nums; }
+.topic-index-total b { font-weight:600; }
+.topic-index-coverage { margin-top:var(--space-5); color:var(--ink-soft); font-size:.8125rem; }
+.topic-index-coverage summary { cursor:pointer; min-height:44px; align-content:center; }
+.topic-index-coverage p { max-width:68ch; margin:.5rem 0 0; }
+
+/* Native Safari selects otherwise ignore the control height in this view. */
+.allocation-collection select, .allocation-controls select, .allocation-seat-picker select {
+  appearance:none; padding-right:2.25rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right .75rem center;
 }
