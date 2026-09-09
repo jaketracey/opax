@@ -1,0 +1,11 @@
+# Cited search summaries
+
+The search page shows a short cited overview above its results. Records render first; summary generation never blocks search, pagination, sorting or opening a record. New queries and filters replace the summary, paging and sorting reuse it, and readers can dismiss it or retry a temporary failure.
+
+`GET /api/search-summary` runs the existing unified search with the same query, record type, mode, speaker, party, jurisdiction, topic and years. It takes original passages from up to ten distinct matching records within the first twenty relevant results. It includes both documents and financial/register records; machine briefs are not source evidence. The configured OpenAI-compatible DeepSeek provider writes a short overview. Each retained sentence must have known source IDs and literal supporting excerpts from the passage or record title, with numeric and known-speaker checks. These checks constrain citations; they are not a semantic proof of every paraphrase. The UI labels the overview as an AI summary and exposes its supporting excerpts.
+
+The server supplies all source links, preserving query strings and fragment identifiers. Browser-provided passages, model-provided URLs and generated enrichment cannot become citations. Empty result sets do not invoke a model. Successful summaries are cached against query, filters, source content, catalog version and cache epoch for one day; failures are retryable and not cached. The existing follow-up limiter bounds generation. A draft with no valid sentence can be rewritten once; no unvalidated draft is sent to the browser. Grant and contract wording that claims payment or completion is rejected.
+
+Generic “The full listing can be found at …” URL directions are removed from search previews and summary inputs. Ask instructions omit these directions, and its evidence fallback omits them too. Original records and their source URLs remain unchanged.
+
+Verification: unit tests cover evidence rejection, attribution, filtering, source URLs, cache scope, empty searches and failures. The browser check covers Chrome and WebKit at phone, tablet and desktop widths, including loading, retry, dismissal, stale responses, pagination and horizontal overflow. Live corpus probes include the Nationals/agriculture search for 1998–2002 and grant records.
