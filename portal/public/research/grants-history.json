@@ -1,0 +1,1167 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-09-09",
+  "checked_at": "2026-09-09T09:07:19.404522+00:00",
+  "dataset": "verified-historical-grant-venues",
+  "coverage": {
+    "scope": "Selected historical grants with independently verified named venues; not a nationwide or representative sample.",
+    "awards": {
+      "total_records": 11,
+      "mapped_records": 11,
+      "unmapped_records": 0,
+      "total_value": 84307200.0,
+      "mapped_value": 84307200.0
+    },
+    "site_count": 11,
+    "publication_range": {
+      "from": "2018-05-24",
+      "to": "2024-05-10"
+    },
+    "programs": [
+      "Building Better Regions Fund",
+      "Community Development Grants",
+      "Priority Community Infrastructure Program"
+    ],
+    "states": [
+      "NSW",
+      "QLD",
+      "SA",
+      "TAS",
+      "VIC",
+      "WA"
+    ],
+    "corpus_context": {
+      "existing_awards": 360058,
+      "detailed_notices": 8150,
+      "as_of": "2026-09-09",
+      "scope": "Available desktop GrantConnect corpus. These counts do not claim verified project locations, payments or complete nationwide coverage."
+    }
+  },
+  "methodology": {
+    "timeline": "Awards enter the view on their GrantConnect publication date. Values reflect the current retrieved notice and may include later amendments. This is not a reconstruction of payments or knowledge at the selected date.",
+    "geography": "Points locate named project venues using primary venue/council sources and separately documented facility geometries. They are not recipient headquarters, postcode centroids or surveyed works footprints.",
+    "money": "Each grant is counted once. No per-site allocation, payment date or completed-work claim is inferred.",
+    "electorates": "2025 AEC boundaries locate the current venue; historical boundaries may differ.",
+    "selection": "A small deliberately checked selection across years and programs. Do not rank electorates or infer wider grant distribution from this sample.",
+    "attribution": "Some venue geometry © OpenStreetMap contributors, ODbL. https://www.openstreetmap.org/copyright"
+  },
+  "records": [
+    {
+      "id": "GA6601",
+      "record_type": "award",
+      "title": "Tench Reserve boat ramp and waterfront upgrade",
+      "activity": "The Tench Reserve Boat Ramp and Waterfront Rework project will construct a new boat ramp with access roads and upgrade the surrounding foreshore and parkland.",
+      "program": "Community Development Grants",
+      "go_id": null,
+      "value": 5000000.0,
+      "state": "NSW",
+      "locality": "Jamisontown",
+      "source_url": "https://www.grants.gov.au/Ga/Show/9e1ddf7b-09e5-b0d0-a532-7e76e5ebb120",
+      "invitation_ids": [],
+      "award_ids": [
+        "GA6601"
+      ],
+      "publish_date": "2018-05-24",
+      "approval_date": "2017-03-24",
+      "grant_term": "16-May-2018 to 30-Aug-2019",
+      "start_date": "2018-05-16",
+      "end_date": "2019-08-30",
+      "recipient": "Penrith City Council",
+      "payment_verified": false,
+      "version": 0,
+      "last_updated": "24-May-2018 11:42 am (ACT Local Time)",
+      "sites": [
+        {
+          "id": "history-tench",
+          "site_name": "Tench Reserve boat ramp",
+          "address": "Tench Avenue, Jamisontown NSW 2750",
+          "locality": "Jamisontown",
+          "state": "NSW",
+          "latitude": -33.76400960416818,
+          "longitude": 150.66101140647194,
+          "location_source_url": "https://penrithcity.nsw.gov.au/facilities-recreation/nepean-river/nepean-river-interactive-map",
+          "site_precision": "venue",
+          "electorate_2025": "Lindsay",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T09:07:19.404522+00:00",
+            "method": "Read the original venue map destination coordinates, checking the marker name against the funded facility and excluding map viewport centres.",
+            "sources": [
+              {
+                "url": "https://penrithcity.nsw.gov.au/facilities-recreation/nepean-river/nepean-river-interactive-map",
+                "excerpt": "Tench Reserve, Tench Avenue, Jamisontown NSW 2750",
+                "role": "independent venue identity and address",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "3c8c7a87e2374eb1069233725af49973775154ab7bbafb883415998baf639577"
+              }
+            ],
+            "notes": [
+              "Council map marker explicitly named Boat Ramp and Trailer Parking; matches named boat ramp works."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 4,
+              "scope": "2025 electoral division of the current venue point only. Not the electoral division when the historical grant was approved or an allocation of money to that division."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T09:07:19.404522+00:00",
+        "method": "Fresh individual GrantConnect notice checked for grant ID, activity, recipient, program, published date and value; independent original venue source and location evidence checked separately.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/9e1ddf7b-09e5-b0d0-a532-7e76e5ebb120",
+            "excerpt": "The Tench Reserve Boat Ramp and Waterfront Rework project will construct a new boat ramp with access roads and upgrade the surrounding foreshore and parkland.",
+            "role": "original published award scope, date and amount",
+            "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+            "content_sha256": "5eb09c81fa639cb87343a801752be9c503803bee58c2f431c78c27f09bed4a11"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. Not evidence of payment or work completion.",
+          "Timeline uses the original publication date with the current recorded value, which may include subsequent amendments."
+        ],
+        "corpus_status": "existing_award_new_location_enrichment"
+      }
+    },
+    {
+      "id": "GA6602",
+      "record_type": "award",
+      "title": "Willetton Basketball Stadium expansion",
+      "activity": "The Willetton Basketball Stadium Expansion project will include four new indoor basketball courts, timber flooring, multi-court line marking, seating, change rooms, meeting/function facilities, kiosk, administration, offices, and foyer.",
+      "program": "Community Development Grants",
+      "go_id": null,
+      "value": 6050000.0,
+      "state": "WA",
+      "locality": "Willetton",
+      "source_url": "https://www.grants.gov.au/Ga/Show/9e3238d0-96e3-5317-4b1d-90a64ee021c2",
+      "invitation_ids": [],
+      "award_ids": [
+        "GA6602"
+      ],
+      "publish_date": "2018-05-24",
+      "approval_date": "2018-01-26",
+      "grant_term": "16-May-2018 to 30-Nov-2019",
+      "start_date": "2018-05-16",
+      "end_date": "2019-11-30",
+      "recipient": "Willetton Basketball Association Inc",
+      "payment_verified": false,
+      "version": 0,
+      "last_updated": "24-May-2018 11:44 am (ACT Local Time)",
+      "sites": [
+        {
+          "id": "history-willetton",
+          "site_name": "Willetton Basketball Stadium",
+          "address": "58 Burrendah Boulevard, Willetton WA 6155",
+          "locality": "Willetton",
+          "state": "WA",
+          "latitude": -32.0564827,
+          "longitude": 115.8822301,
+          "location_source_url": "https://www.willettonbasketball.com.au/willetton-stadium/stadium-information/",
+          "site_precision": "venue",
+          "electorate_2025": "Tangney",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T09:07:19.404522+00:00",
+            "method": "Match primary operator/council venue identity and physical location to the independently named OpenStreetMap facility polygon. Assert the representative point falls inside that polygon.",
+            "sources": [
+              {
+                "url": "https://www.willettonbasketball.com.au/willetton-stadium/stadium-information/",
+                "excerpt": "Willetton Stadium is situated at 58 Burrendah Boulevard in Willetton.",
+                "role": "independent venue identity and address",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "e268225a3c568bc01704adc4e39f8a67313246db47501e86404f5506b83020bf"
+              },
+              {
+                "url": "https://www.openstreetmap.org/way/238567512",
+                "excerpt": "Willetton Basketball Stadium",
+                "role": "independent named venue polygon and representative point",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "a343550f8c52ee5e275461654f4c1b7588283032b171db44923ae1e8d746fda0"
+              }
+            ],
+            "notes": [
+              "Named basketball stadium polygon on Burrendah Boulevard matches operator address; venue marker, not the individual new courts."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 2072,
+              "scope": "2025 electoral division of the current venue point only. Not the electoral division when the historical grant was approved or an allocation of money to that division."
+            },
+            "geometry": {
+              "source_url": "https://www.openstreetmap.org/way/238567512",
+              "osm_type": "way",
+              "osm_id": 238567512,
+              "bounds": [
+                -32.0569207,
+                -32.0562247,
+                115.8815997,
+                115.8828594
+              ],
+              "point_within_named_polygon": true,
+              "attribution": "© OpenStreetMap contributors",
+              "license_url": "https://www.openstreetmap.org/copyright"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T09:07:19.404522+00:00",
+        "method": "Fresh individual GrantConnect notice checked for grant ID, activity, recipient, program, published date and value; independent original venue source and location evidence checked separately.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/9e3238d0-96e3-5317-4b1d-90a64ee021c2",
+            "excerpt": "The Willetton Basketball Stadium Expansion project will include four new indoor basketball courts, timber flooring, multi-court line marking, seating, change rooms, meeting/function facilities, kiosk, administration, offices, and foyer.",
+            "role": "original published award scope, date and amount",
+            "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+            "content_sha256": "feb798cd7362ab9f6af836dc7f70339b15e913fd6a00799f4a6f113c4e01b57c"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. Not evidence of payment or work completion.",
+          "Timeline uses the original publication date with the current recorded value, which may include subsequent amendments."
+        ],
+        "corpus_status": "existing_award_new_location_enrichment"
+      }
+    },
+    {
+      "id": "GA34203",
+      "record_type": "award",
+      "title": "Qantas Founders Museum airpark roof",
+      "activity": "Construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld",
+      "program": "Community Development Grants",
+      "go_id": null,
+      "value": 11300000.0,
+      "state": "QLD",
+      "locality": "Longreach",
+      "source_url": "https://www.grants.gov.au/Ga/Show/c0341dc2-c04e-1177-4ab0-99b9ae0d1b26",
+      "invitation_ids": [],
+      "award_ids": [
+        "GA34203"
+      ],
+      "publish_date": "2019-02-22",
+      "approval_date": "2019-02-12",
+      "grant_term": "12-Feb-2019 to 20-Apr-2020",
+      "start_date": "2019-02-12",
+      "end_date": "2020-04-20",
+      "recipient": "The Trustee for the Qantas Foundation Memorial Trust",
+      "payment_verified": false,
+      "version": 0,
+      "last_updated": "22-Feb-2019 3:05 pm (ACT Local Time)",
+      "sites": [
+        {
+          "id": "history-qantas",
+          "site_name": "Qantas Founders Museum",
+          "address": "Sir Hudson Fysh Drive, Longreach QLD 4730",
+          "locality": "Longreach",
+          "state": "QLD",
+          "latitude": -23.4399472,
+          "longitude": 144.2705554,
+          "location_source_url": "https://www.qfom.com.au/",
+          "site_precision": "venue",
+          "electorate_2025": "Maranoa",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T09:07:19.404522+00:00",
+            "method": "Match primary operator/council venue identity and physical location to the independently named OpenStreetMap facility polygon. Assert the representative point falls inside that polygon.",
+            "sources": [
+              {
+                "url": "https://www.qfom.com.au/",
+                "excerpt": "Sir Hudson Fysh Drive, Longreach, Qld 4730",
+                "role": "independent venue identity and address",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "b39c934a20b9cfab072a44eee9cc84f1138ab53fa40583102907d84ab1dff934"
+              },
+              {
+                "url": "https://www.openstreetmap.org/way/172840395",
+                "excerpt": "Qantas Founders Museum",
+                "role": "independent named venue polygon and representative point",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "2115e9bed046afd8717a7e66d005333c9c02f2db37bfb2434df2d9cf50a5f0a7"
+              },
+              {
+                "url": "https://www.qfom.com.au/our-history",
+                "excerpt": "build a roof over the museum’s airpark enclosure",
+                "role": "operator confirmation of funded facility scope",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "e6d86c2e0c27221f5b3c38c71744ed9aed599a3203db7a2293e4bbfae258051d"
+              }
+            ],
+            "notes": [
+              "Named museum building polygon locates the museum venue. The funded airpark roof is within this museum complex; this pin is not its surveyed footprint."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 140962,
+              "scope": "2025 electoral division of the current venue point only. Not the electoral division when the historical grant was approved or an allocation of money to that division."
+            },
+            "geometry": {
+              "source_url": "https://www.openstreetmap.org/way/172840395",
+              "osm_type": "way",
+              "osm_id": 172840395,
+              "bounds": [
+                -23.4400831,
+                -23.4396399,
+                144.270212,
+                144.2709112
+              ],
+              "point_within_named_polygon": true,
+              "attribution": "© OpenStreetMap contributors",
+              "license_url": "https://www.openstreetmap.org/copyright"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T09:07:19.404522+00:00",
+        "method": "Fresh individual GrantConnect notice checked for grant ID, activity, recipient, program, published date and value; independent original venue source and location evidence checked separately.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/c0341dc2-c04e-1177-4ab0-99b9ae0d1b26",
+            "excerpt": "Construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld",
+            "role": "original published award scope, date and amount",
+            "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+            "content_sha256": "a6288c6937cc151aab511f4dcfbcf644de7b6843a8304e35f2d60f8b424f5bc8"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. Not evidence of payment or work completion.",
+          "Timeline uses the original publication date with the current recorded value, which may include subsequent amendments."
+        ],
+        "corpus_status": "existing_award_new_location_enrichment"
+      }
+    },
+    {
+      "id": "GA39469",
+      "record_type": "award",
+      "title": "Rockhampton Museum of Art",
+      "activity": "Rockhampton Museum of Art",
+      "program": "Building Better Regions Fund",
+      "go_id": null,
+      "value": 10000000.0,
+      "state": "QLD",
+      "locality": "Rockhampton City",
+      "source_url": "https://www.grants.gov.au/Ga/Show/d443d88e-a378-b63c-4faf-93de66b1e8c6",
+      "invitation_ids": [],
+      "award_ids": [
+        "GA39469"
+      ],
+      "publish_date": "2019-04-08",
+      "approval_date": "2019-03-20",
+      "grant_term": "1-Apr-2019 to 9-Mar-2022 Original: 1-Apr-2019 to 5-Oct-2021",
+      "start_date": "2019-04-01",
+      "end_date": "2022-03-09",
+      "recipient": "ROCKHAMPTON REGIONAL COUNCIL",
+      "payment_verified": false,
+      "version": 1,
+      "last_updated": "21-Sep-2021 3:11 pm (ACT Local Time)",
+      "sites": [
+        {
+          "id": "history-rockhampton",
+          "site_name": "Rockhampton Museum of Art",
+          "address": "220 Quay Street, Rockhampton City QLD 4700",
+          "locality": "Rockhampton City",
+          "state": "QLD",
+          "latitude": -23.3787896,
+          "longitude": 150.5151073,
+          "location_source_url": "https://www.rockhamptonregion.qld.gov.au/FacilitiesRecreation/Parks-Open-Spaces/Book-a-Park/Venues-and-Parks-for-Hire/Rockhampton-Museum-of-Art",
+          "site_precision": "venue",
+          "electorate_2025": "Capricornia",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T09:07:19.404522+00:00",
+            "method": "Read the original venue map destination coordinates, checking the marker name against the funded facility and excluding map viewport centres.",
+            "sources": [
+              {
+                "url": "https://www.rockhamptonregion.qld.gov.au/FacilitiesRecreation/Parks-Open-Spaces/Book-a-Park/Venues-and-Parks-for-Hire/Rockhampton-Museum-of-Art",
+                "excerpt": "220 Quay St, Rockhampton City 4700",
+                "role": "independent venue identity and address",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "859f960a84a7f1e1d011d3e23e1db7a5ed336a7bd8976b8e538c2efe04fdac9b"
+              }
+            ],
+            "notes": [
+              "Council marker for the new museum on Quay Street, not the former art gallery on Victoria Parade."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 2189,
+              "scope": "2025 electoral division of the current venue point only. Not the electoral division when the historical grant was approved or an allocation of money to that division."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T09:07:19.404522+00:00",
+        "method": "Fresh individual GrantConnect notice checked for grant ID, activity, recipient, program, published date and value; independent original venue source and location evidence checked separately.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/d443d88e-a378-b63c-4faf-93de66b1e8c6",
+            "excerpt": "Rockhampton Museum of Art",
+            "role": "original published award scope, date and amount",
+            "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+            "content_sha256": "f150318fb77eda54b253d0264c71dfa32ca54814709d581190052aef59894f17"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. Not evidence of payment or work completion.",
+          "Timeline uses the original publication date with the current recorded value, which may include subsequent amendments."
+        ],
+        "corpus_status": "existing_award_new_location_enrichment"
+      }
+    },
+    {
+      "id": "GA79739",
+      "record_type": "award",
+      "title": "Concord Oval redevelopment",
+      "activity": "The redevelopment of Concord Oval project will redevelop and construct new facilities at Concord Oval, including the Wests Tigers Centre of Excellence.",
+      "program": "Community Development Grants",
+      "go_id": "GO3141",
+      "value": 5500000.0,
+      "state": "NSW",
+      "locality": "Concord",
+      "source_url": "https://www.grants.gov.au/Ga/Show/e8222538-cdb4-40ed-5055-245fa6e6aa70",
+      "invitation_ids": [],
+      "award_ids": [
+        "GA79739"
+      ],
+      "publish_date": "2020-05-25",
+      "approval_date": "2020-02-28",
+      "grant_term": "20-May-2020 to 31-Mar-2022 Original: 20-May-2020 to 31-Dec-2020",
+      "start_date": "2020-05-20",
+      "end_date": "2022-03-31",
+      "recipient": "Wests Tigers Rugby League Football Pty Ltd",
+      "payment_verified": false,
+      "version": 1,
+      "last_updated": "15-Oct-2020 12:23 pm (ACT Local Time)",
+      "sites": [
+        {
+          "id": "history-concord",
+          "site_name": "Concord Oval",
+          "address": "Concord Oval, Loftus Street, Concord NSW 2137",
+          "locality": "Concord",
+          "state": "NSW",
+          "latitude": -33.8684377,
+          "longitude": 151.1093031,
+          "location_source_url": "https://canadabay.bookable.net.au/venues/91/concord-oval-canadian-exiles-room",
+          "site_precision": "venue",
+          "electorate_2025": "Reid",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T09:07:19.404522+00:00",
+            "method": "Match primary operator/council venue identity and physical location to the independently named OpenStreetMap facility polygon. Assert the representative point falls inside that polygon.",
+            "sources": [
+              {
+                "url": "https://canadabay.bookable.net.au/venues/91/concord-oval-canadian-exiles-room",
+                "excerpt": "The Canadian Exiles Room is a multi-function venue overlooking the historic Concord Oval.",
+                "role": "independent venue identity and address",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "39b48d0331263ee388872a87f1b91ab627ded148706dc72f686b63cc85af1831"
+              },
+              {
+                "url": "https://www.openstreetmap.org/way/166415664",
+                "excerpt": "Concord Oval",
+                "role": "independent named venue polygon and representative point",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "13f4ccdae723fa2635b3c0bc4c0c6c6197a1299a092cd0eec8fd6ce9d8701365"
+              }
+            ],
+            "notes": [
+              "Named stadium polygon locates Concord Oval between Loftus and Gipps streets; the project includes multiple facilities within the venue."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 1819,
+              "scope": "2025 electoral division of the current venue point only. Not the electoral division when the historical grant was approved or an allocation of money to that division."
+            },
+            "geometry": {
+              "source_url": "https://www.openstreetmap.org/way/166415664",
+              "osm_type": "way",
+              "osm_id": 166415664,
+              "bounds": [
+                -33.8693821,
+                -33.8670501,
+                151.1078263,
+                151.1107231
+              ],
+              "point_within_named_polygon": true,
+              "attribution": "© OpenStreetMap contributors",
+              "license_url": "https://www.openstreetmap.org/copyright"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T09:07:19.404522+00:00",
+        "method": "Fresh individual GrantConnect notice checked for grant ID, activity, recipient, program, published date and value; independent original venue source and location evidence checked separately.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/e8222538-cdb4-40ed-5055-245fa6e6aa70",
+            "excerpt": "The redevelopment of Concord Oval project will redevelop and construct new facilities at Concord Oval, including the Wests Tigers Centre of Excellence.",
+            "role": "original published award scope, date and amount",
+            "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+            "content_sha256": "4a4fb6e1fc41374a0f4f1583e12de5790f24f0ed92af9a5341f1efb9936c0a4c"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. Not evidence of payment or work completion.",
+          "Timeline uses the original publication date with the current recorded value, which may include subsequent amendments."
+        ],
+        "corpus_status": "existing_award_new_location_enrichment"
+      }
+    },
+    {
+      "id": "GA203191",
+      "record_type": "award",
+      "title": "Melville Oval courts and pavilion upgrade",
+      "activity": "The project will construct two netball courts, change rooms, a function centre and upgrade the grandstand at Melville Oval, Hamilton, Victoria.",
+      "program": "Community Development Grants",
+      "go_id": "GO3141",
+      "value": 4043000.0,
+      "state": "VIC",
+      "locality": "Hamilton",
+      "source_url": "https://www.grants.gov.au/Ga/Show/c707fe68-c1e5-4994-9e50-c72bfee82478",
+      "invitation_ids": [],
+      "award_ids": [
+        "GA203191"
+      ],
+      "publish_date": "2021-11-25",
+      "approval_date": "2021-09-02",
+      "grant_term": "15-Nov-2021 to 1-Apr-2024",
+      "start_date": "2021-11-15",
+      "end_date": "2024-04-01",
+      "recipient": "Southern Grampians Shire Council",
+      "payment_verified": false,
+      "version": 0,
+      "last_updated": "25-Nov-2021 1:59 pm (ACT Local Time)",
+      "sites": [
+        {
+          "id": "history-melville",
+          "site_name": "Melville Oval",
+          "address": "Melville Oval, Market Place, Hamilton VIC 3300",
+          "locality": "Hamilton",
+          "state": "VIC",
+          "latitude": -37.7407174,
+          "longitude": 142.0222036,
+          "location_source_url": "https://www.sthgrampians.vic.gov.au/Our-Services/Sport-and-Recreation/Book-a-Council-Venue",
+          "site_precision": "venue",
+          "electorate_2025": "Wannon",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T09:07:19.404522+00:00",
+            "method": "Match primary operator/council venue identity and physical location to the independently named OpenStreetMap facility polygon. Assert the representative point falls inside that polygon.",
+            "sources": [
+              {
+                "url": "https://www.sthgrampians.vic.gov.au/Our-Services/Sport-and-Recreation/Book-a-Council-Venue",
+                "excerpt": "Melville Oval",
+                "role": "independent venue identity and address",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "c51cd0084287841d45e8eb471ef4e4667487e3cd6ea55ea97741f9851440d774"
+              },
+              {
+                "url": "https://www.openstreetmap.org/way/189036018",
+                "excerpt": "Melville Oval",
+                "role": "independent named venue polygon and representative point",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "521bd987274eeb2133d95399d61d032bb41ba891d529b0c0b6d48a516b147627"
+              },
+              {
+                "url": "https://www.sthgrampians.vic.gov.au/files/assets/public/v/1/council-meeting-documents/2020-2023-council-meetings/minutes-council-meeting-12-july-2023-003.pdf#page=15",
+                "excerpt": "Melville Oval",
+                "role": "council planning record for site extent and funded facilities",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "3d1742037c41faa0971db604414b951c6e995955fa3009fa75c886ea8029ccc0"
+              }
+            ],
+            "notes": [
+              "Named oval geometry locates the venue. Council planning minutes confirm the project includes its grandstand, pavilion and netball courts with an extension into Market Place; no individual works footprint is asserted."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 57305,
+              "scope": "2025 electoral division of the current venue point only. Not the electoral division when the historical grant was approved or an allocation of money to that division."
+            },
+            "geometry": {
+              "source_url": "https://www.openstreetmap.org/way/189036018",
+              "osm_type": "way",
+              "osm_id": 189036018,
+              "bounds": [
+                -37.7413803,
+                -37.740056,
+                142.0213576,
+                142.0230426
+              ],
+              "point_within_named_polygon": true,
+              "attribution": "© OpenStreetMap contributors",
+              "license_url": "https://www.openstreetmap.org/copyright"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T09:07:19.404522+00:00",
+        "method": "Fresh individual GrantConnect notice checked for grant ID, activity, recipient, program, published date and value; independent original venue source and location evidence checked separately.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/c707fe68-c1e5-4994-9e50-c72bfee82478",
+            "excerpt": "The project will construct two netball courts, change rooms, a function centre and upgrade the grandstand at Melville Oval, Hamilton, Victoria.",
+            "role": "original published award scope, date and amount",
+            "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+            "content_sha256": "b3b3f05a2aa816c0b7de12a888a80e5b97c8cbfe16a8d558a89db0d2dbba7784"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. Not evidence of payment or work completion.",
+          "Timeline uses the original publication date with the current recorded value, which may include subsequent amendments."
+        ],
+        "corpus_status": "existing_award_new_location_enrichment"
+      }
+    },
+    {
+      "id": "GA223727",
+      "record_type": "award",
+      "title": "Hobart Aquatic Centre warm water pool",
+      "activity": "Doone Kennedy Hobart Aquatic Centre Warm Water Pool",
+      "program": "Building Better Regions Fund",
+      "go_id": "GO4504",
+      "value": 3414200.0,
+      "state": "TAS",
+      "locality": "Hobart",
+      "source_url": "https://www.grants.gov.au/Ga/Show/97579b49-7639-4e03-aafb-33f6f1351896",
+      "invitation_ids": [],
+      "award_ids": [
+        "GA223727"
+      ],
+      "publish_date": "2022-03-25",
+      "approval_date": "2021-10-28",
+      "grant_term": "24-Mar-2022 to 8-Jun-2024",
+      "start_date": "2022-03-24",
+      "end_date": "2024-06-08",
+      "recipient": "HOBART CITY COUNCIL",
+      "payment_verified": false,
+      "version": 0,
+      "last_updated": "25-Mar-2022 3:16 pm (ACT Local Time)",
+      "sites": [
+        {
+          "id": "history-hobart",
+          "site_name": "Doone Kennedy Hobart Aquatic Centre",
+          "address": "1 Davies Avenue, Hobart TAS 7000",
+          "locality": "Hobart",
+          "state": "TAS",
+          "latitude": -42.8762375,
+          "longitude": 147.3321073,
+          "location_source_url": "https://www.hobartaquaticcentre.com.au/About-us/Contact",
+          "site_precision": "venue",
+          "electorate_2025": "Clark",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T09:07:19.404522+00:00",
+            "method": "Match primary operator/council venue identity and physical location to the independently named OpenStreetMap facility polygon. Assert the representative point falls inside that polygon.",
+            "sources": [
+              {
+                "url": "https://www.hobartaquaticcentre.com.au/About-us/Contact",
+                "excerpt": "1 Davies Avenue, Hobart",
+                "role": "independent venue identity and address",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "e155cd2d5d471786873c7a9650964112b261475bd63c1e258aa9619ab8e27944"
+              },
+              {
+                "url": "https://www.openstreetmap.org/way/27501630",
+                "excerpt": "Doone Kennedy Hobart Aquatic Centre",
+                "role": "independent named venue polygon and representative point",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "53bc4d084866627955e971d60ea05ee787c7b376e9c134ff3acdef448b1f169b"
+              }
+            ],
+            "notes": [
+              "Named aquatic-centre building polygon beside Davies Avenue; venue point only, not a surveyed position of the new warm water pool."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 360,
+              "scope": "2025 electoral division of the current venue point only. Not the electoral division when the historical grant was approved or an allocation of money to that division."
+            },
+            "geometry": {
+              "source_url": "https://www.openstreetmap.org/way/27501630",
+              "osm_type": "way",
+              "osm_id": 27501630,
+              "bounds": [
+                -42.8766604,
+                -42.8758013,
+                147.3312719,
+                147.3328906
+              ],
+              "point_within_named_polygon": true,
+              "attribution": "© OpenStreetMap contributors",
+              "license_url": "https://www.openstreetmap.org/copyright"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T09:07:19.404522+00:00",
+        "method": "Fresh individual GrantConnect notice checked for grant ID, activity, recipient, program, published date and value; independent original venue source and location evidence checked separately.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/97579b49-7639-4e03-aafb-33f6f1351896",
+            "excerpt": "Doone Kennedy Hobart Aquatic Centre Warm Water Pool",
+            "role": "original published award scope, date and amount",
+            "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+            "content_sha256": "163608a3d8a656536414856ac406ceaf21d248171acaa3355ca1106dea8a6ac4"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. Not evidence of payment or work completion.",
+          "Timeline uses the original publication date with the current recorded value, which may include subsequent amendments."
+        ],
+        "corpus_status": "existing_award_new_location_enrichment"
+      }
+    },
+    {
+      "id": "GA227405",
+      "record_type": "award",
+      "title": "Hands Oval sporting facility",
+      "activity": "New multi-purpose elite sporting facility : Hands Oval, Bunbury",
+      "program": "Building Better Regions Fund",
+      "go_id": "GO4504",
+      "value": 4400000.0,
+      "state": "WA",
+      "locality": "South Bunbury",
+      "source_url": "https://www.grants.gov.au/Ga/Show/78ef8083-5635-4da1-be2f-c80b66820b3b",
+      "invitation_ids": [],
+      "award_ids": [
+        "GA227405"
+      ],
+      "publish_date": "2022-04-07",
+      "approval_date": "2021-10-28",
+      "grant_term": "6-Apr-2022 to 9-Jun-2025 Original: 6-Apr-2022 to 8-Jun-2024",
+      "start_date": "2022-04-06",
+      "end_date": "2025-06-09",
+      "recipient": "CITY OF BUNBURY",
+      "payment_verified": false,
+      "version": 1,
+      "last_updated": "2-Jan-2024 2:21 pm (ACT Local Time)",
+      "sites": [
+        {
+          "id": "history-hands",
+          "site_name": "Hands Oval",
+          "address": "Corner Spencer Street and Clarke Street, South Bunbury WA 6230",
+          "locality": "South Bunbury",
+          "state": "WA",
+          "latitude": -33.34616,
+          "longitude": 115.64297,
+          "location_source_url": "https://www.afl.com.au/venues/177",
+          "site_precision": "venue",
+          "electorate_2025": "Forrest",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T09:07:19.404522+00:00",
+            "method": "Read the original venue map destination coordinates, checking the marker name against the funded facility and excluding map viewport centres.",
+            "sources": [
+              {
+                "url": "https://www.afl.com.au/venues/177",
+                "excerpt": "Cnr Spencer St & Clarke St, South Bunbury WA 6230",
+                "role": "independent venue identity and address",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "fd326f26a3f23ee14e8d0d2ec32d501d229a8e21fef4afbb2f1d85be78395414"
+              }
+            ],
+            "notes": [
+              "Official AFL venue map destination coordinates (!4m3!3m2!1d-33.34616!2d115.64296999999999); the separate viewport centre was rejected. Venue point, not a surveyed new-building footprint."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 1944,
+              "scope": "2025 electoral division of the current venue point only. Not the electoral division when the historical grant was approved or an allocation of money to that division."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T09:07:19.404522+00:00",
+        "method": "Fresh individual GrantConnect notice checked for grant ID, activity, recipient, program, published date and value; independent original venue source and location evidence checked separately.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/78ef8083-5635-4da1-be2f-c80b66820b3b",
+            "excerpt": "New multi-purpose elite sporting facility : Hands Oval, Bunbury",
+            "role": "original published award scope, date and amount",
+            "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+            "content_sha256": "f684f1972a4ec81a65e33b8213841a94a76273d18849ede065b600630bf6fecf"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. Not evidence of payment or work completion.",
+          "Timeline uses the original publication date with the current recorded value, which may include subsequent amendments."
+        ],
+        "corpus_status": "existing_award_new_location_enrichment"
+      }
+    },
+    {
+      "id": "GA302956",
+      "record_type": "award",
+      "title": "Netball SA Stadium renovation",
+      "activity": "The renovation of the Netball SA Stadium in Adelaide including installation of roofing, aircon/heating, replacement of louvres, upgrades to lighting and replacement of court surfaces",
+      "program": "Community Development Grants",
+      "go_id": "GO3141",
+      "value": 6000000.0,
+      "state": "SA",
+      "locality": "Mile End South",
+      "source_url": "https://www.grants.gov.au/Ga/Show/04cfc857-7d5f-44e0-aaa0-f04d9c7f10f5",
+      "invitation_ids": [],
+      "award_ids": [
+        "GA302956"
+      ],
+      "publish_date": "2023-05-17",
+      "approval_date": "2023-04-14",
+      "grant_term": "28-Apr-2023 to 1-Dec-2025",
+      "start_date": "2023-04-28",
+      "end_date": "2025-12-01",
+      "recipient": "Office for Recreation Sport and Racing",
+      "payment_verified": false,
+      "version": 0,
+      "last_updated": "17-May-2023 11:39 am (ACT Local Time)",
+      "sites": [
+        {
+          "id": "history-netball",
+          "site_name": "Netball SA Stadium",
+          "address": "155 Railway Terrace, Mile End South SA 5031",
+          "locality": "Mile End South",
+          "state": "SA",
+          "latitude": -34.9325528,
+          "longitude": 138.5787323,
+          "location_source_url": "https://sa.netball.com.au/stadium-conditions-entry",
+          "site_precision": "venue",
+          "electorate_2025": "Adelaide",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T09:07:19.404522+00:00",
+            "method": "Match primary operator/council venue identity and physical location to the independently named OpenStreetMap facility polygon. Assert the representative point falls inside that polygon.",
+            "sources": [
+              {
+                "url": "https://sa.netball.com.au/stadium-conditions-entry",
+                "excerpt": "155 Railway Terrace, Mile End South SA 5031",
+                "role": "independent venue identity and address",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "f61780fed6b6bbc9abe1564c5e70c3bf084fe00d046ed34f7e8c7ca61495f0d0"
+              },
+              {
+                "url": "https://www.openstreetmap.org/way/81150997",
+                "excerpt": "Netball SA Stadium",
+                "role": "independent named venue polygon and representative point",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "3d2eb9d7ab05d0fb176c42965889df0ee60c1f77aeabf0da82ea9136ebc0b01f"
+              }
+            ],
+            "notes": [
+              "Named stadium polygon matches the primary operator location. Later temporary offices at Adelaide Arena are not used. This 2023 renovation award is distinct from later redevelopment funding."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 2233,
+              "scope": "2025 electoral division of the current venue point only. Not the electoral division when the historical grant was approved or an allocation of money to that division."
+            },
+            "geometry": {
+              "source_url": "https://www.openstreetmap.org/way/81150997",
+              "osm_type": "way",
+              "osm_id": 81150997,
+              "bounds": [
+                -34.9331718,
+                -34.9319316,
+                138.5782828,
+                138.5791427
+              ],
+              "point_within_named_polygon": true,
+              "attribution": "© OpenStreetMap contributors",
+              "license_url": "https://www.openstreetmap.org/copyright"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T09:07:19.404522+00:00",
+        "method": "Fresh individual GrantConnect notice checked for grant ID, activity, recipient, program, published date and value; independent original venue source and location evidence checked separately.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/04cfc857-7d5f-44e0-aaa0-f04d9c7f10f5",
+            "excerpt": "The renovation of the Netball SA Stadium in Adelaide including installation of roofing, aircon/heating, replacement of louvres, upgrades to lighting and replacement of court surfaces",
+            "role": "original published award scope, date and amount",
+            "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+            "content_sha256": "979e39f5b4f2d7e8b749c5b174e6a1ffbc094e0917b57630e8e2fa5b9583ed7f"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. Not evidence of payment or work completion.",
+          "Timeline uses the original publication date with the current recorded value, which may include subsequent amendments."
+        ],
+        "corpus_status": "existing_award_new_location_enrichment"
+      }
+    },
+    {
+      "id": "GA367617",
+      "record_type": "award",
+      "title": "Box Hill City Oval pavilions",
+      "activity": "The project is to redevelop Box Hill City Oval through the design and construction of a new North Pavilion and the refurbishment of the Southern Pavilion.",
+      "program": "Priority Community Infrastructure Program",
+      "go_id": "GO6047",
+      "value": 13600000.0,
+      "state": "VIC",
+      "locality": "Box Hill",
+      "source_url": "https://www.grants.gov.au/Ga/Show/f14c1e31-4633-4d02-9273-da96bcca24bb",
+      "invitation_ids": [],
+      "award_ids": [
+        "GA367617"
+      ],
+      "publish_date": "2024-05-10",
+      "approval_date": "2023-09-12",
+      "grant_term": "6-May-2024 to 18-Dec-2026",
+      "start_date": "2024-05-06",
+      "end_date": "2026-12-18",
+      "recipient": "Whitehorse City Council",
+      "payment_verified": false,
+      "version": 0,
+      "last_updated": "10-May-2024 9:37 am (ACT Local Time)",
+      "sites": [
+        {
+          "id": "history-boxhill",
+          "site_name": "Box Hill City Oval",
+          "address": "1153–1155 Whitehorse Road, Box Hill VIC 3128",
+          "locality": "Box Hill",
+          "state": "VIC",
+          "latitude": -37.8184727,
+          "longitude": 145.1375689,
+          "location_source_url": "https://whitehorse.bookable.net.au/venues/40/box-hill-city-oval",
+          "site_precision": "venue",
+          "electorate_2025": "Menzies",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T09:07:19.404522+00:00",
+            "method": "Match primary operator/council venue identity and physical location to the independently named OpenStreetMap facility polygon. Assert the representative point falls inside that polygon.",
+            "sources": [
+              {
+                "url": "https://whitehorse.bookable.net.au/venues/40/box-hill-city-oval",
+                "excerpt": "1153-1155 Whitehorse Rd, Box Hill 3128",
+                "role": "independent venue identity and address",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "fb672a50899aac709a17fbef040669c2bd97d5924f7e5e79fa68ab4f2bbc279d"
+              },
+              {
+                "url": "https://www.openstreetmap.org/way/24577624",
+                "excerpt": "Box Hill City Oval",
+                "role": "independent named venue polygon and representative point",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "98ba6ae5580242caea99f13ca31c0b743b8198e96b03a8508aa387d65f0d540f"
+              }
+            ],
+            "notes": [
+              "Named oval-reserve polygon matches the council-operated venue listing. The grant covers north and south pavilions within the one venue and is counted once."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 1369,
+              "scope": "2025 electoral division of the current venue point only. Not the electoral division when the historical grant was approved or an allocation of money to that division."
+            },
+            "geometry": {
+              "source_url": "https://www.openstreetmap.org/way/24577624",
+              "osm_type": "way",
+              "osm_id": 24577624,
+              "bounds": [
+                -37.8194417,
+                -37.8173709,
+                145.1362591,
+                145.1389188
+              ],
+              "point_within_named_polygon": true,
+              "attribution": "© OpenStreetMap contributors",
+              "license_url": "https://www.openstreetmap.org/copyright"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T09:07:19.404522+00:00",
+        "method": "Fresh individual GrantConnect notice checked for grant ID, activity, recipient, program, published date and value; independent original venue source and location evidence checked separately.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/f14c1e31-4633-4d02-9273-da96bcca24bb",
+            "excerpt": "The project is to redevelop Box Hill City Oval through the design and construction of a new North Pavilion and the refurbishment of the Southern Pavilion.",
+            "role": "original published award scope, date and amount",
+            "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+            "content_sha256": "0d1379b4b5a5cc7deac3790e56654044fba356dc44cac5456c4e951ca89b4879"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. Not evidence of payment or work completion.",
+          "Timeline uses the original publication date with the current recorded value, which may include subsequent amendments."
+        ],
+        "corpus_status": "existing_award_new_location_enrichment"
+      }
+    },
+    {
+      "id": "GA367618",
+      "record_type": "award",
+      "title": "Carnegie Memorial Swimming Pool redevelopment",
+      "activity": "The project will redevelop the Carnegie Memorial Swimming Pool into a contemporary community aquatic facility which includes new pools, café and BBQ facilities, community rooms and carparks.",
+      "program": "Priority Community Infrastructure Program",
+      "go_id": "GO6047",
+      "value": 15000000.0,
+      "state": "VIC",
+      "locality": "Carnegie",
+      "source_url": "https://www.grants.gov.au/Ga/Show/8bd0af37-562a-4623-a586-09c94b194537",
+      "invitation_ids": [],
+      "award_ids": [
+        "GA367618"
+      ],
+      "publish_date": "2024-05-10",
+      "approval_date": "2023-09-23",
+      "grant_term": "6-May-2024 to 30-Mar-2025",
+      "start_date": "2024-05-06",
+      "end_date": "2025-03-30",
+      "recipient": "Glen Eira City Council",
+      "payment_verified": false,
+      "version": 0,
+      "last_updated": "10-May-2024 10:00 am (ACT Local Time)",
+      "sites": [
+        {
+          "id": "history-carnegie",
+          "site_name": "Carnegie Memorial Swimming Pool",
+          "address": "Koornang Park, Moira Avenue, Carnegie VIC 3163",
+          "locality": "Carnegie",
+          "state": "VIC",
+          "latitude": -37.8946936,
+          "longitude": 145.0523814,
+          "location_source_url": "https://www.geleisure.com.au/locations/carnegie-memorial-swimming-pool",
+          "site_precision": "venue",
+          "electorate_2025": "Hotham",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T09:07:19.404522+00:00",
+            "method": "Match primary operator/council venue identity and physical location to the independently named OpenStreetMap facility polygon. Assert the representative point falls inside that polygon.",
+            "sources": [
+              {
+                "url": "https://www.geleisure.com.au/locations/carnegie-memorial-swimming-pool",
+                "excerpt": "Koornang Park, Moira Avenue, Carnegie",
+                "role": "independent venue identity and address",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "8d2b0d438bee39233cacfb7044e856612ec876647c9ba493d4a3b9bf8249b00d"
+              },
+              {
+                "url": "https://www.openstreetmap.org/way/62641736",
+                "excerpt": "Carnegie Memorial Swimming Pool",
+                "role": "independent named venue polygon and representative point",
+                "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+                "content_sha256": "43b85eb17c28977807d99780d39d32148e688bfc48167090fbce4152937dc3f5"
+              }
+            ],
+            "notes": [
+              "Named pool-complex polygon matches operator location at Koornang Park. Venue point represents the complex, not any individual pool or carpark."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 568,
+              "scope": "2025 electoral division of the current venue point only. Not the electoral division when the historical grant was approved or an allocation of money to that division."
+            },
+            "geometry": {
+              "source_url": "https://www.openstreetmap.org/way/62641736",
+              "osm_type": "way",
+              "osm_id": 62641736,
+              "bounds": [
+                -37.8953554,
+                -37.8940748,
+                145.0517038,
+                145.0530494
+              ],
+              "point_within_named_polygon": true,
+              "attribution": "© OpenStreetMap contributors",
+              "license_url": "https://www.openstreetmap.org/copyright"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T09:07:19.404522+00:00",
+        "method": "Fresh individual GrantConnect notice checked for grant ID, activity, recipient, program, published date and value; independent original venue source and location evidence checked separately.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/8bd0af37-562a-4623-a586-09c94b194537",
+            "excerpt": "The project will redevelop the Carnegie Memorial Swimming Pool into a contemporary community aquatic facility which includes new pools, café and BBQ facilities, community rooms and carparks.",
+            "role": "original published award scope, date and amount",
+            "retrieved_at": "2026-09-09T09:07:19.404522+00:00",
+            "content_sha256": "09792c23c487870911583525371b235b885ab821a59f3b4c89a005c2d30094c7"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. Not evidence of payment or work completion.",
+          "Timeline uses the original publication date with the current recorded value, which may include subsequent amendments."
+        ],
+        "corpus_status": "existing_award_new_location_enrichment"
+      }
+    }
+  ]
+}

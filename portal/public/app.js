@@ -1484,6 +1484,8 @@ function route() {
   const manageFocus = !firstRoute;
   firstRoute = false;
   destroySupplierPage();
+  grantsResearchGeneration++;
+  grantsResearchHandle?.destroy(); grantsResearchHandle = null;
 
   if (view !== "subject") { destroySubjectMap(); currentSubjectKey = null; }
   if (view === "subject" && segs[1] === "supplier") {
@@ -7655,7 +7657,7 @@ async function renderDocBillPanel(doc, slug) {
 // Both are standalone lazy modules with a mount/destroy contract; the page
 // only owns the toggle. Modules are mounted once and kept alive per session.
 
-const explore = { tm: null, tide: null, quiz: null, ledger: null, grants: null, matrix: null, wd: null, tvn: null };
+const explore = { ballot: null, tm: null, tide: null, quiz: null, ledger: null, grants: null, matrix: null, wd: null, tvn: null };
 
 let explainInstance = null;
 let explainOpenSeq = 0;
@@ -7731,6 +7733,7 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
+  ballot: { name: "Build your ballot", dialog: "dialog-ballot", body: "explore-ballot", module: "/ballot.js?v=20260909-1", mount: "mountBallot" },
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
@@ -7775,6 +7778,7 @@ async function openGame(which, params = null) {
   }
 }
 
+$("explore-ballot-btn").addEventListener("click", () => openGame("ballot"));
 $("explore-tm-btn").addEventListener("click", () => openGame("tm"));
 $("explore-tide-btn").addEventListener("click", () => openGame("tide"));
 $("explore-quiz-btn").addEventListener("click", () => openGame("quiz"));
@@ -10884,6 +10888,8 @@ function renderStats(container, stats, topic, { speakers = true } = {}) {
 }
 
 let currentReportSlug = null;
+let grantsResearchHandle = null;
+let grantsResearchGeneration = 0;
 
 /**
  * The evidence-brief layers of a report: prose lead, key figures traced to
@@ -11947,6 +11953,7 @@ function renderReportV2(report, slug) {
 }
 
 async function openReport(slug, sectionNum, manageFocus) {
+  const grantsGeneration = grantsResearchGeneration;
   if ($('report-research')) $('report-research').hidden = true;
   if (slug === 'grants-allocation') {
     $('report-view').hidden = true;
@@ -11957,9 +11964,10 @@ async function openReport(slug, sectionNum, manageFocus) {
     root.hidden = false;
     currentReportSlug = null;
     setCrumbs([{label:'Reports',href:'/reports'},{label:'Where community funding goes'}]);
-    const { mountGrantsResearch } = await import('/grants-research.js?v=20260909-2');
-    if (!hereRoute().startsWith('/reports/grants-allocation')) return;
-    await mountGrantsResearch(root,{focus:manageFocus});
+    const { mountGrantsResearch } = await import('/grants-research.js?v=20260909-map-2');
+    if (grantsGeneration !== grantsResearchGeneration || !hereRoute().startsWith('/reports/grants-allocation')) return;
+    grantsResearchHandle = mountGrantsResearch(root,{focus:manageFocus});
+    await grantsResearchHandle.ready;
     return;
   }
   // Already rendered (e.g. Back from a cited document): just reveal it —

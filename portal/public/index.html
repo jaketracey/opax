@@ -58,7 +58,7 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=e9b40c889f">
+<link rel="stylesheet" href="/style.css?v=15bf301447">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -760,6 +760,12 @@
     <!-- ============================ EXPLORE ============================ -->
     <section id="panel-explore" class="panel" hidden aria-label="Explore">
       <div class="game-grid">
+        <button type="button" class="game-card" id="explore-ballot-btn">
+          <span class="game-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="5" width="28" height="38" rx="2"/><path d="M17 14h3v4h-3zM17 25h3v4h-3zM26 16h6M26 27h6M17 36h15"/></svg></span>
+          <span class="game-title">Build your ballot</span>
+          <span class="game-blurb">Research the candidates and arrange your own preferences with a practice ballot from the 2025 federal election.</span>
+          <span class="game-cta">Build a practice ballot</span>
+        </button>
         <button type="button" class="game-card" id="explore-tm-btn">
           <span class="game-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6"
@@ -883,6 +889,10 @@
         </button>
       </div>
 
+      <dialog class="game-dialog" id="dialog-ballot" aria-label="Build your ballot">
+        <div class="game-dialog-head"><button type="button" class="game-close" data-close="dialog-ballot" aria-label="Close">✕</button></div>
+        <div id="explore-ballot" class="game-dialog-body"></div>
+      </dialog>
       <dialog class="game-dialog" id="dialog-tm" aria-label="Time machine">
         <div class="game-dialog-head">
           <button type="button" class="game-close" data-close="dialog-tm" aria-label="Close">✕</button>
@@ -1317,6 +1327,6 @@
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
 <script src="/navigation.js?v=842e523c9d" defer></script>
-<script src="/app.js?v=56e9625690" defer></script>
+<script src="/app.js?v=2e3dfe03cd" defer></script>
 </body>
 </html>
