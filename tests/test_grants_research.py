@@ -36,6 +36,9 @@ class GrantsResearchTests(unittest.TestCase):
         invitation=next(r for r in rows if r['slug']=='mlci-invitation-001')
         self.assertIn('not an award or payment',invitation['texts']['t-body']['body'])
         self.assertEqual(invitation['extra']['metadata']['stage'],'invitation')
+        award=next(r for r in rows if r['slug']=='mlci-award-ga559327')
+        self.assertIn('Closed Non-Competitive',award['texts']['t-body']['body'])
+        self.assertEqual(award['extra']['metadata']['source_fields']['go_id'],'GO7867')
         self.assertTrue(all('not the 2025 result' in r['texts']['t-body']['body'] for r in rows if r['slug'].startswith('aec-seat-')))
 
     def test_enrichment_queue_excludes_withdrawn_projects_and_known_affiliations(self):

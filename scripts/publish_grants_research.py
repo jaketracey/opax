@@ -45,9 +45,10 @@ def records(data, directory=None):
     for a in data['awards']:
         text=(f"{a['ga_id']}: {a['activity']}. Major and Local Community Infrastructure Program. "
               f"Published grant award value: AUD {a['value']:,}. Publication date: {a['publish_date']}. "
-              f"Recorded delivery state: {a.get('delivery_state') or 'not recorded'}. An award is not a payment. "
+              f"Grant opportunity: {a['go_id']}. Recorded selection process: {a.get('selection_process') or 'not recorded'}. "
+              f"Recorded delivery state: {a.get('delivery_state') or 'not recorded'}. Recorded delivery postcode: {a.get('delivery_postcode') or 'not recorded'}. An award is not a payment. "
               "This record has not been matched to a specific invitation or electorate; do not infer a project site from a recipient address.")
-        yield resource('mlci-award-'+a['ga_id'].lower(),a['activity']+' — '+a['ga_id'],text,a['source_url'],a['publish_date'],'grant_award','grantconnect',{'stage':'award','record_id':a['ga_id'],'value_aud':a['value'],'delivery_state':a.get('delivery_state')})
+        yield resource('mlci-award-'+a['ga_id'].lower(),a['activity']+' — '+a['ga_id'],text,a['source_url'],a['publish_date'],'grant_award','grantconnect',{'stage':'award','record_id':a['ga_id'],'value_aud':a['value'],'delivery_state':a.get('delivery_state'),'source_fields':a})
     for p in (directory or {}).get('people',[]):
         if not p.get('representation'):continue
         facts='; '.join(f"{r['jurisdiction']} / {r['chamber']}: {r['electorate']}" for r in p['representation'])
@@ -66,8 +67,12 @@ def resource(slug,title,text,url,date,kind,source,metadata):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--data',type=Path,required=True)
-    p.add_argument('--receipts',type=Path,required=True);p.add_argument('--directory',type=Path);p.add_argument('--workers',type=int,default=4);p.add_argument('--write',action='store_true');a=p.parse_args()
+    p.add_argument('--receipts',type=Path,required=True);p.add_argument('--directory',type=Path);p.add_argument('--workers',type=int,default=4);p.add_argument('--write',action='store_true')
+    p.add_argument('--kind',choices=['grant_invitation','grant_award','election_baseline','parliamentary_profile','research_report'])
+    p.add_argument('--update-owned',action='store_true',help='Update text/metadata only after confirming this publisher owns the source')
+    a=p.parse_args()
     rows=list(records(json.loads(a.data.read_text()),json.loads(a.directory.read_text()) if a.directory else None))
+    if a.kind:rows=[r for r in rows if {'labelset':'kind','label':a.kind} in r['usermetadata']['classifications']]
     if not a.write:print(json.dumps({'records':len(rows),'mode':'dry run'}));return
     from parli.arag import AragConfig,AragError,KbClient
     kb=KbClient(AragConfig.from_env());a.receipts.parent.mkdir(parents=True,exist_ok=True)
@@ -85,6 +90,11 @@ def main():
             if kb.get_resource_by_slug(row['slug'],show='origin').get('origin',{}).get('url') != row['origin']['url']:
                 raise RuntimeError('Source URL read-back mismatch: '+row['slug'])
         live=kb.get_resource_text(rid,'t-body')
+        if a.update_owned:
+            kb.patch_resource_by_slug(row['slug'],{'texts':row['texts'],'extra':row['extra']})
+            live=kb.get_resource_text(rid,'t-body')
+            if kb.get_resource_by_slug(row['slug'],show='extra').get('extra') != row['extra']:
+                raise RuntimeError('Metadata read-back mismatch: '+row['slug'])
         if live.get('value',{}).get('body')!=row['texts']['t-body']['body']:raise RuntimeError('Read-back mismatch: '+row['slug'])
         time.sleep(.3)
         return row['slug'],rid,'verified',time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())
