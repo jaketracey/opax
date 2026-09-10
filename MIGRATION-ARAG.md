@@ -11,17 +11,19 @@ KB `opax` (`d33c0a87-98cb-4169-b0d2-ff9b75573fb7`, account `7b5c9761…`) is liv
 `ray-test` KB was deleted 2026-09-01. No enrichment (DA) task is registered anywhere —
 gated on the cost sign-offs in §Costs. Branch: `worktree-arag-migration`.
 
-**Models (updated 2026-09-01 evening — BYOK LIVE, provider-pinned):**
+**Models (updated 2026-09-10 — BYOK LIVE, provider fallback enabled):**
 `generative_model` and `summary_model` are `openai-compatible` → OpenRouter →
-model_id **`@preset/opax`** (an OpenRouter dashboard preset:
-`deepseek/deepseek-v4-flash-0731`, provider routing only=[DeepSeek]).
-Unpinned, OpenRouter served the model from 17 third-party hosts — mostly fp8
-quants, at least one fp4 — so the pin buys full-precision first-party serving
-at $0.44/$1.32 per 1M (~$0.008/ask, ~12K asks per $100). Routing policy lives
-in the OpenRouter preset (dashboard edit, no KB touch): switch the preset's
-`only` to `order` if fallback-on-outage is preferred over strict pinning
-(strict = asks fail during a DeepSeek outage). generation_config 1600 max out
-/ 120k max in.
+model_id **`@preset/opax`**, currently preset version 3:
+`deepseek/deepseek-v4-flash-0731`, with
+`provider: {order: ["deepseek"], allow_fallbacks: true}` and
+`reasoning: {enabled: false}`. The preferred host is attempted when available;
+other hosts serving the same model may answer when it is unavailable. These
+hosts can use different quantisation, so inspect answer quality as well as
+availability. The previous `only: ["deepseek"]` restriction caused production
+HTTP 412 failures when OpenRouter no longer listed that host for the model.
+An `allow_fallbacks: true` flag does not remove an `only` restriction.
+Generation configuration remains 4096 max out / 120k max in.
+See [the incident and recovery checks](docs/operations/2026-09-10-ask-provider-outage.md).
 **Reasoning burn (found 2026-09-04):** the box's `model_id` is `@preset/opax`, and
 v4-flash reasons by default. The platform's `reasoning_features` knobs
 (`effort_key`, `dispatch` 0/1/2/3, `default_effort` 5) were tried live and change
@@ -30,7 +32,9 @@ nothing — `reasoning` still comes back (4-19K chars) and on a bad draw eats th
 written answer came back". Sent directly to OpenRouter, `reasoning: {enabled: false}`
 (or `reasoning_effort: "none"`) zeroes reasoning tokens on this model, so the fix is
 on the preset (dashboard: presets → opax → add `"reasoning": {"enabled": false}` to the
-config; the presets API is read-only). Verify with a direct `@preset/opax` call:
+config). As verified on 2026-09-10, the presets API also supports updates via
+`POST /api/v1/presets/opax/chat/completions`; retain the existing configuration
+and system prompt when creating a new version. Verify with a direct `@preset/opax` call:
 `completion_tokens_details.reasoning_tokens` must be 0.
 **Applied 2026-09-04 11:27Z** (preset version 2, edited in the dashboard; the change took
 about two minutes to propagate). After it: /ask ~5 s instead of 12-35 s, `reasoning`
