@@ -21,6 +21,7 @@ import { canonicalPageRedirect } from './canonical-origin'
 import { communityMcp } from './community-mcp'
 import { voiceRoute } from './voice'
 import { proxyPostHog } from './posthog'
+import { networkBlock } from './network-block'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { runDailyPost, composeDailyPost, envSources, melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-post'
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
@@ -4120,6 +4121,9 @@ export default {
     const url = new URL(request.url)
     const canonical = canonicalPageRedirect(request, env.COMMUNITY_ORIGIN)
     if (canonical) return canonical
+    // Scraper fleets (see network-block.ts) are refused before any paid route runs.
+    const blocked = networkBlock(request, env, url.pathname)
+    if (blocked) return withSecurityHeaders(blocked, url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     if (url.pathname.startsWith('/api/community/')) return communityResponse(await communityRoute(request, env))

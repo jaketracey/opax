@@ -60,7 +60,11 @@
     // the convention is the date of the corpus change. See docs/STREAMING.md
     // "Caching" and the MIGRATION-ARAG.md invariants.
     "CACHE_EPOCH": "2026-09-09-grant-place-evidence",
-    "DAILY_POST_ENABLED": "true"
+    "DAILY_POST_ENABLED": "true",
+    // Networks refused on /api and /og. 45102/24429/37963 = Alibaba Cloud: a
+    // 650-address headless-Chrome fleet in Singapore was making ~100x the real
+    // readers' paid /api/ask calls from 4 Sep 2026. Edit here, no code change.
+    "BLOCKED_ASNS": "45102,24429,37963"
   },
 
   // Workers Rate Limiting bindings (wrangler >= 4.36 top-level `ratelimits`;
@@ -91,7 +95,7 @@
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-09-grant-place-evidence", "DAILY_POST_ENABLED": "false" },
+      "vars": { "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-09-grant-place-evidence", "DAILY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963" },
       "ratelimits": [],
       // Never post from staging; triggers would otherwise be inherited.
       "triggers": { "crons": [] },

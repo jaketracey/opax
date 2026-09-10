@@ -4,6 +4,8 @@ interface Env {
   ARAG_KB_ID: string
   ARAG_KB_TOKEN: string
   /** Daily X post (docs/DAILY-POST.md). All optional: missing secrets mean the cron only logs. */
+  /** Comma-separated ASNs refused on /api and /og (network-block.ts). */
+  BLOCKED_ASNS?: string
   DAILY_POST_ENABLED?: string
   X_API_KEY?: string
   X_API_SECRET?: string
@@ -18,6 +20,8 @@ declare namespace Cloudflare {
   ARAG_KB_ID: string
     ARAG_KB_TOKEN: string
     /** Daily X post (docs/DAILY-POST.md). All optional: missing secrets mean the cron only logs. */
+    /** Comma-separated ASNs refused on /api and /og (network-block.ts). */
+    BLOCKED_ASNS?: string
     DAILY_POST_ENABLED?: string
     X_API_KEY?: string
     X_API_SECRET?: string
