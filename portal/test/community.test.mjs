@@ -18,7 +18,18 @@ async function login(email='reader@example.com'){assert.equal((await call('auth/
 return {db,env,outbox,call,request,login}}
 test('magic links are single-use, hashed, and issue secure private sessions',async()=>{const f=fixture(),l=await f.login();assert.match(l.cookie,/__Host-opax_session=/);assert.notEqual(f.db.prepare('SELECT token_hash FROM login_links').get().token_hash,l.token);assert.equal((await f.call('auth/consume','POST',{token:l.token})).status,400);const r=await f.call('status','GET',undefined,l.cookie);assert.equal(r.headers.get('cache-control'),'no-store');assert.equal((await r.json()).member.email,'reader@example.com');f.db.close()});
 test('expired links and tokens cannot sign in',async()=>{const f=fixture();await f.call('auth/request','POST',{email:'a@example.com'});const token=new URL(f.outbox[0].text.match(/https:\/\/\S+/)[0]).hash.slice(7);f.db.exec('UPDATE login_links SET expires_at=0');assert.equal((await f.call('auth/consume','POST',{token})).status,400);assert.equal((await f.call('auth/consume','POST',{token:'x'.repeat(43)})).status,400);f.db.close()});
-test('cross-origin account mutations are refused',async()=>{const f=fixture();assert.equal((await f.call('auth/request','POST',{email:'a@example.com'},'',{origin:'https://evil.test'})).status,403);assert.equal(f.outbox.length,0);f.db.close()});
+test('cross-origin and opaque-origin account mutations are refused',async()=>{
+ const f=fixture();
+ try{
+  for(const origin of ['https://evil.test','https://www.opax.test','null','']){
+   for(const path of ['auth/request','auth/consume','auth/logout']){
+    assert.equal((await f.call(path,'POST',{email:'a@example.com',token:'a'.repeat(43)},'',{origin})).status,403);
+   }
+  }
+  assert.equal(f.outbox.length,0);
+  assert.equal(f.db.prepare('SELECT count(*) n FROM login_links').get().n,0);
+ }finally{f.db.close()}
+});
 test('email failures invalidate the unused link and do not create accounts',async()=>{const f=fixture();f.env.COMMUNITY_EMAIL.send=async()=>{throw Error('mail failed')};assert.equal((await f.call('auth/request','POST',{email:'a@example.com'})).status,503);assert.equal(f.db.prepare('SELECT count(*) n FROM login_links').get().n,0);assert.equal(f.db.prepare('SELECT count(*) n FROM members').get().n,0);f.db.close()});
 test('login rate limits prevent repeated email sends',async()=>{const f=fixture();for(let i=0;i<5;i++)assert.equal((await f.call('auth/request','POST',{email:'a@example.com'})).status,200);assert.equal((await f.call('auth/request','POST',{email:'a@example.com'})).status,429);assert.equal(f.outbox.length,5);f.db.close()});
 test('logging out on all devices revokes every session',async()=>{const f=fixture(),a=await f.login(),b=await f.login();assert.equal((await f.call('auth/logout','POST',{everywhere:true},a.cookie)).status,200);assert.equal((await (await f.call('status','GET',undefined,b.cookie)).json()).member,null);f.db.close()});

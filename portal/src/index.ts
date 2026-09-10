@@ -16,6 +16,7 @@
 import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
+import { canonicalPageRedirect } from './canonical-origin'
 import { communityMcp } from './community-mcp'
 import { voiceRoute } from './voice'
 import { proxyPostHog } from './posthog'
@@ -4123,6 +4124,8 @@ async function route(
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    const canonical = canonicalPageRedirect(request, env.COMMUNITY_ORIGIN)
+    if (canonical) return canonical
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     if (url.pathname.startsWith('/api/community/')) return communityResponse(await communityRoute(request, env))
