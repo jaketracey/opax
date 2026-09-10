@@ -1,3 +1,4 @@
+import {readGenerationCache, storeGenerationCache} from './generation-cache'
 /**
  * OPAX portal Worker — thin proxy over the Progress Agentic RAG knowledge box.
  *
@@ -208,9 +209,8 @@ function json(data: unknown, status = 200): Response {
 // Finished answers therefore live in caches.default under a synthetic URL
 // keyed by a SHA-256 of the canonical ask input plus CACHE_EPOCH (wrangler
 // vars; bumped whenever the corpus changes, so a stale record is never
-// replayed). caches.default is PER COLO: a question warmed in Sydney is a
-// MISS in Frankfurt. That is accepted — the traffic is Australian — and the
-// warm script (scripts/warm_cache.py) runs from Australia.
+// replayed). The edge cache is backed by shared Workers KV, so other
+// locations can reuse successful generations without another model call.
 //
 // Only answers worth keeping are stored: not a refusal, non-empty, at least
 // one cited source. Chat turns (`context`) are never cached — the answer
@@ -1003,7 +1003,7 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
     })(),
   )
   return new Response(readable, {
-    headers: { ...SSE_HEADERS, 'x-opax-cache': 'HIT', ...(cachedAt ? { 'x-opax-cached-at': cachedAt } : {}) },
+    headers: { ...SSE_HEADERS, 'x-opax-cache': 'HIT', ...(cachedAt ? { 'x-opax-cached-at': cachedAt } : {}), ...(hit.headers.get('x-opax-cache-tier') ? {'x-opax-cache-tier':hit.headers.get('x-opax-cache-tier')!} : {}) },
   })
 }
 
@@ -1027,7 +1027,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const cacheKey = keyText ? cacheRequest('ask', await sha256Hex(keyText)) : null
   const bypass = cacheBypass(request, url)
   if (cacheKey && !bypass) {
-    const hit = await caches.default.match(cacheKey)
+    const hit = await readGenerationCache(env, ctx, cacheKey)
     if (hit) return wantStream ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
@@ -1039,7 +1039,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   catch { return json({ error: 'Public-record search is temporarily unavailable. Please try again.' }, 503) }
   const body = buildAskBody(input, records)
   const store = (payload: AskPayload): void => {
-    if (cacheKey && cacheableAnswer(payload)) cacheStore(ctx, cacheKey, json(payload), ASK_CACHE_TTL)
+    if (cacheKey && cacheableAnswer(payload)) storeGenerationCache(env, ctx, cacheKey, json(payload), ASK_CACHE_TTL)
   }
   if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records, scope })
 
@@ -1087,7 +1087,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   const query = (searchUrl.searchParams.get('q') || '').trim()
   const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to'].map(k => [k, searchUrl.searchParams.get(k) || '']))
   const key = cacheRequest('search-summary', await sha256Hex(JSON.stringify({version:SEARCH_SUMMARY_VERSION, epoch:env.CACHE_EPOCH, query, filters, sources, index:results.index_version})))
-  const cached = await caches.default.match(key)
+  const cached = await readGenerationCache(env, ctx, key)
   if (cached) return withCacheStatus(cached, 'HIT', false)
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
   if (limited) return limited
@@ -1106,7 +1106,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
     }
     if (!summary) return json({error:'A cited summary is unavailable. Your matching records are still below.'},502)
     const out = json({status:'ready', ...summary, reviewed_count:sources.length, partial:!!results.warnings?.length})
-    cacheStore(ctx, key, out, 24*60*60)
+    storeGenerationCache(env, ctx, key, out, 24*60*60)
     return withCacheStatus(out,'MISS',false)
   } catch { return json({error:'A cited summary is unavailable. Your matching records are still below.'},503) }
 }
@@ -1119,8 +1119,8 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
   const graph = await assetJson<StoryGraph>(env,files[jurisdiction])
   const context = journeyStoryContext(graph,lens,focus)
   if (!context) return json({error:'Journey not available'},404)
-  const key = cacheRequest('journey-story',await sha256Hex(JSON.stringify({version:STORY_VERSION,context})))
-  const cached = await caches.default.match(key)
+  const key = cacheRequest('journey-story',await sha256Hex(JSON.stringify({version:STORY_VERSION,epoch:env.CACHE_EPOCH,context})))
+  const cached = await readGenerationCache(env, ctx, key)
   if (cached) return withCacheStatus(cached,'HIT',false)
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER,request)
   if (limited) return limited
@@ -1144,7 +1144,7 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
     }
     if (!steps) return json({error:'Story unavailable'},502)
     const out = json({steps,generated:true,version:STORY_VERSION})
-    cacheStore(ctx,key,out,7*24*60*60)
+    storeGenerationCache(env,ctx,key,out,7*24*60*60)
     return withCacheStatus(out,'MISS',false)
   } catch { return json({error:'Story unavailable'},503) }
 }

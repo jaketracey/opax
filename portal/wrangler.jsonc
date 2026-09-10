@@ -15,6 +15,8 @@
     "run_worker_first": ["/", "/*.html", "/community", "/community/", "/connections", "/connections/", "/map", "/map/", "/api/*", "/og/*", "/ingest/*", "/mcp"]
   },
 
+  "kv_namespaces": [{"binding":"GENERATION_CACHE","id":"e0b56c0457374743b580e7210e7b4515"}],
+
   "d1_databases": [{"binding":"COMMUNITY_DB","database_name":"opax-community","database_id":"ea0ca399-189f-4fc0-83f8-66a41204a180","migrations_dir":"migrations"}],
   "send_email": [{"name":"COMMUNITY_EMAIL"}],
 
@@ -76,6 +78,7 @@
     "staging": {
       "name": "opax-portal-staging",
       "secrets": {"required":["ELEVENLABS_API_KEY","VOICE_TOOL_SECRET"]},
+      "kv_namespaces": [{"binding":"GENERATION_CACHE","id":"aed3fad08c95468ea8578c761ada6a72"}],
       "d1_databases": [{"binding":"COMMUNITY_DB","database_name":"opax-community-staging","database_id":"033d5775-4443-4757-a984-326f2914ac7f","migrations_dir":"migrations"}],
       "send_email": [{"name":"COMMUNITY_EMAIL"}],
       "workers_dev": true,

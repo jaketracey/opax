@@ -129,7 +129,7 @@ Every `/api/ask` miss is a paid generative call that takes 15-40 s, and the
 same questions come back all day: twelve home-page chips, the topic pages'
 "What has parliament said about X?", the money map's industry asks, the
 harness, the report generator. The Worker therefore keeps finished answers
-in `caches.default` and replays them — including down the SSE path, so
+in `caches.default`, backed by shared Workers KV for public generations, and replays them — including down the SSE path, so
 `readAskStream` in `app.js` needs no change and never learns the difference.
 
 `X-OPAX-Cache: HIT | MISS | BYPASS` is on every cached endpoint.
@@ -137,9 +137,11 @@ in `caches.default` and replays them — including down the SSE path, so
 | endpoint | TTL | key |
 | --- | --- | --- |
 | `POST /api/ask` | 7 days | SHA-256 of the canonical ask input (below) |
+| `GET /api/search-summary` | 24 hours | prompt version + corpus epoch + query/scope + source snapshot |
+| `POST /api/journey-story` | 7 days | prompt version + corpus epoch + server-loaded graph facts |
 | `GET /api/search` | 10 min | SHA-256 of epoch + the query string, `nocache` dropped, params sorted |
 | `GET /api/resource/<slug>` | 1 hour | epoch + slug |
-| `POST /api/followups` | 24 hours | SHA-256 of epoch + question + answer + the cleaned passages |
+| `POST /api/followups` | 7 days | SHA-256 of epoch + question + answer + the cleaned passages |
 | `GET /api/stats`, `/api/recent` | 5 min | the route |
 | `GET /api/news` | 15 min | the route |
 | `GET /api/topics`, `/api/topic/*` &c. | as before | the route (`cachedJson`) |
@@ -216,9 +218,23 @@ streamed path caches the `done` payload (the same bytes the reader got), and
 it does so even when the reader left early — the answer was paid for either
 way.
 
-`caches.default` is **per Cloudflare location**. A question warmed in Sydney
-is a miss in Frankfurt. Accepted: the readers are Australian, and
-`scripts/warm_cache.py` is run from Australia.
+`caches.default` is **per Cloudflare location**. As of 2026-09-10, successful
+Ask answers, cited search summaries and journey stories also have an expiring
+copy in `GENERATION_CACHE` (Workers KV). An edge miss checks this shared copy
+before making another paid call, then warms the local edge for the remaining
+lifetime. Existing edge answers are adopted without extending their expiry.
+Staging has a separate namespace. Conversation turns still bypass this cache.
+
+`X-OPAX-Cache-Tier: edge | shared` identifies the layer serving a hit. Structured
+`generation_cache` logs contain only route and outcome, never questions, answers,
+user identifiers or credentials. Storage failures fail open; only successful,
+validated JSON responses up to 1 MB enter shared storage. Account/cookie responses
+cannot enter this cache. KV is eventually consistent, so simultaneous cold
+requests can still generate separately during propagation. This is response
+reuse, not a global concurrency lock. Ordinary edge-only caches are unchanged.
+
+The cache retains the existing TTLs and corpus/prompt keys. A corpus epoch bump
+invalidates both layers together. No model or citation-validation rules change.
 
 Measured against `wrangler dev`, 2026-09-02:
 
