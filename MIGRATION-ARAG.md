@@ -13,15 +13,18 @@ gated on the cost sign-offs in §Costs. Branch: `worktree-arag-migration`.
 
 **Models (updated 2026-09-10 — BYOK LIVE, provider fallback enabled):**
 `generative_model` and `summary_model` are `openai-compatible` → OpenRouter →
-model_id **`@preset/opax`**, currently preset version 3:
+model_id **`@preset/opax`**, currently preset version 4:
 `deepseek/deepseek-v4-flash-0731`, with
-`provider: {order: ["deepseek"], allow_fallbacks: true}` and
+`provider: {order: ["deepseek", "morph/bf16", "deepinfra/fp8"], allow_fallbacks: true}` and
 `reasoning: {enabled: false}`. The preferred host is attempted when available;
-other hosts serving the same model may answer when it is unavailable. These
-hosts can use different quantisation, so inspect answer quality as well as
+Morph's full-precision endpoint is next, followed by DeepInfra and other hosts
+serving the same model. These hosts can use different quantisation, so inspect answer quality as well as
 availability. The previous `only: ["deepseek"]` restriction caused production
 HTTP 412 failures when OpenRouter no longer listed that host for the model.
 An `allow_fallbacks: true` flag does not remove an `only` restriction.
+Version 3 restored routing but its default host repeatedly omitted usable
+citations for the reported mixed financial/speech question. Version 4 returned
+a generated answer with 11 validated citation keys for that question.
 Generation configuration remains 4096 max out / 120k max in.
 See [the incident and recovery checks](docs/operations/2026-09-10-ask-provider-outage.md).
 **Reasoning burn (found 2026-09-04):** the box's `model_id` is `@preset/opax`, and

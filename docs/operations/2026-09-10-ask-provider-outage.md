@@ -37,7 +37,7 @@ version back confirmed version 3 and the exact configuration above.
 The old preset's descriptive text still describes strict pinning; use the
 designated version's configuration as the source of truth.
 
-## Remaining recovery blocker
+## Spending-cap recovery
 
 A direct preset call then returned 403, `Key limit exceeded (total limit)`.
 Read-only account checks found the Opax key's lifetime cap was US$300, usage
@@ -45,10 +45,44 @@ US$300.027937444, and remaining key allowance zero. The account had approximatel
 US$40.33 in existing credit at that check. The key cap and account balance are
 separate controls.
 
-The proposed next step is to raise the key's cap to US$340, using existing
-credit without purchasing more. User approval is pending; no cap, payment,
-auto-recharge, or credential changes were made. Do not describe Ask as restored
-until the checks below pass.
+The user approved US$500 and applied that limit from their phone. At 03:07 UTC,
+the key API confirmed a US$500 lifetime cap, US$199.972062556 remaining key
+allowance, and no reset period. Account credit was still approximately US$40.33;
+the cap change did not add funds. No credentials or automatic purchase settings
+were changed.
+
+## Answer verification and host preference
+
+After the cap change, a direct preset completion succeeded with zero reasoning
+tokens. A scoped synchronous question about gambling advertising returned an
+answer, 11 retrieved sources and a valid citation. The reported mixed
+financial/speech question no longer returned an error, but repeatedly fell back
+to original excerpts: the default fallback host omitted the citation mappings
+required to validate its generated prose. The source-validation guard correctly
+retained the excerpts instead of showing an unsupported answer.
+
+Preset version 4 retains the same model, disabled reasoning and enabled host
+fallbacks, with this preference order:
+
+```json
+"provider": {
+  "order": ["deepseek", "morph/bf16", "deepinfra/fp8"],
+  "allow_fallbacks": true
+}
+```
+
+The current model endpoint catalog identified Morph's endpoint as `bf16`, and
+a direct preset completion confirmed Morph served the unchanged DeepSeek model
+with zero reasoning tokens. The production question then returned a generated
+answer with 11 valid citation keys linking to financial records. This is a
+bounded recovery sample, not a claim that every answer or fallback host has
+been quality-reviewed.
+
+The production mobile check passed in headless WebKit with an iPhone 13
+viewport: the reported question rendered a generated answer, 18 inline citation
+marks and 11 source links, with no horizontal overflow or JavaScript errors.
+A subsequent replay returned the same validated answer from the cache.
+This checks the Safari engine and mobile layout, not a physical iPhone device.
 
 ## Recovery verification
 
@@ -66,7 +100,7 @@ until the checks below pass.
    source links render.
 
 Do not bypass a spending cap by replacing the key or changing billing providers.
-The earlier preset can be restored by posting its saved full configuration as
+An earlier preset can be restored by posting its saved full configuration as
 a new version, but strict pinning currently recreates the routing failure.
 
 ## References
