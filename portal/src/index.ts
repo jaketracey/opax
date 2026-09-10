@@ -21,6 +21,8 @@ import { canonicalPageRedirect } from './canonical-origin'
 import { communityMcp } from './community-mcp'
 import { voiceRoute } from './voice'
 import { proxyPostHog } from './posthog'
+import { TOPIC_NAMES } from './topic-names.mjs'
+import { runDailyPost, composeDailyPost, envSources, melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-post'
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
@@ -2333,30 +2335,7 @@ const SITE_TITLE = 'OPAX: ask what Australian politicians actually said'
 const SITE_DESCRIPTION =
   'Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.'
 
-// Mirror of app.js TOPICS (scripts/arag_enrich.py is canonical for both).
-const TOPIC_NAMES: Record<string, string> = {
-  'gambling': 'Gambling',
-  'financial-services': 'Financial services',
-  'mining-energy': 'Mining & energy',
-  'climate-environment': 'Climate & environment',
-  'property-construction': 'Property & construction',
-  'housing': 'Housing',
-  'health': 'Health',
-  'media-communications': 'Media & communications',
-  'hospitality-alcohol': 'Hospitality & alcohol',
-  'defence-security': 'Defence & security',
-  'agriculture': 'Agriculture',
-  'unions-workplace': 'Unions & workplace',
-  'immigration': 'Immigration',
-  'indigenous-affairs': 'Indigenous affairs',
-  'tax-budget': 'Tax & budget',
-  'education': 'Education',
-  'welfare-social': 'Welfare & social services',
-  'integrity-democracy': 'Integrity & democracy',
-  'infrastructure-transport': 'Infrastructure & transport',
-  'justice-law': 'Justice & law',
-  'foreign-affairs': 'Foreign affairs',
-}
+// TOPIC_NAMES lives in ./topic-names (shared with the daily post).
 
 const STATE_NAMES: Record<string, string> = {
   federal: 'federal parliament', nsw: 'NSW parliament', vic: 'Victorian parliament',
@@ -4083,6 +4062,17 @@ async function route(
       if (url.pathname === '/api/brief' && request.method === 'GET') {
         return await apiBrief(url, env)
       }
+      if (url.pathname === '/api/daily-post/preview' && request.method === 'GET') {
+        // What the cron would post for a date (default today, Melbourne). Never posts.
+        const date = url.searchParams.get('date') ?? melbourneDate()
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return json({ error: 'bad date' }, 400)
+        const kindParam = url.searchParams.get('kind')
+        const kind = (DAILY_POST_KINDS as readonly string[]).includes(kindParam ?? '') ? kindParam as DailyPostKind : undefined
+        const post = await composeDailyPost(date, envSources(env, name => personTopicsFor(name, env)), kind)
+        const response = json(post ?? { error: 'nothing to post' }, post ? 200 : 404)
+        response.headers.set('cache-control', 'no-store')
+        return response
+      }
       if (url.pathname === '/api/topics' && request.method === 'GET') {
         return await apiTopics(env)
       }
@@ -4119,6 +4109,10 @@ async function route(
       }
       return await env.ASSETS.fetch(request)
   }
+}
+
+function personTopicsFor(name: string, env: Env): Promise<Response> {
+  return apiPersonTopics(new URL(`${env.COMMUNITY_ORIGIN}/api/person-topics?name=${encodeURIComponent(name)}`), env)
 }
 
 export default {
@@ -4188,5 +4182,11 @@ export default {
       console.error(JSON.stringify({ level: 'error', path: url.pathname, message: String(err) }))
       return withSecurityHeaders(json({ error: 'internal error' }, 500), url)
     }
+  },
+
+  // Cron (wrangler.jsonc "triggers"): the daily X post. See docs/DAILY-POST.md.
+  async scheduled(controller: ScheduledController, env: Env, _ctx: ExecutionContext): Promise<void> {
+    const result = await runDailyPost(env, { now: controller.scheduledTime, personTopics: name => personTopicsFor(name, env) })
+    console.log('daily-post', JSON.stringify({ cron: controller.cron, status: result.status, reason: result.reason, id: result.id, subject: result.post?.subject }))
   },
 } satisfies ExportedHandler<Env>

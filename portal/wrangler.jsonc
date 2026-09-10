@@ -22,6 +22,12 @@
 
   "secrets": {"required":["ARAG_KB_ID","ARAG_KB_TOKEN","ELEVENLABS_API_KEY","VOICE_TOOL_SECRET"]},
 
+  // Daily X post at 22:00 UTC = 08:00 AEST / 09:00 AEDT. Posts only when
+  // DAILY_POST_ENABLED is "true" and the four X_* secrets exist; otherwise the
+  // run logs "skipped"/"dry-run". Preview: /api/daily-post/preview?date=YYYY-MM-DD.
+  //   npx wrangler secret put X_API_KEY / X_API_SECRET / X_ACCESS_TOKEN / X_ACCESS_TOKEN_SECRET
+  "triggers": { "crons": ["0 22 * * *"] },
+
   "observability": {
     "enabled": true,
     "logs": { "head_sampling_rate": 1 }
@@ -53,7 +59,8 @@
     // answers built on the old record are never served again. Any string;
     // the convention is the date of the corpus change. See docs/STREAMING.md
     // "Caching" and the MIGRATION-ARAG.md invariants.
-    "CACHE_EPOCH": "2026-09-09-grant-place-evidence"
+    "CACHE_EPOCH": "2026-09-09-grant-place-evidence",
+    "DAILY_POST_ENABLED": "true"
   },
 
   // Workers Rate Limiting bindings (wrangler >= 4.36 top-level `ratelimits`;
@@ -84,8 +91,10 @@
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-09-grant-place-evidence" },
+      "vars": { "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-09-grant-place-evidence", "DAILY_POST_ENABLED": "false" },
       "ratelimits": [],
+      // Never post from staging; triggers would otherwise be inherited.
+      "triggers": { "crons": [] },
       "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/*"] }
     }
   }
