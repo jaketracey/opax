@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   kindFor, seededPick, fit, xLength, prettySponsor, prettyParty, formatDate, joinList,
-  composeDailyPost, oauth1Header, runDailyPost, X_LIMIT,
+  composeDailyPost, oauth1Header, runDailyPost, X_LIMIT, clip,
 } from '../src/daily-post.ts';
 
 const roster = { people: [
@@ -106,12 +106,23 @@ test('bill post uses the summary sentences and a readable sponsor', async () => 
   assert.ok(passed.text.includes('Passed 20 Aug 2026. Introduced 1 Mar 2026 (Treasury portfolio).'));
 });
 
+test('a long first summary sentence is clipped to fit rather than dropped', async () => {
+  const long = { ...billFiles, 'au-federal-r7537': { summary: { sentences: ['This bill changes the Customs Tariff Act 1995 to remove customs duties on goods brought in under the Geelong Treaty, a nuclear submarine partnership agreement with the United Kingdom signed on 26 July 2025, and it goes on and on well past the character budget.'] } } };
+  const src = { ...sources(['bill:au-federal-r7400']), async asset(path) { const m = path.match(/^\/bills\/(.+)\.json$/); return m && m[1] !== 'index' ? long[decodeURIComponent(m[1])] : sources().asset(path); } };
+  const post = await composeDailyPost('2026-09-10', src, 'bill');
+  assert.ok(post.text.includes('This bill changes the Customs Tariff Act 1995'), post.text);
+  assert.ok(post.text.includes('…'));
+  assert.ok(xLength(post.text) <= X_LIMIT);
+  assert.equal(clip('short', 10), 'short');
+  assert.equal(clip('the quick brown fox jumps', 16), 'the quick brown…');
+});
+
 test('topic post skips reports without speech stats and names the loudest voices', async () => {
   const post = await composeDailyPost('2026-09-10', sources(), 'topic');
   assert.equal(post.kind, 'topic');
   assert.equal(post.subject, 'topic:housing');
-  assert.ok(post.text.startsWith("Housing in Australia's parliaments: 19,369 speeches from 1,292 members."));
-  assert.ok(post.text.includes('Loudest right now: Andrew Bragg (Liberal), Harriet Shing and Ben Riley (Labor).'));
+  assert.ok(post.text.startsWith("Housing in Australia's parliaments: 19,369 speeches from 1,292 speakers."));
+  assert.ok(post.text.includes('Most vocal lately: Andrew Bragg (Liberal), Harriet Shing and Ben Riley (Labor).'));
   assert.ok(post.text.endsWith('https://opax.com.au/reports/housing'));
   assert.ok(xLength(post.text) <= X_LIMIT);
 });

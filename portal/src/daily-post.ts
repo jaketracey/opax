@@ -111,6 +111,15 @@ export function fit(head: string[], optional: string[], tail: string, limit = X_
   return text
 }
 
+/** Cuts text to `limit` characters at a word boundary with an ellipsis. */
+export function clip(text: string, limit: number): string {
+  const chars = [...text]
+  if (chars.length <= limit) return text
+  const cut = chars.slice(0, Math.max(0, limit - 1)).join('')
+  const atWord = cut.replace(/\s+\S*$/, '')
+  return (atWord.length >= limit * 0.6 ? atWord : cut).replace(/[\s,;:]+$/, '') + '…'
+}
+
 export function formatDate(iso: string | null | undefined): string {
   if (!iso) return ''
   const [y, m, d] = iso.slice(0, 10).split('-').map(Number)
@@ -234,9 +243,14 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
     ? `Passed ${formatDate(bill.status_as_of)}. Introduced ${formatDate(bill.introduced)}${by}.`
     : `Introduced ${formatDate(bill.introduced)}${by}. Still before parliament.`
   const url = `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`
+  const head = [bill.title, status]
+  // A summary sentence is the point of the post: clip the first one to whatever
+  // room is left rather than dropping it when the explanatory memorandum runs long.
+  const room = X_LIMIT - xLength(fit(head, [], url)) - 2
+  const first = sentences[0] ? clip(sentences[0], room) : ''
   return {
     date, kind: 'bill', subject: `bill:${bill.key}`, title: bill.title, url,
-    text: fit([bill.title, status], [sentences[0] ?? '', sentences[1] ?? ''], url),
+    text: fit(head, [room >= 40 ? first : '', sentences[1] ?? ''], url),
   }
 }
 
@@ -264,10 +278,10 @@ async function topicPost(date: string, sources: DailyPostSources, exclude: strin
       .map(v => v.party ? `${v.speaker} (${v.party})` : v.speaker)
     const url = `${ORIGIN}/reports/${encodeURIComponent(slug)}`
     const head = [
-      `${report.title} in Australia's parliaments: ${formatNumber(count)} speeches${speakers ? ` from ${formatNumber(speakers)} members` : ''}.`,
+      `${report.title} in Australia's parliaments: ${formatNumber(count)} speeches${speakers ? ` from ${formatNumber(speakers)} speakers` : ''}.`,
     ]
     const optional = [
-      voices.length ? `Loudest right now: ${joinList(voices)}.` : '',
+      voices.length ? `Most vocal lately: ${joinList(voices)}.` : '',
       report.blurb ?? '',
       'Who says what, and how they voted:',
     ]
