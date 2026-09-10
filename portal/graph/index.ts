@@ -28,6 +28,7 @@ import { type Reveal, runReveal } from './reveal.ts'
 import { mountWordsLayer } from './words.ts'
 import { cpiMultiplier } from './cpi.ts'
 import { mountConnectionFallback } from './connection-fallback.ts'
+import { filterMoneyEdges, readMoneyFilters, type MoneyFilters } from '../public/money-records.js'
 
 // Re-exported so a Node smoke test can exercise the pure layout/data layer
 // without a DOM or a WebGL context.
@@ -70,7 +71,8 @@ export type MoneyNode = {
   id: string
   label: string
   /** 'grantor' is the central node public money flows out of. */
-  kind: 'donor' | 'party' | 'grantor'
+  kind: 'donor' | 'party' | 'grantor' | 'agency' | 'supplier'
+  profileUrl?: string
   industry: string
   group: string
   colour?: string
@@ -127,6 +129,8 @@ export type MoneyScene = {
 }
 
 export type MoneyMapOptions = {
+  filters?: MoneyFilters
+  onViewChange?: (view: MoneyGraph, filters: MoneyFilters, years: { from: number; to: number; cpi: boolean }) => void
   /** Reader input in the map or controls; scene presentation stays silent. */
   onInteract?: () => void
   /** Builds the parliament ask-link for a donor's industry. */
@@ -140,6 +144,8 @@ export type MoneyMapOptions = {
   focus?: string
   /** 'full' (default): legend, find, time scrub, zoom, hint. 'mini': bare scene + cards. */
   chrome?: 'full' | 'mini'
+  /** A quiet, fitted industry overview; groups open only when chosen. */
+  overview?: boolean
   /**
    * The year scrub, on its own. Defaults to `chrome === 'full'`; set it true
    * to give mini chrome the two thumbs - one compact row docked bottom left,
@@ -173,6 +179,7 @@ export type MoneyMapOptions = {
 }
 
 export type MoneyMapHandle = {
+  setFilters(filters: MoneyFilters, route?: URLSearchParams): void
   presentScene(scene: MoneyScene): boolean
   /** Restore the full nominal, unfiltered overview. */
   clearScene(): void
@@ -199,7 +206,7 @@ function yearSpan(first: number | null, last: number | null): string {
 const toMapNode = (n: MoneyNode): MapNode => ({
   id: n.id,
   label: n.label,
-  group: n.group,
+  group: n.kind === 'grantor' ? 'public money' : n.group,
   weight: n.total / WEIGHT_SCALE,
   kind: n.kind,
   industry: n.industry,
@@ -275,12 +282,13 @@ export function buildGraph(raw: MoneyGraph): {
   let slot = 0
   for (const group of CLUSTER_COLOURS.keys()) slots.set(group, slot++)
 
+  const nodes = raw.nodes.map(toMapNode)
   const counts = new Map<string, number>()
-  for (const node of raw.nodes) counts.set(node.group, (counts.get(node.group) ?? 0) + 1)
+  for (const node of nodes) counts.set(node.group, (counts.get(node.group) ?? 0) + 1)
 
   const groupStyles = new Map<string, GroupStyle>()
   for (const [group, count] of counts) {
-    const style = clusterColour(group)
+    const style = group === 'public money' ? { colour: GRANTOR_COLOUR, ink: '#245E58' } : clusterColour(group)
     groupStyles.set(group, {
       slot: slots.get(group) ?? (slots.get('other') ?? 0),
       colour: style.colour,
@@ -290,7 +298,6 @@ export function buildGraph(raw: MoneyGraph): {
     })
   }
 
-  const nodes = raw.nodes.map(toMapNode)
   const edges = raw.edges.map(toMapEdge)
   return { nodes, edges, groupStyles, degrees: buildDegrees(edges) }
 }
@@ -423,6 +430,22 @@ const CSS = `
   white-space: nowrap; }
 .mm-row-amt { font-weight: 600; white-space: nowrap; }
 .mm-row-years { font-size: 11px; color: #8a8578; white-space: nowrap; }
+.mm-award-group { margin: 12px 0 0; padding: 0 0 0 12px; border-left: 3px solid var(--mm-award-colour, #29877e); }
+.mm-award-group + .mm-award-group { margin-top: 18px; }
+.mm-award-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mm-card .mm-award-title { margin: 0; font-family: inherit; font-size: 12px; font-weight: 600; line-height: 1.4; min-width: 0; }
+.mm-award-category { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0;
+  border: 0; background: none; text-align: left; font: inherit; color: #142a43; cursor: pointer; }
+.mm-award-category:hover { text-decoration: underline; text-underline-offset: 3px; }
+.mm-award-category:focus-visible { outline: 2px solid #8a5a12; outline-offset: 3px; }
+.mm-award-arrow { color: #8a5a12; font-size: 18px; }
+.mm-award-total { flex: none; font-size: 16px; color: #26251f; font-variant-numeric: tabular-nums; }
+.mm-award-meta { margin: 0 0 10px; font-size: 11px; line-height: 1.4; color: #605e54; }
+.mm-award-projects { list-style: none; margin: 0; padding: 0; }
+.mm-award-project { display: flex; align-items: baseline; gap: 12px; padding: 9px 0; border-top: 1px solid #e4e1d8;
+  font-size: 12px; line-height: 1.5; color: #4a4942; }
+.mm-award-project-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.mm-award-project-amount { flex: none; font-weight: 600; font-variant-numeric: tabular-nums; }
 .mm-ask { display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; min-height: 44px;
   margin-top: 12px; padding: 8px 12px; border: 0; border-radius: 9px;
   background: #142a43; color: #ffffff; font-size: 13px; font-weight: 600;
@@ -621,15 +644,18 @@ function el<K extends keyof HTMLElementTagNameMap>(
 
 export async function mountMoneyMap(
   container: HTMLElement,
-  dataUrl: string,
+  dataUrl: string | MoneyGraph,
   opts: MoneyMapOptions = {},
 ): Promise<MoneyMapHandle> {
   injectStyles()
   container.classList.add('mm-root')
 
-  const response = await fetch(dataUrl)
-  if (!response.ok) throw new Error(`money map data: HTTP ${response.status} for ${dataUrl}`)
-  const raw = (await response.json()) as MoneyGraph
+  let raw: MoneyGraph
+  if (typeof dataUrl === 'string') {
+    const response = await fetch(dataUrl)
+    if (!response.ok) throw new Error(`money map data: HTTP ${response.status} for ${dataUrl}`)
+    raw = await response.json() as MoneyGraph
+  } else raw = dataUrl
 
   if (!webglAvailable()) return mountConnectionFallback(container, raw, opts)
 
@@ -664,6 +690,7 @@ export async function mountMoneyMap(
   let syncScrubControls = () => {}
   let scrubPending = 0
   let destroyed = false
+  let researchFilters: MoneyFilters = opts.filters ?? (full && typeof location !== 'undefined' ? readMoneyFilters(new URLSearchParams(location.search)) : {})
 
   // Full maps own these three query parameters. Mini maps are embedded in
   // donor/party/front-page routes, so their scrub remains local to the embed.
@@ -697,6 +724,9 @@ export async function mountMoneyMap(
     } else {
       url.searchParams.delete('from')
       url.searchParams.delete('to')
+    }
+    for (const [key, value] of Object.entries({ type: researchFilters.type === 'all' ? '' : researchFilters.type, party: researchFilters.party, min: researchFilters.min || '', q: researchFilters.query, industry: activeGroup })) {
+      if (value) url.searchParams.set(key, String(value)); else url.searchParams.delete(key)
     }
     if (adjustForInflation) url.searchParams.set('cpi', '1')
     else url.searchParams.delete('cpi')
@@ -860,7 +890,7 @@ export async function mountMoneyMap(
   // --- Engine ----------------------------------------------------------
   let selectedId: string | null = null
   let selectedEdge: MapEdge | null = null
-  let activeGroup: string | null = null
+  let activeGroup: string | null = researchFilters.industry || null
 
   let recoveryNotice: HTMLDivElement | null = null
   let engine: KnowledgeMapEngine
@@ -888,6 +918,7 @@ export async function mountMoneyMap(
     container.replaceChildren()
     return mountConnectionFallback(container, raw, opts)
   }
+  engine.setOverviewMode(opts.overview === true)
   engine.onEdgePick = (edge) => setEdgeSelection(edge)
   const words = mountWordsLayer({ engine, raw, legend, routeBase })
 
@@ -953,7 +984,7 @@ export async function mountMoneyMap(
   let grantsOn = hasGrants
   let visibleSceneIds = new Set<string>()
   let visibleSceneEdges: MapEdge[] = []
-  const overviewScale = () => container.getBoundingClientRect().width <= 540 ? 1.3 : 1
+  const overviewScale = () => !opts.overview && container.getBoundingClientRect().width <= 540 ? 1.3 : 1
   const pushData = ({ keepFocus = false } = {}) => {
     // A scrub step, a filter or a re-layout is the reader driving: the
     // choreography gives way rather than animating over the top of it.
@@ -975,11 +1006,11 @@ export async function mountMoneyMap(
     const windowNodes = recalculated
       ? raw.nodes.map((n) => windowFigures(n, yearLo, yearHi, adjustForInflation))
       : raw.nodes
-    const windowEdges = (recalculated
+    const windowEdges = filterMoneyEdges({ ...raw, edges: (recalculated
       ? raw.edges.map((e) => windowFigures(e, yearLo, yearHi, adjustForInflation))
       : raw.edges)
       .filter(inWindow)
-      .filter((e) => grantsOn || !isGrantEdge(e))
+      .filter((e) => grantsOn || !isGrantEdge(e)) }, { ...researchFilters, industry: activeGroup || undefined })
     const grantsByNode = new Map<string, GrantsBlock>()
     const contractsByNode = new Map<string, GrantsBlock>()
     for (const n of raw.nodes) {
@@ -995,10 +1026,10 @@ export async function mountMoneyMap(
     }
     const activeDonors = new Set(windowEdges.flatMap((e) => [e.source, e.target]))
     const visibleNodes = windowNodes.filter((n) => {
-      if (n.kind === 'grantor') return grantsOn
-      if (n.group === 'parties') return true
+      if (n.kind === 'grantor') return grantsOn && activeDonors.has(n.id)
+      if (n.group === 'parties') return windowEdges.length > 0 && (researchFilters.party ? n.id === researchFilters.party : activeDonors.has(n.id))
       if (activeGroup !== null && n.group !== activeGroup) return false
-      return !scrubbed || activeDonors.has(n.id)
+      return activeDonors.has(n.id)
     })
     const visibleIds = new Set(visibleNodes.map((n) => n.id))
     const visibleEdges = windowEdges
@@ -1012,15 +1043,18 @@ export async function mountMoneyMap(
       measure: 'resources',
       layout: 'grouped',
       aspect: aspectBucket(),
-      centralGroup: 'parties',
+      centralGroup: raw.meta.procurement ? 'agencies' : 'parties',
+      collapseGroups: !raw.meta.procurement,
     }
     visibleSceneIds = visibleIds
     visibleSceneEdges = visibleEdges
     engine.setData(data)
+    syncUrlState()
+    opts.onViewChange?.({ ...raw, nodes: visibleNodes, edges: windowEdges.filter(e => visibleIds.has(e.source) && visibleIds.has(e.target)) }, { ...researchFilters, industry: activeGroup || '' }, { from: yearLo, to: yearHi, cpi: adjustForInflation })
     // The fit signature deliberately excludes the year window: refitting the
     // camera on every scrub step would turn the timeline into a fairground
     // ride. Filters and resizes refit; the scrub holds the view still.
-    const sig = `${data.aspect}|${activeGroup ?? '*'}`
+    const sig = `${data.aspect}|${activeGroup ?? '*'}|${JSON.stringify(researchFilters)}`
     if (sig !== fitSig) {
       const firstFit = fitSig === ''
       fitSig = sig
@@ -1098,7 +1132,7 @@ export async function mountMoneyMap(
   // --- Legend / filter -------------------------------------------------
   const chips = new Map<string, HTMLButtonElement>()
   const applyIsolate = (group: string | null) => {
-    activeGroup = group !== null && group !== 'parties' && graph.groupStyles.has(group) ? group : null
+    activeGroup = group !== null && group !== 'parties' && group !== 'public money' && graph.groupStyles.has(group) ? group : null
     for (const [g, c] of chips) {
       c.setAttribute('aria-pressed', String(g === activeGroup))
       if (activeGroup !== null && g !== activeGroup) c.setAttribute('data-dimmed', '')
@@ -1109,7 +1143,7 @@ export async function mountMoneyMap(
   }
   if (legend) {
     const legendGroups = [...CLUSTER_COLOURS.keys()].filter(
-      (group) => group !== 'parties' && graph.groupStyles.has(group),
+      (group) => group !== 'parties' && group !== 'public money' && graph.groupStyles.has(group),
     )
     for (const group of legendGroups) {
       const chip = el('button', 'mm-chip', legend)
@@ -1332,6 +1366,39 @@ export async function mountMoneyMap(
     }
   }
 
+  /** Public funding is grouped by record category, with projects nested below. */
+  const awardGroup = (parent: HTMLElement, label: string, colour: string, block: GrantsBlock,
+    noun: string, onClick: (() => void) | null) => {
+    const group = el('section', 'mm-award-group', parent)
+    group.style.setProperty('--mm-award-colour', colour)
+    const heading = el('div', 'mm-award-heading', group)
+    const title = el('h3', 'mm-award-title', heading)
+    if (onClick) {
+      const button = el('button', 'mm-award-category', title)
+      button.type = 'button'
+      button.textContent = label
+      button.title = `Explore ${label.toLowerCase()} on the map`
+      button.addEventListener('click', onClick)
+      const arrow = el('span', 'mm-award-arrow', button)
+      arrow.textContent = '›'
+      arrow.setAttribute('aria-hidden', 'true')
+    } else title.textContent = label
+    el('strong', 'mm-award-total', heading).textContent = formatMoney(block.total)
+    el('p', 'mm-award-meta', group).textContent = `${block.count.toLocaleString()} ${noun}${block.count === 1 ? '' : 's'} · ${yearSpan(block.firstYear, block.lastYear)}`
+    const entries = (block.top ?? []).slice(0, 3)
+    if (entries.length) {
+      const projects = el('ul', 'mm-award-projects', group)
+      for (const [name, amount] of entries) {
+        const item = el('li', 'mm-award-project', projects)
+        el('span', 'mm-award-project-name', item).textContent = name
+        // A single project already shares the category total directly above it.
+        if (entries.length > 1 || amount !== block.total) {
+          el('span', 'mm-award-project-amount', item).textContent = formatMoney(amount)
+        }
+      }
+    }
+  }
+
   /** A question-trigger or profile link on a card. */
   const trigger = (parent: HTMLElement, href: string, label: string, quiet = false, external = false) => {
     const a = el('a', quiet ? 'mm-ask mm-ask-quiet' : 'mm-ask', parent)
@@ -1352,7 +1419,7 @@ export async function mountMoneyMap(
   }
   /** Keep the map independent of the page shell: it only describes the held flow. */
   const explain = (parent: HTMLElement, detail: Record<string, string>) => {
-    const button = el('button', 'mm-ask', parent)
+    const button = el('button', 'mm-ask mm-ask-quiet', parent)
     button.type = 'button'
     button.textContent = 'Explain this flow'
     button.addEventListener('click', () => {
@@ -1392,6 +1459,21 @@ export async function mountMoneyMap(
     close.setAttribute('aria-label', 'Close details')
     close.addEventListener('click', () => setSelection(null, { user: true }))
 
+    if (node.kind === 'agency' || node.kind === 'supplier') {
+      el('h2', '', card).textContent = node.label
+      el('span', 'mm-card-tag', card).textContent = node.kind === 'agency' ? 'Government agency' : 'Government supplier'
+      el('div', 'mm-card-total', card).textContent = formatMoney(node.total)
+      el('p', 'mm-card-sub', card).textContent = `${node.count.toLocaleString()} recorded contracts${node.id === opts.subject ? '' : ' in this relationship'}`
+      el('div', 'mm-card-section', card).textContent = node.kind === 'agency' ? 'Contracts awarded to' : 'Contracts awarded by'
+      const list = el('ul', 'mm-rows', card)
+      for (const edge of view.edges.filter(e => e.source === node.id || e.target === node.id).sort((a, b) => b.total - a.total)) {
+        const other = view.nodes.get(edge.source === node.id ? edge.target : edge.source)
+        if (other) row(list, other.colour ?? null, other.label, edge.total, `${edge.count.toLocaleString()} contracts`, () => setSelection(other.id, { user: true }))
+      }
+      if (node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl)) trigger(card, node.profileUrl, 'Full profile')
+      el('p', 'mm-card-fine', card).textContent = 'Recorded contract commitments, not verified payments. The map shows the largest relationships; the profile lists all available records.'
+      return
+    }
     const title = el('h2', '', card)
     title.textContent = node.label
     const tag = el('span', 'mm-card-tag', card)
@@ -1443,34 +1525,26 @@ export async function mountMoneyMap(
         // summed with them. The figures follow the year window like the rest.
         const grantsTitle = el('div', 'mm-card-section', card)
         grantsTitle.textContent = 'Public money received'
-        const glist = el('ul', 'mm-rows', card)
+        const glist = el('div', 'mm-award-groups', card)
         const grantor = raw.nodes.find((n) => n.kind === 'grantor' && n.flow !== 'contracts')
         const contractor = raw.nodes.find((n) => n.kind === 'grantor' && n.flow === 'contracts')
         if (node.grants) {
           const g = view.grants.get(node.id) ?? node.grants
           if (g.count > 0) {
-            row(glist, grantor?.colour ?? GRANTOR_COLOUR, grantor?.label ?? 'Grants', g.total,
-              `${g.count.toLocaleString()} grant${g.count === 1 ? '' : 's'} · ${yearSpan(g.firstYear, g.lastYear)}`,
+            awardGroup(glist, grantor?.label ?? 'Grants', grantor?.colour ?? GRANTOR_COLOUR, g, 'grant',
               grantor ? () => setSelection(grantor.id, { user: true }) : null)
-            for (const [program, dollars] of (g.top ?? []).slice(0, 3)) {
-              row(glist, null, program, dollars, '', null)
-            }
           } else {
-            const none = el('li', 'mm-row-note', glist)
+            const none = el('p', 'mm-row-note', glist)
             none.textContent = view.span ? `no grants started in ${view.span}` : 'no grants'
           }
         }
         if (node.contracts) {
           const c = view.contracts.get(node.id) ?? node.contracts
           if (c.count > 0) {
-            row(glist, contractor?.colour ?? CONTRACTOR_COLOUR, contractor?.label ?? 'Contracts', c.total,
-              `${c.count.toLocaleString()} contract${c.count === 1 ? '' : 's'} · ${yearSpan(c.firstYear, c.lastYear)}`,
+            awardGroup(glist, contractor?.label ?? 'Contracts', contractor?.colour ?? CONTRACTOR_COLOUR, c, 'contract',
               contractor ? () => setSelection(contractor.id, { user: true }) : null)
-            for (const [agency, dollars] of (c.top ?? []).slice(0, 3)) {
-              row(glist, null, agency, dollars, '', null)
-            }
           } else {
-            const none = el('li', 'mm-row-note', glist)
+            const none = el('p', 'mm-row-note', glist)
             none.textContent = view.span ? `no contracts started in ${view.span}` : 'no contracts'
           }
         }
@@ -1489,15 +1563,39 @@ export async function mountMoneyMap(
       }
       if (!['individual', 'other', ''].includes(node.industry.toLowerCase())) {
         trigger(card, askUrl(node.industry.replace(/_/g, ' ')),
-          'What did parliament say about this industry?')
+          'What did parliament say about this industry?', true)
       }
       // Quote the suffix-stripped name: MPs say "Philip Morris", never
       // "Philip Morris Limited" - the full label finds nothing.
       trigger(card,
         `/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`,
         `What was said about ${shortName(node.label)}?`, true)
-      if (node.id !== opts.subject) trigger(card, subjectUrl('donor', node.label), 'Full profile', true)
+      const evidenceButton = el('button', 'mm-ask mm-ask-quiet', card)
+      evidenceButton.type = 'button'
+      evidenceButton.textContent = 'See mentions in the source records'
+      const evidenceSlot = el('section', 'mm-evidence', card)
+      evidenceSlot.hidden = true
+      evidenceButton.addEventListener('click', async () => {
+        evidenceButton.disabled = true
+        evidenceButton.textContent = 'Finding source excerpts…'
+        try {
+          const { mountEvidence } = await import('../public/evidence.js')
+          const found = await mountEvidence(evidenceSlot, { name: node.label }, {
+            compact: true, alive: () => !destroyed && selectedId === node.id && evidenceSlot.isConnected,
+          })
+          if (!destroyed && selectedId === node.id && evidenceSlot.isConnected) {
+            evidenceButton.hidden = found
+            if (!found) evidenceButton.textContent = 'No verified excerpts available yet'
+          }
+        } catch {
+          if (evidenceSlot.isConnected) {
+            evidenceButton.textContent = 'Try loading source excerpts again'
+            evidenceButton.disabled = false
+          }
+        }
+      })
       explain(card, { kind: 'donor', from: node.label })
+      if (node.id !== opts.subject) trigger(card, subjectUrl('donor', node.label), 'Full profile')
     } else if (node.kind === 'grantor') {
       const contracts = node.flow === 'contracts'
       listTitle.textContent = contracts
@@ -1558,10 +1656,10 @@ export async function mountMoneyMap(
           `/ask?q=${
             encodeURIComponent(`What has ${node.label} said about ${industry}?`)
           }`,
-          `Ask what ${node.label} said about ${industry}`)
+          `Ask what ${node.label} said about ${industry}`, true)
       }
-      if (node.id !== opts.subject) trigger(card, subjectUrl('party', node.label), 'Full profile', true)
       explain(card, { kind: 'party', to: node.label })
+      if (node.id !== opts.subject) trigger(card, subjectUrl('party', node.label), 'Full profile')
     }
   }
 
@@ -1671,6 +1769,22 @@ export async function mountMoneyMap(
       return
     }
     const from = view.nodes.get(edge.source)
+    if (from?.kind === 'agency') {
+      const to = view.nodes.get(edge.target)
+      if (!to) return
+      card.replaceChildren()
+      const close = el('button', 'mm-card-close', card)
+      close.type = 'button'; close.textContent = '✕'; close.setAttribute('aria-label', 'Close details')
+      close.addEventListener('click', () => setEdgeSelection(null))
+      el('h2', '', card).textContent = `${from.label} → ${to.label}`
+      el('span', 'mm-card-tag', card).textContent = 'Contracts awarded'
+      el('div', 'mm-card-total', card).textContent = formatMoney(edge.total ?? 0)
+      el('p', 'mm-card-sub', card).textContent = `${(edge.count ?? 0).toLocaleString()} recorded contracts`
+      const list = el('ul', 'mm-rows', card)
+      for (const node of [from, to]) row(list, node.colour ?? null, node.label, edge.total ?? 0, '', () => setSelection(node.id, { user: true }))
+      el('p', 'mm-card-fine', card).textContent = 'Contract commitments, not verified payments. Open either profile for the source records.'
+      return
+    }
     if (from?.kind === 'grantor') {
       renderGrantFlowCard(edge, from)
       return
@@ -1923,7 +2037,7 @@ export async function mountMoneyMap(
   const strongestFlows = (id: string) => {
     const node = view.nodes.get(id)
     if (!node) return null
-    const incoming = node.kind === 'party'
+    const incoming = node.kind === 'party' || node.kind === 'supplier'
     const flows = view.edges
       .filter((e) => (incoming ? e.target : e.source) === id)
       .sort((a, b) => b.total - a.total)
@@ -1962,6 +2076,7 @@ export async function mountMoneyMap(
   /** Present only existing ids and observed endpoint pairs from the visible data. */
   const resetSceneWindow = (scene?: MoneyScene) => {
     cancelReveal()
+    researchFilters = {}
     selectedId = null
     selectedEdge = null
     card.hidden = true
@@ -2040,6 +2155,25 @@ export async function mountMoneyMap(
   }
 
   return {
+    setFilters: (filters, route) => {
+      if (destroyed) return
+      cancelReveal()
+      guidedScene = false
+      selectedId = null
+      selectedEdge = null
+      card.hidden = true
+      releaseHost()
+      if (route) {
+        const read = (key: string, fallback: number) => /^\d{4}$/.test(route.get(key) || '') ? Math.max(yearMin, Math.min(yearMax, Number(route.get(key)))) : fallback
+        const from = read('from', yearMin), to = read('to', yearMax)
+        yearLo = Math.min(from, to); yearHi = Math.max(from, to)
+        yearsInUrl = route.has('from') || route.has('to')
+        adjustForInflation = route.get('cpi') === '1'
+        syncScrubControls()
+      }
+      researchFilters = { ...filters }
+      applyIsolate(filters.industry || null)
+    },
     presentScene,
     clearScene,
     pauseScene,

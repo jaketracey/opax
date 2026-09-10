@@ -6,7 +6,7 @@ import { runInNewContext } from 'node:vm';
 // Execute the actual module; only replace its dynamic WebGL import with a
 // controlled loader. The small DOM below models the nodes this module touches.
 const source = readFileSync(new URL('../public/suppliers.js', import.meta.url), 'utf8')
-  .replaceAll('export function ', 'function ')
+  .replaceAll('export function ', 'function ').replaceAll('export async function ', 'async function ')
   .replace('import("/money-map.js?v=suppliers-1")', 'loadMapModule()');
 const tick = () => new Promise((resolve) => setImmediate(resolve));
 const deferred = () => { let resolve; const promise = new Promise((r) => { resolve = r; }); return { promise, resolve }; };
@@ -17,8 +17,9 @@ function node() {
     setAttribute(key, value) { this.attributes[key] = value; },
     removeAttribute(key) { delete this.attributes[key]; },
     addEventListener(event, fn) { this.listeners[event] = fn; },
+    removeEventListener(event) { delete this.listeners[event]; },
     querySelector(selector) { if (!children.has(selector)) children.set(selector, node()); return children.get(selector); },
-    querySelectorAll() { return []; }, focus() {},
+    querySelectorAll() { return []; }, focus() {}, scrollIntoView() {},
   };
 }
 function setup(fetch, mount = async () => ({ destroy() {}, setPaused() {} })) {
@@ -137,4 +138,15 @@ test('a map handle returned after departure is destroyed and cannot become activ
   await click;
   assert.equal(destroyed, 1);
   assert.equal(button.hidden, false, 'late completion must not mutate the departed UI');
+});
+
+
+test('a contract search link filters and opens its exact supplier record', async () => {
+  const context = setup(async (url) => response(url === '/suppliers.json' ? { suppliers: [entry()] } : { profiles: { [id]: profile() } }));
+  const root = node();
+  context.mountSupplierProfile(root, id, { params: new URLSearchParams({contract:'CN1'}) });
+  await tick();
+  assert.equal(root.querySelector('input[name="contract-query"]').value, 'CN1');
+  assert.match(root.querySelector('.supplier-contract-list').innerHTML, /CN1/);
+  assert.equal(root.querySelector('.supplier-contract').open, true);
 });

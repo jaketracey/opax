@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-08-26",
+  "sentences": [
+   "This bill would impose the charge that forms part of the proposed news-media bargaining incentive.",
+   "It would set a rate of 2.5 per cent on relevant Australian digital advertising revenue determined under the companion administration bill.",
+   "The companion framework would determine who is liable and how qualifying support for news businesses reduces the amount payable."
+  ],
+  "changes": [
+   "Provides the legal imposition of the news media bargaining charge.",
+   "Sets its rate at 2.5 per cent of the relevant revenue base.",
+   "Links commencement to the administration bill and does not commence if that bill does not commence."
+  ],
+  "affected": "Digital platform groups brought within the companion liability rules, and the tax authority administering the charge, are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.379367+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10721",
@@ -159,8 +178,7 @@
     }
    },
    "party_coverage": {
-    "dated": 35,
-    "member": 7
+    "dated": 42
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/9"
@@ -184,7 +202,7 @@
      "noes": 1
     },
     "LNP": {
-     "ayes": 1,
+     "ayes": 2,
      "noes": 0
     },
     "Labor": {
@@ -192,25 +210,21 @@
      "noes": 25
     },
     "Liberal": {
-     "ayes": 16,
+     "ayes": 17,
      "noes": 0
     },
     "Nationals": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     },
     "One Nation": {
      "ayes": 3,
      "noes": 0
-    },
-    "United Australia Party": {
-     "ayes": 1,
-     "noes": 0
     }
    },
    "party_coverage": {
-    "dated": 49,
-    "member": 9
+    "dated": 57,
+    "member": 1
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/10"
@@ -251,8 +265,7 @@
     }
    },
    "party_coverage": {
-    "dated": 37,
-    "member": 7
+    "dated": 44
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/11"
@@ -289,8 +302,7 @@
     }
    },
    "party_coverage": {
-    "dated": 36,
-    "member": 7
+    "dated": 43
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/12"
@@ -327,8 +339,7 @@
     }
    },
    "party_coverage": {
-    "dated": 36,
-    "member": 7
+    "dated": 43
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/13"

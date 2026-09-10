@@ -1,0 +1,1150 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-09-09",
+  "checked_at": "2026-09-09T08:49:57.818501+00:00",
+  "coverage": {
+    "total_awards": 89,
+    "total_invitations": 226,
+    "total_invitation_records": 227,
+    "mapped_awards": 7,
+    "mapped_invitations": 6,
+    "mapped_award_value": 12715000.0,
+    "mapped_invitation_value": 11070000,
+    "total_award_value": 242781386.0,
+    "total_invitation_value": 559241712,
+    "award_site_count": 9,
+    "invitation_site_count": 6,
+    "unmapped_awards": 82,
+    "unmapped_invitations": 220,
+    "payment_verified_records": 0
+  },
+  "methodology": [
+    "Pins mark named project venues from council or venue-operator location data, matched to original grant notices. They are not recipient offices or postcode centres.",
+    "Published grants and invitations are separate views. A grant shared by several sites is counted once; its value is never assigned in full to each pin.",
+    "Locations are venue markers, not surveyed construction footprints. Electoral labels describe the venue point against the AEC boundaries used at the 2025 federal election. They are not a seat-level funding comparison.",
+    "The first checked locations are a selected sample, not representative of all funding. Records without a checked location remain available in the full list.",
+    "A published award records a grant agreement, not proof that money has been paid or work completed."
+  ],
+  "records": [
+    {
+      "id": "GA566033",
+      "record_type": "award",
+      "title": "David Campese Oval fencing",
+      "value": 370000.0,
+      "state": "NSW",
+      "locality": "Queanbeyan East",
+      "source_url": "https://www.grants.gov.au/Ga/Show/fd9b8df0-a83c-4bfe-95d3-ffce53277e96",
+      "invitation_ids": [
+        "mlci-invitation-017"
+      ],
+      "award_ids": [
+        "GA566033"
+      ],
+      "publish_date": "2026-06-23",
+      "approval_date": "2026-02-11",
+      "grant_term": "12-Jun-2026 to 1-Apr-2027",
+      "recipient": "Queanbeyan-Palerang Regional Council",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "campese",
+          "site_name": "David Campese Oval",
+          "address": "1B Yass Road, Queanbeyan East NSW 2620",
+          "locality": "Queanbeyan East",
+          "state": "NSW",
+          "latitude": -35.3476386,
+          "longitude": 149.244194,
+          "location_source_url": "https://www.qprc.nsw.gov.au/Facilities-Recreation/Parks-Playgrounds-Sportsgrounds/Taylor-Park",
+          "site_precision": "venue",
+          "electorate_2025": "Eden-Monaro",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.qprc.nsw.gov.au/Facilities-Recreation/Parks-Playgrounds-Sportsgrounds/Taylor-Park",
+                "excerpt": "1B Yass Road, Queanbeyan East 2620",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "02fb017199599b3054fcf26b9848ea574785cd4ff16b7769647626005ea39129"
+              }
+            ],
+            "notes": [
+              "Council location marker on its Taylor Park page, which explicitly identifies David Campese Field. The pin represents the oval venue, not individual fence posts."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 1144,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Fresh original GrantConnect detail matched to GO7867, exact activity and amount in the existing corpus; named project venues checked against independent council/operator pages.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/fd9b8df0-a83c-4bfe-95d3-ffce53277e96",
+            "excerpt": "The project will deliver fencing and netting infrastructure upgrades at David Campese Oval, Queanbeyan NSW.",
+            "role": "published award scope and amount",
+            "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+            "content_sha256": "0ac70c046418fc8b0b5bcb956ae8a1e2092f6c3eda17f8eb37455330e97e4af9"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. This is not evidence of payment or completed construction."
+        ],
+        "invitation_match": {
+          "method": "Same named project, program context, state and value; later award scope checked separately.",
+          "source_id": "mlci-invitation-017",
+          "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+          "amount_matches": true
+        }
+      }
+    },
+    {
+      "id": "mlci-invitation-017",
+      "record_type": "invitation",
+      "title": "David Campese Oval - Netting and Fencing Infrastructure Upgrade",
+      "value": 370000,
+      "state": "NSW",
+      "locality": "Queanbeyan East",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-017"
+      ],
+      "award_ids": [
+        "GA566033"
+      ],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "campese",
+          "site_name": "David Campese Oval",
+          "address": "1B Yass Road, Queanbeyan East NSW 2620",
+          "locality": "Queanbeyan East",
+          "state": "NSW",
+          "latitude": -35.3476386,
+          "longitude": 149.244194,
+          "location_source_url": "https://www.qprc.nsw.gov.au/Facilities-Recreation/Parks-Playgrounds-Sportsgrounds/Taylor-Park",
+          "site_precision": "venue",
+          "electorate_2025": "Eden-Monaro",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.qprc.nsw.gov.au/Facilities-Recreation/Parks-Playgrounds-Sportsgrounds/Taylor-Park",
+                "excerpt": "1B Yass Road, Queanbeyan East 2620",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "02fb017199599b3054fcf26b9848ea574785cd4ff16b7769647626005ea39129"
+              }
+            ],
+            "notes": [
+              "Council location marker on its Taylor Park page, which explicitly identifies David Campese Field. The pin represents the oval venue, not individual fence posts."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 1144,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Named invitation venue located through original council/operator sources and cross-checked with the separate later award. The original invitation amount and status are retained.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "David Campese Oval - Netting and Fencing Infrastructure Upgrade",
+            "role": "invitation project name, value and snapshot status"
+          }
+        ],
+        "notes": [
+          "Invitation recorded on 14 November 2025. It is a separate stage from the later award; the amounts must not be added together."
+        ]
+      }
+    },
+    {
+      "id": "GA578171",
+      "record_type": "award",
+      "title": "Rathmines tennis court lighting",
+      "value": 300000.0,
+      "state": "NSW",
+      "locality": "Rathmines",
+      "source_url": "https://www.grants.gov.au/Ga/Show/453234d9-e3fe-43d0-be00-bb742782b61a",
+      "invitation_ids": [
+        "mlci-invitation-014"
+      ],
+      "award_ids": [
+        "GA578171"
+      ],
+      "publish_date": "2026-09-02",
+      "approval_date": "2026-04-07",
+      "grant_term": "26-Aug-2026 to 30-Mar-2029",
+      "recipient": "Lake Macquarie City Council",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "rathmines",
+          "site_name": "Rathmines Tennis Courts",
+          "address": "107 Rosemary Row, Rathmines NSW 2283",
+          "locality": "Rathmines",
+          "state": "NSW",
+          "latitude": -33.0425315,
+          "longitude": 151.5929731,
+          "location_source_url": "https://totaltennislakemac.com.au/locations/rathmines/",
+          "site_precision": "venue",
+          "electorate_2025": "Hunter",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://totaltennislakemac.com.au/locations/rathmines/",
+                "excerpt": "107 Rosemary Row, Rathmines, NSW, 2283",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "b156997541bb0cf3ccec387b890214238b32b2f1569783916e9452ff3e721fae"
+              }
+            ],
+            "notes": [
+              "Venue operator lists four courts. Coordinate is the place marker in the Rathmines-specific directions link, not the map camera centre or the operator’s other branches."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 3145,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Fresh original GrantConnect detail matched to GO7867, exact activity and amount in the existing corpus; named project venues checked against independent council/operator pages.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/453234d9-e3fe-43d0-be00-bb742782b61a",
+            "excerpt": "The project will deliver new lighting over four tennis courts at Rathmines Tennis Courts.",
+            "role": "published award scope and amount",
+            "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+            "content_sha256": "97b435f6f1f7f0f6292698d1b770bdc00c12993215776016ed517c785453ce42"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. This is not evidence of payment or completed construction."
+        ],
+        "invitation_match": {
+          "method": "Same named project, program context, state and value; later award scope checked separately.",
+          "source_id": "mlci-invitation-014",
+          "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+          "amount_matches": true
+        }
+      }
+    },
+    {
+      "id": "mlci-invitation-014",
+      "record_type": "invitation",
+      "title": "Upgrades to Lighting Improvements to Four Courts at Rathmines Tennis Club",
+      "value": 300000,
+      "state": "NSW",
+      "locality": "Rathmines",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-014"
+      ],
+      "award_ids": [
+        "GA578171"
+      ],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "rathmines",
+          "site_name": "Rathmines Tennis Courts",
+          "address": "107 Rosemary Row, Rathmines NSW 2283",
+          "locality": "Rathmines",
+          "state": "NSW",
+          "latitude": -33.0425315,
+          "longitude": 151.5929731,
+          "location_source_url": "https://totaltennislakemac.com.au/locations/rathmines/",
+          "site_precision": "venue",
+          "electorate_2025": "Hunter",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://totaltennislakemac.com.au/locations/rathmines/",
+                "excerpt": "107 Rosemary Row, Rathmines, NSW, 2283",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "b156997541bb0cf3ccec387b890214238b32b2f1569783916e9452ff3e721fae"
+              }
+            ],
+            "notes": [
+              "Venue operator lists four courts. Coordinate is the place marker in the Rathmines-specific directions link, not the map camera centre or the operator’s other branches."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 3145,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Named invitation venue located through original council/operator sources and cross-checked with the separate later award. The original invitation amount and status are retained.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Upgrades to Lighting Improvements to Four Courts at Rathmines Tennis Club",
+            "role": "invitation project name, value and snapshot status"
+          }
+        ],
+        "notes": [
+          "Invitation recorded on 14 November 2025. It is a separate stage from the later award; the amounts must not be added together."
+        ]
+      }
+    },
+    {
+      "id": "GA575257",
+      "record_type": "award",
+      "title": "Pambula playground upgrades",
+      "value": 750000.0,
+      "state": "NSW",
+      "locality": "Pambula",
+      "source_url": "https://www.grants.gov.au/Ga/Show/1bdc2114-c5dd-4968-88c5-02df36d79eb4",
+      "invitation_ids": [
+        "mlci-invitation-024"
+      ],
+      "award_ids": [
+        "GA575257"
+      ],
+      "publish_date": "2026-07-20",
+      "approval_date": "2026-04-28",
+      "grant_term": "7-Jul-2026 to 1-Mar-2029",
+      "recipient": "Bega Valley Shire Council",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "pambula",
+          "site_name": "Pambula Village Playground",
+          "address": "Bennett Lane, Pambula NSW 2549",
+          "locality": "Pambula",
+          "state": "NSW",
+          "latitude": -36.93049871277751,
+          "longitude": 149.87628752644548,
+          "location_source_url": "https://www.begavalley.nsw.gov.au/Our-Community/Sport-and-recreation/Playgrounds-skateparks-and-exercise-stations/Playgrounds/Pambula-Pambula-Village-Playground",
+          "site_precision": "venue",
+          "electorate_2025": "Eden-Monaro",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.begavalley.nsw.gov.au/Our-Community/Sport-and-recreation/Playgrounds-skateparks-and-exercise-stations/Playgrounds/Pambula-Pambula-Village-Playground",
+                "excerpt": "Bennett Lane, Pambula, Pambula 2549",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "38203cfbfeb27205ce1b0764c6515c85daeb43e4699bcb90d3cef9e9b6e6b5a7"
+              }
+            ],
+            "notes": [
+              "Council playground page provides this location marker. This is one of two playspaces named in GA575257."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 2532,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        },
+        {
+          "id": "george",
+          "site_name": "George Street Reserve Playground",
+          "address": "George Street, South Pambula NSW 2549",
+          "locality": "South Pambula",
+          "state": "NSW",
+          "latitude": -36.946065169563106,
+          "longitude": 149.85927091534307,
+          "location_source_url": "https://www.begavalley.nsw.gov.au/Our-Community/Sport-and-recreation/Playgrounds-skateparks-and-exercise-stations/Playgrounds/South-Pambula-George-Street-Reserve-Playground",
+          "site_precision": "venue",
+          "electorate_2025": "Eden-Monaro",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.begavalley.nsw.gov.au/Our-Community/Sport-and-recreation/Playgrounds-skateparks-and-exercise-stations/Playgrounds/South-Pambula-George-Street-Reserve-Playground",
+                "excerpt": "George Street Reserve, George Street, South Pambula",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "dc96441905701fe763bb1816802535779f8fcb4fb5a4e2aa4d27e557b8e9135d"
+              }
+            ],
+            "notes": [
+              "Council playground page provides this location marker. This is the second playspace named in GA575257."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 4391,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Fresh original GrantConnect detail matched to GO7867, exact activity and amount in the existing corpus; named project venues checked against independent council/operator pages.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/1bdc2114-c5dd-4968-88c5-02df36d79eb4",
+            "excerpt": "The project will upgrade the existing Pambula Village and George Street Reserve local playspaces. Work will include installation of contemporary and nature-based play equipment,",
+            "role": "published award scope and amount",
+            "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+            "content_sha256": "987003614bc316d9c8e265d37398b7ea4130096001106bfcd591a7922cf4f11b"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. This is not evidence of payment or completed construction.",
+          "The displayed amount is for the whole grant. The source gives no amount for each site; no per-site allocation has been made.",
+          "The November 2025 invitation names Pambula Village. The later published award names Pambula Village and George Street Reserve; the invitation view retains only the originally named site."
+        ],
+        "invitation_match": {
+          "method": "Same named project, program context, state and value; later award scope checked separately.",
+          "source_id": "mlci-invitation-024",
+          "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+          "amount_matches": true
+        }
+      }
+    },
+    {
+      "id": "mlci-invitation-024",
+      "record_type": "invitation",
+      "title": "Pambula Village Playground Upgrade",
+      "value": 750000,
+      "state": "NSW",
+      "locality": "Pambula",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-024"
+      ],
+      "award_ids": [
+        "GA575257"
+      ],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "pambula",
+          "site_name": "Pambula Village Playground",
+          "address": "Bennett Lane, Pambula NSW 2549",
+          "locality": "Pambula",
+          "state": "NSW",
+          "latitude": -36.93049871277751,
+          "longitude": 149.87628752644548,
+          "location_source_url": "https://www.begavalley.nsw.gov.au/Our-Community/Sport-and-recreation/Playgrounds-skateparks-and-exercise-stations/Playgrounds/Pambula-Pambula-Village-Playground",
+          "site_precision": "venue",
+          "electorate_2025": "Eden-Monaro",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.begavalley.nsw.gov.au/Our-Community/Sport-and-recreation/Playgrounds-skateparks-and-exercise-stations/Playgrounds/Pambula-Pambula-Village-Playground",
+                "excerpt": "Bennett Lane, Pambula, Pambula 2549",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "38203cfbfeb27205ce1b0764c6515c85daeb43e4699bcb90d3cef9e9b6e6b5a7"
+              }
+            ],
+            "notes": [
+              "Council playground page provides this location marker. This is one of two playspaces named in GA575257."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 2532,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Named invitation venue located through original council/operator sources and cross-checked with the separate later award. The original invitation amount and status are retained.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Pambula Village Playground Upgrade",
+            "role": "invitation project name, value and snapshot status"
+          }
+        ],
+        "notes": [
+          "Invitation recorded on 14 November 2025. It is a separate stage from the later award; the amounts must not be added together."
+        ]
+      }
+    },
+    {
+      "id": "GA575783",
+      "record_type": "award",
+      "title": "Jerrabomberra playground and tennis upgrades",
+      "value": 1645000.0,
+      "state": "NSW",
+      "locality": "Jerrabomberra",
+      "source_url": "https://www.grants.gov.au/Ga/Show/6269a111-3882-420b-a890-29a3d69e7b7a",
+      "invitation_ids": [],
+      "award_ids": [
+        "GA575783"
+      ],
+      "publish_date": "2026-08-04",
+      "approval_date": "2026-05-11",
+      "grant_term": "17-Jul-2026 to 27-Apr-2028",
+      "recipient": "Queanbeyan-Palerang Regional Council",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "madew",
+          "site_name": "David Madew Memorial Park playground",
+          "address": "4 Coral Drive, Jerrabomberra NSW 2619",
+          "locality": "Jerrabomberra",
+          "state": "NSW",
+          "latitude": -35.38765,
+          "longitude": 149.198574,
+          "location_source_url": "https://www.qprc.nsw.gov.au/Facilities-Recreation/Parks-Playgrounds-Sportsgrounds/David-Madew-Memorial-Park",
+          "site_precision": "venue",
+          "electorate_2025": "Eden-Monaro",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.qprc.nsw.gov.au/Facilities-Recreation/Parks-Playgrounds-Sportsgrounds/David-Madew-Memorial-Park",
+                "excerpt": "4 Coral Drive, Jerrabomberra 2619",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "2f0409710e1e9a49595d40daed5b69df2a957d77c8343611d1349cf10285ed7f"
+              }
+            ],
+            "notes": [
+              "Council park page supplies the playground location. The grant also covers the tennis club within the same park."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 1647,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        },
+        {
+          "id": "jerra-tennis",
+          "site_name": "Jerrabomberra Tennis Club",
+          "address": "4 Coral Drive, Jerrabomberra NSW 2619",
+          "locality": "Jerrabomberra",
+          "state": "NSW",
+          "latitude": -35.388065572705784,
+          "longitude": 149.1973569007179,
+          "location_source_url": "https://www.qprc.nsw.gov.au/Facilities-Recreation/Parks-Playgrounds-Sportsgrounds/Jerrabomberra-Tennis-Club",
+          "site_precision": "venue",
+          "electorate_2025": "Eden-Monaro",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.qprc.nsw.gov.au/Facilities-Recreation/Parks-Playgrounds-Sportsgrounds/Jerrabomberra-Tennis-Club",
+                "excerpt": "The Jerrabomberra Tennis Club courts are located at 4 Coral Drive, Jerrabomberra.",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "e8dfd55582354ddf3760ccf379cf329d49ca53363f49a8b403e5345bcd61a430"
+              }
+            ],
+            "notes": [
+              "Council tennis facility page supplies this location marker, distinct from the playground within the same park. Both belong to one grant."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 1583,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Fresh original GrantConnect detail matched to GO7867, exact activity and amount in the existing corpus; named project venues checked against independent council/operator pages.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/6269a111-3882-420b-a890-29a3d69e7b7a",
+            "excerpt": "The project will deliver critical repairs and upgrades of community recreational infrastructure at David Madew Memorial Park in the suburb of Jerrabomberra, including a",
+            "role": "published award scope and amount",
+            "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+            "content_sha256": "3f1b9787f72f7db33edfd45dc626be1c6ccfddd3912607a4e0cd5feeca2f11ad"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. This is not evidence of payment or completed construction.",
+          "The displayed amount is for the whole grant. The source gives no amount for each site; no per-site allocation has been made.",
+          "The award names both David Madew Memorial Park and Jerrabomberra Tennis Club at the same park. The broader Jerrabomberra invitation is not linked because its title does not establish this exact scope."
+        ]
+      }
+    },
+    {
+      "id": "GA559895",
+      "record_type": "award",
+      "title": "Mandurah indoor court expansion",
+      "value": 4000000.0,
+      "state": "WA",
+      "locality": "Mandurah",
+      "source_url": "https://www.grants.gov.au/Ga/Show/d00d4c39-513d-483e-b044-cd51cb73a058",
+      "invitation_ids": [
+        "mlci-invitation-224"
+      ],
+      "award_ids": [
+        "GA559895"
+      ],
+      "publish_date": "2026-05-08",
+      "approval_date": "2026-03-10",
+      "grant_term": "6-May-2026 to 1-May-2029",
+      "recipient": "City of Mandurah",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "mandurah",
+          "site_name": "Mandurah Aquatic and Recreation Centre",
+          "address": "303 Pinjarra Road, Mandurah WA 6210",
+          "locality": "Mandurah",
+          "state": "WA",
+          "latitude": -32.537199,
+          "longitude": 115.737072,
+          "location_source_url": "https://www.mandurah.wa.gov.au/facilities/parks-beaches-and-reserves",
+          "site_precision": "venue",
+          "electorate_2025": "Canning",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.mandurah.wa.gov.au/facilities/parks-beaches-and-reserves",
+                "excerpt": "303 Pinjarra Road Mandurah WA 6210 Australia",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "726dfc799685564ace7d38928ef3fbd3844d3d11cc189512a51f20b41a497955"
+              }
+            ],
+            "notes": [
+              "Council map data entry 57901 identifies the community facility with its address and coordinates. The separate Cemetery Road changing-room marker is not used."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 2282,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Fresh original GrantConnect detail matched to GO7867, exact activity and amount in the existing corpus; named project venues checked against independent council/operator pages.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/d00d4c39-513d-483e-b044-cd51cb73a058",
+            "excerpt": "The project will deliver upgrades to the Mandurah Aquatic and Recreation Centre, expanding the existing building to include 3 additional indoor multi-use courts with",
+            "role": "published award scope and amount",
+            "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+            "content_sha256": "6fa10ecacd1d1c1b32b30bfee192fbee052064c6f96cd4f231730c74b05fba5d"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. This is not evidence of payment or completed construction."
+        ],
+        "invitation_match": {
+          "method": "Same named project, program context, state and value; later award scope checked separately.",
+          "source_id": "mlci-invitation-224",
+          "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162",
+          "amount_matches": true
+        }
+      }
+    },
+    {
+      "id": "mlci-invitation-224",
+      "record_type": "invitation",
+      "title": "Mandurah Aquatic Centre Basketball Courts",
+      "value": 4000000,
+      "state": "WA",
+      "locality": "Mandurah",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162",
+      "invitation_ids": [
+        "mlci-invitation-224"
+      ],
+      "award_ids": [
+        "GA559895"
+      ],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "mandurah",
+          "site_name": "Mandurah Aquatic and Recreation Centre",
+          "address": "303 Pinjarra Road, Mandurah WA 6210",
+          "locality": "Mandurah",
+          "state": "WA",
+          "latitude": -32.537199,
+          "longitude": 115.737072,
+          "location_source_url": "https://www.mandurah.wa.gov.au/facilities/parks-beaches-and-reserves",
+          "site_precision": "venue",
+          "electorate_2025": "Canning",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.mandurah.wa.gov.au/facilities/parks-beaches-and-reserves",
+                "excerpt": "303 Pinjarra Road Mandurah WA 6210 Australia",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "726dfc799685564ace7d38928ef3fbd3844d3d11cc189512a51f20b41a497955"
+              }
+            ],
+            "notes": [
+              "Council map data entry 57901 identifies the community facility with its address and coordinates. The separate Cemetery Road changing-room marker is not used."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 2282,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Named invitation venue located through original council/operator sources and cross-checked with the separate later award. The original invitation amount and status are retained.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=162",
+            "excerpt": "Mandurah Aquatic Centre Basketball Courts",
+            "role": "invitation project name, value and snapshot status"
+          }
+        ],
+        "notes": [
+          "Invitation recorded on 14 November 2025. It is a separate stage from the later award; the amounts must not be added together."
+        ]
+      }
+    },
+    {
+      "id": "GA578157",
+      "record_type": "award",
+      "title": "Kumbartcho Sanctuary upgrades",
+      "value": 1600000.0,
+      "state": "QLD",
+      "locality": "Eatons Hill",
+      "source_url": "https://www.grants.gov.au/Ga/Show/85e59b15-fe25-4781-a51c-b9a418905c65",
+      "invitation_ids": [
+        "mlci-invitation-089"
+      ],
+      "award_ids": [
+        "GA578157"
+      ],
+      "publish_date": "2026-08-28",
+      "approval_date": "2026-04-20",
+      "grant_term": "21-Aug-2026 to 1-Jun-2028",
+      "recipient": "Moreton Bay City Council",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "kumbartcho",
+          "site_name": "Kumbartcho Sanctuary",
+          "address": "15 Bunya Pine Court, Eatons Hill QLD 4037",
+          "locality": "Eatons Hill",
+          "state": "QLD",
+          "latitude": -27.3463923,
+          "longitude": 152.9416718,
+          "location_source_url": "https://www.moretonbay.qld.gov.au/Services/Environment/Environment-Centres/Kumbartcho-Sanctuary",
+          "site_precision": "venue",
+          "electorate_2025": "Dickson",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.moretonbay.qld.gov.au/Services/Environment/Environment-Centres/Kumbartcho-Sanctuary",
+                "excerpt": "15 Bunya Pine Court, Eatons Hill 4037.",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "c31bb5e54aab118d1efc5ad7391aa10dffa9551c1b28f04780df7042150434f2"
+              }
+            ],
+            "notes": [
+              "Council environment-centre page supplies the venue location. Eatons Hill is the council’s locality spelling; the award uses Eaton Hills."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 3682,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Fresh original GrantConnect detail matched to GO7867, exact activity and amount in the existing corpus; named project venues checked against independent council/operator pages.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/85e59b15-fe25-4781-a51c-b9a418905c65",
+            "excerpt": "The project will deliver the upgrade of the Kumbartcho Sanctuary, including construction of a new amenities building, storage shed and café, and upgrades to",
+            "role": "published award scope and amount",
+            "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+            "content_sha256": "7f729a0a70ed87606ff05428fd03b7e3e44fbd62097d0e4603c22748fb15817a"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. This is not evidence of payment or completed construction."
+        ],
+        "invitation_match": {
+          "method": "Same named project, program context, state and value; later award scope checked separately.",
+          "source_id": "mlci-invitation-089",
+          "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+          "amount_matches": true
+        }
+      }
+    },
+    {
+      "id": "mlci-invitation-089",
+      "record_type": "invitation",
+      "title": "Kumbartcho Sanctuary Upgrade",
+      "value": 1600000,
+      "state": "QLD",
+      "locality": "Eatons Hill",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-089"
+      ],
+      "award_ids": [
+        "GA578157"
+      ],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "kumbartcho",
+          "site_name": "Kumbartcho Sanctuary",
+          "address": "15 Bunya Pine Court, Eatons Hill QLD 4037",
+          "locality": "Eatons Hill",
+          "state": "QLD",
+          "latitude": -27.3463923,
+          "longitude": 152.9416718,
+          "location_source_url": "https://www.moretonbay.qld.gov.au/Services/Environment/Environment-Centres/Kumbartcho-Sanctuary",
+          "site_precision": "venue",
+          "electorate_2025": "Dickson",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.moretonbay.qld.gov.au/Services/Environment/Environment-Centres/Kumbartcho-Sanctuary",
+                "excerpt": "15 Bunya Pine Court, Eatons Hill 4037.",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "c31bb5e54aab118d1efc5ad7391aa10dffa9551c1b28f04780df7042150434f2"
+              }
+            ],
+            "notes": [
+              "Council environment-centre page supplies the venue location. Eatons Hill is the council’s locality spelling; the award uses Eaton Hills."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 3682,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Named invitation venue located through original council/operator sources and cross-checked with the separate later award. The original invitation amount and status are retained.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Kumbartcho Sanctuary Upgrade",
+            "role": "invitation project name, value and snapshot status"
+          }
+        ],
+        "notes": [
+          "Invitation recorded on 14 November 2025. It is a separate stage from the later award; the amounts must not be added together."
+        ]
+      }
+    },
+    {
+      "id": "GA575780",
+      "record_type": "award",
+      "title": "Lowood pool expansion",
+      "value": 4050000.0,
+      "state": "QLD",
+      "locality": "Lowood",
+      "source_url": "https://www.grants.gov.au/Ga/Show/249d1a0f-9fb6-47a0-8520-ae77252cdcf1",
+      "invitation_ids": [
+        "mlci-invitation-098"
+      ],
+      "award_ids": [
+        "GA575780"
+      ],
+      "publish_date": "2026-07-28",
+      "approval_date": "2026-06-03",
+      "grant_term": "17-Jul-2026 to 31-Jan-2029",
+      "recipient": "Somerset Regional Council",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "lowood",
+          "site_name": "Lowood Swimming Pool",
+          "address": "159 Main Street, Lowood QLD 4311",
+          "locality": "Lowood",
+          "state": "QLD",
+          "latitude": -27.4649465,
+          "longitude": 152.580155,
+          "location_source_url": "https://www.somerset.qld.gov.au/Whats-on/Council-Events/Pool-Movie-Night-Lowood",
+          "site_precision": "venue",
+          "electorate_2025": "Blair",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.somerset.qld.gov.au/Whats-on/Council-Events/Pool-Movie-Night-Lowood",
+                "excerpt": "Lowood Swimming Pool, Main Street, Lowood, 4311",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "e3418fbeb0ddb414e4eb49d096c350cf06545d7fababa385c9d4d845464d817f"
+              },
+              {
+                "url": "https://www.somerset.qld.gov.au/Community/Sport-and-Recreation/Sporting-Facilities",
+                "excerpt": "The Lowood Swimming Pool is on 159 Main Street",
+                "role": "project venue street address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "71e2cdbaf534246a966745c7f39aca13f574a1aa92b9bd14c7247e2bd978d236"
+              }
+            ],
+            "notes": [
+              "Council venue event supplies the pool marker; its separate sporting facilities directory confirms 159 Main Street. The award records delivery postcode 4306; the council uses 4311. Neither postcode is used to place the pin."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 9516,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Fresh original GrantConnect detail matched to GO7867, exact activity and amount in the existing corpus; named project venues checked against independent council/operator pages.",
+        "sources": [
+          {
+            "url": "https://www.grants.gov.au/Ga/Show/249d1a0f-9fb6-47a0-8520-ae77252cdcf1",
+            "excerpt": "The project will deliver a new enclosed pool and a new clubhouse/recreation facility at the Lowood Swimming Pool, including associated infrastructure, improved disability access,",
+            "role": "published award scope and amount",
+            "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+            "content_sha256": "cc2f0779ecb236f9c755edce2246319b970bd905f3162d593def8805bbc7e9ab"
+          }
+        ],
+        "notes": [
+          "Published grant value, GST inclusive where applicable. This is not evidence of payment or completed construction."
+        ],
+        "invitation_match": {
+          "method": "Same named project, program context, state and value; later award scope checked separately.",
+          "source_id": "mlci-invitation-098",
+          "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161",
+          "amount_matches": true
+        }
+      }
+    },
+    {
+      "id": "mlci-invitation-098",
+      "record_type": "invitation",
+      "title": "Lowood Swimming Pool Upgrade",
+      "value": 4050000,
+      "state": "QLD",
+      "locality": "Lowood",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161",
+      "invitation_ids": [
+        "mlci-invitation-098"
+      ],
+      "award_ids": [
+        "GA575780"
+      ],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "lowood",
+          "site_name": "Lowood Swimming Pool",
+          "address": "159 Main Street, Lowood QLD 4311",
+          "locality": "Lowood",
+          "state": "QLD",
+          "latitude": -27.4649465,
+          "longitude": 152.580155,
+          "location_source_url": "https://www.somerset.qld.gov.au/Whats-on/Council-Events/Pool-Movie-Night-Lowood",
+          "site_precision": "venue",
+          "electorate_2025": "Blair",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-09T08:49:57.818501+00:00",
+            "method": "Independently re-read original venue source and individual GrantConnect notice; match named works to the actual facility.",
+            "sources": [
+              {
+                "url": "https://www.somerset.qld.gov.au/Whats-on/Council-Events/Pool-Movie-Night-Lowood",
+                "excerpt": "Lowood Swimming Pool, Main Street, Lowood, 4311",
+                "role": "project venue coordinates and address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "e3418fbeb0ddb414e4eb49d096c350cf06545d7fababa385c9d4d845464d817f"
+              },
+              {
+                "url": "https://www.somerset.qld.gov.au/Community/Sport-and-Recreation/Sporting-Facilities",
+                "excerpt": "The Lowood Swimming Pool is on 159 Main Street",
+                "role": "project venue street address",
+                "retrieved_at": "2026-09-09T08:49:57.818501+00:00",
+                "content_sha256": "71e2cdbaf534246a966745c7f39aca13f574a1aa92b9bd14c7247e2bd978d236"
+              }
+            ],
+            "notes": [
+              "Council venue event supplies the pool marker; its separate sporting facilities directory confirms 159 Main Street. The award records delivery postcode 4306; the council uses 4311. Neither postcode is used to place the pin."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test coverage against all 150 AEC 2025 electoral polygons. Exactly one matching division. Distance to boundary measured in the local MGA zone.",
+              "distance_to_boundary_metres": 9516,
+              "scope": "Venue point only; no allocation of the grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-09T08:49:57.818501+00:00",
+        "method": "Named invitation venue located through original council/operator sources and cross-checked with the separate later award. The original invitation amount and status are retained.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161",
+            "excerpt": "Lowood Swimming Pool Upgrade",
+            "role": "invitation project name, value and snapshot status"
+          }
+        ],
+        "notes": [
+          "Invitation recorded on 14 November 2025. It is a separate stage from the later award; the amounts must not be added together."
+        ]
+      }
+    }
+  ]
+}

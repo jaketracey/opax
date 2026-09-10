@@ -9,10 +9,18 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    // API routes must reach the Worker even though assets exist; so must the
-    // share images, which are drawn on request (src/og-render.ts).
-    "run_worker_first": ["/api/*", "/og/*", "/ingest/*"]
+    // Page entry points must canonicalise www before serving the app, so
+    // sign-in requests and host-only account cookies share one origin.
+    // Other static assets still bypass the Worker. Share images are dynamic.
+    "run_worker_first": ["/", "/*.html", "/community", "/community/", "/connections", "/connections/", "/map", "/map/", "/api/*", "/og/*", "/ingest/*", "/mcp"]
   },
+
+  "kv_namespaces": [{"binding":"GENERATION_CACHE","id":"e0b56c0457374743b580e7210e7b4515"}],
+
+  "d1_databases": [{"binding":"COMMUNITY_DB","database_name":"opax-community","database_id":"ea0ca399-189f-4fc0-83f8-66a41204a180","migrations_dir":"migrations"}],
+  "send_email": [{"name":"COMMUNITY_EMAIL"}],
+
+  "secrets": {"required":["ARAG_KB_ID","ARAG_KB_TOKEN","ELEVENLABS_API_KEY","VOICE_TOOL_SECRET"]},
 
   "observability": {
     "enabled": true,
@@ -32,6 +40,12 @@
   //   npx wrangler secret put ARAG_KB_TOKEN
   //   npx wrangler secret put ARAG_KB_ID
   "vars": {
+    "VOICE_ENABLED": "true",
+    "VOICE_AGENT_ID": "agent_9901m22sz1chfpbtqb7r2kkxdskv",
+    "VOICE_MONTHLY_SECONDS": "40000",
+    "COMMUNITY_ORIGIN": "https://opax.com.au",
+    "COMMUNITY_EMAIL_FROM": "hello@login.opax.com.au",
+    "COMMUNITY_ENABLED": "true",
     "ARAG_ZONE": "aws-ap-southeast-2-1",
     // Folded into every response-cache key (/api/ask 7 days, /api/search,
     // /api/resource, /api/followups). Bump it whenever the corpus changes
@@ -39,7 +53,7 @@
     // answers built on the old record are never served again. Any string;
     // the convention is the date of the corpus change. See docs/STREAMING.md
     // "Caching" and the MIGRATION-ARAG.md invariants.
-    "CACHE_EPOCH": "2026-09-08-releases-rosters-contracts"
+    "CACHE_EPOCH": "2026-09-09-grant-place-evidence"
   },
 
   // Workers Rate Limiting bindings (wrangler >= 4.36 top-level `ratelimits`;
@@ -59,5 +73,20 @@
     // hundred ms of CPU each. A crawler fetches one per shared link; only a
     // script minting fresh ?q= URLs could ask for sixty in a minute.
     { "name": "OG_LIMITER", "namespace_id": "1004", "simple": { "limit": 60, "period": 60 } }
-  ]
+  ],
+  "env": {
+    "staging": {
+      "name": "opax-portal-staging",
+      "secrets": {"required":["ELEVENLABS_API_KEY","VOICE_TOOL_SECRET"]},
+      "kv_namespaces": [{"binding":"GENERATION_CACHE","id":"aed3fad08c95468ea8578c761ada6a72"}],
+      "d1_databases": [{"binding":"COMMUNITY_DB","database_name":"opax-community-staging","database_id":"033d5775-4443-4757-a984-326f2914ac7f","migrations_dir":"migrations"}],
+      "send_email": [{"name":"COMMUNITY_EMAIL"}],
+      "workers_dev": true,
+      "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
+      "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
+      "vars": { "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-09-grant-place-evidence" },
+      "ratelimits": [],
+      "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/*"] }
+    }
+  }
 }

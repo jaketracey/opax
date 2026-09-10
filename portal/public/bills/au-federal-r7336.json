@@ -145,12 +145,16 @@
    "noes": 27,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 10,
      "noes": 0
     },
     "Independent": {
-     "ayes": 1,
+     "ayes": 0,
      "noes": 1
     },
     "Labor": {
@@ -167,8 +171,7 @@
     }
    },
    "party_coverage": {
-    "dated": 35,
-    "member": 5
+    "dated": 40
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-31/1"

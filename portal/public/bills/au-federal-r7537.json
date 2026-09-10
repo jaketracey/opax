@@ -1,0 +1,69 @@
+{
+ "key": "au-federal-r7537",
+ "title": "AI Kill Switch and Data Centre Control Bill 2026",
+ "short_title": "AI Kill Switch and Data Centre Control Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-09-07",
+ "originating_house": "representatives",
+ "sponsor": "GEE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-09-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7537%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7537%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7537_ems_17631485-ac43-4e8a-8287-57db34d490d8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7537%22",
+   "document_date": "2026-09-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-09-07",
+  "sentences": [
+   "This bill would require providers of covered advanced AI systems to maintain ways to restrict, suspend or shut them down.",
+   "It would introduce incident reporting and ministerial emergency directions when serious harm is threatened.",
+   "It would also pause new AI data centres and major expansions until Parliament legislates the required safeguards and expressly ends the moratorium."
+  ],
+  "changes": [
+   "Requires technical controls that allow covered AI systems to be restricted or stopped.",
+   "Requires critical incidents to be reported and permits emergency directions, subject to reasons, reconsideration and parliamentary reporting.",
+   "Prohibits construction of new AI data centres and major expansions while the moratorium operates.",
+   "Makes ending the moratorium depend on legislation addressing farmland, water, utility prices, environmental and health protection, community consent and AI safety oversight.",
+   "Applies monitoring, investigation and civil enforcement mechanisms to the framework."
+  ],
+  "affected": "Providers of covered AI technologies, data-centre developers, regulators and communities affected by proposed facilities are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.378831+00:00"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

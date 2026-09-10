@@ -5,13 +5,14 @@ Generate the portal's investigation reports from the knowledge box.
 Each report is a set of questions asked of the corpus via /ask (grounded,
 cited, synchronous); answers + sources are written as static JSON into
 portal/public/reports/, which the Worker serves as assets. Re-run any time
-the corpus grows, then `wrangler deploy` from portal/ to publish.
+the corpus grows, then `npm run deploy` from portal/ to publish.
 
   python3 scripts/generate_reports.py                # all topics
   python3 scripts/generate_reports.py gambling housing  # subset
 
-Uses ARAG_* from .env. Query-time cost only (generative model is pinned to
-the cheapest tier on the KB) — this does NOT trigger enrichment.
+Uses ARAG_* from .env or the environment. Set REPORT_STRUCTURED_WRITER=codex
+to use the installed Codex CLI for figures, positions and the introduction.
+Narratives use the knowledge box’s configured writer. This does not trigger enrichment.
 """
 
 import argparse
@@ -19,6 +20,10 @@ from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 import json
 import math
+import os
+import shutil
+import subprocess
+import tempfile
 import re
 import sys
 import time
@@ -35,7 +40,7 @@ OUT_DIR = Path(__file__).resolve().parent.parent / "portal" / "public" / "report
 REPORTS: dict[str, dict] = {
     "gambling": {
         "title": "Gambling",
-        "blurb": "What parliament says about poker machines, online wagering and gambling reform.",
+        "blurb": "Poker machines, online wagering and reform across the public record.",
         "topic": "gambling",
         "subject": "gambling",
         "relevance_terms": (
@@ -59,7 +64,7 @@ REPORTS: dict[str, dict] = {
     },
     "climate": {
         "title": "Climate & Energy",
-        "blurb": "The climate debate on the record: targets, coal, renewables and carbon pricing.",
+        "blurb": "Targets, coal, renewables and carbon pricing across the public record.",
         "topic": "climate-environment",
         "subject": "climate and energy",
         "relevance_terms": (
@@ -139,7 +144,7 @@ REPORTS: dict[str, dict] = {
     },
     "indigenous": {
         "title": "First Nations",
-        "blurb": "Reconciliation, the Voice, Closing the Gap and native title, in parliament's own words.",
+        "blurb": "Reconciliation, the Voice, Closing the Gap and native title across the public record.",
         "topic": "indigenous-affairs",
         "subject": "First Nations",
         "relevance_terms": (
@@ -223,7 +228,7 @@ REPORTS: dict[str, dict] = {
     },
     "media": {
         "title": "Media Ownership",
-        "blurb": "Concentration, regulation and the platforms: parliament on the press.",
+        "blurb": "Media ownership, regulation and digital platforms across the public record.",
         "topic": "media-communications",
         "subject": "media ownership",
         "relevance_terms": (
@@ -306,12 +311,15 @@ SECTION_PROMPT = (
 # truly empty record, and forbids the "Based on the provided context" opener
 # the owner rejected in v1.
 WINDOW_SYSTEM = (
-    "You are OPAX, a research assistant over the Australian parliamentary record. "
-    "You answer strictly from the passages provided, citing them. You never invent facts."
+    "You are OPAX, a research assistant over the Australian public record. "
+    "You answer strictly from the passages provided, citing them. You never invent facts. "
+    "Grant invitation and award extracts, election baselines, roster affiliations and research notes are structured descriptions prepared by Opax, not verbatim original documents. Cite the extracted facts but never quote their wording as the department, AEC or researcher speaking. Keep invitations, awards and payments separate. Attribute CPI comparisons to CPI; do not claim independent electorate matching. Roster affiliations may be historical and election baselines are pre-election, not current incumbency."
 )
 WINDOW_PROMPT = (
-    "Passages from the record (a speech is the named speaker's own words; first-person "
-    "text is theirs). Every passage was delivered in an Australian parliament {period}.\n"
+    "Original records dated {period}: parliamentary speeches, government releases and "
+    "transcripts, bills, disclosures, contracts, grants and other public records. "
+    "Identify the source type; an announcement is not proof of delivery, and an award "
+    "is not a payment. Do not infer political influence from a connection.\n"
     "{context}\n\n"
     "Question: {question}\n\n"
     "Instructions: Answer from whichever passages address the question, quoting or closely "
@@ -322,14 +330,13 @@ WINDOW_PROMPT = (
     "Ignore passages that are off-topic; answer from the ones that apply "
     "even if only a few do or they address it only in part. If some passages mention the "
     "subject only briefly, report what they say and note that the record is limited. "
-    "Name the speakers and their parties wherever the passages do, and name the parliament "
-    "every time it is not the Commonwealth — never \"the same parliament\", since consecutive "
-    "passages are usually from different ones. Be exact with figures and never invent one. "
-    "Every passage is one member's own words, including what it says about their opponents: "
+    "Name speakers and parties only when identified. Distinguish the issuing government "
+    "from parliament, and name the jurisdiction. Be exact with figures and never invent one. "
+    "Treat political assertions as attributed claims, including statements about opponents: "
     "report a characterisation of another party as that member's claim about them, never as "
     "that party's own position and never as established fact. "
     "Begin with the answer itself. Never open with a preamble such as \"Based on the provided "
-    "context\", \"According to the passages\" or \"The context shows\": the reader knows the "
+    "context\", \"According to the passages\" or \"The record shows\": the reader knows the "
     "answer comes from the record. Do not explain how the passages are numbered, ordered or "
     "provided. Write two to four tight paragraphs of plain Markdown — no headings. "
     "Only if NO passage mentions the subject at all, reply exactly: "
@@ -362,7 +369,7 @@ TIDE_DECADES = (
     {"decade": "2020s", "label": "2020–26"},
 )
 
-# Paid calls, counted for the budget line at the end of a run.
+# Generation calls, counted for the activity line at the end of a run.
 ASKS: "Counter[str]" = Counter()
 
 
@@ -387,6 +394,7 @@ def resource_summary(resource: dict) -> dict:
         "slug": resource.get("slug") or "",
         "title": resource.get("title"),
         "speaker": collabs[0] if collabs else None,
+        "kind": labels.get("kind"),
         "party": labels.get("party"),
         "state": labels.get("state"),
         "date": meta.get("date"),
@@ -418,7 +426,7 @@ def numbered_sources(kb: KbClient, query: str, top_k: int = 24,
             continue
         n += 1
         srcs[n] = s
-        who = " · ".join(x for x in [s["speaker"], s["party"], (s["date"] or "")[:10]] if x)
+        who = " · ".join(x for x in [s["kind"], s["state"], s["speaker"], s["party"], (s["date"] or "")[:10]] if x)
         body = (s["passage"] or s["snippet"])[:chars]
         lines.append(f"[{n}] {s['title']}{f' ({who})' if who else ''} — {body}")
     return srcs, lines
@@ -513,6 +521,25 @@ def openrouter_tool_call(schema: dict, prompt: str) -> dict:
     the grounding is unchanged: the numbered KB sources ride in the prompt and
     every item must trace back via source_ref or it is dropped.
     """
+    if os.environ.get("REPORT_STRUCTURED_WRITER") == "codex":
+        with tempfile.TemporaryDirectory(prefix="opax-report-") as directory:
+            folder = Path(directory)
+            shape = folder / "schema.json"
+            result = folder / "result.json"
+            shape.write_text(json.dumps(schema["parameters"]))
+            binary = shutil.which("codex")
+            if not binary:
+                raise RuntimeError("Codex is required for the configured report writer")
+            completed = subprocess.run([
+                binary, "-a", "never", "exec", "-m", "gpt-5.6-luna",
+                "-c", 'model_reasoning_effort="medium"', "-s", "read-only",
+                "--ephemeral", "--ignore-user-config", "--ignore-rules", "--skip-git-repo-check",
+                "--output-schema", str(shape), "-o", str(result), "-",
+            ], input="Do not use tools. Return only the required JSON, grounded in these sources.\n"+schema["description"]+"\n"+prompt,
+                text=True, capture_output=True, timeout=300)
+            if completed.returncode or not result.exists():
+                raise RuntimeError("Codex report extraction failed: " + completed.stderr[-300:])
+            return json.loads(result.read_text())
     import re as _re
     import urllib.request
 
@@ -728,8 +755,9 @@ def gen_key_stats(kb: KbClient, title: str, srcs: dict, lines: list[str],
         return [], []
     query = (
         f'Extract the statistics a reader needs on "{title}" in Australian politics. '
-        "Below are real numbered sources from the parliamentary record, each printed with "
-        "the passage it was retrieved on. Report ONLY figures that appear in those passages, "
+        "Below are real numbered sources from the public record, each printed with "
+        "the passage it was retrieved on. Choose figures directly about this report topic; "
+        "a department name alone does not make a staffing figure relevant. Report ONLY figures that appear in those passages, "
         "exactly as stated, and ONLY where the passage also states what the figure is measured "
         "against. Give the numerator, that base as the denominator, and the unit, and set "
         "source_ref to the number of the source. Never reverse the part and the whole. A number "
@@ -783,6 +811,7 @@ def gen_key_stats(kb: KbClient, title: str, srcs: dict, lines: list[str],
             "detail": str(stat.get("detail") or "").strip(),
             "slug": source["slug"],
             "source_title": source["title"],
+            "kind": source.get("kind"),
         })
     return kept[:6], dropped
 
@@ -795,7 +824,7 @@ def gen_positions(kb: KbClient, title: str, srcs: dict, lines: list[str],
         return []
     query = (
         f'Where does each party stand on "{title}"? Below are real numbered sources from the '
-        "Australian parliamentary record, each tagged with its speaker and party. Report a "
+        "Australian public record, with speaker and party metadata where available. Report a "
         "position for a party ONLY when one of the sources shows a parliamentarian of that "
         "party taking it, and set source_ref to that source's number. A question put to a "
         "minister is the questioner's position, never the minister's. One entry per party. "
@@ -820,6 +849,7 @@ def gen_positions(kb: KbClient, title: str, srcs: dict, lines: list[str],
             "position": text,
             "slug": src["slug"],
             "source_title": src["title"],
+            "kind": src.get("kind"),
             "speaker": src["speaker"],
             "date": src["date"],
             "window": window,
@@ -831,7 +861,7 @@ LEDE_SCHEMA = {
     "name": "lede",
     "description": (
         "Three or four sentences opening a report with the overarching view of a debate "
-        "in the Australian parliament: what it is about, where the sides stand, what is "
+        "in the Australian public record: what it is about, where the sides stand, what is "
         "being fought over now and how it has moved. Each sentence is drawn from the "
         "findings below and carries the number of the source that best evidences it."
     ),
@@ -969,7 +999,7 @@ def gen_lede(kb: KbClient, title: str, sections: list[dict], eras: list[dict] = 
     moved = "\n\n".join(
         f"ERA {e.get('label')} — {e.get('question')}\n{e.get('answer')}" for e in eras if e.get("answer"))
     query = (
-        f'Open a report on "{title}" in the Australian parliament with one paragraph of three or '
+        f'Open a report on "{title}" across the Australian public record with one paragraph of three or '
         "four sentences that gives a reader the overarching view of the debate. Write as an "
         "analyst summing it up, not as a run of quotations: what the argument is fundamentally "
         "about, where the sides stand and on what grounds, what is being fought over now, and "
@@ -1030,7 +1060,7 @@ def gen_lede(kb: KbClient, title: str, sections: list[dict], eras: list[dict] = 
         source = srcs[ref]
         if source["slug"] not in {u["slug"] for u in used}:
             used.append({**{k: source.get(k) for k in
-                            ("slug", "title", "speaker", "party", "state", "date", "passage")},
+                            ("slug", "title", "speaker", "party", "state", "date", "passage", "kind")},
                          # A lede lists only what its sentences rest on.
                          "cited": True})
     if not text:
@@ -1589,12 +1619,15 @@ def catalog_rows(kb: KbClient, topic: str, refresh: bool = False) -> list[dict]:
                 "title": resource.get("title"),
                 "date": str(meta.get("date") or "")[:10],
                 "speaker": collabs[0] if collabs else None,
+                "kind": labels.get("kind"),
                 "party": labels.get("party"),
                 "state": labels.get("state"),
             })
         if not (result.get("fulltext") or {}).get("next_page") or not resources:
             break
         page += 1
+        if page % 25 == 0:
+            print(f"  catalog {topic}: {len(rows):,} speeches read", flush=True)
     path.write_text(json.dumps({
         "topic": topic,
         "enumerated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -1699,8 +1732,11 @@ def window_questions(cfg: dict, discovered: list[dict], limit: int = 8) -> list[
     titles = [d["title"] for d in discovered if not is_topic_echo(d["title"], cfg)]
     found = [debate_question(t, cfg) for t in dedupe_subjects(titles)]
     curated = [period_question(q) for q in cfg["questions"]]
-    lead = max(0, limit - len(curated))
-    ordered = found[:min(5, lead)] + curated + found[min(5, lead):]
+    broader = [
+        period_question(f"What policy changes, government announcements and implementation evidence concern {cfg['subject']} across the public record?"),
+        period_question(f"What do bills, government releases, contracts, grants and disclosure records reveal about {cfg['subject']}, and what remains unproven?"),
+    ]
+    ordered = broader + curated + found
     seen: set[str] = set()
     out = []
     for question in ordered:
@@ -1722,41 +1758,30 @@ def period_question(question: str, period: str = "since July 2024") -> str:
 
 
 def era_question(cfg: dict, era: dict, discovered: list[dict]) -> str:
-    """One question per era, named after the era's own biggest debates."""
-    # A compound bill title runs to 140 characters and misdirects retrieval as
-    # much as it informs it; a truncated one names a bill that does not exist.
-    # Long titles are simply left out of the list.
-    titles = dedupe_subjects(
-        [d["title"] for d in discovered if not is_topic_echo(d["title"], cfg)])
-    subjects = [s for s in (debate_subject(t) for t in titles) if len(s) <= 80][:3]
-    # The report's subject, spelled the way a reader spells it: "First Nations",
-    # not the lowercased title.
-    stem = (f"How did parliament argue about {cfg.get('subject') or cfg['title'].lower()} "
+    # Hansard-only discovered titles can drown out the topic (for example,
+    # procedural library business in a media-ownership report).
+    return (f"How did policy and public debate develop on {cfg.get('subject') or cfg['title'].lower()} "
             f"{era['period']}?")
-    if not subjects:
-        return stem
-    listed = subjects[0] if len(subjects) == 1 else (
-        ", ".join(subjects[:-1]) + " and " + subjects[-1])
-    return f"{stem} The debates of the period included {listed}."
 
 
 def window_clauses(topic: str, since: str | None, until: str | None) -> dict:
-    """The /find and /ask filter for a topic inside a date window.
+    """Date-window retrieval across original records of every kind.
 
-    `created` is the speech date on this path. The two not-clauses mirror the
-    Worker's: a title field holds only 'Name — date' and matches as retrieval
-    noise, and da-summary-t-body is a model's own paraphrase, which must never
-    come back as a source for a model to read."""
-    clauses: list[dict] = [
-        {"prop": "label", "labelset": "kind", "label": "speech"},
-        {"prop": "label", "labelset": "topic", "label": topic},
-    ]
+    Topic labels are incomplete outside Hansard. Query relevance supplies the
+    topic; dates retain the report windows, and generated summaries stay out.
+    Parliamentary counts and key speeches use their separate speech filters.
+    """
+    # Topic labels remain incomplete outside speeches; relevance comes from the query.
+    clauses: list[dict] = []
     if since or until:
         clauses.append({
             "prop": "created",
             **({"since": f"{since}T00:00:00Z"} if since else {}),
             **({"until": f"{until}T23:59:59Z"} if until else {}),
         })
+    # Registry bill cards mix generated summaries into body text. The original
+    # bill_text, explanatory_memorandum and bills_digest records remain searchable.
+    clauses.append({"not": {"prop": "label", "labelset": "kind", "label": "bill"}})
     clauses.append({"not": {"prop": "field", "type": "generic"}})
     clauses.append({"not": {"prop": "field", "type": "text", "name": "da-summary-t-body"}})
     return {"field": {"and": clauses}}
@@ -2217,6 +2242,7 @@ def ask_sources(res: dict, answer: str = "") -> list[dict]:
             "party": summary["party"],
             "state": summary["state"],
             "date": summary["date"],
+            "kind": summary["kind"],
             "cited": rid in cited_ids,
             "passage": trim_passage(cited_paragraph(resource, set(citations))),
             "answer_ranges": dedupe_ranges(spans.get(rid) or []),
@@ -2225,15 +2251,35 @@ def ask_sources(res: dict, answer: str = "") -> list[dict]:
     return sources
 
 
+def trim_record_preamble(section: dict) -> dict:
+    """Remove a redundant opener without moving citations off their claims."""
+    answer = section.get("answer") or ""
+    prefix = re.match(r"The (?:parliamentary |public )?record (?:shows|indicates|reveals) (?:that )?", answer)
+    if not prefix:
+        return section
+    offset = prefix.end()
+    text = answer[offset:]
+    section["answer"] = text[:1].upper() + text[1:]
+    for source in section.get("sources") or []:
+        source["answer_ranges"] = [
+            [max(0, start - offset), end - offset]
+            for start, end in source.get("answer_ranges") or [] if end > offset
+        ]
+    return section
+
+
 def build_section(kb: KbClient, question: str, *, topic: str | None = None,
                   since: str | None = None, until: str | None = None,
                   period: str = "") -> dict:
     """One window-filtered, cited ask. This is the unit the budget counts."""
     if topic:
         prompt = WINDOW_PROMPT.replace("{period}", period or "in the period asked about")
+        filters = window_clauses(topic, since, until)
+        if question.startswith("What do bills, government releases"):
+            filters["field"]["and"].append({"not": {"prop": "label", "labelset": "kind", "label": "speech"}})
         res = kb.ask(question, citations=True, prompt=prompt, system=WINDOW_SYSTEM,
                      top_k=20, show=["basic", "origin", "extra"],
-                     filter_expression=window_clauses(topic, since, until))
+                     filter_expression=filters)
     else:
         res = kb.ask(question, citations=True, prompt=SECTION_PROMPT, top_k=20,
                      show=["basic", "origin", "extra"])
@@ -2251,7 +2297,7 @@ def build_section(kb: KbClient, question: str, *, topic: str | None = None,
         # The platform does not always return ranges with an answer. Rather
         # than ship a section the page cannot mark up, fall back to the words.
         anchor_block(Records(kb), section)
-    return section
+    return trim_record_preamble(section)
 
 
 def merge_surname_variants(counts: "Counter[str]") -> dict[str, str]:
@@ -2306,6 +2352,20 @@ def voices(rows: list[dict], since: str | None = None, until: str | None = None,
             "count": count,
         })
     return out
+
+
+def refreshed_speech_stats(prior: dict | None, rows: list[dict]) -> dict:
+    """Count the same topic-labelled corpus used by the report's voice charts."""
+    speakers = voices(rows, limit=len(rows))
+    years = Counter(str(row.get("date") or "")[:4] for row in rows)
+    return {
+        **(prior or {}),
+        "speech_count": len(rows),
+        "unique_speakers": len(speakers),
+        "timeline": [[year, count] for year, count in sorted(years.items()) if year.isdigit()],
+        "top_speakers": [[s["speaker"], s["count"]] for s in speakers[:5]],
+        "speech_scope": "topic-labelled-corpus",
+    }
 
 
 def tide(kb: KbClient, topic: str) -> list[dict]:
@@ -2481,7 +2541,7 @@ def load_prior(slug: str) -> dict:
 def budget_line() -> str:
     total = sum(ASKS.values())
     detail = ", ".join(f"{name} {count}" for name, count in sorted(ASKS.items()))
-    return f"Paid calls this run: {total}" + (f" ({detail})" if detail else "")
+    return f"Generation calls this run: {total}" + (f" ({detail})" if detail else "")
 
 
 def main() -> None:
@@ -2595,10 +2655,7 @@ def main() -> None:
 
     # --- a whole report ----------------------------------------------------
     counters = kb.counters()
-    index = []
     idx_path = OUT_DIR / "index.json"
-    if idx_path.exists():
-        index = json.loads(idx_path.read_text()).get("reports", [])
 
     for slug in picked:
         cfg = REPORTS[slug]
@@ -2612,10 +2669,7 @@ def main() -> None:
         rows = catalog_rows(kb, cfg["topic"], args.refresh_rows)
         print(f"[{slug}] {len(rows):,} labelled speeches on {cfg['topic']}")
 
-        # v1's prose lead and its three unfiltered sections stay in the file so
-        # the live page keeps working until the v2 page lands. They are not
-        # re-asked here: v2's `now` and `lede` replace them, and re-asking them
-        # would double the budget for prose no reader will see.
+        # Replace the visible v2 report; omit obsolete v1 prose from downloads.
         report = {
             **prior,
             "slug": slug,
@@ -2624,9 +2678,14 @@ def main() -> None:
             "version": 2,
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "corpus_resources": counters.get("resources"),
-            "stats": all_stats.get(slug),
+            "retrieval_scope": "full-corpus",
+            "parliamentary_metrics_scope": "speech",
+            "stats": refreshed_speech_stats(all_stats.get(slug), rows),
             "voices": {"now": voices(rows, args.since), "all": voices(rows)},
         }
+
+        report.pop("brief", None)
+        report.pop("sections", None)
 
         # Checkpoint after every block. A whole report is a dozen paid asks and
         # the platform 429s hard when other jobs share the account: a failure
@@ -2687,17 +2746,22 @@ def main() -> None:
               f"{tally.get('passages', 0)}/{tally.get('sources', 0)} sources carry a passage")
         checkpoint()
 
-        index = [r for r in index if r["slug"] != slug] + [{
-            "slug": slug, "title": cfg["title"], "blurb": cfg["blurb"],
-            "updated": report["generated_at"],
-        }]
         print(f"[{slug}] done. {budget_line()}")
 
-    index.sort(key=lambda r: r["slug"])
+    index = [
+        {"slug": slug, "title": report["title"], "blurb": report["blurb"],
+         "updated": report["generated_at"]}
+        for slug in sorted(REPORTS)
+        if (report := load_prior(slug))
+    ]
+    # Source comparisons are maintained from audited datasets, not generated asks.
+    comparisons = [json.loads(path.read_text()) for path in sorted(OUT_DIR.glob('*.json')) if path.name != 'index.json']
+    index = [{"slug": r['slug'], "title": r['title'], "blurb": r['blurb'], "updated": r['generated_at']}
+             for r in comparisons if r.get('format') == 'source-comparison'] + index
     idx_path.write_text(json.dumps({"reports": index}, indent=1))
     print(f"Wrote {len(picked)} report(s) + index to {OUT_DIR}")
     print(budget_line())
-    print("Publish with: cd portal && npx wrangler deploy")
+    print("Publish with: cd portal && npm run deploy")
 
 
 if __name__ == "__main__":

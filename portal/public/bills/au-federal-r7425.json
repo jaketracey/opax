@@ -180,12 +180,16 @@
    "noes": 29,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 10,
      "noes": 0
     },
     "Independent": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "Labor": {
@@ -202,8 +206,7 @@
     }
    },
    "party_coverage": {
-    "dated": 38,
-    "member": 4
+    "dated": 42
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-25/1"
@@ -218,6 +221,10 @@
    "noes": 25,
    "outcome": "affirmative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 0,
      "noes": 1
@@ -227,7 +234,7 @@
      "noes": 0
     },
     "Independent": {
-     "ayes": 4,
+     "ayes": 3,
      "noes": 0
     },
     "LNP": {
@@ -256,8 +263,7 @@
     }
    },
    "party_coverage": {
-    "dated": 58,
-    "member": 5
+    "dated": 63
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-25/2"
@@ -272,12 +278,16 @@
    "noes": 29,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Greens": {
      "ayes": 10,
      "noes": 0
     },
     "Independent": {
-     "ayes": 4,
+     "ayes": 3,
      "noes": 0
     },
     "Labor": {
@@ -294,8 +304,7 @@
     }
    },
    "party_coverage": {
-    "dated": 39,
-    "member": 4
+    "dated": 43
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-25/3"
@@ -310,6 +319,10 @@
    "noes": 22,
    "outcome": "affirmative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 1,
+     "noes": 0
+    },
     "Country Liberal Party": {
      "ayes": 0,
      "noes": 1
@@ -319,7 +332,7 @@
      "noes": 0
     },
     "Independent": {
-     "ayes": 4,
+     "ayes": 3,
      "noes": 0
     },
     "LNP": {
@@ -344,8 +357,7 @@
     }
    },
    "party_coverage": {
-    "dated": 54,
-    "member": 5
+    "dated": 59
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-25/4"

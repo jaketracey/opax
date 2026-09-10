@@ -221,9 +221,8 @@
     }
    },
    "party_coverage": {
-    "earliest": 30,
-    "dated": 16,
-    "member": 6
+    "earliest": 36,
+    "dated": 16
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-24/6"
@@ -276,9 +275,8 @@
     }
    },
    "party_coverage": {
-    "earliest": 30,
-    "dated": 15,
-    "member": 6
+    "earliest": 36,
+    "dated": 15
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-24/7"

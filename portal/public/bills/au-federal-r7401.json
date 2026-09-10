@@ -160,11 +160,11 @@
     },
     "Liberal": {
      "ayes": 0,
-     "noes": 15
+     "noes": 16
     },
     "Nationals": {
      "ayes": 0,
-     "noes": 3
+     "noes": 2
     },
     "One Nation": {
      "ayes": 0,
@@ -176,8 +176,7 @@
     }
    },
    "party_coverage": {
-    "dated": 55,
-    "member": 6
+    "dated": 61
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/24"

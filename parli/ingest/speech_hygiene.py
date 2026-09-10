@@ -240,6 +240,11 @@ def clean_speech_text_with_rules(
             value = updated
             rules.append(name)
 
+    # OpenAustralia page navigation is scraped after the actual speech.
+    apply("openaustralia_website_footer", re.sub(
+        r"(?m)[ \t]*View the PC OA website[ \t]*$", "", value
+    ))
+
     if _NUMERIC_ENTITY_RE.search(value):
         apply("numeric_html_entity", html.unescape(value))
 

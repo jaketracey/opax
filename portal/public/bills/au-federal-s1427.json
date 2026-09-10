@@ -157,8 +157,7 @@
    },
    "party_coverage": {
     "dated": 53,
-    "member": 6,
-    "earliest": 6
+    "earliest": 12
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-11/2"
@@ -173,6 +172,10 @@
    "noes": 36,
    "outcome": "negative",
    "party_splits": {
+    "Australia's Voice": {
+     "ayes": 0,
+     "noes": 1
+    },
     "Country Liberal Party": {
      "ayes": 1,
      "noes": 0
@@ -183,7 +186,7 @@
     },
     "Independent": {
      "ayes": 1,
-     "noes": 2
+     "noes": 1
     },
     "LNP": {
      "ayes": 1,
@@ -194,11 +197,11 @@
      "noes": 24
     },
     "Liberal": {
-     "ayes": 18,
+     "ayes": 19,
      "noes": 0
     },
     "Nationals": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     },
     "One Nation": {
@@ -207,8 +210,7 @@
     }
    },
    "party_coverage": {
-    "dated": 56,
-    "member": 6
+    "dated": 62
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-26/3"

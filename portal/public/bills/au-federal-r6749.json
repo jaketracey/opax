@@ -157,8 +157,8 @@
     }
    },
    "party_coverage": {
-    "member": 5,
-    "earliest": 19,
+    "member": 3,
+    "earliest": 21,
     "dated": 14
    },
    "paired": 0,
@@ -200,8 +200,8 @@
     }
    },
    "party_coverage": {
-    "member": 5,
-    "earliest": 17,
+    "member": 3,
+    "earliest": 19,
     "dated": 12
    },
    "paired": 0,
@@ -243,8 +243,8 @@
     }
    },
    "party_coverage": {
-    "member": 5,
-    "earliest": 17,
+    "member": 3,
+    "earliest": 19,
     "dated": 12
    },
    "paired": 0,

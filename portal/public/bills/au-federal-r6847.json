@@ -184,9 +184,9 @@
     }
    },
    "party_coverage": {
-    "member": 7,
+    "member": 3,
     "dated": 12,
-    "earliest": 16
+    "earliest": 20
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/3"
@@ -243,9 +243,9 @@
     }
    },
    "party_coverage": {
-    "member": 13,
+    "member": 5,
     "dated": 19,
-    "earliest": 21
+    "earliest": 29
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/4"
@@ -294,9 +294,9 @@
     }
    },
    "party_coverage": {
-    "member": 7,
+    "member": 4,
     "dated": 14,
-    "earliest": 17
+    "earliest": 20
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/5"
@@ -345,9 +345,9 @@
     }
    },
    "party_coverage": {
-    "member": 8,
+    "member": 4,
     "dated": 14,
-    "earliest": 17
+    "earliest": 21
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/6"

@@ -134,7 +134,7 @@
      "noes": 0
     },
     "LNP": {
-     "ayes": 2,
+     "ayes": 3,
      "noes": 0
     },
     "Labor": {
@@ -152,15 +152,11 @@
     "One Nation": {
      "ayes": 3,
      "noes": 0
-    },
-    "United Australia Party": {
-     "ayes": 1,
-     "noes": 0
     }
    },
    "party_coverage": {
-    "dated": 53,
-    "member": 10
+    "dated": 62,
+    "member": 1
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/19"

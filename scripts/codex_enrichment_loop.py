@@ -73,10 +73,10 @@ SPEECHES
 
 
 def summary_prompt(items: list[dict]) -> str:
-    return f"""Write a brief for every Australian parliamentary speech below for OPAX.
-Each value must be one compact sentence of 25 to 75 words, neutrally stating what was argued, announced, asked, answered, or moved. Use only that rid's supplied text and never carry a speaker, claim, or figure across records. Do not name or infer the speaker from the title: start directly with an action such as 'Asked', 'Argued', 'Moved', 'Reported', or 'Paid tribute'. When several speakers appear, describe the proceeding neutrally; for questions and answers use 'Asked whether ...; the minister said ...'. Preserve the source's tense and status exactly, especially 'will announce' versus 'announced'. Preserve at most three useful concrete positions, figures, bill names, people, or places. Use neutral verbs and include only directly supported claims. Never start with 'In this speech', 'This speech', or 'The speaker says'. Summarise rather than quote, use plain ASCII punctuation, stay below 600 characters, and return only the required JSON object. Do not call tools or external APIs.
+    return f"""Write a brief for every Australian public record below for OPAX. Each item identifies its kind; it may be a parliamentary speech or an official government transcript or release.
+Each value must be one compact sentence, normally 25 to 75 words (a short question or procedural record may use 8 to 24 words), neutrally stating what was argued, announced, asked, answered, moved, or reported. Use only that rid's supplied text and never carry a speaker, claim, or figure across records. Do not name or infer the speaker from the title: start directly with an action such as 'Asked', 'Argued', 'Announced', 'Moved', 'Reported', or 'Paid tribute'. When several speakers appear, describe the proceeding neutrally; for questions and answers use 'Asked whether ...; the minister said ...'. Write years in full: do not shorten 2026 to 2027 into 2026-27. Preserve the source's tense and status exactly, especially 'will announce' versus 'announced'. Preserve at most three useful concrete positions, figures, bill names, people, organisations, programs, or places. Use neutral verbs and include only directly supported claims. Never start with 'In this speech', 'This speech', 'This release', or 'The speaker says'. Summarise rather than quote, use plain ASCII punctuation, stay below 600 characters, and return only the required JSON object. Do not call tools or external APIs.
 
-SPEECHES
+RECORDS
 {json.dumps(items, ensure_ascii=False, separators=(',', ':'))}
 """
 
@@ -125,19 +125,21 @@ def validate_payload(kind: str, payload: object, items: list[dict]) -> list[str]
             problems.append(f"{rid}: brief is not a string")
             continue
         words = value.split()
-        if not 15 <= len(words) <= 80:
-            problems.append(f"{rid}: use 15-80 words (procedural records may be short)")
+        if not 8 <= len(words) <= 80:
+            problems.append(f"{rid}: use 8-80 words (short questions and procedural records may be concise)")
         if len(value) > 600 or len(value) < 40:
             problems.append(f"{rid}: use 40-600 characters")
         if any(mark in value for mark in ("—", "–", "‘", "’", "“", "”")):
             problems.append(f"{rid}: use plain ASCII punctuation")
         item = by_rid[rid]
-        speaker = (item.get("title") or "").split(" — ", 1)[0].strip().lower()
-        if speaker and len(speaker.split()) >= 2 and speaker in value.lower():
-            problems.append(f"{rid}: do not name or infer the record speaker")
         source_text = (item.get("text") or "").replace("½", ".5").replace("¼", ".25").replace("¾", ".75")
-        source_numbers = {n.replace(",", "") for n in re.findall(r"\b\d[\d,]*(?:\.\d+)?%?\b", source_text)}
-        for number in re.findall(r"\b\d[\d,]*(?:\.\d+)?%?\b", value):
+        speaker = (item.get("title") or "").split(" — ", 1)[0].strip().lower()
+        if (speaker and len(speaker.split()) >= 2 and speaker in value.lower()
+                and speaker not in source_text.lower()):
+            problems.append(f"{rid}: do not name or infer the record speaker")
+        number_pattern = r"(?<![\d,])\d[\d,]*(?:\.\d+)?%?"
+        source_numbers = {n.replace(",", "") for n in re.findall(number_pattern, source_text)}
+        for number in re.findall(number_pattern, value):
             if number.replace(",", "") not in source_numbers:
                 problems.append(f"{rid}: figure {number} is not present in the supplied text")
     return problems
@@ -180,6 +182,7 @@ def main() -> None:
         schema_path.write_text(json.dumps(schema(args.kind, items)))
         prompt = label_prompt(items) if args.kind == "labels" else summary_prompt(items)
         for attempt in range(1, 4):
+            problems = []
             result_path.unlink(missing_ok=True)
             response = ask_codex(args.model, args.effort, prompt, schema_path, result_path)
             if response.returncode == 0 and result_path.exists():
@@ -191,6 +194,8 @@ def main() -> None:
                     prompt += "\n\nThe previous attempt failed these checks. Rewrite every value and return the complete object:\n- " + "\n- ".join(problems[:20])
                 except (json.JSONDecodeError, TypeError):
                     pass
+            if response.returncode == 0 and result_path.exists():
+                print(f"[{args.worker}] Validation: {problems[:20]}", flush=True)
             print(f"[{args.worker}] Codex attempt {attempt} failed: {(response.stderr or response.stdout)[-500:]}", flush=True)
             time.sleep(10 * attempt)
         else:

@@ -27,6 +27,7 @@ function harness(rows = [supplier()], loader) {
     assetJson: async (_env, path) => { assert.equal(path, '/suppliers.json'); requests++; return loader ? loader() : { meta: { generated_at: '2026-09-07T00:00:00Z' }, suppliers: rows }; },
     cachedJson: async (_key, fn) => fn(),
     loadPeople: async () => ({ people: [] }), loadMoney: async () => ({ parties: new Map(), donors: new Map() }),
+    loadAgencies: async () => null, loadElectorates: async () => null,
     loadReports: async () => ({ reports: [] }), loadCampaigners: async () => null,
   };
   runInNewContext(code, context);
@@ -101,7 +102,7 @@ test('missing or malformed export yields 503 and a failed load can recover', asy
 
 test('metadata escapes supplier text and links to the new directory', async () => {
   const meta = await harness([supplier({ name: '<script>alert("x")</script> & Co' })]).meta(id);
-  assert.doesNotMatch(meta.prerender, /<script>/);
+  assert.doesNotMatch(meta.prerender, /<script\b/i);
   assert.match(meta.prerender, /&lt;script&gt;/);
   assert.match(meta.prerender, /href="\/subject\/supplier"/);
   assert.equal(meta.canonical, `https://opax.com.au/subject/supplier/${id}`);

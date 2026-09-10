@@ -5,8 +5,12 @@ const fields = {
   opax_search: ['query_length', 'search_kind', 'search_mode'],
   opax_chip: ['chip_kind'],
   opax_game_open: ['game'],
-  opax_download: [],
-  opax_outbound: ['host'],
+  opax_download: ['format'],
+  opax_outbound: ['host', 'partner', 'placement'],
+  opax_community_open: ['placement'],
+  opax_money_view: ['view'],
+  opax_map_action: ['action', 'filter', 'format', 'row_count'],
+  opax_journey: ['action', 'lens', 'step', 'step_count'],
   opax_source_open: ['from_section'],
   opax_ask_started: ['from_section'],
   opax_ask_completed: ['from_section', 'duration_ms', 'source_count', 'has_answer'],
@@ -21,7 +25,7 @@ export function safePath(value) {
     const url = new URL(value, 'https://opax.com.au');
     const path = url.hash.startsWith('#/') ? url.hash.slice(1).split('?')[0] : url.pathname;
     // Unknown paths can contain arbitrary reader input; never collect them.
-    if (!/^\/(?:$|ask(?:\/|$)|chat(?:\/|$)|search(?:\/|$)|money(?:\/|$)|reports(?:\/|$)|explore(?:\/|$)|doc(?:\/|$)|subject(?:\/|$)|declared(?:\/|$)|about(?:\/|$)|methods(?:\/|$)|stats(?:\/|$)|expenses(?:\/|$)|bills?(?:\/|$))/.test(path)) return '/other';
+    if (!/^\/(?:$|ask(?:\/|$)|chat(?:\/|$)|search(?:\/|$)|money(?:\/|$)|map(?:\/|$)|discover(?:\/|$)|connections\.html$|reports(?:\/|$)|explore(?:\/|$)|doc(?:\/|$)|subject(?:\/|$)|declared(?:\/|$)|about(?:\/|$)|methods(?:\/|$)|stats(?:\/|$)|expenses(?:\/|$)|bills?(?:\/|$))/.test(path)) return '/other';
     return path;
   } catch { return '/other'; }
 }

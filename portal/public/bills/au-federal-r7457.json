@@ -189,8 +189,7 @@
     }
    },
    "party_coverage": {
-    "dated": 40,
-    "member": 5
+    "dated": 45
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/8"
@@ -214,7 +213,7 @@
      "noes": 1
     },
     "LNP": {
-     "ayes": 1,
+     "ayes": 2,
      "noes": 0
     },
     "Labor": {
@@ -222,11 +221,11 @@
      "noes": 21
     },
     "Liberal": {
-     "ayes": 15,
+     "ayes": 16,
      "noes": 0
     },
     "Nationals": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     },
     "One Nation": {
@@ -234,13 +233,12 @@
      "noes": 0
     },
     "United Australia Party": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     }
    },
    "party_coverage": {
-    "dated": 51,
-    "member": 6
+    "dated": 57
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/9"
@@ -289,8 +287,7 @@
     }
    },
    "party_coverage": {
-    "dated": 41,
-    "member": 5
+    "dated": 46
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/10"
@@ -339,8 +336,7 @@
     }
    },
    "party_coverage": {
-    "dated": 40,
-    "member": 5
+    "dated": 45
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/11"
@@ -381,8 +377,7 @@
     }
    },
    "party_coverage": {
-    "dated": 36,
-    "member": 5
+    "dated": 41
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/12"

@@ -180,11 +180,11 @@
     },
     "Liberal": {
      "ayes": 0,
-     "noes": 15
+     "noes": 16
     },
     "Nationals": {
      "ayes": 0,
-     "noes": 3
+     "noes": 2
     },
     "One Nation": {
      "ayes": 3,
@@ -192,8 +192,7 @@
     }
    },
    "party_coverage": {
-    "dated": 52,
-    "member": 6
+    "dated": 58
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/5"
@@ -225,11 +224,11 @@
      "noes": 23
     },
     "Liberal": {
-     "ayes": 15,
+     "ayes": 16,
      "noes": 0
     },
     "Nationals": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     },
     "One Nation": {
@@ -238,8 +237,7 @@
     }
    },
    "party_coverage": {
-    "dated": 51,
-    "member": 6
+    "dated": 57
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/6"
@@ -272,11 +270,11 @@
     },
     "Liberal": {
      "ayes": 0,
-     "noes": 15
+     "noes": 16
     },
     "Nationals": {
      "ayes": 0,
-     "noes": 3
+     "noes": 2
     },
     "One Nation": {
      "ayes": 3,
@@ -288,8 +286,7 @@
     }
    },
    "party_coverage": {
-    "dated": 53,
-    "member": 6
+    "dated": 59
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/7"
@@ -325,11 +322,11 @@
      "noes": 22
     },
     "Liberal": {
-     "ayes": 15,
+     "ayes": 16,
      "noes": 0
     },
     "Nationals": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "One Nation": {
@@ -342,8 +339,7 @@
     }
    },
    "party_coverage": {
-    "dated": 53,
-    "member": 6
+    "dated": 59
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/9"
@@ -380,11 +376,11 @@
     },
     "Liberal": {
      "ayes": 0,
-     "noes": 15
+     "noes": 16
     },
     "Nationals": {
      "ayes": 0,
-     "noes": 2
+     "noes": 1
     },
     "One Nation": {
      "ayes": 3,
@@ -396,8 +392,7 @@
     }
    },
    "party_coverage": {
-    "dated": 53,
-    "member": 6
+    "dated": 59
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/10"

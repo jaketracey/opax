@@ -53,7 +53,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-08-19",
+  "sentences": [
+   "For liable departures from 1 January 2027, this bill would raise the passenger movement charge to $80 instead of $70.",
+   "Passengers whose tickets were sold on or before Royal Assent would retain the $70 rate for departures through 30 June 2028.",
+   "From 1 July 2028, liable departures would attract the $80 rate regardless of when the ticket was bought."
+  ],
+  "changes": [
+   "Raises the charge on eligible departures from Australia by $10.",
+   "Ties the new rate to departure dates from January 2027, with an eighteen-month transition for qualifying earlier bookings.",
+   "Keeps the existing rate during that transition for tickets or equivalent travel authorities issued before commencement.",
+   "Ends the earlier-booking exception for departures from July 2028."
+  ],
+  "affected": "Travellers liable for the charge, airlines, shipping and charter operators, and border officials collecting it are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.379098+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

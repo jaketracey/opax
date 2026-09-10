@@ -363,8 +363,8 @@
    },
    "party_coverage": {
     "dated": 35,
-    "member": 9,
-    "earliest": 3
+    "member": 8,
+    "earliest": 4
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-19/4"
@@ -418,8 +418,8 @@
    },
    "party_coverage": {
     "dated": 33,
-    "member": 9,
-    "earliest": 4
+    "member": 8,
+    "earliest": 5
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-19/5"
@@ -473,8 +473,8 @@
    },
    "party_coverage": {
     "dated": 33,
-    "member": 8,
-    "earliest": 4
+    "member": 7,
+    "earliest": 5
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-19/6"
@@ -524,8 +524,8 @@
    },
    "party_coverage": {
     "dated": 30,
-    "member": 7,
-    "earliest": 4
+    "member": 6,
+    "earliest": 5
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-19/7"
@@ -575,8 +575,8 @@
    },
    "party_coverage": {
     "dated": 29,
-    "member": 7,
-    "earliest": 4
+    "member": 6,
+    "earliest": 5
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-19/8"
@@ -630,8 +630,8 @@
    },
    "party_coverage": {
     "dated": 41,
-    "member": 7,
-    "earliest": 4
+    "member": 6,
+    "earliest": 5
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-19/9"
@@ -680,9 +680,9 @@
     }
    },
    "party_coverage": {
-    "member": 9,
+    "member": 8,
     "dated": 42,
-    "earliest": 4
+    "earliest": 5
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-25/1"
@@ -736,8 +736,8 @@
    },
    "party_coverage": {
     "dated": 33,
-    "member": 8,
-    "earliest": 4
+    "member": 7,
+    "earliest": 5
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-25/2"
@@ -799,8 +799,8 @@
    },
    "party_coverage": {
     "dated": 35,
-    "member": 9,
-    "earliest": 4
+    "member": 8,
+    "earliest": 5
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-25/3"

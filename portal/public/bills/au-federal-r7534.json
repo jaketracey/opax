@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-08-26",
+  "sentences": [
+   "This bill would charge licensed online wagering providers a levy to fund regulation of wagering advertising.",
+   "The Australian Communications and Media Authority would recover specified costs of the advertising restrictions and opt-out register created by companion legislation.",
+   "Total levy collections would be limited to eligible regulatory costs rather than used to raise additional revenue."
+  ],
+  "changes": [
+   "Makes providers that operated during all or part of a levy period liable for that period’s levy.",
+   "Lets the regulator set the calculation method by legislative instrument after consulting the minister.",
+   "Limits total collections to eligible register and advertising-regulation costs.",
+   "Allows upfront register costs to be recovered across several periods, with no more than the full amount recovered."
+  ],
+  "affected": "Licensed interactive wagering providers and the communications regulator are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.379045+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10701",
@@ -141,8 +161,7 @@
     }
    },
    "party_coverage": {
-    "dated": 32,
-    "member": 3
+    "dated": 35
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/6"
@@ -179,8 +198,7 @@
     }
    },
    "party_coverage": {
-    "dated": 32,
-    "member": 3
+    "dated": 35
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/7"
@@ -225,8 +243,7 @@
     }
    },
    "party_coverage": {
-    "dated": 39,
-    "member": 3
+    "dated": 42
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/8"
@@ -263,8 +280,7 @@
     }
    },
    "party_coverage": {
-    "dated": 36,
-    "member": 4
+    "dated": 40
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/9"
@@ -301,8 +317,7 @@
     }
    },
    "party_coverage": {
-    "dated": 39,
-    "member": 5
+    "dated": 44
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/10"
@@ -339,8 +354,7 @@
     }
    },
    "party_coverage": {
-    "dated": 36,
-    "member": 5
+    "dated": 41
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/11"
@@ -377,8 +391,7 @@
     }
    },
    "party_coverage": {
-    "dated": 35,
-    "member": 5
+    "dated": 40
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/12"
@@ -411,11 +424,11 @@
     },
     "Liberal": {
      "ayes": 0,
-     "noes": 16
+     "noes": 17
     },
     "Nationals": {
      "ayes": 0,
-     "noes": 3
+     "noes": 2
     },
     "One Nation": {
      "ayes": 4,
@@ -423,8 +436,8 @@
     }
    },
    "party_coverage": {
-    "dated": 52,
-    "member": 8
+    "dated": 59,
+    "member": 1
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/13"
@@ -456,11 +469,11 @@
      "noes": 25
     },
     "Liberal": {
-     "ayes": 16,
+     "ayes": 17,
      "noes": 0
     },
     "Nationals": {
-     "ayes": 3,
+     "ayes": 2,
      "noes": 0
     },
     "One Nation": {
@@ -469,8 +482,8 @@
     }
    },
    "party_coverage": {
-    "dated": 52,
-    "member": 8
+    "dated": 59,
+    "member": 1
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/14"
@@ -507,8 +520,7 @@
     }
    },
    "party_coverage": {
-    "dated": 38,
-    "member": 5
+    "dated": 43
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/15"
@@ -541,8 +553,7 @@
     }
    },
    "party_coverage": {
-    "dated": 35,
-    "member": 5
+    "dated": 40
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/16"
@@ -583,8 +594,7 @@
     }
    },
    "party_coverage": {
-    "dated": 45,
-    "member": 5
+    "dated": 50
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/17"

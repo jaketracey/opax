@@ -10,9 +10,9 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
-  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Permissions-Policy: camera=(), microphone=(self), geolocation=(), payment=(), usb=()
   Cross-Origin-Opener-Policy: same-origin
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; font-src 'self'; connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; worker-src 'self'; manifest-src 'self'; frame-src https://www.googletagmanager.com; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://tile.openstreetmap.org https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; font-src 'self'; connect-src 'self' wss://opax.com.au wss://staging.opax.com.au https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; worker-src 'self'; manifest-src 'self'; frame-src https://www.googletagmanager.com; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
 
 # --- caching -----------------------------------------------------------------
 # A request matching several rules inherits ALL their headers, and same-name
@@ -35,6 +35,10 @@
 # .webp so /photos/people.json is left to the /*.json rule and not double-set.)
 /*.json
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+# Bill dates and progress should reflect each publication for returning readers.
+/bills/*.json
+  ! Cache-Control
+  Cache-Control: public, max-age=0, must-revalidate
 # Reports are regenerated several times a day now; five minutes, then a day of
 # stale grace, so a rebuild reaches readers without a hard refresh.
 /reports/*.json
@@ -70,3 +74,29 @@
 /chunks/*
   ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
+
+# A release is immutable; the small manifest selects the current release.
+/electorates/manifest.json
+  ! Cache-Control
+  Cache-Control: public, max-age=300, must-revalidate
+/electorates/releases/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+
+/community
+  Cache-Control: public, max-age=0, must-revalidate
+  ! Referrer-Policy
+  Referrer-Policy: no-referrer
+/community.html
+  Cache-Control: public, max-age=0, must-revalidate
+  ! Referrer-Policy
+  Referrer-Policy: no-referrer
+
+/voice.js
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+/voice.css
+  Cache-Control: public, max-age=31536000, immutable
+/voice-assets/*
+  ! Cache-Control
+  Cache-Control: public, max-age=300, must-revalidate

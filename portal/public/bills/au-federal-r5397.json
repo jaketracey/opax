@@ -363,8 +363,8 @@
    },
    "party_coverage": {
     "dated": 50,
-    "earliest": 5,
-    "member": 10
+    "earliest": 8,
+    "member": 7
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2015-08-12/3"

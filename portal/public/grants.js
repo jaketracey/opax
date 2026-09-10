@@ -599,10 +599,10 @@ export function mountGrants (container, opts = {}) {
   const root = el('section', 'gr-root')
   root.setAttribute('aria-label', 'Who gets the grants: grant recipients checked against the donor registers')
   root.innerHTML = `
-    <h2 class="gr-title">Who gets the grants</h2>
+    ${opts.showHeading === false ? '' : `<h2 class="gr-title">Who gets the grants</h2>
     <p class="gr-deck">Every published grant award, resolved to the organisations that receive it and
       checked against the donor registers: who gets public money, from which programs, in which seats,
-      and which of them also fund parties.</p>
+      and which of them also fund parties.</p>`}
 
     <div class="gr-toolbar" role="group" aria-label="Grant filters">
       <div class="gr-views" role="group" aria-label="Jurisdiction">

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
+import { filterMoneyEdges, readMoneyFilters } from '../public/money-records.js';
 
 const read = name => readFileSync(new URL(`../graph/${name}.ts`, import.meta.url), 'utf8');
 const transpile = source => ts.transpileModule(source, {compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText;
@@ -74,9 +75,9 @@ test('desktop selection keeps the quiet focus nudge',()=>{
 
 const windowBlock=adapter.slice(adapter.indexOf('export function windowFigures'),adapter.indexOf('export function buildGraph',adapter.indexOf('export function windowFigures')));
 const fallback=read('connection-fallback').replace(/^import .*\n/gm,'').replaceAll('export function','function');
-const {connectionRows,mountConnectionFallback}=runInNewContext(`${transpile(windowBlock.replace('export ',''))}\n${transpile(fallback)}; ({connectionRows,mountConnectionFallback})`,{formatMoney:n=>`$${n}`,document:{createElement:tag=>element(tag)}});
+const {connectionRows,mountConnectionFallback}=runInNewContext(`${transpile(windowBlock.replace('export ',''))}\n${transpile(fallback)}; ({connectionRows,mountConnectionFallback})`,{URLSearchParams,filterMoneyEdges,readMoneyFilters,formatMoney:n=>`$${n}`,document:{createElement:tag=>element(tag)}});
 function element(tag='div') { return {tagName:tag,children:[],style:{},classList:{remove(){}},append(...items){this.children.push(...items)},replaceChildren(){this.children=[]},setAttribute(){},addEventListener(name,fn){this[name]=fn},remove(){this.removed=true}}; }
-const data={nodes:[{id:'hub',label:'Contracts'},{id:'a',label:'Recipient A'},{id:'p',label:'Party'}],edges:[
+const data={nodes:[{id:'hub',kind:'grantor',flow:'contracts',label:'Contracts'},{id:'a',kind:'donor',label:'Recipient A'},{id:'p',kind:'party',label:'Party'}],edges:[
   {source:'hub',target:'a',total:100,count:2,byYear:{2022:[40,1],2023:[60,1]}},
   {source:'a',target:'p',total:20,count:1,byYear:{2023:[20,1]}},
 ]};

@@ -12,7 +12,7 @@
  "sponsor_person_id": null,
  "portfolio": "Finance",
  "status": "before_parliament",
- "status_as_of": "2026-07-02",
+ "status_as_of": "2026-09-07",
  "key_dates": [
   {
    "stage": "introduced",
@@ -73,6 +73,12 @@
    "date": "2026-07-02",
    "house": "senate",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
   }
  ],
  "sources": [
@@ -91,6 +97,12 @@
   {
    "kind": "em_revised",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7481_ems_0776036f-0053-4c35-9fde-db64a0cbc19a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7481_ems_d6938e68-215d-4111-9c1e-ab8200f6fef7%22",
    "document_date": null,
    "licence": "CC BY-NC-ND 4.0"
   },

@@ -55,10 +55,10 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     story.hidden = !active;
     stage.classList.toggle('has-journey', Boolean(active));
     if (!active) { story.innerHTML = ''; return; }
-    const header = `<div class="journey-story-top"><span>${esc(active.title)}</span><button type="button" data-action="exit" aria-label="End guided journey">×</button></div>`;
+    const header = `<div class="journey-story-top"><h2 class="journey-title">${esc(active.title)}</h2><button type="button" data-action="exit" aria-label="End guided journey">×</button></div>`;
     const chooser = active.choices ? `<div class="journey-selector"><label for="journey-focus">${esc(active.selectorLabel || 'Focus')}</label><select id="journey-focus" data-focus="true" aria-label="${esc(active.selectorLabel || 'Focus')}"><option value="">Choose ${active.selectorLabel === 'Industry' ? 'an industry' : active.selectorLabel === 'Recipient' ? 'a recipient' : 'an organisation'}…</option>${active.choices.map(choice => `<option value="${esc(choice.value)}"${choice.value === active.selection ? ' selected' : ''}>${esc(choice.label)}</option>`).join('')}</select></div>` : '';
     if (!active.steps.length) {
-      story.innerHTML = `${header}<div class="journey-choice-empty"><h3>Where would you like to start?</h3><p>Choose from the dropdown to build your journey.</p>${chooser}<p class="journey-help">${esc(active.id === 'public-money' ? 'Recipients with both public-money and party-funding connections in this map.' : active.id === 'over-time' ? 'Organisations with dated receipts in both comparison windows.' : 'Choices reflect the connections available in this map.')}</p></div>`;
+      story.innerHTML = `${header}<div class="journey-choice-empty">${chooser}<p class="journey-help">${esc(active.id === 'public-money' ? 'Recipients with both public-money and party-funding connections in this map.' : active.id === 'over-time' ? 'Organisations with dated receipts in both comparison windows.' : 'Choices reflect the connections available in this map.')}</p></div>`;
       enhancePicker();
       return;
     }
@@ -108,13 +108,38 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
       results.innerHTML = matches.map(c => `<button type="button" data-choice="${esc(c.value)}" class="journey-picker-option"${c.value === active.selection ? ' aria-current="true"' : ''}><span>${esc(names[choices.indexOf(c)])}</span>${detail(c) ? `<small>${detail(c)}</small>` : ''}</button>`).join('');
       count.textContent = matches.length ? `${matches.length} ${matches.length === 1 ? 'result' : 'results'}` : 'No matches. Try another name.';
     };
+    // Commit touch choices before Safari moves focus and dismisses the panel.
+    // A scrolling gesture must never select the option under the finger.
+    const commitChoice = option => {
+      select.value = option.dataset.choice;
+      onFocus({ target: select });
+      story.querySelector('.journey-picker-trigger')?.focus({ preventScroll: true });
+    };
+    let touchChoice = null;
+    root.addEventListener('touchstart', event => {
+      const option = event.target.closest('[data-choice]');
+      const touch = event.touches[0];
+      touchChoice = option && event.touches.length === 1 ? {option,x:touch.clientX,y:touch.clientY} : null;
+    }, {passive:true});
+    root.addEventListener('touchmove', event => {
+      const touch = event.touches[0];
+      if (touchChoice && (!touch || Math.hypot(touch.clientX-touchChoice.x,touch.clientY-touchChoice.y)>10)) touchChoice=null;
+    }, {passive:true});
+    root.addEventListener('touchcancel', () => { touchChoice=null; });
+    root.addEventListener('touchend', event => {
+      const choice=touchChoice; touchChoice=null;
+      if (!choice || !event.cancelable) return;
+      event.preventDefault();
+      commitChoice(choice.option);
+    }, {passive:false});
+    root.addEventListener('mousedown', event => {
+      if (event.target.closest('[data-choice]')) event.preventDefault();
+    });
     root.addEventListener('click', event => {
       event.stopPropagation();
       const option = event.target.closest('[data-choice]');
       if (option) {
-        select.value = option.dataset.choice;
-        onFocus({ target: select });
-        story.querySelector('.journey-picker-trigger')?.focus({ preventScroll: true });
+        commitChoice(option);
       } else if (event.target.closest('.journey-picker-trigger')) {
         if (!panel.hidden) { close(); return; }
         onPickerOpen({ target: select });
@@ -141,10 +166,17 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     disposePicker = () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('focusin', outside); };
   }
 
+  function trackJourney(action) {
+    if (!active) return;
+    try { dispatchEvent(new CustomEvent('opax:analytics', { detail: {
+      event: 'opax_journey', properties: { action, lens: active.id, step: step + 1, step_count: active.steps.length },
+    } })); } catch { /* optional measurement */ }
+  }
   function present() {
     if (!active?.steps.length || destroyed) return;
     const shown = map.presentScene(active.steps[step].scene);
-    if (shown === false) { playing = false; reason = 'This view is unavailable in the 3D map. You can still read each step and open its records.'; stopTimer(); render(); }
+    if (shown === false) { trackJourney('unavailable'); playing = false; reason = 'This view is unavailable in the 3D map. You can still read each step and open its records.'; stopTimer(); render(); }
+    else trackJourney(step === active.steps.length - 1 ? 'completed' : 'step');
   }
   function schedule() {
     stopTimer();
@@ -159,7 +191,8 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     }, STEP_MS);
   }
   function pause(why = '') {
-    if (destroyed || !active) return;
+    if (destroyed || !active || (!playing && !why)) return;
+    trackJourney('paused');
     playing = false; stopTimer(); map.pauseScene?.();
     reason = why === 'map' ? 'Map paused for you to explore. Continue to return to this step.' : '';
     render();
@@ -172,9 +205,11 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     step = Math.max(0, Math.min(journey.steps.length - 1, Math.trunc(Number(requestedStep)) || 0));
     render();
     if (active.steps.length) { present(); loadStory(); } else { pendingStory?.controller.abort(); pendingStory=null; map.clearScene(); }
+    if (!active.steps.length) trackJourney('opened');
     if (announce) options.onRoute?.(active.id, step, active.selection || '');
   }
   function exit() {
+    trackJourney('exited');
     pendingStory?.controller.abort(); pendingStory=null; stopTimer(); playing = false; active = null; reason = ''; render(); map.clearScene(); options.onRoute?.(null, 0, '');
   }
   function move(next) {
@@ -196,6 +231,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
       case 'play':
         if (playing) { pause(); break; }
         if (!active?.steps.length || reduced.matches || document.hidden) break;
+        trackJourney('played');
         if (step === active.steps.length - 1) step = 0;
         else if (step === 0 && !reason) step = 1;
         playing = step < active.steps.length - 1; reason = ''; render(); present(); schedule(); options.onRoute?.(active.id, step, active.selection || ''); break;
@@ -223,6 +259,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     selections[id] = active.choices.some(choice => choice.value === select.value) ? select.value : '';
     journeys = buildMoneyJourneys(data, selections);
     choose(id, 0);
+    trackJourney('focus_selected');
     story.querySelector('[data-focus]')?.focus({ preventScroll: true });
   }
   function onKey(event) {

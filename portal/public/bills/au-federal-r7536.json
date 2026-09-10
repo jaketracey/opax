@@ -1,0 +1,69 @@
+{
+ "key": "au-federal-r7536",
+ "title": "Automated Decision-Making (Safeguards and Transparency) Bill 2026",
+ "short_title": "Automated Decision-Making (Safeguards and Transparency) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-09-07",
+ "originating_house": "representatives",
+ "sponsor": "CHANEY, Kate, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-09-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7536%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7536%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7536_ems_dc31ea13-a4be-4f15-bada-aba1b5984fb8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7536%22",
+   "document_date": "2026-09-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-09-07",
+  "sentences": [
+   "This bill would set mandatory safeguards for significant automated administrative action by Commonwealth government bodies.",
+   "Agencies would have to assess risks, explain automated decisions to affected people and maintain human accountability, with stronger controls for high-risk uses.",
+   "The framework would regulate automation authorised by other laws rather than grant a new power to automate decisions."
+  ],
+  "changes": [
+   "Prohibits unlawful automation and generally prevents automation of discretionary judgements, subject to specified exceptions.",
+   "Requires risk assessments before covered administrative action is automated.",
+   "Requires notice and meaningful explanations when a person is affected by an automated decision.",
+   "Requires human override capability for high-risk automation and preserves avenues for reviewing decisions.",
+   "Creates a public register of systems and gives the Commonwealth Ombudsman review and audit functions."
+  ],
+  "affected": "People affected by significant Commonwealth decisions, government agencies and relevant officials or contractors are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.378907+00:00"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

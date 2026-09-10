@@ -131,6 +131,7 @@ export type EngineData = {
   aspect: number
   /** Group pinned to the origin with the rest ringed around it (the parties). */
   centralGroup?: string
+  collapseGroups?: boolean
 }
 
 export type EngineEmphasis = {
@@ -578,6 +579,8 @@ export class KnowledgeMapEngine {
   }
   private viewOwnedFlag = false
   private focusOwnedFlag = false
+  /** Homepage presentation, independent of camera distance. */
+  private overviewMode = false
   /** Automatic overview scale. Phones can start closer without claiming the view. */
   private fitScale = 1
   private fitDist = 420
@@ -885,13 +888,14 @@ export class KnowledgeMapEngine {
       data.aspect,
       data.centralGroup,
     )
+    if (this.overviewMode) for (const centre of centres.values()) centre.y = 0
     this.centres = centres
     // The landing angle is chosen, not fixed: looking straight down the ring
     // stacks one cluster behind another, so before the first fit the camera
     // walks the circle and keeps the azimuth that spreads the cluster
     // centres furthest apart on screen. A reader who has taken the view
     // keeps it.
-    if (!this.viewOwnedFlag && centres.size > 2) {
+    if (!this.overviewMode && !this.viewOwnedFlag && centres.size > 2) {
       this.view.theta = this.bestTheta(centres)
       this.idleAnchor = this.view.theta
       this.idlePhase = 0
@@ -1040,16 +1044,17 @@ export class KnowledgeMapEngine {
           opacity: 0.055,
           depthWrite: false,
         })
-        const cat = this.palette.cats[style.slot] ?? this.palette.accent
-        material.color.copy(cat)
+        material.color.set(style.colour)
+        const cat = material.color
         const mesh = new THREE.Mesh(this.territoryGeo, material)
         mesh.raycast = () => undefined
         mesh.renderOrder = -2
         this.territoryGroup.add(mesh)
         const caption = document.createElement('div')
         caption.className = 'rp-map3d-territory'
-        caption.style.color = this.palette.inks[style.slot] ?? '#5A616B'
-        const captionFull = `${group.toUpperCase()} · ${count}`
+        caption.style.color = style.ink
+        const groupLabel = this.overviewMode ? group.charAt(0).toUpperCase() + group.slice(1) : group.toUpperCase()
+        const captionFull = `${groupLabel} · ${count}`
         caption.textContent = captionFull
         caption.style.display = 'none'
         this.labelLayer.appendChild(caption)
@@ -1062,7 +1067,7 @@ export class KnowledgeMapEngine {
           material,
           caption,
           captionFull,
-          captionShort: group.toUpperCase(),
+          captionShort: groupLabel,
           captionW: 0,
           captionShortW: 0,
           captionHubW: 0,
@@ -1075,7 +1080,8 @@ export class KnowledgeMapEngine {
         for (const member of members) member.territory = territory
         this.territories.push(territory)
 
-        if (group === data.centralGroup || count < HUB_MIN_MEMBERS) continue
+        // Public sources stay distinct: grants and contracts must never fold into one summed hub.
+        if (data.collapseGroups === false || group === data.centralGroup || members.some((member) => member.node.kind === 'grantor') || count < HUB_MIN_MEMBERS) continue
 
         const hubMaterial = new THREE.MeshStandardMaterial({
           roughness: 0.42,
@@ -1555,7 +1561,9 @@ export class KnowledgeMapEngine {
         : (node.industry ?? node.group).replace(/_/g, ' ')
       category.style.color = this.palette.inks[visual.slot] ?? '#5A616B'
       const links = visual.degree === 1 ? '1' : `${visual.degree}`
-      const who = node.kind === 'party'
+      const who = node.kind === 'agency' || node.kind === 'supplier'
+        ? `${links} contract relationship${visual.degree === 1 ? '' : 's'}`
+        : node.kind === 'party'
         ? (visual.degree === 1 ? '1 donor shown' : `${links} donors shown`)
         : (visual.degree === 1 ? '1 party' : `${links} parties`)
       this.popupCounts.textContent = node.total !== undefined
@@ -1603,6 +1611,22 @@ export class KnowledgeMapEngine {
   // -------------------------------------------------------------------
   // View - fit, focus, zoom, insets.
   // -------------------------------------------------------------------
+
+  /** Homepage groups stay readable at any zoom, until explicitly opened. */
+  setOverviewMode(enabled: boolean) {
+    this.overviewMode = enabled
+    if (enabled) {
+      this.idleSpin = false
+      this.view.theta = 0
+      this.view.phi = PHI_MIN
+    }
+  }
+
+  private get restingOverview(): boolean {
+    if (!this.overviewMode || this.emphasis.selectedId !== null || this.emphasis.pathEdges !== null) return false
+    for (const hub of this.hubs.values()) if (hub.dived) return false
+    return true
+  }
 
   setInsets(insets: Insets) {
     this.insets = insets
@@ -1728,6 +1752,10 @@ export class KnowledgeMapEngine {
     this.focusOwnedFlag = false
     this.fitScale = Math.max(1, Math.min(1.8, scale))
     this.releaseDives()
+    if (this.overviewMode) {
+      this.view.theta = 0
+      this.view.phi = PHI_MIN
+    }
     if (this.nodeVisuals.size === 0) return
     this.updateWorldBounds()
     this.updateCamera()
@@ -1852,6 +1880,7 @@ export class KnowledgeMapEngine {
     let plusU = -Infinity
     let minusU = -Infinity
     for (const visual of this.nodeVisuals.values()) {
+      if (this.restingOverview && visual.territory?.hub) continue
       d.set(visual.sim.x, visual.sim.y, visual.sim.z).sub(centre)
       const depth = d.dot(e)
       const pr = d.dot(right)
@@ -1883,7 +1912,9 @@ export class KnowledgeMapEngine {
       if (fracH < 0.9) {
         dist = Math.max(dist, (Math.abs(d.dot(right)) / tanH + depth) / (1 - fracH))
       }
-      const top = d.dot(up) + territory.r
+      const fitR = this.restingOverview && territory.hub ? territory.hub.anchor.r : territory.r
+      const top = d.dot(up) + fitR
+      if (this.restingOverview) dist = Math.max(dist, (-d.dot(up) + fitR) / tanV + depth)
       if (fracV < 0.9 && top > 0) {
         dist = Math.max(dist, (top / tanV + depth) / (1 - fracV))
       }
@@ -1899,8 +1930,12 @@ export class KnowledgeMapEngine {
         const dh = tanH * depth
         if (pr + halfW + dh > plusR) plusR = pr + halfW + dh
         if (-pr + halfW + dh > minusR) minusR = -pr + halfW + dh
-        const top = pu + territory.r + tall * k * dist + tanV * depth
+        const top = pu + (this.restingOverview && territory.hub ? territory.hub.anchor.r : territory.r) + tall * k * dist + tanV * depth
         if (top > plusU) plusU = top
+        if (this.restingOverview) {
+          const bottom = -pu + (territory.hub?.anchor.r ?? territory.r) + tanV * depth
+          if (bottom > minusU) minusU = bottom
+        }
       }
       this.fitMidR = Number.isFinite(plusR) && Number.isFinite(minusR) ? (plusR - minusR) / 2 : 0
       this.fitMidU = Number.isFinite(plusU) && Number.isFinite(minusU) ? (plusU - minusU) / 2 : 0
@@ -2727,7 +2762,7 @@ export class KnowledgeMapEngine {
     this.camera.aspect = rect.width / rect.height
     this.camera.updateProjectionMatrix()
     if (!this.viewOwnedFlag && this.nodeVisuals.size > 0) {
-      this.fit(false, rect.width <= 540 ? 1.3 : 1)
+      this.fit(false, !this.overviewMode && rect.width <= 540 ? 1.3 : 1)
     }
     this.renderDirty = true
   }
@@ -3154,7 +3189,8 @@ export class KnowledgeMapEngine {
       const pinned = pinnedGroups !== null && pinnedGroups.has(hub.group)
       const px = (territory.spread * (this.height / 2)) / (dist * halfTan)
       let want = hub.lodTarget
-      if (pinned) want = 0
+      if (this.overviewMode) want = pinned || hub.dived ? 0 : 1
+      else if (pinned) want = 0
       else if (hub.lodTarget === 1 && px > EXPAND_PX) want = 0
       else if (hub.lodTarget === 0 && px < COLLAPSE_PX && !hub.dived) want = 1
       if (hub.lodStarted < 0) {
@@ -3211,6 +3247,7 @@ export class KnowledgeMapEngine {
     const territory = this.territories.find((t) => t.group === group)
     const hub = territory?.hub
     if (!territory || !hub) return
+    if (this.overviewMode) this.releaseDives()
     this.updateCamera()
     // Frame the cluster with room around it: the parties it feeds and its
     // neighbours stay in view, so the reader keeps their bearings.
@@ -3319,6 +3356,7 @@ export class KnowledgeMapEngine {
    * capBaseline on success.
    */
   private placeCaption(text: string, w: number, sx: number, sy: number, screenR: number): boolean {
+    const captionHeight = this.overviewMode ? 22 : CAPTION_H
     const half = w / 2 + 4
     const plateL = this.insets.left + PLATE_INSET
     const plateR = this.width - this.insets.right - PLATE_INSET
@@ -3327,8 +3365,8 @@ export class KnowledgeMapEngine {
     if (half * 2 > plateR - plateL) return false
     for (let pass = 0; pass < 2; pass++) {
       for (let side = 0; side < 2; side++) {
-        const y1 = side === 0 ? sy - screenR - 5 - CAPTION_H : sy + screenR + 5
-        const y2 = y1 + CAPTION_H
+        const y1 = side === 0 ? sy - screenR - 5 - captionHeight : sy + screenR + 5
+        const y2 = y1 + captionHeight
         if (y1 < plateT || y2 > plateB) continue
         let x1 = sx - half
         let x2 = sx + half
@@ -3553,7 +3591,7 @@ export class KnowledgeMapEngine {
       const lod = hub ? hub.lod : 0
       const inNeighbourhood = this.neighbourIds?.has(id) ?? false
       if (
-        strictPath || lod > 0.35 || !disc.ok || disc.opacity < 0.2 ||
+        (this.restingOverview && focus === null) || strictPath || lod > 0.35 || !disc.ok || disc.opacity < 0.2 ||
         (focus !== null && !inNeighbourhood) ||
         (!inNeighbourhood && kept >= budget)
       ) {

@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as explained in the linked explanatory memorandum",
+  "as_of": "2026-08-26",
+  "sentences": [
+   "This bill would connect the news-business register with the proposed News Journalism Payment Scheme.",
+   "The Australian Communications and Media Authority would have to tell the department administering payments about specified changes in registered businesses and corporations.",
+   "The notifications would help the department assess eligibility and payment entitlements under the separate payments bill."
+  ],
+  "changes": [
+   "Requires notifications when news businesses or corporations are registered, endorsed or have those arrangements revoked.",
+   "Requires relevant notifications about ownership changes or failure to meet registration requirements.",
+   "Requires notifications when news sources are added to or removed from a registered business.",
+   "Specifies information that notifications must contain, including the event date and relevant business, source and contact details."
+  ],
+  "affected": "Registered news businesses, their corporations, the communications regulator and the department administering journalism payments are affected.",
+  "model": "GPT-6 (Codex)",
+  "generated_at": "2026-09-08T04:37:37.379265+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10721",
@@ -141,8 +161,7 @@
     }
    },
    "party_coverage": {
-    "dated": 35,
-    "member": 7
+    "dated": 42
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/9"
@@ -166,7 +185,7 @@
      "noes": 1
     },
     "LNP": {
-     "ayes": 1,
+     "ayes": 2,
      "noes": 0
     },
     "Labor": {
@@ -174,25 +193,21 @@
      "noes": 25
     },
     "Liberal": {
-     "ayes": 16,
+     "ayes": 17,
      "noes": 0
     },
     "Nationals": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     },
     "One Nation": {
      "ayes": 3,
      "noes": 0
-    },
-    "United Australia Party": {
-     "ayes": 1,
-     "noes": 0
     }
    },
    "party_coverage": {
-    "dated": 49,
-    "member": 9
+    "dated": 57,
+    "member": 1
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/10"
@@ -233,8 +248,7 @@
     }
    },
    "party_coverage": {
-    "dated": 37,
-    "member": 7
+    "dated": 44
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/11"
@@ -271,8 +285,7 @@
     }
    },
    "party_coverage": {
-    "dated": 36,
-    "member": 7
+    "dated": 43
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/12"
@@ -309,8 +322,7 @@
     }
    },
    "party_coverage": {
-    "dated": 36,
-    "member": 7
+    "dated": 43
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/13"

@@ -12,7 +12,7 @@
  "sponsor_person_id": null,
  "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
  "status": "before_parliament",
- "status_as_of": "2026-07-01",
+ "status_as_of": "2026-09-08",
  "key_dates": [
   {
    "stage": "introduced",
@@ -61,12 +61,24 @@
    "date": "2026-07-01",
    "house": "senate",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7512%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7512%22"
   }
  ],
  "sources": [
   {
    "kind": "em",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7512_ems_24d52f21-720b-4448-98f3-3ad32ae8be53%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7512_ems_9ae26441-9d99-48df-ad60-739266c102e1%22",
    "document_date": null,
    "licence": "CC BY-NC-ND 4.0"
   },

@@ -1,3 +1,4 @@
+import {readGenerationCache, storeGenerationCache} from './generation-cache'
 /**
  * OPAX portal Worker — thin proxy over the Progress Agentic RAG knowledge box.
  *
@@ -13,8 +14,20 @@
  *  - exclude da-* fields from citations (enrichment output must not cite itself)
  */
 
+import { ASK_PIPELINE_VERSION, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
+import { resolveAskScope, needsAskPeople, askRetrievalQuery, type AskScope } from './ask-scope'
+import { communityRoute } from './community'
+import { canonicalPageRedirect } from './canonical-origin'
+import { communityMcp } from './community-mcp'
+import { voiceRoute } from './voice'
 import { proxyPostHog } from './posthog'
+import { CATALOG_KINDS, searchCatalog } from './catalog-search'
+import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
+import { SEARCH_SORTS, compareSearchResults } from './search-sort'
+import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
+
+import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer } from './search-summary'
 
 import { OG_FONT_FILES, OG_VERSION, homeCard, type OgCard } from './og'
 import { renderOgPng, type OgFont } from './og-render'
@@ -36,11 +49,12 @@ interface FindResource {
 
 const SLUG_RE = /^(speech|legal|news)-(\d+)$/
 const PRESS_SLUG_RE = /^press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+$/
+const RESEARCH_SLUG_RE = /^(?:mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/
 // Division records (parli.ingest.votes_ingest) carry composite ids:
 // division-nsw-la-2025-12-22-3, division-federal-senate-10113. Public too.
 const DIVISION_SLUG_RE = /^division-[a-z0-9-]+$/
 const isPublicSlug = (slug: string): boolean =>
-  SLUG_RE.test(slug) || DIVISION_SLUG_RE.test(slug) || PRESS_SLUG_RE.test(slug)
+  SLUG_RE.test(slug) || DIVISION_SLUG_RE.test(slug) || PRESS_SLUG_RE.test(slug) || RESEARCH_SLUG_RE.test(slug)
 
 /**
  * Build a /find//ask filter_expression from the portal's filter vocabulary.
@@ -83,15 +97,17 @@ function filterExpression(f: {
   speaker?: string | null
   party?: string | null
   state?: string | null
+  chamber?: string | null
   topic?: string | null
   from?: string | null
   to?: string | null
 }): Record<string, unknown> | null {
-  const clauses: Record<string, unknown>[] = []
+  const clauses: Record<string, unknown>[] = [{ not: { prop: 'label', labelset: 'kind', label: 'news' } }]
   if (f.kind && f.kind !== 'all') {
     clauses.push({ prop: 'label', labelset: 'kind', label: f.kind })
   }
   if (f.party) clauses.push({ prop: 'label', labelset: 'party', label: f.party })
+  if (f.chamber) clauses.push({ prop: 'label', labelset: 'chamber', label: f.chamber })
   if (f.state) clauses.push({ prop: 'label', labelset: 'state', label: f.state })
   if (f.topic && TOPIC_SLUGS.has(f.topic)) {
     clauses.push({ prop: 'label', labelset: 'topic', label: f.topic })
@@ -193,9 +209,8 @@ function json(data: unknown, status = 200): Response {
 // Finished answers therefore live in caches.default under a synthetic URL
 // keyed by a SHA-256 of the canonical ask input plus CACHE_EPOCH (wrangler
 // vars; bumped whenever the corpus changes, so a stale record is never
-// replayed). caches.default is PER COLO: a question warmed in Sydney is a
-// MISS in Frankfurt. That is accepted — the traffic is Australian — and the
-// warm script (scripts/warm_cache.py) runs from Australia.
+// replayed). The edge cache is backed by shared Workers KV, so other
+// locations can reuse successful generations without another model call.
 //
 // Only answers worth keeping are stored: not a refusal, non-empty, at least
 // one cited source. Chat turns (`context`) are never cached — the answer
@@ -349,7 +364,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     Math.max(1, Math.floor(Number(url.searchParams.get('per') ?? SEARCH_PER_DEFAULT)) || SEARCH_PER_DEFAULT),
     SEARCH_PER_MAX,
   )
-  const sort = url.searchParams.get('sort') === 'newest' ? 'newest' : 'relevance'
+  const sort = url.searchParams.get('sort') || 'relevance'
   // Legacy callers (the person page, the time machine) pin their own depth and
   // never page; a pager asks for the full window so the count it prints is real.
   const topK = Math.min(
@@ -395,12 +410,7 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     cacheStore(ctx, windowKey, json(win), SEARCH_WINDOW_CACHE_TTL)
   }
 
-  const ordered =
-    sort === 'newest'
-      ? [...win.results].sort(
-          (a, b) => String(b.date || '').localeCompare(String(a.date || '')) || b.score - a.score,
-        )
-      : win.results
+  const ordered = [...win.results].sort((a, b) => compareSearchResults(a, b, sort))
   const pageCount = Math.max(1, Math.ceil(ordered.length / per))
   const clamped = Math.min(page, pageCount)
   const rows = ordered.slice((clamped - 1) * per, clamped * per)
@@ -427,6 +437,64 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   })
   cacheStore(ctx, pageKey, out, SEARCH_CACHE_TTL)
   return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
+}
+
+/** Unified public search. Existing /api/search callers retain document-only semantics. */
+async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const selected = url.searchParams.get('kind') || 'all'
+  if ((selected === 'all' || CATALOG_KINDS.has(selected)) && catalogTokens(url.searchParams.get('q')).length > 16) return json({ error: 'Use up to 16 search words, or narrow the record type to documents.' }, 400)
+  const check = new URL(url)
+  if (CATALOG_KINDS.has(selected)) check.searchParams.set('kind', 'speech')
+  const extendedStates = new Set(['tas', 'wa', 'nt', 'act'])
+  if (extendedStates.has(check.searchParams.get('state') || '')) check.searchParams.delete('state')
+  const bad = validateSearchQuery(check)
+  if (bad) return bad
+  const limited = await rateLimited(env.SEARCH_LIMITER, request)
+  if (limited) return limited
+  const localWanted = selected === 'all' || CATALOG_KINDS.has(selected)
+  const documentsWanted = !CATALOG_KINDS.has(selected) && !extendedStates.has(url.searchParams.get('state') || '')
+  const docUrl = new URL(url)
+  docUrl.pathname = '/api/search'
+  docUrl.searchParams.set('kind', selected)
+  docUrl.searchParams.set('sort', 'relevance')
+  docUrl.searchParams.set('page', '1')
+  docUrl.searchParams.set('per', '200')
+  const tasks = await Promise.allSettled([
+    localWanted ? searchCatalog(url, env.ASSETS) : Promise.resolve(null),
+    documentsWanted ? (async () => {
+      const req = new Request(docUrl, request)
+      const response = env.STAGING_API ? await env.STAGING_API.fetch(req) : await apiSearch(req, docUrl, env, ctx)
+      if (!response.ok) throw new Error('Document search unavailable')
+      return await response.json() as { results: SearchResult[]; truncated: boolean }
+    })() : Promise.resolve(null),
+  ])
+  const catalog = tasks[0].status === 'fulfilled' ? tasks[0].value : null
+  const documents = tasks[1].status === 'fulfilled' ? tasks[1].value : null
+  const warnings: string[] = []
+  if (tasks[0].status === 'rejected') warnings.push('Financial and register search is temporarily unavailable. These results only cover documents.')
+  if (tasks[1].status === 'rejected') warnings.push('Document search is temporarily unavailable. These results only cover the other published records.')
+  if (!catalog && !documents && warnings.length) return json({ error: 'Search is temporarily unavailable. Please try again.' }, 503)
+  // Reciprocal ranks combine lexical records with semantic document retrieval;
+  // their native scores are different scales and must never be compared.
+  const combined = [
+    ...(catalog?.results || []).map((r, i) => ({ ...r, score: 1 / (10 + i), sort_date: r.date || r.sort_date || '' })),
+    ...(documents?.results || []).map((r, i) => ({ ...r, score: 1 / (10.5 + i), sort_date: r.date || '' })),
+  ]
+  const sort = url.searchParams.get('sort') || 'relevance'
+  // Select the same relevance window before sorting, so changing order never
+  // replaces matches or changes the count between pages.
+  combined.sort((a, b) => compareSearchResults(a, b, 'relevance'))
+  const rows = combined.slice(0, 200).sort((a, b) => compareSearchResults(a, b, sort))
+  const per = Math.min(200, Number(url.searchParams.get('per') || 20))
+  const pageCount = Math.max(1, Math.ceil(rows.length / per))
+  const page = Math.min(pageCount, Number(url.searchParams.get('page') || 1))
+  const years: Record<string, number> = {}
+  for (const row of rows) { const y = row.date?.slice(0, 4) || ''; if (/^\d{4}$/.test(y)) years[y] = (years[y] || 0) + 1 }
+  return json({ query: url.searchParams.get('q'), kind: selected, sort, page, per_page: per, page_count: pageCount,
+    results: rows.slice((page - 1) * per, page * per), count: rows.slice((page - 1) * per, page * per).length,
+    total: rows.length, truncated: !!(catalog?.truncated || documents?.truncated || combined.length > 200 || warnings.length),
+    years, warnings, catalog_matches: catalog?.total || 0, coverage: catalog?.coverage, index_version: catalog?.version,
+  })
 }
 
 /** One /find at `topK` depth, deduped to documents and ranked by score. */
@@ -471,7 +539,7 @@ async function searchWindow(
   }
 
   const results = Object.entries(found.resources ?? {})
-    .filter(([, r]) => !(r.slug ?? '').startsWith('da-')) // enrichment output never surfaces as a result
+    .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')) // enrichment output never surfaces as a result
     .map(([rid, resource]) => {
     const slug = resource.slug ?? ''
     const m = SLUG_RE.exec(slug)
@@ -488,7 +556,9 @@ async function searchWindow(
     for (const field of Object.values(resource.fields ?? {})) {
       for (const para of Object.values(field.paragraphs ?? {})) {
         const cal = calibrate(para.score, para.score_type)
-        const lower = para.text.toLowerCase()
+        const passage = stripListingBoilerplate(para.text)
+        if (!passage) continue
+        const lower = passage.toLowerCase()
         let hits = 0
         let at = -1
         for (const t of queryTerms) {
@@ -498,7 +568,7 @@ async function searchWindow(
         if (hits > bestHits || (hits === bestHits && cal >= bestScore)) {
           bestHits = hits
           bestScore = cal
-          bestText = para.text
+          bestText = passage
           hitAt = at
         }
       }
@@ -545,6 +615,7 @@ interface AskInput {
   kind?: string
   speaker?: string
   party?: string
+  chamber?: string
   state?: string
   topic?: string
   from?: string
@@ -555,6 +626,9 @@ interface AskInput {
 type AskAnswer = {
   answer?: string
   citations?: Record<string, unknown>
+  citation_footnote_to_context?: Record<string, string>
+  footnote_to_context?: Record<string, string>
+  augmented_context?: AugmentedContext
   retrieval_results?: { resources?: Record<string, FindResource> }
 }
 
@@ -576,16 +650,22 @@ const healthyRetrieval = (a: AskAnswer): boolean =>
   Object.keys(a.retrieval_results?.resources ?? {}).length >= 5
 
 /** The platform /ask body for a portal question: filters, context turns, prompt. */
-function buildAskBody(input: AskInput): Record<string, unknown> {
-  const { question, kind, speaker, party, state, topic, from, to, context } = input
+function buildAskBody(input: AskInput, records: AskRecords = { records: [], coverage: '', total: 0 }): Record<string, unknown> {
+  const { question, kind, speaker, party, state, chamber, topic, from, to, context } = input
   const body: Record<string, unknown> = {
-    query: question,
-    citations: true, // NEVER combine with answer_json_schema — platform bug
+    query: askRetrievalQuery(input),
+    citations: 'llm_footnotes', // NEVER combine citations with answer_json_schema
     top_k: 20,
     reranker: 'predict',
     show: ['basic', 'origin', 'extra'],
+    extra_context: recordContext(records.records),
+    rag_strategies: [
+      { name: 'neighbouring_paragraphs', before: 1, after: 1 },
+      // Index speaker metadata is unsafe for debates containing several speakers.
+      { name: 'metadata_extension', types: ['classification_labels'] },
+    ],
   }
-  // Prior conversation turns from the chat view. The platform's /ask context
+  // Prior conversation turns from the chat view. The platform's /ask chat_history
   // author enum is NUCLIA | USER (422 otherwise) — prior answers go in as
   // NUCLIA. The platform validates at 24 turns; clip text defensively too.
   const turns: { author: string; text: string }[] = []
@@ -599,8 +679,8 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
   // prompt below that turn is worse than useless (measured 2026-09-04 on
   // "hospitality", 1998-2006, 20/20 passages on topic: the prompt alone
   // answered every time, the prompt plus the turn refused every time).
-  const provenance = speaker?.trim()
-    ? `Every passage is from a speech delivered by ${speaker.trim()} in an Australian parliament; first-person passages are their own words. `
+  const provenance = speaker?.trim() && kind === 'speech'
+    ? `These records are indexed under ${speaker.trim()} in an Australian parliament. Some debate records contain multiple speakers; the index name alone does not establish who said a particular passage. `
     : ''
   if (Array.isArray(context) && context.length > 0) {
     turns.push(
@@ -613,9 +693,22 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
         })),
     )
   }
-  if (turns.length > 0) body.context = turns
-  const filters = filterExpression({ kind: kind ?? 'speech', speaker, party, state, topic, from, to })
+  if (turns.length > 0) {
+    body.chat_history = turns
+    // We already supply a contextual retrieval query. The provider's implicit
+    // history rewrite lost the subject in live follow-up checks (2026-09-08).
+    // Keep history for generation, but search the explicit query unchanged.
+    body.chat_history_relevance_threshold = 1
+    body.rephrase = false
+  }
+  const filters = filterExpression({ kind: kind ?? 'all', speaker, party, state, chamber, topic, from, to })
   if (filters) body.filter_expression = filters
+  if (integrityQuestion(question || '')) {
+    body.filter_expression = { field: { and: [
+      ...(filters?.field ? [filters.field] : []),
+      { or: ['corruption', 'integrity', 'NACC'].map(word => ({ prop: 'keyword', word })) },
+    ] } }
+  }
 
   // Every ask owns its prompt. The platform default's fallback line ("Not
   // enough data to answer this.") fires on any mixed context even after
@@ -627,35 +720,68 @@ function buildAskBody(input: AskInput): Record<string, unknown> {
   // the substance.
   body.prompt = {
     system:
-      'You are OPAX, a research assistant over the Australian parliamentary record. You answer strictly from the passages provided, citing them. You never invent facts.',
+      'You are OPAX, a research assistant over Australian parliamentary and public financial records. You answer strictly from the passages provided, citing them. You never invent facts. ' + RECORD_GROUNDING,
     user:
-      `${provenance}Passages from the record (a speech is the named speaker's own words; first-person text is theirs):\n{context}\n\n` +
+      `${provenance}Passages from the record:\n{context}\n\n` +
       'Question: {question}\n\n' +
-      'Instructions: Answer from whichever passages address the question, quoting or closely paraphrasing them. ' +
+      (integrityQuestion(question || '') ? 'For this question, use a passage about an institution only if it explicitly identifies a corruption or integrity body. A generic national commissioner, frontline services, or service agencies without that identification does not establish a position on a federal anti-corruption commission. Omit that material entirely, even if it appears in the retrieved context. ' : '') +
+      (party ? `This retrieval is restricted to records indexed under ${party}. A combined debate can still contain other parties' speakers. Unless the passages explicitly establish the speaker's affiliation, frame the answer as evidence in records indexed under ${party}, not as verified statements by ${party} MPs. Do not present a passage explicitly speaking for a different party as this group's position. ` : '') +
+      'Instructions: If the question contains a follow-up, answer the latest follow-up; the earlier user question only supplies its subject. Give a concise, cited explanation in your own words from whichever passages address the question. Use direct quotations only when their exact wording helps answer the question or the reader asks for quotes. ' +
+      'When the question names a particular institution, commission, bill or policy, exclude passages about other institutions sharing generic words such as commission or reform. For example, a not-for-profit regulator or another national commissioner is not evidence about a federal anti-corruption commission. ' +
+      'Omit generic website directions such as \"The full listing can be found at\" and its URL. Summarise the substantive evidence instead. ' +
       'Ignore passages that are off-topic; answer from the ones that apply even if only a few do or they address it only in part. If some passages mention the subject only briefly, report what they say and note that the record is limited. ' +
       'Begin with the answer itself. Never open with a preamble such as "Based on the provided context", "According to the passages" or "The context shows": the reader knows the answer comes from the record. ' +
+      FOOTNOTE_INSTRUCTIONS +
+      'Quotation marks mean verbatim source wording. Never put a paraphrase, changed verb or compressed sentence in quotation marks; use an unquoted paraphrase instead. Attach each citation to the exact passage supporting that claim, not another passage on the same topic. ' +
+      'Party labels identify the indexing scope of a record, not the affiliation of every speaker in a combined debate. Do not call an unnamed speaker an Independent, Labor, Liberal or other party MP merely from the record label. When attribution is not explicit in the passage, describe it as a passage in records indexed under that group. ' +
       'Do not explain how the passages are numbered, ordered or provided. ' +
       // "Donor" on this site is a political donor. Asked to count blood donors
       // the model once listed OAM recipients it found in the passages; asked
       // to count political donors it cannot, and should say where that lives.
       'On this site "donor", "donation" and "gave" mean money disclosed to electoral commissions by political donors, not blood or organ donation, unless the question says otherwise. ' +
-      'Speeches cannot count or total donors, donations, grants or contracts: if the question asks for such a figure, say in one sentence that the disclosed registers on this site (the ledger and the money map) hold it, then report what the speeches themselves say about the subject. ' +
+      (records.coverage ? `Published-record coverage: ${records.coverage} ` : '') +
+      'A ranked retrieval is not an exhaustive search of parliament. Never claim a person or group made no statements merely because none appeared in these results. If the requested group is absent, say the retrieved selection does not establish its position. ' +
+      'Distinguish what was said during a requested period from later recollections about that period. Do not present a later retrospective account as a contemporaneous statement. Keep the answer to about 300 words unless more detail is requested. ' +
       'Only if NO passage mentions the subject at all, reply exactly: The record retrieved for this question does not discuss it.',
   }
   return body
 }
 
 /** The portal's answer payload: the same shape from the sync and streamed paths. */
-function askPayload(answer: AskAnswer): { answer: string; citations: Record<string, unknown>; sources: unknown[] } {
+function askPayload(answer: AskAnswer, records: AskRecords = { records: [], coverage: '', total: 0 }, scope?: AskScope): { answer: string; citations: Record<string, unknown>; sources: unknown[]; scope?: AskScope; answer_status?: string; evidence_excerpts?: { resource: string; text: string }[] } {
+  const resources = Object.fromEntries(Object.entries(answer.retrieval_results?.resources ?? {})
+    .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')))
+  const knownContexts = new Set<string>(records.records.map((_, i) => `USER_CONTEXT_${i}`))
+  for (const resource of Object.values(resources)) {
+    for (const field of Object.values(resource.fields ?? {})) {
+      for (const id of Object.keys(field.paragraphs ?? {})) {
+        if (originalContext(id)) knownContexts.add(id)
+      }
+    }
+  }
+  const augmented = {
+    ...answer.augmented_context?.paragraphs,
+    ...answer.augmented_context?.fields,
+  }
+  for (const [id, block] of Object.entries(augmented)) {
+    if (resources[id.split('/')[0]] && originalContext(id) && typeof block.text === 'string') knownContexts.add(id)
+  }
+  const footnotes = answer.citation_footnote_to_context ?? answer.footnote_to_context
+  const normalised = (footnotes && Object.keys(footnotes).length > 0) || /\[\^|\[\d+\]:\s*block-/.test(answer.answer ?? '')
+    ? normaliseFootnotes(answer.answer ?? '', footnotes ?? {}, knownContexts)
+    : { answer: answer.answer ?? '', citations: Object.fromEntries(
+        Object.entries(answer.citations ?? {}).filter(([id]) => knownContexts.has(id)),
+      ) }
+  // Both citation modes now use offsets into the clean answer (Unicode code points).
+  const citations = normalised.citations
   // Citation keys are ARAG paragraph ids ("<rid>/f/<field>/..."); the leading
   // segment is the resource id. Platform-format knowledge stays HERE — the
   // frontend just reads the `cited` flag.
   const citedIds = new Set(
-    Object.keys(answer.citations ?? {}).map((k) => k.split('/')[0]),
+    Object.keys(citations).map((k) => k.split('/')[0]),
   )
-  const citedParas = new Set(Object.keys(answer.citations ?? {}))
-  const sources = Object.entries(answer.retrieval_results?.resources ?? {})
-    .filter(([, r]) => !(r.slug ?? '').startsWith('da-'))
+  const citedParas = new Set(Object.keys(citations))
+  const sources = Object.entries(resources)
     .map(([rid, r]) => {
       const meta = r.extra?.metadata ?? {}
       // The passage to quote beside the answer: prefer the paragraph the
@@ -667,6 +793,7 @@ function askPayload(answer: AskAnswer): { answer: string; citations: Record<stri
       let citedScore = -1
       for (const field of Object.values(r.fields ?? {})) {
         for (const [pid, para] of Object.entries(field.paragraphs ?? {})) {
+          if (!originalContext(pid)) continue
           const cal = calibrate(para.score, para.score_type)
           if (cal > bestScore) {
             bestScore = cal
@@ -678,29 +805,106 @@ function askPayload(answer: AskAnswer): { answer: string; citations: Record<stri
           }
         }
       }
+      // Neighbouring paragraphs may be cited without being a retrieval hit.
+      for (const [id, block] of Object.entries(augmented)) {
+        if (id.split('/')[0] === rid && citedParas.has(id) && !citedText && typeof block.text === 'string') citedText = block.text
+      }
       return {
         resource: rid,
         slug: r.slug ?? '',
         title: r.title ?? r.slug ?? rid,
+        href: (r.slug ?? '').startsWith('bill-') ? `/bill/${(r.slug ?? '').slice(5)}` : `/doc/${r.slug ?? ''}`,
+        kind: label(r, 'kind'),
         speaker: r.origin?.collaborators?.[0] ?? null,
         party: label(r, 'party'),
         state: label(r, 'state'),
         chamber: label(r, 'chamber'),
         date: (meta.date as string) ?? null,
         url: r.origin?.url || null, // official record, for exports/citations
-        snippet: (citedText || bestText).slice(0, 600),
+        // Metadata extension is model context, not part of the quoted record.
+        snippet: (citedText || bestText).replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, '').trim().slice(0, 600),
         cited: citedIds.has(rid),
       }
     })
 
   return {
-    answer: answer.answer ?? '',
-    citations: answer.citations ?? {},
-    sources,
+    answer: normalised.answer,
+    ...(scope ? { scope } : {}),
+    citations,
+    sources: [...recordSources(records.records, citations), ...sources],
   }
 }
 
 type AskPayload = ReturnType<typeof askPayload>
+
+/** Verify quotes against original cited resources, not model metadata. */
+function hasUnsupportedQuotes(payload: AskPayload, raw: AskAnswer): boolean {
+  const cited = new Set(Object.keys(payload.citations).map(id => id.split('/')[0]))
+  const text = new Map<string, string[]>()
+  const add = (id: string, value: string) => {
+    if (!cited.has(id.split('/')[0]) || !originalContext(id)) return
+    const rid = id.split('/')[0]
+    const parts = text.get(rid) ?? []
+    parts.push(value.replace(/\n+DOCUMENT CLASSIFICATION LABELS:[\s\S]*$/, ''))
+    text.set(rid, parts)
+  }
+  for (const resource of Object.values(raw.retrieval_results?.resources ?? {})) {
+    for (const field of Object.values(resource.fields ?? {})) {
+      for (const [id, paragraph] of Object.entries(field.paragraphs ?? {})) add(id, paragraph.text)
+    }
+  }
+  for (const [id, block] of Object.entries({ ...raw.augmented_context?.paragraphs, ...raw.augmented_context?.fields })) {
+    if (typeof block.text === 'string') add(id, block.text)
+  }
+  for (const source of payload.sources as { resource: string; snippet?: string }[]) {
+    if (source.resource.startsWith('USER_CONTEXT_') && source.snippet) add(source.resource, source.snippet)
+  }
+  return unsupportedQuotes(payload.answer, [...text.values()].map(parts => parts.join('\n'))).length > 0
+}
+
+/** If recovery fails, select original passages independently of the failed draft. */
+function evidenceOnlyAnswer(payload: AskPayload, raw: AskAnswer, question: string): AskPayload {
+  type Source = { resource: string; snippet?: string; cited?: boolean }
+  const sources = payload.sources as Source[]
+  const known = new Set(sources.map(s => s.resource))
+  const candidates = new Map<string, { resource: string; id: string; text: string; relevance: number; score: number }>()
+  const add = (id: string, value: string, score = 0) => {
+    const resource = id.split('/')[0]
+    if (!known.has(resource) || !originalContext(id)) return
+    const excerpt = evidenceExcerpt(value, question)
+    if (!excerpt.text || !excerpt.relevance) return
+    const current = candidates.get(resource)
+    if (!current || excerpt.relevance > current.relevance || (excerpt.relevance === current.relevance && score > current.score)) {
+      candidates.set(resource, { resource, id, ...excerpt, score })
+    }
+  }
+  for (const resource of Object.values(raw.retrieval_results?.resources ?? {})) {
+    for (const field of Object.values(resource.fields ?? {})) {
+      for (const [id, paragraph] of Object.entries(field.paragraphs ?? {})) add(id, paragraph.text, calibrate(paragraph.score, paragraph.score_type))
+    }
+  }
+  for (const [id, block] of Object.entries({ ...raw.augmented_context?.paragraphs, ...raw.augmented_context?.fields })) {
+    if (typeof block.text === 'string') add(id, block.text)
+  }
+  for (const source of sources) {
+    if (/^USER_CONTEXT_\d+$/.test(source.resource) && source.snippet) add(source.resource, source.snippet)
+  }
+  const selected = [...candidates.values()].sort((a, b) => b.relevance - a.relevance || b.score - a.score).slice(0, 3)
+  let answer = selected.length
+    ? 'I couldn’t verify a summary this time. These passages may help you explore the question.'
+    : 'I couldn’t verify an answer from these results. Try a more specific question, or browse the retrieved sources.'
+  const citations: Record<string, number[][]> = {}
+  for (const excerpt of selected) {
+    answer += `\n\n> ${excerpt.text}`
+    const end = Array.from(answer).length
+    citations[excerpt.id] = [[end - 1, end]]
+  }
+  const used = new Set(Object.keys(citations).map(id => id.split('/')[0]))
+  return { ...payload, answer, citations, answer_status: 'evidence_only',
+    evidence_excerpts: selected.map(({ resource, text }) => ({ resource, text })),
+    sources: sources.map(s => ({ ...s, cited: used.has(s.resource),
+      ...(used.has(s.resource) ? { snippet: candidates.get(s.resource)!.text } : {}) })) }
+}
 
 /**
  * The canonical form of an ask, or null when it must not be cached (chat
@@ -714,15 +918,17 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
   if (Array.isArray(input.context) && input.context.length > 0) return null
   const str = (s: string | undefined): string => (s ?? '').trim().replace(/\s+/g, ' ')
   const yr = (s: string | undefined): string => (/^\d{4}$/.test(str(s)) ? str(s) : '')
-  const kind = input.kind ?? 'speech'
+  const kind = input.kind ?? 'all'
   const topic = str(input.topic)
   return JSON.stringify({
     epoch,
+    pipeline: ASK_PIPELINE_VERSION,
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
     party: str(input.party),
     state: str(input.state),
+    chamber: str(input.chamber),
     topic: TOPIC_SLUGS.has(topic) ? topic : '',
     from: yr(input.from),
     to: yr(input.to),
@@ -730,7 +936,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
     // non-empty filter value, including ones filterExpression then discards
     // (an unknown topic, a "from" that is not a year). Two asks that differ
     // only there get different prompts, so the flag has to be in the key.
-    filtered: [input.speaker, input.party, input.state, input.topic, input.from, input.to].some(
+    filtered: [input.speaker, input.party, input.state, input.chamber, input.topic, input.from, input.to].some(
       (v) => (v ?? '').trim().length > 0,
     ),
   })
@@ -738,7 +944,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
 
 /** Worth keeping for a week: a real answer with at least one cited source. */
 const cacheableAnswer = (p: AskPayload): boolean =>
-  !isRefusal({ answer: p.answer }) && p.sources.some((s) => (s as { cited?: boolean }).cited === true)
+  p.answer_status !== 'evidence_only' && !isRefusal({ answer: p.answer }) && p.sources.some((s) => (s as { cited?: boolean }).cited === true)
 
 /** Cut on word boundaries into pieces of about `size` characters; pieces concatenate to the input exactly. */
 function chunkText(text: string, size: number): string[] {
@@ -797,12 +1003,18 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
     })(),
   )
   return new Response(readable, {
-    headers: { ...SSE_HEADERS, 'x-opax-cache': 'HIT', ...(cachedAt ? { 'x-opax-cached-at': cachedAt } : {}) },
+    headers: { ...SSE_HEADERS, 'x-opax-cache': 'HIT', ...(cachedAt ? { 'x-opax-cached-at': cachedAt } : {}), ...(hit.headers.get('x-opax-cache-tier') ? {'x-opax-cache-tier':hit.headers.get('x-opax-cache-tier')!} : {}) },
   })
 }
 
 async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-  const input = ((await request.json().catch(() => ({}))) ?? {}) as AskInput
+  const rawInput = ((await request.json().catch(() => ({}))) ?? {}) as AskInput
+  let people: { name: string }[] = []
+  if (needsAskPeople(rawInput)) {
+    try { people = (await loadPeople(env)).people }
+    catch { return json({ error: 'The parliamentarian index is temporarily unavailable. Please try again.' }, 503) }
+  }
+  const { input, scope } = resolveAskScope(rawInput, people)
   if (!input.question?.trim()) return json({ error: 'question is required' }, 400)
 
   const url = new URL(request.url)
@@ -815,18 +1027,21 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const cacheKey = keyText ? cacheRequest('ask', await sha256Hex(keyText)) : null
   const bypass = cacheBypass(request, url)
   if (cacheKey && !bypass) {
-    const hit = await caches.default.match(cacheKey)
+    const hit = await readGenerationCache(env, ctx, cacheKey)
     if (hit) return wantStream ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
   const limited = await rateLimited(env.ASK_LIMITER, request)
   if (limited) return limited
 
-  const body = buildAskBody(input)
+  let records: AskRecords
+  try { records = await retrieveAskRecords(input, env.ASSETS) }
+  catch { return json({ error: 'Public-record search is temporarily unavailable. Please try again.' }, 503) }
+  const body = buildAskBody(input, records)
   const store = (payload: AskPayload): void => {
-    if (cacheKey && cacheableAnswer(payload)) cacheStore(ctx, cacheKey, json(payload), ASK_CACHE_TTL)
+    if (cacheKey && cacheableAnswer(payload)) storeGenerationCache(env, ctx, cacheKey, json(payload), ASK_CACHE_TTL)
   }
-  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status })
+  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records, scope })
 
   const askOnce = async (b: Record<string, unknown>, timeoutMs: number): Promise<AskAnswer | Response> => {
     try {
@@ -846,9 +1061,54 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
     if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
-  const payload = askPayload(answer)
+  let payload = askPayload(answer, records, scope)
+  if (!isRefusal(answer) && payload.sources.length && (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer))) {
+    const retryBody = Object.keys(payload.citations).length ? body : legacyCitationsAsk(body)
+    const fallback = await askOnce(hasUnsupportedQuotes(payload, answer) ? quoteRecoveryAsk(retryBody) : retryBody, ASK_SYNC_TIMEOUT_MS)
+    if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope) }
+  }
+  if (hasUnsupportedQuotes(payload, answer) || (!isRefusal(answer) && !Object.keys(payload.citations).length)) payload = evidenceOnlyAnswer(payload, answer, String(body.query ?? ''))
   store(payload)
   return withCacheStatus(json(payload), status, false)
+}
+
+/** A short overview grounded only in the same filtered public search results. */
+async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const searchUrl = new URL(url)
+  searchUrl.pathname = '/api/search-all'
+  searchUrl.searchParams.set('page', '1')
+  searchUrl.searchParams.set('per', '20')
+  searchUrl.searchParams.set('sort', 'relevance')
+  const response = await apiUnifiedSearch(request, searchUrl, env, ctx)
+  if (!response.ok) return response
+  const results = await response.json() as {results: Record<string, unknown>[]; index_version?: string; warnings?: string[]}
+  const sources = summarySources(results.results || [])
+  if (!sources.length) return json({status:'empty', points:[], sources:[]})
+  const query = (searchUrl.searchParams.get('q') || '').trim()
+  const filters = Object.fromEntries(['kind','mode','speaker','party','state','topic','from','to'].map(k => [k, searchUrl.searchParams.get(k) || '']))
+  const key = cacheRequest('search-summary', await sha256Hex(JSON.stringify({version:SEARCH_SUMMARY_VERSION, epoch:env.CACHE_EPOCH, query, filters, sources, index:results.index_version})))
+  const cached = await readGenerationCache(env, ctx, key)
+  if (cached) return withCacheStatus(cached, 'HIT', false)
+  const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
+  if (limited) return limited
+  try {
+    const prompt = summaryPrompt(query,filters,sources)
+    const generate = async (query: string) => summaryModelAnswer(await kbFetch(env, '/ask', {
+      body: {query, top_k:1, reranker:'noop', generative_model:'openai-compatible', max_tokens:4096,
+        prompt:{system:SEARCH_SUMMARY_SYSTEM, user:'{question}'}},
+      headers:{'x-synchronous':'true'}, signal:AbortSignal.timeout(25_000),
+    }))
+    const answer = await generate(prompt)
+    let summary = answer ? parseSearchSummary(answer,sources) : null
+    if (!summary && answer) {
+      const repaired = await generate(prompt + '\nWrite a fresh, short overview. Previous output failed source validation. Keep each sentence to one narrow factual point. Cite an EXACT passage or title for every named speaker and claim. Use supplied numbers without rounding. Grants and contracts are published awards, not received, paid or spent money, funded work, or completed projects. Return only the required JSON.')
+      summary = repaired ? parseSearchSummary(repaired,sources) : null
+    }
+    if (!summary) return json({error:'A cited summary is unavailable. Your matching records are still below.'},502)
+    const out = json({status:'ready', ...summary, reviewed_count:sources.length, partial:!!results.warnings?.length})
+    storeGenerationCache(env, ctx, key, out, 24*60*60)
+    return withCacheStatus(out,'MISS',false)
+  } catch { return json({error:'A cited summary is unavailable. Your matching records are still below.'},503) }
 }
 
 // Narration is generated from server-loaded graph facts, never client-supplied amounts.
@@ -859,8 +1119,8 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
   const graph = await assetJson<StoryGraph>(env,files[jurisdiction])
   const context = journeyStoryContext(graph,lens,focus)
   if (!context) return json({error:'Journey not available'},404)
-  const key = cacheRequest('journey-story',await sha256Hex(JSON.stringify({version:STORY_VERSION,context})))
-  const cached = await caches.default.match(key)
+  const key = cacheRequest('journey-story',await sha256Hex(JSON.stringify({version:STORY_VERSION,epoch:env.CACHE_EPOCH,context})))
+  const cached = await readGenerationCache(env, ctx, key)
   if (cached) return withCacheStatus(cached,'HIT',false)
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER,request)
   if (limited) return limited
@@ -884,7 +1144,7 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
     }
     if (!steps) return json({error:'Story unavailable'},502)
     const out = json({steps,generated:true,version:STORY_VERSION})
-    cacheStore(ctx,key,out,7*24*60*60)
+    storeGenerationCache(env,ctx,key,out,7*24*60*60)
     return withCacheStatus(out,'MISS',false)
   } catch { return json({error:'Story unavailable'},503) }
 }
@@ -949,6 +1209,9 @@ async function streamAskOnce(
   let answer = ''
   let citations: Record<string, unknown> = {}
   let resources: Record<string, FindResource> | undefined
+  let footnotes: Record<string, string> | undefined
+  let augmented: AugmentedContext | undefined
+  const footnoteStream = new FootnoteStream()
   let failure: string | null = null
   let words = 0
   let lastStatusAt = 0
@@ -968,7 +1231,7 @@ async function streamAskOnce(
         const text = typeof item.text === 'string' ? item.text : ''
         if (!text) return // reasoning-phase placeholder
         answer += text
-        const out = gate.push(text)
+        const out = gate.push(body.citations === 'llm_footnotes' ? footnoteStream.push(text) : text)
         if (out) await send('delta', { text: out })
         return
       }
@@ -986,6 +1249,12 @@ async function streamAskOnce(
       }
       case 'retrieval':
         resources = (item.results as { resources?: Record<string, FindResource> } | undefined)?.resources
+        return
+      case 'footnote_citations':
+        footnotes = (item.footnote_to_context as Record<string, string> | undefined) ?? {}
+        return
+      case 'augmented_context':
+        augmented = item.augmented as AugmentedContext | undefined
         return
       case 'citations':
         citations = (item.citations as Record<string, unknown> | undefined) ?? {}
@@ -1023,7 +1292,9 @@ async function streamAskOnce(
   if (buffer.trim()) await handle(buffer.trim())
 
   if (failure && !answer.trim()) throw new Error(`ask failed (${failure})`)
-  return { answer, citations, retrieval_results: { resources } }
+  const tail = gate.push(footnoteStream.push('', true))
+  if (tail) await send('delta', { text: tail })
+  return { answer, citations, citation_footnote_to_context: footnotes, augmented_context: augmented, retrieval_results: { resources } }
 }
 
 /** streamAskOnce under a stall timer: no item at all within stallMs aborts the attempt. */
@@ -1056,7 +1327,7 @@ function apiAskStream(
   body: Record<string, unknown>,
   env: Env,
   ctx: ExecutionContext,
-  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus },
+  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; records: AskRecords; scope?: AskScope },
 ): Response {
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
   const writer = writable.getWriter()
@@ -1099,7 +1370,18 @@ function apiAskStream(
           const again = await streamAskOnce(env, body, send, upstream.signal)
           if (!isRefusal(again)) result = again
         }
-        const payload = askPayload(result)
+        let payload = askPayload(result, opts.records, opts.scope)
+        if (!clientGone && !isRefusal(result) && payload.sources.length && (!Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, result))) {
+          await send('retry', { reason: 'citations' })
+          try {
+            const retryBody = Object.keys(payload.citations).length ? body : legacyCitationsAsk(body)
+            const fallback = await streamAskGuarded(env, hasUnsupportedQuotes(payload, result) ? quoteRecoveryAsk(retryBody) : retryBody, send, upstream.signal, ASK_STALL_MS)
+            if (!isRefusal(fallback)) { result = fallback; payload = askPayload(fallback, opts.records, opts.scope) }
+          } catch {
+            // The final quotation check below falls back to evidence if recovery fails.
+          }
+        }
+        if (hasUnsupportedQuotes(payload, result) || (!isRefusal(result) && !Object.keys(payload.citations).length)) payload = evidenceOnlyAnswer(payload, result, String(body.query ?? ''))
         await send('done', payload)
         // Cached from the `done` payload — the same bytes the reader got —
         // even when the reader left early (the answer was paid for).
@@ -1383,8 +1665,9 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
  * (the doc may land in the next sync).
  */
 async function apiResource(request: Request, url: URL, slug: string, env: Env, ctx: ExecutionContext): Promise<Response> {
+  if (/^news-\d+$/.test(slug)) return json({ error: 'News articles are no longer part of the corpus' }, 410)
   if (!isPublicSlug(slug)) return json({ error: 'bad slug' }, 400)
-  const cacheKey = cacheRequest('resource', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
+  const cacheKey = cacheRequest('resource-body-v2', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
@@ -1406,11 +1689,14 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
     extra?: { metadata?: Record<string, unknown> }
     data?: { texts?: Record<string, { value?: { body?: string } }> }
   }
-  // Reassemble split bodies (body, body-1, body-2...) in order.
+  // Source publishers use body or t-body. Prefer the standard family when
+  // both exist, and never include generated summary fields in the source text.
   const texts = r.data?.texts ?? {}
-  const bodyText = Object.keys(texts)
-    .filter((k) => k === 'body' || k.startsWith('body-'))
-    .sort((a, b) => (a === 'body' ? -1 : b === 'body' ? 1 : a.localeCompare(b, undefined, { numeric: true })))
+  const standardBodyKeys = Object.keys(texts).filter((k) => /^body(?:-\d+)?$/.test(k))
+  const sourceBodyKeys = standardBodyKeys.length ? standardBodyKeys
+    : Object.keys(texts).filter((k) => /^t-body(?:-\d+)?$/.test(k))
+  const bodyText = sourceBodyKeys
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
     .map((k) => texts[k]?.value?.body ?? '')
     .join('')
   const labels: Record<string, string> = {}
@@ -2087,9 +2373,11 @@ const DIRECTORY_KINDS: Record<string, string> = {
   party: 'Parties',
   donor: 'Donors',
   supplier: 'Government suppliers',
+  agency: 'Government agencies',
   campaigner: 'Campaigners & third parties',
+  electorate: 'Electorates',
 }
-type DirectoryKind = 'person' | 'party' | 'donor' | 'campaigner' | 'supplier'
+type DirectoryKind = 'person' | 'party' | 'donor' | 'campaigner' | 'supplier' | 'agency' | 'electorate'
 const isDirectoryKind = (s: string): s is DirectoryKind => s in DIRECTORY_KINDS
 
 // Static pages: title as app.js TITLES sets it, blurb from the masthead menus.
@@ -2110,6 +2398,8 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
     description: 'Explore political funding and public money in 3D. Guided journeys follow contracts, shared party connections, industries and changes over time, with federal and state records.',
     query: true,
   },
+  'money/receipts': { title: 'Political receipts · OPAX', description: 'Explore disclosed political receipts by donor, party and industry.', query: true },
+  'money/grants': { title: 'Grants · OPAX', description: 'Explore public grant awards and their recipients.', query: true },
   reports: {
     title: 'Reports · OPAX',
     description: 'Standing investigations pairing the money with the words: climate, gambling, housing, immigration, First Nations and media ownership, every claim cited.',
@@ -2136,7 +2426,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   stats: {
     title: 'Corpus stats · OPAX',
-    description: 'Live counts for every collection in the OPAX index: speeches, divisions, legislation and news, by parliament and year.',
+    description: 'Live counts for every collection in the OPAX index: speeches, divisions, bills and official statements, by parliament and year.',
   },
   declared: {
     title: 'Just declared · OPAX',
@@ -2202,6 +2492,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
   } catch {
     return null
   }
+  if (segs.length === 2 && dec[0] === 'money' && ['receipts', 'grants'].includes(dec[1])) return { kind: 'static', page: dec.join('/') }
   if (segs.length === 1 && dec[0] in STATIC_PAGES) return { kind: 'static', page: dec[0] }
   if (dec[0] === 'reports' && /^[a-z][a-z0-9-]*$/.test(dec[1] ?? '')) {
     // /reports/<slug> and its section deep links /reports/<slug>/s/<n>
@@ -2219,7 +2510,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
     const dir = dec[1]
     if (isDirectoryKind(dir)) {
       if (segs.length === 2) return { kind: 'index', dir }
-      const max = dir === 'campaigner' ? CAMPAIGNER_NAME_MAX : dir === 'supplier' ? SUPPLIER_NAME_MAX : SUBJECT_NAME_MAX
+      const max = dir === 'campaigner' ? CAMPAIGNER_NAME_MAX : (dir === 'supplier' || dir === 'agency') ? SUPPLIER_NAME_MAX : SUBJECT_NAME_MAX
       if (segs.length === 3 && dec[2].trim() && dec[2].length <= max) {
         return { kind: 'subject', dir, name: dec[2].trim() }
       }
@@ -2250,6 +2541,8 @@ interface Person {
   first: number | null
   last: number | null
   pid?: string
+  representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[]
+  rosterOnly?: { asOf?: string; seats: string[] }
 }
 interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person> }
 
@@ -2352,7 +2645,19 @@ async function assetJson<T>(env: Env, path: string): Promise<T> {
 let peopleMemo: Promise<PeopleData> | null = null
 function loadPeople(env: Env): Promise<PeopleData> {
   peopleMemo ??= assetJson<{ meta?: { generated?: string }; people: Person[] }>(env, '/parliamentarians.json')
-    .then((raw) => {
+    .then(async (raw) => {
+      const reference = await loadElectorates(env).catch(() => null)
+      const names = new Set(raw.people.map((p) => foldName(p.name)))
+      for (const p of reference?.people || []) {
+        if ([p.name, ...p.aliases].some((n) => names.has(foldName(n)))) continue
+        const seats = p.electorates.filter((e) => e.current)
+        if (!seats.length) continue
+        raw.people.push({ name: p.name, pid: p.legacy_person_id || p.person_id, speeches: 0,
+          party: seats[0].party || null, states: [...new Set(seats.map((e) => e.jurisdiction))],
+          chambers: [...new Set(seats.map((e) => e.chamber))], first: null, last: null,
+          rosterOnly: { asOf: seats[0].as_of, seats: seats.map((e) => e.name) } })
+        names.add(foldName(p.name))
+      }
       const byName = new Map<string, Person>()
       const byFold = new Map<string, Person>()
       for (const p of raw.people) {
@@ -2623,7 +2928,7 @@ const yearSpan = (a: string, b: string): string => (a && b && a !== b ? `${a} to
 
 const indexLinks = (): string =>
   `<p><a href="/subject/person">Parliamentarians</a> · <a href="/subject/party">Parties</a> · ` +
-  `<a href="/subject/donor">Donors</a> · <a href="/subject/supplier">Government suppliers</a> · <a href="/subject/campaigner">Campaigners</a> · ` +
+  `<a href="/subject/donor">Donors</a> · <a href="/subject/supplier">Government suppliers</a> · <a href="/subject/agency">Government agencies</a> · <a href="/subject/campaigner">Campaigners</a> · ` +
   `<a href="/subject/topic">Topics</a></p>`
 
 function prerenderBlock(heading: string, sentence: string, kicker: string): string {
@@ -2719,8 +3024,14 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if (route.dir === 'person') {
         const people = await loadPeople(env).catch(() => null)
         description = clip(`Every parliamentarian in the OPAX record${people ? `: ${num(people.people.length)} speakers` : ''} since 1993, searchable by name, party and parliament, each with their speeches.`)
+      } else if (route.dir === 'electorate') {
+        description = 'Australian electorates, their representatives, election results and Census context. Browse by parliament and chamber, with dated sources and explicit historical coverage.'
       } else if (route.dir === 'party') {
         description = 'Australian political parties in the record: speeches, members and disclosed receipts, party by party, from Hansard and electoral commission returns.'
+      } else if (route.dir === 'agency') {
+        const data = await loadAgencies(env).catch(() => null)
+        if (!data) return base({ title: 'Government agencies · OPAX', description: 'The agency index is temporarily unavailable. Please try again.', status: 503 })
+        description = clip(`Explore ${num(data.agencies.length)} Commonwealth agencies: contracts awarded, supplier relationships and 3D maps. Recorded commitments, not payments.`)
       } else if (route.dir === 'supplier') {
         const suppliers = await loadSuppliers(env).catch(() => null)
         if (!suppliers) return base({ title: 'Government suppliers · OPAX', description: 'The supplier index is temporarily unavailable. Please try again.', status: 503 })
@@ -2773,9 +3084,11 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     }
 
     case 'subject':
+      if (route.dir === 'electorate') return electorateMeta(route.name, url, env)
       if (route.dir === 'person') return personMeta(route.name, url, env)
       if (route.dir === 'campaigner') return campaignerMeta(route.name, url, env)
       if (route.dir === 'supplier') return supplierMeta(route.name, url, env)
+      if (route.dir === 'agency') return agencyMeta(route.name, url, env)
       return moneySubjectMeta(route.dir, route.name, url, env)
 
     case 'doc':
@@ -2858,6 +3171,49 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
   }
 }
 
+interface ElectorateSummary {
+  electorate_id: string; slug: string; name: string; jurisdiction: string; chamber: string;
+  state_code: string; status: string; url: string; detail_url: string;
+  representation_as_of: string | null; election_count: number;
+  representatives: { person_id: string; party?: string; person: { name: string } }[];
+}
+interface ElectoratePerson {
+  person_id: string; name: string; aliases: string[]; legacy_person_id?: string;
+  electorates: { current: boolean; name: string; jurisdiction: string; chamber: string; party?: string; as_of?: string; url: string }[];
+}
+let electorateMemo: Promise<{ generated: string; electorates: ElectorateSummary[]; people: ElectoratePerson[] }> | null = null
+function loadElectorates(env: Env) {
+  electorateMemo ??= assetJson<{ index_url: string; people_url: string; generated: string }>(env, '/electorates/manifest.json')
+    .then(async (manifest) => {
+      const [index, people] = await Promise.all([
+        assetJson<{ electorates: ElectorateSummary[] }>(env, manifest.index_url),
+        assetJson<{ people: ElectoratePerson[] }>(env, manifest.people_url),
+      ])
+      return { generated: manifest.generated, electorates: index.electorates, people: people.people }
+    }).catch((error) => { electorateMemo = null; throw error })
+  return electorateMemo
+}
+async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
+  const data = await loadElectorates(env).catch(() => null)
+  const e = data?.electorates.find((e) => e.slug === name || e.electorate_id === name)
+  if (!e) return {
+    title: data ? 'Electorate not found · OPAX' : 'Electorate data unavailable · OPAX',
+    description: 'Browse the OPAX electorate directory.', canonical: canonicalFor(url, true), ogType: 'website',
+    status: data ? 404 : 503, jsonLd: null, prerender: null,
+  }
+  const representation = e.representatives.length
+    ? `${e.representatives.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')}. Verified ${e.representation_as_of}.`
+    : 'Representation is not yet verified in this release.'
+  const facts = `${e.name}, ${e.jurisdiction === 'federal' ? 'Federal' : e.jurisdiction.toUpperCase()} ${CHAMBER_NAMES[e.chamber] || e.chamber}. ${representation} ${e.election_count} indexed election contests.`
+  const canonical = `${SITE_ORIGIN}${e.url}`
+  return {
+    title: `${e.name} · Electorate · OPAX`, description: clip(facts), canonical, ogType: 'website', status: 200,
+    jsonLd: { '@context': 'https://schema.org', '@type': 'Place', name: e.name, identifier: e.electorate_id, url: canonical, description: facts },
+    prerender: prerenderBlock(e.name, facts, 'Electorate'),
+    card: { kicker: 'Electorate', title: e.name, lines: [representation, `${e.election_count} indexed election contests · ${e.state_code.toUpperCase()}`] },
+  }
+}
+
 async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const [people, photos, moneyData] = await Promise.all([
     loadPeople(env).catch(() => null),
@@ -2883,7 +3239,15 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const where = p.chambers.length === 1 && CHAMBER_NAMES[p.chambers[0]]
     ? `${p.states.length === 1 && p.states[0] !== 'federal' ? `${STATE_NAMES[p.states[0]]?.replace(' parliament', '') ?? p.states[0]} ` : ''}${CHAMBER_NAMES[p.chambers[0]]}`
     : p.states.map((s) => STATE_NAMES[s] ?? s).join(' and ')
-  const who = [p.party, where].filter(Boolean).join(', ')
+  const represented = [...new Set((p.representation ?? []).map(r => r.electorate))].join(', ')
+  const who = [p.party, where, represented ? `recorded representation: ${represented}` : ''].filter(Boolean).join(', ')
+  if (p.rosterOnly) {
+    const description = clip(`${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. Speech totals are not yet in the directory.`)
+    return { title, description, canonical, ogType: 'profile', status: 200,
+      jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name: display, url: canonical, jobTitle: 'Parliamentarian' },
+      prerender: prerenderBlock(display, description, 'Parliamentarian'),
+      card: { kicker: 'Parliamentarian', title: display, lines: [description], portraitId, credit } }
+  }
   const facts = `${display}${who ? ` (${who})` : ''}: ${num(p.speeches)} speeches in the Australian parliamentary record, ${years(p.first, p.last)}.`
   const tail = 'What they said, and who funds them.'
   const federal = p.states.includes('federal')
@@ -2913,6 +3277,34 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       credit,
     },
   }
+}
+
+interface AgencyRow {
+  id: string; name: string; total: number; count: number; supplier_count: number
+  first_year?: number | null; last_year?: number | null
+}
+let agenciesMemo: Promise<{ meta?: { generated_at?: string }; agencies: AgencyRow[] }> | null = null
+function loadAgencies(env: Env) {
+  agenciesMemo ??= assetJson<{ meta?: { generated_at?: string }; agencies: AgencyRow[] }>(env, '/agencies.json').then(data => {
+    if (!Array.isArray(data.agencies) || data.agencies.some(a => !/^a-[a-f0-9]{20}$/.test(a.id) || typeof a.name !== 'string' || !a.name.trim() || !Number.isFinite(a.total) || !Number.isFinite(a.count) || !Number.isFinite(a.supplier_count))) throw new Error('Invalid agency directory')
+    return data
+  }).catch(error => { agenciesMemo = null; throw error })
+  return agenciesMemo
+}
+async function agencyMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
+  const data = await loadAgencies(env).catch(() => null)
+  const agency = data?.agencies.find(a => a.id === name) ?? data?.agencies.find(a => a.name === name)
+  if (!agency) return { title: data ? 'Agency not found · OPAX' : 'Agency temporarily unavailable · OPAX',
+    description: data ? 'Browse the government agency directory for available contract records.' : 'Agency records could not be loaded. Please try again.',
+    canonical: canonicalFor(url, false), ogType: 'website', status: data ? 404 : 503, jsonLd: null, prerender: null, card: null }
+  const canonical = `${SITE_ORIGIN}/subject/agency/${agency.id}`
+  const facts = `${agency.name}: ${money(agency.total)} in recorded contract commitments across ${num(agency.count)} contracts and ${num(agency.supplier_count)} suppliers.`
+  const description = withTail(facts, 'Explore supplier relationships and source notices.')
+  return { title: `${clip(agency.name, 90)} · Government agency · OPAX`, description, canonical, ogType: 'profile', status: 200,
+    jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: agency.name, url: canonical, description,
+      mainEntity: { '@type': 'GovernmentOrganization', name: agency.name } },
+    prerender: prerenderBlock(agency.name, `${facts} Award values are not expenditure. Agency names remain separate as recorded.`, 'Government agency'),
+    card: { kicker: 'Government agency', title: agency.name, lines: [`${money(agency.total)} in recorded commitments`, `${num(agency.count)} contracts · ${num(agency.supplier_count)} suppliers`, 'Recorded awards, not expenditure.'] } }
 }
 
 async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
@@ -3091,6 +3483,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     jsonLd: null,
     prerender: null,
   }
+  if (/^news-\d+$/.test(slug)) return { ...generic, title: 'Document removed · OPAX', status: 410 }
   if (!isPublicSlug(slug)) return { ...generic, title: 'Document not found · OPAX', status: 404 }
   let res: Response | null
   try {
@@ -3175,6 +3568,14 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
         lines: [[r.speaker, r.metadata.role].filter(Boolean).join(' · '), 'Read the official source text on OPAX.'],
       },
     }
+  }
+  if (RESEARCH_SLUG_RE.test(slug)) {
+    const names: Record<string,string> = { grant_invitation:'Grant invitation', grant_award:'Published grant award', election_baseline:'Pre-election seat baseline', parliamentary_profile:'Recorded parliamentary representation', research_report:'Research source note' }
+    const kind = names[r.labels.kind] || 'Source record'
+    const description = clip(`${r.title}. ${kind} with source provenance on OPAX. ${typeof r.metadata.date_meaning === 'string' ? r.metadata.date_meaning : 'Invitations, awards and payments are distinct stages.'}`)
+    return { ...generic, title:`${r.title} · OPAX`, description,
+      jsonLd:{'@context':'https://schema.org','@type':'CreativeWork',name:r.title,description,url:canonical,publisher},
+      card:{kicker:kind,title:r.title,lines:['Read the record and its source on OPAX.']} }
   }
   const speaker = r.speaker ?? 'Unknown speaker'
   // A committee transcript's speaker may be a witness, named as the transcript
@@ -3380,7 +3781,7 @@ function robotsTxt(): Response {
 /** Every indexable page, rebuilt from the data files and cached a day. */
 async function sitemapXml(env: Env): Promise<Response> {
   return cachedJson('/sitemap.xml', async () => {
-    const [people, moneyData, reports, campaigners, suppliers] = await Promise.all([
+    const [people, moneyData, reports, campaigners, suppliers, agencies, electorates] = await Promise.all([
       loadPeople(env),
       loadMoney(env),
       loadReports(env),
@@ -3388,6 +3789,8 @@ async function sitemapXml(env: Env): Promise<Response> {
       // yet must cost the sitemap its campaigner rows, not the whole sitemap.
       loadCampaigners(env).catch(() => null),
       loadSuppliers(env).catch(() => null),
+      loadAgencies(env).catch(() => null),
+      loadElectorates(env).catch(() => null),
     ])
     const rows: string[] = []
     const add = (path: string, lastmod?: string) => {
@@ -3396,10 +3799,12 @@ async function sitemapXml(env: Env): Promise<Response> {
     }
     add('/')
     for (const page of ['search', 'money', 'reports', 'explore', 'discover', 'about', 'methods', 'stats', 'expenses']) add(`/${page}`)
+    for (const a of agencies?.agencies ?? []) add(`/subject/agency/${a.id}`, agencies?.meta?.generated_at)
     for (const r of reports.reports) add(`/reports/${r.slug}`, r.updated)
     add('/subject/topic')
     for (const slug of Object.keys(TOPIC_NAMES)) add(`/subject/topic/${slug}`)
-    for (const dir of ['person', 'party', 'donor', 'campaigner', 'supplier']) add(`/subject/${dir}`)
+    for (const dir of ['person', 'party', 'donor', 'campaigner', 'supplier', 'agency', 'electorate']) add(`/subject/${dir}`)
+    for (const e of electorates?.electorates || []) add(e.url, electorates?.generated)
     // Parties: every label the money data or the people data knows.
     const partyLabels = new Map<string, string>()
     for (const n of moneyData.parties.values()) partyLabels.set(foldName(n.label), n.label)
@@ -3444,7 +3849,7 @@ const BASE_SECURITY_HEADERS: Record<string, string> = {
   'x-content-type-options': 'nosniff',
   'referrer-policy': 'strict-origin-when-cross-origin',
   'x-frame-options': 'DENY',
-  'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+  'permissions-policy': 'camera=(), microphone=(self), geolocation=(), payment=(), usb=()',
   'cross-origin-opener-policy': 'same-origin',
 }
 
@@ -3465,11 +3870,11 @@ const GTM = 'https://www.googletagmanager.com'
 const GA = 'https://*.google-analytics.com https://*.analytics.google.com'
 const CSP_PAGE = [
   "default-src 'self'",
-  `script-src 'self' ${GTM}`,
+  `script-src 'self' 'wasm-unsafe-eval' ${GTM}`,
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' data: ${GTM} ${GA}`, // data: for the stylesheet's inline SVG glyphs (a select's chevron); images, never script
+  `img-src 'self' data: https://tile.openstreetmap.org ${GTM} ${GA}`, // data: for the stylesheet's inline SVG glyphs (a select's chevron); images, never script
   "font-src 'self'",
-  `connect-src 'self' ${GTM} ${GA}`,
+  `connect-src 'self' wss://opax.com.au wss://staging.opax.com.au ${GTM} ${GA}`,
   "worker-src 'self'",
   "manifest-src 'self'",
   `frame-src ${GTM}`,
@@ -3489,15 +3894,17 @@ const NULL_BODY_STATUS = new Set([101, 204, 205, 304])
 // query's result set. Every other /api route is the caching work's to own, so
 // its Cache-Control is left exactly as the handler returned it — and even here
 // a handler that sets its own (the SSE stream does) wins.
-const NO_STORE_PATHS = new Set(['/api/journey-story', '/api/ask', '/api/followups', '/api/search'])
+const NO_STORE_PATHS = new Set(['/api/search-summary', '/api/journey-story', '/api/ask', '/api/followups', '/api/search', '/api/search-all'])
 
 function withSecurityHeaders(res: Response, url: URL): Response {
   const isApi = url.pathname.startsWith('/api/')
   // Responses from the ASSETS binding are immutable; re-wrap to edit headers.
   // res.body is passed through unread, so SSE keeps streaming.
-  const out = new Response(NULL_BODY_STATUS.has(res.status) ? null : res.body, res)
+  const out = new Response(NULL_BODY_STATUS.has(res.status) ? null : res.body, { status: res.status, statusText: res.statusText, headers: res.headers, ...(res.webSocket ? { webSocket: res.webSocket } : {}) })
   for (const [k, v] of Object.entries(BASE_SECURITY_HEADERS)) out.headers.set(k, v)
   out.headers.set('content-security-policy', isApi ? CSP_API : CSP_PAGE)
+  if (url.pathname.startsWith('/api/community/') || url.pathname.startsWith('/api/voice/') || url.pathname === '/mcp') { out.headers.set('cache-control', 'no-store'); out.headers.set('referrer-policy', 'no-referrer') }
+  if (url.pathname === '/community' || url.pathname === '/community.html') out.headers.set('referrer-policy', 'no-referrer')
   if (NO_STORE_PATHS.has(url.pathname) && !out.headers.has('cache-control')) {
     out.headers.set('cache-control', 'no-store')
   }
@@ -3515,7 +3922,7 @@ const MAX_PARTY_CHARS = 64
 const MIN_YEAR = 1900
 const MAX_YEAR = 2100
 
-const KINDS = new Set(['speech', 'legal', 'news', 'division', 'bill', 'press_release', 'all'])
+const KINDS = new Set(['speech', 'legal', 'division', 'bill', 'press_release', 'grant_invitation', 'grant_award', 'election_baseline', 'parliamentary_profile', 'research_report', 'all'])
 const STATES = new Set(['federal', 'nsw', 'vic', 'sa', 'qld'])
 const MODES = new Set(['hybrid', 'semantic', 'keyword'])
 // Party labels are the KB's own facet values (served by /api/parties) and grow
@@ -3578,7 +3985,7 @@ function validateSearchQuery(url: URL): Response | null {
     if (!/^\d{1,4}$/.test(raw) || Number(raw) < 1) return json({ error: `${k} must be a whole number` }, 400)
   }
   const sort = url.searchParams.get('sort')
-  if (sort && sort !== 'relevance' && sort !== 'newest') return json({ error: 'unknown sort' }, 400)
+  if (sort && !SEARCH_SORTS.has(sort)) return json({ error: 'unknown sort' }, 400)
   const err = validateFilters((k) => url.searchParams.get(k))
   return err ? json({ error: err }, 400) : null
 }
@@ -3634,6 +4041,9 @@ async function route(
   {
       if (url.pathname === '/api/search' && request.method === 'GET') {
         return validateSearchQuery(url) ?? (await apiSearch(request, url, env, ctx))
+      }
+      if (url.pathname === '/api/search-summary' && request.method === 'GET') {
+        return await apiSearchSummary(request, url, env, ctx)
       }
       if (url.pathname === '/api/ask' && request.method === 'POST') {
         const body = await readJsonBody(request)
@@ -3714,7 +4124,50 @@ async function route(
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    const canonical = canonicalPageRedirect(request, env.COMMUNITY_ORIGIN)
+    if (canonical) return canonical
     const isApi = url.pathname.startsWith('/api/')
+    const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
+    if (url.pathname.startsWith('/api/community/')) return communityResponse(await communityRoute(request, env))
+    if (url.pathname.startsWith('/api/voice/')) return communityResponse(await voiceRoute(request, env, ctx, async path => {
+      const target = new URL(path, env.COMMUNITY_ORIGIN)
+      const local = new Request(target, { headers: { 'cf-connecting-ip': 'voice-tools' } })
+      if (target.pathname === '/api/search-all') return apiUnifiedSearch(local, target, env, ctx)
+      if (env.STAGING_API) return env.STAGING_API.fetch(local)
+      return route(local, target, env, ctx)
+    }))
+    if (url.pathname === '/mcp') return communityResponse(await communityMcp(request, env, async path => {
+      const target = new URL(path, env.COMMUNITY_ORIGIN)
+      const local = new Request(target, { headers: { 'cf-connecting-ip': request.headers.get('cf-connecting-ip') || 'mcp' } })
+      if (target.pathname === '/api/search-all') return apiUnifiedSearch(local, target, env, ctx)
+      if (env.STAGING_API) return env.STAGING_API.fetch(local)
+      return route(local, target, env, ctx)
+    }))
+    if (url.pathname === '/api/search-all' && request.method === 'GET') {
+      try {
+        const response = withSecurityHeaders(await apiUnifiedSearch(request, url, env, ctx), url)
+        if (env.STAGING_API) response.headers.set('x-robots-tag', 'noindex, nofollow')
+        return response
+      } catch {
+        return withSecurityHeaders(json({ error: 'Search is temporarily unavailable. Please try again.' }, 503), url)
+      }
+    }
+    // Staging serves this branch's assets and reuses only the existing public API.
+    // It needs no copied KB credentials and every preview response is noindex.
+    if (env.STAGING_API) {
+      let response: Response
+      if (isApi || url.pathname.startsWith('/og/')) response = await env.STAGING_API.fetch(request)
+      else if (url.pathname === '/robots.txt') response = new Response('User-agent: *\nDisallow: /\n', { headers: { 'content-type': 'text/plain' } })
+      else if (url.pathname.startsWith('/ingest/')) response = new Response(null, { status: 204 })
+      else {
+        const assetUrl = new URL(request.url)
+        if (matchSeoRoute(url)) assetUrl.pathname = '/'
+        response = await env.ASSETS.fetch(new Request(assetUrl, request))
+      }
+      const preview = withSecurityHeaders(response, url)
+      preview.headers.set('x-robots-tag', 'noindex, nofollow')
+      return preview
+    }
     if (url.pathname.startsWith('/ingest/')) return proxyPostHog(request)
     try {
       // The route table only matches GET, so a HEAD (curl -I, uptime probes)

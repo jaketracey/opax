@@ -161,8 +161,8 @@
     }
    },
    "party_coverage": {
-    "member": 8,
-    "earliest": 22,
+    "member": 2,
+    "earliest": 28,
     "dated": 18
    },
    "paired": 0,
@@ -204,9 +204,9 @@
     }
    },
    "party_coverage": {
-    "member": 8,
+    "member": 2,
     "dated": 19,
-    "earliest": 16
+    "earliest": 22
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2019-10-14/3"

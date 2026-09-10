@@ -501,9 +501,9 @@
     }
    },
    "party_coverage": {
-    "member": 11,
+    "member": 10,
     "dated": 54,
-    "earliest": 3
+    "earliest": 4
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-15/5"
@@ -572,9 +572,9 @@
     }
    },
    "party_coverage": {
-    "member": 10,
+    "member": 9,
     "dated": 54,
-    "earliest": 3
+    "earliest": 4
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-15/6"
@@ -639,9 +639,9 @@
     }
    },
    "party_coverage": {
-    "member": 13,
+    "member": 11,
     "dated": 51,
-    "earliest": 5
+    "earliest": 7
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/1"
@@ -706,9 +706,9 @@
     }
    },
    "party_coverage": {
-    "member": 9,
+    "member": 8,
     "dated": 41,
-    "earliest": 5
+    "earliest": 6
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/2"
@@ -778,8 +778,8 @@
    },
    "party_coverage": {
     "dated": 55,
-    "member": 11,
-    "earliest": 5
+    "member": 10,
+    "earliest": 6
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/3"
@@ -848,9 +848,9 @@
     }
    },
    "party_coverage": {
-    "member": 12,
+    "member": 11,
     "dated": 54,
-    "earliest": 5
+    "earliest": 6
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/4"
@@ -919,9 +919,9 @@
     }
    },
    "party_coverage": {
-    "member": 12,
+    "member": 11,
     "dated": 54,
-    "earliest": 4
+    "earliest": 5
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/5"
@@ -990,9 +990,9 @@
     }
    },
    "party_coverage": {
-    "member": 13,
+    "member": 11,
     "dated": 54,
-    "earliest": 5
+    "earliest": 7
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/6"
@@ -1061,9 +1061,9 @@
     }
    },
    "party_coverage": {
-    "member": 13,
+    "member": 11,
     "dated": 54,
-    "earliest": 5
+    "earliest": 7
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-17/7"
