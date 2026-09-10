@@ -20,6 +20,10 @@ export async function proxyPostHog(request: Request): Promise<Response> {
     const value = request.headers.get(name)
     if (value) headers.set(name, value)
   }
+  // Without this PostHog geolocates every reader to the Worker's egress (a US data
+  // centre). Only the connecting address is forwarded, never a client-supplied chain.
+  const ip = request.headers.get('cf-connecting-ip')
+  if (ip && !asset) headers.set('x-forwarded-for', ip)
   try {
     const upstream = await fetch(target, {
       method: request.method,

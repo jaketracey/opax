@@ -12,10 +12,12 @@ test('queries, hash query parameters and unrecognized routes are not collected',
 test('event properties are allowlisted and SDK enrichment is sanitized', () => {
   assert.equal(cleanEvent('unexpected', { question: 'private' }), null);
   assert.deepEqual(cleanEvent('opax_ask_completed', { source_count: 3, answer: 'private', has_answer: true }), { source_count: 3, has_answer: true });
-  const event = beforeSend({ properties: { $current_url: 'https://opax.com.au/search?q=private', $referrer: 'https://example.com/private', $initial_current_url: 'private', $set: { $initial_current_url: 'private' }, $title: 'private', query_length: 7, search_kind: 'speech' } });
+  const event = beforeSend({ properties: { $current_url: 'https://opax.com.au/search?q=private', $referrer: 'https://example.com/private', $referring_domain: 'example.com', $initial_referring_domain: 'private', $initial_current_url: 'private', $set: { $initial_current_url: 'private' }, $title: 'private', query_length: 7, search_kind: 'speech' } });
   assert.equal(event.properties.$current_url, 'https://opax.com.au/search');
   assert.equal(event.properties.query_length, 7);
   assert.equal(event.properties.search_kind, 'speech');
+  assert.equal(event.properties.$referring_domain, 'example.com');
+  assert.equal(event.properties.$referrer, undefined);
   assert.ok(!JSON.stringify(event).includes('private'));
 });
 test('analytics loads before the shared event emitter, both deferred', () => {

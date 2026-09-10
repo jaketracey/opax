@@ -43,9 +43,10 @@ export function beforeSend(event) {
   delete p.$set;
   delete p.$set_once;
   // SDK enrichment includes referrers, initial URLs, titles and campaign/search
-  // parameters even when the application captures no free text.
+  // parameters even when the application captures no free text. The referring
+  // domain alone (no path, no query) is kept so traffic sources are visible.
   for (const key of Object.keys(p)) {
-    if (key === '$current_url' || key === '$pathname') continue;
+    if (key === '$current_url' || key === '$pathname' || key === '$referring_domain') continue;
     if (/^\$.*(?:url|referr|initial|title|search|keyword)|^(?:utm_|gclid|fbclid|msclkid)/i.test(key)) delete p[key];
   }
   p.$pathname = safePath(p.$pathname || p.$current_url || '/');
