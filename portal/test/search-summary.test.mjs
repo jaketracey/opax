@@ -79,7 +79,7 @@ function fixture({empty=false,invalid=false,denied=false}={}){
  const ctx={...summary,URL,Request,Response,AbortSignal,Error,json:(x,status=200)=>Response.json(x,{status}),
   apiUnifiedSearch:async(req,url)=>{calls.push({search:url.href});return Response.json({results:empty?[]:rows,index_version:'v1'})},
   cacheRequest:(kind,key)=>new Request('https://cache.test/'+kind+'/'+key),sha256Hex:async s=>createHash('sha256').update(s).digest('hex'),
-  caches:{default:{match:async key=>cache.get(key.url)?.clone()}},cacheStore:(_ctx,key,res)=>cache.set(key.url,res.clone()),withCacheStatus:res=>res,
+  readGenerationCache:async (_env,_ctx,key)=>cache.get(key.url)?.clone(),storeGenerationCache:(_env,_ctx,key,res)=>cache.set(key.url,res.clone()),withCacheStatus:res=>res,
   rateLimited:async()=>denied?Response.json({error:'Limited'},{status:429}):null,
   kbFetch:async(_env,path,options)=>{calls.push({path,body:options.body});return Response.json({answer:invalid?'invalid':JSON.stringify(draft())})}
  };
