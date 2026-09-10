@@ -9,9 +9,10 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    // API routes must reach the Worker even though assets exist; so must the
-    // share images, which are drawn on request (src/og-render.ts).
-    "run_worker_first": ["/api/*", "/og/*", "/ingest/*", "/mcp"]
+    // Page entry points must canonicalise www before serving the app, so
+    // sign-in requests and host-only account cookies share one origin.
+    // Other static assets still bypass the Worker. Share images are dynamic.
+    "run_worker_first": ["/", "/*.html", "/community", "/community/", "/connections", "/connections/", "/map", "/map/", "/api/*", "/og/*", "/ingest/*", "/mcp"]
   },
 
   "d1_databases": [{"binding":"COMMUNITY_DB","database_name":"opax-community","database_id":"ea0ca399-189f-4fc0-83f8-66a41204a180","migrations_dir":"migrations"}],
