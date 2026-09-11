@@ -2308,8 +2308,8 @@ function safeAnswerLink(href) {
   if (typeof href !== "string" || !/^(?:https?:\/\/|\/(?!\/))/i.test(href) || /[\\\u0000-\u0020]/.test(href)) return null;
   try {
     const url = new URL(href, "https://opax.com.au");
-    if (!["https:", "http:"].includes(url.protocol) || url.username || url.password) return null;
-    return href.startsWith("/") ? url.pathname + url.search + url.hash : url.href;
+    if (url.origin !== "https://opax.com.au" || url.username || url.password) return null;
+    return url.pathname + url.search + url.hash;
   } catch { return null; }
 }
 
@@ -2323,7 +2323,8 @@ function appendInline(el, text) {
     const href = safeAnswerLink(match[2]);
     if (href) {
       const link = document.createElement("a");
-      link.href = href;
+      // Keep the origin literal: source/model text can supply only an Opax path.
+      link.href = "https://opax.com.au" + href;
       appendStyledText(link, match[1]);
       el.appendChild(link);
     } else appendStyledText(el, match[0]);
