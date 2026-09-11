@@ -1,3 +1,4 @@
+import { positionEvidence, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
 /**
@@ -527,6 +528,7 @@ async function searchWindow(
     speaker: url.searchParams.get('speaker'),
     party: url.searchParams.get('party'),
     state: url.searchParams.get('state'),
+    chamber: url.searchParams.get('chamber'),
     topic: url.searchParams.get('topic'),
     from: url.searchParams.get('from'),
     to: url.searchParams.get('to'),
@@ -937,7 +939,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
   const topic = str(input.topic)
   return JSON.stringify({
     epoch,
-    pipeline: ASK_PIPELINE_VERSION,
+    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v1' : ''),
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
@@ -1063,6 +1065,15 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const store = (payload: AskPayload): void => {
     if (cacheKey && cacheableAnswer(payload)) storeGenerationCache(env, ctx, cacheKey, json(payload), ASK_CACHE_TTL)
   }
+  if (isPositionBody(body)) {
+    // Read and bound original speaking turns before generation. A cached answer
+    // uses a position-specific version, so older unverified drafts cannot replay.
+    try {
+      const payload = await documentedPositionAnswer(input, body, env, ctx)
+      store(payload)
+      return withCacheStatus(json(payload), status, false)
+    } catch { return json({ error: 'The speech records are temporarily unavailable. Please try again.' }, 503) }
+  }
   if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records, scope })
 
   const askOnce = async (b: Record<string, unknown>, timeoutMs: number): Promise<AskAnswer | Response> => {
@@ -1097,22 +1108,68 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   return withCacheStatus(json(payload), status, false)
 }
 
+/** Retrieve once, then generate only from original turns belonging to the index speaker. */
+async function documentedPositionAnswer(input: AskInput, body: Record<string, unknown>, env: Env, ctx: ExecutionContext): Promise<AskPayload> {
+  const scope: AskScope = { speaker: canonicalSpeaker(input.speaker || ''), kind: 'speech',
+    ...Object.fromEntries(['party','state','chamber','from','to'].flatMap(key => {
+      const value = input[key as keyof AskInput]
+      return typeof value === 'string' && value ? [[key,value]] : []
+    })) }
+  const url = new URL('https://opax.com.au/api/search')
+  for (const [key,value] of Object.entries(scope)) if (value) url.searchParams.set(key,value)
+  if (input.topic) url.searchParams.set('topic',input.topic)
+  const query = String(body.query || '')
+  const found = await searchWindow(env, {q:query, mode:'hybrid',kind:'speech',topK:20,url})
+  if (!found) throw new Error('Speech retrieval failed')
+  const rows = found.results.filter(r => /^speech-\d+$/.test(r.slug) && r.speaker === scope.speaker).slice(0,8)
+  const reads = await Promise.allSettled(rows.map(async row => {
+    const resourceUrl = new URL('/api/resource/'+row.slug, url)
+    const response = await apiResource(new Request(resourceUrl), resourceUrl, row.slug, env, ctx)
+    if (!response.ok) throw new Error('Original speech unavailable')
+    const original = await response.json() as {speaker?:string;text?:string}
+    if (original.speaker !== scope.speaker || typeof original.text !== 'string') return null
+    const snippet = positionEvidence(original.text,query)
+    return snippet ? {...row,href:'/doc/'+row.slug,snippet,cited:false} : null
+  }))
+  const sources = reads.flatMap(r => r.status === 'fulfilled' && r.value ? [r.value] : [])
+  if (!sources.length && reads.some(r => r.status === 'rejected')) throw new Error('Original speeches unavailable')
+  const gap: AskPayload = {answer:EVIDENCE_GAP_ANSWER,citations:{},sources:[],scope,answer_status:'evidence_gap'}
+  if (!sources.length) return gap
+  const payload: AskPayload = {...gap,sources}
+  return await recoverPositionAnswer(payload,body,env) || gap
+}
+
 /** Recover a position with exact source excerpts, rather than inventing citation IDs. */
 async function recoverPositionAnswer(payload: AskPayload, body: Record<string,unknown>, env: Env): Promise<AskPayload | null> {
   const sourceRows = payload.sources.filter((s): s is Record<string,unknown> => !!s && typeof s === 'object')
-  const sources = summarySources(sourceRows)
+  const sources = summarySources(sourceRows, 6000)
   if (!sources.length) return null
   try {
-    const prompt = summaryPrompt(String(body.query || ''), {speaker:payload.scope?.speaker || ''}, sources) +
-      '\nDescribe only this named politician’s own documented positions on the query topic, in past tense. Never roleplay or predict. Omit ministerial replies even when the document is indexed under the politician. Prefer concrete policy proposals over allegations or rhetoric. Preserve policy limits and duration exactly; omit attack statistics. Each point must be supported by an exact excerpt. If the passages do not establish their position, return {"points":[]}.'
+    const makePrompt = () => summaryPrompt(String(body.query || '').slice(0,2000), {speaker:payload.scope?.speaker || ''}, sources) +
+      '\nDescribe only this named politician’s own documented positions on the query topic, in past tense. Never roleplay or predict. Omit ministerial replies even when the document is indexed under the politician. Prefer concrete policy proposals over allegations or rhetoric. The passages are limited to the indexed speaker’s first speaking turn; no later speaker or ministerial reply may be inferred. Preserve policy limits and duration exactly; omit attack statistics. Return at most two points. Lead with a concrete proposal and preserve its eligibility, duration and numeric limits, including any lower-of conditions. Each point must be one concrete proposal or position, in one short sentence. Do not append attack statistics or commentary about opponents to a proposal. Each point must be supported in full by an exact excerpt from the passage itself, never its title. Include the proposal conditions in that excerpt. Omit costs unless the excerpt includes the speaker’s stated costing, and explicitly attribute any estimate to them. If the passages do not establish their position, return {"points":[]}.'
+    let prompt = makePrompt()
+    while (sources.length && prompt.length > 19500) { sources.pop(); prompt = makePrompt() }
+    if (!sources.length) return null
     const answer = await summaryModelAnswer(await kbFetch(env, '/ask', {
       body:{query:prompt,top_k:1,reranker:'noop',generative_model:'openai-compatible',max_tokens:1800,
-        prompt:{system:SEARCH_SUMMARY_SYSTEM,user:'{question}'}},
+        prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + POSITION_GROUNDING + ' Return only valid JSON in the requested points-and-citations schema, with no other text.',user:'{question}'}},
       headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(25_000),
     }))
-    const summary = answer && parseSearchSummary(answer, sources)
+    const summary = answer && parseSearchSummary(normalizePositionDraft(answer, sources), sources)
     if (!summary) return null
-    let text = '**From the retrieved speeches**\n\n'
+    const folded = (text: string) => text.normalize('NFKC').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim()
+    // Keep useful verified points when another point quotes a title or strays
+    // onto an unrelated topic mentioned elsewhere in a long speech.
+    summary.points = summary.points.filter(point => positionEvidence(point.text, String(body.query || '')) &&
+      point.source_ids.every(id => {
+        const source = summary.sources.find(source => source.id === id)
+        return source && positionEvidence(source.evidence.join(' '), String(body.query || '')) &&
+          source.evidence.every(quote => folded(source.snippet).includes(folded(quote)))
+      })).slice(0,2)
+    if (!summary.points.length) return null
+    const used = new Set(summary.points.flatMap(point => point.source_ids))
+    summary.sources = summary.sources.filter(source => used.has(source.id))
+    let text = '**From their speeches**\n\n'
     const citations: Record<string,number[][]> = {}
     for (const point of summary.points) {
       text += '- ' + point.text

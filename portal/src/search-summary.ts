@@ -14,7 +14,7 @@ const clean = (value: unknown, max: number) => typeof value === 'string'
 const fold = (value: string) => value.normalize('NFKC').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim()
 
 /** Only server-retrieved passages enter the prompt; briefs and client prose do not. */
-export function summarySources(rows: Record<string, unknown>[]): SummarySource[] {
+export function summarySources(rows: Record<string, unknown>[], snippetLimit = 1800): SummarySource[] {
   const sources: SummarySource[] = [], seen = new Set<string>()
   for (const row of rows) {
     const slug = typeof row.slug === 'string' ? row.slug : ''
@@ -24,7 +24,7 @@ export function summarySources(rows: Record<string, unknown>[]): SummarySource[]
     const url = new URL(rawHref, 'https://opax.com.au')
     if (url.origin !== 'https://opax.com.au' || url.pathname !== rawHref.split(/[?#]/)[0]) continue
     const href = url.pathname + url.search + url.hash
-    const snippet = clean(stripListingBoilerplate(typeof row.snippet === 'string' ? row.snippet : ''), 1800)
+    const snippet = clean(stripListingBoilerplate(typeof row.snippet === 'string' ? row.snippet : ''), Math.min(6000, Math.max(45, snippetLimit)))
     if (snippet.length < 45 || seen.has(href)) continue
     seen.add(href)
     sources.push({ id: `s${sources.length + 1}`, href, snippet,
