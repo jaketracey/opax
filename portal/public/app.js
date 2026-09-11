@@ -2304,8 +2304,35 @@ function parseDocBlocks(body) {
   return blocks;
 }
 
-/** Inline treatment: **bold** only — text nodes and <strong>, nothing else. */
+function safeAnswerLink(href) {
+  if (typeof href !== "string" || !/^(?:https?:\/\/|\/(?!\/))/i.test(href) || /[\\\u0000-\u0020]/.test(href)) return null;
+  try {
+    const url = new URL(href, "https://opax.com.au");
+    if (!["https:", "http:"].includes(url.protocol) || url.username || url.password) return null;
+    return href.startsWith("/") ? url.pathname + url.search + url.hash : url.href;
+  } catch { return null; }
+}
+
+/** Render links and emphasis as DOM nodes; model text never becomes HTML. */
 function appendInline(el, text) {
+  const value = String(text);
+  const links = /`[^`\n]+`|\[([^\]\n]+)\]\(([^\s()]+)\)/g;
+  let last = 0;
+  for (const match of value.matchAll(links)) {
+    appendStyledText(el, value.slice(last, match.index));
+    const href = safeAnswerLink(match[2]);
+    if (href) {
+      const link = document.createElement("a");
+      link.href = href;
+      appendStyledText(link, match[1]);
+      el.appendChild(link);
+    } else appendStyledText(el, match[0]);
+    last = match.index + match[0].length;
+  }
+  appendStyledText(el, value.slice(last));
+}
+
+function appendStyledText(el, text) {
   // Bold splits first so a ** pair is never read as two italics markers.
   const parts = String(text).split(/\*\*(.+?)\*\*/);
   parts.forEach((part, j) => {

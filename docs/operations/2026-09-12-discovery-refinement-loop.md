@@ -37,7 +37,7 @@ The Pocock response now cites `speech-1204764` (2 July 2026) and `speech-827462`
 
 ## Validation and next passes
 
-- 347 portal tests passed, including new paired arithmetic, date scope, missing-side, unsupported-category and proposal-filter checks.
+- 349 portal tests passed, including new paired arithmetic, date scope, missing-side, unsupported-category, proposal-filter and safe-link rendering checks.
 - TypeScript and asset stamps passed.
 - The six added end-to-end cases passed against the changed Worker using the live corpus. The final Pocock repeat was a cache hit; its earlier uncached answer and original sources were reviewed separately.
 - Browser checks at 390, 768 and 1440 pixels found no overflow or page errors. Both comparison rows, three citation controls and the calculation link rendered correctly; tapping a citation opened the evidence.
