@@ -55,17 +55,17 @@ const source=await readFile(new URL('../src/index.ts',import.meta.url),'utf8');
 const start=source.indexOf('async function documentedPositionAnswer('),end=source.indexOf('/** A failed summary',start);
 const code=ts.transpileModule(source.slice(start,end),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function harness({rows,texts={},recover=true,unavailable=false}={}){
- let query,generated,reads=0;
+ let query,generated,generationBody,reads=0;
  const fn=runInNewContext(code+';documentedPositionAnswer',{...helpers,URL,Request,canonicalSpeaker:s=>s,EVIDENCE_GAP_ANSWER:'This selection does not establish their position on that topic.',
   searchWindow:async(e,args)=>{query=args;return rows===null?null:{results:rows||[{slug:'speech-1',speaker:'Example MP',title:'Example MP — 2025-02-11',date:'2025-02-11',kind:'speech',resource:'rid'}]};},
   apiResource:async(r,u,slug)=>{reads++;return unavailable?Response.json({error:'down'},{status:503}):Response.json(texts[slug]||{speaker:'Example MP',text:proposal+'\n\n1:08 pm\n\n'+other});},
-  quotedPositionAnswer:()=>null, recoverPositionAnswer:async(payload)=>{generated=payload;return recover?{...payload,answer:'Verified proposal',answer_status:undefined}:null;},
+  quotedPositionAnswer:()=>null, recoverPositionAnswer:async(payload,body)=>{generated=payload;generationBody=body;return recover?{...payload,answer:'Verified proposal',answer_status:undefined}:null;},
  });
- return {run:()=>fn({speaker:'Example MP',kind:'speech',from:'2025',to:'2026',chamber:'senate',topic:'housing'},{query:'housing affordability'},{},{}),get query(){return query},get generated(){return generated},get reads(){return reads}};
+ return {run:()=>fn({question:'What rent limit did he propose?',speaker:'Example MP',kind:'speech',from:'2025',to:'2026',chamber:'senate',topic:'housing'},{query:'housing affordability'},{},{}),get query(){return query},get generated(){return generated},get generationBody(){return generationBody},get reads(){return reads}};
 }
 test('position retrieval honors filters and passes only original first-turn text to generation',async()=>{
  const h=harness();await h.run();assert.equal(h.query.topK,20);assert.equal(h.query.url.searchParams.get('speaker'),'Example MP');assert.equal(h.query.url.searchParams.get('from'),'2025');assert.equal(h.query.url.searchParams.get('chamber'),'senate');assert.equal(h.query.url.searchParams.get('topic'),'housing');
- assert.equal(h.generated.sources[0].snippet,proposal);assert.equal(h.generated.sources[0].href,'/doc/speech-1');assert.equal(h.generated.scope.speaker,'Example MP');
+ assert.equal(h.generated.sources[0].snippet,proposal);assert.equal(h.generated.sources[0].href,'/doc/speech-1');assert.equal(h.generated.scope.speaker,'Example MP');assert.equal(h.generationBody.position_question,'What rent limit did he propose?');
 });
 test('wrong people and generated records never enter source reads or generation',async()=>{
  const rows=[{slug:'speech-1',speaker:'Another MP'},{slug:'da-summary-1',speaker:'Example MP'}];const h=harness({rows});const out=await h.run();assert.equal(h.reads,0);assert.equal(h.generated,undefined);assert.equal(out.answer_status,'evidence_gap');
@@ -86,4 +86,12 @@ test('fallback selects a concrete proposal, never a procedural or irrelevant pas
  assert.equal(positionProposalQuote('I proposed an inquiry into the NDIS and its administration.','housing affordability'),'');
  assert.equal(positionProposalQuote('I move that the Senate take note of housing questions.','housing affordability'),'');
  assert.equal(positionProposalQuote('I spoke about agriculture.\n\n1:08 pm\n\n'+gst,'housing affordability'),'');
+});
+
+test('an explicit policy cap keeps its immediate capacity qualification',()=>{
+ const policy="One Nation's policy is to cap immigration at approximately 130,000 per year, numbers we can actually accommodate.";
+ const condition='When we can, then we can look at increasing those numbers over a period of time.';
+ assert.equal(positionProposalQuote(policy+' '+condition+' We have no problem with immigration.','immigration cap'),policy+' '+condition);
+ assert.equal(positionProposalQuote('A long procedural speech about migration.','immigration'),'');
+ assert.equal(positionProposalQuote(policy+' '+condition,'housing affordability'),'');
 });

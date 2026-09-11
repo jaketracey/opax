@@ -9018,9 +9018,11 @@ function syncAskChatViewport() {
   const update = () => {
     const covered = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
     form.style.setProperty("--ask-keyboard-bottom", `${covered}px`);
+    document.documentElement.style.setProperty("--chat-voice-clearance", `${Math.ceil(form.getBoundingClientRect().height) + covered}px`);
   };
   viewport.addEventListener("resize", update);
   viewport.addEventListener("scroll", update);
+  new ResizeObserver(update).observe(form);
   update();
 }
 

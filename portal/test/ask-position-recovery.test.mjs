@@ -54,3 +54,18 @@ test('failed generation can still show a dated verbatim proposal with valid cita
  for(const ranges of Object.values(out.citations))for(const [start,end] of ranges)assert.ok(start>=0&&end<=Array.from(out.answer).length);
  assert.equal(fallback({...payload,sources:[{...payload.sources[0],snippet:'I proposed an inquiry into the NDIS and the cost of support coordination.'}]},'housing affordability'),null);
 });
+
+test('generation receives the current follow-up separately from its resolved retrieval topic',async()=>{
+ const h=harness(draft());await h.recover(payload,{query:'housing',position_question:'When did she propose it?'},{});
+ assert.ok(h.request.body.query.includes('Latest reader question: "When did she propose it?"'));
+ assert.match(h.request.body.query,/Answer that latest question specifically/);
+});
+test('a summary cannot merge proposal conditions from different dated speeches',async()=>{
+ const h=harness(JSON.stringify({points:[{text:'Example MP proposed a five-year GST moratorium for homes up to $1 million.',citations:[{id:'s1',quote},{id:'s2',quote}]}]}));
+ assert.equal(await h.recover({...payload,sources:[...payload.sources,{...payload.sources[0],resource:'other',href:'/doc/speech-2',date:'2026-01-01'}]},{query:'housing'},{}),null);
+});
+
+test('a missing cost or reason never falls back to a generic policy quote',()=>{
+ for(const q of ['What did it cost?','Why did she propose it?','How long would it last?','And how long would it last?'])assert.equal(fallback(payload,'housing',q),null);
+ assert.equal(fallback(payload,'housing','What cap did she propose?').answer_status,'evidence_only');
+});
