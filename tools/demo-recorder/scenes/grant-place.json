@@ -1,0 +1,17 @@
+{
+  "id": "grant-place",
+  "title": "Find a grant near you",
+  "path": "/reports/grants-allocation?collection=history",
+  "ready": ".allocation-pin[title^=\"Willetton\"]",
+  "description": "A real visit to the selected historical grants collection. No amounts or answers are fabricated or hard-coded into captions.",
+  "steps": [
+    { "action": "hold", "caption": "What grant funding is recorded near you?", "holdMs": 3200 },
+    { "action": "type", "target": "#allocation-query", "value": "Willetton", "caption": "Search for a place or project.", "waitFor": ".allocation-pin[title^=\"Willetton\"]", "holdMs": 1700 },
+    { "action": "scroll", "target": "#allocation-map", "caption": "See the verified project site on the map.", "holdMs": 2200 },
+    { "action": "click", "target": ".allocation-pin[title^=\"Willetton\"]", "caption": "Choose a pin to see what the grant was for.", "waitFor": "#allocation-detail.has-project", "holdMs": 2300 },
+    { "action": "scroll", "target": "#allocation-detail", "caption": "Check the award amount and publication date.", "holdMs": 2500 },
+    { "action": "click", "target": ".allocation-site-fold > summary", "caption": "Open the evidence behind the mapped location.", "waitFor": ".allocation-site-fold[open]", "holdMs": 2600 },
+    { "action": "hover", "target": ".allocation-source-link", "caption": "Follow the link to the original funding record.", "holdMs": 2600 },
+    { "action": "hold", "caption": "Explore selected grants at opax.com.au", "holdMs": 3400 }
+  ]
+}

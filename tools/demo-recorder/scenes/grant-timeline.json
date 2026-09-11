@@ -1,0 +1,16 @@
+{
+  "id": "grant-timeline",
+  "title": "Explore earlier grants",
+  "path": "/reports/grants-allocation?collection=history",
+  "ready": "#allocation-year:not([disabled])",
+  "description": "The year slider filters publication dates. It does not show payments or reconstruct historic award values.",
+  "steps": [
+    { "action": "hold", "caption": "Explore a selection of earlier grant awards.", "holdMs": 3000 },
+    { "action": "scroll", "target": "#allocation-map", "caption": "Each pin marks a project site checked against sources.", "holdMs": 2800 },
+    { "action": "scroll", "target": "#allocation-timeline", "caption": "Use the year slider to explore older records.", "holdMs": 1800 },
+    { "action": "range", "target": "#allocation-year", "value": 2019, "caption": "Filter to grants published by 2019.", "holdMs": 2600 },
+    { "action": "hold", "caption": "Award values include later updates. These are not payments.", "holdMs": 3600 },
+    { "action": "click", "target": "#allocation-latest", "caption": "Choose All years to bring the other records back.", "holdMs": 2300 },
+    { "action": "scroll", "target": "#allocation-map", "caption": "Explore the record at opax.com.au", "holdMs": 3200 }
+  ]
+}
