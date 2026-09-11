@@ -40,9 +40,18 @@ export function positionEvidence(text: string, query: string): string {
  */
 export function positionProposalQuote(text: string, query: string): string {
   const sentences = firstSpeechTurn(text).replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+(?=[\p{Lu}“‘"'])/u)
-  const proposal = /\b(?:I|we)\s+(?:propose|proposed|recommend|recommended)|\b(?:my|our)\s+propos(?:al|ed)|\bthis\s+(?:bill|legislation)\s+(?:will|would)|\b(?:announces?|announced)\s+a\s+policy|\b(?:moratorium|amendment)\b/i
-  return sentences.find(sentence => sentence.length >= 45 && sentence.length <= 700 &&
-    proposal.test(sentence) && positionEvidence(sentence, query)) || ''
+  const proposal = /\b(?:I|we)\s+(?:propose|proposed|recommend|recommended)|\b(?:my|our)\s+propos(?:al|ed)|\bthis\s+(?:bill|legislation)\s+(?:will|would)|\b(?:announces?|announced)\s+a\s+policy|\bpolicy\s+is\s+to\b|\b(?:moratorium|amendment)\b/i
+  const at = sentences.findIndex(sentence => sentence.length >= 45 && sentence.length <= 700 &&
+    proposal.test(sentence) && positionEvidence(sentence, query))
+  if (at < 0) return ''
+  let quote = sentences[at]
+  // Preserve immediately following qualifications such as a cap increasing
+  // when capacity permits. Keep the quotation contiguous and bounded.
+  for (const next of sentences.slice(at + 1, at + 3)) {
+    if (!/^(?:When|If|Provided|Subject to|Unless)\b/i.test(next) || quote.length + next.length + 1 > 700) break
+    quote += ' ' + next
+  }
+  return quote
 }
 
 /** Repair a missing root brace and source whitespace only, never wording or IDs.

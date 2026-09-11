@@ -23,7 +23,7 @@ export function recordQuery(input: RecordQuestion): string {
   let terms: string[] = subject(question)
   // A short follow-up inherits the last user question, never model prose.
   if ((terms.length < 2 || /^(?:and|what about|how about)\b/i.test(question.trim())) && Array.isArray(input.context) && input.context.length) {
-    const previous = [...input.context].reverse().find(t => t.author === 'question' && t.text)
+    const previous = [...input.context].reverse().find(t => (t.author === 'question' || t.author === 'user') && t.text)
     terms = [...terms, ...subject(previous?.text || '')]
   }
   if (!terms.length) terms = tokens(question).filter((t: string) => /^(donation|donor|receipt|contract|grant|expense|interest|bill)$/.test(t))

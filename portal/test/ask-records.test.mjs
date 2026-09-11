@@ -130,3 +130,7 @@ test('institution catalog evidence excludes unrelated commissioners',async()=>{
  assert.ok(found.records.length>0);
  assert.ok(found.records.every(r=>/corruption|integrity|NACC/i.test(r.title+' '+r.snippet)));
 });
+
+test('public-record follow-ups recognise the browser user role and ignore assistant claims',()=>{
+ assert.equal(records.recordQuery({question:'And Labor?',context:[{author:'user',text:'Who takes gambling money?'},{author:'answer',text:'InventedIndustries takes it.'}]}),'labor gambling');
+});

@@ -6,11 +6,12 @@ import ts from 'typescript';
 const transpile=s=>ts.transpileModule(s,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
 const exports={};runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts',import.meta.url),'utf8')),{exports});
 const {normaliseFootnotes,FootnoteStream}=exports;
+const scope={};runInNewContext(transpile(readFileSync(new URL('../src/ask-scope.ts',import.meta.url),'utf8')),{exports:scope});
 const index=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const extract=(a,b)=>index.slice(index.indexOf(a),index.indexOf(b,index.indexOf(a)));
 let streamBody;
 const api=runInNewContext(transpile([extract('function buildAskBody(','/** The portal'),extract('function askPayload(','type AskPayload'),extract('function hasUnsupportedQuotes(', '/**\n * The canonical form of an ask'),extract('function askCacheInput(','/** Cut on word boundaries'),extract('class RefusalGate','/** streamAskOnce under')].join('\n'))+';({buildAskBody,askPayload,askCacheInput,cacheableAnswer,streamAskOnce,hasUnsupportedQuotes,evidenceOnlyAnswer})',{
- ...exports, isRefusal:r=>r.answer==='refusal', POSITION_GROUNDING: 'Do not roleplay', integrityQuestion:()=>false, askRetrievalQuery: input=>input.question, recordContext:rows=>rows.map(r=>JSON.stringify(r)), recordSources:(rows,c)=>rows.map((r,i)=>({...r,resource:`USER_CONTEXT_${i}`,cited:Object.hasOwn(c,`USER_CONTEXT_${i}`)})), RECORD_GROUNDING:'', filterExpression:f=>({field:f}),calibrate:s=>s,label:()=>null,canonicalSpeaker:s=>s,TOPIC_SLUGS:new Set(['housing']),REFUSAL_PREFIXES:['not enough data'],TextDecoder,Date,ragBase:()=> 'https://example.test',fetch:async()=>new Response(streamBody)
+ ...exports, isNamedPositionQuestion:scope.isNamedPositionQuestion, isRefusal:r=>r.answer==='refusal', POSITION_GROUNDING: 'Do not roleplay', integrityQuestion:()=>false, askRetrievalQuery: input=>input.question, recordContext:rows=>rows.map(r=>JSON.stringify(r)), recordSources:(rows,c)=>rows.map((r,i)=>({...r,resource:`USER_CONTEXT_${i}`,cited:Object.hasOwn(c,`USER_CONTEXT_${i}`)})), RECORD_GROUNDING:'', filterExpression:f=>({field:f}),calibrate:s=>s,label:()=>null,canonicalSpeaker:s=>s,TOPIC_SLUGS:new Set(['housing']),REFUSAL_PREFIXES:['not enough data'],TextDecoder,Date,ragBase:()=> 'https://example.test',fetch:async()=>new Response(streamBody)
 });
 const id='r1/t/transcript/0-50',neighbour='r1/t/transcript/50-100',generated='r1/t/da-summary/0-50';
 const fixture=()=>({answer:'😀 A fact[^1]. Another fact[^2].\n\n[^1]: block-AA\n[^2]: block-AB',citation_footnote_to_context:{'block-AA':id,'block-AB':neighbour},retrieval_results:{resources:{r1:{slug:'speech-1',title:'Speech',fields:{'t/transcript':{paragraphs:{[id]:{text:'Original passage',score:0.8,score_type:'RERANKER'}}}}}}},augmented_context:{paragraphs:{[neighbour]:{id:neighbour,text:'Surrounding original passage'}}}});
@@ -18,7 +19,8 @@ const plain=x=>JSON.parse(JSON.stringify(x));
 test('original-turn version expires only named position answers, preserving other caches',()=>{
  const position={question:'What would Example MP say about housing?',speaker:'Example MP',kind:'speech'};
  assert.equal(JSON.parse(api.askCacheInput(position,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v1');
- for(const input of [{question:'Who funds Labor?'},{...position,question:'What did Example MP say about housing?'},{...position,kind:'all'}])assert.equal(JSON.parse(api.askCacheInput(input,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION);
+ assert.equal(JSON.parse(api.askCacheInput({...position,question:'What did Example MP say about housing?'},'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v1');
+ for(const input of [{question:'Who funds Labor?'},{...position,kind:'all'}])assert.equal(JSON.parse(api.askCacheInput(input,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION);
 });
 test('footnotes resolve through provider mappings with Unicode offsets',()=>{const p=api.askPayload(fixture());assert.equal(p.answer,'😀 A fact. Another fact.');assert.deepEqual(plain(p.citations[id]),[[7,8]]);assert.deepEqual(plain(p.citations[neighbour]),[[21,22]]);assert.equal(p.sources[0].cited,true)});
 test('live plain numbering, multiple blocks and repeated citations work',()=>{const p=normaliseFootnotes('Fact [1]. More [1][2].\n[1]: block-AA, block-AB\n[2]: block-AA',{'block-AA':id,'block-AB':neighbour},new Set([id,neighbour]));assert.equal(p.answer,'Fact. More.');assert.equal(p.citations[id].length,2);assert.equal(p.citations[neighbour].length,2);assert.equal(normaliseFootnotes('Schedule [42] applies.',{},new Set()).answer,'Schedule [42] applies.')});
