@@ -35,6 +35,16 @@ export function positionEvidence(text: string, query: string): string {
   return excerpt.text.length >= 45 ? excerpt.text : ''
 }
 
+/** A useful verbatim fallback, limited to an explicit, on-topic proposal.
+ * Do not use procedural openings or an arbitrary top-ranked passage.
+ */
+export function positionProposalQuote(text: string, query: string): string {
+  const sentences = firstSpeechTurn(text).replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+(?=[\p{Lu}“‘"'])/u)
+  const proposal = /\b(?:I|we)\s+(?:propose|proposed|recommend|recommended)|\b(?:my|our)\s+propos(?:al|ed)|\bthis\s+(?:bill|legislation)\s+(?:will|would)|\b(?:announces?|announced)\s+a\s+policy|\b(?:moratorium|amendment)\b/i
+  return sentences.find(sentence => sentence.length >= 45 && sentence.length <= 700 &&
+    proposal.test(sentence) && positionEvidence(sentence, query)) || ''
+}
+
 /** Repair a missing root brace and source whitespace only, never wording or IDs.
  * Imported HTML sometimes joins link text to its next word ("GSTbeing").
  * Restore the exact original excerpt before the normal citation validator runs.
