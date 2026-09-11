@@ -2309,7 +2309,12 @@ function safeAnswerLink(href) {
   try {
     const url = new URL(href, "https://opax.com.au");
     if (url.origin !== "https://opax.com.au" || url.username || url.password) return null;
-    return url.pathname + url.search + url.hash;
+    // Encode each URL component explicitly before it is written into the DOM.
+    // Decode individual components first so an existing %3A or %20 is not doubled.
+    const path = url.pathname.split("/").map(part => encodeURIComponent(decodeURIComponent(part))).join("/");
+    const query = [...url.searchParams].map(([key, value]) => encodeURIComponent(key) + "=" + encodeURIComponent(value)).join("&");
+    const hash = url.hash ? "#" + encodeURIComponent(decodeURIComponent(url.hash.slice(1))) : "";
+    return path + (query ? "?" + query : "") + hash;
   } catch { return null; }
 }
 

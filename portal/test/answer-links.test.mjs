@@ -12,6 +12,8 @@ const {safeAnswerLink,appendInline}=runInNewContext(chunk+';({safeAnswerLink,app
 test('answer links allow Opax record paths, never foreign origins or executable schemes',()=>{
  for(const href of ['/graph/money.json','/money?industry=gambling']) assert.equal(safeAnswerLink(href),href);
  assert.equal(safeAnswerLink('https://opax.com.au/graph/money.json'),'/graph/money.json');
+ assert.equal(safeAnswerLink('/money?party=party%3ALabor&focus=donor%3AMineralogy'),'/money?party=party%3ALabor&focus=donor%3AMineralogy');
+ assert.equal(safeAnswerLink('/subject/person/David%20Pocock'),'/subject/person/David%20Pocock');
  for(const href of ['javascript:alert(1)','data:text/html,test','//evil.test','/\\evil.test','https://name:secret@opax.com.au/','https://example.test/\npath','https://www.aec.gov.au/','https://opax.com.au.evil.test/']) assert.equal(safeAnswerLink(href),null,href);
 });
 test('calculation links become anchors while model HTML and unsafe links stay text',()=>{
