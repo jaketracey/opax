@@ -852,7 +852,7 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
   }
 }
 
-type AskPayload = ReturnType<typeof askPayload>
+type AskPayload = ReturnType<typeof askPayload> & { evidence_kind?: 'original_position_proposal' }
 
 /** Verify quotes against original cited resources, not model metadata. */
 function hasUnsupportedQuotes(payload: AskPayload, raw: AskAnswer): boolean {
@@ -961,7 +961,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
 
 /** Worth keeping for a week: a real answer with at least one cited source. */
 const cacheableAnswer = (p: AskPayload): boolean =>
-  p.answer_status !== 'evidence_only' && !isRefusal({ answer: p.answer }) && p.sources.some((s) => (s as { cited?: boolean }).cited === true)
+  (p.answer_status !== 'evidence_only' || p.evidence_kind === 'original_position_proposal') && !isRefusal({ answer: p.answer }) && p.sources.some((s) => (s as { cited?: boolean }).cited === true)
 
 /** Cut on word boundaries into pieces of about `size` characters; pieces concatenate to the input exactly. */
 function chunkText(text: string, size: number): string[] {
@@ -1157,7 +1157,7 @@ function quotedPositionAnswer(payload: AskPayload, query: string): AskPayload | 
     citations[source.id] = [[end-1,end]]
     answer += '\n\n'
   }
-  return {answer:answer.trim(),citations,scope:payload.scope,answer_status:'evidence_only',sources:sources.map(source => ({
+  return {answer:answer.trim(),citations,scope:payload.scope,answer_status:'evidence_only',evidence_kind:'original_position_proposal',sources:sources.map(source => ({
     ...rows.find(row => row.href === source.href)!,resource:source.id,snippet:source.quote,cited:true,
   }))}
 }

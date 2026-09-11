@@ -9,8 +9,8 @@ const {normaliseFootnotes,FootnoteStream}=exports;
 const index=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const extract=(a,b)=>index.slice(index.indexOf(a),index.indexOf(b,index.indexOf(a)));
 let streamBody;
-const api=runInNewContext(transpile([extract('function buildAskBody(','/** The portal'),extract('function askPayload(','type AskPayload'),extract('function hasUnsupportedQuotes(', '/**\n * The canonical form of an ask'),extract('function askCacheInput(','/** Worth keeping'),extract('class RefusalGate','/** streamAskOnce under')].join('\n'))+';({buildAskBody,askPayload,askCacheInput,streamAskOnce,hasUnsupportedQuotes,evidenceOnlyAnswer})',{
- ...exports, POSITION_GROUNDING: 'Do not roleplay', integrityQuestion:()=>false, askRetrievalQuery: input=>input.question, recordContext:rows=>rows.map(r=>JSON.stringify(r)), recordSources:(rows,c)=>rows.map((r,i)=>({...r,resource:`USER_CONTEXT_${i}`,cited:Object.hasOwn(c,`USER_CONTEXT_${i}`)})), RECORD_GROUNDING:'', filterExpression:f=>({field:f}),calibrate:s=>s,label:()=>null,canonicalSpeaker:s=>s,TOPIC_SLUGS:new Set(['housing']),REFUSAL_PREFIXES:['not enough data'],TextDecoder,Date,ragBase:()=> 'https://example.test',fetch:async()=>new Response(streamBody)
+const api=runInNewContext(transpile([extract('function buildAskBody(','/** The portal'),extract('function askPayload(','type AskPayload'),extract('function hasUnsupportedQuotes(', '/**\n * The canonical form of an ask'),extract('function askCacheInput(','/** Cut on word boundaries'),extract('class RefusalGate','/** streamAskOnce under')].join('\n'))+';({buildAskBody,askPayload,askCacheInput,cacheableAnswer,streamAskOnce,hasUnsupportedQuotes,evidenceOnlyAnswer})',{
+ ...exports, isRefusal:r=>r.answer==='refusal', POSITION_GROUNDING: 'Do not roleplay', integrityQuestion:()=>false, askRetrievalQuery: input=>input.question, recordContext:rows=>rows.map(r=>JSON.stringify(r)), recordSources:(rows,c)=>rows.map((r,i)=>({...r,resource:`USER_CONTEXT_${i}`,cited:Object.hasOwn(c,`USER_CONTEXT_${i}`)})), RECORD_GROUNDING:'', filterExpression:f=>({field:f}),calibrate:s=>s,label:()=>null,canonicalSpeaker:s=>s,TOPIC_SLUGS:new Set(['housing']),REFUSAL_PREFIXES:['not enough data'],TextDecoder,Date,ragBase:()=> 'https://example.test',fetch:async()=>new Response(streamBody)
 });
 const id='r1/t/transcript/0-50',neighbour='r1/t/transcript/50-100',generated='r1/t/da-summary/0-50';
 const fixture=()=>({answer:'😀 A fact[^1]. Another fact[^2].\n\n[^1]: block-AA\n[^2]: block-AB',citation_footnote_to_context:{'block-AA':id,'block-AB':neighbour},retrieval_results:{resources:{r1:{slug:'speech-1',title:'Speech',fields:{'t/transcript':{paragraphs:{[id]:{text:'Original passage',score:0.8,score_type:'RERANKER'}}}}}}},augmented_context:{paragraphs:{[neighbour]:{id:neighbour,text:'Surrounding original passage'}}}});
@@ -140,4 +140,11 @@ test('an unrelated but cited position cannot pass as an answer about the request
  raw.retrieval_results.resources.r1.fields['t/transcript'].paragraphs[id].text='She argued immigration needed a cap.';
  body.query='immigration';assert.equal(exports.guardPositionAnswer(raw,body),raw);
  body.query='quantum zoning on Mars';body.prompt.system='General search';assert.equal(exports.guardPositionAnswer(raw,body),raw);
+});
+
+test('verified original proposals are reusable while generic unverified excerpts remain uncached',()=>{
+ const p={answer:'A verbatim original proposal with a date.',sources:[{cited:true}],answer_status:'evidence_only'};
+ assert.equal(api.cacheableAnswer(p),false);assert.equal(api.cacheableAnswer({...p,evidence_kind:'original_position_proposal'}),true);
+ assert.equal(api.cacheableAnswer({...p,evidence_kind:'original_position_proposal',sources:[]}),false);
+ assert.equal(api.cacheableAnswer({...p,evidence_kind:'original_position_proposal',answer:'refusal'}),false);
 });
