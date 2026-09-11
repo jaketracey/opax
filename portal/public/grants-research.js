@@ -47,6 +47,15 @@ export function publishedThrough(records,year) {
   if(!year)return records;
   return records.filter(p=>/^\d{4}-\d{2}-\d{2}/.test(p.date||'') && p.date.slice(0,10)<=`${year}-12-31`);
 }
+export function yearDiscovery(records, year) {
+  const visible=publishedThrough(records,year);
+  return {visible, firstPublished:visible.filter(p=>Number(p.date?.slice(0,4))===year),
+    later:records.filter(p=>/^\d{4}-\d{2}-\d{2}/.test(p.date||'') && Number(p.date.slice(0,4))>year).length};
+}
+export function projectToShow(records, selectedId, preferredId) {
+  return records.find(p=>p.id===selectedId) || records.find(p=>p.id===preferredId) ||
+    records.find(p=>p.sites.length) || records[0] || null;
+}
 function chart(rows,{baseline=false}={}) {
   const max=Math.max(1,...rows.flatMap(r=>[r.value??r.actual,r.expected||0]));
   return `<div class="allocation-bars">${rows.map(r=>`<div class="allocation-bar-row"><div class="allocation-bar-label"><span>${esc(r.name)}</span><strong>${compact(r.value??r.actual)}</strong></div><div class="allocation-track" aria-hidden="true"><span style="width:${100*(r.value??r.actual)/max}%"></span>${baseline?`<i style="left:${100*r.expected/max}%"></i>`:''}</div>${baseline?`<small>${money(r.expected)} if shared in proportion to seat numbers</small>`:''}</div>`).join('')}</div>`;
@@ -71,16 +80,19 @@ export function mountGrantsResearch(root,{focus=false}={}) {
   } catch { if(!destroyed)root.innerHTML='<p role="alert">The grant records could not be loaded. Please reload to try again.</p>';return instance; }
   if(destroyed || root.closest('[hidden]'))return;
   document.title='Where community funding goes · Reports · OPAX';
-  root.innerHTML=`<div class="allocation-intro"><h1 tabindex="-1">Where community funding goes</h1><p>Find community projects and see the funding recorded for them.</p></div>
+  root.innerHTML=`<div class="allocation-intro"><h1 tabindex="-1">Where community funding goes</h1><p>See what a grant was for, who it was awarded to and where the project is.</p></div>
+    <section class="allocation-start" aria-label="Start with a real project"><h2>Start with a real project</h2><div id="allocation-examples"></div></section>
     <section class="allocation-explorer" aria-label="Find community funding">
+      <div class="allocation-map-layout" id="allocation-map-layout"><aside class="allocation-detail" id="allocation-detail" aria-label="Selected project"></aside><div class="allocation-map-column"><p id="allocation-map-caption" class="allocation-map-caption"></p><div class="allocation-map-frame"><div id="allocation-map" aria-label="Map of verified project sites"></div><div class="allocation-map-actions"><button class="secondary" id="allocation-fit" type="button">Show all sites</button><button class="secondary" id="allocation-move" type="button" aria-pressed="false">Move map</button></div><div id="allocation-map-empty" class="allocation-map-empty" hidden><h3>No project sites mapped here yet</h3><p>You can still explore the funding records for this view.</p><button class="secondary" type="button" data-action="list">See matching records</button></div></div><p id="allocation-map-status" class="allocation-map-status" role="status" hidden></p></div></div>
+      <h2 class="allocation-browse-heading">Explore more projects</h2>
       <label class="allocation-collection">Explore<select id="allocation-collection"><option value="community">Community infrastructure</option><option value="history">Earlier grants</option><option value="invitations">Invited projects</option></select></label>
       <p id="allocation-stage-note" class="allocation-stage-note"></p>
       <div class="allocation-controls"><label class="allocation-search">Find a place or project<input id="allocation-query" type="search" placeholder="Town, project or council" autocomplete="off"></label><label class="allocation-state">State or territory<select id="allocation-state"><option value="">Across Australia</option>${Object.entries(stateNames).map(([id,name])=>`<option value="${id}">${name}</option>`).join('')}</select></label><div class="allocation-view-switch" role="group" aria-label="Display"><button type="button" data-view="map" aria-pressed="true">Map</button><button type="button" data-view="list" aria-pressed="false">List</button></div></div>
       <div class="allocation-viewbar"><p id="allocation-result-count" role="status" aria-live="polite"></p></div>
       <p id="allocation-coverage" class="allocation-coverage"></p>
 
-      <div class="allocation-map-layout" id="allocation-map-layout"><div class="allocation-map-column"><div class="allocation-map-frame"><div id="allocation-map" aria-label="Map of verified project sites"></div><div class="allocation-map-actions"><button class="secondary" id="allocation-fit" type="button">Show all sites</button><button class="secondary" id="allocation-move" type="button" aria-pressed="false">Move map</button></div><div id="allocation-map-empty" class="allocation-map-empty" hidden><h3>No project sites mapped here yet</h3><p>You can still explore the funding records for this view.</p><button class="secondary" type="button" data-action="list">See matching records</button></div></div><p id="allocation-map-status" class="allocation-map-status" role="status" hidden></p></div><aside class="allocation-detail" id="allocation-detail" aria-label="Selected project"></aside></div>
-      <div class="allocation-timeline" id="allocation-timeline"><div><label for="allocation-year">Published by <output id="allocation-year-label" for="allocation-year"></output></label><button type="button" class="text-link" id="allocation-latest">All years</button></div><input id="allocation-year" type="range" step="1" aria-describedby="allocation-time-note"><div class="allocation-year-ends" aria-hidden="true"><span id="allocation-first-year"></span><span id="allocation-last-year"></span></div><p id="allocation-time-note">Amounts include later updates to award notices.</p></div>
+      <div class="allocation-timeline" id="allocation-timeline"><div><label for="allocation-year">Show grants published by the end of <output id="allocation-year-label" for="allocation-year"></output></label><button type="button" class="text-link" id="allocation-latest">All years</button></div><input id="allocation-year" type="range" step="1" aria-describedby="allocation-time-note allocation-year-summary"><div class="allocation-year-ends" aria-hidden="true"><span id="allocation-first-year"></span><span id="allocation-last-year"></span></div><div class="allocation-year-navigation"><button type="button" class="secondary" id="allocation-year-previous">Previous year</button><button type="button" class="secondary" id="allocation-year-next">Next year</button></div><div id="allocation-year-summary" role="status" aria-live="polite" aria-atomic="true"></div><div id="allocation-year-projects"></div><p id="allocation-time-note">These are selected examples. Amounts are the latest recorded award values, including any later updates; they do not show payments made that year.</p></div>
+
       <div id="allocation-projects"></div><div class="allocation-list-actions"><button class="secondary" id="allocation-more" hidden>Show more projects</button><button class="text-link" id="allocation-export">Download these records</button></div>
     </section>
     <details class="allocation-comparison"><summary>Compare the wider picture<span>States and closely contested seats</span></summary><div class="allocation-comparison-body"><h2>How invitations were shared</h2><p>These comparisons use the department’s November 2025 invitation list.</p><div class="allocation-controls"><label>Compare by<select id="allocation-lens"><option value="states">State and territory</option><option value="seats">How close the election was</option></select></label></div><div id="allocation-chart"></div><p id="allocation-chart-note" class="fineprint"></p><details class="allocation-seat-fold"><summary>Look up an electorate’s election margin</summary><p>These margins describe seats before the 2025 federal election.</p><label class="allocation-seat-picker">Electorate<select id="allocation-seat">${data.seats.map(s=>`<option value="${esc(s.name)}">${esc(s.name)} · ${s.state}</option>`).join('')}</select></label><div id="allocation-seat-detail"></div></details></div></details>
@@ -90,7 +102,11 @@ export function mountGrantsResearch(root,{focus=false}={}) {
   let collection=params.get('stage')==='invitations'?'invitations':params.get('collection')==='history'?'history':'community';
   let stage=collection==='invitations'?'invitations':'awards', view=params.get('view')==='list'?'list':'map';
   let cutoffYear=/^\d{4}$/.test(params.get('through')||'')?Number(params.get('through')):null;
-  let shown=12, filtered=[], selectedId=null, selectedOrigin='row', mapReady=false;
+  let shown=12, filtered=[], selectedId=params.get('project'), selectedOrigin='row', mapReady=false, overview=false;
+  const preferred=()=>collection==='history'?'GA6602':collection==='community'?'GA575257':null;
+  const examples=[['GA6602','history','Basketball courts in Willetton'],['GA34203','history','An aircraft museum in Longreach'],['GA575257','community','Playgrounds in Pambula']].map(([id,group,label])=>({group,label,record:(group==='history'?historicalRecords(historyData):recordsWithLocations(data,locations)).find(p=>p.id===id)})).filter(p=>p.record?.sites.length);
+  get('allocation-examples').innerHTML=examples.map(({record,label})=>`<button type="button" class="allocation-example" data-example="${esc(record.id)}"><span>${esc(label)}</span><strong>${compact(record.value)} award</strong><small>See the project and source</small></button>`).join('');
+  root.querySelector('.allocation-start').hidden=!examples.length;
   const historicYears=publicationYears(historicalRecords(historyData));
   if(historicYears)get('allocation-collection').querySelector('[value=history]').textContent=`Earlier grants (${historicYears.min}–${historicYears.max})`;
   get('allocation-query').value=params.get('q')||'';
@@ -98,32 +114,48 @@ export function mountGrantsResearch(root,{focus=false}={}) {
   function updateUrl() {
     if(destroyed)return;
     const next=new URL(location.href);
-    for(const key of ['q','state','stage','view','collection','through'])next.searchParams.delete(key);
+    for(const key of ['q','state','stage','view','collection','through','project'])next.searchParams.delete(key);
     if(get('allocation-query').value.trim())next.searchParams.set('q',get('allocation-query').value.trim());
     if(get('allocation-state').value)next.searchParams.set('state',get('allocation-state').value);
     if(stage!=='awards')next.searchParams.set('stage',stage);
     if(view!=='map')next.searchParams.set('view',view);
     if(collection==='history')next.searchParams.set('collection','history');
     if(cutoffYear&&stage==='awards')next.searchParams.set('through',String(cutoffYear));
+    if(selectedId)next.searchParams.set('project',selectedId);
     history.replaceState(history.state,'',next);
   }
   const stageName=()=>stage==='invitations'?'invited projects':collection==='history'?'featured grants':'published grants';
   function drawDetail(record) {
-    get('allocation-detail').classList.toggle('has-project',!!record);
-    if(!record){get('allocation-detail').innerHTML=`<div class="allocation-detail-intro">${pinIcon}<h2>Start with a place</h2><p>Choose a pin or a project below to see what the funding is for.</p></div>`;return;}
+    const panel=get('allocation-detail');
+    panel.classList.toggle('has-project',!!record);
+    get('allocation-map-caption').textContent=record?.sites.length
+      ? `Project location: ${record.sites.map(s=>s.site_name).join(' and ')}` : 'Verified project locations';
+    if(!record){panel.innerHTML=`<div class="allocation-detail-intro">${pinIcon}<h2>${filtered.length?'Choose a project to see its funding':'No matching projects'}</h2><p>${filtered.length?'Open a named project below or choose a pin on the map.':'Try another place, state or year.'}</p></div>`;return;}
     const place=[record.locality || record.lga,stateNames[record.state]||record.state].filter(Boolean).join(', ');
-    get('allocation-detail').innerHTML=`<button type="button" class="allocation-detail-close" aria-label="Close project details">×</button><p class="allocation-detail-place">${esc(place||'Project location being checked')}</p><h2 tabindex="-1">${esc(record.title)}</h2><div class="allocation-detail-money"><strong>${money(record.value)}</strong><span>${stage==='awards'?'Published grant':'Invited to apply'}${record.sites.length>1?' · whole grant':''}</span>${record.sites.length>1?'<small>The amount covers all sites; individual shares are not recorded.</small>':''}</div>${record.original_title!==record.title?`<p class="allocation-description">${esc(record.original_title)}</p>`:''}${record.date?`<p class="fineprint">Published ${date(record.date)}</p>`:''}${record.program?`<p class="fineprint">${esc(record.program)}</p>`:''}<a class="allocation-source-link" href="${esc(record.source_url)}" target="_blank" rel="noopener">View funding record <span aria-hidden="true">↗</span></a>${record.sites.length?`<details class="allocation-site-fold"><summary>${record.sites.length>1?record.sites.length+' project locations':'Project location and evidence'}</summary><div class="allocation-sites">${record.sites.map(s=>`<div>${pinIcon}<div><strong>${esc(s.site_name)}</strong><p>${esc(s.address)}</p>${s.electorate_2025?`<p>${esc(s.electorate_2025)} electorate (2025)</p>`:''}<a href="${esc(s.location_source_url)}" target="_blank" rel="noopener">Check the location</a></div></div>`).join('')}</div></details>`:'<p class="allocation-unlocated">The project site has not been verified yet. This record is not pinned to an office address.</p>'}`;
-    get('allocation-detail').querySelector('.allocation-detail-close').onclick=()=>{const previous=selectedId;selectedId=null;map?.select(null,false);drawDetail(null);drawRows();get('allocation-detail').hidden=view==='list';if(selectedOrigin==='pin'&&view==='map')map?.focus(previous);else root.querySelector(`[data-record="${CSS.escape(previous)}"]`)?.focus({preventScroll:true});};
+    panel.innerHTML=`<button type="button" class="allocation-detail-close" aria-label="Close project details">×</button>
+      <p class="allocation-detail-place">${esc(place||'Project location being checked')}</p>
+      <h2 tabindex="-1">${esc(record.title)}</h2>
+      <div class="allocation-detail-money"><strong>${money(record.value)}</strong><span>${stage==='awards'?'Latest recorded grant award':'Invitation to apply for funding'}${record.sites.length>1?' · whole grant':''}</span>${record.sites.length>1?'<small>The amount covers all sites; individual shares are not recorded.</small>':''}</div>
+      <div class="allocation-purpose"><h3>What ${stage==='awards'?'the grant was':'the funding would be'} for</h3><p class="allocation-description">${esc(record.original_title||record.title)}</p></div>
+      <dl class="allocation-facts">${record.recipient?`<div><dt>${stage==='awards'?'Awarded to':'Applicant'}</dt><dd>${esc(record.recipient)}</dd></div>`:''}${record.date?`<div><dt>First published</dt><dd>${date(record.date)}</dd></div>`:''}${record.program?`<div><dt>Grant program</dt><dd>${esc(record.program)}</dd></div>`:''}</dl>
+      <p class="allocation-stage-caution">${stage==='awards'?'An award records approved funding. It does not confirm payment or completed works.':'An invitation is a chance to apply, not an awarded grant.'}</p>
+      <a class="allocation-source-link" href="${esc(record.source_url)}" target="_blank" rel="noopener">Read the original ${stage==='awards'?'grant award':'invitation'} <span aria-hidden="true">↗</span></a>
+      ${record.sites.length?`<details class="allocation-site-fold"><summary>${record.sites.length>1?record.sites.length+' project locations':'Project location and evidence'}</summary><div class="allocation-sites">${record.sites.map(s=>`<div>${pinIcon}<div><strong>${esc(s.site_name)}</strong><p>${esc(s.address)}</p>${s.electorate_2025?`<p>${esc(s.electorate_2025)} electorate (2025)</p>`:''}<a href="${esc(s.location_source_url)}" target="_blank" rel="noopener">Check the location</a></div></div>`).join('')}</div></details>`:'<p class="allocation-unlocated">The project site has not been verified yet. This record is not pinned to an office address.</p>'}`;
+    panel.querySelector('.allocation-detail-close').onclick=()=>{const previous=selectedId;selectedId=null;overview=true;map?.select(null,false);map?.fitAll();drawDetail(null);drawRows();updateUrl();panel.hidden=view==='list';if(selectedOrigin==='pin'&&view==='map')map?.focus(previous);else root.querySelector(`[data-record="${CSS.escape(previous)}"]`)?.focus({preventScroll:true});};
   }
   function choose(id,origin='row') {
     const record=filtered.find(p=>p.id===id); if(!record)return;
-    selectedId=id;selectedOrigin=origin;drawDetail(record);map?.select(id);drawRows();
+    selectedId=id;overview=false;selectedOrigin=origin;drawDetail(record);map?.select(id);drawRows();updateUrl();
     get('allocation-detail').hidden=false;
-    if(view==='list'||matchMedia('(max-width: 760px)').matches)get('allocation-detail').querySelector('h2')?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
-    get('allocation-detail').querySelector('h2')?.focus({preventScroll:true});
+    const heading=get('allocation-detail').querySelector('h2'), box=heading?.getBoundingClientRect();
+    const headerHeight=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h'))||96;
+    if(box&&(box.top<headerHeight+16||box.bottom>innerHeight-80))heading.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+    heading?.focus({preventScroll:true});
   }
   function drawRows() {
     const rows=view==='map'?filtered.filter(p=>p.sites.length):filtered;
+    for(const button of root.querySelectorAll('[data-example]'))button.setAttribute('aria-pressed',String(button.dataset.example===selectedId));
+    for(const button of root.querySelectorAll('[data-year-project]'))button.setAttribute('aria-pressed',String(button.dataset.yearProject===selectedId));
     get('allocation-projects').innerHTML=rows.length?`<h2 class="allocation-results-heading">${view==='map'?'Projects on this map':'Matching records'}</h2><div class="allocation-results-grid">${rows.slice(0,shown).map(p=>`<button type="button" class="allocation-project${p.id===selectedId?' is-selected':''}" data-record="${esc(p.id)}" aria-pressed="${p.id===selectedId}"><span><strong>${esc(p.title)}</strong><small>${esc([p.locality||p.lga,stateNames[p.state]||p.state].filter(Boolean).join(', ') )||'Delivery state not recorded'}</small><span class="allocation-location-label">${p.sites.length?`${pinIcon}${p.sites.length>1?p.sites.length+' sites':'Site located'}`:'Location being checked'}</span></span><b>${compact(p.value)}</b></button>`).join('')}</div>`:(view==='list'?'<p class="allocation-no-results">No records match. Try a different place, project or state.</p>':'');
     for(const button of get('allocation-projects').querySelectorAll('[data-record]'))button.onclick=()=>choose(button.dataset.record);
     get('allocation-more').hidden=shown>=rows.length;
@@ -137,10 +169,17 @@ export function mountGrantsResearch(root,{focus=false}={}) {
     if(!years||cutoffYear===years.max)cutoffYear=null;
     const records=stage==='awards'?publishedThrough(fullRecords,cutoffYear):fullRecords;
     get('allocation-collection').value=collection;
-    get('allocation-timeline').hidden=!years;
+    get('allocation-timeline').hidden=!years||years.min===years.max;
     if(years){const slider=get('allocation-year');slider.min=years.min;slider.max=years.max;slider.value=cutoffYear||years.max;slider.disabled=years.min===years.max;slider.setAttribute('aria-valuetext',`Grants published through ${slider.value}`);get('allocation-year-label').textContent=slider.value;get('allocation-first-year').textContent=years.min;get('allocation-last-year').textContent=years.max;get('allocation-latest').disabled=!cutoffYear;}
     filtered=filterRecords(records,{query:get('allocation-query').value,state:get('allocation-state').value});
-    if(!filtered.some(p=>p.id===selectedId))selectedId=null;
+    if(!filtered.some(p=>p.id===selectedId))selectedId=overview?null:projectToShow(filtered,null,preferred())?.id||null;
+    if(years){
+      const chosenYear=cutoffYear||years.max, scoped=filterRecords(fullRecords,{query:get('allocation-query').value,state:get('allocation-state').value});
+      const discovery=yearDiscovery(scoped,chosenYear);
+      get('allocation-year-previous').disabled=chosenYear<=years.min;get('allocation-year-next').disabled=chosenYear>=years.max;
+      get('allocation-year-summary').innerHTML=`<strong>${discovery.firstPublished.length?`${discovery.firstPublished.length} ${discovery.firstPublished.length===1?'award first appeared':'awards first appeared'} in ${chosenYear}`:`No matching awards first appeared in ${chosenYear}`}</strong><p>${filtered.length} ${collection==='history'?'selected examples':'matching awards'} published by then.${discovery.later?` ${discovery.later} later ${discovery.later===1?'award is':'awards are'} hidden.`:''}</p>`;
+      get('allocation-year-projects').innerHTML=discovery.firstPublished.slice(0,4).map(p=>`<button type="button" class="allocation-year-project" data-year-project="${esc(p.id)}"><span>${esc(p.title)}</span><strong>${compact(p.value)}</strong><small>See this project</small></button>`).join('')+(discovery.firstPublished.length>4?`<p>${discovery.firstPublished.length-4} more awards from this year are in the records below.</p>`:'');
+    }
     const coverage=locationCoverage(filtered), unknown=records.filter(p=>!p.state).length;
     for(const b of root.querySelectorAll('[data-view]'))b.setAttribute('aria-pressed',String(b.dataset.view===view));
     get('allocation-stage-note').textContent=collection==='history'?(historyData?'A selection from other grant programs, with verified project sites.':'The earlier records could not load. Please reload to try again.'):stage==='awards'?'Published funding awards, not payments or completed works.':'Projects invited to apply in November 2025. An invitation does not confirm a grant.';
@@ -154,15 +193,28 @@ export function mountGrantsResearch(root,{focus=false}={}) {
     drawDetail(filtered.find(p=>p.id===selectedId));drawRows();
     updateUrl();
   }
-  get('allocation-collection').onchange=()=>{collection=get('allocation-collection').value;stage=collection==='invitations'?'invitations':'awards';cutoffYear=null;selectedId=null;draw(true,true);};
-  get('allocation-year').oninput=()=>{cutoffYear=Number(get('allocation-year').value);draw(true,false,true);};
+  get('allocation-collection').onchange=()=>{overview=false;collection=get('allocation-collection').value;stage=collection==='invitations'?'invitations':'awards';cutoffYear=null;selectedId=null;draw(true,true);};
+  const changeYear=(year,preview=false)=>{
+    cutoffYear=year;overview=false;
+    const all=collection==='history'?historicalRecords(historyData):recordsWithLocations(data,locations,stage);
+    const scoped=filterRecords(all,{query:get('allocation-query').value,state:get('allocation-state').value});
+    const finding=yearDiscovery(scoped,year);
+    selectedId=(finding.firstPublished[0]||projectToShow(finding.visible,selectedId,preferred()))?.id||null;
+    draw(true,!preview,preview);
+  };
+  get('allocation-year').oninput=()=>changeYear(Number(get('allocation-year').value),true);
+  get('allocation-year').onchange=()=>draw(true,true);
+  const stepYear=delta=>changeYear(Number(get('allocation-year').value)+delta);
+  get('allocation-year-previous').onclick=()=>stepYear(-1);get('allocation-year-next').onclick=()=>stepYear(1);
+  for(const b of root.querySelectorAll('[data-example]'))b.onclick=()=>{const example=examples.find(p=>p.record.id===b.dataset.example);collection=example.group;stage='awards';cutoffYear=null;overview=false;selectedId=example.record.id;get('allocation-query').value='';get('allocation-state').value='';view='map';draw(true,true);choose(selectedId);};
+  get('allocation-year-projects').onclick=e=>{const b=e.target.closest('[data-year-project]');if(b)choose(b.dataset.yearProject);};
   get('allocation-latest').onclick=()=>{cutoffYear=null;draw(true,true);};
   for(const b of root.querySelectorAll('[data-view]'))b.onclick=()=>{view=b.dataset.view;draw();};
   root.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;if(b.dataset.action==='list'){view='list';draw();}if(b.dataset.action==='all-states'){get('allocation-state').value='';draw();}},{signal:controller.signal});
-  get('allocation-state').onchange=()=>draw(true,true);
-  get('allocation-query').oninput=()=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{if(!destroyed)draw();},180);};
+  get('allocation-state').onchange=()=>{overview=false;draw(true,true);};
+  get('allocation-query').oninput=()=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{if(!destroyed){overview=false;draw();}},180);};
   get('allocation-more').onclick=()=>{shown+=12;drawRows();};
-  get('allocation-fit').onclick=()=>{selectedId=null;drawDetail(null);drawRows();map?.fitAll();map?.select(null,false);};
+  get('allocation-fit').onclick=()=>{selectedId=null;overview=true;drawDetail(null);drawRows();updateUrl();map?.fitAll();map?.select(null,false);};
   get('allocation-move').onclick=()=>{const b=get('allocation-move'),enabled=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',String(enabled));b.textContent=enabled?'Done moving':'Move map';map?.setMovable(enabled);};
   get('allocation-export').onclick=()=>{
     const cell=s=>'"'+String(s??'').replace(/^[=+@-]/,"'$&").replaceAll('"','""')+'"';

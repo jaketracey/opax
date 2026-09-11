@@ -13,7 +13,8 @@
         "record_type": "award",
         "value": 6050000,
         "publish_date": "2018-05-24",
-        "source_url": "https://www.grants.gov.au/Ga/Show/9e3238d0-96e3-5317-4b1d-90a64ee021c2"
+        "source_url": "https://www.grants.gov.au/Ga/Show/9e3238d0-96e3-5317-4b1d-90a64ee021c2",
+        "recipient": "Willetton Basketball Association Inc"
       },
       "includes": {
         "activity": [
@@ -28,13 +29,7 @@
       }
     }
   ],
-  "setup": [
-    {
-      "action": "click",
-      "target": ".allocation-pin[title^=\"Willetton\"]",
-      "waitFor": "#allocation-detail.has-project"
-    }
-  ],
+  "setup": [],
   "steps": [
     {
       "action": "hold",
@@ -50,19 +45,11 @@
       "frameTarget": "#allocation-detail"
     },
     {
-      "action": "scroll",
-      "target": "#allocation-map",
-      "caption": "The pin locates the stadium in Willetton, Western Australia.",
+      "action": "hover",
+      "target": ".allocation-facts",
+      "caption": "The award names Willetton Basketball Association as the recipient.",
       "holdMs": 2700,
-      "frameTarget": "#allocation-map"
-    },
-    {
-      "action": "click",
-      "target": ".allocation-site-fold > summary",
-      "caption": "Its location evidence links back to the stadium operator.",
-      "waitFor": ".allocation-site-fold[open]",
-      "holdMs": 1800,
-      "frameTarget": ".allocation-site-fold"
+      "frameTarget": ".allocation-facts"
     },
     {
       "action": "hover",

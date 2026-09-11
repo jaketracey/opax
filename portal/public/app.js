@@ -11942,7 +11942,7 @@ async function openReport(slug, sectionNum, manageFocus) {
     root.hidden = false;
     currentReportSlug = null;
     setCrumbs([{label:'Reports',href:'/reports'},{label:'Where community funding goes'}]);
-    const { mountGrantsResearch } = await import('/grants-research.js?v=20260909-map-2');
+    const { mountGrantsResearch } = await import('/grants-research.js?v=20260911-clear-projects');
     if (grantsGeneration !== grantsResearchGeneration || !hereRoute().startsWith('/reports/grants-allocation')) return;
     grantsResearchHandle = mountGrantsResearch(root,{focus:manageFocus});
     await grantsResearchHandle.ready;
