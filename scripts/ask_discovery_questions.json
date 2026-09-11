@@ -99,7 +99,7 @@
       "expect": {
         "any_terms": [
           "$457,673",
-          "2020\u201321",
+          "2020–21",
           "Labor"
         ],
         "hits": 3,
@@ -128,6 +128,89 @@
         "hits": 1,
         "min_cited": 1,
         "source_speaker": "Anthony Albanese"
+      }
+    },
+    {
+      "id": "gambling-party-comparison",
+      "q": "Who gets more gambling money, Labor or Liberal?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$1,739,427",
+          "$10,763,834",
+          "$9,024,407"
+        ],
+        "hits": 3,
+        "min_cited": 3
+      }
+    },
+    {
+      "id": "gambling-party-comparison-year",
+      "q": "Who gets more gambling money, Labor or Liberal in 2020?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$97,478",
+          "$457,673",
+          "$360,195"
+        ],
+        "hits": 3,
+        "min_cited": 3
+      }
+    },
+    {
+      "id": "mineralogy-familiar-name",
+      "q": "Who gets the most money from Mineralogy?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "United Australia Party",
+          "$128,428,269"
+        ],
+        "hits": 2,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "industry-comparison",
+      "q": "Who gives more money to Labor, unions or finance?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$122,966,378",
+          "$247,398,401",
+          "$124,432,023"
+        ],
+        "hits": 3,
+        "min_cited": 3
+      }
+    },
+    {
+      "id": "banks-not-finance",
+      "q": "Who gives more money to Labor, unions or banks?",
+      "expect": {
+        "answer_status": "needs_scope",
+        "any_terms": [
+          "grouped with other finance"
+        ],
+        "hits": 1,
+        "must_not_terms": [
+          "$"
+        ]
+      }
+    },
+    {
+      "id": "pocock-proposals",
+      "q": "What has David Pocock proposed about housing affordability?",
+      "expect": {
+        "any_terms": [
+          "Commonwealth land",
+          "75%",
+          "30%"
+        ],
+        "hits": 2,
+        "min_cited": 1,
+        "source_speaker": "David Pocock"
       }
     }
   ]

@@ -122,6 +122,8 @@ test('position prompts keep the original question and treat an evidence gap as a
  assert.match(b.prompt.user,/EXACT topic/);assert.match(b.prompt.user,/Do not add other policies/);
  assert.equal(exports.isEvidenceGap(exports.EVIDENCE_GAP_ANSWER),true);
  assert.equal(exports.isEvidenceGap(exports.EVIDENCE_GAP_ANSWER+' She supports unrelated policy.'),false);
+ const proposal=api.buildAskBody({question:'What has David Pocock proposed about housing?',speaker:'David Pocock',kind:'speech'});
+ assert.equal(exports.isPositionBody(proposal),true);assert.match(proposal.prompt.user,/Omit ministerial replies/);
 });
 
 test('an unrelated but cited position cannot pass as an answer about the requested topic',()=>{

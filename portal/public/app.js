@@ -2304,8 +2304,41 @@ function parseDocBlocks(body) {
   return blocks;
 }
 
-/** Inline treatment: **bold** only — text nodes and <strong>, nothing else. */
+function safeAnswerLink(href) {
+  if (typeof href !== "string" || !/^(?:https?:\/\/|\/(?!\/))/i.test(href) || /[\\\u0000-\u0020]/.test(href)) return null;
+  try {
+    const url = new URL(href, "https://opax.com.au");
+    if (url.origin !== "https://opax.com.au" || url.username || url.password) return null;
+    // Encode each URL component explicitly before it is written into the DOM.
+    // Decode individual components first so an existing %3A or %20 is not doubled.
+    const path = url.pathname.split("/").map(part => encodeURIComponent(decodeURIComponent(part))).join("/");
+    const query = [...url.searchParams].map(([key, value]) => encodeURIComponent(key) + "=" + encodeURIComponent(value)).join("&");
+    const hash = url.hash ? "#" + encodeURIComponent(decodeURIComponent(url.hash.slice(1))) : "";
+    return path + (query ? "?" + query : "") + hash;
+  } catch { return null; }
+}
+
+/** Render links and emphasis as DOM nodes; model text never becomes HTML. */
 function appendInline(el, text) {
+  const value = String(text);
+  const links = /`[^`\n]+`|\[([^\]\n]+)\]\(([^\s()]+)\)/g;
+  let last = 0;
+  for (const match of value.matchAll(links)) {
+    appendStyledText(el, value.slice(last, match.index));
+    const href = safeAnswerLink(match[2]);
+    if (href) {
+      const link = document.createElement("a");
+      // Keep the origin literal: source/model text can supply only an Opax path.
+      link.href = "https://opax.com.au" + href;
+      appendStyledText(link, match[1]);
+      el.appendChild(link);
+    } else appendStyledText(el, match[0]);
+    last = match.index + match[0].length;
+  }
+  appendStyledText(el, value.slice(last));
+}
+
+function appendStyledText(el, text) {
   // Bold splits first so a ** pair is never read as two italics markers.
   const parts = String(text).split(/\*\*(.+?)\*\*/);
   parts.forEach((part, j) => {
@@ -3066,7 +3099,7 @@ function renderMoneyPanel(ind) {
 
 /** "What did John Howard say about pokies?" → filter retrieval to the speaker. */
 function parseSpeakerIntent(q) {
-  const m = /^what (?:did|has|have|does|would|might) ([A-Za-z'\u2019 .-]{4,40}?) (?:say|said|says)(?: about| on)? /i.exec(q.trim());
+  const m = /^(?:what|how) (?:did|has|have|does|would|might) ([A-Za-z'\u2019 .-]{4,40}?) (?:say|said|says|propos(?:e|ed)|recommend(?:ed)?)(?: about| on)? /i.exec(q.trim());
   if (!m) return null;
   const who = m[1].trim();
   if (/\b(parliament|house|senate|mps?|senators?|government|labor|liberal|greens|nationals|coalition|minister|ministers|politicians?|members|people|courts?|they)\b/i.test(who)) return null;
@@ -8707,7 +8740,7 @@ async function runAsk(question) {
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
     revealAskResult();
     $("ask-result").querySelector(".action-row").hidden = false;
-    $("ask-result").querySelector(".kicker").textContent = data.answer_status === "evidence_only" ? "From the record" : "Answer";
+    $("ask-result").querySelector(".kicker").textContent = data.answer_status === "calculated" ? "From disclosed receipts" : data.answer_status === "evidence_only" ? "From the record" : "Answer";
     if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
       renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question) });
