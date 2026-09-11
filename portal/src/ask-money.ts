@@ -1,5 +1,5 @@
 import type { RecordQuestion } from './ask-records'
-import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptJurisdiction, type ReceiptGraph} from './voice-money'
+import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptJurisdiction, unmatchedReceiptRankingScope, type ReceiptGraph} from './voice-money'
 
 const comparisonQuestion = (q:string) => /\b(?:more|less|higher|lower|compare|versus|vs)\b/i.test(q)
 
@@ -72,9 +72,11 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
   const result=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au',input)
   if(!result) return null
   if('needs_scope' in result) return {answer:result.answer,citations:{},sources:[],answer_status:'needs_scope',money_ranking:true}
-  if('needs_period' in result) return {answer:result.answer,citations:{},sources:[],answer_status:'needs_period'}
+  if('needs_period' in result) return {answer:result.answer,citations:{},sources:[],answer_status:'needs_period',money_ranking:true}
   if(/\bfrom\s+(?!(?:19|20)\d{2}\b)/i.test(query) && !result.selected_industries.length && !result.selected_donors.length) return null
   if(/\b(?:lobby|industry|sector)\b/i.test(query) && !result.selected_industries.length && !result.selected_donors.length) return null
+  const unmatched=unmatchedReceiptRankingScope(graph,query,result,input.party)
+  if(unmatched)return {answer:`I couldn't match **${unmatched}** in this map. Please use a donor, industry or party name from the [money map](https://opax.com.au/money) so the calculation includes your whole question.`,citations:{},sources:[],answer_status:'needs_scope',money_ranking:true}
   if(comparisonQuestion(query))return comparedMoneyAnswer(result,graph,query,file)
   if(result.selected_parties.length>1) return null
   if(result.selected_industries.length>1) return null

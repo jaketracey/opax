@@ -19,6 +19,37 @@ const scaffolding = new Set('how much how many money political donations donatio
 const contains = (q:string, phrase:string) => (' '+q+' ').includes(' '+normal(phrase)+' ')
 // A company suffix can be omitted, but a shortened name must identify one donor.
 const companyName = (name:string) => normal(name).replace(/\s+(?:(?:pty|proprietary)\s+)?(?:ltd|limited)$/, '')
+const rankingWords = new Set('who which what are is was were be been being gets get got getting takes take took taking receives receive received receiving gives giving donates donate donated donating donors donor contributors contribution contributions largest biggest most top more less higher lower compare comparison compared versus vs than both either these those each with financial nominal aud dollars dollar amount amounts disclosed published recorded records record shown included selected selection lifetime across throughout during up until through starting ending between lobby lobbies to whom s'.split(' '))
+
+/** A recognised name must not hide an unrecognised qualifier or a second name.
+ * Only consume names used by the calculation, plus the question's grammar.
+ * This is deliberately conservative: a clarification is safer than a partial sum.
+ */
+export function unmatchedReceiptRankingScope(graph:ReceiptGraph, query:string, selected:{selected_donors:string[];selected_parties:string[];selected_industries:string[]}, partyFilter?:string): string {
+  const donorLabels=new Set(selected.selected_donors)
+  const shortCounts=new Map<string,number>()
+  for(const node of graph.nodes)if(node.kind==='donor') {
+    const short=companyName(node.label)
+    shortCounts.set(short,(shortCounts.get(short)||0)+1)
+  }
+  const phrases=graph.nodes.filter(n=>n.kind==='donor'&&donorLabels.has(n.label)).flatMap(n=>{
+    const short=companyName(n.label)
+    const unique=short.length>=5&&shortCounts.get(short)===1
+    return [n.label,...(n.aliases||[]),...(unique?[short]:[])]
+  })
+  for(const industry of selected.selected_industries) phrases.push(industry.replaceAll('_',' '),...(aliases[industry]||[]))
+  for(const party of graph.nodes.filter(n=>n.kind==='party'&&(partyFilter||selected.selected_parties.includes(n.label)))) {
+    phrases.push(party.label,...(party.aliases||[]))
+    if(party.label==='Labor')phrases.push('ALP')
+    if(party.label==='Nationals')phrases.push('National Party')
+    if(['LNP','Liberal National Party'].includes(party.label))phrases.push('LNP','Liberal National Party')
+  }
+  let remainder=' '+normal(query)+' '
+  for(const phrase of [...new Set(phrases.map(normal))].sort((a,b)=>b.length-a.length)) {
+    if(phrase)remainder=remainder.replaceAll(' '+phrase+' ',' ').replace(/\s+/g,' ')
+  }
+  return remainder.trim().split(' ').filter(w=>w&&!scaffolding.has(w)&&!rankingWords.has(w)&&!/^(?:19|20)\d{2}$/.test(w)).join(' ')
+}
 export const moneyQuestion = (q:string) => /\b(?:money|donat\w*|donors?|receipts?|funding|funded|contributions?)\b/i.test(q)
 export function receiptJurisdiction(query:string): string | null {
   const q=normal(query)

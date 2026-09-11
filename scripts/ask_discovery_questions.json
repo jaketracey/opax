@@ -99,7 +99,7 @@
       "expect": {
         "any_terms": [
           "$457,673",
-          "2020–21",
+          "2020\u201321",
           "Labor"
         ],
         "hits": 3,
@@ -211,6 +211,51 @@
         "hits": 2,
         "min_cited": 1,
         "source_speaker": "David Pocock"
+      }
+    },
+    {
+      "id": "mixed-industries",
+      "q": "Who gets more money from gambling and aerospace, Labor or Liberal?",
+      "expect": {
+        "answer_status": "needs_scope",
+        "any_terms": [
+          "aerospace",
+          "whole question"
+        ],
+        "hits": 2,
+        "must_not_terms": [
+          "$"
+        ]
+      }
+    },
+    {
+      "id": "mixed-donors",
+      "q": "Who gets the most money from Mineralogy and Acme Space Widgets?",
+      "expect": {
+        "answer_status": "needs_scope",
+        "any_terms": [
+          "acme space widgets",
+          "whole question"
+        ],
+        "hits": 2,
+        "must_not_terms": [
+          "$"
+        ]
+      }
+    },
+    {
+      "id": "industry-subset",
+      "q": "Who gets the most money from online gambling?",
+      "expect": {
+        "answer_status": "needs_scope",
+        "any_terms": [
+          "online",
+          "whole question"
+        ],
+        "hits": 2,
+        "must_not_terms": [
+          "$"
+        ]
       }
     }
   ]

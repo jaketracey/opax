@@ -79,7 +79,34 @@ test('familiar corporate names find the donor without a model ranking',async()=>
 });
 
 test('unsupported comparisons and missing data never become a false winner',async()=>{
- for(const q of ['Who gets more money, Labor or Unicorn Party?','Who gets more money, Labor or Liberal or Greens?','Who gets more money from gambling or mining, Labor or Liberal?','Did Labor or Liberal receive more gambling money in 2020 than in 2021?','Who gets more money from the unicorn lobby, Labor or Liberal?','Who gets more unicorn industry money, Labor or Liberal?','Compare gambling money, Labor in 2020 or Liberal in 2021?','Compare gambling money for Labor and Liberal, 2020 vs 2021?','Who gets more gambling money adjusted for inflation, Labor or Liberal?']) assert.equal(await ask(q),null,q);
+ for(const q of ['Who gets more money, Labor or Liberal or Greens?','Who gets more money from gambling or mining, Labor or Liberal?','Did Labor or Liberal receive more gambling money in 2020 than in 2021?','Who gets more money from the unicorn lobby, Labor or Liberal?','Who gets more unicorn industry money, Labor or Liberal?','Compare gambling money, Labor in 2020 or Liberal in 2021?','Compare gambling money for Labor and Liberal, 2020 vs 2021?','Who gets more gambling money adjusted for inflation, Labor or Liberal?']) assert.equal(await ask(q),null,q);
  const missing=await ask('Who gets more gambling money, Labor or Liberal in 1900?');
  assert.equal(missing.answer_status,'evidence_gap');assert.doesNotMatch(missing.answer,/\$0|received more/);
+});
+
+test('mixed known and unknown scopes request clarification instead of publishing a partial winner',async()=>{
+ for(const [q,unmatched] of [
+  ['Who gets more money from gambling and aerospace, Labor or Liberal?','aerospace'],
+  ['Who gets the most money from Mineralogy and Acme Space Widgets?','acme space widgets'],
+  ['Who gets the most money from gambling and cryptocurrency?','cryptocurrency'],
+  ['Who gets more money, Labor or Unicorn Party?','unicorn'],
+  ['Who gets the most money from online gambling?','online'],
+  ['Who gets the most money from Mineralogy and gambling?','gambling'],
+  ['Who gets the most money from gambling, aerospace and finance?','aerospace'],
+ ]) {
+  const r=await ask(q);
+  assert.equal(r.answer_status,'needs_scope',q);assert.ok(r.answer.includes(`**${unmatched}**`),q);
+  assert.doesNotMatch(r.answer,/\$|received the most|received.*more/);assert.deepEqual(r.sources,[]);assert.deepEqual(r.citations,{});
+ }
+});
+
+test('the whole-query check retains known aliases, reversed comparisons and explicit filters',async()=>{
+ for(const q of [
+  'Who gets more funding from gambling, Liberal versus Labor?',
+  'Compare the disclosed gambling receipts for Labor and Liberal in 2020',
+  'Who donates the most to ALP?',
+  'Who donates the most to the National Party?',
+  'Who gets the most money from Mineralogy Pty Ltd?',
+ ]) assert.equal((await ask(q)).answer_status,'calculated',q);
+ assert.equal((await ask('Who gives the most money to Labor?',{party:'Liberal'})).answer_status,'calculated');
 });

@@ -8712,6 +8712,7 @@ async function runAsk(question) {
     // Trim before every use: a whitespace-only answer is truthy and would
     // otherwise slip past the "(no answer)" fallback and render nothing.
     const answerText = (data.answer || "").trim();
+    const needsClarification = ["needs_scope", "needs_period"].includes(data.answer_status);
     const sources = (data.sources || []).map((source) => ({
       ...source,
       cited: source.cited ?? Object.keys(data.citations || {}).some((key) => key.split("/")[0] === source.resource),
@@ -8736,11 +8737,12 @@ async function runAsk(question) {
 
     if (data.money_ranking) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
     hideWombat();
-    setStatus($("ask-status"), data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
+    setStatus($("ask-status"), needsClarification ? "Please clarify the question before I calculate the answer." : data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
     revealAskResult();
-    $("ask-result").querySelector(".action-row").hidden = false;
-    $("ask-result").querySelector(".kicker").textContent = data.answer_status === "calculated" ? "From disclosed receipts" : data.answer_status === "evidence_only" ? "From the record" : "Answer";
+    $("ask-result").querySelector(".action-row").hidden = needsClarification;
+    $("ask-stamp").hidden = needsClarification;
+    $("ask-result").querySelector(".kicker").textContent = needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? "From disclosed receipts" : data.answer_status === "evidence_only" ? "From the record" : "Answer";
     if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
       renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question) });
