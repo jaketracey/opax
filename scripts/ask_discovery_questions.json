@@ -99,7 +99,7 @@
       "expect": {
         "any_terms": [
           "$457,673",
-          "2020\u201321",
+          "2020–21",
           "Labor"
         ],
         "hits": 3,
@@ -253,6 +253,82 @@
           "whole question"
         ],
         "hits": 2,
+        "must_not_terms": [
+          "$"
+        ]
+      }
+    },
+    {
+      "id": "gambling-labor-year-comparison",
+      "q": "Did Labor receive more gambling money in 2020 or 2021?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$553,355",
+          "$457,673",
+          "$1,011,028",
+          "2020–21",
+          "2021–22"
+        ],
+        "hits": 5,
+        "min_cited": 3
+      }
+    },
+    {
+      "id": "gambling-labor-year-change",
+      "q": "How did gambling receipts to Labor change from 2020 to 2021?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$553,355",
+          "$457,673",
+          "$1,011,028"
+        ],
+        "hits": 3,
+        "min_cited": 3
+      }
+    },
+    {
+      "id": "gambling-labor-year-decrease",
+      "q": "How did gambling receipts to Labor change from 2021 to 2022?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$360,828 less",
+          "$1,011,028",
+          "$650,200"
+        ],
+        "hits": 3,
+        "min_cited": 3
+      }
+    },
+    {
+      "id": "gambling-labor-year-endpoints",
+      "q": "Compare gambling receipts to Labor in 2019 versus 2022",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$366,565",
+          "$283,635",
+          "$650,200"
+        ],
+        "hits": 3,
+        "min_cited": 3,
+        "must_not_terms": [
+          "$457,673",
+          "$1,011,028"
+        ]
+      }
+    },
+    {
+      "id": "gambling-multiple-year-cohorts",
+      "q": "Did Labor or Liberal receive more gambling money in 2020 than in 2021?",
+      "expect": {
+        "answer_status": "needs_scope",
+        "any_terms": [
+          "one recipient party"
+        ],
+        "hits": 1,
         "must_not_terms": [
           "$"
         ]
