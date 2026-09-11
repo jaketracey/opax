@@ -69,3 +69,62 @@ test('a missing cost or reason never falls back to a generic policy quote',()=>{
  for(const q of ['What did it cost?','Why did she propose it?','How long would it last?','And how long would it last?'])assert.equal(fallback(payload,'housing',q),null);
  assert.equal(fallback(payload,'housing','What cap did she propose?').answer_status,'evidence_only');
 });
+
+test('a cap follow-up cannot borrow an unquoted waiting period or substitute another immigration policy',async()=>{
+ const cap="One Nation's policy is to cap immigration at approximately 130,000 per year, numbers we can actually accommodate.";
+ const other='Under our policy, immigration from nations known to foster extremism will be prohibited.';
+ const h=harness(JSON.stringify({points:[
+  {text:'Example MP proposed capping immigration at 130,000 per year, with an eight-year waiting period for citizenship.',citations:[{id:'s1',quote:cap}]},
+  {text:'Example MP proposed prohibiting immigration from nations known to foster extremism.',citations:[{id:'s2',quote:other}]}
+ ]}));
+ const rows=[{...payload.sources[0],snippet:cap+' A separate eight-year proposal was discussed.'},{...payload.sources[0],href:'/doc/speech-2',snippet:other}];
+ assert.equal(await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{}),null);
+});
+
+test('a supported cap survives while unrelated immigration policies are omitted',async()=>{
+ const cap='We propose an immigration cap of 130,000 per year.';
+ const other='We propose stricter immigration screening to exclude security threats.';
+ const h=harness(JSON.stringify({points:[
+  {text:'Example MP proposed an immigration cap of 130,000 per year.',citations:[{id:'s1',quote:cap}]},
+  {text:'Example MP proposed stricter immigration screening.',citations:[{id:'s2',quote:other}]}
+ ]}));
+ const out=await h.recover({...payload,sources:[{...payload.sources[0],snippet:cap},{...payload.sources[0],href:'/doc/speech-2',snippet:other}]},{query:'immigration cap',position_question:'What cap did she propose?'},{});
+ assert.match(out.answer,/130,000/);assert.doesNotMatch(out.answer,/screening/);assert.equal(out.sources.length,1);
+});
+
+test('rent definitions retain both quoted percentages and their lower-of condition',()=>{
+ const evidence='Affordable rent is a maximum of 75% of market rent or 30% of household income, if that is lower.';
+ assert.equal(evidenceHelpers.positionPointSupported('Rent would be capped at 75% of market rent or 30% of household income.',evidence,'What rent limit did he propose?'),false);
+ assert.equal(evidenceHelpers.positionPointSupported('In 2026 he proposed rent capped at 75% of market rent or 30% of household income, whichever is lower.',evidence,'What rent limit did he propose?','2026-07-02'),true);
+ assert.equal(evidenceHelpers.positionPointSupported('Rent would be capped at 80% of market rent.',evidence,'What rent limit did he propose?'),false);
+});
+
+test('two points citing the same speech cannot borrow each others excerpts',async()=>{
+ const cap='We propose an immigration cap of 130,000 per year.';
+ const other='We propose stricter immigration screening to exclude security threats.';
+ const h=harness(JSON.stringify({points:[
+  {text:'Example MP proposed an immigration cap of 130,000 per year, with an eight-year waiting period.',citations:[{id:'s1',quote:cap}]},
+  {text:'Example MP proposed stricter immigration screening.',citations:[{id:'s1',quote:other}]}
+ ]}));
+ const rows=[{...payload.sources[0],snippet:cap+' '+other+' An eight-year period was mentioned elsewhere.'}];
+ assert.equal(await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{}),null);
+});
+
+test('discarded points do not leave their excerpts in the surviving source citation',async()=>{
+ const cap='We propose an immigration cap of 130,000 per year.';
+ const other='We propose stricter immigration screening to exclude security threats.';
+ const h=harness(JSON.stringify({points:[
+  {text:'Example MP proposed an immigration cap of 130,000 per year.',citations:[{id:'s1',quote:cap}]},
+  {text:'Example MP proposed stricter immigration screening.',citations:[{id:'s1',quote:other}]}
+ ]}));
+ const out=await h.recover({...payload,sources:[{...payload.sources[0],snippet:cap+' '+other}]},{query:'immigration cap',position_question:'What cap did she propose?'},{});
+ assert.match(out.answer,/130,000/);assert.doesNotMatch(out.answer,/screening/);assert.equal(out.sources[0].snippet,cap);
+});
+
+test('a source month cannot support an unquoted eight-year policy duration',async()=>{
+ const cap="One Nation's policy is to cap immigration at approximately 130,000 per year, numbers we can actually accommodate.";
+ const h=harness(JSON.stringify({points:[{text:'Example MP proposed capping immigration at approximately 130,000 per year, with an eight-year waiting period for citizenship.',citations:[{id:'s1',quote:cap}]}]}));
+ const rows=[{...payload.sources[0],date:'2025-08-26',snippet:cap}];
+ assert.equal(await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{}),null);
+ assert.equal(evidenceHelpers.positionPointSupported('The immigration cap would be 2025 per year.',cap,'What cap did she propose?','2025-08-26'),false);
+});

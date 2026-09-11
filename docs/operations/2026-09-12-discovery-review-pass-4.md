@@ -31,3 +31,15 @@ Reproducible questions: `scripts/ask_discovery_followups.json`. Working evidence
 Scope resolution uses explicit language patterns and will not understand every elliptical conversation. Original metadata or undetected speaker boundaries can still be wrong; a bounded retrieval window cannot establish that a politician has no position. Exact excerpts do not formally prove every paraphrase or preserve every unstated implication. Missing requested details remain an evidence gap rather than an inferred answer.
 
 The remaining two scheduled passes focus on funding-comparison scope and clearer mobile discovery. No additional enrichment model calls or queue changes were made in this pass.
+
+## Production follow-up
+
+PR #138 fixed browser scope and the mobile interaction. The three fresh browser requests passed source-identity and citation checks in 9.4–15.4 seconds. Reviewing their content still found a release defect: the cap summary added an eight-year citizenship condition absent from its supporting excerpt and included a second, unrelated immigration policy. Structural citation success was not accepted as answer verification.
+
+The follow-up rejects numeric details absent from the quoted evidence (including small written-out numbers), requires cap/limit answers to cite a corresponding limit, and preserves a quoted lower-of condition in the summary. A rejected draft can still use the exact original proposal, without another generation attempt. Named-position caches receive a new version; general Ask and funding caches remain unchanged. The suite now contains 394 tests.
+
+These checks remain conservative and do not prove semantic entailment. In particular, matching numbers alone cannot establish every qualitative claim, and broader wording or number spellings can lead to an evidence fallback. Fresh post-fix responses must still be reviewed against the originals.
+
+A second live check exposed a shared-source edge case: two points citing one speech shared an aggregate excerpt list, so a rejected cap point could leave cap evidence attached to another surviving policy point. Position recovery now keeps and validates each point against its own quotations, requires the answer itself to address the requested limit, and removes excerpts belonging to rejected points. General search-summary output retains its existing shape. Two regression cases reproduce the shared-source failure and verify citation cleanup.
+
+The final numeric check also keeps source dates out of policy quantities: August (08) in a source date must not validate an eight-year waiting period. A matching year is allowed only in a temporal phrase such as “in his 2026 bill speech.” A dated production-shaped regression reproduces this leak.

@@ -6,7 +6,7 @@ export interface SummarySource {
   speaker?: string; party?: string; state?: string; date?: string
 }
 export interface SearchSummary {
-  points: { text: string; source_ids: string[] }[]
+  points: { text: string; source_ids: string[]; evidence?: Record<string, string[]> }[]
   sources: (SummarySource & { evidence: string[] })[]
 }
 const clean = (value: unknown, max: number) => typeof value === 'string'
@@ -48,7 +48,7 @@ SEARCH DATA:\n${JSON.stringify({query, filters, sources})}`
 }
 
 /** A citation must resolve to this result set and contain a real supporting excerpt. */
-export function parseSearchSummary(answer: string, sources: SummarySource[]): SearchSummary | null {
+export function parseSearchSummary(answer: string, sources: SummarySource[], perPointEvidence = false): SearchSummary | null {
   try {
     const raw = JSON.parse(answer.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, ''))
     if (!Array.isArray(raw.points) || !raw.points.length || raw.points.length > 6) return null
@@ -84,7 +84,9 @@ export function parseSearchSummary(answer: string, sources: SummarySource[]): Se
       const valid = validatePoint()
       if (!valid) continue
       if (points.reduce((n,p) => n+p.text.split(/\s+/).length,0)+valid.text.split(/\s+/).length > 125) continue
-      points.push({text:valid.text,source_ids:[...valid.evidence.keys()]})
+      points.push({text:valid.text,source_ids:[...valid.evidence.keys()],
+        ...(perPointEvidence ? {evidence:Object.fromEntries([...valid.evidence].map(([id,{quotes}]) => [id,[...quotes]]))} : {}),
+      })
       for (const [id,{quotes}] of valid.evidence) {
         if (!cited.has(id)) cited.set(id,new Set())
         for (const quote of quotes) cited.get(id)!.add(quote)
