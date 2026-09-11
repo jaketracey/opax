@@ -61,3 +61,16 @@ test('mentions of a chamber or another parliament do not become subject filters'
   const out=resolveAskScope({question}).input;assert.equal(out.state,undefined);assert.equal(out.chamber,undefined);
  }
 });
+
+test('hypothetical questions retrieve the named person and ask about recorded statements',()=>{
+ const people=[{name:'Pauline Hanson'},{name:'Anthony Albanese'}];
+ for(const verb of ['would','might']) {
+  const question=`What ${verb} Pauline Hanson say about immigration?`;
+  assert.equal(exports.needsAskPeople({question}),true);
+  const {input}=resolveAskScope({question},people);
+  assert.equal(input.speaker,'Pauline Hanson');assert.equal(input.kind,'speech');
+  assert.equal(exports.askRetrievalQuery(input),'immigration');
+ }
+ assert.match(exports.POSITION_GROUNDING,/Do not roleplay/);
+ assert.equal(resolveAskScope({question:'What would Pauline Hanson and Anthony Albanese say?'},people).input.speaker,undefined);
+});

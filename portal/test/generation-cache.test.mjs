@@ -61,7 +61,7 @@ const routeCode=ts.transpileModule(index.slice(index.indexOf('async function api
 test('Ask checks shared cache before quota, while conversations and explicit refresh bypass it',async()=>{
  let cacheReads=0,quota=0;
  const api=runInNewContext(routeCode+';apiAsk', {URL,Request,Response,AbortSignal,Date,
-  needsAskPeople:()=>false,resolveAskScope:input=>({input}),askCacheInput:input=>input.context?.length?null:'public',
+  rankedMoneyAnswer: async () => null, needsAskPeople:()=>false,resolveAskScope:input=>({input}),askCacheInput:input=>input.context?.length?null:'public',
   cacheRequest:()=>key(),sha256Hex:async()=>'',cacheBypass:(r,u)=>u.searchParams.get('nocache')==='1',
   readGenerationCache:async()=>{cacheReads++;return Response.json({answer:'Cached'})},
   rateLimited:async()=>{quota++;return Response.json({error:'limited'},{status:429})},json:Response.json,withCacheStatus:r=>r});
