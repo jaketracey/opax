@@ -8,11 +8,18 @@
         "any_terms": [
           "GST",
           "building materials",
-          "five-year"
+          "five-year",
+          "11 Feb 2025"
         ],
-        "hits": 2,
+        "hits": 3,
         "min_cited": 1,
-        "source_speaker": "Pauline Hanson"
+        "source_speaker": "Pauline Hanson",
+        "must_not_terms": [
+          "NDIS",
+          "investor problem",
+          "investor activity",
+          "supply problem"
+        ]
       }
     },
     {
@@ -99,7 +106,7 @@
       "expect": {
         "any_terms": [
           "$457,673",
-          "2020–21",
+          "2020\u201321",
           "Labor"
         ],
         "hits": 3,
@@ -206,9 +213,10 @@
         "any_terms": [
           "Commonwealth land",
           "75%",
-          "30%"
+          "30%",
+          "2 July 2026"
         ],
-        "hits": 2,
+        "hits": 3,
         "min_cited": 1,
         "source_speaker": "David Pocock"
       }
@@ -267,8 +275,8 @@
           "$553,355",
           "$457,673",
           "$1,011,028",
-          "2020–21",
-          "2021–22"
+          "2020\u201321",
+          "2021\u201322"
         ],
         "hits": 5,
         "min_cited": 3
