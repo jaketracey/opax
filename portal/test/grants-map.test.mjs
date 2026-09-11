@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {recordsWithLocations,filterRecords,locationCoverage,historicalRecords,publicationYears,publishedThrough} from '../public/grants-research.js';
+import {recordsWithLocations,filterRecords,locationCoverage,historicalRecords,publicationYears,publishedThrough,yearDiscovery,projectToShow} from '../public/grants-research.js';
 const data=JSON.parse(readFileSync(new URL('../public/research/mlci.json',import.meta.url)));
 const sites=JSON.parse(readFileSync(new URL('../public/research/grant-locations.json',import.meta.url)));
 test('map keeps all funding records and only pins verified project venues',()=>{
@@ -71,4 +71,24 @@ test('historical release covers each published year without expanding the progra
  assert.equal(publishedThrough(rows,2019).length,4);
  assert.equal(publishedThrough(rows,2024).length,11);
  assert.ok(rows.every(p=>!data.awards.some(a=>a.ga_id===p.id)));
+});
+
+test('year discoveries name only the awards first published that year and explain later exclusions',()=>{
+ const history=JSON.parse(readFileSync(new URL('../public/research/grants-history.json',import.meta.url)));
+ const rows=historicalRecords(history), finding=yearDiscovery(rows,2019);
+ assert.equal(finding.visible.length,4);
+ assert.deepEqual(finding.firstPublished.map(p=>p.id),['GA34203','GA39469']);
+ assert.equal(finding.later,7);
+ assert.equal(finding.firstPublished.find(p=>p.id==='GA34203').value,11300000);
+ const wa=yearDiscovery(filterRecords(rows,{state:'WA'}),2019);
+ assert.equal(wa.visible.length,1);assert.equal(wa.firstPublished.length,0);assert.equal(wa.later,1);
+ assert.equal(yearDiscovery([...rows,{date:null}],2019).later,7);
+});
+
+test('project selection keeps the requested record only while it matches the current filters',()=>{
+ const rows=historicalRecords(JSON.parse(readFileSync(new URL('../public/research/grants-history.json',import.meta.url))));
+ assert.equal(projectToShow(rows,'GA34203','GA6602').id,'GA34203');
+ assert.equal(projectToShow(publishedThrough(rows,2018),'GA34203','GA6602').id,'GA6602');
+ assert.equal(projectToShow(filterRecords(rows,{state:'QLD'}),null,'GA6602').id,'GA34203');
+ assert.equal(projectToShow([],null,'GA6602'),null);
 });

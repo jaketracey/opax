@@ -1,7 +1,7 @@
 {
   "id": "grant-timeline",
   "title": "The grant for a roof over four aircraft",
-  "path": "/reports/grants-allocation?collection=history",
+  "path": "/reports/grants-allocation?collection=history&project=GA34203",
   "ready": "#allocation-year:not([disabled])",
   "description": "The 2019 Qantas Founders Museum roof award gives the timeline a concrete discovery. The year slider filters original publication dates; amounts are the latest recorded award values and can include later amendments. The map is a selected historical sample and does not establish payments.",
   "initialTarget": "#allocation-detail",
@@ -31,52 +31,46 @@
   "steps": [
     {
       "action": "hold",
-      "caption": "A roof over four aircraft. A grant recorded at $11.3 million.",
-      "holdMs": 3700,
+      "caption": "An $11.3 million award to build a roof over four aircraft.",
+      "holdMs": 3800,
       "frameTarget": "#allocation-detail"
     },
     {
-      "action": "click",
-      "target": ".allocation-detail-close",
-      "caption": "Track when an award first appeared.",
-      "holdMs": 800,
-      "frame": "map-and-timeline"
+      "action": "hover",
+      "target": ".allocation-description",
+      "caption": "Qantas Founders Museum, Longreach. The project is named in the record.",
+      "holdMs": 2600,
+      "frameTarget": "#allocation-detail"
     },
     {
       "action": "range",
       "target": "#allocation-year",
       "value": 2019,
-      "caption": "Published in 2019. Values may include later updates.",
-      "holdMs": 1400,
-      "frame": "map-and-timeline"
+      "caption": "Choose 2019 to see which awards first appeared that year.",
+      "holdMs": 2800,
+      "frameTarget": "#allocation-timeline"
     },
     {
       "action": "click",
-      "target": ".allocation-pin[title^=\"Qantas Founders Museum\"]",
-      "caption": "Longreach, Queensland. Qantas Founders Museum.",
+      "target": "[data-year-project=\"GA34203\"]",
+      "caption": "Open the museum award to see its recipient and original notice.",
       "waitFor": "#allocation-detail.has-project",
-      "holdMs": 2200,
+      "holdMs": 2800,
       "frameTarget": "#allocation-detail"
     },
     {
       "action": "hover",
       "target": ".allocation-source-link",
-      "caption": "Original award linked here. It does not prove payment.",
-      "holdMs": 2600,
-      "frameTarget": "#allocation-detail"
+      "caption": "Latest recorded value. An award is not proof of payment.",
+      "holdMs": 2800,
+      "frameTarget": ".allocation-source-link"
     },
     {
       "action": "hold",
-      "caption": "Find the record behind a project. opax.com.au",
-      "holdMs": 2800,
+      "caption": "See what a grant was for. opax.com.au",
+      "holdMs": 2500,
       "frameTarget": "#allocation-detail"
     }
   ],
-  "setup": [
-    {
-      "action": "click",
-      "target": ".allocation-pin[title^=\"Qantas Founders Museum\"]",
-      "waitFor": "#allocation-detail.has-project"
-    }
-  ]
+  "setup": []
 }
