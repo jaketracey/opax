@@ -983,7 +983,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=evidence-button-20260909");
+    const { mountMoneyMap } = await import("/money-map.js?v=precise-industry-20260912");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1236,7 +1236,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=evidence-button-20260909"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=precise-industry-20260912"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -3066,7 +3066,7 @@ function renderMoneyPanel(ind) {
 
 /** "What did John Howard say about pokies?" → filter retrieval to the speaker. */
 function parseSpeakerIntent(q) {
-  const m = /^what (?:did|has|have|does) ([A-Za-z'\u2019 .-]{4,40}?) (?:say|said|says)(?: about| on)? /i.exec(q.trim());
+  const m = /^what (?:did|has|have|does|would|might) ([A-Za-z'\u2019 .-]{4,40}?) (?:say|said|says)(?: about| on)? /i.exec(q.trim());
   if (!m) return null;
   const who = m[1].trim();
   if (/\b(parliament|house|senate|mps?|senators?|government|labor|liberal|greens|nationals|coalition|minister|ministers|politicians?|members|people|courts?|they)\b/i.test(who)) return null;
@@ -3731,7 +3731,7 @@ async function mountSubjectMap(nodeId) {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=evidence-button-20260909");
+    const { mountMoneyMap } = await import("/money-map.js?v=precise-industry-20260912");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
@@ -8419,7 +8419,7 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=evidence-button-20260909"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=precise-industry-20260912"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
@@ -8606,14 +8606,7 @@ async function runAsk(question) {
   $("ask-followups").replaceChildren();
   $("ask-answer").askEvidence = [];
   const btn = $("ask-submit");
-  // Structured money answer, rendered immediately from local data.
-  const moneyInd = detectMoneyIndustry(question);
   $("ask-money").hidden = true;
-  if (moneyInd) {
-    loadMoneyData().then(() => {
-      if (askAbort === myAbort) renderMoneyPanel(moneyInd);
-    });
-  }
   let speakerFilter = parseSpeakerIntent(question);
   btn.disabled = true;
   btn.classList.add("btn-loading");
@@ -8706,8 +8699,9 @@ async function runAsk(question) {
     const alsoList = cited.length ? retrieved : [];
     $("ask-answer").askEvidence = citedList;
     lastAsk = { question, answer: answerText, sources, kind: askKind(), answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts };
-    prefetchAskFollowups(lastAsk);
+    if (!data.money_ranking) prefetchAskFollowups(lastAsk);
 
+    if (data.money_ranking) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
     hideWombat();
     setStatus($("ask-status"), data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
@@ -8824,7 +8818,7 @@ function renderChips() {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "chip";
-    b.textContent = q.length > 60 ? q.slice(0, 57) + "…" : q;
+    b.textContent = q;
     b.addEventListener("click", () => {
       $("ask-input").value = q;
       replaceRoute(askHash(q));
@@ -11699,7 +11693,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=evidence-button-20260909");
+    const { mountMoneyMap } = await import("/money-map.js?v=precise-industry-20260912");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",

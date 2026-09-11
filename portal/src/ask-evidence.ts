@@ -4,7 +4,11 @@ export type AugmentedContext = {
   fields?: Record<string, { id?: string; text?: string; parent?: string }>
 }
 
-export const ASK_PIPELINE_VERSION = '2026-09-09-footnotes-context-recovery-v8'
+export const ASK_PIPELINE_VERSION = '2026-09-11-positions-ranked-receipts-v16'
+
+/** A deliberately scoped evidence gap is a valid answer, not a missing citation. */
+export const EVIDENCE_GAP_ANSWER = 'This selection does not establish their position on that topic.'
+export const isEvidenceGap = (answer: string): boolean => answer.trim().replace(/[.]$/, '').toLowerCase() === EVIDENCE_GAP_ANSWER.slice(0, -1).toLowerCase()
 
 /** Suppress generic website directions in previews, never in source records. */
 export function stripListingBoilerplate(value: string): string {
@@ -193,4 +197,27 @@ export function unsupportedQuotes(answer: string, evidence: string[]): string[] 
       })
     })
   })
+}
+
+
+/** Position summaries cannot substitute another topic just because it has citations. */
+export const isPositionBody = (body: Record<string, unknown>): boolean =>
+  String((body.prompt as {system?:string})?.system || '').startsWith('You explain Australian politicians’ documented positions from primary records.')
+export function guardPositionAnswer<T extends {answer?:string; retrieval_results?:{resources?:Record<string,any>}; augmented_context?:AugmentedContext}>(raw: T, body: Record<string,unknown>): T {
+  if (!isPositionBody(body)) return raw
+  const topic = String(body.query || '').toLowerCase()
+  const terms = [...new Set((topic.match(/[\p{L}\p{N}]+/gu) || []).filter(t => t.length > 2 && !EXCERPT_STOP.has(t)))]
+  if (!terms.length) return raw
+  const texts: string[] = []
+  for (const resource of Object.values(raw.retrieval_results?.resources || {})) {
+    for (const field of Object.values(resource.fields || {}) as {paragraphs?:Record<string,{text?:string}>}[]) {
+      for (const [id,paragraph] of Object.entries(field.paragraphs || {})) if (originalContext(id) && paragraph.text) texts.push(paragraph.text)
+    }
+  }
+  for (const [id,block] of Object.entries(raw.augmented_context?.paragraphs || {})) if (originalContext(id) && block.text) texts.push(block.text)
+  const words = new Set(texts.join(' ').toLowerCase().match(/[\p{L}\p{N}]+/gu) || [])
+  const synonyms: Record<string,string[]> = {immigration:['migration'],migration:['immigration'],housing:['homes','rental'],affordability:['affordable'],pokies:['gambling','poker']}
+  const matches = terms.filter(t => [t,...(synonyms[t] || [])].some(w => words.has(w))).length
+  if (matches >= Math.ceil(terms.length / 2)) return raw
+  return {...raw,answer:EVIDENCE_GAP_ANSWER,citations:{},citation_footnote_to_context:{},footnote_to_context:{},retrieval_results:{resources:{}},augmented_context:{}}
 }

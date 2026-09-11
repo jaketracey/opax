@@ -34,7 +34,7 @@ function harness(responses) {
     ...helpers, Response, Request, URL, Date, AbortController, AbortSignal, TransformStream, TextEncoder,
     REFUSAL_PREFIXES: ['not enough data'], ASK_SYNC_TIMEOUT_MS: 1000, ASK_STALL_MS: 1000, ASK_RETRY_BUDGET_MS: 1000,
     SSE_HEADERS: { 'content-type': 'text/event-stream' },
-    needsAskPeople: () => false, resolveAskScope: input => ({ input, scope: {} }),
+    rankedMoneyAnswer: async () => null, needsAskPeople: () => false, resolveAskScope: input => ({ input, scope: {} }),
     askCacheInput: () => null, cacheBypass: () => false, rateLimited: async () => null,
     retrieveAskRecords: async () => ({ records: [], coverage: '', total: 0 }),
     buildAskBody: input => ({ query: input.question, citations: 'llm_footnotes', prompt: { user: 'Answer {question} from {context}. ' + helpers.FOOTNOTE_INSTRUCTIONS } }),
@@ -92,3 +92,10 @@ for (const stream of [false, true]) {
     assert.equal(result.answer_status, undefined);
   });
 }
+
+for (const stream of [false,true]) test(`${stream?'streamed':'synchronous'}: an explicit evidence gap does not force an invented cited answer`,async()=>{
+ const h=harness([draft(helpers.EVIDENCE_GAP_ANSWER,false)]);
+ const result=await h.run(stream);
+ assert.equal(h.calls.length,1);assert.equal(result.answer,helpers.EVIDENCE_GAP_ANSWER);
+ assert.equal(Object.keys(result.citations).length,0);assert.equal(result.answer_status,undefined);
+});

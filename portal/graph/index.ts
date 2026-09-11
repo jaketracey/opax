@@ -1028,7 +1028,7 @@ export async function mountMoneyMap(
     const visibleNodes = windowNodes.filter((n) => {
       if (n.kind === 'grantor') return grantsOn && activeDonors.has(n.id)
       if (n.group === 'parties') return windowEdges.length > 0 && (researchFilters.party ? n.id === researchFilters.party : activeDonors.has(n.id))
-      if (activeGroup !== null && n.group !== activeGroup) return false
+      if (activeGroup !== null && n.group !== activeGroup && n.industry !== activeGroup) return false
       return activeDonors.has(n.id)
     })
     const visibleIds = new Set(visibleNodes.map((n) => n.id))
@@ -1132,7 +1132,7 @@ export async function mountMoneyMap(
   // --- Legend / filter -------------------------------------------------
   const chips = new Map<string, HTMLButtonElement>()
   const applyIsolate = (group: string | null) => {
-    activeGroup = group !== null && group !== 'parties' && group !== 'public money' && graph.groupStyles.has(group) ? group : null
+    activeGroup = group !== null && group !== 'parties' && group !== 'public money' && (graph.groupStyles.has(group) || raw.nodes.some(n => n.kind === 'donor' && n.industry === group)) ? group : null
     for (const [g, c] of chips) {
       c.setAttribute('aria-pressed', String(g === activeGroup))
       if (activeGroup !== null && g !== activeGroup) c.setAttribute('data-dimmed', '')

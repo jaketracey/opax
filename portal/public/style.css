@@ -5169,3 +5169,6 @@ h3, #panel-methods h3, #panel-expenses h3 {
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E");
   background-repeat:no-repeat; background-position:right .75rem center;
 }
+
+/* Citation buttons need a real box for keyboard focus and touch hit testing. */
+#panel-ask .ask-citation, #panel-chat .ask-citation { line-height: 1; }

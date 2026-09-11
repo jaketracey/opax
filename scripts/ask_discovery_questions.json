@@ -1,0 +1,134 @@
+{
+  "_doc": "Focused discovery review. Run with scripts/ask_regression.py --bench scripts/ask_discovery_questions.json. Structural success is not factual verification: review original cited speeches, dates, attribution and receipt selection. Exact money figures are snapshot assertions for the 7 September 2026 graph, not complete donation totals.",
+  "questions": [
+    {
+      "id": "hanson-housing",
+      "q": "What would Pauline Hanson say about housing affordability?",
+      "expect": {
+        "any_terms": [
+          "GST",
+          "building materials",
+          "five-year"
+        ],
+        "hits": 2,
+        "min_cited": 1,
+        "source_speaker": "Pauline Hanson"
+      }
+    },
+    {
+      "id": "hanson-immigration",
+      "q": "What would Pauline Hanson say about immigration?",
+      "expect": {
+        "any_terms": [
+          "130,000",
+          "immigration"
+        ],
+        "hits": 2,
+        "min_cited": 1,
+        "source_speaker": "Pauline Hanson"
+      }
+    },
+    {
+      "id": "gambling-rank",
+      "q": "Who takes the most money from the gambling lobby?",
+      "expect": {
+        "any_terms": [
+          "$10,763,834",
+          "Labor",
+          "selection"
+        ],
+        "hits": 3,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "fossil-fuel-rank",
+      "q": "Who receives the most funding from fossil fuel donors?",
+      "expect": {
+        "any_terms": [
+          "$9,013,973",
+          "Liberal",
+          "selection"
+        ],
+        "hits": 3,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "labor-funders",
+      "q": "Who donates the most to Labor?",
+      "expect": {
+        "any_terms": [
+          "disclosed",
+          "receipts",
+          "not a donations-only ranking"
+        ],
+        "hits": 3,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "one-nation-funders",
+      "q": "Who donates the most to One Nation?",
+      "expect": {
+        "any_terms": [
+          "disclosed",
+          "receipts",
+          "not a donations-only ranking"
+        ],
+        "hits": 3,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "largest-connection",
+      "q": "Who donates the most to who?",
+      "expect": {
+        "any_terms": [
+          "Mineralogy",
+          "United Australia Party",
+          "$128,428,269"
+        ],
+        "hits": 3,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "gambling-one-year",
+      "q": "Who takes the most money from the gambling lobby in 2020?",
+      "expect": {
+        "any_terms": [
+          "$457,673",
+          "2020\u201321",
+          "Labor"
+        ],
+        "hits": 3,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "unsupported-position",
+      "q": "What would Pauline Hanson say about quantum zoning on Mars?",
+      "expect": {
+        "thin_ok": true,
+        "must_not_terms": [
+          "NDIS",
+          "income splitting",
+          "royal commission"
+        ]
+      }
+    },
+    {
+      "id": "albanese-housing-control",
+      "q": "What would Anthony Albanese say about housing affordability?",
+      "expect": {
+        "any_terms": [
+          "housing"
+        ],
+        "hits": 1,
+        "min_cited": 1,
+        "source_speaker": "Anthony Albanese"
+      }
+    }
+  ]
+}
