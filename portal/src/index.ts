@@ -1,4 +1,4 @@
-import { positionEvidence, positionProposalQuote, normalizePositionDraft } from './position-evidence'
+import { positionEvidence, positionProposalQuote, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
 /**
@@ -939,7 +939,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
   const topic = str(input.topic)
   return JSON.stringify({
     epoch,
-    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v1' : ''),
+    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v2' : ''),
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
@@ -1191,6 +1191,7 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
       point.source_ids.every(id => {
         const source = summary.sources.find(source => source.id === id)
         return source && positionEvidence(source.evidence.join(' '), String(body.query || '')) &&
+          positionPointSupported(point.text, source.evidence.join(' '), String(body.position_question || ''), source.date) &&
           source.evidence.every(quote => folded(source.snippet).includes(folded(quote)))
       })).slice(0,2)
     if (!summary.points.length) return null

@@ -54,6 +54,22 @@ export function positionProposalQuote(text: string, query: string): string {
   return quote
 }
 
+/** A number elsewhere in a long speech cannot support a different quoted claim.
+ * This conservative check is not semantic entailment; rejected drafts can still
+ * use the verified proposal quotation without another model call. */
+export function positionPointSupported(text: string, evidence: string, question: string, date = ''): boolean {
+  const words = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen']
+  const numbers = (value: string) => value.toLowerCase()
+    .replace(new RegExp(`\\b(${words.join('|')})\\b`, 'g'), word => String(words.indexOf(word)))
+    .match(/\d+(?:[,.]\d+)*|\b(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion)\b/g)
+    ?.map(number => /^\d/.test(number) ? String(Number(number.replaceAll(',', ''))) : number) || []
+  const allowed = new Set(numbers(evidence + ' ' + date))
+  if (numbers(text).some(number => !allowed.has(number))) return false
+  if (/\b(?:cap|limit)\b/i.test(question) && !/\b(?:cap(?:ped|ping)?|limit(?:ed)?|maximum|up to)\b/i.test(evidence)) return false
+  if (/\b(?:whichever|if that is|if this is)\s+lower\b/i.test(evidence) && !/\blower\b/i.test(text)) return false
+  return true
+}
+
 /** Repair a missing root brace and source whitespace only, never wording or IDs.
  * Imported HTML sometimes joins link text to its next word ("GSTbeing").
  * Restore the exact original excerpt before the normal citation validator runs.
