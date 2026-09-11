@@ -55,7 +55,9 @@ for (const file of files) {
   const doc = JSON.parse(readFileSync(join(billsDir, file), "utf8"));
   const where = doc.key;
   assert.equal(`${doc.key}.json`, file, `${file} is named for its key`);
-  assert.deepEqual(Object.keys(doc).sort(), [...BILL_KEYS].sort(), `${where} keys`);
+  // Exposure drafts (docs/BILLS-CONTRACT.md) carry three keys a registry bill never has.
+  const DRAFT_ONLY = doc.status === "exposure_draft" ? ["consultation", "related", "became"] : [];
+  assert.deepEqual(Object.keys(doc).sort(), [...BILL_KEYS, ...DRAFT_ONLY].sort(), `${where} keys`);
 
   const row = indexByKey.get(doc.key);
   assert.ok(row, `${where} is listed in index.json`);

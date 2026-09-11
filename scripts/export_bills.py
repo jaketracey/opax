@@ -69,6 +69,12 @@ LICENCE_APH = "CC BY-NC-ND 4.0 (Parliament of Australia)"
 LICENCE_FRL = "CC BY 4.0 (Federal Register of Legislation)"
 DATASET_KIND = {"billhome": "billhome", "ems": "em", "billsdgs": "digest", "bills": "text"}
 
+# Exposure drafts live in the repo, not the database: a department releases a
+# draft for consultation before ParlInfo has a number for it, so there is no
+# billhome row to key on. docs/BILLS-EXPOSURE.md "Exposure drafts".
+DRAFTS_PATH = Path(__file__).resolve().parent / "bills_registry" / "exposure_drafts.json"
+DRAFT_STATUS = "exposure_draft"
+
 HOUSE_CODE = {
     "house of representatives": "representatives",
     "representatives": "representatives",
@@ -850,28 +856,117 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
             "match_rule": "docs/SCOPE-BILLS.md s4 title rule" if (legacy or not links) else "bill_links",
             "parliament_floor": PARLIAMENT_STARTS[0],
         },
-        "bills": sorted(
-            [
-                {
-                    "key": d["key"], "title": d["title"], "short_title": d["short_title"],
-                    "jurisdiction": d["jurisdiction"], "parliament": d["parliament"],
-                    "introduced": d["introduced"], "originating_house": d["originating_house"],
-                    "status": d["status"], "status_as_of": d["status_as_of"],
-                    "sponsor": d["sponsor"], "sponsor_party": d["sponsor_party"],
-                    "portfolio": d["portfolio"],
-                    "has_summary": d["summary"] is not None,
-                    "summary_version": d["summary"]["version"] if d["summary"] else None,
-                    "divisions": len(d["divisions"]),
-                    "speeches": len(d["speeches"]),
-                    "acts": len(d["acts"]),
-                }
-                for d in docs
-            ],
-            key=lambda b: (b["introduced"] or "", b["key"]),
-            reverse=True,
-        ),
+        "bills": sorted([index_row(d) for d in docs], key=index_sort_key, reverse=True),
     }
+    drafts = load_drafts(DRAFTS_PATH)
+    if drafts:
+        docs, index = merge_drafts(docs, index, drafts)
     return docs, index
+
+
+def index_row(d: dict) -> dict:
+    return {
+        "key": d["key"], "title": d["title"], "short_title": d["short_title"],
+        "jurisdiction": d["jurisdiction"], "parliament": d["parliament"],
+        "introduced": d["introduced"], "originating_house": d["originating_house"],
+        "status": d["status"], "status_as_of": d["status_as_of"],
+        "sponsor": d["sponsor"], "sponsor_party": d["sponsor_party"],
+        "portfolio": d["portfolio"],
+        "has_summary": d["summary"] is not None,
+        "summary_version": d["summary"]["version"] if d["summary"] else None,
+        "divisions": len(d["divisions"]),
+        "speeches": len(d["speeches"]),
+        "acts": len(d["acts"]),
+    }
+
+
+def index_sort_key(b: dict) -> tuple:
+    return (b["introduced"] or "", b["key"])
+
+
+# ---------------------------------------------------------------------------
+# Exposure drafts (repo file, no database)
+# ---------------------------------------------------------------------------
+
+
+def load_drafts(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text())
+    drafts = data.get("drafts") if isinstance(data, dict) else data
+    return [d for d in (drafts or []) if d.get("key") and d.get("title")]
+
+
+def draft_doc(d: dict) -> dict:
+    """A draft in the projection's own shape. `introduced` carries the release
+    date so the index sorts it with the bills; status says what it really is."""
+    released = d.get("released")
+    consultation = d.get("consultation") or {}
+    key_dates = [{
+        "stage": "Exposure draft released", "date": released, "house": None,
+        "url": consultation.get("url") or next((s.get("url") for s in d.get("sources") or []), None),
+    }] if released else []
+    if consultation.get("closes"):
+        key_dates.append({"stage": "Consultation closes", "date": consultation["closes"], "house": None,
+                          "url": consultation.get("url")})
+    return {
+        "key": d["key"],
+        "title": d["title"],
+        "short_title": d.get("short_title") or d["title"],
+        "aliases": d.get("aliases") or [],
+        "jurisdiction": d.get("jurisdiction") or "federal",
+        "parliament": d.get("parliament"),
+        "introduced": released,
+        "originating_house": None,
+        "sponsor": d.get("sponsor"),
+        "sponsor_party": d.get("sponsor_party"),
+        "sponsor_person_id": d.get("sponsor_person_id"),
+        "portfolio": d.get("portfolio"),
+        "status": DRAFT_STATUS,
+        "status_as_of": d.get("status_as_of") or released,
+        "key_dates": key_dates,
+        "sources": d.get("sources") or [],
+        "summary": d.get("summary"),
+        "divisions": [],
+        "speeches": [],
+        "acts": [],
+        "consultation": consultation or None,
+        "related": d.get("related") or [],
+        "became": d.get("became"),
+    }
+
+
+def merge_drafts(docs: list[dict], index: dict, drafts: list[dict]) -> tuple[list[dict], dict]:
+    """Replace every draft in the projection with the current drafts file.
+    Registry docs are untouched; a draft no longer in the file disappears."""
+    draft_keys = {d["key"] for d in drafts}
+    kept = [d for d in docs if d.get("status") != DRAFT_STATUS and d["key"] not in draft_keys]
+    draft_docs = [draft_doc(d) for d in drafts]
+    docs = kept + draft_docs
+    rows = [b for b in index["bills"] if b.get("status") != DRAFT_STATUS and b["key"] not in draft_keys]
+    rows += [index_row(d) for d in draft_docs]
+    index = {**index, "count": len(rows), "bills": sorted(rows, key=index_sort_key, reverse=True)}
+    index["meta"] = {**index.get("meta", {}), "exposure_drafts": len(draft_docs)}
+    return docs, index
+
+
+def merge_drafts_into_dir(out: Path, drafts: list[dict]) -> None:
+    """Merge drafts into an existing projection without reading the database:
+    the committed portal/public/bills is what is deployed, and drafts change
+    more often than the registry is re-exported."""
+    index_path = out / "index.json"
+    index = json.loads(index_path.read_text())
+    stale = [b["key"] for b in index["bills"] if b.get("status") == DRAFT_STATUS]
+    for key in stale:
+        path = out / f"{key}.json"
+        if path.exists():
+            path.unlink()
+    _, index = merge_drafts([], index, drafts)
+    write_index(index_path, index)
+    for d in drafts:
+        doc = draft_doc(d)
+        (out / f"{doc['key']}.json").write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n")
+    log(f"merged {len(drafts)} exposure draft(s) into {out} (removed {len(stale)} stale)")
 
 
 def sample_keys(index: dict, n: int) -> set[str]:
@@ -1019,10 +1114,16 @@ def main() -> int:
     ap.add_argument("--fill-briefs", metavar="DIR",
                     help="second phase: attach knowledge-box speech briefs to an existing export")
     ap.add_argument("--brief-cache", default=str(DEFAULT_BRIEF_CACHE))
+    ap.add_argument("--merge-drafts", metavar="DIR",
+                    help="merge scripts/bills_registry/exposure_drafts.json into an existing export (no database)")
+    ap.add_argument("--drafts", default=str(DRAFTS_PATH), help="exposure drafts file")
     args = ap.parse_args()
 
     if args.fill_briefs:
         fill_briefs(Path(args.fill_briefs), Path(args.brief_cache))
+        return 0
+    if args.merge_drafts:
+        merge_drafts_into_dir(Path(args.merge_drafts), load_drafts(Path(args.drafts)))
         return 0
 
     db = connect(args.db)

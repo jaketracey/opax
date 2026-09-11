@@ -1,6 +1,6 @@
 {
  "generated_at": "2026-09-08T04:38:25+00:00",
- "count": 2974,
+ "count": 2975,
  "meta": {
   "mode": "registry",
   "party_basis": "speech-record",
@@ -12,9 +12,11 @@
   },
   "speech_cap": 24,
   "match_rule": "bill_links",
-  "parliament_floor": "1998-11-10"
+  "parliament_floor": "1998-11-10",
+  "exposure_drafts": 1
  },
  "bills": [
+  {"key":"au-federal-ed-online-safety-digital-duty-of-care-2026","title":"Online Safety Amendment (Digital Duty of Care) Bill 2026","short_title":"Digital Duty of Care Bill 2026 (exposure draft)","jurisdiction":"federal","parliament":48,"introduced":"2026-09-08","originating_house":null,"status":"exposure_draft","status_as_of":"2026-09-08","sponsor":null,"sponsor_party":null,"portfolio":"Communications","has_summary":true,"summary_version":1,"divisions":0,"speeches":0,"acts":0},
   {"key":"au-federal-s1514","title":"Diplomatic Appointments (Selection Process) Bill 2026","short_title":"Diplomatic Appointments (Selection Process) Bill 2026","jurisdiction":"federal","parliament":48,"introduced":"2026-09-07","originating_house":"senate","status":"before_parliament","status_as_of":"2026-09-07","sponsor":"PAYMAN, Sen Fatima","sponsor_party":"Australia&#39;s Voice","portfolio":null,"has_summary":true,"summary_version":1,"divisions":0,"speeches":0,"acts":0},
   {"key":"au-federal-s1512","title":"Tax Laws Amendment (Incentivising Food Donations to Charitable Organisations) Bill 2026","short_title":"Tax Laws Amendment (Incentivising Food Donations to Charitable Organisations) Bill 2026","jurisdiction":"federal","parliament":48,"introduced":"2026-09-07","originating_house":"senate","status":"before_parliament","status_as_of":"2026-09-07","sponsor":"SMITH, Sen Dean","sponsor_party":"Liberal Party of Australia","portfolio":null,"has_summary":true,"summary_version":1,"divisions":0,"speeches":0,"acts":0},
   {"key":"au-federal-r7537","title":"AI Kill Switch and Data Centre Control Bill 2026","short_title":"AI Kill Switch and Data Centre Control Bill 2026","jurisdiction":"federal","parliament":48,"introduced":"2026-09-07","originating_house":"representatives","status":"before_parliament","status_as_of":"2026-09-07","sponsor":"GEE, Andrew, MP","sponsor_party":"Independent Members","portfolio":null,"has_summary":true,"summary_version":1,"divisions":0,"speeches":0,"acts":0},

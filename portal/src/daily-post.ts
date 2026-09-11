@@ -229,7 +229,7 @@ function daysBetween(a: string, b: string): number {
 async function billPost(date: string, sources: DailyPostSources, exclude: string[]): Promise<DailyPost | null> {
   const index = await sources.asset('/bills/index.json') as { bills?: BillIndexItem[] } | null
   const bills = (index?.bills ?? []).filter(b => b.has_summary && b.key && b.title && (
-    b.status === 'before_parliament' ||
+    b.status === 'before_parliament' || b.status === 'exposure_draft' ||
     (b.status === 'passed' && b.status_as_of && daysBetween(b.status_as_of, date) <= 365)
   )).sort((a, b) => a.key.localeCompare(b.key))
   const bill = seededPick(bills, `bill:${date}`, b => `bill:${b.key}`, exclude)
@@ -239,7 +239,9 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
   const sponsor = prettySponsor(bill.sponsor)
   const party = prettyParty(bill.sponsor_party)
   const by = sponsor ? ` by ${sponsor}${party ? ` (${party})` : ''}` : (bill.portfolio ? ` (${bill.portfolio} portfolio)` : '')
-  const status = bill.status === 'passed'
+  const status = bill.status === 'exposure_draft'
+    ? `Exposure draft released ${formatDate(bill.introduced)}${by}. Open for consultation, not yet introduced.`
+    : bill.status === 'passed'
     ? `Passed ${formatDate(bill.status_as_of)}. Introduced ${formatDate(bill.introduced)}${by}.`
     : `Introduced ${formatDate(bill.introduced)}${by}. Still before parliament.`
   const url = `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`

@@ -5,6 +5,7 @@ Four agents build this in parallel, each in its own worktree and branch. This fi
 ## Keys and identity
 
 - `bill_key`: `au-federal-r<billhome id>` for ParlInfo bills (e.g. `au-federal-r7531`); `au-federal-alrc-<bill_id>` only for ALRC-only rows with no billhome match. States later: `au-nsw-<id>` etc.
+- Exposure drafts (a bill released by a department for consultation before ParlInfo numbers it): `au-federal-ed-<slug>-<year>`, status `exposure_draft`, kept in `scripts/bills_registry/exposure_drafts.json` and merged by the exporter; source kinds `exposure_draft` and `consultation`; summary basis `text`. The doc carries `consultation`, `related` and `became` (the ParlInfo key once introduced). See `BILLS-EXPOSURE.md` "Exposure drafts".
 - KB resource slug for a bill: `bill-<bill_key>`. Labels: `kind/bill`, `state/federal`, `decade/<2010s|2020s>`, `parliament/<47>`, `status/<status>`, `sponsor_party/<party>` when known.
 
 ## Tables (SQLite on desktop; the registry agent owns creation; the others only read them or write to the table named as theirs)

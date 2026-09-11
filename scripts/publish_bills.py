@@ -70,6 +70,7 @@ STATUS_WORDS = {
     "rejected": "Rejected",
     "withdrawn": "Withdrawn",
     "lapsed": "Lapsed",
+    "exposure_draft": "Exposure draft",
 }
 SOURCE_NAMES = {
     "billhome": "Bill home page",
@@ -79,6 +80,8 @@ SOURCE_NAMES = {
     "digest": "Bills Digest",
     "text": "Bill text",
     "frl_act": "Act on the Federal Register of Legislation",
+    "exposure_draft": "Exposure draft",
+    "consultation": "Consultation page",
 }
 
 
@@ -114,7 +117,13 @@ def facts_block(doc: dict) -> list[str]:
     status = STATUS_WORDS.get(doc.get("status") or "", doc.get("status") or "")
     where = HOUSE_NAMES.get(doc.get("originating_house") or "", doc.get("originating_house") or "")
     opening = []
-    if doc.get("introduced"):
+    draft = doc.get("status") == "exposure_draft"
+    if draft and doc.get("introduced"):
+        consult = doc.get("consultation") or {}
+        closes = f", consultation closing {consult['closes']}" if consult.get("closes") else ""
+        opening.append(f"Exposure draft released for public consultation on {doc['introduced']}{closes}; "
+                       "not yet introduced to Parliament")
+    elif doc.get("introduced"):
         opening.append(f"Introduced{f' in {where}' if where else ''} on {doc['introduced']}")
     if doc.get("sponsor"):
         party = f" ({doc['sponsor_party']})" if doc.get("sponsor_party") else ""
@@ -143,6 +152,11 @@ def facts_block(doc: dict) -> list[str]:
         parts.append(f"{len(speeches)} speech{'es' if len(speeches) != 1 else ''} in the record name this bill.{who}")
     for act in doc.get("acts") or []:
         parts.append(f"Became the {act['title']}, assented {act.get('assent_date') or 'date unrecorded'}.")
+    for rel in doc.get("related") or []:
+        if rel.get("title"):
+            parts.append(f"{rel.get('relation', 'related').capitalize()}: {rel['title']} (bill {rel.get('key')}).")
+    if doc.get("became"):
+        parts.append(f"Introduced to Parliament as bill {doc['became']}.")
 
     sources = doc.get("sources") or []
     if sources:
@@ -217,6 +231,9 @@ def metadata_for(doc: dict) -> dict:
         "speech_slugs": [s["slug"] for s in doc.get("speeches") or []],
         "speech_count": len(doc.get("speeches") or []),
         "acts": doc.get("acts") or [],
+        "consultation": doc.get("consultation"),
+        "related": doc.get("related") or [],
+        "became": doc.get("became"),
         "page": f"/bill/{doc['key']}",
     }
 

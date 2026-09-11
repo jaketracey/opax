@@ -15,10 +15,12 @@ const bills = { bills: [
   { key: 'au-federal-r7537', title: 'AI Kill Switch and Data Centre Control Bill 2026', introduced: '2026-09-07', status: 'before_parliament', sponsor: 'GEE, Andrew, MP', sponsor_party: 'Independent Members', has_summary: true },
   { key: 'au-federal-r1000', title: 'Old Lapsed Bill 2019', introduced: '2019-02-01', status: 'lapsed', has_summary: true },
   { key: 'au-federal-r7400', title: 'Recently Passed Bill 2026', introduced: '2026-03-01', status: 'passed', status_as_of: '2026-08-20', sponsor: '', portfolio: 'Treasury', has_summary: true },
+  { key: 'au-federal-ed-draft-2026', title: 'Draft Bill 2026', introduced: '2026-09-08', status: 'exposure_draft', status_as_of: '2026-09-08', sponsor: null, portfolio: 'Communications', has_summary: true },
 ] };
 const billFiles = {
   'au-federal-r7537': { summary: { sentences: ['This bill would require providers of covered advanced AI systems to maintain ways to restrict, suspend or shut them down.', 'It would introduce incident reporting and ministerial emergency directions when serious harm is threatened.', 'A third sentence that should not be needed.'] } },
   'au-federal-r7400': { summary: { sentences: ['It changes a tax thing.'] } },
+  'au-federal-ed-draft-2026': { summary: { sentences: ['It would impose a duty of care.'] } },
 };
 const reports = { reports: [{ slug: 'grants-allocation', title: 'Where community funding goes' }, { slug: 'housing', title: 'Housing' }] };
 const reportFiles = {
@@ -93,7 +95,7 @@ test('politician post names the member, seat, count and top topics', async () =>
 });
 
 test('bill post uses the summary sentences and a readable sponsor', async () => {
-  const post = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400']), 'bill');
+  const post = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
   assert.equal(post.kind, 'bill');
   assert.equal(post.subject, 'bill:au-federal-r7537');
   assert.ok(post.text.startsWith('AI Kill Switch and Data Centre Control Bill 2026\n\nIntroduced 7 Sep 2026 by Andrew Gee (Independent). Still before parliament.'));
@@ -101,14 +103,22 @@ test('bill post uses the summary sentences and a readable sponsor', async () => 
   assert.ok(!post.text.includes('A third sentence'));
   assert.ok(post.text.endsWith('https://opax.com.au/bill/au-federal-r7537'));
   assert.ok(xLength(post.text) <= X_LIMIT);
-  const passed = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7537']), 'bill');
+  const passed = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7537', 'bill:au-federal-ed-draft-2026']), 'bill');
   assert.equal(passed.subject, 'bill:au-federal-r7400', 'lapsed bills are never featured; a recent passed bill is');
   assert.ok(passed.text.includes('Passed 20 Aug 2026. Introduced 1 Mar 2026 (Treasury portfolio).'));
 });
 
+test('an exposure draft is a bill candidate and says it is a draft', async () => {
+  const post = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-r7537']), 'bill');
+  assert.equal(post.subject, 'bill:au-federal-ed-draft-2026');
+  assert.ok(post.text.includes('Exposure draft released 8 Sep 2026 (Communications portfolio). Open for consultation, not yet introduced.'), post.text);
+  assert.ok(post.text.includes('It would impose a duty of care.'));
+  assert.ok(post.text.endsWith('https://opax.com.au/bill/au-federal-ed-draft-2026'));
+});
+
 test('a long first summary sentence is clipped to fit rather than dropped', async () => {
   const long = { ...billFiles, 'au-federal-r7537': { summary: { sentences: ['This bill changes the Customs Tariff Act 1995 to remove customs duties on goods brought in under the Geelong Treaty, a nuclear submarine partnership agreement with the United Kingdom signed on 26 July 2025, and it goes on and on well past the character budget.'] } } };
-  const src = { ...sources(['bill:au-federal-r7400']), async asset(path) { const m = path.match(/^\/bills\/(.+)\.json$/); return m && m[1] !== 'index' ? long[decodeURIComponent(m[1])] : sources().asset(path); } };
+  const src = { ...sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), async asset(path) { const m = path.match(/^\/bills\/(.+)\.json$/); return m && m[1] !== 'index' ? long[decodeURIComponent(m[1])] : sources().asset(path); } };
   const post = await composeDailyPost('2026-09-10', src, 'bill');
   assert.ok(post.text.includes('This bill changes the Customs Tariff Act 1995'), post.text);
   assert.ok(post.text.includes('…'));

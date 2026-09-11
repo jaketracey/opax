@@ -3091,6 +3091,7 @@ const BILL_STATUS: Record<string, string> = {
   rejected: 'Rejected',
   withdrawn: 'Withdrawn',
   lapsed: 'Lapsed',
+  exposure_draft: 'Exposure draft',
 }
 
 async function billMeta(key: string, env: Env): Promise<PageMeta> {
@@ -3120,7 +3121,9 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
   // "Passed. Introduced in the House of Representatives on 18 October 2006."
   const opening = [
     status ? `${status}.` : '',
-    b.introduced ? `Introduced${house ? ` in the ${house}` : ''} on ${longDate(b.introduced)}.` : '',
+    b.introduced ? (b.status === 'exposure_draft'
+      ? `Released for public consultation on ${longDate(b.introduced)}, not yet introduced to Parliament.`
+      : `Introduced${house ? ` in the ${house}` : ''} on ${longDate(b.introduced)}.`) : '',
   ].filter(Boolean).join(' ')
   const counts: string[] = []
   if (b.divisions) counts.push(`${num(b.divisions)} division${b.divisions === 1 ? '' : 's'}`)

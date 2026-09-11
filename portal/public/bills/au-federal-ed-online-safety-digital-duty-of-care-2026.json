@@ -1,0 +1,88 @@
+{
+ "key": "au-federal-ed-online-safety-digital-duty-of-care-2026",
+ "title": "Online Safety Amendment (Digital Duty of Care) Bill 2026",
+ "short_title": "Digital Duty of Care Bill 2026 (exposure draft)",
+ "aliases": [
+  "Digital Duty of Care Bill",
+  "Online Safety Amendment (Digital Duty of Care) Bill 2026 exposure draft"
+ ],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-09-08",
+ "originating_house": null,
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "exposure_draft",
+ "status_as_of": "2026-09-08",
+ "key_dates": [
+  {
+   "stage": "Exposure draft released",
+   "date": "2026-09-08",
+   "house": null,
+   "url": "https://www.infrastructure.gov.au/department/media/publications/exposure-draft-online-safety-amendment-digital-duty-care-bill-2026"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "exposure_draft",
+   "url": "https://www.infrastructure.gov.au/sites/default/files/documents/exposure-draft-online-safety-amendment-digital-duty-of-care-bill-2026-september2026.pdf",
+   "document_date": "2026-09-08",
+   "licence": "CC BY 4.0 (Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts)"
+  },
+  {
+   "kind": "consultation",
+   "url": "https://www.infrastructure.gov.au/department/media/publications/exposure-draft-online-safety-amendment-digital-duty-care-bill-2026",
+   "document_date": "2026-09-08",
+   "licence": "CC BY 4.0 (Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts)"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "text",
+  "attribution": "Written by a model from the exposure draft text; not the record",
+  "describes_version": "as released for consultation on 8 September 2026",
+  "as_of": "2026-09-08",
+  "sentences": [
+   "This exposure draft would rewrite Part 2 of the Online Safety Act 2021 to impose a digital duty of care: anyone who provides or controls an online service would have to ensure, so far as is reasonably practicable, a safe online environment for people in Australia and for children in particular.",
+   "Providers would have to manage design features such as recommender systems, endless feeds and engagement feedback, run written risk assessments at least once a year and act on them, with the eSafety Commissioner able to issue formal warnings and remedial directions and a civil penalty of up to 60,000 penalty units for a breach.",
+   "It would also let the Commissioner order app stores and search engines to remove apps and links used to make fake nude material within 24 hours, open a data access scheme for approved researchers, and repeal the industry codes and standards of the online content scheme, with the duty of care commencing 12 months after assent."
+  ],
+  "changes": [
+   "Replaces the objects of the Online Safety Act 2021 with a duty on persons responsible for online services to ensure a safe online environment (Schedule 2, item 1).",
+   "Defines online services broadly: social media, messaging, designated internet services, hosting, search, app stores, equipment suppliers and services that generate and share AI material; the Minister may exempt low-risk or little-used services (section 25A).",
+   "Lists seriously harmful material and conduct (section 25C) and material harmful to children (section 25D), and names recommender, logged-in, endless-feed, feedback and time-limited features as having negative behavioural impacts, which social media services must not operate for Australians under 16 (sections 25B, 25F and 25G).",
+   "Requires written risk assessments at least annually and before any change that could add risk, kept for six years and produced to the Commissioner within 30 days; the Minister may require user empowerment tools (sections 26 and 26A). Lawful private communications between consenting adults are excepted.",
+   "Sets civil penalties of 60,000 penalty units for breaching the duty or a remedial direction, and 6,000 for failing to run required complaint and dispute processes (sections 26B, 26D and 26F).",
+   "Adds a 24-hour removal notice for apps and websites predominantly used to generate fake nude material (Schedule 1, section 86B), a data access scheme for approved researchers including permission to use sock puppet identities for research (sections 205B to 205H), and repeals the online content scheme's industry codes and standards (Schedule 3)."
+  ],
+  "affected": "Providers and controllers of online services used in Australia, including social media, messaging, search, app stores and generative AI services; children under 16 on social media; approved researchers; and the eSafety Commissioner.",
+  "confidence": "high",
+  "flags": [
+   "exposure draft: provisions may change before introduction",
+   "simplified outlines are marked 'to be drafted' in the text"
+  ],
+  "model": "claude-fable-5-1",
+  "generated_at": "2026-09-12T00:00:00+00:00"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [],
+ "consultation": {
+  "url": "https://www.infrastructure.gov.au/department/media/publications/exposure-draft-online-safety-amendment-digital-duty-care-bill-2026",
+  "opens": "2026-09-08",
+  "closes": null,
+  "note": "Feedback by email to the department; the page does not state a closing date."
+ },
+ "related": [
+  {
+   "kind": "bill",
+   "key": "au-federal-r7286",
+   "relation": "predecessor",
+   "title": "Online Safety Amendment (Digital Duty of Care) Bill 2024",
+   "note": "Zoe Daniel's private member's bill of the same name, introduced November 2024 and lapsed in March 2025."
+  }
+ ],
+ "became": null
+}

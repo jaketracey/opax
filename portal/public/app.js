@@ -6776,6 +6776,7 @@ function billStatusLine(b) {
 
 const BILL_SOURCE_NAMES = {
   billhome: "Bill home", text: "Bill text", em: "Explanatory memorandum",
+  exposure_draft: "Exposure draft", consultation: "Consultation page",
   em_revised: "Revised explanatory memorandum", em_supp: "Supplementary explanatory memorandum",
   digest: "Bills Digest", frl_act: "The Act on the Federal Register",
 };
@@ -7352,6 +7353,23 @@ function billSummaryHTML(bill) {
   </section>`;
 }
 
+/** An exposure draft's predecessor bill, and the bill it became once introduced. */
+function billRelatedHTML(bill) {
+  const lines = [];
+  for (const r of bill?.related || []) {
+    if (!r?.key || !r?.title) continue;
+    const rel = r.relation === "predecessor" ? "Builds on" : sentenceCase(r.relation || "Related");
+    lines.push(`${esc(rel)} <a href="/bill/${encodeURIComponent(r.key)}">${esc(r.title)}</a>${r.note ? ` — ${esc(r.note)}` : ""}`);
+  }
+  if (bill?.became) lines.push(`Introduced to Parliament as <a href="/bill/${encodeURIComponent(bill.became)}">this bill</a>.`);
+  const c = bill?.consultation;
+  if (bill?.status === "exposure_draft" && c?.url) {
+    const when = c.closes ? `Consultation closes ${esc(fmtDate(c.closes))}` : "Open for consultation";
+    lines.push(`${when}: <a href="${esc(safeUrl(c.url) || "#")}" rel="noopener" target="_blank">have your say ↗︎</a>`);
+  }
+  return lines.length ? `<p class="bill-related">${lines.join("<br>")}</p>` : "";
+}
+
 /** /bill/<key> — one bill, whole. */
 async function openBill(key, manageFocus) {
   const view = `bill:${key}`;
@@ -7397,7 +7415,7 @@ async function openBill(key, manageFocus) {
     sponsorLinks.length
       ? `Introduced by ${sponsorLinks.slice(0, 3).join(", ")}${
         sponsorLinks.length > 3 ? ` and ${sponsorLinks.length - 3} others` : ""}`
-      : "Sponsor not recorded",
+      : bill.status === "exposure_draft" ? "Government exposure draft, not yet introduced" : "Sponsor not recorded",
     billParty(bill.sponsor_party) ? partyChipHTML(billParty(bill.sponsor_party)) : "",
     billPortfolio(bill) ? esc(billPortfolio(bill)) : "",
   ].filter(Boolean);
@@ -7411,8 +7429,9 @@ async function openBill(key, manageFocus) {
       <p class="subject-tag bill-tag">${sponsorBits.join(" · ")}</p>
       <p class="bill-status"><b>${esc(sentenceCase(bill.status) || "Status not recorded")}</b>${
         bill.status_as_of ? `<span class="bill-status-as">as at ${esc(fmtDate(bill.status_as_of))}</span>` : ""}${
-        bill.introduced ? `<span class="bill-status-as">introduced ${esc(fmtDate(bill.introduced))}${
+        bill.introduced ? `<span class="bill-status-as">${bill.status === "exposure_draft" ? "released" : "introduced"} ${esc(fmtDate(bill.introduced))}${
           billHouse(bill.originating_house) ? ` in the ${esc(billHouse(bill.originating_house))}` : ""}</span>` : ""}</p>
+      ${billRelatedHTML(bill)}
     </div>
     ${billSummaryHTML(bill)}
     ${billTimelineHTML(bill)}

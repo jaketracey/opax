@@ -379,3 +379,30 @@ debated, and no page should say so.
 - 812 of 2,510 outlined bills carry a `flagged` rather than `ok` summary and
   project as having no summary at all; that is a review-state design choice
   (section "Summary contract" in `docs/BILLS-CONTRACT.md`), not a defect here.
+
+## Exposure drafts
+
+The biggest bills of a year are usually public for weeks before Parliament has a
+number for them: Treasury, Communications, Industry, DFAT and Home Affairs release
+exposure drafts for consultation. ParlInfo knows nothing about them, so they live
+in `scripts/bills_registry/exposure_drafts.json` (one object per draft, hand
+curated, ~30 a year) and the exporter merges them into the projection:
+
+```sh
+python3 scripts/export_bills.py --merge-drafts portal/public/bills   # no database
+python3 scripts/export_bills.py --legacy --out /tmp/bills             # full run: merges too
+python3 scripts/publish_bills.py --keys au-federal-ed-<slug>          # KB resource
+python3 -m unittest scripts/test_export_drafts.py
+```
+
+A draft's `released` date sits in `introduced` so it sorts with the bills; its
+status is `exposure_draft` and the page, the daily post and the KB text all say
+"released for consultation" rather than "introduced". `related` links the
+predecessor (a lapsed private member's bill, say); once the real bill lands, set
+`became` to its ParlInfo key and keep the row, so the draft page points forward
+and readers can compare draft and bill. The merge removes any draft no longer in
+the file, never touches a registry row, and is idempotent.
+
+Summaries are written from the draft text (`basis: text`) because drafts usually
+ship without an explanatory memorandum; the attribution says so.
+
