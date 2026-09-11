@@ -74,3 +74,14 @@ test('hypothetical questions retrieve the named person and ask about recorded st
  assert.match(exports.POSITION_GROUNDING,/Do not roleplay/);
  assert.equal(resolveAskScope({question:'What would Pauline Hanson and Anthony Albanese say?'},people).input.speaker,undefined);
 });
+
+test('plain-language proposal questions search the named speaker and topic',()=>{
+ for(const verb of ['proposed','recommended']) {
+  const question=`What has David Pocock ${verb} about housing affordability?`;
+  assert.equal(exports.needsAskPeople({question}),true);
+  const {input}=resolveAskScope({question},[{name:'David Pocock'}]);
+  assert.equal(input.speaker,'David Pocock');assert.equal(input.kind,'speech');
+  assert.equal(exports.askRetrievalQuery(input),'housing affordability');
+ }
+ assert.equal(resolveAskScope({question:'What has David Pocock and Pauline Hanson proposed about housing?'},[{name:'David Pocock'},{name:'Pauline Hanson'}]).input.speaker,undefined);
+});

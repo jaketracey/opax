@@ -9,14 +9,16 @@ export function isReceiptGraph(data:Record<string,unknown>): data is Record<stri
 const normal = (s:string) => s.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()
 const aliases:Record<string,string[]> = {
   gambling:['gambling','wagering','betting','casino','casinos','pokies','poker machines'],
-  property:['property','real estate','property developers'], finance:['finance','banking','banks'],
-  fossil_fuels:['fossil fuel','fossil fuels','coal','oil and gas','energy'], mining:['mining'],
+  property:['property','real estate','property developers'], finance:['finance','financial sector','financial services'],
+  fossil_fuels:['fossil fuel','fossil fuels','coal','oil and gas'], mining:['mining'],
   unions:['unions','trade unions'], defence:['defence','defense'], health:['health','healthcare'],
   pharmacy:['pharmacy','pharmaceutical','pharma'], tech:['technology','tech'], media:['media'],
   agriculture:['agriculture','agricultural','farming'], hospitality:['hospitality','hotels'],
 }
 const scaffolding = new Set('how much how many money political donations donation funding funded fund funds receipts receipt gave given give has have did does do from to the a an of for in on by and or all total totals industry industries sector government parties party over years year between since before after flowed flow show me please federal australian australia queensland qld victoria vic tasmania tas'.split(' '))
 const contains = (q:string, phrase:string) => (' '+q+' ').includes(' '+normal(phrase)+' ')
+// A company suffix can be omitted, but a shortened name must identify one donor.
+const companyName = (name:string) => normal(name).replace(/\s+(?:(?:pty|proprietary)\s+)?(?:ltd|limited)$/, '')
 export const moneyQuestion = (q:string) => /\b(?:money|donat\w*|donors?|receipts?|funding|funded|contributions?)\b/i.test(q)
 export function receiptJurisdiction(query:string): string | null {
   const q=normal(query)
@@ -34,6 +36,12 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   const words=q.split(' ').filter(w=>!scaffolding.has(w)&&!/^\d+$/.test(w))
   const nameMatches=(n:Node) => [n.label,...(n.aliases||[])].some(label=>contains(q,label) || (words.length>0 && words.every(w=>normal(label).split(' ').includes(w))))
   const exactDonors=graph.nodes.filter(n=>n.kind==='donor'&&[n.label,...(n.aliases||[])].some(label=>contains(q,label)))
+  if(!exactDonors.length) {
+    const shortened=graph.nodes.filter(n=>n.kind==='donor'&&companyName(n.label).length>=5&&contains(q,companyName(n.label)))
+    if(shortened.length===1)exactDonors.push(shortened[0])
+  }
+  if(!exactDonors.length && /\b(?:banks|banking)\b/.test(q)) return {needs_scope:true,answer:'Banks are grouped with other finance organisations in this map. For a like-for-like comparison, ask about the finance sector or name a specific bank.',sources:[],jurisdiction}
+  if(!exactDonors.length && /\benergy\b/.test(q) && !industries.includes('fossil_fuels')) return {needs_scope:true,answer:'Energy can include fossil fuels and renewables. Please name the industry or company you want to compare.',sources:[],jurisdiction}
   if(exactDonors.length) industries=[]
   const donors=exactDonors.length?exactDonors:graph.nodes.filter(n=>n.kind==='donor' && (industries.length ? industries.includes(n.industry||'') : nameMatches(n)))
   const lnp=/\bliberal national party\b|\blnp\b/.test(q)
@@ -57,6 +65,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   const donorIds=new Set(donors.map(n=>n.id)),partyIds=new Set(parties.map(n=>n.id))
   const totals=new Map<string,{id:string,name:string,total_aud:number,receipts:number}>()
   const donorTotals=new Map<string,{id:string,name:string,total_aud:number,receipts:number}>()
+  const industryTotals=new Map<string,{id:string,name:string,total_aud:number,receipts:number}>()
   const flows: {donor_id:string,donor:string,party_id:string,party:string,total_aud:number,receipts:number}[]=[]
   let cents=0,count=0,first=Infinity,last=-Infinity,matching=0
   for(const edge of graph.edges) {
@@ -82,6 +91,10 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     previous.total_aud+=amount/100;previous.receipts+=receipts;totals.set(party.id,previous)
     const donorTotal=donorTotals.get(donor.id)||{id:donor.id,name:donor.label,total_aud:0,receipts:0}
     donorTotal.total_aud+=amount/100;donorTotal.receipts+=receipts;donorTotals.set(donor.id,donorTotal)
+    if(donor.industry) {
+      const industryTotal=industryTotals.get(donor.industry)||{id:donor.industry,name:donor.industry.replaceAll('_',' '),total_aud:0,receipts:0}
+      industryTotal.total_aud+=amount/100;industryTotal.receipts+=receipts;industryTotals.set(donor.industry,industryTotal)
+    }
     flows.push({donor_id:donor.id,donor:donor.label,party_id:party.id,party:party.label,total_aud:amount/100,receipts})
   }
   const params=new URLSearchParams({jur:jurisdiction,type:'receipts'})
@@ -99,6 +112,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     total_aud:cents/100,receipts:count,period,requested_years:{from:from??null,to:to??null},jurisdiction,subject,
     by_party:[...totals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
     by_donor:[...donorTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
+    by_industry:[...industryTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
     flows:flows.sort((a,b)=>b.total_aud-a.total_aud),
     selected_donors:donors.map(d=>d.label),
     selected_parties:parties.map(p=>p.label),

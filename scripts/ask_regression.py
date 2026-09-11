@@ -45,6 +45,8 @@ def check(spec, data):
     if data.get('answer_status') == 'evidence_only':
         warnings.append('summary could not be verified; returned original evidence only')
     exp = spec.get('expect', {})
+    if exp.get('answer_status') and data.get('answer_status') != exp['answer_status']:
+        errors.append('wrong answer status: ' + str(data.get('answer_status')))
     for field in ['party', 'speaker', 'state', 'kind', 'chamber']:
         expected = exp.get('source_' + field) or spec.get('request', {}).get(field)
         if expected and expected != 'all':
@@ -63,7 +65,7 @@ def check(spec, data):
     if exp.get('thin_ok'):
         if not thin:
             errors.append('no explicit evidence limitation for unsupported question')
-    elif not citations:
+    elif not citations and exp.get('answer_status') not in ('needs_scope', 'needs_period'):
         warnings.append('no citations' + ('; evidence limitation stated' if thin else ''))
     if len(cited_ids) < exp.get('min_cited', 0):
         warnings.append(f'{len(cited_ids)} cited sources below target {exp["min_cited"]}')

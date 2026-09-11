@@ -3066,7 +3066,7 @@ function renderMoneyPanel(ind) {
 
 /** "What did John Howard say about pokies?" → filter retrieval to the speaker. */
 function parseSpeakerIntent(q) {
-  const m = /^what (?:did|has|have|does|would|might) ([A-Za-z'\u2019 .-]{4,40}?) (?:say|said|says)(?: about| on)? /i.exec(q.trim());
+  const m = /^(?:what|how) (?:did|has|have|does|would|might) ([A-Za-z'\u2019 .-]{4,40}?) (?:say|said|says|propos(?:e|ed)|recommend(?:ed)?)(?: about| on)? /i.exec(q.trim());
   if (!m) return null;
   const who = m[1].trim();
   if (/\b(parliament|house|senate|mps?|senators?|government|labor|liberal|greens|nationals|coalition|minister|ministers|politicians?|members|people|courts?|they)\b/i.test(who)) return null;
@@ -8707,7 +8707,7 @@ async function runAsk(question) {
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
     revealAskResult();
     $("ask-result").querySelector(".action-row").hidden = false;
-    $("ask-result").querySelector(".kicker").textContent = data.answer_status === "evidence_only" ? "From the record" : "Answer";
+    $("ask-result").querySelector(".kicker").textContent = data.answer_status === "calculated" ? "From disclosed receipts" : data.answer_status === "evidence_only" ? "From the record" : "Answer";
     if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
       renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question) });
