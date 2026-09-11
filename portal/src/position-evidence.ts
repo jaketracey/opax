@@ -63,8 +63,12 @@ export function positionPointSupported(text: string, evidence: string, question:
     .replace(new RegExp(`\\b(${words.join('|')})\\b`, 'g'), word => String(words.indexOf(word)))
     .match(/\d+(?:[,.]\d+)*|\b(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion)\b/g)
     ?.map(number => /^\d/.test(number) ? String(Number(number.replaceAll(',', ''))) : number) || []
-  const allowed = new Set(numbers(evidence + ' ' + date))
-  if (numbers(text).some(number => !allowed.has(number))) return false
+  const allowed = new Set(numbers(evidence))
+  // A source's August date is not evidence for an eight-year policy. Permit
+  // its year only as an explicit temporal phrase, never as a policy quantity.
+  const year = /^\d{4}/.exec(date)?.[0]
+  const claim = year ? text.replace(new RegExp(`\\b(?:in|from)\\s+(?:(?:his|her|their)\\s+)?${year}\\b`, 'gi'), '') : text
+  if (numbers(claim).some(number => !allowed.has(number))) return false
   if (/\b(?:cap|limit)\b/i.test(question) && [text,evidence].some(value => !/\b(?:cap(?:ped|ping)?|limit(?:ed)?|maximum|up to)\b/i.test(value))) return false
   if (/\b(?:whichever|if that is|if this is)\s+lower\b/i.test(evidence) && !/\blower\b/i.test(text)) return false
   return true

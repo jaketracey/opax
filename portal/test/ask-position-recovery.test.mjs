@@ -120,3 +120,11 @@ test('discarded points do not leave their excerpts in the surviving source citat
  const out=await h.recover({...payload,sources:[{...payload.sources[0],snippet:cap+' '+other}]},{query:'immigration cap',position_question:'What cap did she propose?'},{});
  assert.match(out.answer,/130,000/);assert.doesNotMatch(out.answer,/screening/);assert.equal(out.sources[0].snippet,cap);
 });
+
+test('a source month cannot support an unquoted eight-year policy duration',async()=>{
+ const cap="One Nation's policy is to cap immigration at approximately 130,000 per year, numbers we can actually accommodate.";
+ const h=harness(JSON.stringify({points:[{text:'Example MP proposed capping immigration at approximately 130,000 per year, with an eight-year waiting period for citizenship.',citations:[{id:'s1',quote:cap}]}]}));
+ const rows=[{...payload.sources[0],date:'2025-08-26',snippet:cap}];
+ assert.equal(await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{}),null);
+ assert.equal(evidenceHelpers.positionPointSupported('The immigration cap would be 2025 per year.',cap,'What cap did she propose?','2025-08-26'),false);
+});
