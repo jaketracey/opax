@@ -1,4 +1,4 @@
-import { positionEvidence, normalizePositionDraft } from './position-evidence'
+import { positionEvidence, positionProposalQuote, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
 /**
@@ -1136,7 +1136,30 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   const gap: AskPayload = {answer:EVIDENCE_GAP_ANSWER,citations:{},sources:[],scope,answer_status:'evidence_gap'}
   if (!sources.length) return gap
   const payload: AskPayload = {...gap,sources}
-  return await recoverPositionAnswer(payload,body,env) || gap
+  return await recoverPositionAnswer(payload,body,env) || quotedPositionAnswer(payload,query) || gap
+}
+
+/** A failed summary must not hide a usable, explicitly recorded proposal. */
+function quotedPositionAnswer(payload: AskPayload, query: string): AskPayload | null {
+  const rows = payload.sources.filter((s): s is Record<string,unknown> => !!s && typeof s === 'object')
+  const sources = summarySources(rows,6000).flatMap(source => {
+    const quote = positionProposalQuote(source.snippet,query)
+    return quote ? [{...source,quote}] : []
+  }).slice(0,2)
+  if (!sources.length) return null
+  let answer = '**From their speeches**\n\n'
+  const citations: Record<string,number[][]> = {}
+  for (const source of sources) {
+    const date = source.date?.slice(0,10) || source.title.match(/\b\d{4}-\d{2}-\d{2}\b/)?.[0]
+    const timestamp = date && Number.isFinite(Date.parse(date)) ? new Intl.DateTimeFormat('en-AU',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(date)) : ''
+    answer += [source.speaker,timestamp].filter(Boolean).join(' · ') + ':\n\n> ' + source.quote
+    const end = Array.from(answer).length
+    citations[source.id] = [[end-1,end]]
+    answer += '\n\n'
+  }
+  return {answer:answer.trim(),citations,scope:payload.scope,answer_status:'evidence_only',sources:sources.map(source => ({
+    ...rows.find(row => row.href === source.href)!,resource:source.id,snippet:source.quote,cited:true,
+  }))}
 }
 
 /** Recover a position with exact source excerpts, rather than inventing citation IDs. */

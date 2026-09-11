@@ -44,3 +44,13 @@ test('an irrelevant policy point cannot discard or contaminate the verified hous
  const h=harness(answer);const out=await h.recover({...payload,sources:[...payload.sources,{...payload.sources[0],href:'/doc/speech-2',snippet:unrelated}]},{query:'housing affordability'},{});
  assert.match(out.answer,/five-year/);assert.doesNotMatch(out.answer,/NDIS/);assert.equal(out.sources.length,1);assert.equal(Object.keys(out.citations).length,1);
 });
+
+const fallbackStart=source.indexOf('function quotedPositionAnswer(');
+const fallbackCode=source.slice(fallbackStart,source.indexOf('/** Recover a position',fallbackStart));
+const fallback=runInNewContext(ts.transpileModule(fallbackCode,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';quotedPositionAnswer',{...helpers,...evidenceHelpers,Intl,Date});
+test('failed generation can still show a dated verbatim proposal with valid citations',()=>{
+ const out=fallback(payload,'housing affordability');assert.equal(out.answer_status,'evidence_only');assert.match(out.answer,/11 Feb 2025/);assert.ok(out.answer.includes('> '+quote));
+ assert.equal(out.sources[0].snippet,quote);assert.equal(out.sources[0].href,'/doc/speech-1');
+ for(const ranges of Object.values(out.citations))for(const [start,end] of ranges)assert.ok(start>=0&&end<=Array.from(out.answer).length);
+ assert.equal(fallback({...payload,sources:[{...payload.sources[0],snippet:'I proposed an inquiry into the NDIS and the cost of support coordination.'}]},'housing affordability'),null);
+});

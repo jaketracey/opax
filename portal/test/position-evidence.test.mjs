@@ -6,7 +6,7 @@ import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
 const bundle=await build({entryPoints:[new URL('../src/position-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const helpers=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
-const {firstSpeechTurn,positionEvidence,normalizePositionDraft}=helpers;
+const {firstSpeechTurn,positionEvidence,positionProposalQuote,normalizePositionDraft}=helpers;
 const proposal='I proposed a five-year GST moratorium on essential building materials for homes up to $1 million to improve housing affordability.';
 const other='Housing affordability is an investor problem, and my home state is Western Australia.';
 
@@ -52,14 +52,14 @@ test('normalisation never repairs fabricated words, numbers, IDs or inner syntax
 });
 
 const source=await readFile(new URL('../src/index.ts',import.meta.url),'utf8');
-const start=source.indexOf('async function documentedPositionAnswer('),end=source.indexOf('/** Recover a position',start);
+const start=source.indexOf('async function documentedPositionAnswer('),end=source.indexOf('/** A failed summary',start);
 const code=ts.transpileModule(source.slice(start,end),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function harness({rows,texts={},recover=true,unavailable=false}={}){
  let query,generated,reads=0;
  const fn=runInNewContext(code+';documentedPositionAnswer',{...helpers,URL,Request,canonicalSpeaker:s=>s,EVIDENCE_GAP_ANSWER:'This selection does not establish their position on that topic.',
   searchWindow:async(e,args)=>{query=args;return rows===null?null:{results:rows||[{slug:'speech-1',speaker:'Example MP',title:'Example MP — 2025-02-11',date:'2025-02-11',kind:'speech',resource:'rid'}]};},
   apiResource:async(r,u,slug)=>{reads++;return unavailable?Response.json({error:'down'},{status:503}):Response.json(texts[slug]||{speaker:'Example MP',text:proposal+'\n\n1:08 pm\n\n'+other});},
-  recoverPositionAnswer:async(payload)=>{generated=payload;return recover?{...payload,answer:'Verified proposal',answer_status:undefined}:null;},
+  quotedPositionAnswer:()=>null, recoverPositionAnswer:async(payload)=>{generated=payload;return recover?{...payload,answer:'Verified proposal',answer_status:undefined}:null;},
  });
  return {run:()=>fn({speaker:'Example MP',kind:'speech',from:'2025',to:'2026',chamber:'senate',topic:'housing'},{query:'housing affordability'},{},{}),get query(){return query},get generated(){return generated},get reads(){return reads}};
 }
@@ -78,4 +78,12 @@ test('source and generation failures cannot replay unverified retrieval snippets
 });
 test('position source reads are bounded to eight original documents',async()=>{
  const rows=Array.from({length:20},(_,i)=>({slug:'speech-'+i,speaker:'Example MP',kind:'speech'}));const h=harness({rows});await h.run();assert.equal(h.reads,8);
+});
+
+test('fallback selects a concrete proposal, never a procedural or irrelevant passage',()=>{
+ const gst='One Nationtoday announces a policy for a five-year moratorium onGSTbeing charged on essential building materials for homes up to the value of $1 million.';
+ assert.equal(positionProposalQuote('I move the motion. '+gst,'housing affordability'),gst);
+ assert.equal(positionProposalQuote('I proposed an inquiry into the NDIS and its administration.','housing affordability'),'');
+ assert.equal(positionProposalQuote('I move that the Senate take note of housing questions.','housing affordability'),'');
+ assert.equal(positionProposalQuote('I spoke about agriculture.\n\n1:08 pm\n\n'+gst,'housing affordability'),'');
 });
