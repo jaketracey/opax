@@ -1,7 +1,7 @@
 # Opax demo recordings
 
-Repeatable product demonstrations with a smoothly animated cursor, gold click
-ripples, and timed captions. The browser operates the real public website.
+Repeatable product demonstrations with a smoothly animated cursor, subtle gold click
+ripples, and timed captions below the recording. The browser operates the real public website.
 
 ## Make a video
 
@@ -24,7 +24,9 @@ That command records both a **1920 × 1080 widescreen video** and a separate
 **1080 × 1920 vertical video** using the site's mobile layout. It records the
 vertical layout independently; it does not crop the desktop screen.
 
-The second ready-to-use demo shows the publication-year slider:
+The first story follows a $6.05 million stadium expansion in Willetton. The
+second finds an $11.3 million aircraft shelter award in Longreach using the
+publication-year slider:
 
 ```sh
 npm run record -- --scene grant-timeline --format all
@@ -48,9 +50,12 @@ Each format has:
 
 - `opax.mp4`: H264 video, ready for review and upload. Captions are burned in by
   default so the demonstration works with sound off.
-- `capture.webm`: original browser recording, including cursor and visible captions.
+- `capture.mp4`: native-resolution H264 derivative with cursor, without captions.
+- `capture-frames/`, `capture.ffconcat`: original JPEG frames and measured timing recipe.
+- `video-timing.json`, `capture-timing.json`: measured frame intervals, export
+  timings and subtitle plate dimensions. `caption-plates/` keeps the rendered text.
 - `captions.srt`, `captions.vtt`, `captions.json`: the same captions with timings
-  measured against the browser recording's timestamp origin.
+  measured against the first captured frame.
 - `review/`: a screenshot of every completed step, for quick visual checking.
 - `manifest.json`: script actions, dates, source URLs and hashes, browser/version
   details, export status, and captured errors.
@@ -86,6 +91,11 @@ Supported actions: `hold`, `scroll`, `click`, `hover`, `type`, `select`, `range`
 Every step needs a caption. All except `hold` need a CSS `target` that matches
 exactly one visible element. `type`, `select` and `range` also need `value`.
 An optional `waitFor` selector waits for the resulting UI before holding the shot.
+`setup` accepts the same actions without captions, before capture starts.
+`initialTarget` frames the first shot. Each step can use `frameTarget` to frame a
+specific element, or `frame: "map-and-timeline"` to keep the grant map and slider
+visible together. Close a selected project before this combined shot on mobile;
+the recorder fails if both cannot fit. These options scroll the real page.
 `holdMs` controls reading time after the action. Keep one short thought per caption.
 
 Captions advance when the action starts and stay visible while the page loads.
@@ -95,8 +105,14 @@ missing target fails the run rather than silently recording an unrelated action.
 The workflow is reproducible, not pixel-identical: public data, map tiles, page
 design and network timing can change. Source snapshots and the saved script let
 you check what was shown. To change burned-in copy, edit the scene and record again.
-The recorder captures the 1600 × 900 desktop or 540 × 960 mobile viewport and
-scales it to the export size. It does not label an upscaled export as native capture.
+The recorder captures native device pixels: 1920 × 960 desktop or 1080 × 1680
+mobile. A separate navy footer completes the 16:9 or 9:16 export, with captions
+never covering the application. Each JPEG has a measured timestamp; slower frames
+are held for their actual duration. Final video is 30fps H264. No upscaling or
+speed change is used. Original JPEG frames are retained with the concat recipe
+for source inspection and recomposition; allow roughly 100–250MB per short clip.
+The quality gate rejects captures below 18fps, sustained frame intervals above
+100ms or individual gaps above 350ms, even if an encoder could duplicate frames.
 
 ## A regular publishing routine
 
@@ -112,8 +128,11 @@ must never publish. Check that `manifest.json` says `ready-for-review`.
 
 The supplied examples use a selected historical grants collection. They do not
 claim complete national coverage, payments, construction completion, or that the
-slider reconstructs the award value as it was in a past year. Captions avoid
-hard-coded amounts so changed live values do not produce stale narration.
+slider reconstructs the award value as it was in a past year. Both scenes carry `evidence` checks against the public dataset fetched during
+recording: exact record id, amount, publication date and source link, plus quoted
+activity excerpts. If any fact changes or disappears, the recorder stops before
+capture. Update the scene only after checking the source. These checks detect data
+drift; editorial review still needs to assess what the evidence actually supports.
 
 ## Recording isolation and checks
 
@@ -121,8 +140,9 @@ Each run starts a fresh, signed-out browser with no stored cookies or permission
 It does not capture your personal Chrome tabs. Analytics requests are suppressed;
 HTTP writes are blocked, including paid Ask/voice requests. These templates only
 browse public data. Server request logs will still contain the recording visit.
-The cursor/caption layer exists only inside this isolated browser and does not
-modify the deployed website.
+The cursor overlay and hiding of the unrelated `#opax-voice` launcher happen only
+in the recording browser. The manifest records these presentation changes. App
+data and behaviour are unchanged; subtitles are composed outside its viewport.
 
 Readiness checks cover page status, target visibility, fonts and map tiles. The
 export is checked for H264, correct dimensions and caption/video duration agreement.
@@ -133,6 +153,6 @@ after automated checks pass.
 npm test
 ```
 
-Implementation references: [Playwright screencasting](https://playwright.dev/docs/api/class-screencast),
+Implementation references: [Playwright screenshots](https://playwright.dev/docs/api/class-page#page-screenshot),
 [Playwright mouse control](https://playwright.dev/docs/api/class-mouse), and
 [FFmpeg encoding options](https://ffmpeg.org/ffmpeg-all.html).

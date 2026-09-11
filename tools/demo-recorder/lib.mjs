@@ -1,6 +1,6 @@
 export const FORMATS = {
-  landscape: { viewport: { width: 1600, height: 900 }, output: { width: 1920, height: 1080 }, deviceScaleFactor: 1.2 },
-  portrait: { viewport: { width: 540, height: 960 }, output: { width: 1080, height: 1920 }, deviceScaleFactor: 2 },
+  landscape: { viewport: { width: 1600, height: 800 }, contentSize: { width: 1920, height: 960 }, output: { width: 1920, height: 1080 }, deviceScaleFactor: 1.2 },
+  portrait: { viewport: { width: 540, height: 840 }, contentSize: { width: 1080, height: 1680 }, output: { width: 1080, height: 1920 }, deviceScaleFactor: 2 },
 };
 
 export function validateScene(scene) {
@@ -8,14 +8,36 @@ export function validateScene(scene) {
   if (!scene.path?.startsWith('/') || scene.path.startsWith('//')) throw Error('Scene path must be relative to the site.');
   if (!scene.ready || !Array.isArray(scene.steps) || !scene.steps.length) throw Error('Scene needs a ready selector and steps.');
   const actions = new Set(['hold', 'scroll', 'type', 'click', 'hover', 'select', 'range']);
-  for (const step of scene.steps) {
+  if (scene.setup != null && !Array.isArray(scene.setup)) throw Error('Scene setup must be an array.');
+  for (const step of [...(scene.setup || []), ...scene.steps]) {
     if (!actions.has(step.action)) throw Error(`Unknown action: ${step.action}`);
-    if (typeof step.caption !== 'string' || !step.caption.trim()) throw Error('Every step needs a caption.');
+    if (scene.steps.includes(step) && (typeof step.caption !== 'string' || !step.caption.trim())) throw Error('Every step needs a caption.');
     if (step.action !== 'hold' && !step.target) throw Error(`${step.action} needs a target selector.`);
     if (['type', 'select', 'range'].includes(step.action) && step.value == null) throw Error(`${step.action} needs a value.`);
     if (step.holdMs != null && (!Number.isFinite(step.holdMs) || step.holdMs < 0 || step.holdMs > 30000)) throw Error('holdMs must be 0–30000.');
+    if (step.frame && step.frame !== 'map-and-timeline') throw Error('Unknown frame composition.');
+  }
+  for (const guard of scene.evidence || []) {
+    if (!/^\/research\/[a-z-]+\.json$/.test(guard.path) || typeof guard.recordId !== 'string') throw Error('Evidence needs a public dataset path and record id.');
+    if (!Object.keys(guard.equals || {}).length && !Object.keys(guard.includes || {}).length) throw Error('Evidence needs at least one fact check.');
   }
   return scene;
+}
+
+export function verifyEvidence(dataset, guard) {
+  const matches = dataset?.records?.filter(record => record.id === guard.recordId) || [];
+  if (matches.length !== 1) throw Error(`Evidence: ${guard.recordId} must exist exactly once in ${guard.path}.`);
+  const record = matches[0];
+  for (const [field, value] of Object.entries(guard.equals || {})) {
+    if (record[field] !== value) throw Error(`Evidence changed: ${guard.recordId}.${field}. Review the caption before recording.`);
+  }
+  for (const [field, phrases] of Object.entries(guard.includes || {})) {
+    if (!Array.isArray(phrases) || !phrases.length || phrases.some(phrase => typeof phrase !== 'string' || !phrase.trim())) throw Error('Evidence excerpts must be non-empty text.');
+    for (const phrase of phrases) {
+      if (typeof record[field] !== 'string' || !record[field].includes(phrase)) throw Error(`Evidence excerpt changed: ${guard.recordId}.${field}. Review the caption before recording.`);
+    }
+  }
+  return { path: guard.path, recordId: guard.recordId, datasetAsOf: dataset.as_of, checked: { equals: guard.equals || {}, includes: guard.includes || {} } };
 }
 
 export function ease(t) { return t < .5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2; }
@@ -36,39 +58,27 @@ export function subtitleFiles(captions) {
 }
 
 // Run in the isolated recording browser. Nothing is added to the public site.
-export function installOverlay({ captionsEnabled }) {
+export function installOverlay() {
   const host = document.createElement('div');
   host.id = 'opax-recording-overlay';
   host.style.cssText = 'position:fixed;inset:0;z-index:2147483647;pointer-events:none;';
   const root = host.attachShadow({ mode: 'open' });
   root.innerHTML = `<style>
     :host { pointer-events:none; }
-    .pointer { position:fixed;left:0;top:0;width:34px;height:44px;filter:drop-shadow(0 2px 3px #142a4370);will-change:transform; }
-    .halo { position:fixed;width:46px;height:46px;margin:-23px;border-radius:50%;background:#d8aa4430;border:2px solid #bd8c2460;box-sizing:border-box;will-change:transform; }
-    .click { position:fixed;width:20px;height:20px;border:3px solid #c79831;border-radius:50%;margin:-10px;box-sizing:border-box; }
-    .caption { position:fixed;bottom:48px;left:50%;transform:translateX(-50%);box-sizing:border-box;width:max-content;max-width:min(950px,82vw);padding:17px 27px 19px;background:#142a43f5;color:#fff;border-top:3px solid #d7aa48;border-radius:12px;box-shadow:0 10px 38px #142a4330;font:600 28px/1.4 Arial,sans-serif;text-align:center;text-wrap:balance; }
-    .brand { display:block;margin-bottom:5px;font-size:11px;font-weight:700;letter-spacing:.14em;color:#e3bd6b; }
-    @media(max-width:760px) { .caption { bottom:110px;max-width:88vw;padding:14px 20px 17px;font-size:23px;border-radius:10px; } .brand {font-size:10px;} .pointer {width:29px;height:38px;} }
-  </style><div class="halo"></div><svg class="pointer" viewBox="0 0 32 42"><path d="M3 2v31l8-8 7 14 6-3-7-14h12Z" fill="#142a43" stroke="white" stroke-width="2.5" stroke-linejoin="round"/></svg><div class="caption" hidden><span class="brand">OPAX · EXPLORE THE RECORD</span><span class="words"></span></div>`;
+    .pointer { position:fixed;left:0;top:0;width:23px;height:30px;filter:drop-shadow(0 1px 2px #142a4360);will-change:transform; }
+    .click { position:fixed;width:16px;height:16px;border:2px solid #c79831;border-radius:50%;margin:-8px;box-sizing:border-box; }
+  </style><svg class="pointer" viewBox="0 0 32 42"><path d="M3 2v31l8-8 7 14 6-3-7-14h12Z" fill="#142a43" stroke="white" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
   document.documentElement.append(host);
-  const pointer = root.querySelector('.pointer'), halo = root.querySelector('.halo'), caption = root.querySelector('.caption');
+  const pointer = root.querySelector('.pointer');
   const move = (x, y) => {
     pointer.style.transform = `translate(${x - 3}px,${y - 2}px)`;
-    halo.style.transform = `translate(${x}px,${y}px)`;
   };
   const click = (x, y) => {
     const ring = document.createElement('div'); ring.className = 'click'; ring.style.left = `${x}px`; ring.style.top = `${y}px`; root.append(ring);
-    ring.animate([{ transform: 'scale(.5)', opacity: 1 }, { transform: 'scale(3.5)', opacity: 0 }], { duration: 560, easing: 'ease-out' }).finished.then(() => ring.remove());
+    ring.animate([{ transform: 'scale(.5)', opacity: 1 }, { transform: 'scale(2.5)', opacity: 0 }], { duration: 350, easing: 'ease-out' }).finished.then(() => ring.remove());
   };
   document.addEventListener('mousemove', event => move(event.clientX, event.clientY), true);
   document.addEventListener('mousedown', event => click(event.clientX, event.clientY), true);
-  const cursorStyle = document.createElement('style'); cursorStyle.textContent = '* { cursor: none !important; }'; document.head.append(cursorStyle);
+  const cursorStyle = document.createElement('style'); cursorStyle.textContent = '* { cursor: none !important; } #opax-voice { display:none !important; }'; document.head.append(cursorStyle);
   move(innerWidth * .78, innerHeight * .4);
-  window.__opaxRecording = {
-    caption(text) {
-      root.querySelector('.words').textContent = text; caption.hidden = !captionsEnabled;
-      if (captionsEnabled) caption.animate([{ opacity: 0, translate: '0 5px' }, { opacity: 1, translate: '0 0' }], { duration: 160, fill: 'both' });
-      return Date.now();
-    },
-  };
 }

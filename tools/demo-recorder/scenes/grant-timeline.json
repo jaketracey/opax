@@ -1,16 +1,82 @@
 {
   "id": "grant-timeline",
-  "title": "Explore earlier grants",
+  "title": "The grant for a roof over four aircraft",
   "path": "/reports/grants-allocation?collection=history",
   "ready": "#allocation-year:not([disabled])",
-  "description": "The year slider filters publication dates. It does not show payments or reconstruct historic award values.",
+  "description": "The 2019 Qantas Founders Museum roof award gives the timeline a concrete discovery. The year slider filters original publication dates; amounts are the latest recorded award values and can include later amendments. The map is a selected historical sample and does not establish payments.",
+  "initialTarget": "#allocation-detail",
+  "evidence": [
+    {
+      "path": "/research/grants-history.json",
+      "recordId": "GA34203",
+      "equals": {
+        "record_type": "award",
+        "value": 11300000,
+        "publish_date": "2019-02-22",
+        "recipient": "The Trustee for the Qantas Foundation Memorial Trust",
+        "source_url": "https://www.grants.gov.au/Ga/Show/c0341dc2-c04e-1177-4ab0-99b9ae0d1b26"
+      },
+      "includes": {
+        "activity": [
+          "airpark roof over four aircraft",
+          "Qantas Founders Museum",
+          "Longreach"
+        ],
+        "title": [
+          "Qantas Founders Museum"
+        ]
+      }
+    }
+  ],
   "steps": [
-    { "action": "hold", "caption": "Explore a selection of earlier grant awards.", "holdMs": 3000 },
-    { "action": "scroll", "target": "#allocation-map", "caption": "Each pin marks a project site checked against sources.", "holdMs": 2800 },
-    { "action": "scroll", "target": "#allocation-timeline", "caption": "Use the year slider to explore older records.", "holdMs": 1800 },
-    { "action": "range", "target": "#allocation-year", "value": 2019, "caption": "Filter to grants published by 2019.", "holdMs": 2600 },
-    { "action": "hold", "caption": "Award values include later updates. These are not payments.", "holdMs": 3600 },
-    { "action": "click", "target": "#allocation-latest", "caption": "Choose All years to bring the other records back.", "holdMs": 2300 },
-    { "action": "scroll", "target": "#allocation-map", "caption": "Explore the record at opax.com.au", "holdMs": 3200 }
+    {
+      "action": "hold",
+      "caption": "A roof over four aircraft. A grant recorded at $11.3 million.",
+      "holdMs": 3700,
+      "frameTarget": "#allocation-detail"
+    },
+    {
+      "action": "click",
+      "target": ".allocation-detail-close",
+      "caption": "Track when an award first appeared.",
+      "holdMs": 800,
+      "frame": "map-and-timeline"
+    },
+    {
+      "action": "range",
+      "target": "#allocation-year",
+      "value": 2019,
+      "caption": "Published in 2019. Values may include later updates.",
+      "holdMs": 1400,
+      "frame": "map-and-timeline"
+    },
+    {
+      "action": "click",
+      "target": ".allocation-pin[title^=\"Qantas Founders Museum\"]",
+      "caption": "Longreach, Queensland. Qantas Founders Museum.",
+      "waitFor": "#allocation-detail.has-project",
+      "holdMs": 2200,
+      "frameTarget": "#allocation-detail"
+    },
+    {
+      "action": "hover",
+      "target": ".allocation-source-link",
+      "caption": "Original award linked here. It does not prove payment.",
+      "holdMs": 2600,
+      "frameTarget": "#allocation-detail"
+    },
+    {
+      "action": "hold",
+      "caption": "Find the record behind a project. opax.com.au",
+      "holdMs": 2800,
+      "frameTarget": "#allocation-detail"
+    }
+  ],
+  "setup": [
+    {
+      "action": "click",
+      "target": ".allocation-pin[title^=\"Qantas Founders Museum\"]",
+      "waitFor": "#allocation-detail.has-project"
+    }
   ]
 }

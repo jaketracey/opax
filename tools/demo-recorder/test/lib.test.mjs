@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { FORMATS, validateScene, subtitleFiles, ease } from '../lib.mjs';
+import { FORMATS, validateScene, verifyEvidence, subtitleFiles, ease } from '../lib.mjs';
+import { captureQuality } from '../video.mjs';
 
 test('built-in scenes have valid actions, targets and editorial captions', async () => {
   for (const name of ['grant-place', 'grant-timeline']) {
@@ -42,14 +43,41 @@ test('subtitle text stays text, including comments and cue-like delimiters', () 
   }
 });
 
-test('capture and export aspect ratios match, with even H264 dimensions', () => {
-  for (const { viewport, output } of Object.values(FORMATS)) {
-    assert.equal(viewport.width / viewport.height, output.width / output.height);
+test('native pixels fill the export width with a reserved subtitle footer', () => {
+  for (const { viewport, deviceScaleFactor, contentSize, output } of Object.values(FORMATS)) {
+    assert.equal(viewport.width * deviceScaleFactor, contentSize.width);
+    assert.equal(viewport.height * deviceScaleFactor, contentSize.height);
+    assert.equal(contentSize.width, output.width);
+    assert.ok(output.height > contentSize.height);
     assert.equal(output.width % 2, 0); assert.equal(output.height % 2, 0);
+  }
+});
+
+test('caption evidence fails closed when a record, amount or excerpt changes', () => {
+  const record = { id: 'GA1', value: 500, publish_date: '2019-02-22', activity: 'A roof over four aircraft' };
+  const dataset = { as_of: '2026-09-09', records: [record] };
+  const guard = { path: '/research/grants-history.json', recordId: 'GA1', equals: { value: 500, publish_date: '2019-02-22' }, includes: { activity: ['four aircraft'] } };
+  assert.equal(verifyEvidence(dataset, guard).recordId, 'GA1');
+  assert.throws(() => verifyEvidence(undefined, guard));
+  assert.throws(() => verifyEvidence({ records: [] }, guard));
+  assert.throws(() => verifyEvidence({ records: [record, record] }, guard));
+  for (const changed of [{ value: 501 }, { publish_date: '2020-01-01' }, { activity: 'A roof over three aircraft' }]) {
+    assert.throws(() => verifyEvidence({ records: [{ ...record, ...changed }] }, guard));
   }
 });
 
 test('pointer easing reaches its target without overshooting', () => {
   assert.equal(ease(0), 0); assert.equal(ease(1), 1);
   for (let i = 1; i <= 100; i++) assert.ok(ease(i / 100) >= ease((i - 1) / 100));
+});
+
+test('capture quality rejects slow or stalled frames even if export would say 30fps', () => {
+  const sample = (interval, count = 120) => ({ durationMs: count * interval, frameCount: count, frames: Array.from({ length: count }, (_, i) => ({ timestampMs: i * interval })) });
+  assert.ok(captureQuality(sample(34)).capturedFramesPerSecond > 29);
+  assert.throws(() => captureQuality(sample(120)), /too choppy/);
+  const stalled = sample(34);
+  for (let i = 60; i < stalled.frames.length; i++) stalled.frames[i].timestampMs += 500;
+  stalled.durationMs += 500;
+  assert.throws(() => captureQuality(stalled), /too choppy/);
+  assert.throws(() => captureQuality(sample(0)), /invalid/);
 });

@@ -4,8 +4,8 @@ cd -- "$(dirname -- "$0")"
 
 print 'Opax demo recorder'
 print ''
-print '1. Find a grant near you'
-print '2. Explore earlier grants'
+print '1. The grant behind four new basketball courts'
+print '2. The grant for a roof over four aircraft'
 print ''
 read 'choice?Choose a demo [1]: '
 case "${choice:-1}" in

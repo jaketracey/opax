@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 import { chromium } from 'playwright';
-import { readFile, writeFile, mkdir, rename } from 'node:fs/promises';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execFileSync, spawn } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { parseArgs } from 'node:util';
-import { FORMATS, validateScene, ease, subtitleFiles, installOverlay } from './lib.mjs';
+import { FORMATS, validateScene, verifyEvidence, ease, subtitleFiles, installOverlay } from './lib.mjs';
+import { startCapture, renderVideo } from './video.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const { values: args } = parseArgs({ options: {
@@ -45,10 +46,6 @@ await mkdir(dirname(runDir), { recursive: true });
 await mkdir(runDir); // Fail instead of overwriting an earlier recording.
 await writeFile(join(runDir, 'scene.json'), JSON.stringify(scene, null, 2));
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-const run = (command, argv) => new Promise((resolve, reject) => {
-  const child = spawn(command, argv, { stdio: 'inherit' });
-  child.on('error', reject); child.on('exit', code => code === 0 ? resolve() : reject(Error(`${command} exited ${code}`)));
-});
 const revision = (() => { try { return execFileSync('git', ['rev-parse', 'HEAD'], { cwd: here, encoding: 'utf8' }).trim(); } catch { return null; } })();
 
 async function record(format) {
@@ -57,16 +54,16 @@ async function record(format) {
   const manifest = { status: 'recording', scene: scene.id, format, startedAt: new Date().toISOString(),
     url: new URL(scene.path, base).href, viewport: preset.viewport, output: preset.output,
     revision, nodeVersion: process.version,
-    recorderSha256: createHash('sha256').update(await readFile(join(here, 'record.mjs'))).update(await readFile(join(here, 'lib.mjs'))).digest('hex'),
+    recorderSha256: createHash('sha256').update(await readFile(join(here, 'record.mjs'))).update(await readFile(join(here, 'lib.mjs'))).update(await readFile(join(here, 'video.mjs'))).digest('hex'),
     lockfileSha256: createHash('sha256').update(await readFile(join(here, 'package-lock.json'))).digest('hex'),
     playwrightVersion: JSON.parse(await readFile(join(here, 'node_modules/playwright/package.json'), 'utf8')).version,
-    captionsBurnedIn: !args['no-captions'], audio: 'silent', steps: [], sources: [], pageErrors: [],
+    captionsBurnedIn: !args['no-captions'], audio: 'silent', presentation: { hidden: ['#opax-voice'], cursor: 'animated overlay', captions: 'separate footer' }, steps: [], sources: [], pageErrors: [],
     note: 'Live public site capture. Same actions and styling are repeatable; data, rendering and network timings may change.' };
   const browser = await chromium.launch({ headless: !args.headed });
   manifest.browserVersion = browser.version();
   const context = await browser.newContext({ viewport: preset.viewport, deviceScaleFactor: preset.deviceScaleFactor,
     locale: 'en-AU', timezoneId: 'Australia/Melbourne', colorScheme: 'light', reducedMotion: 'no-preference', serviceWorkers: 'block' });
-  const blockedWrites = [], evidenceJobs = [];
+  const blockedWrites = [], evidenceJobs = [], datasets = new Map();
   // Keep demo traffic out of the site's analytics. No authenticated state is loaded.
   await context.route('**/*', route => {
     const request = route.request(), url = new URL(request.url());
@@ -85,11 +82,13 @@ async function record(format) {
     if (url.origin !== base.origin || !/^\/research\/[a-z-]+\.json$/.test(url.pathname)) return;
     evidenceJobs.push((async () => {
       const body = await response.body(), filename = url.pathname.split('/').pop();
+      if (!response.ok()) throw Error(`Dataset returned ${response.status()}.`);
+      datasets.set(url.pathname, JSON.parse(body.toString()));
       await writeFile(join(directory, 'evidence', filename), body);
       manifest.sources.push({ url: response.url(), status: response.status(), sha256: createHash('sha256').update(body).digest('hex'), file: `evidence/${filename}` });
     })().catch(error => { manifest.pageErrors.push(`Source snapshot failed: ${error.message}`); }));
   });
-  let recording = false, firstFrameAt = null, recordingStartedAt = null;
+  let recorder = null;
   const cues = [];
   let pointer = { x: preset.viewport.width * .78, y: preset.viewport.height * .4 };
   async function target(selector) {
@@ -110,15 +109,30 @@ async function record(format) {
   }
   async function scrollTo(locator, force = false) {
     await locator.evaluate(async (element, force) => {
-      const box = element.getBoundingClientRect();
       const header = document.querySelector('header')?.getBoundingClientRect().height || 100;
-      const safeTop = Math.min(header, 140) + 28, safeBottom = innerWidth < 760 ? 240 : 170;
-      if (!force && box.top >= safeTop && box.bottom <= innerHeight - safeBottom) return;
-      const from = scrollY, to = Math.max(0, Math.min(document.documentElement.scrollHeight - innerHeight, scrollY + box.top - safeTop));
+      const safeTop = Math.min(header, 140) + 20, safeBottom = 24;
+      // Source/detail panels scroll independently on desktop. Reveal a target
+      // inside them before positioning the whole panel in the document.
+      let parent = element.parentElement;
+      while (parent && parent !== document.body) {
+        const style = getComputedStyle(parent);
+        if (/(auto|scroll)/.test(style.overflowY) && parent.scrollHeight > parent.clientHeight + 1) {
+          const panel = parent.getBoundingClientRect(), child = element.getBoundingClientRect();
+          if (child.top < panel.top + 16 || child.bottom > panel.bottom - 16) {
+            parent.scrollTo({ top: parent.scrollTop + child.top - panel.top - 20, behavior: 'smooth' });
+            await new Promise(resolve => setTimeout(resolve, 400));
+          }
+        }
+        parent = parent.parentElement;
+      }
+      const current = element.getBoundingClientRect();
+      if (!force && current.top >= safeTop - 2 && current.bottom <= innerHeight - safeBottom + 2) return;
+      const from = scrollY, to = Math.max(0, Math.min(document.documentElement.scrollHeight - innerHeight, scrollY + current.top - safeTop));
+      if (Math.abs(from - to) < 3) return;
       await new Promise(resolve => {
         const started = performance.now();
         function tick(now) {
-          const t = Math.min(1, (now - started) / 800), p = t < .5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
+          const t = Math.min(1, (now - started) / 650), p = t < .5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
           scrollTo({ top: from + (to - from) * p, behavior: 'instant' });
           if (t < 1) requestAnimationFrame(tick); else resolve();
         }
@@ -134,6 +148,49 @@ async function record(format) {
     await move(box.x + box.width / 2, box.y + box.height / 2);
     return box;
   }
+  async function frameMapAndTimeline() {
+    const map = await target('#allocation-map');
+    await scrollTo(map, true);
+    const fit = await page.evaluate(() => {
+      const map = document.querySelector('#allocation-map').getBoundingClientRect();
+      const timeline = document.querySelector('#allocation-timeline').getBoundingClientRect();
+      return { mapTop: map.top, bottom: timeline.bottom, height: innerHeight };
+    });
+    if (fit.bottom > fit.height - 8) throw Error('Map and timeline do not fit together. Close the selected project or revise the scene framing.');
+  }
+  async function frame(step) {
+    if (step.frame === 'map-and-timeline') await frameMapAndTimeline();
+    else if (step.frameTarget) await scrollTo(await target(step.frameTarget));
+  }
+  async function performAction(step) {
+    // Set the combined composition before dragging so the map remains visible.
+    if (step.frame === 'map-and-timeline' && step.action !== 'click') await frame(step);
+    const locator = step.target ? await target(step.target) : null;
+    if (step.action === 'scroll' && !step.frame) await scrollTo(locator, true);
+    if (['click', 'hover', 'type', 'select'].includes(step.action)) {
+      await pointAt(locator);
+      if (step.action === 'select') await locator.selectOption(String(step.value));
+      else if (step.action !== 'hover') {
+        await locator.click();
+        if (step.action === 'type') {
+          await locator.press('ControlOrMeta+A');
+          await locator.pressSequentially(String(step.value), { delay: 75 });
+        }
+      }
+    }
+    if (step.action === 'range') {
+      await scrollTo(locator);
+      const values = await locator.evaluate(el => ({ min: Number(el.min), max: Number(el.max), value: Number(el.value) }));
+      const value = Number(step.value);
+      if (!(values.min < values.max) || !Number.isFinite(value) || value < values.min || value > values.max) throw Error('Range value is outside the current data. Update the scene.');
+      const box = await locator.boundingBox(), x = v => box.x + 8 + (box.width - 16) * (v - values.min) / (values.max - values.min), y = box.y + box.height / 2;
+      await move(x(values.value), y); await page.mouse.down(); await move(x(value), y, 1100); await page.mouse.up();
+      if (Number(await locator.inputValue()) !== value) throw Error('Slider did not reach the requested year.');
+    }
+    if (step.waitFor) await page.locator(step.waitFor).waitFor({ state: 'visible' });
+    if (step.action !== 'hold') await sleep(200);
+    await frame(step);
+  }
   try {
     console.log(`${format}: opening ${manifest.url}`);
     const response = await page.goto(manifest.url, { waitUntil: 'domcontentloaded' });
@@ -143,49 +200,24 @@ async function record(format) {
     if (await page.locator('.leaflet-tile').count()) {
       await page.waitForFunction(() => [...document.querySelectorAll('.leaflet-tile')].every(image => image.complete && image.naturalWidth > 0), undefined, { timeout: 20000 });
     }
-    await page.evaluate(installOverlay, { captionsEnabled: !args['no-captions'] });
+    await Promise.all(evidenceJobs);
+    manifest.evidenceChecks = (scene.evidence || []).map(guard => verifyEvidence(datasets.get(guard.path), guard));
+    await page.evaluate(installOverlay);
+    for (const step of scene.setup || []) await performAction(step);
+    if (scene.initialTarget) await scrollTo(await target(scene.initialTarget), true);
+    await frame(scene.steps[0]);
+    // Start with a completed, legible composition, not page loading or setup.
     await page.mouse.move(pointer.x, pointer.y);
     await sleep(300);
-    recordingStartedAt = Date.now();
-    // Screencast frames use CSS pixels even at a higher deviceScaleFactor. Recording
-    // at the export size pads the smaller frame with grey; scale only when encoding.
-    await page.screencast.start({ path: join(directory, 'capture.webm'), size: preset.viewport, quality: 100,
-      onFrame: frame => { firstFrameAt ??= frame.timestamp; } });
-    recording = true;
+    recorder = await startCapture(page, directory, { expectedSize: preset.contentSize });
+    manifest.recordingEpoch = recorder.epoch;
     for (const [index, step] of scene.steps.entries()) {
       console.log(`${format}: ${index + 1}/${scene.steps.length} ${step.caption}`);
-      const cueTime = await page.evaluate(text => window.__opaxRecording.caption(text), step.caption);
+      const cueTime = index === 0 ? recorder.epoch : Date.now();
       if (cues.length) cues.at(-1).endAt = cueTime;
       cues.push({ text: step.caption, startAt: cueTime });
       const item = { ...step, startedAt: cueTime, beforeUrl: page.url() }; manifest.steps.push(item);
-      const locator = step.target ? await target(step.target) : null;
-      if (step.action === 'scroll') await scrollTo(locator, true);
-      if (['click', 'hover', 'type', 'select'].includes(step.action)) {
-        await pointAt(locator);
-        if (step.action !== 'hover') {
-          // Locator click retains hit-target checks, while the custom pointer travels visibly first.
-          if (step.action === 'select') {
-            await locator.selectOption(String(step.value));
-          } else {
-            await locator.click();
-            if (step.action === 'type') {
-              await locator.press('ControlOrMeta+A');
-              await locator.pressSequentially(String(step.value), { delay: 95 });
-            }
-          }
-        }
-      }
-      if (step.action === 'range') {
-        await scrollTo(locator);
-        const values = await locator.evaluate(el => ({ min: Number(el.min), max: Number(el.max), value: Number(el.value) }));
-        const value = Number(step.value);
-        if (!(values.min < values.max) || !Number.isFinite(value) || value < values.min || value > values.max) throw Error('Range value is outside the current data. Update the scene.');
-        const box = await locator.boundingBox(), x = v => box.x + 8 + (box.width - 16) * (v - values.min) / (values.max - values.min), y = box.y + box.height / 2;
-        await move(x(values.value), y); await page.mouse.down(); await move(x(value), y, 1400); await page.mouse.up();
-        if (Number(await locator.inputValue()) !== value) throw Error('Slider did not reach the requested year.');
-      }
-      if (step.waitFor) await page.locator(step.waitFor).waitFor({ state: 'visible' });
-      if (step.action !== 'hold') await sleep(350);
+      await performAction(step);
       await sleep(step.holdMs ?? 2400);
       if (blockedWrites.length) throw Error('The demo attempted a write or model request. Recording stopped.');
       if (await page.locator('#allocation-map-status:not([hidden])').count()) throw Error('The map reported a loading problem.');
@@ -193,40 +225,22 @@ async function record(format) {
       await page.screenshot({ path: join(directory, 'review', `${String(index + 1).padStart(2, '0')}.png`) });
     }
     cues.at(-1).endAt = Date.now();
-    await page.screencast.stop(); recording = false;
-    const rawProbe = JSON.parse(execFileSync('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', join(directory, 'capture.webm')], { encoding: 'utf8' }));
-    const epoch = Date.parse(rawProbe.format.tags?.creation_time) || recordingStartedAt;
-    manifest.firstFrameAt = firstFrameAt;
-    manifest.recordingEpoch = epoch;
-    manifest.rawDurationSeconds = Number(rawProbe.format.duration);
-    const rawStream = rawProbe.streams.find(s => s.codec_type === 'video');
-    if (rawStream.width !== preset.viewport.width || rawStream.height !== preset.viewport.height) throw Error('Raw capture dimensions do not match the viewport.');
-    const captions = cues.map(c => ({ text: c.text, startMs: Math.max(0, c.startAt - epoch), endMs: Math.max(1, c.endAt - epoch), timestampMs: null, confidence: null }));
+    const capture = await recorder.stop();
+    const captions = cues.map(c => ({ text: c.text, startMs: Math.max(0, c.startAt - capture.epoch), endMs: Math.max(1, c.endAt - capture.epoch) }));
     const subtitles = subtitleFiles(captions);
     await writeFile(join(directory, 'captions.json'), JSON.stringify(captions, null, 2));
     await writeFile(join(directory, 'captions.srt'), subtitles.srt);
     await writeFile(join(directory, 'captions.vtt'), subtitles.vtt);
-    // Playwright appends at least one second of its last frame on stop. Trim that
-    // recorder tail to the measured end of the last caption, without changing speed.
-    await run('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-i', join(directory, 'capture.webm'), '-an', '-t', String(captions.at(-1).endMs / 1000),
-      '-vf', `scale=${preset.output.width}:${preset.output.height}:flags=lanczos,setsar=1`,
-      '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', join(directory, 'rendering.mp4')]);
-    const probe = JSON.parse(execFileSync('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', join(directory, 'rendering.mp4')], { encoding: 'utf8' }));
-    const stream = probe.streams.find(s => s.codec_type === 'video');
-    if (stream?.width !== preset.output.width || stream?.height !== preset.output.height || stream.codec_name !== 'h264') throw Error('Export dimensions or codec are incorrect.');
-    const durationMs = Number(probe.format.duration) * 1000;
-    if (Math.abs(durationMs - captions.at(-1).endMs) > 100) throw Error('Recording and caption timing diverged. Review capture.webm.');
-    await rename(join(directory, 'rendering.mp4'), join(directory, 'opax.mp4'));
-    manifest.status = 'ready-for-review'; manifest.durationSeconds = Number(probe.format.duration);
-    manifest.endedAt = new Date().toISOString();
-    await writeFile(join(directory, 'probe.json'), JSON.stringify(probe, null, 2));
+    const rendered = await renderVideo({ browser, directory, capture, captions, preset, captionsEnabled: !args['no-captions'] });
+    manifest.status = 'ready-for-review'; manifest.durationSeconds = Number(rendered.probe.format.duration);
+    manifest.timing = rendered.timing; manifest.endedAt = new Date().toISOString();
     console.log(`${format}: ${manifest.durationSeconds.toFixed(1)}s → ${join(directory, 'opax.mp4')}`);
   } catch (error) {
     manifest.status = 'failed'; manifest.error = error.message;
     await page.screenshot({ path: join(directory, 'failure.png') }).catch(() => {});
     throw error;
   } finally {
-    if (recording) await page.screencast.stop().catch(() => {});
+    if (recorder) await recorder.stop().catch(() => {});
     await Promise.all(evidenceJobs);
     manifest.blockedWrites = blockedWrites;
     await writeFile(join(directory, 'manifest.json'), JSON.stringify(manifest, null, 2));
