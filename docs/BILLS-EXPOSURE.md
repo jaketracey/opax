@@ -32,7 +32,12 @@ scp scripts/export_bills.py desktop:/tmp/
 ssh desktop 'python3 /tmp/export_bills.py --legacy --out /tmp/bills'
 rsync -a --delete desktop:/tmp/bills/ portal/public/bills/
 python3 scripts/export_bills.py --fill-briefs portal/public/bills
+python3 scripts/export_bills.py --merge-drafts portal/public/bills   # the rsync --delete drops the drafts
 ```
+
+A copy of the script in `/tmp` on the box cannot see `scripts/bills_registry/exposure_drafts.json`,
+so the on-box run has no drafts and the `--delete` rsync removes them; the merge
+step puts them back from the repo file and must run last.
 
 The read is `mode=ro` with `PRAGMA query_only=ON` inside one transaction, and
 `sqlite3` is not installed on the box, so everything goes through Python's
