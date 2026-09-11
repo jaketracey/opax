@@ -26,10 +26,12 @@ function stamp(ms, separator) {
 }
 
 export function subtitleFiles(captions) {
-  const text = value => value.replace(/\r/g, '').replace(/-->/g, '→');
+  // SRT and WebVTT players can interpret markup. Escape it in both formats;
+  // replacing individual tag delimiters is not sufficient sanitisation.
+  const text = value => value.replace(/\r/g, '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
   return {
     srt: captions.map((c, i) => `${i + 1}\n${stamp(c.startMs, ',')} --> ${stamp(c.endMs, ',')}\n${text(c.text)}\n`).join('\n'),
-    vtt: 'WEBVTT\n\n' + captions.map(c => `${stamp(c.startMs, '.')} --> ${stamp(c.endMs, '.')}\n${text(c.text).replaceAll('&', '&amp;').replaceAll('<', '&lt;')}\n`).join('\n'),
+    vtt: 'WEBVTT\n\n' + captions.map(c => `${stamp(c.startMs, '.')} --> ${stamp(c.endMs, '.')}\n${text(c.text)}\n`).join('\n'),
   };
 }
 

@@ -30,7 +30,16 @@ test('caption timestamps round correctly across minute and hour boundaries', () 
   assert.match(result.srt, /00:00:00,000 --> 00:01:00,000/);
   assert.match(result.srt, /00:01:00,000 --> 01:00:00,000/);
   assert.match(result.vtt, /^WEBVTT\n\n/);
-  assert.match(result.vtt, /Check &lt;the source> &amp; dates/);
+  assert.match(result.vtt, /Check &lt;the source&gt; &amp; dates/);
+  assert.match(result.srt, /Check &lt;the source&gt; &amp; dates/);
+});
+
+test('subtitle text stays text, including comments and cue-like delimiters', () => {
+  const result = subtitleFiles([{text: '<!-- note --!><img src=x> -->', startMs: 0, endMs: 1000}]);
+  for (const file of [result.srt, result.vtt]) {
+    assert.ok(!file.includes('<'));
+    assert.ok(file.includes('&lt;!-- note --!&gt;&lt;img src=x&gt; --&gt;'));
+  }
 });
 
 test('capture and export aspect ratios match, with even H264 dimensions', () => {
