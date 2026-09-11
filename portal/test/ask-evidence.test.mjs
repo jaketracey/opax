@@ -18,8 +18,8 @@ const fixture=()=>({answer:'😀 A fact[^1]. Another fact[^2].\n\n[^1]: block-AA
 const plain=x=>JSON.parse(JSON.stringify(x));
 test('original-turn version expires only named position answers, preserving other caches',()=>{
  const position={question:'What would Example MP say about housing?',speaker:'Example MP',kind:'speech'};
- assert.equal(JSON.parse(api.askCacheInput(position,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v2');
- assert.equal(JSON.parse(api.askCacheInput({...position,question:'What did Example MP say about housing?'},'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v2');
+ assert.equal(JSON.parse(api.askCacheInput(position,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v3');
+ assert.equal(JSON.parse(api.askCacheInput({...position,question:'What did Example MP say about housing?'},'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v3');
  for(const input of [{question:'Who funds Labor?'},{...position,kind:'all'}])assert.equal(JSON.parse(api.askCacheInput(input,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION);
 });
 test('footnotes resolve through provider mappings with Unicode offsets',()=>{const p=api.askPayload(fixture());assert.equal(p.answer,'😀 A fact. Another fact.');assert.deepEqual(plain(p.citations[id]),[[7,8]]);assert.deepEqual(plain(p.citations[neighbour]),[[21,22]]);assert.equal(p.sources[0].cited,true)});

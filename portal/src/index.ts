@@ -939,7 +939,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
   const topic = str(input.topic)
   return JSON.stringify({
     epoch,
-    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v2' : ''),
+    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v3' : ''),
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
@@ -1182,7 +1182,7 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
         prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + POSITION_GROUNDING + ' Return only valid JSON in the requested points-and-citations schema, with no other text.',user:'{question}'}},
       headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(25_000),
     }))
-    const summary = answer && parseSearchSummary(normalizePositionDraft(answer, sources), sources)
+    const summary = answer && parseSearchSummary(normalizePositionDraft(answer, sources), sources, true)
     if (!summary) return null
     const folded = (text: string) => text.normalize('NFKC').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim()
     // Keep useful verified points when another point quotes a title or strays
@@ -1190,13 +1190,16 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
     summary.points = summary.points.filter(point => point.source_ids.length === 1 && positionEvidence(point.text, String(body.query || '')) &&
       point.source_ids.every(id => {
         const source = summary.sources.find(source => source.id === id)
-        return source && positionEvidence(source.evidence.join(' '), String(body.query || '')) &&
-          positionPointSupported(point.text, source.evidence.join(' '), String(body.position_question || ''), source.date) &&
-          source.evidence.every(quote => folded(source.snippet).includes(folded(quote)))
+        const evidence = point.evidence?.[id] || []
+        return source && evidence.length && positionEvidence(evidence.join(' '), String(body.query || '')) &&
+          positionPointSupported(point.text, evidence.join(' '), String(body.position_question || ''), source.date) &&
+          evidence.every(quote => folded(source.snippet).includes(folded(quote)))
       })).slice(0,2)
     if (!summary.points.length) return null
     const used = new Set(summary.points.flatMap(point => point.source_ids))
-    summary.sources = summary.sources.filter(source => used.has(source.id))
+    summary.sources = summary.sources.filter(source => used.has(source.id)).map(source => ({...source,
+      evidence:[...new Set(summary.points.flatMap(point => point.evidence?.[source.id] || []))],
+    }))
     let text = '**From their speeches**\n\n'
     const citations: Record<string,number[][]> = {}
     for (const point of summary.points) {

@@ -65,7 +65,7 @@ export function positionPointSupported(text: string, evidence: string, question:
     ?.map(number => /^\d/.test(number) ? String(Number(number.replaceAll(',', ''))) : number) || []
   const allowed = new Set(numbers(evidence + ' ' + date))
   if (numbers(text).some(number => !allowed.has(number))) return false
-  if (/\b(?:cap|limit)\b/i.test(question) && !/\b(?:cap(?:ped|ping)?|limit(?:ed)?|maximum|up to)\b/i.test(evidence)) return false
+  if (/\b(?:cap|limit)\b/i.test(question) && [text,evidence].some(value => !/\b(?:cap(?:ped|ping)?|limit(?:ed)?|maximum|up to)\b/i.test(value))) return false
   if (/\b(?:whichever|if that is|if this is)\s+lower\b/i.test(evidence) && !/\blower\b/i.test(text)) return false
   return true
 }
