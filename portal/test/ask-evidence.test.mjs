@@ -6,21 +6,28 @@ import ts from 'typescript';
 const transpile=s=>ts.transpileModule(s,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
 const exports={};runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts',import.meta.url),'utf8')),{exports});
 const {normaliseFootnotes,FootnoteStream}=exports;
+const scope={};runInNewContext(transpile(readFileSync(new URL('../src/ask-scope.ts',import.meta.url),'utf8')),{exports:scope});
 const index=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const extract=(a,b)=>index.slice(index.indexOf(a),index.indexOf(b,index.indexOf(a)));
 let streamBody;
-const api=runInNewContext(transpile([extract('function buildAskBody(','/** The portal'),extract('function askPayload(','type AskPayload'),extract('function hasUnsupportedQuotes(', '/**\n * The canonical form of an ask'),extract('function askCacheInput(','/** Worth keeping'),extract('class RefusalGate','/** streamAskOnce under')].join('\n'))+';({buildAskBody,askPayload,askCacheInput,streamAskOnce,hasUnsupportedQuotes,evidenceOnlyAnswer})',{
- ...exports, integrityQuestion:()=>false, askRetrievalQuery: input=>input.question, recordContext:rows=>rows.map(r=>JSON.stringify(r)), recordSources:(rows,c)=>rows.map((r,i)=>({...r,resource:`USER_CONTEXT_${i}`,cited:Object.hasOwn(c,`USER_CONTEXT_${i}`)})), RECORD_GROUNDING:'', filterExpression:f=>({field:f}),calibrate:s=>s,label:()=>null,canonicalSpeaker:s=>s,TOPIC_SLUGS:new Set(['housing']),REFUSAL_PREFIXES:['not enough data'],TextDecoder,Date,ragBase:()=> 'https://example.test',fetch:async()=>new Response(streamBody)
+const api=runInNewContext(transpile([extract('function buildAskBody(','/** The portal'),extract('function askPayload(','type AskPayload'),extract('function hasUnsupportedQuotes(', '/**\n * The canonical form of an ask'),extract('function askCacheInput(','/** Cut on word boundaries'),extract('class RefusalGate','/** streamAskOnce under')].join('\n'))+';({buildAskBody,askPayload,askCacheInput,cacheableAnswer,streamAskOnce,hasUnsupportedQuotes,evidenceOnlyAnswer})',{
+ ...exports, isNamedPositionQuestion:scope.isNamedPositionQuestion, isRefusal:r=>r.answer==='refusal', POSITION_GROUNDING: 'Do not roleplay', integrityQuestion:()=>false, askRetrievalQuery: input=>input.question, recordContext:rows=>rows.map(r=>JSON.stringify(r)), recordSources:(rows,c)=>rows.map((r,i)=>({...r,resource:`USER_CONTEXT_${i}`,cited:Object.hasOwn(c,`USER_CONTEXT_${i}`)})), RECORD_GROUNDING:'', filterExpression:f=>({field:f}),calibrate:s=>s,label:()=>null,canonicalSpeaker:s=>s,TOPIC_SLUGS:new Set(['housing']),REFUSAL_PREFIXES:['not enough data'],TextDecoder,Date,ragBase:()=> 'https://example.test',fetch:async()=>new Response(streamBody)
 });
 const id='r1/t/transcript/0-50',neighbour='r1/t/transcript/50-100',generated='r1/t/da-summary/0-50';
 const fixture=()=>({answer:'😀 A fact[^1]. Another fact[^2].\n\n[^1]: block-AA\n[^2]: block-AB',citation_footnote_to_context:{'block-AA':id,'block-AB':neighbour},retrieval_results:{resources:{r1:{slug:'speech-1',title:'Speech',fields:{'t/transcript':{paragraphs:{[id]:{text:'Original passage',score:0.8,score_type:'RERANKER'}}}}}}},augmented_context:{paragraphs:{[neighbour]:{id:neighbour,text:'Surrounding original passage'}}}});
 const plain=x=>JSON.parse(JSON.stringify(x));
+test('original-turn version expires only named position answers, preserving other caches',()=>{
+ const position={question:'What would Example MP say about housing?',speaker:'Example MP',kind:'speech'};
+ assert.equal(JSON.parse(api.askCacheInput(position,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v4');
+ assert.equal(JSON.parse(api.askCacheInput({...position,question:'What did Example MP say about housing?'},'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v4');
+ for(const input of [{question:'Who funds Labor?'},{...position,kind:'all'}])assert.equal(JSON.parse(api.askCacheInput(input,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION);
+});
 test('footnotes resolve through provider mappings with Unicode offsets',()=>{const p=api.askPayload(fixture());assert.equal(p.answer,'😀 A fact. Another fact.');assert.deepEqual(plain(p.citations[id]),[[7,8]]);assert.deepEqual(plain(p.citations[neighbour]),[[21,22]]);assert.equal(p.sources[0].cited,true)});
 test('live plain numbering, multiple blocks and repeated citations work',()=>{const p=normaliseFootnotes('Fact [1]. More [1][2].\n[1]: block-AA, block-AB\n[2]: block-AA',{'block-AA':id,'block-AB':neighbour},new Set([id,neighbour]));assert.equal(p.answer,'Fact. More.');assert.equal(p.citations[id].length,2);assert.equal(p.citations[neighbour].length,2);assert.equal(normaliseFootnotes('Schedule [42] applies.',{},new Set()).answer,'Schedule [42] applies.')});
 test('invented and generated references never become citations',()=>{const f=fixture();f.citation_footnote_to_context={'block-AA':generated,'block-AB':'unknown/t/body/0-20'};f.retrieval_results.resources.r1.fields['t/da-summary']={paragraphs:{[generated]:{text:'Generated summary',score:1,score_type:'RERANKER'}}};const p=api.askPayload(f);assert.equal(Object.keys(p.citations).length,0);assert.equal(p.sources[0].cited,false);assert.equal(p.sources[0].snippet,'Original passage')});
 test('neighbouring evidence supplies cited snippet',()=>{const f=fixture();f.answer='A fact[^2].\n[^2]: block-AB';assert.equal(api.askPayload(f).sources[0].snippet,'Surrounding original passage')});
 test('legacy citations still work',()=>{const f=fixture();f.answer='A fact.';f.citation_footnote_to_context={};f.citations={[id]:[[0,6]]};assert.deepEqual(plain(api.askPayload(f).citations[id]),[[0,6]])});
-test('request preserves scope and clips current chat history; cache is versioned',()=>{const b=api.buildAskBody({question:'What did she propose?',speaker:'Example MP',context:Array.from({length:30},(_,i)=>({author:i%2?'answer':'question',text:'x'.repeat(7000)}))});assert.equal(b.citations,'llm_footnotes');assert.equal(b.context,undefined);assert.equal(b.chat_history.length,24);assert.equal(b.chat_history[1].author,'NUCLIA');assert.equal(b.chat_history[0].text.length,6000);assert.equal(b.filter_expression.field.speaker,'Example MP');assert.equal(b.rag_strategies[0].before,1);assert.equal(b.rag_strategies[0].after,1);assert.deepEqual(plain(b.rag_strategies[1].types),['classification_labels']);assert.equal(b.answer_json_schema,undefined);assert.equal(api.askCacheInput({question:'Q',context:[{text:'history'}]},'epoch'),null);assert.match(api.askCacheInput({question:'Q'},'epoch'),/footnotes-context/)});
+test('request preserves scope and clips current chat history; cache is versioned',()=>{const b=api.buildAskBody({question:'What did she propose?',speaker:'Example MP',context:Array.from({length:30},(_,i)=>({author:i%2?'answer':'question',text:'x'.repeat(7000)}))});assert.equal(b.citations,'llm_footnotes');assert.equal(b.context,undefined);assert.equal(b.chat_history.length,24);assert.equal(b.chat_history[1].author,'NUCLIA');assert.equal(b.chat_history[0].text.length,6000);assert.equal(b.filter_expression.field.speaker,'Example MP');assert.equal(b.rag_strategies[0].before,1);assert.equal(b.rag_strategies[0].after,1);assert.deepEqual(plain(b.rag_strategies[1].types),['classification_labels']);assert.equal(b.answer_json_schema,undefined);assert.equal(api.askCacheInput({question:'Q',context:[{text:'history'}]},'epoch'),null);assert.equal(JSON.parse(api.askCacheInput({question:'Q'},'epoch')).pipeline,exports.ASK_PIPELINE_VERSION)});
 test('stream hides markers and definitions across every chunk boundary',()=>{for(const raw of [fixture().answer,'Fact[1].\n\n[1]: block-AA\n','Fact[^block-AA].\n'])for(let size=1;size<=raw.length;size++){const stream=new FootnoteStream();let text='';for(let i=0;i<raw.length;i+=size)text+=stream.push(raw.slice(i,i+size));text+=stream.push('',true);assert.doesNotMatch(text,/block-|\[\^|\[1\]/);assert.match(text,/fact|Fact/)}});
 test('NDJSON and synchronous payloads agree, including augmented evidence',async()=>{const f=fixture();const items=[{type:'answer',text:f.answer},{type:'retrieval',results:f.retrieval_results},{type:'footnote_citations',footnote_to_context:f.citation_footnote_to_context},{type:'augmented_context',augmented:f.augmented_context},{type:'status',code:'0'}];const encoded=new TextEncoder().encode(items.map(item=>JSON.stringify({item})).join('\n'));streamBody=new ReadableStream({start(c){for(let i=0;i<encoded.length;i+=7)c.enqueue(encoded.slice(i,i+7));c.close()}});const events=[];const a=await api.streamAskOnce({ARAG_KB_TOKEN:'test'},{citations:'llm_footnotes'},async(e,d)=>events.push([e,d]),new AbortController().signal);assert.deepEqual(plain(api.askPayload(a)),plain(api.askPayload(f)));assert.doesNotMatch(events.filter(([e])=>e==='delta').map(([,d])=>d.text).join(''),/block-|\[\^/)});
 test('stream preserves normal markdown links and incomplete ordinary brackets',()=>{for(const raw of ['Read [bill](https://example.test).','An ordinary [bracket remains open','Code [1, 2, 3] is an array']){const f=new FootnoteStream();let out='';for(const c of raw)out+=f.push(c);out+=f.push('',true);assert.equal(out,raw)}});
@@ -114,4 +121,32 @@ test('UI keeps footnotes after punctuation and closing quotes without crossing p
  assert.equal(render('A fact.',[
   {answerRanges:[[0,6],[0,7]]},{answerRanges:[[0,7]]}
  ]),'A fact.⟦source:1⟧⟦source:2⟧');
+});
+
+test('position prompts keep the original question and treat an evidence gap as a complete response',()=>{
+ const b=api.buildAskBody({question:'What would Pauline Hanson say about housing?',speaker:'Pauline Hanson',kind:'speech'});
+ assert.match(b.prompt.user,/What would Pauline Hanson say about housing/);
+ assert.match(b.prompt.user,/EXACT topic/);assert.match(b.prompt.user,/Do not add other policies/);
+ assert.equal(exports.isEvidenceGap(exports.EVIDENCE_GAP_ANSWER),true);
+ assert.equal(exports.isEvidenceGap(exports.EVIDENCE_GAP_ANSWER+' She supports unrelated policy.'),false);
+ const proposal=api.buildAskBody({question:'What has David Pocock proposed about housing?',speaker:'David Pocock',kind:'speech'});
+ assert.equal(exports.isPositionBody(proposal),true);assert.match(proposal.prompt.user,/Omit ministerial replies/);
+});
+
+test('an unrelated but cited position cannot pass as an answer about the requested topic',()=>{
+ const body=api.buildAskBody({question:'What would Pauline Hanson say about quantum zoning on Mars?',speaker:'Pauline Hanson',kind:'speech'});
+ body.query='quantum zoning on Mars';
+ const raw=fixture();raw.answer='She proposed an NDIS inquiry.';
+ const checked=exports.guardPositionAnswer(raw,body);
+ assert.equal(checked.answer,exports.EVIDENCE_GAP_ANSWER);assert.deepEqual(plain(checked.retrieval_results.resources),{});
+ raw.retrieval_results.resources.r1.fields['t/transcript'].paragraphs[id].text='She argued immigration needed a cap.';
+ body.query='immigration';assert.equal(exports.guardPositionAnswer(raw,body),raw);
+ body.query='quantum zoning on Mars';body.prompt.system='General search';assert.equal(exports.guardPositionAnswer(raw,body),raw);
+});
+
+test('verified original proposals are reusable while generic unverified excerpts remain uncached',()=>{
+ const p={answer:'A verbatim original proposal with a date.',sources:[{cited:true}],answer_status:'evidence_only'};
+ assert.equal(api.cacheableAnswer(p),false);assert.equal(api.cacheableAnswer({...p,evidence_kind:'original_position_proposal'}),true);
+ assert.equal(api.cacheableAnswer({...p,evidence_kind:'original_position_proposal',sources:[]}),false);
+ assert.equal(api.cacheableAnswer({...p,evidence_kind:'original_position_proposal',answer:'refusal'}),false);
 });

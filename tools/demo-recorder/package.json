@@ -1,0 +1,11 @@
+{
+  "name": "opax-demo-recorder",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "record": "node record.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": { "playwright": "1.63.0" }
+}

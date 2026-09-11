@@ -6,7 +6,7 @@ export interface SummarySource {
   speaker?: string; party?: string; state?: string; date?: string
 }
 export interface SearchSummary {
-  points: { text: string; source_ids: string[] }[]
+  points: { text: string; source_ids: string[]; evidence?: Record<string, string[]> }[]
   sources: (SummarySource & { evidence: string[] })[]
 }
 const clean = (value: unknown, max: number) => typeof value === 'string'
@@ -14,7 +14,7 @@ const clean = (value: unknown, max: number) => typeof value === 'string'
 const fold = (value: string) => value.normalize('NFKC').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim()
 
 /** Only server-retrieved passages enter the prompt; briefs and client prose do not. */
-export function summarySources(rows: Record<string, unknown>[]): SummarySource[] {
+export function summarySources(rows: Record<string, unknown>[], snippetLimit = 1800): SummarySource[] {
   const sources: SummarySource[] = [], seen = new Set<string>()
   for (const row of rows) {
     const slug = typeof row.slug === 'string' ? row.slug : ''
@@ -24,7 +24,7 @@ export function summarySources(rows: Record<string, unknown>[]): SummarySource[]
     const url = new URL(rawHref, 'https://opax.com.au')
     if (url.origin !== 'https://opax.com.au' || url.pathname !== rawHref.split(/[?#]/)[0]) continue
     const href = url.pathname + url.search + url.hash
-    const snippet = clean(stripListingBoilerplate(typeof row.snippet === 'string' ? row.snippet : ''), 1800)
+    const snippet = clean(stripListingBoilerplate(typeof row.snippet === 'string' ? row.snippet : ''), Math.min(6000, Math.max(45, snippetLimit)))
     if (snippet.length < 45 || seen.has(href)) continue
     seen.add(href)
     sources.push({ id: `s${sources.length + 1}`, href, snippet,
@@ -48,7 +48,7 @@ SEARCH DATA:\n${JSON.stringify({query, filters, sources})}`
 }
 
 /** A citation must resolve to this result set and contain a real supporting excerpt. */
-export function parseSearchSummary(answer: string, sources: SummarySource[]): SearchSummary | null {
+export function parseSearchSummary(answer: string, sources: SummarySource[], perPointEvidence = false): SearchSummary | null {
   try {
     const raw = JSON.parse(answer.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, ''))
     if (!Array.isArray(raw.points) || !raw.points.length || raw.points.length > 6) return null
@@ -84,7 +84,9 @@ export function parseSearchSummary(answer: string, sources: SummarySource[]): Se
       const valid = validatePoint()
       if (!valid) continue
       if (points.reduce((n,p) => n+p.text.split(/\s+/).length,0)+valid.text.split(/\s+/).length > 125) continue
-      points.push({text:valid.text,source_ids:[...valid.evidence.keys()]})
+      points.push({text:valid.text,source_ids:[...valid.evidence.keys()],
+        ...(perPointEvidence ? {evidence:Object.fromEntries([...valid.evidence].map(([id,{quotes}]) => [id,[...quotes]]))} : {}),
+      })
       for (const [id,{quotes}] of valid.evidence) {
         if (!cited.has(id)) cited.set(id,new Set())
         for (const quote of quotes) cited.get(id)!.add(quote)

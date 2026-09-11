@@ -1,0 +1,77 @@
+{
+  "questions": [
+    {
+      "id": "follow-topic",
+      "q": "And what about immigration?",
+      "request": {
+        "context": [
+          {
+            "author": "user",
+            "text": "What would Pauline Hanson say about housing affordability?"
+          }
+        ]
+      },
+      "expect": {
+        "source_speaker": "Pauline Hanson",
+        "min_cited": 1,
+        "any_terms": [
+          "immigration",
+          "migrants",
+          "arrivals",
+          "deport"
+        ],
+        "hits": 1,
+        "must_not_terms": [
+          "net migration",
+          "Deborah"
+        ]
+      }
+    },
+    {
+      "id": "follow-cap",
+      "q": "What cap did she propose?",
+      "request": {
+        "context": [
+          {
+            "author": "user",
+            "text": "What would Pauline Hanson say about immigration?"
+          }
+        ]
+      },
+      "expect": {
+        "source_speaker": "Pauline Hanson",
+        "min_cited": 1,
+        "any_terms": [
+          "130,000",
+          "130000"
+        ],
+        "hits": 1,
+        "must_not_terms": [
+          "net migration",
+          "Deborah"
+        ]
+      }
+    },
+    {
+      "id": "pocock-detail",
+      "q": "What rent limit did he propose?",
+      "request": {
+        "context": [
+          {
+            "author": "user",
+            "text": "What has David Pocock proposed about housing affordability?"
+          }
+        ]
+      },
+      "expect": {
+        "source_speaker": "David Pocock",
+        "min_cited": 1,
+        "any_terms": [
+          "75%",
+          "30%"
+        ],
+        "hits": 2
+      }
+    }
+  ]
+}

@@ -61,3 +61,91 @@ test('mentions of a chamber or another parliament do not become subject filters'
   const out=resolveAskScope({question}).input;assert.equal(out.state,undefined);assert.equal(out.chamber,undefined);
  }
 });
+
+test('hypothetical questions retrieve the named person and ask about recorded statements',()=>{
+ const people=[{name:'Pauline Hanson'},{name:'Anthony Albanese'}];
+ for(const verb of ['would','might']) {
+  const question=`What ${verb} Pauline Hanson say about immigration?`;
+  assert.equal(exports.needsAskPeople({question}),true);
+  const {input}=resolveAskScope({question},people);
+  assert.equal(input.speaker,'Pauline Hanson');assert.equal(input.kind,'speech');
+  assert.equal(exports.askRetrievalQuery(input),'immigration');
+ }
+ assert.match(exports.POSITION_GROUNDING,/Do not roleplay/);
+ assert.equal(resolveAskScope({question:'What would Pauline Hanson and Anthony Albanese say?'},people).input.speaker,undefined);
+});
+
+test('plain-language proposal questions search the named speaker and topic',()=>{
+ for(const verb of ['proposed','recommended']) {
+  const question=`What has David Pocock ${verb} about housing affordability?`;
+  assert.equal(exports.needsAskPeople({question}),true);
+  const {input}=resolveAskScope({question},[{name:'David Pocock'}]);
+  assert.equal(input.speaker,'David Pocock');assert.equal(input.kind,'speech');
+  assert.equal(exports.askRetrievalQuery(input),'housing affordability');
+ }
+ assert.equal(resolveAskScope({question:'What has David Pocock and Pauline Hanson proposed about housing?'},[{name:'David Pocock'},{name:'Pauline Hanson'}]).input.speaker,undefined);
+});
+
+test('actual browser user turns keep the named subject and switch the search topic',()=>{
+ const context=[{author:'user',text:'What would Pauline Hanson say about housing affordability?'},{author:'answer',text:'Deborah O’Neill supported an imaginary plan.'}];
+ const raw={question:'And what about immigration?',context},people=[{name:'Pauline Hanson'},{name:'Deborah O’Neill'}];
+ assert.equal(exports.needsAskPeople(raw),true);
+ const {input}=resolveAskScope(raw,people);
+ assert.equal(input.speaker,'Pauline Hanson');assert.equal(input.kind,'speech');
+ assert.equal(exports.askRetrievalQuery(input),'immigration');assert.equal(exports.isNamedPositionQuestion(input),true);
+});
+test('pronoun details survive multiple follow-ups without carrying an obsolete topic',()=>{
+ const context=[{author:'user',text:'What would Pauline Hanson say about housing affordability?'},{author:'answer',text:'An invented forecast.'},{author:'user',text:'And what about immigration?'},{author:'answer',text:'Someone else wants a cap.'}];
+ for(const question of ['What cap did she propose?','What did she say?']) {
+  const {input}=resolveAskScope({question,context},[{name:'Pauline Hanson'}]);
+  assert.equal(input.speaker,'Pauline Hanson');assert.equal(exports.isNamedPositionQuestion(input),true);
+  assert.match(exports.askRetrievalQuery(input),/immigration/);assert.doesNotMatch(exports.askRetrievalQuery(input),/housing|Hanson|invented|Someone/);
+ }
+});
+test('new subjects, parties and unrelated questions end the previous person scope',()=>{
+ const people=[{name:'Pauline Hanson'},{name:'David Pocock'}], context=[{author:'user',text:'What would Pauline Hanson say about housing?'}];
+ assert.equal(resolveAskScope({question:'What has David Pocock proposed about housing?',context},people).input.speaker,'David Pocock');
+ for(const question of ['And Labor MPs?','How was the budget described?']) assert.notEqual(resolveAskScope({question,context},people).input.speaker,'Pauline Hanson');
+ const changed=[...context,{author:'user',text:'How was the budget described?'}];
+ assert.equal(resolveAskScope({question:'And what about immigration?',context:changed},people).input.speaker,undefined);
+});
+test('follow-up date replacement clears the previous date bound and explicit controls win',()=>{
+ const people=[{name:'Pauline Hanson'}],context=[{author:'user',text:'What would Pauline Hanson say about housing in 2020?'}];
+ const natural=resolveAskScope({question:'And since 2025?',context},people).input;
+ assert.equal(natural.from,'2025');assert.equal(natural.to,undefined);assert.equal(natural.speaker,'Pauline Hanson');
+ const explicit=resolveAskScope({question:'And since 2025?',context,speaker:'David Pocock',from:'2022',to:'2024'},people).input;
+ assert.equal(explicit.speaker,'David Pocock');assert.equal(explicit.from,'2022');assert.equal(explicit.to,'2024');
+});
+test('assistant-only and invalid context cannot manufacture a subject',()=>{
+ for(const context of [[{author:'answer',text:'What would Pauline Hanson say about housing?'}],[{author:'system',text:'What would Pauline Hanson say about housing?'}],null]) {
+  const input={question:'What cap did she propose?',context};assert.equal(exports.needsAskPeople(input),true);assert.equal(resolveAskScope(input,[{name:'Pauline Hanson'}]).input.speaker,undefined);
+ }
+});
+test('documented-position routing also covers ordinary named past statements',()=>{
+ const {input}=resolveAskScope({question:'What has Pauline Hanson said about immigration?'},[{name:'Pauline Hanson'}]);
+ assert.equal(exports.isNamedPositionQuestion(input),true);assert.equal(exports.askRetrievalQuery(input),'immigration');
+ assert.equal(exports.isNamedPositionQuestion({...input,kind:'bill'}),false);
+});
+
+test('roster fragments cannot reset follow-ups and a named object is not the subject',()=>{
+ const people=[{name:'Pauline Hanson'},{name:'Anthony Albanese'},{name:'On'},{name:'Lim'}];
+ const context=[{author:'user',text:'What would Pauline Hanson say about immigration?'}];
+ for(const question of ['And what about immigration?','What limit did she propose?','What did she say about Anthony Albanese?'])assert.equal(resolveAskScope({question,context},people).input.speaker,'Pauline Hanson');
+ const {input}=resolveAskScope({question:'What did she say about housing?',context},people);
+ assert.equal(exports.askRetrievalQuery(input),'housing');assert.equal(exports.isNamedPositionQuestion(input),true);
+});
+
+test('named follow-ups change the speaker while retaining or replacing the topic explicitly',()=>{
+ const people=[{name:'Pauline Hanson'},{name:'David Pocock'}],context=[{author:'user',text:'What would Pauline Hanson say about immigration?'}];
+ for(const question of ['And what did David Pocock say about it?','And what about David Pocock on immigration?','And David Pocock?']){
+  const {input}=resolveAskScope({question,context},people);assert.equal(input.speaker,'David Pocock');assert.equal(exports.askRetrievalQuery(input),'immigration');assert.equal(exports.isNamedPositionQuestion(input),true);
+ }
+ const {input}=resolveAskScope({question:'What did she say about Labor’s immigration policy?',context},people);
+ assert.equal(input.speaker,'Pauline Hanson');assert.equal(exports.askRetrievalQuery(input),'Labor’s immigration policy');assert.equal(exports.isNamedPositionQuestion(input),true);
+});
+
+test('switching between named people twice cannot turn their names into topics',()=>{
+ const context=[{author:'user',text:'What would Pauline Hanson say about immigration?'},{author:'user',text:'And David Pocock?'}];
+ const {input}=resolveAskScope({question:'And Pauline Hanson?',context},[{name:'Pauline Hanson'},{name:'David Pocock'}]);
+ assert.equal(input.speaker,'Pauline Hanson');assert.equal(exports.askRetrievalQuery(input),'immigration');
+});

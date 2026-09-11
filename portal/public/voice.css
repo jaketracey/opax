@@ -73,3 +73,7 @@ body.opax-voice-ready { padding-bottom: calc(76px + env(safe-area-inset-bottom, 
   .opax-voice-eyebrow { display:none; }
   .opax-voice-footer { padding-top:8px; padding-bottom:10px; }
 }
+
+/* Keep the text composer's Ask button usable while the voice launcher is present. */
+body:has(#panel-chat:not([hidden])) .opax-voice { bottom:calc(max(12px, env(safe-area-inset-bottom, 0px)) + var(--chat-voice-clearance, 84px)); }
+body:has(#panel-chat:not([hidden])) .opax-voice-panel { max-height:calc(100dvh - 112px - var(--chat-voice-clearance, 84px)); }

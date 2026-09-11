@@ -1,0 +1,68 @@
+{
+  "id": "grant-place",
+  "title": "The grant behind four new basketball courts",
+  "path": "/reports/grants-allocation?collection=history&q=Willetton",
+  "ready": ".allocation-pin[title^=\"Willetton\"]",
+  "description": "A specific public award for Willetton Basketball Stadium, from amount to project scope to venue evidence. Fixed caption facts are checked against the captured public dataset before recording. This is a selected historical example, not proof of payment or completed works.",
+  "initialTarget": "#allocation-detail",
+  "evidence": [
+    {
+      "path": "/research/grants-history.json",
+      "recordId": "GA6602",
+      "equals": {
+        "record_type": "award",
+        "value": 6050000,
+        "publish_date": "2018-05-24",
+        "source_url": "https://www.grants.gov.au/Ga/Show/9e3238d0-96e3-5317-4b1d-90a64ee021c2",
+        "recipient": "Willetton Basketball Association Inc"
+      },
+      "includes": {
+        "activity": [
+          "four new indoor basketball courts",
+          "seating",
+          "change rooms",
+          "meeting/function facilities"
+        ],
+        "title": [
+          "Willetton Basketball Stadium"
+        ]
+      }
+    }
+  ],
+  "setup": [],
+  "steps": [
+    {
+      "action": "hold",
+      "caption": "$6.05 million for a stadium expansion. What did it cover?",
+      "holdMs": 3700,
+      "frameTarget": "#allocation-detail"
+    },
+    {
+      "action": "hover",
+      "target": ".allocation-description",
+      "caption": "Four new indoor courts, plus change rooms and other facilities.",
+      "holdMs": 3300,
+      "frameTarget": "#allocation-detail"
+    },
+    {
+      "action": "hover",
+      "target": ".allocation-facts",
+      "caption": "The award names Willetton Basketball Association as the recipient.",
+      "holdMs": 2700,
+      "frameTarget": ".allocation-facts"
+    },
+    {
+      "action": "hover",
+      "target": ".allocation-source-link",
+      "caption": "Original award notice linked here. It does not prove payment.",
+      "holdMs": 1800,
+      "frameTarget": "#allocation-detail"
+    },
+    {
+      "action": "hold",
+      "caption": "Find the record behind a project. opax.com.au",
+      "holdMs": 2800,
+      "frameTarget": "#allocation-detail"
+    }
+  ]
+}

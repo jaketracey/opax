@@ -1,0 +1,346 @@
+{
+  "_doc": "Focused discovery review. Run with scripts/ask_regression.py --bench scripts/ask_discovery_questions.json. Structural success is not factual verification: review original cited speeches, dates, attribution and receipt selection. Exact money figures are snapshot assertions for the 7 September 2026 graph, not complete donation totals.",
+  "questions": [
+    {
+      "id": "hanson-housing",
+      "q": "What would Pauline Hanson say about housing affordability?",
+      "expect": {
+        "any_terms": [
+          "GST",
+          "building materials",
+          "five-year",
+          "11 Feb 2025"
+        ],
+        "hits": 3,
+        "min_cited": 1,
+        "source_speaker": "Pauline Hanson",
+        "must_not_terms": [
+          "NDIS",
+          "investor problem",
+          "investor activity",
+          "supply problem"
+        ]
+      }
+    },
+    {
+      "id": "hanson-immigration",
+      "q": "What would Pauline Hanson say about immigration?",
+      "expect": {
+        "any_terms": [
+          "130,000",
+          "immigration"
+        ],
+        "hits": 2,
+        "min_cited": 1,
+        "source_speaker": "Pauline Hanson"
+      }
+    },
+    {
+      "id": "gambling-rank",
+      "q": "Who takes the most money from the gambling lobby?",
+      "expect": {
+        "any_terms": [
+          "$10,763,834",
+          "Labor",
+          "selection"
+        ],
+        "hits": 3,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "fossil-fuel-rank",
+      "q": "Who receives the most funding from fossil fuel donors?",
+      "expect": {
+        "any_terms": [
+          "$9,013,973",
+          "Liberal",
+          "selection"
+        ],
+        "hits": 3,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "labor-funders",
+      "q": "Who donates the most to Labor?",
+      "expect": {
+        "any_terms": [
+          "disclosed",
+          "receipts",
+          "not a donations-only ranking"
+        ],
+        "hits": 3,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "one-nation-funders",
+      "q": "Who donates the most to One Nation?",
+      "expect": {
+        "any_terms": [
+          "disclosed",
+          "receipts",
+          "not a donations-only ranking"
+        ],
+        "hits": 3,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "largest-connection",
+      "q": "Who donates the most to who?",
+      "expect": {
+        "any_terms": [
+          "Mineralogy",
+          "United Australia Party",
+          "$128,428,269"
+        ],
+        "hits": 3,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "gambling-one-year",
+      "q": "Who takes the most money from the gambling lobby in 2020?",
+      "expect": {
+        "any_terms": [
+          "$457,673",
+          "2020\u201321",
+          "Labor"
+        ],
+        "hits": 3,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "unsupported-position",
+      "q": "What would Pauline Hanson say about quantum zoning on Mars?",
+      "expect": {
+        "thin_ok": true,
+        "must_not_terms": [
+          "NDIS",
+          "income splitting",
+          "royal commission"
+        ]
+      }
+    },
+    {
+      "id": "albanese-housing-control",
+      "q": "What would Anthony Albanese say about housing affordability?",
+      "expect": {
+        "any_terms": [
+          "housing"
+        ],
+        "hits": 1,
+        "min_cited": 1,
+        "source_speaker": "Anthony Albanese"
+      }
+    },
+    {
+      "id": "gambling-party-comparison",
+      "q": "Who gets more gambling money, Labor or Liberal?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$1,739,427",
+          "$10,763,834",
+          "$9,024,407"
+        ],
+        "hits": 3,
+        "min_cited": 3
+      }
+    },
+    {
+      "id": "gambling-party-comparison-year",
+      "q": "Who gets more gambling money, Labor or Liberal in 2020?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$97,478",
+          "$457,673",
+          "$360,195"
+        ],
+        "hits": 3,
+        "min_cited": 3
+      }
+    },
+    {
+      "id": "mineralogy-familiar-name",
+      "q": "Who gets the most money from Mineralogy?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "United Australia Party",
+          "$128,428,269"
+        ],
+        "hits": 2,
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "industry-comparison",
+      "q": "Who gives more money to Labor, unions or finance?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$122,966,378",
+          "$247,398,401",
+          "$124,432,023"
+        ],
+        "hits": 3,
+        "min_cited": 3
+      }
+    },
+    {
+      "id": "banks-not-finance",
+      "q": "Who gives more money to Labor, unions or banks?",
+      "expect": {
+        "answer_status": "needs_scope",
+        "any_terms": [
+          "grouped with other finance"
+        ],
+        "hits": 1,
+        "must_not_terms": [
+          "$"
+        ]
+      }
+    },
+    {
+      "id": "pocock-proposals",
+      "q": "What has David Pocock proposed about housing affordability?",
+      "expect": {
+        "any_terms": [
+          "Commonwealth land",
+          "75%",
+          "30%",
+          "2 July 2026"
+        ],
+        "hits": 3,
+        "min_cited": 1,
+        "source_speaker": "David Pocock"
+      }
+    },
+    {
+      "id": "mixed-industries",
+      "q": "Who gets more money from gambling and aerospace, Labor or Liberal?",
+      "expect": {
+        "answer_status": "needs_scope",
+        "any_terms": [
+          "aerospace",
+          "whole question"
+        ],
+        "hits": 2,
+        "must_not_terms": [
+          "$"
+        ]
+      }
+    },
+    {
+      "id": "mixed-donors",
+      "q": "Who gets the most money from Mineralogy and Acme Space Widgets?",
+      "expect": {
+        "answer_status": "needs_scope",
+        "any_terms": [
+          "acme space widgets",
+          "whole question"
+        ],
+        "hits": 2,
+        "must_not_terms": [
+          "$"
+        ]
+      }
+    },
+    {
+      "id": "industry-subset",
+      "q": "Who gets the most money from online gambling?",
+      "expect": {
+        "answer_status": "needs_scope",
+        "any_terms": [
+          "online",
+          "whole question"
+        ],
+        "hits": 2,
+        "must_not_terms": [
+          "$"
+        ]
+      }
+    },
+    {
+      "id": "gambling-labor-year-comparison",
+      "q": "Did Labor receive more gambling money in 2020 or 2021?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$553,355",
+          "$457,673",
+          "$1,011,028",
+          "2020\u201321",
+          "2021\u201322"
+        ],
+        "hits": 5,
+        "min_cited": 3
+      }
+    },
+    {
+      "id": "gambling-labor-year-change",
+      "q": "How did gambling receipts to Labor change from 2020 to 2021?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$553,355",
+          "$457,673",
+          "$1,011,028"
+        ],
+        "hits": 3,
+        "min_cited": 3
+      }
+    },
+    {
+      "id": "gambling-labor-year-decrease",
+      "q": "How did gambling receipts to Labor change from 2021 to 2022?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$360,828 less",
+          "$1,011,028",
+          "$650,200"
+        ],
+        "hits": 3,
+        "min_cited": 3
+      }
+    },
+    {
+      "id": "gambling-labor-year-endpoints",
+      "q": "Compare gambling receipts to Labor in 2019 versus 2022",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$366,565",
+          "$283,635",
+          "$650,200"
+        ],
+        "hits": 3,
+        "min_cited": 3,
+        "must_not_terms": [
+          "$457,673",
+          "$1,011,028"
+        ]
+      }
+    },
+    {
+      "id": "gambling-multiple-year-cohorts",
+      "q": "Did Labor or Liberal receive more gambling money in 2020 than in 2021?",
+      "expect": {
+        "answer_status": "needs_scope",
+        "any_terms": [
+          "one recipient party"
+        ],
+        "hits": 1,
+        "must_not_terms": [
+          "$"
+        ]
+      }
+    }
+  ]
+}

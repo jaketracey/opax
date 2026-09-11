@@ -983,7 +983,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=evidence-button-20260909");
+    const { mountMoneyMap } = await import("/money-map.js?v=precise-industry-20260912");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1236,7 +1236,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=evidence-button-20260909"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=precise-industry-20260912"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -2304,8 +2304,41 @@ function parseDocBlocks(body) {
   return blocks;
 }
 
-/** Inline treatment: **bold** only — text nodes and <strong>, nothing else. */
+function safeAnswerLink(href) {
+  if (typeof href !== "string" || !/^(?:https?:\/\/|\/(?!\/))/i.test(href) || /[\\\u0000-\u0020]/.test(href)) return null;
+  try {
+    const url = new URL(href, "https://opax.com.au");
+    if (url.origin !== "https://opax.com.au" || url.username || url.password) return null;
+    // Encode each URL component explicitly before it is written into the DOM.
+    // Decode individual components first so an existing %3A or %20 is not doubled.
+    const path = url.pathname.split("/").map(part => encodeURIComponent(decodeURIComponent(part))).join("/");
+    const query = [...url.searchParams].map(([key, value]) => encodeURIComponent(key) + "=" + encodeURIComponent(value)).join("&");
+    const hash = url.hash ? "#" + encodeURIComponent(decodeURIComponent(url.hash.slice(1))) : "";
+    return path + (query ? "?" + query : "") + hash;
+  } catch { return null; }
+}
+
+/** Render links and emphasis as DOM nodes; model text never becomes HTML. */
 function appendInline(el, text) {
+  const value = String(text);
+  const links = /`[^`\n]+`|\[([^\]\n]+)\]\(([^\s()]+)\)/g;
+  let last = 0;
+  for (const match of value.matchAll(links)) {
+    appendStyledText(el, value.slice(last, match.index));
+    const href = safeAnswerLink(match[2]);
+    if (href) {
+      const link = document.createElement("a");
+      // Keep the origin literal: source/model text can supply only an Opax path.
+      link.href = "https://opax.com.au" + href;
+      appendStyledText(link, match[1]);
+      el.appendChild(link);
+    } else appendStyledText(el, match[0]);
+    last = match.index + match[0].length;
+  }
+  appendStyledText(el, value.slice(last));
+}
+
+function appendStyledText(el, text) {
   // Bold splits first so a ** pair is never read as two italics markers.
   const parts = String(text).split(/\*\*(.+?)\*\*/);
   parts.forEach((part, j) => {
@@ -3066,7 +3099,7 @@ function renderMoneyPanel(ind) {
 
 /** "What did John Howard say about pokies?" → filter retrieval to the speaker. */
 function parseSpeakerIntent(q) {
-  const m = /^what (?:did|has|have|does) ([A-Za-z'\u2019 .-]{4,40}?) (?:say|said|says)(?: about| on)? /i.exec(q.trim());
+  const m = /^(?:what|how) (?:did|has|have|does|would|might) ([A-Za-z'\u2019 .-]{4,40}?) (?:say|said|says|propos(?:e|ed)|recommend(?:ed)?)(?: about| on)? /i.exec(q.trim());
   if (!m) return null;
   const who = m[1].trim();
   if (/\b(parliament|house|senate|mps?|senators?|government|labor|liberal|greens|nationals|coalition|minister|ministers|politicians?|members|people|courts?|they)\b/i.test(who)) return null;
@@ -3731,7 +3764,7 @@ async function mountSubjectMap(nodeId) {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=evidence-button-20260909");
+    const { mountMoneyMap } = await import("/money-map.js?v=precise-industry-20260912");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
@@ -8438,7 +8471,7 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=evidence-button-20260909"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=precise-industry-20260912"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
@@ -8625,14 +8658,7 @@ async function runAsk(question) {
   $("ask-followups").replaceChildren();
   $("ask-answer").askEvidence = [];
   const btn = $("ask-submit");
-  // Structured money answer, rendered immediately from local data.
-  const moneyInd = detectMoneyIndustry(question);
   $("ask-money").hidden = true;
-  if (moneyInd) {
-    loadMoneyData().then(() => {
-      if (askAbort === myAbort) renderMoneyPanel(moneyInd);
-    });
-  }
   let speakerFilter = parseSpeakerIntent(question);
   btn.disabled = true;
   btn.classList.add("btn-loading");
@@ -8705,6 +8731,7 @@ async function runAsk(question) {
     // Trim before every use: a whitespace-only answer is truthy and would
     // otherwise slip past the "(no answer)" fallback and render nothing.
     const answerText = (data.answer || "").trim();
+    const needsClarification = ["needs_scope", "needs_period"].includes(data.answer_status);
     const sources = (data.sources || []).map((source) => ({
       ...source,
       cited: source.cited ?? Object.keys(data.citations || {}).some((key) => key.split("/")[0] === source.resource),
@@ -8725,14 +8752,16 @@ async function runAsk(question) {
     const alsoList = cited.length ? retrieved : [];
     $("ask-answer").askEvidence = citedList;
     lastAsk = { question, answer: answerText, sources, kind: askKind(), answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts };
-    prefetchAskFollowups(lastAsk);
+    if (!data.money_ranking) prefetchAskFollowups(lastAsk);
 
+    if (data.money_ranking) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
     hideWombat();
-    setStatus($("ask-status"), data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
+    setStatus($("ask-status"), needsClarification ? "Please clarify the question before I calculate the answer." : data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
     revealAskResult();
-    $("ask-result").querySelector(".action-row").hidden = false;
-    $("ask-result").querySelector(".kicker").textContent = data.answer_status === "evidence_only" ? "From the record" : "Answer";
+    $("ask-result").querySelector(".action-row").hidden = needsClarification;
+    $("ask-stamp").hidden = needsClarification;
+    $("ask-result").querySelector(".kicker").textContent = needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? "From disclosed receipts" : data.answer_status === "evidence_only" ? "From the record" : "Answer";
     if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
       renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question) });
@@ -8843,7 +8872,7 @@ function renderChips() {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "chip";
-    b.textContent = q.length > 60 ? q.slice(0, 57) + "…" : q;
+    b.textContent = q;
     b.addEventListener("click", () => {
       $("ask-input").value = q;
       replaceRoute(askHash(q));
@@ -9008,9 +9037,11 @@ function syncAskChatViewport() {
   const update = () => {
     const covered = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
     form.style.setProperty("--ask-keyboard-bottom", `${covered}px`);
+    document.documentElement.style.setProperty("--chat-voice-clearance", `${Math.ceil(form.getBoundingClientRect().height) + covered}px`);
   };
   viewport.addEventListener("resize", update);
   viewport.addEventListener("scroll", update);
+  new ResizeObserver(update).observe(form);
   update();
 }
 
@@ -11718,7 +11749,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=evidence-button-20260909");
+    const { mountMoneyMap } = await import("/money-map.js?v=precise-industry-20260912");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
@@ -11961,7 +11992,7 @@ async function openReport(slug, sectionNum, manageFocus) {
     root.hidden = false;
     currentReportSlug = null;
     setCrumbs([{label:'Reports',href:'/reports'},{label:'Where community funding goes'}]);
-    const { mountGrantsResearch } = await import('/grants-research.js?v=20260909-map-2');
+    const { mountGrantsResearch } = await import('/grants-research.js?v=20260911-clear-projects');
     if (grantsGeneration !== grantsResearchGeneration || !hereRoute().startsWith('/reports/grants-allocation')) return;
     grantsResearchHandle = mountGrantsResearch(root,{focus:manageFocus});
     await grantsResearchHandle.ready;
