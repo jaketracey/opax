@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {buildFlows, filterFlows, windowFlow, aggregateDonors, sortRows, buildCSV, parseLedgerParams} from '../public/ledger.js';
+import {buildFlows, filterFlows, windowFlow, aggregateDonors, sortRows, buildCSV, parseLedgerParams, serializeLedgerParams} from '../public/ledger.js';
 const row={donorId:'donor:test',donor:'Test',industry:'gambling',party:'Labor',partyColour:'#f00',total:105,count:4,firstYear:2020,lastYear:2022,byYear:{2020:[60,1],2022:[40,2]},undated:[5,1]};
 test('selected years recalculate amounts, counts and dates without mutating lifetime data',()=>{
  assert.equal(windowFlow(row,null,null),row);
@@ -68,4 +68,21 @@ test('every published jurisdiction matches independently summed year cells, incl
    assert.equal(rows.reduce((s,r)=>s+r.count,0),expected.reduce((s,[,v])=>s+v[1],0),`${file}: count ${from}-${to}`);
   }
  }
+});
+
+test('shareable selection round trips exact filters, donor aggregation and sort order',()=>{
+ const data=JSON.parse(readFileSync(new URL('../public/graph/money.qld.json',import.meta.url)));
+ const state={jur:'qld',view:'donors',q:'Tabcorp',industry:'gambling',party:'Labor',focusDonorId:'donor:tabcorp',yearFrom:2020,yearTo:2020,min:0,sort:{donors:{key:'donor',dir:'asc'}}};
+ const params=serializeLedgerParams(state,data), parsed=parseLedgerParams(params,data);
+ assert.equal(parsed.ok,true);assert.equal(parsed.jurisdiction,'qld');assert.equal(parsed.view,'donors');assert.deepEqual(parsed.sort,state.sort.donors);
+ assert.equal(parsed.filters.partyId,'party:Labor');assert.equal(parsed.filters.focusDonorId,'donor:tabcorp');assert.equal(parsed.filters.q,'Tabcorp');
+ const rows=aggregateDonors(filterFlows(buildFlows(data),parsed.filters));assert.equal(rows.length,1);assert.equal(rows[0].total,12100);
+ const cleared=serializeLedgerParams({...state,q:'',industry:'',party:'',focusDonorId:'',yearFrom:null,yearTo:null},data);
+ for(const key of ['q','industry','party','focus','from','to','min'])assert.equal(cleared.has(key),false);
+ assert.equal(parseLedgerParams(cleared,data).view,'donors');
+ assert.equal(serializeLedgerParams({...state,party:'Unresolved party'},data),null);
+});
+test('presentation params fail closed for invalid, cross-view and duplicate sorting',()=>{
+ for(const query of ['view=constructor','view=donors&sort=party','view=flows&sort=topParty','sort=__proto__','dir=sideways','view=donors&view=flows','sort=total&sort=donor'])assert.equal(parseLedgerParams(query).ok,false,query);
+ for(const query of ['view=donors&sort=topParty&dir=asc','view=flows&sort=years&dir=desc','view=flows'])assert.equal(parseLedgerParams(query).ok,true,query);
 });

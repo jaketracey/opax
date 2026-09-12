@@ -8,22 +8,22 @@ const app = fs.readFileSync(new URL("app.js", root), "utf8");
 const html = fs.readFileSync(new URL("index.html", root), "utf8");
 const worker = fs.readFileSync(new URL("../src/index.ts", import.meta.url), "utf8");
 
-test("corpus manifest includes the cleaned PM transcript tranche", () => {
+test("refreshed corpus manifest retains the cleaned PM transcript tranche", () => {
   const source = corpus.sources.find((item) => item.name.startsWith("Prime Minister transcripts"));
   assert.deepEqual(source, {
     name: "Prime Minister transcripts and releases (PM&C)",
     docs: 614,
     coverage: "2025–2026",
   });
-  assert.equal(corpus.version, "2026-09-09");
-  assert.equal(corpus.expected_resources, 620066);
+  assert.equal(corpus.version, "2026-09-13");
+  assert.equal(corpus.expected_resources, 620540);
   assert.equal(
     Object.values(corpus.expected_resources_breakdown).reduce((sum, value) => sum + value, 0),
     corpus.expected_resources,
   );
   assert.deepEqual(corpus.sources.find((item) => item.name.startsWith("NSW Government")), {
     name: "NSW Government ministerial releases",
-    docs: 5150,
+    docs: 5185,
     coverage: "2024–2026",
   });
 });
