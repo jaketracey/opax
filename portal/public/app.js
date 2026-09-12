@@ -31,7 +31,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["money-records","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
+const PANELS = ["money-records","connections","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
 // /bills is the bill panel's index; it has no panel of its own, so isRoute has
 // to be told the word is ours before the click handler will follow it.
 const PANEL_ALIASES = { bills: "bill" };
@@ -846,6 +846,7 @@ const TITLES = {
   search: "Search the record · OPAX",
   discover: "Discover overlooked patterns · OPAX",
   money: "Money map · OPAX",
+  connections: "Connections in the record · OPAX",
   reports: "Reports · OPAX",
   doc: "From the record · OPAX",
   subject: "OPAX encyclopedia",
@@ -1394,6 +1395,38 @@ async function openSupplierPage(name, params, manageFocus) {
   }
 }
 
+// --- connections: organisations, programs and places across the records -----
+// The module owns the panel's controls and list while the route is open and
+// hands them back clean on destroy, so a later visit mounts on a blank slate.
+let connectionsPage = null;
+let connectionsGeneration = 0;
+function destroyConnectionsPage() {
+  connectionsGeneration += 1;
+  connectionsPage?.destroy();
+  connectionsPage = null;
+}
+async function openConnectionsPage(params, manageFocus) {
+  const generation = connectionsGeneration;
+  const status = $("connection-status");
+  if (status) status.textContent = "Opening the records…";
+  if (manageFocus) $("connections-title")?.focus({ preventScroll: true });
+  try {
+    const module = await import("/connections.js");
+    if (generation !== connectionsGeneration) return;
+    connectionsPage = module.mountConnections($("connections-body"), {
+      params,
+      // A selection or a filter rewrites the address in place, so the page a
+      // reader copies reopens on the same connection: /connections?entity=…
+      onAddress(search) {
+        if (generation !== connectionsGeneration) return;
+        replaceRoute(`/connections${search}`);
+        syncPathMeta(); // canonical and og:url follow the selection, as the address bar does
+      },
+    });
+  } catch {
+    if (generation === connectionsGeneration && status) status.textContent = "Connection records are unavailable. Please try again later.";
+  }
+}
 
 async function openAgencyPage(name, params, manageFocus) {
   const generation = supplierPageGeneration;
@@ -1485,6 +1518,7 @@ function route() {
   const manageFocus = !firstRoute;
   firstRoute = false;
   destroySupplierPage();
+  destroyConnectionsPage();
   grantsResearchGeneration++;
   grantsResearchHandle?.destroy(); grantsResearchHandle = null;
 
@@ -1583,6 +1617,11 @@ function route() {
     document.title = `${title} · OPAX`;
     setCrumbs([{ label: 'Money', href: '/money' }, { label: title }]);
     openMoneyRecords(segs[1], params);
+  } else if (view === "connections") {
+    showPanel("connections");
+    document.title = TITLES.connections;
+    setCrumbs([{ label: "Money", href: "/money" }, { label: "Programs & places" }]);
+    openConnectionsPage(params, manageFocus);
   } else if (view === "money") {
     showPanel("money");
     document.title = TITLES.money;
@@ -12460,6 +12499,7 @@ const VIEW_DESCRIPTIONS = {
   discover: "Explore overlaps and concentrations across recorded party receipts and government contracts, with evidence and limitations for every investigation lead.",
   search: "Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year.",
   money: "Disclosed political donations as territory you can spin: donors, parties and 28 years of returns.",
+  connections: "Organisations, programs and places named across speeches, official releases and grant records, each opened to its source excerpts.",
   reports: "Standing investigations pairing the money with the words, every claim cited to the record.",
   subject: "An entry in the OPAX encyclopedia of Australian parliamentarians, parties, donors and topics.",
   doc: "A document from the Australian parliamentary record, with its speaker, date and official source.",

@@ -131,17 +131,12 @@ function stamp({ check }) {
     )
     process.exit(1)
   }
-  // The standalone connections directory shares the immutable stylesheet.
-  const connectionsPath = join(PUBLIC, 'connections.html')
-  const connectionsBefore = readFileSync(connectionsPath, 'utf8')
-  const connectionsAfter = connectionsBefore.replace(/\/(style\.css|voice\.css|voice\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
-  if (!check && connectionsAfter !== connectionsBefore) writeFileSync(connectionsPath, connectionsAfter)
   const communityPath = join(PUBLIC, 'community.html')
   const communityBefore = readFileSync(communityPath, 'utf8')
   const communityAfter = communityBefore.replace(/\/(style\.css|community\.css|community\.js|voice\.css|voice\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && communityAfter !== communityBefore) writeFileSync(communityPath, communityAfter)
   if (check) {
-    if (after !== before || connectionsAfter !== connectionsBefore || communityAfter !== communityBefore) {
+    if (after !== before || communityAfter !== communityBefore) {
       console.error('stamp_assets: index.html stamps are stale — run `node scripts/stamp_assets.mjs`.')
       process.exit(1)
     }

@@ -30,7 +30,7 @@ Full extraction launched on desktop as PID 918738, output `/home/jake/.cache/aut
 
 ## Profile and map integration (local, not shipped)
 
-Added a reusable evidence panel for supplier and donor profiles, an on-demand source-excerpt panel on Money Map donor cards, and `/connections.html` for searching organisations, programs and electorates. The exporter writes hashed lookup/shard files so profile pages do not download the whole directory. ABN-based lookups also require the profile name to map to that identity.
+Added a reusable evidence panel for supplier and donor profiles, an on-demand source-excerpt panel on Money Map donor cards, and `/connections` (once a standalone `connections.html`, now a route in the app shell) for searching organisations, programs and electorates. The exporter writes hashed lookup/shard files so profile pages do not download the whole directory. ABN-based lookups also require the profile name to map to that identity.
 
 Publication gates now reject generic aliases and loose aliases lacking canonical-name equivalence (e.g. “our community”, “the farm”, and “Australian Public Service” for the Commission). Pilot export: 77 entities, 111 entity-record matches, 80 candidate record matches withheld. Export refuses incomplete corpus runs unless explicitly invoked for preview. Preview assets remain on desktop under `/home/jake/.cache/autoresearch/evidence-preview`; they are NOT in public assets.
 

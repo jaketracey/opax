@@ -2671,6 +2671,11 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   'money/receipts': { title: 'Political receipts · OPAX', description: 'Explore disclosed political receipts by donor, party and industry.', query: true },
   'money/grants': { title: 'Grants · OPAX', description: 'Explore public grant awards and their recipients.', query: true },
+  connections: {
+    title: 'Connections in the record · OPAX',
+    description: 'Organisations, programs and places named across speeches, official releases and grant records, each opened to its source excerpts.',
+    query: true,
+  },
   reports: {
     title: 'Reports · OPAX',
     description: 'Standing investigations pairing the money with the words: climate, gambling, housing, immigration, First Nations and media ownership, every claim cited.',
@@ -3902,6 +3907,10 @@ class SetText {
   element(el: Element) { el.setInnerContent(this.value) }
 }
 
+function legacyConnectionsRedirect(url: URL): Response {
+  return new Response(null, { status: 301, headers: { location: `/connections${url.search}`, 'cache-control': 'public, max-age=86400' } })
+}
+
 async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const [shell, meta] = await Promise.all([
     env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`)),
@@ -4072,7 +4081,7 @@ async function sitemapXml(env: Env): Promise<Response> {
       rows.push(`<url><loc>${escXml(`${SITE_ORIGIN}${path}`)}</loc>${mod}</url>`)
     }
     add('/')
-    for (const page of ['search', 'money', 'reports', 'explore', 'discover', 'about', 'methods', 'stats', 'expenses']) add(`/${page}`)
+    for (const page of ['search', 'money', 'connections', 'reports', 'explore', 'discover', 'about', 'methods', 'stats', 'expenses']) add(`/${page}`)
     for (const a of agencies?.agencies ?? []) add(`/subject/agency/${a.id}`, agencies?.meta?.generated_at)
     for (const r of reports.reports) add(`/reports/${r.slug}`, r.updated)
     add('/subject/topic')
@@ -4399,6 +4408,9 @@ async function route(
         if (url.pathname.startsWith('/og/')) return await serveOgImage(url, request, env, ctx)
         if (url.pathname === '/sitemap.xml') return await sitemapXml(env)
         if (url.pathname === '/robots.txt') return robotsTxt()
+        // The connections directory used to be a file of its own; its old address
+        // (linked from evidence panels and corpus.json) forwards to the route.
+        if (url.pathname === '/connections.html') return legacyConnectionsRedirect(url)
         const seoRoute = matchSeoRoute(url)
         if (seoRoute) return await serveSeoPage(seoRoute, url, request, env, ctx)
       }
@@ -4451,6 +4463,7 @@ export default {
       if (isApi || url.pathname.startsWith('/og/')) response = await env.STAGING_API.fetch(request)
       else if (url.pathname === '/robots.txt') response = new Response('User-agent: *\nDisallow: /\n', { headers: { 'content-type': 'text/plain' } })
       else if (url.pathname.startsWith('/ingest/')) response = new Response(null, { status: 204 })
+      else if (url.pathname === '/connections.html') response = legacyConnectionsRedirect(url)
       else {
         const assetUrl = new URL(request.url)
         if (matchSeoRoute(url)) assetUrl.pathname = '/'

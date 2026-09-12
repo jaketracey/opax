@@ -41,6 +41,7 @@ title and description come from.
 | `/ask`, `/ask?q=` | site title, or the question | the question, framed | the `q` param | none |
 | `/search`, `/search?q=` | `Search the record`, or `Search: <q>` | static, or the query | `STATIC_PAGES`, `q` param | `WebPage` |
 | `/money` | `Money map` | static | `STATIC_PAGES` | `WebPage` |
+| `/connections`, `/connections?entity=` | `Connections in the record` | static | `STATIC_PAGES` (query kept in the canonical) | `WebPage` |
 | `/explore` `/chat` `/about` `/methods` `/stats` | static | static | `STATIC_PAGES` | `WebPage` |
 | `/reports` | `Reports` | static | `STATIC_PAGES` | `WebPage` |
 | `/reports/<slug>`, `/reports/<slug>/s/<n>` | report title | `title: blurb` | `reports/index.json` | `Article` (+ `dateModified`) |
@@ -176,7 +177,7 @@ resvg wasm.
 | | count |
 | --- | --- |
 | home | 1 |
-| static pages (`/search` `/money` `/reports` `/explore` `/about` `/methods` `/stats`) | 7 |
+| static pages (`/search` `/money` `/connections` `/reports` `/explore` `/discover` `/about` `/methods` `/stats` `/expenses`) | 10 |
 | reports (`lastmod` from `reports/index.json`) | 6 |
 | topics index and topics | 1 + 21 |
 | directory indexes | 3 |

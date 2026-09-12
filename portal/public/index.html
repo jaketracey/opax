@@ -641,7 +641,7 @@
         <div id="money-jur"></div>
         <details id="money-journey-picker" class="journey-menu" name="money-tools"><summary>Guided journeys</summary><div id="money-journey-controls"></div></details>
         <div id="money-research"></div>
-        <div class="money-related-links"><a class="money-agency-link" href="/subject/agency">Agency contract maps</a><a class="money-evidence-link" href="/connections.html">Programs & places</a></div>
+        <div class="money-related-links"><a class="money-agency-link" href="/subject/agency">Agency contract maps</a><a class="money-evidence-link" href="/connections">Programs & places</a></div>
       </div>
       <div id="money-stage" class="money-stage">
         <aside id="money-journey-story" class="journey-story" aria-label="Guided journey" hidden></aside>
@@ -656,6 +656,26 @@
     </section>
 
     <section id="panel-money-records" class="panel" hidden aria-label="Money records"><div data-money-navigation></div><h1 class="visually-hidden" id="money-records-title">Political receipts</h1><div id="money-records-body"></div></section>
+    <!-- ========================= CONNECTIONS ========================== -->
+    <!-- Organisations, programs and places named across the collected records.
+         connections.js mounts into #connections-body when the route opens and
+         tears itself down when it leaves (see openConnectionsPage in app.js). -->
+    <section id="panel-connections" class="panel" hidden aria-labelledby="connections-title">
+      <div data-money-navigation></div>
+      <div id="connections-body" class="supplier-page connections-page">
+        <h1 id="connections-title" tabindex="-1">Connections in the record</h1>
+        <p class="connections-lede">Explore organisations, programs and places across speeches, official releases and grant records.</p>
+        <div class="supplier-controls">
+          <label>Find a connection<input id="connection-search" type="search" placeholder="Name, program or electorate" autocomplete="off"></label>
+          <label>Show<select id="connection-kind"><option value="">Everything</option><option value="organisation">Organisations</option><option value="program">Programs</option><option value="electorate">Electorates</option><option value="place">Places</option></select></label>
+        </div>
+        <p id="connection-status" role="status">Opening the records…</p>
+        <div class="connections-layout">
+          <div id="connection-list"></div>
+          <section id="connection-detail" tabindex="-1" aria-label="Selected connection" hidden></section>
+        </div>
+      </div>
+    </section>
     <!-- ============================= REPORTS =========================== -->
     <section id="panel-reports" class="panel" hidden aria-label="Reports">
       <div id="reports-list" class="report-cards"></div>

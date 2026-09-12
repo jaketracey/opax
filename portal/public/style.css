@@ -4848,8 +4848,8 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .evidence-locations {margin-top:1.5rem}
 .evidence-locations li {margin-block:.75rem}
 .evidence-locations small {display:block;margin-top:.25rem}
-.connections-page {max-width:76rem;margin:0 auto;padding:clamp(1rem,4vw,3rem)}
-.connections-page nav {margin-bottom:2rem}
+.connections-page {min-width:0}
+.connections-page .connections-lede {max-width:65ch;margin:0 0 1.5rem;color:var(--ink-soft)}
 .connections-layout {display:grid;grid-template-columns:minmax(14rem,1fr) minmax(0,2fr);gap:2rem;align-items:start}
 .connection-choice {display:block;width:100%;text-align:left;padding:1rem;border:0;border-bottom:1px solid #dedbd2;background:transparent;color:inherit;cursor:pointer}
 .connection-choice:hover,.connection-choice:focus-visible {background:#f0eee7}
@@ -4883,6 +4883,8 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .money-area-nav {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:4px;margin-bottom:1rem;border:1px solid var(--line);border-radius:8px;background:var(--paper-sunken)}
   .money-area-nav a {display:flex;align-items:center;justify-content:center;min-height:48px;padding:.5rem;text-align:center;font:500 .875rem/1.3 var(--sans);border:0;border-radius:5px}
   .money-area-nav a[aria-current] {border:0;background:var(--navy);color:var(--on-navy);font-weight:650}
+  /* Five destinations in a two-column grid: the odd one out takes the full row rather than a half. */
+  .money-area-nav a:last-child:nth-child(odd) {grid-column:1/-1}
   .money-workspace-toolbar {display:grid;align-items:stretch;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;margin:0 0 .75rem}
   .money-workspace-toolbar :is(#money-jur,.journey-menu,.research-filters) {min-width:0}
   .money-workspace-toolbar #money-jur select,
