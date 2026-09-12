@@ -24,6 +24,9 @@ Then, up to 16 times:
 2. Read `/tmp/WORKER-batch.json`. Each item has `rid`, `slug`, `title` (speaker and date),
    `text` (the speech, clipped only when very long), `words`, and `kind`.
 3. Write `/tmp/WORKER-summaries.json` as one JSON object `{rid: brief}` with every rid in the batch.
+   Before submitting, spot-check three rids: open each one's `text` and confirm its brief
+   describes that speech. A dropped or duplicated line shifts every brief after it onto the
+   wrong rid, and the harness cannot detect that.
 4. `python3 scripts/summary_workers.py submit --worker WORKER --summaries /tmp/WORKER-summaries.json`
    - Read the output. `submitted N, failed 0` is success. If it names problems, fix those
      briefs and submit the same file again; the rest are already written.
