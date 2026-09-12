@@ -85,6 +85,10 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
   root.classList.add('ph-no-capture', 'ph-sensitive');
   const launcher = button('opax-voice-launcher', '');
   launcher.append(icon('mic'), element('span', '', 'Talk to Opax'));
+  // The pill never said it was a limited feature; the tooltip and the name a
+  // phone's icon-only button carries both do.
+  launcher.title = 'Talk to Opax · 10 minutes free';
+  launcher.setAttribute('aria-label', 'Talk to Opax, 10 minutes free');
   launcher.setAttribute('aria-haspopup', 'dialog');
   launcher.setAttribute('aria-expanded', 'false');
   launcher.setAttribute('aria-controls', 'opax-voice-panel');
@@ -161,7 +165,16 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
   panel.append(header, body, controls, footer);
   root.append(panel, launcher);
   mount.append(root);
-  document.body.classList.add('opax-voice-ready');
+  // Pages with nothing for a conversation to draw on (the community, the
+  // about and methods pages) keep the pill out of the way.
+  const quietRoute = () => /^\/(?:community|about|methods)(?:\/|$)/.test(location.pathname);
+  const applyRoute = () => {
+    const quiet = quietRoute();
+    root.hidden = quiet;
+    document.body.classList.toggle('opax-voice-ready', !quiet);
+    if (quiet && isOpen) closePanel({ restoreFocus: false });
+  };
+  applyRoute();
 
   const listen = (target, event, handler, options) => {
     target.addEventListener(event, handler, options);
@@ -379,6 +392,7 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
   function closePanel({ restoreFocus = true } = {}) {
     isOpen = false;
     panel.hidden = true;
+    root.classList.remove('is-open');
     launcher.setAttribute('aria-expanded', 'false');
     void stop();
     if (restoreFocus && !destroyed) launcher.focus({ preventScroll: true });
@@ -387,6 +401,7 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
     if (destroyed) return;
     isOpen = true;
     panel.hidden = false;
+    root.classList.add('is-open');
     launcher.setAttribute('aria-expanded', 'true');
     close.focus({ preventScroll: true });
     void refreshStatus();
@@ -407,8 +422,8 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
   listen(window, 'beforeunload', teardown);
   listen(window, 'offline', () => { if (attempt) void stop('You are offline. Your microphone is off. Reconnect to try again.'); });
   listen(document, 'visibilitychange', () => { if (document.visibilityState === 'hidden' && attempt) void stop('Conversation ended when you left this tab. Your microphone is off. Start again when you are ready.'); });
-  listen(window, 'opax:route', () => { const next = location.pathname + location.search; if (next !== lastRoute) teardown(); lastRoute = next; });
-  listen(window, 'popstate', teardown);
+  listen(window, 'opax:route', () => { const next = location.pathname + location.search; if (next !== lastRoute) teardown(); lastRoute = next; applyRoute(); });
+  listen(window, 'popstate', () => { teardown(); applyRoute(); });
   render();
   return { open: openPanel, close: closePanel, destroy: async () => { destroyed = true; ++statusGeneration; await stop(); cleanups.forEach(cleanup => cleanup()); root.remove(); document.body.classList.remove('opax-voice-ready'); } };
 }
