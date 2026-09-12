@@ -190,3 +190,15 @@ test('a failed summary over real speeches lists them with on-topic excerpts inst
  for(const [id,ranges] of Object.entries(out.citations)){assert.ok(out.sources.some(s=>s.resource===id&&s.cited));for(const [start,end] of ranges)assert.ok(start>=0&&end<=Array.from(out.answer).length);}
  assert.equal(excerpts({...payload,sources:[]},'housing'),null);
 });
+
+
+test('cost fallback quotes the proposal and its own nearby estimate together',()=>{
+ const cost='This plan will cost $1.4 billion over the next four years.';
+ const bridge='This will improve housing affordability. This policy is part of our plan to cut waste.';
+ const text=quote+' '+bridge+' '+cost;
+ const out=fallback({...payload,sources:[{...payload.sources[0],snippet:text+" Labor’s housing fund is $10 billion."}]},'housing affordability cost','What did she say it would cost?');
+ assert.ok(out.answer.includes(text));assert.match(out.answer,/11 Feb 2025/);assert.doesNotMatch(out.answer,/10 billion/);assert.equal(Object.keys(out.citations).length,1);
+ for(const after of ["Labor’s housing fund is $10 billion. "+cost,'I propose a separate schools plan. '+cost,'This government has failed Australians. '+cost,"It was Labor's policy. "+cost,"This was the government's plan. "+cost,"This will implement Labor's policy. "+cost,"This plan will cost $1.4 billion under Labor's policy.", 'This plan will cost $1.4 billion, according to the opposition.', 'Our plan will cost $1.4 billion while the government’s plan costs more.', 'This is another scheme. '+cost,'This is a new policy. '+cost,'Our budget is $10 billion. '+cost,'(Time expired) '+cost])assert.equal(evidenceHelpers.positionCostQuote(quote+' '+after,'housing affordability'),'');
+ assert.equal(evidenceHelpers.positionCostQuote('I discussed housing affordability. '+cost,'housing affordability'),'');
+ assert.equal(evidenceHelpers.positionCostQuote(text,'immigration'),'');
+});

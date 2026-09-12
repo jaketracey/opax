@@ -2,6 +2,7 @@ import { evidenceExcerpt, guardPositionAnswer, EVIDENCE_GAP_ANSWER } from './ask
 
 export const isPositionDurationQuestion = (question:string):boolean => /^(?:and\s+)?how\s+long\b|\b(?:duration|how many (?:days|weeks|months|years))\b/i.test(question.trim())
 export const isPositionEligibilityQuestion = (question:string):boolean => /\b(?:eligible|eligibility|qualify|qualifies)\b/i.test(question)
+export const isPositionCostQuestion = (question:string):boolean => /\b(?:cost|costing|price)\b|^(?:and\s+)?how\s+much\b/i.test(question)
 const eligibilityTerms = /\b(?:eligible|eligibility|qualifying|qualify|qualifies)\b/i
 const deferredEligibility = (text:string) => text.split(/(?<=[.!?])\s+/).filter(sentence=>/\b(?:eligibility|incomes?|thresholds?)\b.*\b(?:regulations|to be (?:set|specified|determined))\b/i.test(sentence))
 
@@ -14,6 +15,28 @@ export function positionEligibilityQuotes(text:string,query:string):string[] {
   if(!quote)return []
   const condition=deferredEligibility(turn).find(sentence=>sentence!==quote&&sentence.length<=700)
   return condition?[quote,condition]:[quote]
+}
+
+/** Keep a proposal and its explicitly linked cost in one contiguous excerpt.
+ * An opponent's budget or a cost elsewhere in the speech cannot fill the gap. */
+export function positionCostQuote(text:string,query:string):string {
+  const topic=query.replace(/\b(?:cost|costing|price)\b/gi,'').trim()
+  if(!topic)return ''
+  const turn=firstSpeechTurn(text).replace(/\s+/g,' ').trim()
+  const proposal=positionProposalQuote(turn,topic)
+  if(!proposal)return ''
+  const following=turn.slice(turn.indexOf(proposal)+proposal.length).trim().split(/(?<=[.!?])\s+(?=[\p{Lu}“‘"'])/u)
+  let quote=proposal
+  for(const sentence of following.slice(0,3)) {
+    if(quote.length+sentence.length+1>1400)return ''
+    if(!/^(?:This|It|Our)\b/.test(sentence)||/\b(?:another|different|separate|alternative|instead)\b/i.test(sentence))return ''
+    if(/\b(?:Labor|Liberal|Greens|Nationals|Coalition|opposition)\b|\bgovernment['’]s\b/i.test(sentence))return ''
+    quote+=' '+sentence
+    if(/^(?:This|Our)\s+(?:plan|proposal|policy|measure|scheme|programme?|moratorium)\s+(?:will|would|is expected to)\s+cost\s+\$\d/i.test(sentence))return quote
+    if(!/^This (?:(?:will|would)\b|(?:policy|proposal|measure|moratorium) is part of our plan\b)/.test(sentence))return ''
+    if(/\b(?:propos(?:e|es|ed)|announc(?:e|es|ed)|new (?:plan|policy|scheme)|cost|costs|budget|fund)\b/i.test(sentence))return ''
+  }
+  return ''
 }
 
 /** Match time attached to a measure, not an estimate's costing horizon or an

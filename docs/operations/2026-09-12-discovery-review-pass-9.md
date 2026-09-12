@@ -34,3 +34,10 @@ Final production results, API timings, browser checks, asset and graph compariso
 These are dated recorded proposals, not predictions, current promises or proof that a measure became law. Follow-up recognition and sentence extraction are intentionally conservative. Bounded retrieval cannot establish that no other proposal exists. WebKit viewport checks do not replace a physical iPhone or live voice test.
 
 This completes the ninth scheduled discovery review once production is verified. The discovery appendix can then be removed from the recurring automation; enrichment monitoring continues independently.
+
+
+## Production-driven cost correction
+
+The first deployment passed the duration and eligibility probes, but the previously successful cost control fell back to broad evidence and omitted the figure. That was a semantic failure, despite a 200 response and citations. A follow-up release in the same pass now prefers a contiguous original excerpt joining the on-topic proposal to a nearby explicit “This/Our plan/policy will/would cost $…” sentence. It stops on another speaker, another party, a new/separate proposal, a budget or an intervening cost claim; the search is bounded to three following sentences and 1,400 characters. Missing explicit linkage still requires a verified summary. The named-position cache advances again to v6.
+
+The corrected local answer quoted the five-year proposal and $1.4 billion over four years in 1.89 seconds, without generation. The complete suite passed 437 tests, including unrelated/opponent costs, changed proposals, absent proposals, other topics and speaker boundaries. Final production verification and browser checks use the corrected response; the failed first release response remains archived. Total paid application-generation attempts for this pass are bounded to ten, including the final duration control. Exact cost and eligibility checks and all browser replays require no generation.
