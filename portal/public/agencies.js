@@ -1,4 +1,4 @@
-import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart } from './suppliers.js?v=austender-1';
+import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract } from './suppliers.js?v=austender-1';
 import { procurementGraph } from './procurement-data.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = value => (Number(value) || 0).toLocaleString('en-AU');
@@ -129,9 +129,10 @@ function renderProfile(root, profile, meta, helpers, life) {
   }
   function contracts() {
     const q = contractQuery.value.trim().toLocaleLowerCase();
-    const rows = profile.contracts.filter(c => `${c.title} ${c.supplier} ${c.id}`.toLocaleLowerCase().includes(q));
-    root.querySelector('.supplier-contract-count').textContent = `${number(Math.min(contractsVisible,rows.length))} of ${number(rows.length)} contracts${q ? ' matching this filter' : ', newest first'}`;
-    root.querySelector('.supplier-contract-list').innerHTML = rows.length ? rows.slice(0,contractsVisible).map(contractHTML).join('') : '<p>No contracts match this filter.</p>';
+    const rows = profile.contracts.filter(c => !placeholderContract(c) && `${c.title} ${c.supplier} ${c.id}`.toLocaleLowerCase().includes(q));
+    const placeholders = profile.contracts.filter(placeholderContract).length;
+    root.querySelector('.supplier-contract-count').textContent = `${number(Math.min(contractsVisible,rows.length))} of ${number(rows.length)} contracts${q ? ' matching this filter' : ', newest first'}${placeholders && !q ? ` · ${number(placeholders)} undated $0 ${placeholders === 1 ? 'record' : 'records'} not shown` : ''}`;
+    root.querySelector('.supplier-contract-list').innerHTML = rows.length ? rows.slice(0,contractsVisible).map(c => contractHTML(c)).join('') : '<p>No contracts match this filter.</p>';
     const more = root.querySelector('.supplier-contract-more'); more.innerHTML = rows.length > contractsVisible ? '<button type="button" class="supplier-button">Show more contracts</button>' : '';
     more.querySelector('button')?.addEventListener('click', () => { const first = contractsVisible; contractsVisible += 15; contracts(); root.querySelectorAll('.supplier-contract summary')[first]?.focus(); });
   }
