@@ -150,3 +150,11 @@ test('verified original proposals are reusable while generic unverified excerpts
  assert.equal(api.cacheableAnswer({...p,evidence_kind:'original_position_proposal',sources:[]}),false);
  assert.equal(api.cacheableAnswer({...p,evidence_kind:'original_position_proposal',answer:'refusal'}),false);
 });
+
+test('the position topic guard accepts inflections but not unrelated words sharing a short prefix',()=>{
+ const raw=t=>({answer:'x',retrieval_results:{resources:{r:{fields:{body:{paragraphs:{'r/t/body/0-10':{text:t}}}}}}}});
+ const body=q=>({query:q,prompt:{system:'You explain Australian politicians’ documented positions from primary records.'}});
+ assert.notEqual(exports.guardPositionAnswer(raw('One Nation will cap arrivals; immigrants would wait eight years.'),body('immigration')).answer,exports.EVIDENCE_GAP_ANSWER);
+ assert.equal(exports.guardPositionAnswer(raw('The coalition will govern well.'),body('coal')).answer,exports.EVIDENCE_GAP_ANSWER);
+ assert.notEqual(exports.guardPositionAnswer(raw('Thermal coal exports must end.'),body('coal')).answer,exports.EVIDENCE_GAP_ANSWER);
+});

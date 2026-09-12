@@ -131,3 +131,11 @@ test('a source month cannot support an unquoted eight-year policy duration',asyn
  assert.equal(await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{}),null);
  assert.equal(evidenceHelpers.positionPointSupported('The immigration cap would be 2025 per year.',cap,'What cap did she propose?','2025-08-26'),false);
 });
+
+test('the speech year is accepted as a date phrase but never as a policy quantity',()=>{
+ const quote='This bill, the Coal Prohibition (Quit Coal) Bill 2019, will do what the science demands.';
+ assert.equal(evidenceHelpers.positionPointSupported('He introduced the Quit Coal Bill 2019 to prohibit thermal coal exports after 2030.',quote,'What has he said about coal?','2019-02-18'),false,'a figure outside the excerpt is unsupported');
+ const budget='The budget smashes the universality of Medicare by adding a $7 co-payment.';
+ assert.equal(evidenceHelpers.positionPointSupported('Albanese criticised the 2014 Abbott budget for adding a $7 co-payment to see a doctor.',budget,'What has he said about Medicare?','2014-05-27'),true);
+ assert.equal(evidenceHelpers.positionPointSupported('The immigration cap would be 2014 per year.','We will cap arrivals.','What cap did he propose?','2014-05-27'),false);
+});
