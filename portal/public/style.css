@@ -2279,6 +2279,10 @@ a.ency-name:hover, a.ency-name:focus-visible {
   position: absolute; left: 5px; top: -2px; color: var(--ink-faint);
   font: 500 0.625rem/1 var(--sans); font-style: normal; white-space: nowrap;
 }
+/* A median near the end of the track labels itself on its left, so the word
+   never runs past the track and widens the page on a phone. */
+.expense-median-end em { left: auto; right: 5px; }
+.expense-comparison { overflow-x: clip; }
 .expense-value { grid-area: value; text-align: right; color: var(--ink-soft); font-variant-numeric: tabular-nums; line-height: 1.3; white-space: nowrap; }
 .expense-value b { color: var(--ink); }
 .expense-value small { display: inline; margin-left: 0.4rem; color: var(--ink-faint); font-size: 0.75rem; }
@@ -2838,6 +2842,9 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-doc .doc-toolbar-btns .action-btn { min-height: 44px; min-width: 0; padding: 7px 3px; justify-content: center; font-size: 0.8125rem; gap: 4px; }
 #panel-doc #doc-ask { grid-column: 1 / -1; background: var(--bronze-ink); border-color: var(--bronze-ink); color: var(--paper); font-size: 0.9375rem; }
 #panel-doc .doc-toolbar-btns button { flex-direction: column; }
+#panel-doc .doc-toolbar-foot { margin-top: var(--space-5); padding-top: var(--space-3); border-top: 1px solid var(--line); }
+#panel-doc .doc-toolbar-foot .doc-toolbar-btns { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+#panel-doc #doc-ask-foot { grid-column: 1 / -1; background: var(--bronze-ink); border-color: var(--bronze-ink); color: var(--paper); font-size: 0.9375rem; }
 #panel-doc .doc-speaker-links { display: flex; align-items: center; flex-wrap: wrap; gap: 0 5px; margin-top: 4px; font-size: 0.8125rem; }
 #panel-doc .doc-speaker-links a { display: inline-flex; align-items: center; min-height: 44px; }
 #panel-doc .doc-text { max-width: 62ch; font: 400 1.0625rem/1.8 var(--serif); white-space: normal; overflow-wrap: anywhere; }
@@ -2897,7 +2904,8 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 @media (max-width: 699px) {
   #panel-doc .doc-toolbar-btns { display: flex; flex-wrap: wrap; }
   #panel-doc .doc-toolbar-btns .action-btn { flex: 1 0 calc(20% - 6px); min-width: max(44px, 4em); }
-  #panel-doc .doc-toolbar-btns #doc-ask { flex-basis: 100%; }
+  #panel-doc .doc-toolbar-btns #doc-ask, #panel-doc .doc-toolbar-btns #doc-ask-foot { flex-basis: 100%; }
+  #panel-doc .doc-toolbar-foot .doc-toolbar-btns .action-btn { flex-basis: calc(33.3% - 6px); }
 }
 /* ==== page-person: Person entry pages (/subject/person/<name>) ==== */
 .subject-person #subject-sections { min-width: 0; }
@@ -3967,6 +3975,9 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 }
 .bill-speeches .source-title { font-family: var(--serif); font-weight: 600; }
 .bill-actions { margin-top: var(--section-gap); display: flex; flex-wrap: wrap; gap: 0.6rem; }
+/* Under "In short" the row is the page's next step; at the foot it is a quiet repeat. */
+.bill-summary + .bill-actions { margin-top: var(--space-4); }
+.bill-actions-foot { margin-top: var(--space-4); padding-top: var(--space-3); border-top: 1px solid var(--line); }
 
 /* ---- the /bills index --------------------------------------------------- */
 

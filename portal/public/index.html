@@ -368,7 +368,7 @@
         <a href="/bills"><strong>Understand a bill</strong><span>What changes and where it stands.</span></a>
       </nav>
       <section class="front-map" id="front-map" aria-label="Explore the money map">
-        <div class="home-map-stage"><div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div><div class="home-map-invite"><div class="home-map-journeys"><span>Start a guided journey</span><a href="/money?journey=public-money">Public awards & party receipts</a><a href="/money?journey=multiple-parties">Giving to more than one party</a><a href="/money?journey=over-time">How receipts change over time</a></div><a class="action-btn action-gold home-map-open" href="/money">Open the research map</a></div></div>
+        <div class="home-map-stage"><div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div><div class="home-map-invite"><div class="home-map-journeys"><span>Start a guided journey</span><a href="/money?journey=public-money">Contracts &amp; grants</a><a href="/money?journey=multiple-parties">More than one party</a><a href="/money?journey=industry">Explore an industry</a><a href="/money?journey=over-time">Turn back the clock</a></div><a class="action-btn action-gold home-map-open" href="/money">Open the research map</a></div></div>
         <nav class="map-chips home-map-industries" id="front-map-chips" aria-label="Industries on the money map"></nav>
       </section>
       <div class="front-grid" id="front-page">
@@ -393,7 +393,7 @@
 <section class="front-mod" aria-labelledby="h-declared" id="mod-declared" hidden>
           <h2 class="subject-section-title" id="h-declared">Just declared</h2>
           <div id="front-declared"></div>
-          <p class="fineprint"><a href="/declared">All alterations since the statements, by week →</a></p>
+          <p class="fineprint"><a href="/declared">All recent declarations →</a></p>
         </section>
 <section class="front-mod" aria-labelledby="h-reports" id="mod-reports" hidden>
           <h2 class="subject-section-title" id="h-reports">Reports</h2>
@@ -724,9 +724,9 @@
             <a class="action-btn action-primary" id="doc-ask" href="/ask">Ask the record about this</a>
             <button type="button" class="action-btn" id="doc-profile" aria-label="Full profile">Profile</button>
             <button type="button" class="action-btn" id="doc-cite" aria-expanded="false" aria-controls="doc-cite-panel">Cite</button>
-            <button type="button" class="action-btn" id="doc-more" aria-label="Their speeches">More</button>
+            <button type="button" class="action-btn" id="doc-more">Speeches</button>
             <button type="button" class="action-btn" id="doc-similar" aria-label="Find similar speeches" aria-expanded="false" aria-controls="doc-similar-panel">Similar</button>
-            <button type="button" class="action-btn" id="doc-copylink" aria-label="Copy link">Link</button>
+            <button type="button" class="action-btn" id="doc-copylink">Copy link</button>
           </div>
           <p id="doc-speaker-links" class="fineprint doc-speaker-links" hidden></p>
         </div>
@@ -756,6 +756,16 @@
       <div id="doc-text" class="doc-text"></div>
       </div>
       <p class="fineprint" id="doc-caveat" hidden></p>
+      <!-- A speech can run to tens of thousands of pixels on a phone, so the
+           actions a reader wants once they have read it wait at the end too. -->
+      <div class="doc-toolbar doc-toolbar-foot" id="doc-foot-actions" hidden>
+        <div class="doc-toolbar-btns" role="group" aria-label="Document actions, repeated at the end">
+          <a class="action-btn action-primary" id="doc-ask-foot" href="/ask">Ask the record about this</a>
+          <button type="button" class="action-btn" id="doc-cite-foot">Cite</button>
+          <button type="button" class="action-btn" id="doc-similar-foot" aria-label="Find similar speeches">Similar</button>
+          <button type="button" class="action-btn" id="doc-copylink-foot">Copy link</button>
+        </div>
+      </div>
     </section>
 
     <section id="panel-discover" class="panel" hidden aria-labelledby="discover-title">
