@@ -4765,13 +4765,17 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 /* The map leads. Research controls are opened only when needed. */
 .money-workspace-toolbar { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin: .5rem 0 1rem; z-index: 12; }
 #money-research { display: contents; }
-.money-workspace-toolbar select, .money-workspace-toolbar > details > summary, .research-filters > summary, .money-workspace-toolbar > .action-btn { font: 600 .85rem/1.3 var(--sans); min-height: 42px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--navy); padding: .65rem .85rem; }
+.money-workspace-toolbar select, .money-workspace-toolbar > details > summary, .research-filters > summary, .money-workspace-toolbar .action-btn, .money-workspace-toolbar [data-records] { font: 600 .85rem/1.3 var(--sans); min-height: 42px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--navy); padding: .65rem .85rem; }
 .money-workspace-toolbar select { padding-right: 2rem; }
 .money-workspace-toolbar #money-jur select {appearance:none;padding-right:2rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center}
-.money-workspace-toolbar summary { cursor: pointer; list-style: none; }
+/* The disclosure summaries sit beside the jurisdiction select and must read as
+   the same control: same box, text centred, and the same drawn chevron rather
+   than a text glyph on the baseline. */
+.money-workspace-toolbar summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: .6rem; }
 .money-workspace-toolbar summary::-webkit-details-marker { display: none; }
-.money-workspace-toolbar summary::after { content: '⌄'; margin-left: .7rem; }
+.money-workspace-toolbar summary::after { content: ''; flex: 0 0 auto; width: 16px; height: 16px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E") center / 16px 16px no-repeat; }
 .money-workspace-toolbar details[open] > summary { background: var(--navy); color: white; border-color: var(--navy); }
+.money-workspace-toolbar details[open] > summary::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 10 4-4 4 4' fill='none' stroke='%23FFFFFF' stroke-width='1.5'/%3E%3C/svg%3E"); }
 .money-workspace-toolbar .research-filters { position: static; border: 0; padding: 0; margin: 0; }
 .research-filter-panel, #money-journey-controls { position: absolute; top: calc(100% + .5rem); left: 0; width: min(650px, 100%); padding: 1.1rem; background: var(--paper-raised); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 10px 30px #172e4620; margin: 0; }
 .research-filter-panel .research-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 0 .6rem; }
@@ -4937,6 +4941,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .money-workspace-toolbar [data-records] {box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:.4rem;width:100%;min-height:48px;margin:0;padding:.7rem .8rem;font:600 .875rem/1.3 var(--sans);border:1px solid var(--line-strong);border-radius:5px;background-color:var(--paper-raised);color:var(--navy);text-align:left}
   .money-workspace-toolbar #money-jur select {height:100%}
   .money-workspace-toolbar summary::after {margin:0;flex-shrink:0}
+  .money-workspace-toolbar summary {gap:.4rem}
   .money-workspace-toolbar details[open] > summary,
   .money-workspace-toolbar [data-records][aria-expanded="true"] {background:var(--navy);color:var(--on-navy);border-color:var(--navy)}
   .money-related-links {grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;margin:0;font-size:.8125rem}
