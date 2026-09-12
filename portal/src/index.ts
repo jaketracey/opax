@@ -1189,14 +1189,20 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
       '\nAnswer that latest question specifically. The query topic supplies its subject. If they ask when, explain the recorded date; if they ask why, attribute only the reasons stated in the speech; if they ask about cost, give only a stated costing with attribution. Do not substitute a generic policy overview for a request for a particular detail. If the requested detail is absent, return {"points":[]}.' +
       '\nDescribe only this named politician’s own documented positions on the query topic, in past tense. Never roleplay or predict. Omit ministerial replies even when the document is indexed under the politician. Prefer concrete policy proposals over allegations or rhetoric. The passages are limited to the indexed speaker’s first speaking turn; no later speaker or ministerial reply may be inferred. Preserve policy limits and duration exactly; omit attack statistics. Return up to four points, each citing a different original speech where the record supports it. Each point must cite exactly one original speech; never merge policy details from different dates into one proposal. Lead with a concrete proposal and preserve its eligibility, duration and numeric limits, including any lower-of conditions. Each point must be one concrete proposal or position, in one short sentence. Do not append attack statistics or commentary about opponents to a proposal. Each point must be supported in full by an exact excerpt from the passage itself, never its title. Include the proposal conditions in that excerpt. Omit costs unless the excerpt includes the speaker’s stated costing, and explicitly attribute any estimate to them. If the passages do not establish their position, return {"points":[]}.'
     let prompt = makePrompt()
-    // ~15k tokens: every retained original reaches the model. The old 19.5k-char
-    // cap dropped all but three to five of them (2026-09-12).
-    while (sources.length && prompt.length > 60000) { sources.pop(); prompt = makePrompt() }
+    // The evidence travels in the prompt's user template, not `query`: the
+    // platform caps `query` at 20,000 characters (422 above it), which used to
+    // drop all but three to five originals. The template is format-style, so
+    // literal braces are doubled; only the {question} tag stays live.
+    // Budget ~15k tokens: ten originals at their full 5,600-character evidence
+    // windows fit; a 62k template was accepted live.
+    const POSITION_PROMPT_CHARS = 60000
+    while (sources.length && prompt.length > POSITION_PROMPT_CHARS) { sources.pop(); prompt = makePrompt() }
     if (!sources.length) return null
     const answer = await summaryModelAnswer(await kbFetch(env, '/ask', {
-      body:{query:prompt,top_k:1,reranker:'noop',generative_model:env.POSITION_RECOVERY_MODEL || 'openai-compatible',max_tokens:1800,
-        prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + POSITION_GROUNDING + ' Return only valid JSON in the requested points-and-citations schema, with no other text.',user:'{question}'}},
-      headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(25_000),
+      body:{query:String(body.position_question || body.query || '').slice(0,2000),top_k:1,reranker:'noop',generative_model:env.POSITION_RECOVERY_MODEL || 'openai-compatible',max_tokens:1800,
+        prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + POSITION_GROUNDING + ' Return only valid JSON in the requested points-and-citations schema, with no other text.',
+          user:prompt.replace(/[{}]/g, brace => brace + brace) + '\nReader question: {question}'}},
+      headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(40_000),
     }))
     const summary = answer && parseSearchSummary(normalizePositionDraft(answer, sources), sources, true)
     if (!summary) return null

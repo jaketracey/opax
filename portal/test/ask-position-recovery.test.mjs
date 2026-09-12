@@ -33,7 +33,9 @@ test('position recovery does not invent a dated answer from empty sources',async
 test('the first ranked sources fit the provider query limit without removing their policy conditions',async()=>{
  const h=harness(draft());const rows=Array.from({length:12},(_,i)=>({...payload.sources[0],href:'/doc/speech-'+(i+1),snippet:quote+' More original evidence.'.repeat(255)}));
  await h.recover({...payload,sources:rows},{query:'housing'},{});
- assert.equal(h.calls,1);assert.ok(h.request.body.query.length<=60000);assert.ok(h.request.body.query.includes(quote));assert.ok(h.request.body.query.includes('"id":"s8"'));assert.ok(!h.request.body.query.includes('"id":"s10"'));
+ const user=h.request.body.prompt.user;
+ assert.equal(h.calls,1);assert.ok(h.request.body.query.length<=2000);assert.ok(user.length<=60000+40);assert.ok(user.includes(quote));assert.ok(user.includes('"id":"s8"'));assert.ok(!user.includes('"id":"s10"'));
+ assert.ok(user.endsWith('{question}'));const body=user.slice(0,user.lastIndexOf('{question}'));assert.ok(!/(^|[^{])\{(?!\{)/.test(body)&&!/(^|[^}])\}(?!\})/.test(body),'literal braces are doubled for the format-style template');
 });
 test('a record title alone cannot serve as a verified position quotation',async()=>{
  const h=harness(draft());assert.equal(await h.recover({...payload,sources:[{...payload.sources[0],title:quote,snippet:'This speech contains only a discussion of parliamentary procedure and no housing proposal.'}]},{query:'housing'},{}),null);
@@ -57,8 +59,9 @@ test('failed generation can still show a dated verbatim proposal with valid cita
 
 test('generation receives the current follow-up separately from its resolved retrieval topic',async()=>{
  const h=harness(draft());await h.recover(payload,{query:'housing',position_question:'When did she propose it?'},{});
- assert.ok(h.request.body.query.includes('Latest reader question: "When did she propose it?"'));
- assert.match(h.request.body.query,/Answer that latest question specifically/);
+ assert.equal(h.request.body.query,'When did she propose it?');
+ assert.ok(h.request.body.prompt.user.includes('Latest reader question: "When did she propose it?"'));
+ assert.match(h.request.body.prompt.user,/Answer that latest question specifically/);
 });
 test('a summary cannot merge proposal conditions from different dated speeches',async()=>{
  const h=harness(JSON.stringify({points:[{text:'Example MP proposed a five-year GST moratorium for homes up to $1 million.',citations:[{id:'s1',quote},{id:'s2',quote}]}]}));
