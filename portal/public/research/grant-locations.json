@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
   "as_of": "2026-09-13",
-  "checked_at": "2026-09-12T18:43:42.233998+00:00",
+  "checked_at": "2026-09-12T21:48:29.964517+00:00",
   "coverage": {
     "total_awards": 89,
     "total_invitations": 226,
     "total_invitation_records": 227,
     "mapped_awards": 7,
-    "mapped_invitations": 15,
+    "mapped_invitations": 18,
     "mapped_award_value": 12715000.0,
-    "mapped_invitation_value": 15097000,
+    "mapped_invitation_value": 19097000,
     "total_award_value": 242781386.0,
     "total_invitation_value": 559241712,
     "award_site_count": 9,
-    "invitation_site_count": 15,
+    "invitation_site_count": 18,
     "unmapped_awards": 82,
-    "unmapped_invitations": 211,
+    "unmapped_invitations": 208,
     "payment_verified_records": 0
   },
   "methodology": [
@@ -2041,6 +2041,317 @@
           "The AEC marker identifies the existing community hall, not individual mezzanine or downstairs works. The current operator explicitly identifies the former hall name.",
           "The same hall serves both Blair and Oxley polling divisions. The physical venue point was independently checked against all 150 AEC March 2025 boundaries and lies in Blair; polling-service division labels were not used to assign its location.",
           "The 4 April 2025 announcement is an election commitment for mezzanine and downstairs upgrades. The departmental 14 November 2025 record remains an invitation, with no award, payment or completed work established."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-087",
+      "record_type": "invitation",
+      "title": "Wynnum Manly District Cricket Club Upgrade",
+      "value": 1000000,
+      "state": "QLD",
+      "locality": "Tingalpa",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-087"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "carmichael-park-wynnum-manly-cricket",
+          "site_name": "Carmichael Park — Wynnum Manly District Cricket Club",
+          "address": "175 Boundary Street, Tingalpa QLD 4173",
+          "locality": "Tingalpa",
+          "state": "QLD",
+          "latitude": -27.469536359894178,
+          "longitude": 153.1254900137742,
+          "location_source_url": "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-locations/records?where=search%28park_name%2C%22CARMICHAEL%22%29&limit=20",
+          "site_precision": "venue",
+          "electorate_2025": "Bonner",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T21:47:56.888946+00:00",
+            "method": "Match the original named invitation to the official named venue and explicit location marker; independently check the point against the 2025 AEC boundaries.",
+            "sources": [
+              {
+                "url": "https://www.wmdcc.com.au/contact",
+                "excerpt": "Wynnum Manly District Cricket Club | 175 Boundary Street, Tingalpa QLD 4173",
+                "excerpt_kind": "structured official venue extraction",
+                "role": "Primary club identifies its venue address",
+                "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+                "content_sha256": "d673c0c186e75c3feefdc55580d74692c1af82585fdf79dcdb943f10d862bb33"
+              },
+              {
+                "url": "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-locations/records?where=search%28park_name%2C%22CARMICHAEL%22%29&limit=20",
+                "excerpt": "CARMICHAEL PARK | 175 BOUNDARY STREET, TINGALPA 4173 | -27.469536359894178,153.1254900137742",
+                "excerpt_kind": "structured official venue extraction",
+                "role": "Official Council park identity, street address and venue marker",
+                "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+                "content_sha256": "94cc62a61185cf963f427387c51515e21bfc0cc3b108662e88931ba6c4d15dc1"
+              },
+              {
+                "url": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/about-council/publication-scheme-documents/2025/12/Attachment%20C%20-%20Major%20and%20Local%20Community%20Infrastructure%20Program.pdf",
+                "excerpt": "Wynnum Manly District Cricket Club | Funding Offered $1,000,000 | LED lighting upgrades",
+                "excerpt_kind": "structured official venue extraction",
+                "role": "Council MLCIP application sponsorship lists the club and proposed lighting scope; applications may adjust scope",
+                "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+                "content_sha256": "4bdf5e700e0566e5d26077b2bff81fdc30a3c274eee0c8f2d7805d2dc8894c33",
+                "source_date": "2025-12-01"
+              }
+            ],
+            "notes": [
+              "Original 14 November 2025 invitation amount and Awaiting Application status retained. No new funding record, award match, payment, completion or electorate-value allocation is inferred.",
+              "The Council marker identifies Carmichael Park, not a surveyed cricket oval, light pole or funded-work footprint.",
+              "The Council application sponsorship lists proposed LED lighting upgrades for this club. Scope could change during application; neither this proposal nor the original invitation establishes an award or payment."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, test against all 150 AEC March 2025 polygons, and measure nearest matched-boundary distance in EPSG:28356.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 2403.862,
+              "distance_crs": "EPSG:28356"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T21:47:56.888946+00:00",
+        "method": "Independently read the original invitation row and primary venue evidence; preserve funding stages and map only the verified named venue.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Wynnum Manly District Cricket Club Upgrade | Brisbane | QLD | Awaiting Application | 1000000",
+            "excerpt_kind": "structured departmental row extraction",
+            "role": "Original invitation identity, amount and snapshot status, independently checked against the archived departmental PDF",
+            "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "source_date": "2025-11-14",
+            "hash_scope": "Original archived PDF bytes, independently checked this run; fresh HTTP request returned403. The row is a structured extraction, not continuous quotation."
+          },
+          {
+            "url": "https://www.wmdcc.com.au/contact",
+            "excerpt": "Wynnum Manly District Cricket Club | 175 Boundary Street, Tingalpa QLD 4173",
+            "excerpt_kind": "structured official venue extraction",
+            "role": "Primary club identifies its venue address",
+            "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+            "content_sha256": "d673c0c186e75c3feefdc55580d74692c1af82585fdf79dcdb943f10d862bb33"
+          },
+          {
+            "url": "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-locations/records?where=search%28park_name%2C%22CARMICHAEL%22%29&limit=20",
+            "excerpt": "CARMICHAEL PARK | 175 BOUNDARY STREET, TINGALPA 4173 | -27.469536359894178,153.1254900137742",
+            "excerpt_kind": "structured official venue extraction",
+            "role": "Official Council park identity, street address and venue marker",
+            "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+            "content_sha256": "94cc62a61185cf963f427387c51515e21bfc0cc3b108662e88931ba6c4d15dc1"
+          },
+          {
+            "url": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/about-council/publication-scheme-documents/2025/12/Attachment%20C%20-%20Major%20and%20Local%20Community%20Infrastructure%20Program.pdf",
+            "excerpt": "Wynnum Manly District Cricket Club | Funding Offered $1,000,000 | LED lighting upgrades",
+            "excerpt_kind": "structured official venue extraction",
+            "role": "Council MLCIP application sponsorship lists the club and proposed lighting scope; applications may adjust scope",
+            "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+            "content_sha256": "4bdf5e700e0566e5d26077b2bff81fdc30a3c274eee0c8f2d7805d2dc8894c33",
+            "source_date": "2025-12-01"
+          }
+        ],
+        "notes": [
+          "Original 14 November 2025 invitation amount and Awaiting Application status retained. No new funding record, award match, payment, completion or electorate-value allocation is inferred.",
+          "The Council marker identifies Carmichael Park, not a surveyed cricket oval, light pole or funded-work footprint.",
+          "The Council application sponsorship lists proposed LED lighting upgrades for this club. Scope could change during application; neither this proposal nor the original invitation establishes an award or payment."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-088",
+      "record_type": "invitation",
+      "title": "Kele Park Sporting Precinct Upgrades",
+      "value": 1300000,
+      "state": "QLD",
+      "locality": "West Rockhampton",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-088"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "kele-park",
+          "site_name": "Kele Park",
+          "address": "128 Western Street, West Rockhampton QLD 4700",
+          "locality": "West Rockhampton",
+          "state": "QLD",
+          "latitude": -23.3769366,
+          "longitude": 150.4830231,
+          "location_source_url": "https://www.rockhamptonregion.qld.gov.au/FacilitiesRecreation/Parks-Open-Spaces/Parks-Playground-Finder/Kele-Park",
+          "site_precision": "venue",
+          "electorate_2025": "Capricornia",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T21:47:56.888946+00:00",
+            "method": "Match the original named invitation to the official named venue and explicit location marker; independently check the point against the 2025 AEC boundaries.",
+            "sources": [
+              {
+                "url": "https://www.rockhamptonregion.qld.gov.au/FacilitiesRecreation/Parks-Open-Spaces/Parks-Playground-Finder/Kele-Park",
+                "excerpt": "Kele Park | 128 Western Street, West Rockhampton 4700 | -23.3769366,150.4830231",
+                "excerpt_kind": "structured official venue extraction",
+                "role": "Official Council venue address and explicit map marker",
+                "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+                "content_sha256": "b8d84afde4a85125778c1efe22f47bf8b40a3f5d70b8e05ba62844de9ff8963c",
+                "hash_scope": "Archived structured extraction independently read from the rendered official page, not original HTML bytes. Direct HTML fetch returned HTTP 403."
+              }
+            ],
+            "notes": [
+              "Original 14 November 2025 invitation amount and Awaiting Application status retained. No new funding record, award match, payment, completion or electorate-value allocation is inferred.",
+              "Council identifies a shared sporting venue used for softball and AFL. The point identifies Kele Park, not a specific funded building, field or works footprint.",
+              "This location verification does not adopt later project component descriptions or mixed funding envelopes as the original invitation amount."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, test against all 150 AEC March 2025 polygons, and measure nearest matched-boundary distance in EPSG:28356.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 1014.384,
+              "distance_crs": "EPSG:28356"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T21:47:56.888946+00:00",
+        "method": "Independently read the original invitation row and primary venue evidence; preserve funding stages and map only the verified named venue.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Kele Park Sporting Precinct Upgrades | Rockhampton | QLD | Awaiting Application | 1300000",
+            "excerpt_kind": "structured departmental row extraction",
+            "role": "Original invitation identity, amount and snapshot status, independently checked against the archived departmental PDF",
+            "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "source_date": "2025-11-14",
+            "hash_scope": "Original archived PDF bytes, independently checked this run; fresh HTTP request returned403. The row is a structured extraction, not continuous quotation."
+          },
+          {
+            "url": "https://www.rockhamptonregion.qld.gov.au/FacilitiesRecreation/Parks-Open-Spaces/Parks-Playground-Finder/Kele-Park",
+            "excerpt": "Kele Park | 128 Western Street, West Rockhampton 4700 | -23.3769366,150.4830231",
+            "excerpt_kind": "structured official venue extraction",
+            "role": "Official Council venue address and explicit map marker",
+            "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+            "content_sha256": "b8d84afde4a85125778c1efe22f47bf8b40a3f5d70b8e05ba62844de9ff8963c",
+            "hash_scope": "Archived structured extraction independently read from the rendered official page, not original HTML bytes. Direct HTML fetch returned HTTP 403."
+          }
+        ],
+        "notes": [
+          "Original 14 November 2025 invitation amount and Awaiting Application status retained. No new funding record, award match, payment, completion or electorate-value allocation is inferred.",
+          "Council identifies a shared sporting venue used for softball and AFL. The point identifies Kele Park, not a specific funded building, field or works footprint.",
+          "This location verification does not adopt later project component descriptions or mixed funding envelopes as the original invitation amount."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-091",
+      "record_type": "invitation",
+      "title": "Cloncurry Pump Track & Skate Park",
+      "value": 1700000,
+      "state": "QLD",
+      "locality": "Cloncurry",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161",
+      "invitation_ids": [
+        "mlci-invitation-091"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "mary-kathleen-memorial-park",
+          "site_name": "Mary Kathleen Memorial Park — skate park and pump track",
+          "address": "Mary Kathleen Park, Cloncurry QLD 4824",
+          "locality": "Cloncurry",
+          "state": "QLD",
+          "latitude": -20.75738,
+          "longitude": 139.9471749,
+          "location_source_url": "https://www.cloncurry.qld.gov.au/Our-Council/Council-Projects/Major-Projects/Skate-Park-and-Pump-Track",
+          "site_precision": "venue",
+          "electorate_2025": "Kennedy",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T21:47:56.888946+00:00",
+            "method": "Match the original named invitation to the official named venue and explicit location marker; independently check the point against the 2025 AEC boundaries.",
+            "sources": [
+              {
+                "url": "https://www.cloncurry.qld.gov.au/Our-Council/Council-Projects/Major-Projects/Skate-Park-and-Pump-Track",
+                "excerpt": "Skate Park and Pump Track | Mary Kathleen Memorial Park, Cloncurry 4824 | -20.75738,139.9471749 | Phase 2 - Concept Design",
+                "excerpt_kind": "structured official venue extraction",
+                "role": "Council project page identifies its proposed venue and map marker; concept design does not establish completed delivery",
+                "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+                "content_sha256": "75585d7adef04556af88fa70b37cfeac79312a932a26a901397ae62f065500c7",
+                "hash_scope": "Archived structured extraction independently read from the rendered official page, not original HTML bytes. Direct HTML fetch returned HTTP 403."
+              }
+            ],
+            "notes": [
+              "Original 14 November 2025 invitation amount and Awaiting Application status retained. No new funding record, award match, payment, completion or electorate-value allocation is inferred.",
+              "The Council project page identifies the proposed skate park and pump track within Mary Kathleen Memorial Park and records concept design. This marker is the park venue, not a surveyed future works footprint.",
+              "Lighting is described as potential. The current project description does not establish an award, payment or completion of the 14 November 2025 invitation."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, test against all 150 AEC March 2025 polygons, and measure nearest matched-boundary distance in EPSG:28354.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 192941.602,
+              "distance_crs": "EPSG:28354"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T21:47:56.888946+00:00",
+        "method": "Independently read the original invitation row and primary venue evidence; preserve funding stages and map only the verified named venue.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161",
+            "excerpt": "Cloncurry Pump Track & Skate Park | Cloncurry | QLD | Awaiting Application | 1700000",
+            "excerpt_kind": "structured departmental row extraction",
+            "role": "Original invitation identity, amount and snapshot status, independently checked against the archived departmental PDF",
+            "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "source_date": "2025-11-14",
+            "hash_scope": "Original archived PDF bytes, independently checked this run; fresh HTTP request returned403. The row is a structured extraction, not continuous quotation."
+          },
+          {
+            "url": "https://www.cloncurry.qld.gov.au/Our-Council/Council-Projects/Major-Projects/Skate-Park-and-Pump-Track",
+            "excerpt": "Skate Park and Pump Track | Mary Kathleen Memorial Park, Cloncurry 4824 | -20.75738,139.9471749 | Phase 2 - Concept Design",
+            "excerpt_kind": "structured official venue extraction",
+            "role": "Council project page identifies its proposed venue and map marker; concept design does not establish completed delivery",
+            "retrieved_at": "2026-09-12T21:47:56.888946+00:00",
+            "content_sha256": "75585d7adef04556af88fa70b37cfeac79312a932a26a901397ae62f065500c7",
+            "hash_scope": "Archived structured extraction independently read from the rendered official page, not original HTML bytes. Direct HTML fetch returned HTTP 403."
+          }
+        ],
+        "notes": [
+          "Original 14 November 2025 invitation amount and Awaiting Application status retained. No new funding record, award match, payment, completion or electorate-value allocation is inferred.",
+          "The Council project page identifies the proposed skate park and pump track within Mary Kathleen Memorial Park and records concept design. This marker is the park venue, not a surveyed future works footprint.",
+          "Lighting is described as potential. The current project description does not establish an award, payment or completion of the 14 November 2025 invitation."
         ]
       }
     }
