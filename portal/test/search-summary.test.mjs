@@ -92,7 +92,7 @@ test('summary uses the actual filtered search with canonical relevance order and
  const query=new URL(f.calls[0].search).searchParams;
  for(const k of ['party','topic','from','to','state','mode','speaker','kind'])assert.equal(query.get(k),params[k]||'all');
  assert.equal(query.get('page'),'1');assert.equal(query.get('sort'),'relevance');
- assert.equal(f.calls[1].path,'/ask');assert.equal(f.calls[1].body.generative_model,'gemini-2.5-flash-lite');
+ assert.equal(f.calls[1].path,'/ask');assert.equal(f.calls[1].body.generative_model,'openai-compatible');
  await f.run({...params,page:'1',sort:'newest'});assert.equal(f.calls.filter(c=>c.path).length,1);
  await f.run({...params,from:'1999'});assert.equal(f.calls.filter(c=>c.path).length,2);
 });
