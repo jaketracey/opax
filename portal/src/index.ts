@@ -1041,25 +1041,25 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     res.headers.set('server-timing', [...parts, `total;dur=${Date.now() - marks[0][1]}`].join(', '))
     return res
   }
+  if (!rawInput.question?.trim()) return json({ error: 'question is required' }, 400)
+  // Resolve receipt conversations from user turns before speech inference can
+  // apply calendar-year or parliamentarian filters. No model call is needed.
+  try {
+    const ranked = await rankedMoneyAnswer(rawInput, env.ASSETS)
+    if (ranked) { mark('receipts'); return timed(json(ranked)) }
+  } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
   let people: { name: string }[] = []
   if (needsAskPeople(rawInput)) {
     try { people = (await loadPeople(env)).people }
     catch { return json({ error: 'The parliamentarian index is temporarily unavailable. Please try again.' }, 503) }
   }
   const { input, scope } = resolveAskScope(rawInput, people)
-  if (!input.question?.trim()) return json({ error: 'question is required' }, 400)
 
   const url = new URL(request.url)
   const wantStream =
     url.searchParams.get('stream') === '1' ||
     (request.headers.get('accept') ?? '').includes('text/event-stream')
 
-  // Exact rankings use this deployment's data and no generative call.
-  // The stream client also accepts the complete JSON payload.
-  try {
-    const ranked = await rankedMoneyAnswer(input, env.ASSETS)
-    if (ranked) return json(ranked)
-  } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
   mark('prep')
 
   // Cache first: a HIT costs neither a model call nor rate-limit quota.
