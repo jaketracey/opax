@@ -398,6 +398,32 @@ th[aria-sort] .lg-sort { color: var(--ink, #23271F); }
   overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
 }
 
+.lg-cards, .lg-compact-sort { display: none; }
+@media (max-width: 960px) {
+  .lg-table { display: none; }
+  .lg-tablewrap { overflow-x: hidden; }
+  .lg-compact-sort {
+    display: flex; align-items: flex-end; gap: 0.5rem; margin: 0.75rem 0;
+  }
+  .lg-compact-sort .lg-field { flex: 1; }
+  .lg-compact-sort .lg-select, .lg-compact-sort .lg-btn { min-height: 2.75rem; font-size: 1rem; }
+  .lg-compact-sort .lg-btn { min-width: 7.5rem; }
+  .lg-cards:not([hidden]) { display: block; list-style: none; margin: 0; padding: 0; }
+  .lg-card { padding: 1rem; border-bottom: 1px solid var(--line, #DFDCD2); }
+  .lg-card:last-child { border-bottom: 0; }
+  .lg-card-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.5rem 1rem; align-items: start; }
+  .lg-card-label { display: block; color: var(--ink-soft, #575C52); font-size: 0.75rem; line-height: 1.5; }
+  .lg-card a { color: var(--navy, #142A43); text-decoration-color: var(--bronze, #A0761B); text-underline-offset: 3px; }
+  .lg-card-donor { display: inline-flex; align-items: center; min-height: 2.75rem; font-weight: 700; line-height: 1.45; overflow-wrap: anywhere; }
+  .lg-card-value { text-align: right; }
+  .lg-card-value strong { display: block; padding-top: 0.375rem; font-size: 1.25rem; line-height: 1.4; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .lg-card-recipient { margin-top: 0.75rem; }
+  .lg-card-recipient .lg-cell-label { display: flex; align-items: center; min-width: 0; }
+  .lg-card-recipient a { display: inline-flex; align-items: center; min-height: 2.75rem; font-weight: 600; overflow-wrap: anywhere; }
+  .lg-card-share { display: block; font-size: 0.8125rem; color: var(--ink-soft, #575C52); }
+  .lg-card-meta { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin-top: 0.5rem; font-size: 0.8125rem; line-height: 1.55; color: var(--ink-soft, #575C52); }
+}
+
 @media (max-width: 640px) {
   .lg-input, .lg-select { font-size: 1rem; min-height: 2.75rem; }
   .lg-btn, .lg-view, .lg-jur { min-height: 2.75rem; }
@@ -542,8 +568,16 @@ export function mountLedger (container, opts = {}) {
     <p class="lg-year-help" id="lg-year-help">Use the first year of a financial year (2020 for 2020–21), or the polling year for election returns.</p>
     <p class="lg-summary" aria-live="polite" aria-atomic="true"></p>
 
-    <div class="lg-tablewrap" role="region" tabindex="0" aria-label="Political receipts table (scrollable)">
+    <div class="lg-compact-sort">
+      <div class="lg-field">
+        <label class="lg-label" for="lg-compact-sort">Sort by</label>
+        <select class="lg-select" id="lg-compact-sort" disabled></select>
+      </div>
+      <button type="button" class="lg-btn" id="lg-sort-direction" disabled>High to low</button>
+    </div>
+    <div class="lg-tablewrap" role="region" tabindex="0" aria-label="Political receipts (scrollable)">
       <div class="lg-status" role="status">Loading the ledger…</div>
+      <ul class="lg-cards" hidden></ul>
       <table class="lg-table" hidden>
         <caption class="lg-visually-hidden"></caption>
         <thead><tr></tr></thead>
@@ -570,6 +604,9 @@ export function mountLedger (container, opts = {}) {
   const captionEl = $('caption')
   const headRow = $('thead tr')
   const bodyEl = $('tbody')
+  const cardsEl = $('.lg-cards')
+  const compactSortEl = $('#lg-compact-sort')
+  const directionBtn = $('#lg-sort-direction')
 
   // ---- filters → rows -----------------------------------------------------
 
@@ -590,7 +627,11 @@ export function mountLedger (container, opts = {}) {
 
   function renderHead () {
     headRow.textContent = ''
+    compactSortEl.textContent = ''
     for (const col of COLUMNS[state.view]) {
+      const option = el('option', null, col.label)
+      option.value = col.key
+      compactSortEl.appendChild(option)
       const th = el('th', col.numeric ? 'lg-th-num' : null)
       th.scope = 'col'
       const btn = el('button', 'lg-sort')
@@ -606,6 +647,12 @@ export function mountLedger (container, opts = {}) {
 
   function syncSortMarkers () {
     const sort = state.sort[state.view]
+    compactSortEl.value = sort.key
+    const col = COLUMNS[state.view].find((c) => c.key === sort.key)
+    const labels = col.key === 'years' ? ['Oldest first', 'Newest first']
+      : col.numeric ? ['Low to high', 'High to low'] : ['A to Z', 'Z to A']
+    directionBtn.textContent = labels[sort.dir === 'asc' ? 0 : 1]
+    directionBtn.setAttribute('aria-label', `${col.label}: ${directionBtn.textContent}. Change to ${labels[sort.dir === 'asc' ? 1 : 0]}.`)
     for (const th of headRow.children) {
       const btn = th.querySelector('.lg-sort')
       const arrow = th.querySelector('.lg-arrow')
@@ -645,6 +692,32 @@ export function mountLedger (container, opts = {}) {
     cell.appendChild(wrap)
   }
 
+  // The compact list uses the same calculated rows as the table and export.
+  // CSS exposes one presentation at a time, including to assistive technology.
+  function renderCard (r) {
+    const card = el('li', 'lg-card')
+    const top = el('div', 'lg-card-top')
+    const payer = el('div')
+    payer.appendChild(el('span', 'lg-card-label', 'From'))
+    const donor = subjectLink('donor', r.donor)
+    donor.className = 'lg-card-donor'
+    payer.appendChild(donor)
+    const amount = el('div', 'lg-card-value')
+    amount.append(el('span', 'lg-card-label', state.view === 'flows' ? 'Disclosed receipts' : 'Total shown'), el('strong', null, AUD.format(r.total)))
+    top.append(payer, amount)
+    const recipient = el('div', 'lg-card-recipient')
+    recipient.append(el('span', 'lg-card-label', state.view === 'flows' ? 'Received by' : 'Largest recipient'),
+      dotLabel(state.view === 'flows' ? r.partyColour : r.topPartyColour,
+        subjectLink('party', state.view === 'flows' ? r.party : r.topParty)))
+    if (state.view === 'donors') recipient.appendChild(el('span', 'lg-card-share', `${Math.round(r.topShare * 100)}% of the shown total · ${NUM.format(r.parties)} ${r.parties === 1 ? 'party' : 'parties'}`))
+    const details = el('div', 'lg-card-meta')
+    details.append(el('span', null, `Return years: ${yearsText(r)}`),
+      el('span', null, `${NUM.format(r.count)} ${r.count === 1 ? 'record' : 'records'}`),
+      el('span', null, industryLabel(r.industry)))
+    card.append(top, recipient, details)
+    return card
+  }
+
   function render () {
     if (loading || loadError) { exportBtn.disabled = true; return }
     const invalidFrom = !yearFromEl.validity.valid
@@ -657,6 +730,8 @@ export function mountLedger (container, opts = {}) {
     exportBtn.disabled = !!error
     statusEl.hidden = !error
     tableEl.hidden = !!error
+    cardsEl.hidden = !!error
+    compactSortEl.disabled = directionBtn.disabled = !!error
     if (error) {
       currentRows = []
       summaryEl.textContent = error
@@ -668,11 +743,13 @@ export function mountLedger (container, opts = {}) {
     currentRows = rows
 
     const frag = document.createDocumentFragment()
+    const cards = document.createDocumentFragment()
     const renderCells = state.view === 'flows' ? renderCellsFlows : renderCellsDonors
     for (const r of rows) {
       const tr = document.createElement('tr')
       renderCells(tr, r)
       frag.appendChild(tr)
+      cards.appendChild(renderCard(r))
     }
     if (rows.length === 0) {
       const tr = document.createElement('tr')
@@ -680,19 +757,21 @@ export function mountLedger (container, opts = {}) {
       td.colSpan = COLUMNS[state.view].length
       tr.appendChild(td)
       frag.appendChild(tr)
+      cards.appendChild(el('li', 'lg-empty', 'Nothing matches these filters.'))
     }
     bodyEl.textContent = ''
     bodyEl.appendChild(frag)
+    cardsEl.replaceChildren(cards)
 
     const shown = rows.reduce((sum, r) => sum + r.total, 0)
     summaryEl.textContent = ''
     const b = el('b', null, state.view === 'flows'
-      ? `${NUM.format(rows.length)} flows · ${AUD.format(shown)}`
-      : `${NUM.format(rows.length)} donors · ${AUD.format(shown)}`)
+      ? `${NUM.format(rows.length)} ${rows.length === 1 ? 'flow' : 'flows'} · ${AUD.format(shown)}`
+      : `${NUM.format(rows.length)} ${rows.length === 1 ? 'donor' : 'donors'} · ${AUD.format(shown)}`)
     summaryEl.appendChild(b)
     summaryEl.appendChild(document.createTextNode(state.view === 'flows'
       ? ' total shown'
-      : ` total shown, aggregated from ${NUM.format(flowCount)} flows`))
+      : ` total shown, aggregated from ${NUM.format(flowCount)} ${flowCount === 1 ? 'flow' : 'flows'}`))
 
     const hasYearFilter = state.yearFrom != null || state.yearTo != null
     const period = state.yearFrom != null && state.yearTo != null
@@ -706,6 +785,7 @@ export function mountLedger (container, opts = {}) {
     captionEl.textContent = state.view === 'flows'
       ? 'Disclosed donor to party flows matching the current filters'
       : 'Donors aggregated over the flows matching the current filters'
+    cardsEl.setAttribute('aria-label', captionEl.textContent)
 
     clearBtn.hidden = !hasFilters()
   }
@@ -785,6 +865,18 @@ export function mountLedger (container, opts = {}) {
   })
 
   exportBtn.addEventListener('click', exportCSV)
+  compactSortEl.addEventListener('change', () => {
+    const col = COLUMNS[state.view].find((c) => c.key === compactSortEl.value)
+    state.sort[state.view] = { key: col.key, dir: col.numeric ? 'desc' : 'asc' }
+    syncSortMarkers()
+    render()
+  })
+  directionBtn.addEventListener('click', () => {
+    const sort = state.sort[state.view]
+    sort.dir = sort.dir === 'asc' ? 'desc' : 'asc'
+    syncSortMarkers()
+    render()
+  })
 
   for (const btn of root.querySelectorAll('.lg-jur')) {
     btn.addEventListener('click', () => {
@@ -888,6 +980,9 @@ export function mountLedger (container, opts = {}) {
     loading = true
     loadError = false
     exportBtn.disabled = true
+    compactSortEl.disabled = directionBtn.disabled = true
+    cardsEl.hidden = true
+    cardsEl.replaceChildren()
     currentRows = []
     summaryEl.textContent = ''
     fineEl.textContent = ''
