@@ -2597,9 +2597,16 @@ function renderAnswer(container, text, response = {}) {
       container.appendChild(h);
     } else if (block.kind === "list") {
       const list = document.createElement(block.ordered ? "ol" : "ul");
+      if (response.money_ranking && response.answer_status === "needs_scope" && block.items.every(item => /\]\(\/ask\?q=/.test(item.text))) list.className = "answer-money-choices";
       for (const item of block.items) {
         const li = document.createElement("li");
         appendInline(li, item.text);
+        // Correction choices are navigation within this app, including previews.
+        if (list.className === "answer-money-choices") {
+          for (const link of li.querySelectorAll("a")) {
+            if (link.pathname === "/ask") link.setAttribute("href", link.pathname + link.search);
+          }
+        }
         if (item.children.length) {
           const sub = document.createElement("ul");
           for (const child of item.children) {

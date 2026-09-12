@@ -759,6 +759,18 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
   padding: 0.7rem 0.9rem; font-size: 0.8125rem; line-height: 1.5;
 }
 .answer .about-table { font-size: 0.9375rem; }
+.answer ul.answer-money-choices { display: grid; gap: 0.65rem; max-width: 36rem; }
+.answer .answer-money-choices > li { margin: 0; }
+.answer .answer-money-choices > li::before { content: none; }
+.answer-money-choices a {
+  display: block; min-height: 44px; padding: 0.8rem 1rem;
+  border: 1px solid var(--line-strong); border-radius: 5px;
+  background: var(--paper-raised); color: var(--navy);
+  font: 600 1rem/1.5 var(--sans); text-decoration: none;
+}
+.answer-money-choices a:hover { background: var(--paper-sunken); border-color: var(--navy); }
+.answer-money-choices a:focus-visible { outline: 3px solid var(--bronze); outline-offset: 3px; }
+
 .answer .evidence-notice {
   font: 400 0.9375rem/1.6 var(--sans); color: var(--ink-soft);
 }
