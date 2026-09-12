@@ -48,54 +48,108 @@ SEARCH DATA:\n${JSON.stringify({query, filters, sources})}`
 }
 
 /** A citation must resolve to this result set and contain a real supporting excerpt. */
+/** The per-point rules behind parseSearchSummary, usable one point at a time so
+ * a streamed overview can show each point the moment its JSON object closes.
+ * State (word budget, three-point cap, cited excerpts) lives in the validator. */
+export function summaryPointValidator(sources: SummarySource[], perPointEvidence = false) {
+  const known = new Map(sources.map(s => [s.id, s]))
+  const cited = new Map<string, Set<string>>()
+  const points: SearchSummary['points'] = []
+  const validatePoint = (point: any) => {
+    if (!point || typeof point.text !== 'string') return null
+    const text = point.text.trim()
+    if (text.length < 20 || text.length > 520 || /["“”]|<[^>]*>|https?:\/\/|\[[^\]]*\]/i.test(text)) return null
+    if (!Array.isArray(point.citations) || !point.citations.length || point.citations.length > 4) return null
+    const evidence = new Map<string, {source:SummarySource; quotes:Set<string>}>()
+    for (const citation of point.citations) {
+      if (!citation || typeof citation.id !== 'string' || typeof citation.quote !== 'string') return null
+      const source = known.get(citation.id), quote = citation.quote.trim()
+      if (!source || quote.length < 20 || quote.length > 700 || ![source.snippet, source.title].some(text => fold(text).includes(fold(quote)))) return null
+      if (!evidence.has(source.id)) evidence.set(source.id,{source,quotes:new Set()})
+      evidence.get(source.id)!.quotes.add(quote)
+    }
+    const records = [...evidence.values()].map(item => item.source)
+    if (records.some(s => ['grant','grant_award','grant_invitation','contract'].includes(s.kind)) && /\b(?:received|paid|spent|funded|delivered|completed)\b/i.test(text)) return null
+    if (unsupportedQuotes(text, records.map(s => s.snippet)).length) return null
+    const numbers = (s: string) => s.match(/\d+(?:[,.]\d+)*/g)?.map(n => String(Number(n.replaceAll(',', '')))) || []
+    const allowedNumbers = new Set(numbers(records.map(s => [s.title,s.date,s.snippet].join(' ')).join(' ')))
+    if (numbers(text).some(n => !allowedNumbers.has(n))) return null
+    // A named speaker elsewhere in the result set cannot borrow this citation.
+    for (const {speaker} of sources) {
+      if (speaker && text.includes(speaker) && !records.some(s => s.speaker === speaker || s.snippet.includes(speaker))) return null
+    }
+    return {text,evidence}
+  }
+  /** Accept one model point; returns the stored point or null when rejected or over budget. */
+  const accept = (point: unknown): SearchSummary['points'][number] | null => {
+    if (points.length >= 3) return null
+    const valid = validatePoint(point)
+    if (!valid) return null
+    if (points.reduce((n,p) => n+p.text.split(/\s+/).length,0)+valid.text.split(/\s+/).length > 125) return null
+    const stored = {text:valid.text,source_ids:[...valid.evidence.keys()],
+      ...(perPointEvidence ? {evidence:Object.fromEntries([...valid.evidence].map(([id,{quotes}]) => [id,[...quotes]]))} : {}),
+    }
+    points.push(stored)
+    for (const [id,{quotes}] of valid.evidence) {
+      if (!cited.has(id)) cited.set(id,new Set())
+      for (const quote of quotes) cited.get(id)!.add(quote)
+    }
+    return stored
+  }
+  const result = (): SearchSummary | null => points.length
+    ? {points, sources: [...cited].map(([id, quotes]) => ({...known.get(id)!, evidence: [...quotes]}))}
+    : null
+  return { accept, result, get count() { return points.length } }
+}
+
 export function parseSearchSummary(answer: string, sources: SummarySource[], perPointEvidence = false): SearchSummary | null {
   try {
     const raw = JSON.parse(answer.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, ''))
     if (!Array.isArray(raw.points) || !raw.points.length || raw.points.length > 6) return null
-    const known = new Map(sources.map(s => [s.id, s]))
-    const cited = new Map<string, Set<string>>()
-    const points: SearchSummary['points'] = []
+    const validator = summaryPointValidator(sources, perPointEvidence)
     for (const point of raw.points) {
-      const validatePoint = () => {
-        if (!point || typeof point.text !== 'string') return null
-        const text = point.text.trim()
-        if (text.length < 20 || text.length > 520 || /["“”]|<[^>]*>|https?:\/\/|\[[^\]]*\]/i.test(text)) return null
-        if (!Array.isArray(point.citations) || !point.citations.length || point.citations.length > 4) return null
-        const evidence = new Map<string, {source:SummarySource; quotes:Set<string>}>()
-        for (const citation of point.citations) {
-          if (!citation || typeof citation.id !== 'string' || typeof citation.quote !== 'string') return null
-          const source = known.get(citation.id), quote = citation.quote.trim()
-          if (!source || quote.length < 20 || quote.length > 700 || ![source.snippet, source.title].some(text => fold(text).includes(fold(quote)))) return null
-          if (!evidence.has(source.id)) evidence.set(source.id,{source,quotes:new Set()})
-          evidence.get(source.id)!.quotes.add(quote)
-        }
-        const records = [...evidence.values()].map(item => item.source)
-        if (records.some(s => ['grant','grant_award','grant_invitation','contract'].includes(s.kind)) && /\b(?:received|paid|spent|funded|delivered|completed)\b/i.test(text)) return null
-        if (unsupportedQuotes(text, records.map(s => s.snippet)).length) return null
-        const numbers = (s: string) => s.match(/\d+(?:[,.]\d+)*/g)?.map(n => String(Number(n.replaceAll(',', '')))) || []
-        const allowedNumbers = new Set(numbers(records.map(s => [s.title,s.date,s.snippet].join(' ')).join(' ')))
-        if (numbers(text).some(n => !allowedNumbers.has(n))) return null
-        // A named speaker elsewhere in the result set cannot borrow this citation.
-        for (const {speaker} of sources) {
-          if (speaker && text.includes(speaker) && !records.some(s => s.speaker === speaker || s.snippet.includes(speaker))) return null
-        }
-        return {text,evidence}
-      }
-      const valid = validatePoint()
-      if (!valid) continue
-      if (points.reduce((n,p) => n+p.text.split(/\s+/).length,0)+valid.text.split(/\s+/).length > 125) continue
-      points.push({text:valid.text,source_ids:[...valid.evidence.keys()],
-        ...(perPointEvidence ? {evidence:Object.fromEntries([...valid.evidence].map(([id,{quotes}]) => [id,[...quotes]]))} : {}),
-      })
-      for (const [id,{quotes}] of valid.evidence) {
-        if (!cited.has(id)) cited.set(id,new Set())
-        for (const quote of quotes) cited.get(id)!.add(quote)
-      }
-      if (points.length === 3) break
+      validator.accept(point)
+      if (validator.count === 3) break
     }
-    if (!points.length) return null
-    return {points, sources: [...cited].map(([id, quotes]) => ({...known.get(id)!, evidence: [...quotes]}))}
+    return validator.result()
   } catch { return null }
+}
+
+/** Pulls complete objects out of the model's `{"points":[ ... ]}` as the text
+ * streams in, so each point can be validated and shown before the reply ends.
+ * Tracks JSON string state so braces inside quoted excerpts do not count. */
+export class SummaryPointStream {
+  private buffer = ''
+  private cursor = 0
+  private inArray = false
+  seen = 0
+  push(text: string): unknown[] {
+    this.buffer += text
+    const out: unknown[] = []
+    if (!this.inArray) {
+      const open = /"points"\s*:\s*\[/.exec(this.buffer)
+      if (!open) return out
+      this.inArray = true
+      this.cursor = open.index + open[0].length
+    }
+    for (;;) {
+      while (this.cursor < this.buffer.length && /[\s,]/.test(this.buffer[this.cursor])) this.cursor++
+      if (this.cursor >= this.buffer.length || this.buffer[this.cursor] !== '{') return out
+      let depth = 0, inString = false, escaped = false, i = this.cursor
+      for (; i < this.buffer.length; i++) {
+        const c = this.buffer[i]
+        if (inString) { if (escaped) escaped = false; else if (c === '\\') escaped = true; else if (c === '"') inString = false; continue }
+        if (c === '"') inString = true
+        else if (c === '{') depth++
+        else if (c === '}') { depth--; if (depth === 0) break }
+      }
+      if (i >= this.buffer.length) return out // the object is still arriving
+      const raw = this.buffer.slice(this.cursor, i + 1)
+      this.cursor = i + 1
+      this.seen++
+      try { out.push(JSON.parse(raw)) } catch { /* a torn object; the final parse decides */ }
+    }
+  }
 }
 
 /** Bound provider output while reading it, including an unexpectedly large error body. */

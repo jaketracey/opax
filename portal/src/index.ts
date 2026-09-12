@@ -32,7 +32,7 @@ import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
 
-import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer } from './search-summary'
+import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer, summaryPointValidator, SummaryPointStream, type SearchSummary } from './search-summary'
 
 import { OG_FONT_FILES, OG_VERSION, homeCard, type OgCard } from './og'
 import { renderOgPng, type OgFont } from './og-render'
@@ -1312,24 +1312,94 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   if (cached) return withCacheStatus(cached, 'HIT', false)
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
   if (limited) return limited
+  const unavailable = 'A cited summary is unavailable. Your matching records are still below.'
+  const prompt = summaryPrompt(query,filters,sources)
+  const askBody = (q: string) => ({query:q, top_k:1, reranker:'noop', generative_model:env.SEARCH_SUMMARY_MODEL || 'openai-compatible', max_tokens:4096,
+    prompt:{system:SEARCH_SUMMARY_SYSTEM, user:'{question}'}})
+  const repairPrompt = prompt + '\nWrite a fresh, short overview. Previous output failed source validation. Keep each sentence to one narrow factual point. Cite an EXACT passage or title for every named speaker and claim. Use supplied numbers without rounding. Grants and contracts are published awards, not received, paid or spent money, funded work, or completed projects. Return only the required JSON.'
+  const finish = (summary: SearchSummary) => ({status:'ready', ...summary, reviewed_count:sources.length, partial:!!results.warnings?.length})
+  if (url.searchParams.get('stream') === '1') {
+    // Streamed: each point goes out the moment its JSON object closes and
+    // passes the same validation as the synchronous path; `done` carries the
+    // full payload (and is what gets cached). A cache HIT above answers as
+    // plain JSON, which the client also accepts.
+    const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
+    const writer = writable.getWriter()
+    const encoder = new TextEncoder()
+    const send = (event: string, data: unknown): Promise<void> => writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+    ctx.waitUntil((async () => {
+      try {
+        const validator = summaryPointValidator(sources)
+        const stream = new SummaryPointStream()
+        const answer = await streamSummaryAnswer(env, askBody(prompt), async (text) => {
+          for (const point of stream.push(text)) {
+            if (stream.seen > 6) break
+            const accepted = validator.accept(point)
+            if (accepted) await send('point', { text: accepted.text, source_ids: accepted.source_ids })
+          }
+        }, AbortSignal.timeout(40_000))
+        let summary = validator.result()
+        if (!summary && answer) {
+          const repaired = await summaryModelAnswer(await kbFetch(env, '/ask', { body: askBody(repairPrompt), headers:{'x-synchronous':'true'}, signal:AbortSignal.timeout(25_000) }))
+          summary = repaired ? parseSearchSummary(repaired,sources) : null
+          if (summary) for (const point of summary.points) await send('point', { text: point.text, source_ids: point.source_ids })
+        }
+        if (!summary) { await send('error', { error: unavailable }); return }
+        const payload = finish(summary)
+        storeGenerationCache(env, ctx, key, json(payload), 24*60*60)
+        await send('done', payload)
+      } catch {
+        try { await send('error', { error: unavailable }) } catch { /* reader gone */ }
+      } finally {
+        try { await writer.close() } catch { /* already closed */ }
+      }
+    })())
+    return new Response(readable, { headers: { ...SSE_HEADERS, 'x-opax-cache': 'MISS' } })
+  }
   try {
-    const prompt = summaryPrompt(query,filters,sources)
-    const generate = async (query: string) => summaryModelAnswer(await kbFetch(env, '/ask', {
-      body: {query, top_k:1, reranker:'noop', generative_model:env.SEARCH_SUMMARY_MODEL || 'openai-compatible', max_tokens:4096,
-        prompt:{system:SEARCH_SUMMARY_SYSTEM, user:'{question}'}},
-      headers:{'x-synchronous':'true'}, signal:AbortSignal.timeout(25_000),
-    }))
+    const generate = async (q: string) => summaryModelAnswer(await kbFetch(env, '/ask', { body: askBody(q), headers:{'x-synchronous':'true'}, signal:AbortSignal.timeout(25_000) }))
     const answer = await generate(prompt)
     let summary = answer ? parseSearchSummary(answer,sources) : null
     if (!summary && answer) {
-      const repaired = await generate(prompt + '\nWrite a fresh, short overview. Previous output failed source validation. Keep each sentence to one narrow factual point. Cite an EXACT passage or title for every named speaker and claim. Use supplied numbers without rounding. Grants and contracts are published awards, not received, paid or spent money, funded work, or completed projects. Return only the required JSON.')
+      const repaired = await generate(repairPrompt)
       summary = repaired ? parseSearchSummary(repaired,sources) : null
     }
-    if (!summary) return json({error:'A cited summary is unavailable. Your matching records are still below.'},502)
-    const out = json({status:'ready', ...summary, reviewed_count:sources.length, partial:!!results.warnings?.length})
+    if (!summary) return json({error:unavailable},502)
+    const out = json(finish(summary))
     storeGenerationCache(env, ctx, key, out, 24*60*60)
     return withCacheStatus(out,'MISS',false)
-  } catch { return json({error:'A cited summary is unavailable. Your matching records are still below.'},503) }
+  } catch { return json({error:unavailable},503) }
+}
+
+/** One streamed platform generation for the overview: answer text chunks go to
+ * `onText` as they arrive; the whole answer comes back for the final parse. */
+async function streamSummaryAnswer(env: Env, body: Record<string, unknown>, onText: (text: string) => Promise<void>, signal: AbortSignal): Promise<string> {
+  const res = await fetch(`${ragBase(env)}/ask`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', accept: 'application/x-ndjson', 'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}` },
+    body: JSON.stringify(body),
+    signal,
+  })
+  if (!res.ok || !res.body) throw new Error(`summary failed (${res.status})`)
+  let answer = ''
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  const handle = async (line: string) => {
+    let item: { type?: string; text?: string } | undefined
+    try { item = (JSON.parse(line) as { item?: { type?: string; text?: string } }).item } catch { return }
+    if (item?.type === 'answer' && typeof item.text === 'string' && item.text) { answer += item.text; await onText(item.text) }
+  }
+  for (;;) {
+    const { value, done } = await reader.read()
+    if (done) break
+    buffer += decoder.decode(value, { stream: true })
+    let at: number
+    while ((at = buffer.indexOf('\n')) >= 0) { const line = buffer.slice(0, at).trim(); buffer = buffer.slice(at + 1); if (line) await handle(line) }
+  }
+  buffer += decoder.decode()
+  if (buffer.trim()) await handle(buffer.trim())
+  return answer
 }
 
 // Narration is generated from server-loaded graph facts, never client-supplied amounts.

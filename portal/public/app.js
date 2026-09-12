@@ -10105,6 +10105,53 @@ function refreshSearchLayout() {
 window.addEventListener("resize", refreshSearchLayout);
 document.fonts?.ready.then(refreshSearchLayout);
 
+/**
+ * Read a streamed search overview (docs/STREAMING.md): `point` events as each
+ * validated point lands, then `done` with the synchronous payload. A plain
+ * JSON reply (a cache hit, an empty result set, an error) is returned as is.
+ */
+async function readSummaryStream(url, signal, on) {
+  const res = await fetch(url, { headers: { accept: "text/event-stream" }, signal });
+  if (!(res.headers.get("content-type") || "").includes("text/event-stream")) {
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+    return data;
+  }
+  let final = null;
+  const dispatch = (block) => {
+    let event = "message";
+    const data = [];
+    for (const line of block.split("\n")) {
+      if (line.startsWith("event:")) event = line.slice(6).trim();
+      else if (line.startsWith("data:")) data.push(line.slice(5).replace(/^ /, ""));
+    }
+    if (!data.length) return;
+    let payload;
+    try { payload = JSON.parse(data.join("\n")); } catch { return; }
+    if (event === "point") on.point?.(payload);
+    else if (event === "done") final = payload;
+    else if (event === "error") throw new Error(payload.error || "Summary unavailable");
+  };
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    let at;
+    while ((at = buffer.indexOf("\n\n")) >= 0) {
+      const block = buffer.slice(0, at);
+      buffer = buffer.slice(at + 2);
+      if (block.trim()) dispatch(block);
+    }
+  }
+  buffer += decoder.decode();
+  if (buffer.trim()) dispatch(buffer);
+  if (!final) throw new Error("Summary unavailable");
+  return final;
+}
+
 async function runSearchAnswer(q, f, key) {
   searchAnswerAbort?.abort();
   const abort = new AbortController();
@@ -10125,15 +10172,33 @@ async function runSearchAnswer(q, f, key) {
   setStatus($("search-answer-status"), "Reading matching records…");
   $("search-answer-dismiss").onclick = () => { searchAnswerWanted = false; giveUpSearchAnswer(); };
   $("search-answer-retry").onclick = () => runSearchAnswer(q, f, key);
+  // Points arrive one at a time over the stream and fade in as they land;
+  // `done` then attaches the numbered citations and the source list.
+  const shown = [];
+  const showPoint = (point, animate) => {
+    const skeleton = body.querySelector(".answer-skeleton");
+    if (skeleton && !skeleton.classList.contains("is-tail")) {
+      skeleton.replaceChildren(Object.assign(document.createElement("i"), { style: "width:62%" }));
+      skeleton.classList.add("is-tail");
+    }
+    const p = document.createElement("p");
+    p.className = "summary-point" + (animate ? " stream-in" : "");
+    p.append(document.createTextNode(point.text + " "));
+    if (skeleton) body.insertBefore(p, skeleton); else body.append(p);
+    shown.push(p);
+    return p;
+  };
   try {
-    const data = await api(`/api/search-summary?${searchQueryParams(q, f, 1, "relevance")}`, { signal: abort.signal });
+    const data = await readSummaryStream(`/api/search-summary?stream=1&${searchQueryParams(q, f, 1, "relevance")}`, abort.signal, {
+      point: (point) => { if (mine()) showPoint(point, true); },
+    });
     if (!mine()) return;
     if (data.status === "empty") { box.hidden = true; return; }
     if (!data.points?.length || !data.sources?.length) throw new Error("Summary unavailable");
     const sources = new Map(data.sources.map((s, i) => [s.id, { ...s, number: i + 1 }]));
-    body.replaceChildren(...data.points.map(point => {
-      const p = document.createElement("p");
-      p.append(document.createTextNode(point.text + " "));
+    body.querySelector(".answer-skeleton")?.remove();
+    data.points.forEach((point, i) => {
+      const p = shown[i] && shown[i].textContent.trim() === point.text ? shown[i] : (shown[i]?.remove(), shown[i] = showPoint(point, true));
       for (const id of point.source_ids) {
         const s = sources.get(id);
         if (!s || !/^\/(?!\/)/.test(s.href)) continue;
@@ -10144,8 +10209,8 @@ async function runSearchAnswer(q, f, key) {
         a.setAttribute("aria-label", `Source ${s.number}: ${s.title}`);
         p.append(a, document.createTextNode(" "));
       }
-      return p;
-    }));
+    });
+    for (const extra of shown.slice(data.points.length)) extra.remove();
     $("search-answer-sources").replaceChildren(...[...sources.values()].map(s => {
       const li = document.createElement("li"), a = document.createElement("a");
       a.className = "source-title";

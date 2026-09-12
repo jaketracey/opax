@@ -1254,6 +1254,12 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 }
 @keyframes answer-skeleton { from { background-position: 120% 0; } to { background-position: -80% 0; } }
 @media (prefers-reduced-motion: reduce) { .answer-skeleton i { animation: none; } }
+/* The search overview streams in one point at a time: each fades up as it
+   lands, and a single shorter bar keeps the shape of what is still coming. */
+.summary-point.stream-in { animation: summary-fade 0.55s ease-out both; }
+@keyframes summary-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.answer-skeleton.is-tail { padding-top: 0.55em; }
+@media (prefers-reduced-motion: reduce) { .summary-point.stream-in { animation: none; } }
 /* Entry pages while they open: the bars stand where the first section and
    the quick facts will, so the page has its shape before its words. */
 .section-skel { margin: 0.6rem 0 2rem; max-width: 40rem; gap: 0.85em; }
