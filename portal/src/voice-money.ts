@@ -21,6 +21,37 @@ const scaffolding = new Set('how much how many money political donations donatio
 const contains = (q:string, phrase:string) => (' '+q+' ').includes(' '+normal(phrase)+' ')
 // A company suffix can be omitted, but a shortened name must identify one donor.
 const companyName = (name:string) => normal(name).replace(/\s+(?:(?:pty|proprietary)\s+)?(?:ltd|limited)$/, '')
+/** Suggestions are prefix matches, never an automatic corporate identity merge. */
+export function receiptDonorChoices(graph:ReceiptGraph, fragment:string):Node[] {
+  const name=normal(fragment)
+  if(name.length<4 || name.split(' ').length>8)return []
+  return graph.nodes.filter(n=>n.kind==='donor' && [n.label,...(n.aliases||[])].some(label=>normal(label)===name || normal(label).startsWith(name+' ')))
+    .sort((a,b)=>a.label.localeCompare(b.label,'en-AU')).slice(0,6)
+}
+
+function exactReceiptDonors(graph:ReceiptGraph, query:string) {
+  const donors=graph.nodes.filter(n=>n.kind==='donor'),shortCounts=new Map<string,number>()
+  for(const n of donors){const short=companyName(n.label);shortCounts.set(short,(shortCounts.get(short)||0)+1)}
+  const q=' '+query+' ',matches:{node:Node;phrase:string;start:number;end:number}[]=[]
+  for(const node of donors) {
+    const short=companyName(node.label)
+    const phrases=new Set([normal(node.label),...(node.aliases||[]).map(normal),...(short.length>=5&&shortCounts.get(short)===1?[short]:[])])
+    for(const phrase of phrases) {
+      if(!phrase)continue
+      let start=q.indexOf(' '+phrase+' ')
+      while(start>=0){matches.push({node,phrase,start,end:start+phrase.length+2});start=q.indexOf(' '+phrase+' ',start+1)}
+    }
+  }
+  // Prefer the complete name at each occurrence, not an alias nested inside it.
+  const specific=matches.filter(m=>!matches.some(other=>other.start<=m.start&&other.end>=m.end&&(other.start<m.start||other.end>m.end)))
+  for(const match of specific) {
+    const same= specific.filter(m=>m.start===match.start&&m.end===match.end)
+    if(new Set(same.map(m=>m.node.id)).size>1)return {nodes:[],ambiguous:match.phrase}
+    // A short alias shared with another organisation's name needs a choice.
+    if(match.phrase!==normal(match.node.label) && receiptDonorChoices(graph,match.phrase).some(n=>n.id!==match.node.id))return {nodes:[],ambiguous:match.phrase}
+  }
+  return {nodes:[...new Map(specific.map(m=>[m.node.id,m.node])).values()],ambiguous:undefined}
+}
 const rankingWords = new Set('who which what are is was were be been being gets get got getting takes take took taking receives receive received receiving gives giving donates donate donated donating donors donor contributors contribution contributions largest biggest most top more less higher lower compare comparison compared versus vs than both either these those each with financial nominal aud dollars dollar amount amounts disclosed published recorded records record shown included selected selection lifetime across throughout during up until through starting ending between lobby lobbies to whom s change changed changes increase increased increases decrease decreased decreases grew growth rose fell'.split(' '))
 
 /** A recognised name must not hide an unrecognised qualifier or a second name.
@@ -72,19 +103,21 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   let industries=[...new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.industry).filter((v):v is string=>!!v))].filter(ind=>(aliases[ind]||[ind.replaceAll('_',' ')]).some(term=>contains(q,term)))
   const words=q.split(' ').filter(w=>!scaffolding.has(w)&&!/^\d+$/.test(w))
   const nameMatches=(n:Node) => [n.label,...(n.aliases||[])].some(label=>contains(q,label) || (words.length>0 && words.every(w=>normal(label).split(' ').includes(w))))
-  const exactDonors=graph.nodes.filter(n=>n.kind==='donor'&&[n.label,...(n.aliases||[])].some(label=>contains(q,label)))
-  if(!exactDonors.length) {
-    const shortened=graph.nodes.filter(n=>n.kind==='donor'&&companyName(n.label).length>=5&&contains(q,companyName(n.label)))
-    if(shortened.length===1)exactDonors.push(shortened[0])
-  }
+  const named=exactReceiptDonors(graph,q)
+  if(named.ambiguous)return {needs_scope:true,donor_query:named.ambiguous,answer:'Which organisation do you mean? Matching names in this map include '+receiptDonorChoices(graph,named.ambiguous).map(n=>n.label).join('; ')+'. Please use the full organisation name.',sources:[],jurisdiction}
+  const exactDonors=named.nodes
   if(!exactDonors.length && /\b(?:banks|banking)\b/.test(q)) return {needs_scope:true,answer:'Banks are grouped with other finance organisations in this map. For a like-for-like comparison, ask about the finance sector or name a specific bank.',sources:[],jurisdiction}
   if(!exactDonors.length && /\benergy\b/.test(q) && !industries.includes('fossil_fuels')) return {needs_scope:true,answer:'Energy can include fossil fuels and renewables. Please name the industry or company you want to compare.',sources:[],jurisdiction}
   if(exactDonors.length) industries=[]
-  const donors=exactDonors.length?exactDonors:graph.nodes.filter(n=>n.kind==='donor' && (industries.length ? industries.includes(n.industry||'') : nameMatches(n)))
+  const donors=exactDonors.length?exactDonors:graph.nodes.filter(n=>n.kind==='donor' && industries.includes(n.industry||''))
   const lnp=/\bliberal national party\b|\blnp\b/.test(q)
   const parties=graph.nodes.filter(n=>n.kind==='party' && (filters.party ? normal(n.label)===normal(filters.party) : lnp?['LNP','Liberal National Party'].includes(n.label):(nameMatches(n) || (n.label==='Labor' && /\balp\b/.test(q)) || (n.label==='Nationals' && /\bnational party\b/.test(q)))))
   const all=/\b(?:all|total) (?:political )?(?:receipts|donations|party funding)\b/.test(q) || /^(?:who donates the most(?: money)?(?: to who(?:m)?)?|(?:who are the )?(?:biggest|largest|top) political donors)$/.test(q)
   if(filters.party && !parties.length) return null
+  if(!donors.length&&!industries.length){
+    const fragment=unmatchedReceiptRankingScope(graph,query,{selected_donors:[],selected_parties:parties.map(n=>n.label),selected_industries:[]},filters.party)
+    if(receiptDonorChoices(graph,fragment).length)return {needs_scope:true,donor_query:fragment,answer:'Matching names in this map include '+receiptDonorChoices(graph,fragment).map(n=>n.label).join('; ')+'. Please use the full organisation name so separate records are not combined.',sources:[],jurisdiction}
+  }
   if(!donors.length&&!parties.length&&!all) return null
   // Ambiguous relative periods cannot silently become lifetime totals.
   if(!filters.from && !filters.to && /\b(?:last|past|recent|recently|latest|this year|last year|decade)\b/.test(q)) return {needs_period:true,answer:'Choose the financial years for this comparison so I can give the right subtotal.',sources:[],jurisdiction}

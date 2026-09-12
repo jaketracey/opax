@@ -1,5 +1,5 @@
 import type { RecordQuestion } from './ask-records'
-import {fundingContinuation, fundingFollowUp, fundingScopeQuestion, fundingUserTurns} from './ask-money-followup'
+import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQuestion, fundingUserTurns} from './ask-money-followup'
 import {financialYear, receiptPeriodQuery} from './receipt-period'
 import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptJurisdiction, unmatchedReceiptRankingScope, type ReceiptGraph} from './voice-money'
 
@@ -143,13 +143,22 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
   if(periodQuery.error)return {answer:periodQuery.error,citations:{},sources:[],answer_status:'needs_period',money_ranking:true}
   const query=periodQuery.query
   const result=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au',{...input,compareYears:yearComparisonQuestion(query)})
-  if(!result) return null
-  if('needs_scope' in result) return {answer:result.answer,citations:{},sources:[],answer_status:'needs_scope',money_ranking:true}
+  const nameChoice=(fragment:string)=>fundingNameChoice(graph,fragment,jurisdiction,label=>{
+    const escaped=fragment.split(/\s+/).map(word=>word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('[^a-z0-9]+')
+    return query.replace(new RegExp('\\b'+escaped+'\\b','i'),()=>label)
+  },input)
+  const missingScope=()=>({answer:'Please name the donor, industry or recipient party you want to compare. You can [browse the names in the money map](https://opax.com.au/money). I could not match the whole question, so I have not calculated a total.',citations:{},sources:[],answer_status:'needs_scope',money_ranking:true})
+  if(!result) return comparisonQuestion(query)||yearComparisonQuestion(query)?null:nameChoice(unmatchedReceiptRankingScope(graph,query,{selected_donors:[],selected_parties:[],selected_industries:[]}))||missingScope()
+  if('needs_scope' in result) return ('donor_query' in result&&result.donor_query?nameChoice(result.donor_query):null)||{answer:result.answer,citations:{},sources:[],answer_status:'needs_scope',money_ranking:true}
   if('needs_period' in result) return {answer:result.answer,citations:{},sources:[],answer_status:'needs_period',money_ranking:true}
+  const unmatched=unmatchedReceiptRankingScope(graph,query,result,input.party)
+  if(unmatched){
+    // Preserve unsupported comparison handling; no partial ranking is returned.
+    if((comparisonQuestion(query)||yearComparisonQuestion(query)) && (/\bfrom\s+(?!(?:19|20)\d{2}\b)/i.test(query)||/\b(?:lobby|industry|sector)\b/i.test(query)) && !result.selected_industries.length&&!result.selected_donors.length)return null
+    return nameChoice(unmatched)||{answer:`I couldn't match **${unmatched}** in this map. Please use a donor, industry or party name from the [money map](https://opax.com.au/money) so the calculation includes your whole question.`,citations:{},sources:[],answer_status:'needs_scope',money_ranking:true}
+  }
   if(/\bfrom\s+(?!(?:19|20)\d{2}\b)/i.test(query) && !result.selected_industries.length && !result.selected_donors.length) return null
   if(/\b(?:lobby|industry|sector)\b/i.test(query) && !result.selected_industries.length && !result.selected_donors.length) return null
-  const unmatched=unmatchedReceiptRankingScope(graph,query,result,input.party)
-  if(unmatched)return {answer:`I couldn't match **${unmatched}** in this map. Please use a donor, industry or party name from the [money map](https://opax.com.au/money) so the calculation includes your whole question.`,citations:{},sources:[],answer_status:'needs_scope',money_ranking:true}
   if(yearComparisonQuestion(query))return comparedYearAnswer(result,graph,query,file,input)
   if(comparisonQuestion(query))return comparedMoneyAnswer(result,graph,query,file)
   if(result.selected_parties.length>1) return null

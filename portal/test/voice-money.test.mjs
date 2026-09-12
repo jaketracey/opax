@@ -74,3 +74,13 @@ test('voice period labels and separate years cannot become a wider total',()=>{
  assert.equal(one.by_party.find(x=>x.name==='Labor').total_aud,457673);
  for(const q of ['gambling in 2019–20 and 2021–22','gambling in January to June 2020','gambling on 2020-1-1','gambling in calendar year 2020','gambling on 1/1/2020','gambling on 30/06/2021','gambling on 2020.01.01','gambling in H1 2020','gambling in the 1st half of 2020']) assert.equal(receiptAnswer(real,q,'federal','https://opax.test').needs_period,true,q);
 });
+
+
+test('overlapping aliases cannot combine separate organisations',()=>{
+ const real=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
+ const castle=receiptAnswer(real,'money from Crown Castle Australia','federal','https://opax.test');
+ assert.deepEqual(castle.selected_donors,['Crown Castle Australia']);assert.equal(castle.total_aud,27000);assert.equal(castle.receipts,8);
+ for(const name of ['Crown','Macquarie','Tabcorp']){const r=receiptAnswer(real,`money from ${name}`,'federal','https://opax.test');assert.equal(r.needs_scope,true);assert.equal(r.total_aud,undefined);assert.deepEqual(r.sources,[]);}
+ const shared={...graph,nodes:[...graph.nodes,{id:'x',kind:'donor',label:'Example Trust',aliases:['Example Casino']}]};
+ assert.equal(receiptAnswer(shared,'money from Example Casino','federal','https://opax.test').needs_scope,true);
+});
