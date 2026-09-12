@@ -1,5 +1,59 @@
 import { evidenceExcerpt, guardPositionAnswer, EVIDENCE_GAP_ANSWER } from './ask-evidence'
 
+export const isPositionDurationQuestion = (question:string):boolean => /^(?:and\s+)?how\s+long\b|\b(?:duration|how many (?:days|weeks|months|years))\b/i.test(question.trim())
+export const isPositionEligibilityQuestion = (question:string):boolean => /\b(?:eligible|eligibility|qualify|qualifies)\b/i.test(question)
+export const isPositionCostQuestion = (question:string):boolean => /\b(?:cost|costing|price)\b|^(?:and\s+)?how\s+much\b/i.test(question)
+const eligibilityTerms = /\b(?:eligible|eligibility|qualifying|qualify|qualifies)\b/i
+const deferredEligibility = (text:string) => text.split(/(?<=[.!?])\s+/).filter(sentence=>/\b(?:eligibility|incomes?|thresholds?)\b.*\b(?:regulations|to be (?:set|specified|determined))\b/i.test(sentence))
+
+/** Separate verbatim excerpts keep an eligibility statement and any deferred
+ * threshold visible without pretending intervening text was contiguous. */
+export function positionEligibilityQuotes(text:string,query:string):string[] {
+  const turn=firstSpeechTurn(text).replace(/\s+/g,' ').trim()
+  const sentences=turn.split(/(?<=[.!?])\s+(?=[\p{Lu}“‘"'])/u)
+  const quote=sentences.find(sentence=>sentence.length>=45&&sentence.length<=700&&eligibilityTerms.test(sentence)&&positionEvidence(turn.slice(Math.max(0,turn.indexOf(sentence)-300),turn.indexOf(sentence)+sentence.length+300),query))
+  if(!quote)return []
+  const condition=deferredEligibility(turn).find(sentence=>sentence!==quote&&sentence.length<=700)
+  return condition?[quote,condition]:[quote]
+}
+
+/** Keep a proposal and its explicitly linked cost in one contiguous excerpt.
+ * An opponent's budget or a cost elsewhere in the speech cannot fill the gap. */
+export function positionCostQuote(text:string,query:string):string {
+  const topic=query.replace(/\b(?:cost|costing|price)\b/gi,'').trim()
+  if(!topic)return ''
+  const turn=firstSpeechTurn(text).replace(/\s+/g,' ').trim()
+  const proposal=positionProposalQuote(turn,topic)
+  if(!proposal)return ''
+  const following=turn.slice(turn.indexOf(proposal)+proposal.length).trim().split(/(?<=[.!?])\s+(?=[\p{Lu}“‘"'])/u)
+  let quote=proposal
+  for(const sentence of following.slice(0,3)) {
+    if(quote.length+sentence.length+1>1400)return ''
+    if(!/^(?:This|It|Our)\b/.test(sentence)||/\b(?:another|different|separate|alternative|instead)\b/i.test(sentence))return ''
+    if(/\b(?:Labor|Liberal|Greens|Nationals|Coalition|opposition)\b|\bgovernment['’]s\b/i.test(sentence))return ''
+    quote+=' '+sentence
+    if(/^(?:This|Our)\s+(?:plan|proposal|policy|measure|scheme|programme?|moratorium)\s+(?:will|would|is expected to)\s+cost\s+\$\d/i.test(sentence))return quote
+    if(!/^This (?:(?:will|would)\b|(?:policy|proposal|measure|moratorium) is part of our plan\b)/.test(sentence))return ''
+    if(/\b(?:propos(?:e|es|ed)|announc(?:e|es|ed)|new (?:plan|policy|scheme)|cost|costs|budget|fund)\b/i.test(sentence))return ''
+  }
+  return ''
+}
+
+/** Match time attached to a measure, not an estimate's costing horizon or an
+ * unrelated date in the speech. Deliberately conservative, not an NLP parser. */
+function proposalDurations(text:string):string[] {
+  const words=['one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve']
+  const amount=`(?:\\d+(?:\\.\\d+)?|${words.join('|')})`, unit='(?:day|week|month|year)', measure='(?:moratorium|freeze|ban|exemption|trial|scheme|programme?|policy|measure|proposal|amendment)'
+  const value=text.toLowerCase().replace(/[–—‑]/g,'-'),found:string[]=[]
+  const patterns=[
+    new RegExp(`\\b(${amount})[ -](${unit})s?[ -](?:(?:gst|tax|housing|rental|income tax|stamp duty)[ -])?${measure}\\b`,'g'),
+    new RegExp(`\\b(?:${measure}|it)\\s+(?:(?:would|will|shall)\\s+)?(?:last|lasts|lasted|run|runs|ran|apply|applies|remain in (?:place|effect))\\s+(?:for\\s+)?(${amount})\\s+(${unit})s?\\b`,'g'),
+    new RegExp(`\\b${measure}\\s+(?:for|lasting)\\s+(${amount})\\s+(${unit})s?\\b`,'g'),
+  ]
+  for(const pattern of patterns)for(const m of value.matchAll(pattern))found.push(`${words.includes(m[1])?words.indexOf(m[1])+1:Number(m[1])}:${m[2]}`)
+  return found
+}
+
 /** Older imports can contain several speakers under the first speaker's name.
  * Stop conservatively at the first turn boundary; never attribute later turns
  * from the document title alone. This does not repair the underlying record.
@@ -38,11 +92,12 @@ export function positionEvidence(text: string, query: string): string {
 /** A useful verbatim fallback, limited to an explicit, on-topic proposal.
  * Do not use procedural openings or an arbitrary top-ranked passage.
  */
-export function positionProposalQuote(text: string, query: string): string {
+export function positionProposalQuote(text: string, query: string, question = ''): string {
   const sentences = firstSpeechTurn(text).replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+(?=[\p{Lu}“‘"'])/u)
   const proposal = /\b(?:I|we)\s+(?:propose|proposed|recommend|recommended)|\b(?:my|our)\s+propos(?:al|ed)|\bthis\s+(?:bill|legislation)\s+(?:will|would)|\b(?:announces?|announced)\s+a\s+policy|\bpolicy\s+is\s+to\b|\b(?:moratorium|amendment)\b/i
   const at = sentences.findIndex(sentence => sentence.length >= 45 && sentence.length <= 700 &&
-    proposal.test(sentence) && positionEvidence(sentence, query))
+    proposal.test(sentence) && positionEvidence(sentence, query) &&
+    (!isPositionDurationQuestion(question) || proposalDurations(sentence).length>0))
   if (at < 0) return ''
   let quote = sentences[at]
   // Preserve immediately following qualifications such as a cap increasing
@@ -58,6 +113,9 @@ export function positionProposalQuote(text: string, query: string): string {
  * This conservative check is not semantic entailment; rejected drafts can still
  * use the verified proposal quotation without another model call. */
 export function positionPointSupported(text: string, evidence: string, question: string, date = ''): boolean {
+  // Eligible groups are easy to expand accidentally in a paraphrase. These
+  // detail answers use the separate original eligibility excerpts instead.
+  if(isPositionEligibilityQuestion(question))return false
   const words = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen']
   const numbers = (value: string) => value.toLowerCase()
     .replace(new RegExp(`\\b(${words.join('|')})\\b`, 'g'), word => String(words.indexOf(word)))
@@ -73,6 +131,10 @@ export function positionPointSupported(text: string, evidence: string, question:
   const year = /^\d{4}/.exec(date)?.[0]
   const claim = year ? text.replace(new RegExp(`\\b(?:in|from|the|his|her|their|of|since|before|after|during|by|until|a)\\s+(?:(?:his|her|their|the)\\s+)?${year}\\b`, 'gi'), '') : text
   if (numbers(claim).some(number => !allowed.has(number))) return false
+  if (isPositionDurationQuestion(question)) {
+    const durations=proposalDurations(text),supported=new Set(proposalDurations(evidence))
+    if(!durations.length || durations.some(duration=>!supported.has(duration)))return false
+  }
   if (/\b(?:cap|limit)\b/i.test(question) && [text,evidence].some(value => !/\b(?:cap(?:ped|ping)?|limit(?:ed)?|maximum|up to)\b/i.test(value))) return false
   if (/\b(?:whichever|if that is|if this is)\s+lower\b/i.test(evidence) && !/\blower\b/i.test(text)) return false
   return true
