@@ -1133,7 +1133,9 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   const query = String(body.query || '')
   const found = await searchWindow(env, {q:query, mode:'hybrid',kind:'speech',topK:20,url})
   if (!found) throw new Error('Speech retrieval failed')
-  const rows = found.results.filter(r => /^speech-\d+$/.test(r.slug) && r.speaker === scope.speaker).slice(0,8)
+  // Up to twelve originals; summarySources keeps ten and the prompt cap below
+  // trims the rest. Eight left named-politician answers with one or two sources.
+  const rows = found.results.filter(r => /^speech-\d+$/.test(r.slug) && r.speaker === scope.speaker).slice(0,12)
   const reads = await Promise.allSettled(rows.map(async row => {
     const resourceUrl = new URL('/api/resource/'+row.slug, url)
     const response = await apiResource(new Request(resourceUrl), resourceUrl, row.slug, env, ctx)
@@ -1185,9 +1187,11 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
     const makePrompt = () => summaryPrompt(String(body.query || '').slice(0,2000), {speaker:payload.scope?.speaker || ''}, sources) +
       '\nLatest reader question: ' + JSON.stringify(String(body.position_question || body.query || '').slice(0,2000)) +
       '\nAnswer that latest question specifically. The query topic supplies its subject. If they ask when, explain the recorded date; if they ask why, attribute only the reasons stated in the speech; if they ask about cost, give only a stated costing with attribution. Do not substitute a generic policy overview for a request for a particular detail. If the requested detail is absent, return {"points":[]}.' +
-      '\nDescribe only this named politician’s own documented positions on the query topic, in past tense. Never roleplay or predict. Omit ministerial replies even when the document is indexed under the politician. Prefer concrete policy proposals over allegations or rhetoric. The passages are limited to the indexed speaker’s first speaking turn; no later speaker or ministerial reply may be inferred. Preserve policy limits and duration exactly; omit attack statistics. Return at most two points. Each point must cite exactly one original speech; never merge policy details from different dates into one proposal. Lead with a concrete proposal and preserve its eligibility, duration and numeric limits, including any lower-of conditions. Each point must be one concrete proposal or position, in one short sentence. Do not append attack statistics or commentary about opponents to a proposal. Each point must be supported in full by an exact excerpt from the passage itself, never its title. Include the proposal conditions in that excerpt. Omit costs unless the excerpt includes the speaker’s stated costing, and explicitly attribute any estimate to them. If the passages do not establish their position, return {"points":[]}.'
+      '\nDescribe only this named politician’s own documented positions on the query topic, in past tense. Never roleplay or predict. Omit ministerial replies even when the document is indexed under the politician. Prefer concrete policy proposals over allegations or rhetoric. The passages are limited to the indexed speaker’s first speaking turn; no later speaker or ministerial reply may be inferred. Preserve policy limits and duration exactly; omit attack statistics. Return up to four points, each citing a different original speech where the record supports it. Each point must cite exactly one original speech; never merge policy details from different dates into one proposal. Lead with a concrete proposal and preserve its eligibility, duration and numeric limits, including any lower-of conditions. Each point must be one concrete proposal or position, in one short sentence. Do not append attack statistics or commentary about opponents to a proposal. Each point must be supported in full by an exact excerpt from the passage itself, never its title. Include the proposal conditions in that excerpt. Omit costs unless the excerpt includes the speaker’s stated costing, and explicitly attribute any estimate to them. If the passages do not establish their position, return {"points":[]}.'
     let prompt = makePrompt()
-    while (sources.length && prompt.length > 19500) { sources.pop(); prompt = makePrompt() }
+    // ~15k tokens: every retained original reaches the model. The old 19.5k-char
+    // cap dropped all but three to five of them (2026-09-12).
+    while (sources.length && prompt.length > 60000) { sources.pop(); prompt = makePrompt() }
     if (!sources.length) return null
     const answer = await summaryModelAnswer(await kbFetch(env, '/ask', {
       body:{query:prompt,top_k:1,reranker:'noop',generative_model:env.POSITION_RECOVERY_MODEL || 'openai-compatible',max_tokens:1800,
@@ -1206,7 +1210,7 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
         return source && evidence.length && positionEvidence(evidence.join(' '), String(body.query || '')) &&
           positionPointSupported(point.text, evidence.join(' '), String(body.position_question || ''), source.date) &&
           evidence.every(quote => folded(source.snippet).includes(folded(quote)))
-      })).slice(0,2)
+      })).slice(0,4)
     if (!summary.points.length) return null
     const used = new Set(summary.points.flatMap(point => point.source_ids))
     summary.sources = summary.sources.filter(source => used.has(source.id)).map(source => ({...source,
@@ -1226,9 +1230,14 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
       for (const id of point.source_ids) (citations[id] ||= []).push([end-1,end])
       text += '\n'
     }
-    return {answer:text.trim(),citations,scope:payload.scope,sources:summary.sources.map(source => ({
-      ...sourceRows.find(s => s.href === source.href)!,resource:source.id,cited:true,snippet:source.evidence.join(' … '),
-    }))}
+    // Every original the model read is listed, as on the ordinary path: the
+    // cited ones carry their verified excerpts, the rest stay "retrieved only".
+    const cited = new Map(summary.sources.map(source => [source.href, source]))
+    return {answer:text.trim(),citations,scope:payload.scope,sources:sources.map(source => {
+      const row = sourceRows.find(s => s.href === source.href)!
+      const hit = cited.get(source.href)
+      return hit ? {...row,resource:hit.id,cited:true,snippet:hit.evidence.join(' … ')} : {...row,resource:source.id,cited:false}
+    })}
   } catch { return null }
 }
 

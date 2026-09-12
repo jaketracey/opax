@@ -31,9 +31,9 @@ test('position recovery does not invent a dated answer from empty sources',async
  const h=harness(draft());assert.equal(await h.recover({...payload,sources:[]},{query:'housing'},{}),null);assert.equal(h.calls,0);
 });
 test('the first ranked sources fit the provider query limit without removing their policy conditions',async()=>{
- const h=harness(draft());const rows=Array.from({length:8},(_,i)=>({...payload.sources[0],href:'/doc/speech-'+(i+1),snippet:quote+' More original evidence.'.repeat(255)}));
+ const h=harness(draft());const rows=Array.from({length:12},(_,i)=>({...payload.sources[0],href:'/doc/speech-'+(i+1),snippet:quote+' More original evidence.'.repeat(255)}));
  await h.recover({...payload,sources:rows},{query:'housing'},{});
- assert.equal(h.calls,1);assert.ok(h.request.body.query.length<=19500);assert.ok(h.request.body.query.includes(quote));assert.ok(!h.request.body.query.includes('"id":"s8"'));
+ assert.equal(h.calls,1);assert.ok(h.request.body.query.length<=60000);assert.ok(h.request.body.query.includes(quote));assert.ok(h.request.body.query.includes('"id":"s8"'));assert.ok(!h.request.body.query.includes('"id":"s10"'));
 });
 test('a record title alone cannot serve as a verified position quotation',async()=>{
  const h=harness(draft());assert.equal(await h.recover({...payload,sources:[{...payload.sources[0],title:quote,snippet:'This speech contains only a discussion of parliamentary procedure and no housing proposal.'}]},{query:'housing'},{}),null);
@@ -42,7 +42,7 @@ test('an irrelevant policy point cannot discard or contaminate the verified hous
  const unrelated='I called for an inquiry into the NDIS and its support coordination costs.';
  const answer=JSON.stringify({points:[...JSON.parse(draft()).points,{text:'Example MP called for an inquiry into the NDIS and support coordination costs, but did not tie this to housing affordability.',citations:[{id:'s2',quote:unrelated}]}]});
  const h=harness(answer);const out=await h.recover({...payload,sources:[...payload.sources,{...payload.sources[0],href:'/doc/speech-2',snippet:unrelated}]},{query:'housing affordability'},{});
- assert.match(out.answer,/five-year/);assert.doesNotMatch(out.answer,/NDIS/);assert.equal(out.sources.length,1);assert.equal(Object.keys(out.citations).length,1);
+ assert.match(out.answer,/five-year/);assert.doesNotMatch(out.answer,/NDIS/);assert.equal(out.sources.filter(s=>s.cited).length,1);assert.equal(out.sources.length,2);assert.equal(out.sources[1].cited,false);assert.equal(Object.keys(out.citations).length,1);
 });
 
 const fallbackStart=source.indexOf('function quotedPositionAnswer(');
@@ -89,7 +89,7 @@ test('a supported cap survives while unrelated immigration policies are omitted'
   {text:'Example MP proposed stricter immigration screening.',citations:[{id:'s2',quote:other}]}
  ]}));
  const out=await h.recover({...payload,sources:[{...payload.sources[0],snippet:cap},{...payload.sources[0],href:'/doc/speech-2',snippet:other}]},{query:'immigration cap',position_question:'What cap did she propose?'},{});
- assert.match(out.answer,/130,000/);assert.doesNotMatch(out.answer,/screening/);assert.equal(out.sources.length,1);
+ assert.match(out.answer,/130,000/);assert.doesNotMatch(out.answer,/screening/);assert.equal(out.sources.filter(s=>s.cited).length,1);assert.equal(out.sources.length,2);assert.ok(!out.sources[1].cited && !(out.sources[1].resource in out.citations));
 });
 
 test('rent definitions retain both quoted percentages and their lower-of condition',()=>{

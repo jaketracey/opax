@@ -76,8 +76,8 @@ test('source and generation failures cannot replay unverified retrieval snippets
  await assert.rejects(harness({rows:null}).run(),/Speech retrieval failed/);
  const h=harness({recover:false});const out=await h.run();assert.equal(out.answer_status,'evidence_gap');assert.equal(out.sources.length,0);assert.equal(Object.keys(out.citations).length,0);
 });
-test('position source reads are bounded to eight original documents',async()=>{
- const rows=Array.from({length:20},(_,i)=>({slug:'speech-'+i,speaker:'Example MP',kind:'speech'}));const h=harness({rows});await h.run();assert.equal(h.reads,8);
+test('position source reads are bounded to twelve original documents',async()=>{
+ const rows=Array.from({length:20},(_,i)=>({slug:'speech-'+i,speaker:'Example MP',kind:'speech'}));const h=harness({rows});await h.run();assert.equal(h.reads,12);
 });
 
 test('fallback selects a concrete proposal, never a procedural or irrelevant passage',()=>{
