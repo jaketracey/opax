@@ -217,7 +217,12 @@ export function guardPositionAnswer<T extends {answer?:string; retrieval_results
   for (const [id,block] of Object.entries(raw.augmented_context?.paragraphs || {})) if (originalContext(id) && block.text) texts.push(block.text)
   const words = new Set(texts.join(' ').toLowerCase().match(/[\p{L}\p{N}]+/gu) || [])
   const synonyms: Record<string,string[]> = {immigration:['migration'],migration:['immigration'],housing:['homes','rental'],affordability:['affordable'],pokies:['gambling','poker']}
-  const matches = terms.filter(t => [t,...(synonyms[t] || [])].some(w => words.has(w))).length
+  // Inflections count: "immigrants" answers an immigration question. A stem
+  // needs five letters so "coal" cannot claim "coalition".
+  const stem = (t: string) => t.replace(/(?:ation|tion|sion|ment|ing|ers|er|ed|es|s)$/, '')
+  const wordList = [...words]
+  const present = (w: string) => words.has(w) || (stem(w).length >= 5 && wordList.some(word => word.startsWith(stem(w))))
+  const matches = terms.filter(t => [t,...(synonyms[t] || [])].some(present)).length
   if (matches >= Math.ceil(terms.length / 2)) return raw
   return {...raw,answer:EVIDENCE_GAP_ANSWER,citations:{},citation_footnote_to_context:{},footnote_to_context:{},retrieval_results:{resources:{}},augmented_context:{}}
 }

@@ -1,4 +1,6 @@
 import type { RecordQuestion } from './ask-records'
+import { isMoneyRanking } from './ask-money'
+import { isPositionDurationQuestion } from './position-evidence'
 
 // Infer only an unambiguous political cohort, not arbitrary mentions of
 // independence (courts, inquiries, schools) or a comparison between parties.
@@ -35,6 +37,9 @@ const NAMED_SPEECH = /^(?:and\s+)?(?:what|how)\s+(?:has|have|did|does|would|migh
 export const POSITION_GROUNDING = 'When asked what a politician would or might say, explain their documented position in the third person. Do not roleplay them, write a fictional quote, or predict their response. Start with what their recorded statements support, with dates and citations. Distinguish their own statements from another speaker describing them. If the record does not establish their position on this topic, say so rather than inferring it from their party or another topic. For a named politician position question, give a short takeaway followed by up to three concrete policy positions or proposals, each with its own citation. Prefer specific proposals over rhetorical attacks. Keep it under 180 words. Do not spend space summarising ministerial replies; exclude them from the position summary. Attribute criticism and claimed effects to the politician. Do not repeat illustrative population counts, economic forecasts or attack statistics unless the user requests those figures. For an actual proposed policy retain its specified duration, limit or amount exactly. Never confuse arrivals with net migration or departures. Include a source date when provided, and never describe an old statement as a current promise. '
 
 const REFERENTIAL = /^(?:and\b|what about\b|how about\b)|^(?:what|how|why|when|did|does|has|would)\b.*\b(?:he|she|they|his|her|their|it|that)\b/i
+// Compact policy-detail questions often omit a pronoun. Keep only these
+// specific forms; a fresh "Who won the election?" must start a new subject.
+const ELIGIBILITY_FOLLOWUP = /^(?:and\s+)?(?:who\s+(?:(?:would|could|can)\s+(?:be\s+)?(?:eligible|qualify)|(?:is|was|are|were)\s+eligible|qualifies)|which\s+(?:homes|households|people|properties|projects|businesses)\s+(?:(?:would|could|can)\s+(?:qualify|be\s+eligible)|(?:are|were)\s+eligible|qualify))(?:\s+for\s+(?:it|that|this|the (?:scheme|proposal|policy|housing)))?\s*[?!.]*$/i
 const fold = (value: string) => value.toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, ' ').trim()
 // The browser sends "user"; older API clients used "question". Model answers
 // and carried excerpts may supply evidence later, but never the subject filter.
@@ -45,7 +50,7 @@ const userQuestions = (input: RecordQuestion): string[] => Array.isArray(input.c
 const priorQuestion = (input: RecordQuestion) => userQuestions(input).at(-1)
 const partySubject = (question: string) => !!cohort(question) || PARTIES.some(p =>
   new RegExp(`^(?:and\\s+)?(?:(?:what|how)\\s+about\\s+)?${p.name}\\b`, 'i').test(question.trim()))
-const inheritsSubject = (question: string) => REFERENTIAL.test(question.trim()) && !NAMED_SPEECH.test(question.trim()) && !partySubject(question)
+const inheritsSubject = (question: string) => (REFERENTIAL.test(question.trim()) || ELIGIBILITY_FOLLOWUP.test(question.trim())) && !NAMED_SPEECH.test(question.trim()) && !partySubject(question)
 function namedFollowUp(question: string, people: readonly {name:string}[]): {speaker:string;topic?:string} | undefined {
   const rest = question.trim().replace(/^(?:and\s+)?(?:(?:what|how)\s+about\s+)/i, '').replace(/^and\s+/i, '')
   if (rest === question.trim()) return
@@ -60,7 +65,7 @@ function namedFollowUp(question: string, people: readonly {name:string}[]): {spe
 export function needsAskPeople(input: RecordQuestion): boolean {
   if (input.speaker || (input.kind && !['all', 'speech'].includes(input.kind))) return false
   return NAMED_SPEECH.test((input.question || '').trim()) ||
-    REFERENTIAL.test((input.question || '').trim())
+    REFERENTIAL.test((input.question || '').trim()) || ELIGIBILITY_FOLLOWUP.test((input.question || '').trim())
 }
 
 function naturalScope(question: string, people: readonly { name: string }[]): AskScope {
@@ -107,6 +112,9 @@ export function resolveAskScope<T extends RecordQuestion>(input: T, people: read
   const question = typeof input.question === 'string' ? input.question : ''
   let scope: AskScope = {}
   for (const turn of [...userQuestions(input), question]) {
+    // Receipt selections belong to the calculation, not to a later question
+    // about speeches. In particular, do not inherit their financial-year keys.
+    if (isMoneyRanking({question:turn})) { scope={}; continue }
     const named = namedFollowUp(turn, people)
     const current = {...naturalScope(turn, people), ...(named ? {speaker:named.speaker,kind:'speech'} : {})}
     if (!inheritsSubject(turn) || named) scope = {}
@@ -132,12 +140,15 @@ export function isNamedPositionQuestion(input: RecordQuestion): boolean {
     (NAMED_SPEECH.test((input.question || '').trim()) || inheritsSubject(input.question || ''))
 }
 
-const DETAIL_WORDS = new Set('and what how why when did does has have would could should much long was were for to do can about on he she they his her their it its that this say said propose proposed recommend recommended mean exactly please'.split(' '))
+const DETAIL_WORDS = new Set('and what who which how why when did does has have would could should much long was were be for to do can about on he she they his her their it its that this say said propose proposed recommend recommended mean exactly please'.split(' '))
 function topicFromQuestion(question: string): string {
   const named = NAMED_SPEECH.exec(question.trim())
   return named ? question.trim().slice(named[0].length).replace(/^\s*(?:about|on)\s+/i, '').replace(/[?]+$/, '').trim() : question.trim()
 }
 function nextTopic(question: string, previous: string): string {
+  // Duration is a request about the existing proposal, not a new topic word
+  // that its original speech must literally contain. Generation gets it apart.
+  if (isPositionDurationQuestion(question) || ELIGIBILITY_FOLLOWUP.test(question.trim())) return previous
   const changed = (/^(?:and\s+)?(?:what|how)\s+about\s+(.+?)\??$/i.exec(question.trim())?.[1] ||
     /^(?:what|how)\s+(?:has|have|did|does|would|might)\s+(?:he|she|they)\s+(?:say|said|propos(?:e|ed)|recommend(?:ed)?)\s+(?:about|on)\s+(.+?)\??$/i.exec(question.trim())?.[1])?.replace(/\?$/, '').trim()
   // "What about immigration?" changes topic; "what about her cap?" needs
@@ -162,6 +173,7 @@ export function askRetrievalQuery(input: RecordQuestion): string {
     if (topic) return topic
   }
   const previous = priorQuestion(input)
+  if (previous && isMoneyRanking({question:previous})) return question
   if (previous && REFERENTIAL.test(question.trim())) return `${previous}\nFollow-up question: ${question}`
   return question.replace(/^(what|how)\s+(?:would|might)\s+(.{3,80}?)\s+say\b/i, 'What has $2 said')
 }

@@ -1,5 +1,6 @@
 /* The voice surface shares Opax's public-record typography and palette. */
 body.opax-voice-ready { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+@media (max-width:480px) { body.opax-voice-ready { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)); } }
 /* Above the sticky masthead (50); native modal dialogs retain their top layer. */
 .opax-voice { position:fixed; z-index:70; right:max(20px, env(safe-area-inset-right, 0px)); bottom:max(18px, env(safe-area-inset-bottom, 0px)); color:var(--ink, #23271f); font:400 14px/1.55 var(--sans, "Public Sans", sans-serif); }
 .opax-voice *, .opax-voice *::before, .opax-voice *::after { box-sizing:border-box; }
@@ -58,9 +59,13 @@ body.opax-voice-ready { padding-bottom: calc(76px + env(safe-area-inset-bottom, 
   @keyframes opax-voice-wave { to { transform:scaleY(.4); } }
   @keyframes opax-voice-spin { to { transform:rotate(360deg); } }
 }
+/* While a guided journey plays the map, the pill steps aside; an open conversation stays. */
+body.journey-playing .opax-voice:not(.is-open) { display:none; }
 @media (max-width:480px) {
-  .opax-voice { right:max(12px, env(safe-area-inset-right, 0px)); bottom:max(12px, env(safe-area-inset-bottom, 0px)); }
-  .opax-voice-launcher { min-height:46px; padding:10px 16px; font-size:13px; }
+  .opax-voice { right:max(12px, env(safe-area-inset-right, 0px)); bottom:max(12px, env(safe-area-inset-bottom, 0px)); max-width:calc(100vw - 24px); }
+  /* On a phone the pill is a round mic button; its name and the free allowance live on the control. */
+  .opax-voice-launcher { width:44px; height:44px; min-height:44px; padding:0; justify-content:center; border-radius:50%; font-size:13px; }
+  .opax-voice-launcher > span { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
   .opax-voice-panel { width:calc(100vw - 24px); max-width:calc(100vw - 24px); bottom:58px; max-height:calc(100dvh - 94px - env(safe-area-inset-bottom, 0px)); }
   .opax-voice-header { padding:17px 15px 12px 19px; }
   .opax-voice-body { padding-left:19px; padding-right:19px; }

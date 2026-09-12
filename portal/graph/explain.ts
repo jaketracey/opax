@@ -1722,7 +1722,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
           if (list.childElementCount) sources.replaceChildren(el('h3', '', 'Sources from the record'), list)
         } else if (askFailure) {
           const p = el('p', 'explain-status', askFailure)
-          const link = el('a', 'explain-record-link', 'Ask on the full page')
+          const link = el('a', 'explain-record-link', 'Ask the record about this flow')
           link.href = helpers.askHash(question)
           answer.replaceChildren(p, link)
         } else if (askText) {
@@ -1778,7 +1778,7 @@ export function mountExplain(container: HTMLElement, detail: ExplainDetail, help
           if (destroyed || !answer.isConnected) return
           waitHandle?.destroy?.()
           const p = el('p', 'explain-status', askFailure)
-          const link = el('a', 'explain-record-link', 'Ask on the full page')
+          const link = el('a', 'explain-record-link', 'Ask the record about this flow')
           link.href = helpers.askHash(question)
           answer.replaceChildren(p, link)
         })

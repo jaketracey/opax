@@ -1,10 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
-import {runInNewContext} from 'node:vm';
-import ts from 'typescript';
-const exports={};
-runInNewContext(ts.transpileModule(readFileSync(new URL('../src/ask-scope.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports});
+import {build} from 'esbuild';
+const bundle=await build({entryPoints:[new URL('../src/ask-scope.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
+const exports=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const {resolveAskScope}=exports;
 const question='How have independant MPs described negative gearing over the years?';
 test('the reported question retrieves independent speeches despite the misspelling',()=>{for(const q of [question,question.replace('independant','independent')]){const raw={question:q,kind:'all',from:'2000',to:'2026'};const out=resolveAskScope(raw);assert.equal(out.input.party,'Independent');assert.equal(out.input.kind,'speech');assert.equal(out.input.question,q);assert.equal(out.input.from,'2000');assert.equal(out.input.to,'2026');assert.equal(out.scope.party,'Independent');assert.equal(raw.party,undefined)}});
@@ -13,6 +11,36 @@ test('explicit controls and named speakers take precedence',()=>{for(const extra
 test('comparisons, exclusions, incidental mentions and nonpolitical independence stay broad',()=>{for(const q of ['Compare independent MPs with Labor MPs on negative gearing','What do non-independent MPs say about housing?','What do MPs other than independent MPs say?','What do not just independent MPs say?','What did journalists say about independent MPs?','How do independent schools describe funding?','What did the independent review say about MPs?','What have MPs said about negative gearing?'])assert.equal(resolveAskScope({question:q}).scope,undefined,q)});
 test('only referential follow-ups inherit the prior user cohort, never model output',()=>{const context=[{author:'question',text:question},{author:'answer',text:'Labor MPs say something.'}];assert.equal(resolveAskScope({question:'And what about housing supply?',context}).input.party,'Independent');assert.equal(resolveAskScope({question:'What did Labor MPs say?',context}).input.party,'Labor');assert.equal(resolveAskScope({question:'How was the budget described?',context}).scope,undefined);assert.equal(resolveAskScope({question:'And Labor MPs?',context}).input.party,'Labor')});
 test('financial cohort questions keep full-record retrieval',()=>{const out=resolveAskScope({question:'Which independent MPs disclosed donations?',kind:'all'});assert.equal(out.input.party,'Independent');assert.equal(out.input.kind,'all')});
+
+test('compact eligibility follow-ups keep the named proposal and explicit dates',()=>{
+ const people=[{name:'David Pocock'}],context=[{author:'user',text:'What has David Pocock proposed about housing affordability in 2026?'}];
+ for(const question of ['Who would be eligible?','Who can qualify?','Which homes would qualify?','Which households are eligible?','Who would be eligible for it?','Which households would be eligible for this?']){
+  const raw={question,kind:'all',context};assert.equal(exports.needsAskPeople(raw),true);
+  const {input}=resolveAskScope(raw,people);assert.equal(input.speaker,'David Pocock');assert.equal(input.from,'2026');assert.equal(input.to,'2026');assert.equal(exports.isNamedPositionQuestion(input),true);assert.match(exports.askRetrievalQuery(input),/housing affordability/);assert.equal(exports.askRetrievalQuery(input),'housing affordability in 2026');
+ }
+ for(const question of ['Who won the election?','Which grants went to X?','Who would be eligible for citizenship?']){
+  const {input}=resolveAskScope({question,kind:'all',context},people);assert.equal(input.speaker,undefined);assert.equal(input.from,undefined);
+ }
+ assert.equal(resolveAskScope({question:'Who would be eligible?',kind:'all'},people).input.speaker,undefined);
+ assert.equal(resolveAskScope({question:'Who would be eligible?',kind:'all',context:[{author:'answer',text:context[0].text}]},people).input.speaker,undefined);
+ assert.equal(resolveAskScope({question:'Who would be eligible?',kind:'all',context,party:'Labor'},people).input.speaker,undefined);
+ const funding=resolveAskScope({question:'Who would be eligible?',kind:'all',context:[{author:'user',text:'Who donates the most to Labor in 2020?'}]},people).input;
+ assert.equal(funding.speaker,undefined);assert.equal(funding.from,undefined);
+});
+
+test('duration follow-ups retrieve the measure duration rather than the word last',()=>{
+ const raw={question:'How long would it last?',kind:'all',context:[{author:'user',text:'What would Pauline Hanson say about housing affordability?'}]};
+ const {input}=resolveAskScope(raw,[{name:'Pauline Hanson'}]);assert.equal(exports.askRetrievalQuery(input),'housing affordability');assert.equal(input.speaker,'Pauline Hanson');
+});
+
+test('receipt selections do not become speech filters after leaving a funding conversation',()=>{
+ const context=[{author:'user',text:'Who donates the most to Labor from gambling donors in federal records in 2020?'}];
+ const result=resolveAskScope({question:'What did they say about housing?',context});
+ assert.equal(result.scope,undefined);assert.equal(result.input.from,undefined);assert.equal(result.input.party,undefined);
+ assert.equal(exports.askRetrievalQuery(result.input),'What did they say about housing?');
+ const speech=resolveAskScope({question:'What did Pauline Hanson say about donations in 2020?'},[{name:'Pauline Hanson'}]);
+ assert.equal(speech.input.speaker,'Pauline Hanson');assert.equal(speech.input.from,'2020');
+});
 
 
 test('named speech subjects use the full roster name and preserve explicit controls',()=>{

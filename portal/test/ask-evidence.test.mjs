@@ -3,10 +3,12 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
+import {build} from 'esbuild';
 const transpile=s=>ts.transpileModule(s,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
 const exports={};runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts',import.meta.url),'utf8')),{exports});
 const {normaliseFootnotes,FootnoteStream}=exports;
-const scope={};runInNewContext(transpile(readFileSync(new URL('../src/ask-scope.ts',import.meta.url),'utf8')),{exports:scope});
+const scopeBundle=await build({entryPoints:[new URL('../src/ask-scope.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
+const scope=await import('data:text/javascript;base64,'+Buffer.from(scopeBundle.outputFiles[0].text).toString('base64'));
 const index=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const extract=(a,b)=>index.slice(index.indexOf(a),index.indexOf(b,index.indexOf(a)));
 let streamBody;
@@ -18,8 +20,8 @@ const fixture=()=>({answer:'😀 A fact[^1]. Another fact[^2].\n\n[^1]: block-AA
 const plain=x=>JSON.parse(JSON.stringify(x));
 test('original-turn version expires only named position answers, preserving other caches',()=>{
  const position={question:'What would Example MP say about housing?',speaker:'Example MP',kind:'speech'};
- assert.equal(JSON.parse(api.askCacheInput(position,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v4');
- assert.equal(JSON.parse(api.askCacheInput({...position,question:'What did Example MP say about housing?'},'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v4');
+ assert.equal(JSON.parse(api.askCacheInput(position,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v6');
+ assert.equal(JSON.parse(api.askCacheInput({...position,question:'What did Example MP say about housing?'},'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v6');
  for(const input of [{question:'Who funds Labor?'},{...position,kind:'all'}])assert.equal(JSON.parse(api.askCacheInput(input,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION);
 });
 test('footnotes resolve through provider mappings with Unicode offsets',()=>{const p=api.askPayload(fixture());assert.equal(p.answer,'😀 A fact. Another fact.');assert.deepEqual(plain(p.citations[id]),[[7,8]]);assert.deepEqual(plain(p.citations[neighbour]),[[21,22]]);assert.equal(p.sources[0].cited,true)});
@@ -149,4 +151,12 @@ test('verified original proposals are reusable while generic unverified excerpts
  assert.equal(api.cacheableAnswer(p),false);assert.equal(api.cacheableAnswer({...p,evidence_kind:'original_position_proposal'}),true);
  assert.equal(api.cacheableAnswer({...p,evidence_kind:'original_position_proposal',sources:[]}),false);
  assert.equal(api.cacheableAnswer({...p,evidence_kind:'original_position_proposal',answer:'refusal'}),false);
+});
+
+test('the position topic guard accepts inflections but not unrelated words sharing a short prefix',()=>{
+ const raw=t=>({answer:'x',retrieval_results:{resources:{r:{fields:{body:{paragraphs:{'r/t/body/0-10':{text:t}}}}}}}});
+ const body=q=>({query:q,prompt:{system:'You explain Australian politicians’ documented positions from primary records.'}});
+ assert.notEqual(exports.guardPositionAnswer(raw('One Nation will cap arrivals; immigrants would wait eight years.'),body('immigration')).answer,exports.EVIDENCE_GAP_ANSWER);
+ assert.equal(exports.guardPositionAnswer(raw('The coalition will govern well.'),body('coal')).answer,exports.EVIDENCE_GAP_ANSWER);
+ assert.notEqual(exports.guardPositionAnswer(raw('Thermal coal exports must end.'),body('coal')).answer,exports.EVIDENCE_GAP_ANSWER);
 });

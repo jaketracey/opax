@@ -1,4 +1,4 @@
-import { positionEvidence, positionProposalQuote, positionPointSupported, normalizePositionDraft } from './position-evidence'
+import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
 /**
@@ -32,7 +32,7 @@ import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
 
-import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer } from './search-summary'
+import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer, summaryPointValidator, SummaryPointStream, type SearchSummary } from './search-summary'
 
 import { OG_FONT_FILES, OG_VERSION, homeCard, type OgCard } from './og'
 import { renderOgPng, type OgFont } from './og-render'
@@ -54,7 +54,7 @@ interface FindResource {
 
 const SLUG_RE = /^(speech|legal|news)-(\d+)$/
 const PRESS_SLUG_RE = /^press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+$/
-const RESEARCH_SLUG_RE = /^(?:mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/
+const RESEARCH_SLUG_RE = /^(?:grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/
 // Division records (parli.ingest.votes_ingest) carry composite ids:
 // division-nsw-la-2025-12-22-3, division-federal-senate-10113. Public too.
 const DIVISION_SLUG_RE = /^division-[a-z0-9-]+$/
@@ -647,7 +647,13 @@ const REFUSAL_PREFIXES = [
 
 const isRefusal = (a: AskAnswer): boolean => {
   const t = (a.answer ?? '').trim().toLowerCase()
-  return !t || isEvidenceGap(t) || REFUSAL_PREFIXES.some((p) => t.startsWith(p))
+  // The prompt asks for the canned sentence alone, but the model can wrap it
+  // in its own preamble ("I can't answer that question from the retrieved
+  // record. ... The record retrieved for this question does not discuss it.",
+  // seen live 2026-09-12). A prefix check let that ship as an answer, so the
+  // exact sentence counts wherever it lands.
+  return !t || isEvidenceGap(t) || REFUSAL_PREFIXES.some((p) => t.startsWith(p)) ||
+    t.includes('the record retrieved for this question does not discuss it')
 }
 
 // A refusal or empty answer over a healthy retrieval (5+ resources) is a
@@ -939,7 +945,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
   const topic = str(input.topic)
   return JSON.stringify({
     epoch,
-    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v4' : ''),
+    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v6' : ''),
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
@@ -1026,28 +1032,41 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
 
 async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const rawInput = ((await request.json().catch(() => ({}))) ?? {}) as AskInput
+  // Phase durations go out as a Server-Timing header on synchronous answers,
+  // so a slow ask can be split into our work and the platform's from outside.
+  const marks: [string, number][] = [['start', Date.now()]]
+  const mark = (name: string): void => { marks.push([name, Date.now()]) }
+  const timed = (res: Response): Response => {
+    const parts = marks.slice(1).map(([name, at], i) => `${name};dur=${at - marks[i][1]}`)
+    res.headers.set('server-timing', [...parts, `total;dur=${Date.now() - marks[0][1]}`].join(', '))
+    return res
+  }
+  if (!rawInput.question?.trim()) return json({ error: 'question is required' }, 400)
+  // Resolve receipt conversations from user turns before speech inference can
+  // apply calendar-year or parliamentarian filters. No model call is needed.
+  try {
+    const ranked = await rankedMoneyAnswer(rawInput, env.ASSETS)
+    if (ranked) { mark('receipts'); return timed(json(ranked)) }
+  } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
   let people: { name: string }[] = []
   if (needsAskPeople(rawInput)) {
     try { people = (await loadPeople(env)).people }
     catch { return json({ error: 'The parliamentarian index is temporarily unavailable. Please try again.' }, 503) }
   }
   const { input, scope } = resolveAskScope(rawInput, people)
-  if (!input.question?.trim()) return json({ error: 'question is required' }, 400)
 
   const url = new URL(request.url)
   const wantStream =
     url.searchParams.get('stream') === '1' ||
     (request.headers.get('accept') ?? '').includes('text/event-stream')
 
-  // Exact rankings use this deployment's data and no generative call.
-  // The stream client also accepts the complete JSON payload.
-  try {
-    const ranked = await rankedMoneyAnswer(input, env.ASSETS)
-    if (ranked) return json(ranked)
-  } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
+  mark('prep')
 
   // Cache first: a HIT costs neither a model call nor rate-limit quota.
-  const keyText = askCacheInput(input, env.CACHE_EPOCH)
+  // The model is part of the key: re-pinning ASK_MODEL retires answers the
+  // previous model wrote instead of replaying them for seven days.
+  const askModel = env.ASK_MODEL || 'openai-compatible'
+  const keyText = askCacheInput(input, `${env.CACHE_EPOCH}:${askModel}`)
   const cacheKey = keyText ? cacheRequest('ask', await sha256Hex(keyText)) : null
   const bypass = cacheBypass(request, url)
   if (cacheKey && !bypass) {
@@ -1057,11 +1076,16 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
   const limited = await rateLimited(env.ASK_LIMITER, request)
   if (limited) return limited
+  mark('cache')
 
   let records: AskRecords
   try { records = await retrieveAskRecords(input, env.ASSETS) }
   catch { return json({ error: 'Public-record search is temporarily unavailable. Please try again.' }, 503) }
+  mark('records')
   const body = buildAskBody(input, records)
+  // Pinned per pipeline through wrangler vars (see env.d.ts). Every pipeline
+  // rides the KB's OpenRouter slot: generation bills to OpenRouter only.
+  body.generative_model = askModel
   const store = (payload: AskPayload): void => {
     if (cacheKey && cacheableAnswer(payload)) storeGenerationCache(env, ctx, cacheKey, json(payload), ASK_CACHE_TTL)
   }
@@ -1070,8 +1094,9 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     // uses a position-specific version, so older unverified drafts cannot replay.
     try {
       const payload = await documentedPositionAnswer(input, body, env, ctx)
+      mark('position')
       store(payload)
-      return withCacheStatus(json(payload), status, false)
+      return timed(withCacheStatus(json(payload), status, false))
     } catch { return json({ error: 'The speech records are temporarily unavailable. Please try again.' }, 503) }
   }
   if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records, scope })
@@ -1087,6 +1112,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   }
   const t0 = Date.now()
   let answer = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
+  mark('ask')
   // A stall or an upstream error gets one lighter attempt before the reader hears about it.
   if (answer instanceof Response) answer = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
   if (answer instanceof Response) return answer
@@ -1094,6 +1120,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
     if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
+  mark('retry')
   let payload = askPayload(answer, records, scope)
   if (isPositionBody(body) && payload.sources.length && (isEvidenceGap(payload.answer) || !Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer))) {
     payload = await recoverPositionAnswer(payload, body, env) || payload
@@ -1104,8 +1131,9 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope) }
   }
   if (hasUnsupportedQuotes(payload, answer) || (!isRefusal(answer) && !Object.keys(payload.citations).length)) payload = evidenceOnlyAnswer(payload, answer, String(body.query ?? ''))
+  mark('verify')
   store(payload)
-  return withCacheStatus(json(payload), status, false)
+  return timed(withCacheStatus(json(payload), status, false))
 }
 
 /** Retrieve once, then generate only from original turns belonging to the index speaker. */
@@ -1121,7 +1149,9 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   const query = String(body.query || '')
   const found = await searchWindow(env, {q:query, mode:'hybrid',kind:'speech',topK:20,url})
   if (!found) throw new Error('Speech retrieval failed')
-  const rows = found.results.filter(r => /^speech-\d+$/.test(r.slug) && r.speaker === scope.speaker).slice(0,8)
+  // Up to twelve originals; summarySources keeps ten and the prompt cap below
+  // trims the rest. Eight left named-politician answers with one or two sources.
+  const rows = found.results.filter(r => /^speech-\d+$/.test(r.slug) && r.speaker === scope.speaker).slice(0,12)
   const reads = await Promise.allSettled(rows.map(async row => {
     const resourceUrl = new URL('/api/resource/'+row.slug, url)
     const response = await apiResource(new Request(resourceUrl), resourceUrl, row.slug, env, ctx)
@@ -1136,17 +1166,34 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   const gap: AskPayload = {answer:EVIDENCE_GAP_ANSWER,citations:{},sources:[],scope,answer_status:'evidence_gap'}
   if (!sources.length) return gap
   const payload: AskPayload = {...gap,sources}
-  return await recoverPositionAnswer(payload,{...body,position_question:input.question},env) || quotedPositionAnswer(payload,query,input.question) || gap
+  // A paraphrase must not invent who qualifies. Quote the recorded criteria
+  // and any deferred thresholds directly, without another generation call.
+  if(isPositionEligibilityQuestion(input.question || ''))return quotedPositionAnswer(payload,query,input.question) || {...gap,answer:'I couldn’t verify who would qualify from these selected speeches. Try naming the proposal more specifically.'}
+  if(isPositionCostQuestion(input.question || '')) {
+    const quoted=quotedPositionAnswer(payload,query,input.question)
+    if(quoted)return quoted
+  }
+  // A failed summary still shows the reader the speeches it was read from.
+  return await recoverPositionAnswer(payload,{...body,position_question:input.question},env) || quotedPositionAnswer(payload,query,input.question) || positionExcerptsAnswer(payload,query) || gap
 }
 
 /** A failed summary must not hide a usable, explicitly recorded proposal. */
 function quotedPositionAnswer(payload: AskPayload, query: string, question = ''): AskPayload | null {
-  // A generic proposal quote does not answer a missing cost, reason or duration.
-  if (/\b(?:cost|costing|price|why|reason)\b|^(?:and\s+)?how\s+(?:much|long)\b/i.test(question)) return null
+  // A reason still needs a verified summary; numeric details need an explicit
+  // term or linked cost in the original proposal quotation.
+  if (/\b(?:why|reason)\b/i.test(question)) return null
   const rows = payload.sources.filter((s): s is Record<string,unknown> => !!s && typeof s === 'object')
   const sources = summarySources(rows,6000).flatMap(source => {
-    const quote = positionProposalQuote(source.snippet,query)
-    return quote && (!/\b(?:cap|limit)\b/i.test(question) || /\b(?:cap|limit|maximum|up to)\b/i.test(quote)) ? [{...source,quote}] : []
+    if(isPositionCostQuestion(question)) {
+      const quote=positionCostQuote(source.snippet,query)
+      return quote?[{...source,quotes:[quote]}]:[]
+    }
+    if(isPositionEligibilityQuestion(question)) {
+      const quotes=positionEligibilityQuotes(source.snippet,query)
+      return quotes.length?[{...source,quotes}]:[]
+    }
+    const quote = positionProposalQuote(source.snippet,query,question)
+    return quote && (!/\b(?:cap|limit)\b/i.test(question) || /\b(?:cap|limit|maximum|up to)\b/i.test(quote)) ? [{...source,quotes:[quote]}] : []
   }).slice(0,2)
   if (!sources.length) return null
   let answer = '**From their speeches**\n\n'
@@ -1154,14 +1201,42 @@ function quotedPositionAnswer(payload: AskPayload, query: string, question = '')
   for (const source of sources) {
     const date = source.date?.slice(0,10) || source.title.match(/\b\d{4}-\d{2}-\d{2}\b/)?.[0]
     const timestamp = date && Number.isFinite(Date.parse(date)) ? new Intl.DateTimeFormat('en-AU',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(date)) : ''
-    answer += [source.speaker,timestamp].filter(Boolean).join(' · ') + ':\n\n> ' + source.quote
-    const end = Array.from(answer).length
-    citations[source.id] = [[end-1,end]]
-    answer += '\n\n'
+    answer += [source.speaker,timestamp].filter(Boolean).join(' · ') + ':\n\n'
+    for(const quote of source.quotes) {
+      answer += '> '+quote
+      const end = Array.from(answer).length
+      ;(citations[source.id] ||= []).push([end-1,end])
+      answer += '\n\n'
+    }
   }
   return {answer:answer.trim(),citations,scope:payload.scope,answer_status:'evidence_only',evidence_kind:'original_position_proposal',sources:sources.map(source => ({
-    ...rows.find(row => row.href === source.href)!,resource:source.id,snippet:source.quote,cited:true,
+    ...rows.find(row => row.href === source.href)!,resource:source.id,snippet:source.quotes.join(' … '),cited:true,
   }))}
+}
+
+/** Neither a verified summary nor a proposal quote: list the originals read,
+ * with an on-topic excerpt from each of the top three, as the ordinary path
+ * does when it cannot verify a summary. Never a bare gap over real evidence. */
+function positionExcerptsAnswer(payload: AskPayload, query: string): AskPayload | null {
+  type Source = { resource?: string; slug?: string; snippet?: string; cited?: boolean }
+  const rows = payload.sources.filter((s): s is Source => !!s && typeof s === 'object')
+  const excerpts = rows.flatMap(row => {
+    const id = row.resource || row.slug || ''
+    const excerpt = typeof row.snippet === 'string' && id ? evidenceExcerpt(row.snippet, query) : { text: '', relevance: 0 }
+    return excerpt.text && excerpt.relevance ? [{ id, text: excerpt.text, relevance: excerpt.relevance }] : []
+  }).sort((a, b) => b.relevance - a.relevance).slice(0, 3)
+  if (!excerpts.length) return null
+  let answer = 'I couldn’t verify a summary of their position this time. These passages from their speeches may help.'
+  const citations: Record<string, number[][]> = {}
+  for (const excerpt of excerpts) {
+    answer += `\n\n> ${excerpt.text}`
+    const end = Array.from(answer).length
+    citations[excerpt.id] = [[end - 1, end]]
+  }
+  const used = new Map(excerpts.map(e => [e.id, e.text]))
+  return { ...payload, answer, citations, answer_status: 'evidence_only',
+    evidence_excerpts: excerpts.map(({ id, text }) => ({ resource: id, text })),
+    sources: rows.map(row => { const id = row.resource || row.slug || ''; return used.has(id) ? { ...row, resource: id, cited: true, snippet: used.get(id) } : { ...row, resource: id, cited: false } }) }
 }
 
 /** Recover a position with exact source excerpts, rather than inventing citation IDs. */
@@ -1173,14 +1248,22 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
     const makePrompt = () => summaryPrompt(String(body.query || '').slice(0,2000), {speaker:payload.scope?.speaker || ''}, sources) +
       '\nLatest reader question: ' + JSON.stringify(String(body.position_question || body.query || '').slice(0,2000)) +
       '\nAnswer that latest question specifically. The query topic supplies its subject. If they ask when, explain the recorded date; if they ask why, attribute only the reasons stated in the speech; if they ask about cost, give only a stated costing with attribution. Do not substitute a generic policy overview for a request for a particular detail. If the requested detail is absent, return {"points":[]}.' +
-      '\nDescribe only this named politician’s own documented positions on the query topic, in past tense. Never roleplay or predict. Omit ministerial replies even when the document is indexed under the politician. Prefer concrete policy proposals over allegations or rhetoric. The passages are limited to the indexed speaker’s first speaking turn; no later speaker or ministerial reply may be inferred. Preserve policy limits and duration exactly; omit attack statistics. Return at most two points. Each point must cite exactly one original speech; never merge policy details from different dates into one proposal. Lead with a concrete proposal and preserve its eligibility, duration and numeric limits, including any lower-of conditions. Each point must be one concrete proposal or position, in one short sentence. Do not append attack statistics or commentary about opponents to a proposal. Each point must be supported in full by an exact excerpt from the passage itself, never its title. Include the proposal conditions in that excerpt. Omit costs unless the excerpt includes the speaker’s stated costing, and explicitly attribute any estimate to them. If the passages do not establish their position, return {"points":[]}.'
+      '\nDescribe only this named politician’s own documented positions on the query topic, in past tense. Never roleplay or predict. Omit ministerial replies even when the document is indexed under the politician. Prefer concrete policy proposals over allegations or rhetoric. The passages are limited to the indexed speaker’s first speaking turn; no later speaker or ministerial reply may be inferred. Preserve policy limits and duration exactly; omit attack statistics. Return up to four points, each citing a different original speech where the record supports it. Each point must cite exactly one original speech; never merge policy details from different dates into one proposal. Lead with a concrete proposal and preserve its eligibility, duration and numeric limits, including any lower-of conditions. Each point must be one concrete proposal or position, in one short sentence. Do not append attack statistics or commentary about opponents to a proposal. Each point must be supported in full by an exact excerpt from the passage itself, never its title. Include the proposal conditions in that excerpt, and every number, year or amount the point states must appear inside the excerpt. Omit costs unless the excerpt includes the speaker’s stated costing, and explicitly attribute any estimate to them. If the passages do not establish their position, return {"points":[]}.'
     let prompt = makePrompt()
-    while (sources.length && prompt.length > 19500) { sources.pop(); prompt = makePrompt() }
+    // The evidence travels in the prompt's user template, not `query`: the
+    // platform caps `query` at 20,000 characters (422 above it), which used to
+    // drop all but three to five originals. The template is format-style, so
+    // literal braces are doubled; only the {question} tag stays live.
+    // Budget ~15k tokens: ten originals at their full 5,600-character evidence
+    // windows fit; a 62k template was accepted live.
+    const POSITION_PROMPT_CHARS = 60000
+    while (sources.length && prompt.length > POSITION_PROMPT_CHARS) { sources.pop(); prompt = makePrompt() }
     if (!sources.length) return null
     const answer = await summaryModelAnswer(await kbFetch(env, '/ask', {
-      body:{query:prompt,top_k:1,reranker:'noop',generative_model:'openai-compatible',max_tokens:1800,
-        prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + POSITION_GROUNDING + ' Return only valid JSON in the requested points-and-citations schema, with no other text.',user:'{question}'}},
-      headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(25_000),
+      body:{query:String(body.position_question || body.query || '').slice(0,2000),top_k:1,reranker:'noop',generative_model:env.POSITION_RECOVERY_MODEL || 'openai-compatible',max_tokens:1800,
+        prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + POSITION_GROUNDING + ' Return only valid JSON in the requested points-and-citations schema, with no other text.',
+          user:prompt.replace(/[{}]/g, brace => brace + brace) + '\nReader question: {question}'}},
+      headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(40_000),
     }))
     const summary = answer && parseSearchSummary(normalizePositionDraft(answer, sources), sources, true)
     if (!summary) return null
@@ -1191,10 +1274,14 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
       point.source_ids.every(id => {
         const source = summary.sources.find(source => source.id === id)
         const evidence = point.evidence?.[id] || []
-        return source && evidence.length && positionEvidence(evidence.join(' '), String(body.query || '')) &&
+        // The excerpt is judged with its surroundings in the verified original:
+        // "cap arrivals at 130,000" answers an immigration question when the
+        // sentences around it are about immigration.
+        const around = (quote: string) => { const at = folded(source?.snippet || '').indexOf(folded(quote).slice(0, 60)); return at < 0 ? quote : folded(source!.snippet).slice(Math.max(0, at - 300), at + quote.length + 300) }
+        return source && evidence.length && (positionEvidence(evidence.join(' '), String(body.query || '')) || positionEvidence(around(evidence[0]), String(body.query || ''))) &&
           positionPointSupported(point.text, evidence.join(' '), String(body.position_question || ''), source.date) &&
           evidence.every(quote => folded(source.snippet).includes(folded(quote)))
-      })).slice(0,2)
+      })).slice(0,4)
     if (!summary.points.length) return null
     const used = new Set(summary.points.flatMap(point => point.source_ids))
     summary.sources = summary.sources.filter(source => used.has(source.id)).map(source => ({...source,
@@ -1214,9 +1301,14 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
       for (const id of point.source_ids) (citations[id] ||= []).push([end-1,end])
       text += '\n'
     }
-    return {answer:text.trim(),citations,scope:payload.scope,sources:summary.sources.map(source => ({
-      ...sourceRows.find(s => s.href === source.href)!,resource:source.id,cited:true,snippet:source.evidence.join(' … '),
-    }))}
+    // Every original the model read is listed, as on the ordinary path: the
+    // cited ones carry their verified excerpts, the rest stay "retrieved only".
+    const cited = new Map(summary.sources.map(source => [source.href, source]))
+    return {answer:text.trim(),citations,scope:payload.scope,sources:sources.map(source => {
+      const row = sourceRows.find(s => s.href === source.href)!
+      const hit = cited.get(source.href)
+      return hit ? {...row,resource:hit.id,cited:true,snippet:hit.evidence.join(' … ')} : {...row,resource:source.id,cited:false}
+    })}
   } catch { return null }
 }
 
@@ -1239,24 +1331,94 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   if (cached) return withCacheStatus(cached, 'HIT', false)
   const limited = await rateLimited(env.FOLLOWUPS_LIMITER, request)
   if (limited) return limited
+  const unavailable = 'A cited summary is unavailable. Your matching records are still below.'
+  const prompt = summaryPrompt(query,filters,sources)
+  const askBody = (q: string) => ({query:q, top_k:1, reranker:'noop', generative_model:env.SEARCH_SUMMARY_MODEL || 'openai-compatible', max_tokens:4096,
+    prompt:{system:SEARCH_SUMMARY_SYSTEM, user:'{question}'}})
+  const repairPrompt = prompt + '\nWrite a fresh, short overview. Previous output failed source validation. Keep each sentence to one narrow factual point. Cite an EXACT passage or title for every named speaker and claim. Use supplied numbers without rounding. Grants and contracts are published awards, not received, paid or spent money, funded work, or completed projects. Return only the required JSON.'
+  const finish = (summary: SearchSummary) => ({status:'ready', ...summary, reviewed_count:sources.length, partial:!!results.warnings?.length})
+  if (url.searchParams.get('stream') === '1') {
+    // Streamed: each point goes out the moment its JSON object closes and
+    // passes the same validation as the synchronous path; `done` carries the
+    // full payload (and is what gets cached). A cache HIT above answers as
+    // plain JSON, which the client also accepts.
+    const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
+    const writer = writable.getWriter()
+    const encoder = new TextEncoder()
+    const send = (event: string, data: unknown): Promise<void> => writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+    ctx.waitUntil((async () => {
+      try {
+        const validator = summaryPointValidator(sources)
+        const stream = new SummaryPointStream()
+        const answer = await streamSummaryAnswer(env, askBody(prompt), async (text) => {
+          for (const point of stream.push(text)) {
+            if (stream.seen > 6) break
+            const accepted = validator.accept(point)
+            if (accepted) await send('point', { text: accepted.text, source_ids: accepted.source_ids })
+          }
+        }, AbortSignal.timeout(40_000))
+        let summary = validator.result()
+        if (!summary && answer) {
+          const repaired = await summaryModelAnswer(await kbFetch(env, '/ask', { body: askBody(repairPrompt), headers:{'x-synchronous':'true'}, signal:AbortSignal.timeout(25_000) }))
+          summary = repaired ? parseSearchSummary(repaired,sources) : null
+          if (summary) for (const point of summary.points) await send('point', { text: point.text, source_ids: point.source_ids })
+        }
+        if (!summary) { await send('error', { error: unavailable }); return }
+        const payload = finish(summary)
+        storeGenerationCache(env, ctx, key, json(payload), 24*60*60)
+        await send('done', payload)
+      } catch {
+        try { await send('error', { error: unavailable }) } catch { /* reader gone */ }
+      } finally {
+        try { await writer.close() } catch { /* already closed */ }
+      }
+    })())
+    return new Response(readable, { headers: { ...SSE_HEADERS, 'x-opax-cache': 'MISS' } })
+  }
   try {
-    const prompt = summaryPrompt(query,filters,sources)
-    const generate = async (query: string) => summaryModelAnswer(await kbFetch(env, '/ask', {
-      body: {query, top_k:1, reranker:'noop', generative_model:'openai-compatible', max_tokens:4096,
-        prompt:{system:SEARCH_SUMMARY_SYSTEM, user:'{question}'}},
-      headers:{'x-synchronous':'true'}, signal:AbortSignal.timeout(25_000),
-    }))
+    const generate = async (q: string) => summaryModelAnswer(await kbFetch(env, '/ask', { body: askBody(q), headers:{'x-synchronous':'true'}, signal:AbortSignal.timeout(25_000) }))
     const answer = await generate(prompt)
     let summary = answer ? parseSearchSummary(answer,sources) : null
     if (!summary && answer) {
-      const repaired = await generate(prompt + '\nWrite a fresh, short overview. Previous output failed source validation. Keep each sentence to one narrow factual point. Cite an EXACT passage or title for every named speaker and claim. Use supplied numbers without rounding. Grants and contracts are published awards, not received, paid or spent money, funded work, or completed projects. Return only the required JSON.')
+      const repaired = await generate(repairPrompt)
       summary = repaired ? parseSearchSummary(repaired,sources) : null
     }
-    if (!summary) return json({error:'A cited summary is unavailable. Your matching records are still below.'},502)
-    const out = json({status:'ready', ...summary, reviewed_count:sources.length, partial:!!results.warnings?.length})
+    if (!summary) return json({error:unavailable},502)
+    const out = json(finish(summary))
     storeGenerationCache(env, ctx, key, out, 24*60*60)
     return withCacheStatus(out,'MISS',false)
-  } catch { return json({error:'A cited summary is unavailable. Your matching records are still below.'},503) }
+  } catch { return json({error:unavailable},503) }
+}
+
+/** One streamed platform generation for the overview: answer text chunks go to
+ * `onText` as they arrive; the whole answer comes back for the final parse. */
+async function streamSummaryAnswer(env: Env, body: Record<string, unknown>, onText: (text: string) => Promise<void>, signal: AbortSignal): Promise<string> {
+  const res = await fetch(`${ragBase(env)}/ask`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', accept: 'application/x-ndjson', 'x-nuclia-serviceaccount': `Bearer ${env.ARAG_KB_TOKEN}` },
+    body: JSON.stringify(body),
+    signal,
+  })
+  if (!res.ok || !res.body) throw new Error(`summary failed (${res.status})`)
+  let answer = ''
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  const handle = async (line: string) => {
+    let item: { type?: string; text?: string } | undefined
+    try { item = (JSON.parse(line) as { item?: { type?: string; text?: string } }).item } catch { return }
+    if (item?.type === 'answer' && typeof item.text === 'string' && item.text) { answer += item.text; await onText(item.text) }
+  }
+  for (;;) {
+    const { value, done } = await reader.read()
+    if (done) break
+    buffer += decoder.decode(value, { stream: true })
+    let at: number
+    while ((at = buffer.indexOf('\n')) >= 0) { const line = buffer.slice(0, at).trim(); buffer = buffer.slice(at + 1); if (line) await handle(line) }
+  }
+  buffer += decoder.decode()
+  if (buffer.trim()) await handle(buffer.trim())
+  return answer
 }
 
 // Narration is generated from server-loaded graph facts, never client-supplied amounts.
@@ -1275,7 +1437,7 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
   try {
     const generate = async (query: string) => {
       const response = await kbFetch(env,'/ask',{
-        body:{query,top_k:1,reranker:'noop',generative_model:'openai-compatible',max_tokens:4096,
+        body:{query,top_k:1,reranker:'noop',generative_model:env.JOURNEY_STORY_MODEL || 'openai-compatible',max_tokens:4096,
           prompt:{system:JOURNEY_STORY_SYSTEM,user:'{question}'}},
         headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(30_000),
       })
@@ -1784,18 +1946,16 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   ].join('\n')
 
   try {
-    // Synchronous /ask, like the production answers, but on the box's fast
-    // non-reasoning model rather than its default. The BYOK default
-    // (deepseek-v4-flash) is a reasoning model: on this task it spends the
-    // box's whole 1600-token output budget thinking and returns an empty
-    // answer (verified live — `reasoning` full, `answer` empty, per-request
-    // max_tokens does not lift the box cap). flash-lite is the box's proven
-    // rollback model; NOTE it generates platform-side, not via the OpenRouter
-    // key, so these calls can show up in ARAG platform token burn.
+    // Synchronous /ask, like the production answers, on the model pinned by
+    // FOLLOWUPS_MODEL (the OpenRouter slot, so it bills there). History: the
+    // Flash preset once had reasoning on and spent the whole output budget
+    // thinking, returning an empty answer, which is why this ran on the
+    // platform's gemini-2.5-flash-lite until 2026-09-12; reasoning is off on
+    // the preset now, and a platform-native name here burns ARAG tokens.
     // The platform still retrieves against the prompt; that context is
     // incidental and the grounding filter below only trusts OUR passages.
     const res = await kbFetch(env, '/ask', {
-      body: { query: prompt, top_k: 5, max_tokens: 4096, generative_model: 'gemini-2.5-flash-lite' },
+      body: { query: prompt, top_k: 5, max_tokens: 4096, generative_model: env.FOLLOWUPS_MODEL || 'openai-compatible' },
       headers: { 'x-synchronous': 'true' },
     })
     if (!res.ok) return withCacheStatus(json({ questions: [] }), cacheStatus, false)
@@ -2530,6 +2690,11 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   'money/receipts': { title: 'Political receipts · OPAX', description: 'Explore disclosed political receipts by donor, party and industry.', query: true },
   'money/grants': { title: 'Grants · OPAX', description: 'Explore public grant awards and their recipients.', query: true },
+  connections: {
+    title: 'Connections in the record · OPAX',
+    description: 'Organisations, programs and places named across speeches, official releases and grant records, each opened to its source excerpts.',
+    query: true,
+  },
   reports: {
     title: 'Reports · OPAX',
     description: 'Standing investigations pairing the money with the words: climate, gambling, housing, immigration, First Nations and media ownership, every claim cited.',
@@ -3761,6 +3926,10 @@ class SetText {
   element(el: Element) { el.setInnerContent(this.value) }
 }
 
+function legacyConnectionsRedirect(url: URL): Response {
+  return new Response(null, { status: 301, headers: { location: `/connections${url.search}`, 'cache-control': 'public, max-age=86400' } })
+}
+
 async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const [shell, meta] = await Promise.all([
     env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/`)),
@@ -3931,7 +4100,7 @@ async function sitemapXml(env: Env): Promise<Response> {
       rows.push(`<url><loc>${escXml(`${SITE_ORIGIN}${path}`)}</loc>${mod}</url>`)
     }
     add('/')
-    for (const page of ['search', 'money', 'reports', 'explore', 'discover', 'about', 'methods', 'stats', 'expenses']) add(`/${page}`)
+    for (const page of ['search', 'money', 'connections', 'reports', 'explore', 'discover', 'about', 'methods', 'stats', 'expenses']) add(`/${page}`)
     for (const a of agencies?.agencies ?? []) add(`/subject/agency/${a.id}`, agencies?.meta?.generated_at)
     for (const r of reports.reports) add(`/reports/${r.slug}`, r.updated)
     add('/subject/topic')
@@ -4258,6 +4427,9 @@ async function route(
         if (url.pathname.startsWith('/og/')) return await serveOgImage(url, request, env, ctx)
         if (url.pathname === '/sitemap.xml') return await sitemapXml(env)
         if (url.pathname === '/robots.txt') return robotsTxt()
+        // The connections directory used to be a file of its own; its old address
+        // (linked from evidence panels and corpus.json) forwards to the route.
+        if (url.pathname === '/connections.html') return legacyConnectionsRedirect(url)
         const seoRoute = matchSeoRoute(url)
         if (seoRoute) return await serveSeoPage(seoRoute, url, request, env, ctx)
       }
@@ -4310,6 +4482,7 @@ export default {
       if (isApi || url.pathname.startsWith('/og/')) response = await env.STAGING_API.fetch(request)
       else if (url.pathname === '/robots.txt') response = new Response('User-agent: *\nDisallow: /\n', { headers: { 'content-type': 'text/plain' } })
       else if (url.pathname.startsWith('/ingest/')) response = new Response(null, { status: 204 })
+      else if (url.pathname === '/connections.html') response = legacyConnectionsRedirect(url)
       else {
         const assetUrl = new URL(request.url)
         if (matchSeoRoute(url)) assetUrl.pathname = '/'

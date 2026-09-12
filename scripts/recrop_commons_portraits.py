@@ -10,13 +10,22 @@
   (a surname-only page that spans more than one parliament, or a rival holder with the same surname);
   their files, credits and name-map entries are removed.
 Writes contact sheets to scripts/_photos_work/recrop_sheet_<n>.png for a visual check."""
-import json, os, sys, collections
+import json, os, sys, collections, time, urllib.parse
 from pathlib import Path
-import cv2, numpy as np
+import cv2, numpy as np, requests
 from PIL import Image, ImageDraw
 W=Path(__file__).resolve().parents[1]; PH=W/"portal/public/photos"; WK=W/"scripts/_photos_work"; SRC=WK/"src"
 pm=json.load(open(PH/"people.json")); credits=json.load(open(PH/"credits.json")); matches=json.load(open(WK/"wikidata_matches.json"))
 drop_names=set(json.load(open(WK/"wikidata_drop.json")))
+ONLY=None   # --new: only this run's matches (wikidata_matches_new.json); sources are fetched at 640px if missing
+if "--new" in sys.argv:
+    ONLY={f"wd-{m['qid']}" for m in json.load(open(WK/"wikidata_matches_new.json")).values()}
+S=requests.Session(); S.headers["User-Agent"]="OPAX research (opax.com.au; jake.tracey@noice.work)"
+def fetch_src(key):
+    f=credits[key]["file"][5:]; SRC.mkdir(exist_ok=True)
+    r=S.get("https://commons.wikimedia.org/wiki/Special:FilePath/"+urllib.parse.quote(f), params={"width":"640"}, timeout=60)
+    if r.status_code==200 and r.headers.get("content-type","").startswith("image"): (SRC/f"{key}.jpg").write_bytes(r.content)
+    time.sleep(1.0)
 det=cv2.FaceDetectorYN.create(str(WK/"face_detection_yunet_2023mar.onnx"), "", (320,320), 0.7, 0.3, 5000)
 def faces(im):
     h,w=im.shape[:2]; scale=min(1.0, 800/max(h,w)); s=cv2.resize(im,(int(w*scale),int(h*scale))) if scale<1 else im
@@ -32,8 +41,9 @@ for name in drop_names:
 # 2. re-crop
 sheet=[]
 for key in sorted(k for k in credits if k.startswith("wd-")):
-    if key in dropped_keys: continue
+    if key in dropped_keys or (ONLY is not None and key not in ONLY): continue
     src=SRC/f"{key}.jpg"
+    if not src.exists() and ONLY is not None: fetch_src(key)
     if not src.exists(): log[key]="nosrc"; continue
     im=cv2.imread(str(src))
     if im is None: log[key]="unreadable"; continue
@@ -54,6 +64,7 @@ for key in dropped_keys:
     for n in [n for n,v in pm.items() if v==key]: pm.pop(n)
 json.dump(pm, open(PH/"people.json","w"), ensure_ascii=False, indent=0, sort_keys=True)
 json.dump(credits, open(PH/"credits.json","w"), ensure_ascii=False, indent=0, sort_keys=True)
+if ONLY is not None and (WK/"recrop_log.json").exists(): log={**json.load(open(WK/"recrop_log.json")), **log}
 json.dump(log, open(WK/"recrop_log.json","w"), indent=0)
 print("recrop:", collections.Counter(log.values()).most_common(), "| dropped keys:", len(dropped_keys), "| credits:", len(credits), "| people.json:", len(pm))
 # 4. sheets
@@ -66,5 +77,5 @@ for part in range(0,len(sheet),100):
     for i,key in enumerate(chunk):
         x=(i%cols)*tile; y=(i//cols)*(tile+pad); n,l=label.get(key,(key,""))
         img.paste(Image.open(PH/f"{key}.webp").resize((tile,tile)),(x,y)); d.text((x+2,y+tile+2), n[:20], fill="black"); d.text((x+2,y+tile+16), f"{l[:14]} {log[key]}", fill="gray")
-    img.save(WK/f"recrop_sheet_{part//100+1}.png")
+    img.save(WK/f"recrop_sheet_{'new_' if ONLY is not None else ''}{part//100+1}.png")
 print("sheets:", (len(sheet)+99)//100)

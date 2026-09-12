@@ -1,4 +1,4 @@
-"""Download the Wikidata-matched Commons portraits (wikidata_matches.json), record each file's licence and
+"""Download the Wikidata-matched Commons portraits (wikidata_matches.json, or only wikidata_matches_new.json with --new), record each file's licence and
 author from the Commons API, write portal/public/photos/wd-<QID>.webp (200x200), map every OPAX name
 variant to that key in photos/people.json, and write photos/credits.json for the attribution line.
 Also builds a contact sheet PNG for a visual check of the crops. Honest UA, ~1 request/second."""
@@ -8,7 +8,10 @@ import requests
 from PIL import Image, ImageDraw
 W=Path(__file__).resolve().parents[1]; PH=W/"portal/public/photos"; SCR=W/"scripts"/"_photos_work"; SCR.mkdir(exist_ok=True)
 UA={"User-Agent":"OPAX research (opax.com.au; jake.tracey@noice.work)"}; S=requests.Session(); S.headers.update(UA)
-matches=json.load(open(SCR/"wikidata_matches.json"))
+import sys
+matches=json.load(open(SCR/("wikidata_matches_new.json" if "--new" in sys.argv else "wikidata_matches.json")))
+drop=set(json.load(open(SCR/"wikidata_drop.json"))) if (SCR/"wikidata_drop.json").exists() else set()
+matches={n:m for n,m in matches.items() if n not in drop}
 # one Commons file per QID; several OPAX names may point at it
 by_qid={}
 for name,m in matches.items():
@@ -67,5 +70,5 @@ for part in range(0,len(sheet),100):
         x=(i%cols)*tile; y=(i//cols)*(tile+pad)
         img.paste(Image.open(PH/f"wd-{qid}.webp").resize((tile,tile)),(x,y))
         d.text((x+2,y+tile+2), name[:20], fill="black"); d.text((x+2,y+tile+16), label[:20], fill="gray")
-    img.save(SCR/f"contact_sheet_{part//100+1}.png")
+    img.save(SCR/f"contact_sheet_{'new_' if '--new' in sys.argv else ''}{part//100+1}.png")
 print("[sheet] written", (len(sheet)+99)//100, "sheets")

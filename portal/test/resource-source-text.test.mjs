@@ -5,11 +5,13 @@ import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
 
 const source=ts.createSourceFile('index.ts',readFileSync(new URL('../src/index.ts',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
+const slugDeclarations=source.statements.filter(n=>ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>/^(?:SLUG_RE|PRESS_SLUG_RE|RESEARCH_SLUG_RE|DIVISION_SLUG_RE|isPublicSlug)$/.test(d.name.getText(source)))).map(n=>n.getText(source)).join('\n');
+const isPublicSlug=runInNewContext(ts.transpile(slugDeclarations)+'; isPublicSlug');
 const handler=source.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='apiResource').getText(source);
 async function readSource(texts,slug='research-cpi-mlci-2026') {
   const record={title:'Source record',data:{texts},usermetadata:{classifications:[{labelset:'kind',label:'research_report'}]}};
   const api=runInNewContext(ts.transpile(handler)+'; apiResource',{
-    Response, isPublicSlug:()=>true, DIVISION_SLUG_RE:/^division-/,
+    Response, isPublicSlug, DIVISION_SLUG_RE:/^division-/,
     cacheRequest:()=>new Request('https://opax.test/cache'), cacheBypass:()=>true,
     kbFetch:async()=>Response.json(record), json:data=>Response.json(data),
     cacheStore:()=>{}, withCacheStatus:response=>response, RESOURCE_CACHE_TTL:3600,
@@ -36,4 +38,14 @@ test('a migrated record shows its standard body once',async()=>{
 test('generated summaries are never substituted for missing source text',async()=>{
   const result=await readSource({'da-summary-t-body':field('Generated summary')});
   assert.equal(result.text,'');
+});
+
+
+test('verified venue note sources are readable while unrelated slugs stay closed',async()=>{
+ for(const slug of ['grant-site-evidence-mlci-invitation-067','grant-site-evidence-mlci-invitation-070','grant-site-evidence-ga566033']) {
+  assert.equal(isPublicSlug(slug),true);
+  const result=await readSource({'t-body':field('Derived venue evidence, not an award or payment.')},slug);
+  assert.equal(result.text,'Derived venue evidence, not an award or payment.');
+ }
+ for(const slug of ['grant-site-evidence-admin','grant-site-evidence-mlci-invitation-067/secret','grant-site-evidence-mlci-invitation-67','../members','grant-site-evidence-gaNaN'])assert.equal(isPublicSlug(slug),false);
 });

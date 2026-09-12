@@ -102,6 +102,8 @@ export function buildFlows (data) {
       count: e.count,
       firstYear: e.firstYear,
       lastYear: e.lastYear,
+      byYear: e.byYear,
+      undated: e.undated,
     }
   })
 }
@@ -151,10 +153,28 @@ export function aggregateDonors (flows) {
   return out
 }
 
+/** Recalculate a flow from dated cells; lifetime totals are only for all years. */
+export function windowFlow (row, yearFrom, yearTo) {
+  if (yearFrom == null && yearTo == null) return row
+  let total = 0, count = 0, firstYear = Infinity, lastYear = -Infinity
+  for (const [key, cell] of Object.entries(row.byYear || {})) {
+    if (!/^\d{4}$/.test(key) || !Array.isArray(cell) || cell.length < 2) continue
+    const year = Number(key), [amount, records] = cell
+    if (!Number.isFinite(amount) || amount < 0 || !Number.isInteger(records) || records < 0) continue
+    if (yearFrom != null && year < yearFrom || yearTo != null && year > yearTo) continue
+    if (amount === 0 && records === 0) continue
+    total += amount
+    count += records
+    firstYear = Math.min(firstYear, year)
+    lastYear = Math.max(lastYear, year)
+  }
+  // Missing yearly data cannot establish a selected-period amount.
+  return firstYear === Infinity ? null : { ...row, total, count, firstYear, lastYear }
+}
+
 /**
- * Flow-level filters (text, industry, party, year overlap). The min-total
- * cut is applied by the caller — per flow in the Flows view, per aggregated
- * donor in the By-donor view.
+ * Filter and window flows before sorting, donor aggregation or minimum amounts.
+ * The caller applies the minimum per flow or per aggregated donor.
  */
 export function filterFlows (flows, f) {
   const q = (f.q || '').trim().toLowerCase()
@@ -165,10 +185,8 @@ export function filterFlows (flows, f) {
         !industryLabel(r.industry).toLowerCase().includes(q)) return false
     if (f.industry && r.industry !== f.industry) return false
     if (f.party && r.party !== f.party) return false
-    if (f.yearFrom != null && r.lastYear < f.yearFrom) return false
-    if (f.yearTo != null && r.firstYear > f.yearTo) return false
     return true
-  })
+  }).map((r) => windowFlow(r, f.yearFrom, f.yearTo)).filter(Boolean)
 }
 
 const TEXT_KEYS = new Set(['donor', 'industry', 'party', 'topParty'])
@@ -238,14 +256,14 @@ const COLUMNS = {
     { key: 'party', label: 'Party', numeric: false },
     { key: 'total', label: 'Total', numeric: true },
     { key: 'count', label: 'Records', numeric: true },
-    { key: 'years', label: 'Years', numeric: true },
+    { key: 'years', label: 'Return years', numeric: true },
   ],
   donors: [
     { key: 'donor', label: 'Donor', numeric: false },
     { key: 'industry', label: 'Industry', numeric: false },
     { key: 'total', label: 'Total', numeric: true },
     { key: 'parties', label: 'Parties', numeric: true },
-    { key: 'years', label: 'Years', numeric: true },
+    { key: 'years', label: 'Return years', numeric: true },
     { key: 'topParty', label: 'Top recipient', numeric: false },
   ],
 }
@@ -276,8 +294,13 @@ const CSS = `
   border: 1px solid var(--line-strong, #8D897B); border-radius: 2px;
   padding: 0.375rem 0.5rem; min-height: 2.125rem;
 }
+.lg-select {
+  appearance: none; -webkit-appearance: none; padding-right: 2rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right .6rem center;
+}
 .lg-search { width: 15rem; max-width: 100%; }
-.lg-year { width: 4.5rem; font-variant-numeric: tabular-nums; }
+.lg-year { width: 6rem; font-variant-numeric: tabular-nums; }
 .lg-yearrow { display: flex; align-items: center; gap: 0.35rem; }
 .lg-yearrow span { color: var(--ink-faint, #6F7468); }
 
@@ -362,10 +385,12 @@ th[aria-sort] .lg-sort { color: var(--ink, #23271F); }
 .lg-status { padding: 1.5rem 0.75rem; font-size: 0.875rem; color: var(--ink-soft, #575C52); }
 .lg-status .lg-btn { margin-left: 0.5rem; }
 
-.lg-fineprint {
+.lg-fineprint, .lg-year-help {
   margin: 0.6rem 0 0; font-size: 0.75rem; line-height: 1.55;
   color: var(--ink-faint, #6F7468);
 }
+.lg-year-help { margin: 0 0 0.75rem; }
+.lg-period { display: block; margin-top: 0.25rem; }
 .lg-fineprint a { color: var(--bronze-ink, #8A5A12); }
 
 .lg-visually-hidden {
@@ -374,6 +399,14 @@ th[aria-sort] .lg-sort { color: var(--ink, #23271F); }
 }
 
 @media (max-width: 640px) {
+  .lg-input, .lg-select { font-size: 1rem; min-height: 2.75rem; }
+  .lg-btn, .lg-view, .lg-jur { min-height: 2.75rem; }
+  .lg-year { width: 5.5rem; }
+  .lg-field[aria-label="Jurisdiction"] { flex: 1 1 100%; }
+  .lg-field[aria-label="Jurisdiction"] .lg-views { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.375rem; }
+  .lg-field[aria-label="Jurisdiction"] .lg-jur { border: 1px solid var(--line-strong, #8D897B); border-radius: 2px; }
+  .lg-field:has(> #lg-industry), .lg-field:has(> #lg-party) { flex: 1 1 calc(50% - 0.5rem); }
+  .lg-select { max-width: 100%; }
   .lg-search { width: 100%; }
   .lg-field-search { flex: 1 1 100%; }
   .lg-actions { margin-left: 0; }
@@ -414,6 +447,7 @@ function subjectLink (kind, label) {
 }
 
 function yearsText (r) {
+  if (!Number.isFinite(r.firstYear) || !Number.isFinite(r.lastYear)) return 'Undated'
   return r.firstYear === r.lastYear ? String(r.firstYear) : `${r.firstYear}–${r.lastYear}`
 }
 
@@ -442,6 +476,8 @@ export function mountLedger (container, opts = {}) {
   let flows = []                   // joined edge rows, set once data lands
   let meta = {}                    // the loaded file's meta block (state files describe themselves)
   let currentRows = []             // what the table shows now (for export)
+  let loading = true
+  let loadError = false
   let loadSeq = 0                  // a switch mid-load must not let the old file land
   const cache = new Map()          // jurisdiction -> parsed export
   const aborter = new AbortController()
@@ -479,13 +515,13 @@ export function mountLedger (container, opts = {}) {
         <select class="lg-select" id="lg-party"><option value="">All parties</option></select>
       </div>
       <div class="lg-field">
-        <span class="lg-label" id="lg-years-label">Active between</span>
+        <span class="lg-label" id="lg-years-label">Return years</span>
         <div class="lg-yearrow" role="group" aria-labelledby="lg-years-label">
           <input class="lg-input lg-year" id="lg-year-from" type="number" inputmode="numeric"
-                 min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MIN}" aria-label="From year" />
+                 min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MIN}" aria-label="From return year" aria-describedby="lg-year-help" />
           <span aria-hidden="true">–</span>
           <input class="lg-input lg-year" id="lg-year-to" type="number" inputmode="numeric"
-                 min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MAX}" aria-label="To year" />
+                 min="${YEAR_MIN}" max="${YEAR_MAX}" placeholder="${YEAR_MAX}" aria-label="To return year" aria-describedby="lg-year-help" />
         </div>
       </div>
       <div class="lg-field">
@@ -503,10 +539,11 @@ export function mountLedger (container, opts = {}) {
       </div>
     </div>
 
+    <p class="lg-year-help" id="lg-year-help">Use the first year of a financial year (2020 for 2020–21), or the polling year for election returns.</p>
     <p class="lg-summary" aria-live="polite" aria-atomic="true"></p>
 
     <div class="lg-tablewrap" role="region" tabindex="0" aria-label="Political receipts table (scrollable)">
-      <div class="lg-status">Loading the ledger…</div>
+      <div class="lg-status" role="status">Loading the ledger…</div>
       <table class="lg-table" hidden>
         <caption class="lg-visually-hidden"></caption>
         <thead><tr></tr></thead>
@@ -609,6 +646,24 @@ export function mountLedger (container, opts = {}) {
   }
 
   function render () {
+    if (loading || loadError) { exportBtn.disabled = true; return }
+    const invalidFrom = !yearFromEl.validity.valid
+    const invalidTo = !yearToEl.validity.valid
+    const reversed = state.yearFrom != null && state.yearTo != null && state.yearFrom > state.yearTo
+    yearFromEl.setAttribute('aria-invalid', String(invalidFrom || reversed))
+    yearToEl.setAttribute('aria-invalid', String(invalidTo || reversed))
+    const error = invalidFrom || invalidTo ? `Enter a return year between ${YEAR_MIN} and ${YEAR_MAX}.`
+      : reversed ? 'The start year must be the same as or earlier than the end year.' : ''
+    exportBtn.disabled = !!error
+    statusEl.hidden = !error
+    tableEl.hidden = !!error
+    if (error) {
+      currentRows = []
+      summaryEl.textContent = error
+      statusEl.textContent = 'Update the years to see matching receipts.'
+      clearBtn.hidden = false
+      return
+    }
     const { flowCount, rows } = computeRows()
     currentRows = rows
 
@@ -639,6 +694,15 @@ export function mountLedger (container, opts = {}) {
       ? ' total shown'
       : ` total shown, aggregated from ${NUM.format(flowCount)} flows`))
 
+    const hasYearFilter = state.yearFrom != null || state.yearTo != null
+    const period = state.yearFrom != null && state.yearTo != null
+      ? `Return years ${yearsText({ firstYear: state.yearFrom, lastYear: state.yearTo })}`
+      : state.yearFrom != null ? `Return years from ${state.yearFrom}`
+      : state.yearTo != null ? `Return years up to ${state.yearTo}` : 'All recorded years'
+    summaryEl.appendChild(el('span', 'lg-period', hasYearFilter
+      ? `${period} · Only records with yearly amounts are included.`
+      : `${period} · Includes undated records where available.`))
+
     captionEl.textContent = state.view === 'flows'
       ? 'Disclosed donor to party flows matching the current filters'
       : 'Donors aggregated over the flows matching the current filters'
@@ -654,7 +718,7 @@ export function mountLedger (container, opts = {}) {
     if (state.industry) parts.push(`industry = ${industryLabel(state.industry)}`)
     if (state.party) parts.push(`party = ${state.party}`)
     if (state.yearFrom != null || state.yearTo != null) {
-      parts.push(`active between ${state.yearFrom ?? YEAR_MIN}–${state.yearTo ?? YEAR_MAX}`)
+      parts.push(`return years ${state.yearFrom ?? "any"}–${state.yearTo ?? "any"}; only dated amounts`)
     }
     if (state.min > 0) parts.push(`min total ${AUD.format(state.min)}`)
     return parts.length ? parts.join('; ') : 'none'
@@ -678,6 +742,7 @@ export function mountLedger (container, opts = {}) {
         ? 'Excluded: gifts to candidates and committees, public funding and internal party transfers.'
         : 'Excluded: public electoral funding and internal party transfers.',
       meta.not_summed || NOT_SUMMED,
+      'Year columns use the first year of each financial year; election returns may use the polling year. Year filters sum only dated yearly amounts and exclude undated records.',
     ]
     if (meta.licence) comments.push(`Licence: ${meta.licence}`)
     const csv = buildCSV(state.view, currentRows, comments)
@@ -701,8 +766,9 @@ export function mountLedger (container, opts = {}) {
   minEl.addEventListener('change', () => { state.min = Number(minEl.value) || 0; render() })
 
   const readYear = (input) => {
-    const n = Number.parseInt(input.value, 10)
-    return Number.isFinite(n) ? Math.min(YEAR_MAX, Math.max(YEAR_MIN, n)) : null
+    if (!input.value.trim()) return null
+    const n = Number(input.value)
+    return Number.isFinite(n) ? n : null
   }
   yearFromEl.addEventListener('input', () => { state.yearFrom = readYear(yearFromEl); render() })
   yearToEl.addEventListener('input', () => { state.yearTo = readYear(yearToEl); render() })
@@ -819,12 +885,19 @@ export function mountLedger (container, opts = {}) {
       b.setAttribute('aria-pressed', b.dataset.jur === state.jur ? 'true' : 'false')
     }
     const token = ++loadSeq
+    loading = true
+    loadError = false
+    exportBtn.disabled = true
+    currentRows = []
+    summaryEl.textContent = ''
+    fineEl.textContent = ''
     statusEl.hidden = false
     statusEl.textContent = 'Loading the ledger…'
     tableEl.hidden = true
     try {
       const data = await fetchData(state.jur)
       if (token !== loadSeq) return
+      loading = false
       meta = data.meta || {}
       flows = buildFlows(data)
       populateSelects(data)
@@ -835,6 +908,8 @@ export function mountLedger (container, opts = {}) {
       render()
     } catch (err) {
       if (aborter.signal.aborted || token !== loadSeq) return
+      loading = false
+      loadError = true
       statusEl.hidden = false
       statusEl.textContent = 'The ledger could not be loaded.'
       const retry = el('button', 'lg-btn', 'Try again')

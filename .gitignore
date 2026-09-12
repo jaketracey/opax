@@ -47,3 +47,4 @@ scripts/_photos_work/
 
 # Report discovery caches (regenerate with --refresh-rows)
 scripts/state/
+scripts/ask_sweep-report.json

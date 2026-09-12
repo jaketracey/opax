@@ -185,6 +185,6 @@
     "method": "Exact unambiguous recorded names and structured source locations. Exact full-name identity decisions retain ABN provenance; unresolved candidates are unpublished.",
     "coverage_note": "Collected source corpus; coverage differs from searchable records. Postcode overlaps are not precise locations.",
     "stats_url": "/evidence/stats.json",
-    "browse_url": "/connections.html"
+    "browse_url": "/connections"
   }
 }

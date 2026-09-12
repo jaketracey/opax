@@ -58,9 +58,9 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=370836161b">
-<link rel="stylesheet" href="/voice.css?v=1edaa24c7c">
-<script type="module" src="/voice.js?v=d07ded3763"></script>
+<link rel="stylesheet" href="/style.css?v=bba113008a">
+<link rel="stylesheet" href="/voice.css?v=f2b2f1f9bf">
+<script type="module" src="/voice.js?v=353ed6460a"></script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -258,11 +258,17 @@
       <nav class="entry-modes" aria-label="Research mode"><a href="/ask" aria-current="page">Ask a question</a><a href="/search" data-entry-mode="search">Find records</a></nav>
       <form id="ask-form" class="ask-row">
         <label for="ask-input" class="visually-hidden">Ask a question of the parliamentary record</label>
-        <textarea placeholder="What has parliament said about housing affordability?" id="ask-input" class="grow-field" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
+        <!-- The box and its clear cross share one wrapper so the cross can sit
+             inside the field at any width; the wrapper takes the row rules the
+             bare textarea used to. -->
+        <div class="ask-field">
+          <textarea placeholder="What has parliament said about housing affordability?" id="ask-input" class="grow-field" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
+          <button type="button" class="field-clear" id="ask-clear" aria-label="Clear the question"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
+        </div>
         <button type="submit" class="primary" id="ask-submit">Ask the record</button>
         <div class="ask-options-wrap">
-        <button type="button" class="action-btn" id="ask-options-btn" aria-expanded="false" aria-controls="ask-options-pop" aria-label="Ask options" title="Options">
-          <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
+        <button type="button" class="action-btn" id="ask-options-btn" aria-expanded="false" aria-controls="ask-options-pop">
+          <span class="options-word">Options</span><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
         </button>
       <div class="ask-options-pop" id="ask-options-pop" hidden>
         <div class="filter-rail ask-pop-rail">
@@ -312,7 +318,7 @@
       <div id="ask-filter-chips" class="filter-chips" role="group" aria-label="Active filters"></div>
       <div id="ask-chips" hidden>
         <div class="chip-row" id="chip-row">
-          <span class="chip-label">Try:</span>
+          <span class="chip-label">Try a question</span>
           <!-- chips injected -->
         </div>
       </div>
@@ -336,9 +342,18 @@
              donations, grants or contracts) points at the registers that can. -->
         <p class="ask-register-note" id="ask-register-note" hidden></p>
         <div class="action-row">
-          <button type="button" class="action-btn" id="ask-continue"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 4.5h13v9h-7l-3.5 3v-3h-2.5z"/><path d="M7 8h6"/><path d="M7 10.8h4"/></svg><span>Keep asking about this</span></button>
+          <button type="button" class="action-btn" id="ask-continue"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 4.5h13v9h-7l-3.5 3v-3h-2.5z"/><path d="M7 8h6"/><path d="M7 10.8h4"/></svg><span>Continue in a conversation</span></button>
           <button type="button" class="action-btn" id="ask-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link</span></button>
-          <button type="button" class="action-btn" id="ask-export"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Download sources</span></button>
+          <!-- The format is a menu (the search page's sort-menu idiom), not a
+               browser prompt: usable on a phone keyboard and by keyboard. -->
+          <div class="search-sort-picker export-picker" id="ask-export-picker">
+            <button type="button" class="action-btn search-sort-trigger" id="ask-export" aria-haspopup="menu" aria-expanded="false" aria-controls="ask-export-menu"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Download sources</span><svg class="search-sort-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg></button>
+            <div id="ask-export-menu" class="search-sort-menu" role="menu" aria-label="Download format" hidden>
+              <button type="button" role="menuitem" data-format="csv" tabindex="-1"><span><strong>CSV</strong><small>A spreadsheet of the sources</small></span></button>
+              <button type="button" role="menuitem" data-format="bibtex" tabindex="-1"><span><strong>BibTeX</strong><small>For LaTeX and reference managers</small></span></button>
+              <button type="button" role="menuitem" data-format="ris" tabindex="-1"><span><strong>RIS</strong><small>For Zotero, EndNote and Mendeley</small></span></button>
+            </div>
+          </div>
         </div>
 <details id="ask-sources" class="chat-sources" hidden>
           <summary id="ask-sources-sum">Sources</summary>
@@ -354,6 +369,12 @@
           <a href="/methods">How answers work</a></p>
         </details>
         <section id="ask-followups" class="chat-next" aria-label="Suggested follow-up questions" hidden></section>
+        <!-- The example questions come back under the answer, so a reader who
+             has one answer has somewhere to go besides the follow-ups. -->
+        <section id="ask-again" class="chat-next ask-again" aria-label="Ask something else" hidden>
+          <h3 class="subject-section-title">Ask something else</h3>
+          <div class="chip-row" id="ask-again-row"></div>
+        </section>
       </div>
       <!-- The figures follow the answer: the reader asked a question, so the
            answer is what they came for. The panel draws on local data and is
@@ -368,7 +389,7 @@
         <a href="/bills"><strong>Understand a bill</strong><span>What changes and where it stands.</span></a>
       </nav>
       <section class="front-map" id="front-map" aria-label="Explore the money map">
-        <div class="home-map-stage"><div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div><div class="home-map-invite"><div class="home-map-journeys"><span>Start a guided journey</span><a href="/money?journey=public-money">Public awards & party receipts</a><a href="/money?journey=multiple-parties">Giving to more than one party</a><a href="/money?journey=over-time">How receipts change over time</a></div><a class="action-btn action-gold home-map-open" href="/money">Open the research map</a></div></div>
+        <div class="home-map-stage"><div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div><div class="home-map-invite"><div class="home-map-journeys"><span>Start a guided journey</span><a href="/money?journey=public-money">Contracts &amp; grants</a><a href="/money?journey=multiple-parties">More than one party</a><a href="/money?journey=industry">Explore an industry</a><a href="/money?journey=over-time">Turn back the clock</a></div><a class="action-btn action-gold home-map-open" href="/money">Open the research map</a></div></div>
         <nav class="map-chips home-map-industries" id="front-map-chips" aria-label="Industries on the money map"></nav>
       </section>
       <div class="front-grid" id="front-page">
@@ -393,7 +414,7 @@
 <section class="front-mod" aria-labelledby="h-declared" id="mod-declared" hidden>
           <h2 class="subject-section-title" id="h-declared">Just declared</h2>
           <div id="front-declared"></div>
-          <p class="fineprint"><a href="/declared">All alterations since the statements, by week →</a></p>
+          <p class="fineprint"><a href="/declared">All recent declarations →</a></p>
         </section>
 <section class="front-mod" aria-labelledby="h-reports" id="mod-reports" hidden>
           <h2 class="subject-section-title" id="h-reports">Reports</h2>
@@ -452,6 +473,10 @@
 
     <!-- ============================= SEARCH ============================ -->
     <section id="panel-chat" class="panel" hidden aria-label="Keep asking">
+      <div class="chat-head">
+        <p class="kicker">Keep asking</p>
+        <button type="button" class="action-btn" id="chat-new">Start a new conversation</button>
+      </div>
       <div id="chat-thread" class="chat-thread" aria-label="Conversation with the record"></div>
       <div id="chat-status" class="status" role="status"></div>
       <form id="chat-form" class="chat-composer">
@@ -470,8 +495,8 @@
           <textarea id="search-input" class="grow-field" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false" placeholder="Search people, organisations, money, bills or words…"></textarea>
           <button type="submit" class="primary">Search</button>
           <div class="ask-options-wrap">
-          <button type="button" class="action-btn" id="search-options-btn" aria-expanded="false" aria-controls="search-options-pop" aria-label="Search filters" title="Filters">
-            <span class="search-filter-word">Filters</span><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
+          <button type="button" class="action-btn" id="search-options-btn" aria-expanded="false" aria-controls="search-options-pop">
+            <span class="options-word">Filters</span><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
           </button>
           <dialog class="ask-options-pop" id="search-options-pop" hidden aria-labelledby="search-options-title">
             <div class="search-sheet-head"><h2 id="search-options-title" class="subject-section-title">Search filters</h2><button type="button" class="action-btn" id="search-options-close" aria-label="Close search filters">Close</button></div>
@@ -562,7 +587,6 @@
 
       <nav id="search-chips" class="chip-row search-chips" aria-label="Example searches" hidden></nav>
       <div id="search-status" class="status" role="status"></div>
-      <details id="search-coverage" class="fineprint" hidden><summary>Search coverage</summary><p></p></details>
       <div id="search-wombat" hidden></div>
       <div class="search-results-grid">
       <aside class="search-answer" id="search-answer" hidden aria-labelledby="search-answer-head">
@@ -582,7 +606,12 @@
       <div class="search-results-main">
       <div id="search-empty" class="empty-state" hidden></div>
       <div class="results-bar" id="results-bar" hidden>
-        <span id="results-count" role="status" aria-live="polite" aria-atomic="true"></span>
+        <span class="results-lead">
+          <span id="results-count" role="status" aria-live="polite" aria-atomic="true"></span>
+          <!-- Shown while the reader has dismissed the summary; pressing it
+               brings the summary back and forgets the dismissal. -->
+          <button type="button" class="link" id="search-summary-show" hidden>Show cited summary</button>
+        </span>
         <span class="results-actions">
           <!-- Passages/Briefs rides on the same line as the sort and the actions;
                app.js still shows and hides it by #search-readbar. -->
@@ -609,7 +638,14 @@
             </div>
           </div>
           <button type="button" class="action-btn" id="search-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link</span></button>
-          <button type="button" class="action-btn" id="search-export"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Export <span class="btn-detail">(CSV / BibTeX / RIS)</span></span></button>
+          <div class="search-sort-picker export-picker" id="search-export-picker">
+            <button type="button" class="action-btn search-sort-trigger" id="search-export" aria-haspopup="menu" aria-expanded="false" aria-controls="search-export-menu"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Export</span><svg class="search-sort-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg></button>
+            <div id="search-export-menu" class="search-sort-menu" role="menu" aria-label="Export format" hidden>
+              <button type="button" role="menuitem" data-format="csv" tabindex="-1"><span><strong>CSV</strong><small>A spreadsheet of every retrieved match</small></span></button>
+              <button type="button" role="menuitem" data-format="bibtex" tabindex="-1"><span><strong>BibTeX</strong><small>For LaTeX and reference managers</small></span></button>
+              <button type="button" role="menuitem" data-format="ris" tabindex="-1"><span><strong>RIS</strong><small>For Zotero, EndNote and Mendeley</small></span></button>
+            </div>
+          </div>
         </span>
       </div>
       <div id="search-date-ruler" class="date-ruler" hidden></div>
@@ -641,7 +677,7 @@
         <div id="money-jur"></div>
         <details id="money-journey-picker" class="journey-menu" name="money-tools"><summary>Guided journeys</summary><div id="money-journey-controls"></div></details>
         <div id="money-research"></div>
-        <div class="money-related-links"><a class="money-agency-link" href="/subject/agency">Agency contract maps</a><a class="money-evidence-link" href="/connections.html">Programs & places</a></div>
+        <div class="money-related-links"><a class="money-agency-link" href="/subject/agency">Agency contract maps</a><a class="money-evidence-link" href="/connections">Programs & places</a></div>
       </div>
       <div id="money-stage" class="money-stage">
         <aside id="money-journey-story" class="journey-story" aria-label="Guided journey" hidden></aside>
@@ -656,6 +692,27 @@
     </section>
 
     <section id="panel-money-records" class="panel" hidden aria-label="Money records"><div data-money-navigation></div><h1 class="visually-hidden" id="money-records-title">Political receipts</h1><div id="money-records-body"></div></section>
+    <!-- ========================= CONNECTIONS ========================== -->
+    <!-- Organisations, programs and places named across the collected records.
+         connections.js mounts into #connections-body when the route opens and
+         tears itself down when it leaves (see openConnectionsPage in app.js). -->
+    <section id="panel-connections" class="panel" hidden aria-labelledby="connections-title">
+      <div data-money-navigation></div>
+      <div id="connections-body" class="supplier-page connections-page">
+        <!-- The Money sub-nav tab "Programs &amp; places" already names this view; the heading stays for assistive tech, the page title and focus on arrival. -->
+        <h1 id="connections-title" class="visually-hidden" tabindex="-1">Connections in the record</h1>
+        <p class="connections-lede">Explore organisations, programs and places across speeches, official releases and grant records.</p>
+        <div class="supplier-controls">
+          <label>Find a connection<input id="connection-search" type="search" placeholder="Name, program or electorate" autocomplete="off"></label>
+          <label>Show<select id="connection-kind"><option value="">Everything</option><option value="organisation">Organisations</option><option value="program">Programs</option><option value="electorate">Electorates</option><option value="place">Places</option></select></label>
+        </div>
+        <p id="connection-status" role="status">Opening the records…</p>
+        <div class="connections-layout">
+          <div id="connection-list"></div>
+          <section id="connection-detail" tabindex="-1" aria-label="Selected connection" hidden></section>
+        </div>
+      </div>
+    </section>
     <!-- ============================= REPORTS =========================== -->
     <section id="panel-reports" class="panel" hidden aria-label="Reports">
       <div id="reports-list" class="report-cards"></div>
@@ -703,9 +760,9 @@
             <a class="action-btn action-primary" id="doc-ask" href="/ask">Ask the record about this</a>
             <button type="button" class="action-btn" id="doc-profile" aria-label="Full profile">Profile</button>
             <button type="button" class="action-btn" id="doc-cite" aria-expanded="false" aria-controls="doc-cite-panel">Cite</button>
-            <button type="button" class="action-btn" id="doc-more" aria-label="Their speeches">More</button>
+            <button type="button" class="action-btn" id="doc-more">Speeches</button>
             <button type="button" class="action-btn" id="doc-similar" aria-label="Find similar speeches" aria-expanded="false" aria-controls="doc-similar-panel">Similar</button>
-            <button type="button" class="action-btn" id="doc-copylink" aria-label="Copy link">Link</button>
+            <button type="button" class="action-btn" id="doc-copylink">Copy link</button>
           </div>
           <p id="doc-speaker-links" class="fineprint doc-speaker-links" hidden></p>
         </div>
@@ -735,6 +792,16 @@
       <div id="doc-text" class="doc-text"></div>
       </div>
       <p class="fineprint" id="doc-caveat" hidden></p>
+      <!-- A speech can run to tens of thousands of pixels on a phone, so the
+           actions a reader wants once they have read it wait at the end too. -->
+      <div class="doc-toolbar doc-toolbar-foot" id="doc-foot-actions" hidden>
+        <div class="doc-toolbar-btns" role="group" aria-label="Document actions, repeated at the end">
+          <a class="action-btn action-primary" id="doc-ask-foot" href="/ask">Ask the record about this</a>
+          <button type="button" class="action-btn" id="doc-cite-foot">Cite</button>
+          <button type="button" class="action-btn" id="doc-similar-foot" aria-label="Find similar speeches">Similar</button>
+          <button type="button" class="action-btn" id="doc-copylink-foot">Copy link</button>
+        </div>
+      </div>
     </section>
 
     <section id="panel-discover" class="panel" hidden aria-labelledby="discover-title">
@@ -1330,7 +1397,7 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/navigation.js?v=842e523c9d" defer></script>
-<script src="/app.js?v=ebb9cdd2d3" defer></script>
+<script src="/navigation.js?v=0cea0ca89b" defer></script>
+<script src="/app.js?v=cca07756d0" defer></script>
 </body>
 </html>

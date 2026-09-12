@@ -63,3 +63,21 @@ test('new agency profiles are discoverable with their direct destination',async(
  assert.equal(result.results[0].title,'Department of Defence');
  assert.match(result.results[0].href,/^\/subject\/agency\/a-/);
 });
+
+test('verified invitation venues are searchable and open their own funding stage',async()=>{
+ const result=await find('Jabiru Lingiari',{kind:'report'});
+ const rows=result.results.filter(r=>['mlci-invitation-067','mlci-invitation-070'].includes(r.record_id));
+ assert.equal(rows.length,2);
+ for(const r of rows){
+  const href=new URL(r.href,'https://opax.com.au');
+  assert.equal(href.searchParams.get('stage'),'invitations');
+  assert.equal(href.searchParams.get('project'),r.record_id);
+  assert.match(r.snippet,/56 Kinchela Road/);
+  assert.match(r.snippet,/Not an awarded grant or payment/);
+  assert.match(r.snippet,/Venue point only/);
+ }
+ const unresolved=await find('Brockman',{kind:'report'});
+ const row=unresolved.results.find(r=>r.record_id==='mlci-invitation-069');
+ assert.ok(row);assert.equal(new URL(row.href,'https://opax.com.au').searchParams.get('view'),'list');
+ assert.doesNotMatch(row.snippet,/Verified venue:/);
+});

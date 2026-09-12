@@ -59,9 +59,9 @@ function harness({rows,texts={},recover=true,unavailable=false}={}){
  const fn=runInNewContext(code+';documentedPositionAnswer',{...helpers,URL,Request,canonicalSpeaker:s=>s,EVIDENCE_GAP_ANSWER:'This selection does not establish their position on that topic.',
   searchWindow:async(e,args)=>{query=args;return rows===null?null:{results:rows||[{slug:'speech-1',speaker:'Example MP',title:'Example MP — 2025-02-11',date:'2025-02-11',kind:'speech',resource:'rid'}]};},
   apiResource:async(r,u,slug)=>{reads++;return unavailable?Response.json({error:'down'},{status:503}):Response.json(texts[slug]||{speaker:'Example MP',text:proposal+'\n\n1:08 pm\n\n'+other});},
-  quotedPositionAnswer:()=>null, recoverPositionAnswer:async(payload,body)=>{generated=payload;generationBody=body;return recover?{...payload,answer:'Verified proposal',answer_status:undefined}:null;},
+  quotedPositionAnswer:()=>null, positionExcerptsAnswer:(payload)=>({...payload,answer_status:'evidence_only'}), recoverPositionAnswer:async(payload,body)=>{generated=payload;generationBody=body;return recover?{...payload,answer:'Verified proposal',answer_status:undefined}:null;},
  });
- return {run:()=>fn({question:'What rent limit did he propose?',speaker:'Example MP',kind:'speech',from:'2025',to:'2026',chamber:'senate',topic:'housing'},{query:'housing affordability'},{},{}),get query(){return query},get generated(){return generated},get generationBody(){return generationBody},get reads(){return reads}};
+ return {run:(question='What rent limit did he propose?')=>fn({question,speaker:'Example MP',kind:'speech',from:'2025',to:'2026',chamber:'senate',topic:'housing'},{query:'housing affordability'},{},{}),get query(){return query},get generated(){return generated},get generationBody(){return generationBody},get reads(){return reads}};
 }
 test('position retrieval honors filters and passes only original first-turn text to generation',async()=>{
  const h=harness();await h.run();assert.equal(h.query.topK,20);assert.equal(h.query.url.searchParams.get('speaker'),'Example MP');assert.equal(h.query.url.searchParams.get('from'),'2025');assert.equal(h.query.url.searchParams.get('chamber'),'senate');assert.equal(h.query.url.searchParams.get('topic'),'housing');
@@ -74,10 +74,12 @@ test('wrong people and generated records never enter source reads or generation'
 test('source and generation failures cannot replay unverified retrieval snippets',async()=>{
  await assert.rejects(harness({unavailable:true}).run(),/Original speeches unavailable/);
  await assert.rejects(harness({rows:null}).run(),/Speech retrieval failed/);
- const h=harness({recover:false});const out=await h.run();assert.equal(out.answer_status,'evidence_gap');assert.equal(out.sources.length,0);assert.equal(Object.keys(out.citations).length,0);
+ // A failed summary falls back to the originals that were read (verified first-turn text), never to retrieval snippets.
+ const h=harness({recover:false});const out=await h.run();assert.equal(out.answer_status,'evidence_only');assert.equal(out.sources.length,1);assert.equal(out.sources[0].snippet,proposal);assert.equal(Object.keys(out.citations).length,0);
+ const none=harness({recover:false,texts:{'speech-1':{speaker:'Example MP',text:'Procedural remarks only.'}}});const gap=await none.run();assert.equal(gap.answer_status,'evidence_gap');assert.equal(gap.sources.length,0);
 });
-test('position source reads are bounded to eight original documents',async()=>{
- const rows=Array.from({length:20},(_,i)=>({slug:'speech-'+i,speaker:'Example MP',kind:'speech'}));const h=harness({rows});await h.run();assert.equal(h.reads,8);
+test('position source reads are bounded to twelve original documents',async()=>{
+ const rows=Array.from({length:20},(_,i)=>({slug:'speech-'+i,speaker:'Example MP',kind:'speech'}));const h=harness({rows});await h.run();assert.equal(h.reads,12);
 });
 
 test('fallback selects a concrete proposal, never a procedural or irrelevant passage',()=>{
@@ -94,4 +96,14 @@ test('an explicit policy cap keeps its immediate capacity qualification',()=>{
  assert.equal(positionProposalQuote(policy+' '+condition+' We have no problem with immigration.','immigration cap'),policy+' '+condition);
  assert.equal(positionProposalQuote('A long procedural speech about migration.','immigration'),'');
  assert.equal(positionProposalQuote(policy+' '+condition,'housing affordability'),'');
+});
+
+test('proposal duration excludes policy age and costing horizons',()=>{
+ for(const text of ['I proposed retaining a five-year-old housing policy to improve housing affordability.','I proposed a four-year-old housing scheme for housing affordability.','I proposed a four-year costing policy to improve housing affordability.','I proposed a housing plan costing $1.4 billion over four years.'])assert.equal(positionProposalQuote(text,'housing affordability','How long would it last?'),'');
+ assert.equal(positionProposalQuote(proposal,'housing affordability','How long would it last?'),proposal);
+});
+
+test('eligibility without verified criteria preserves scope and never calls generation',async()=>{
+ const h=harness();const out=await h.run('Who would be eligible?');
+ assert.equal(h.generated,undefined);assert.equal(out.answer_status,'evidence_gap');assert.equal(out.scope.speaker,'Example MP');assert.equal(out.sources.length,0);assert.match(out.answer,/couldn’t verify who would qualify/);
 });

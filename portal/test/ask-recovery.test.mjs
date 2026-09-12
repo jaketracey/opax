@@ -20,7 +20,7 @@ function draft(answer, cited = true) {
 const bad = () => draft('It says "Negative gearing only benefits the richest people in Australia".');
 const good = () => draft('The passage describes offsetting rental losses against other income.');
 
-function harness(responses) {
+function harness(responses, env = {}) {
   const calls = [], pending = [], stored = [];
   const next = body => {
     calls.push(body);
@@ -46,7 +46,7 @@ function harness(responses) {
   return { calls, stored, async run(stream) {
     const body = JSON.stringify({ question: 'How have MPs described negative gearing over the years?', kind: 'all' });
     const request = new Request('https://example.test/api/ask' + (stream ? '?stream=1' : ''), { method: 'POST', body });
-    const response = await api.apiAsk(request, {}, ctx);
+    const response = await api.apiAsk(request, env, ctx);
     const text = await response.text();
     await Promise.all(pending);
     if (!stream) return JSON.parse(text);
@@ -98,4 +98,20 @@ for (const stream of [false,true]) test(`${stream?'streamed':'synchronous'}: an 
  const result=await h.run(stream);
  assert.equal(h.calls.length,1);assert.equal(result.answer,helpers.EVIDENCE_GAP_ANSWER);
  assert.equal(Object.keys(result.citations).length,0);assert.equal(result.answer_status,undefined);
+});
+
+test('a refusal wrapped in the model\'s own preamble still counts as a refusal', () => {
+  const { isRefusal } = runInNewContext(transpile(code) + ';({isRefusal})', { ...helpers, REFUSAL_PREFIXES: ['not enough data', 'the record retrieved for this question does not discuss'] });
+  assert.equal(isRefusal({ answer: 'I can’t answer that question from the retrieved record. The passages cover contract awards. The record retrieved for this question does not discuss it.' }), true);
+  assert.equal(isRefusal({ answer: 'The record retrieved for this question does not discuss it.' }), true);
+  assert.equal(isRefusal({ answer: 'Negative gearing was defended by the Treasurer in 2016 [^1].' }), false);
+});
+
+test('the ask pins its generative model from the Worker vars and keys the cache on it', async () => {
+  const h = harness([good()], { ASK_MODEL: 'pinned-model', CACHE_EPOCH: 'e1' });
+  await h.run(false);
+  assert.equal(h.calls[0].generative_model, 'pinned-model');
+  const fallback = harness([good()]);
+  await fallback.run(false);
+  assert.equal(fallback.calls[0].generative_model, 'openai-compatible');
 });

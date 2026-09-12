@@ -134,3 +134,13 @@ test('institution catalog evidence excludes unrelated commissioners',async()=>{
 test('public-record follow-ups recognise the browser user role and ignore assistant claims',()=>{
  assert.equal(records.recordQuery({question:'And Labor?',context:[{author:'user',text:'Who takes gambling money?'},{author:'answer',text:'InventedIndustries takes it.'}]}),'labor gambling');
 });
+
+test('filler-only remainders never pull a random slice of every register into the ask',async()=>{
+ const question='How have MPs described negative gearing over the years?';
+ assert.equal(records.recordQuery({question}),'negative gearing');
+ const found=await records.retrieveAskRecords({question},assets);
+ assert.ok(found.records.length<6, `expected a handful of subject records, got ${found.records.length}`);
+ assert.ok(found.records.every(r=>!/OVER IP|Year 13|MPS Macmill/i.test(r.title)));
+ assert.equal(records.recordQuery({question:'What have MPs said over the years?'}),'');
+ assert.equal((await records.retrieveAskRecords({question:'What have MPs said over the years?'},assets)).records.length,0);
+});

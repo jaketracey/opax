@@ -34,9 +34,9 @@
       ['/explore', 'Interactive tools', 'Compare debates, travel through time and try the record quiz.'],
     ] },
   ];
-  const money = [ ['/money', '3D connections'], ['/money/receipts', 'Political receipts'], ['/discover', 'Government contracts'], ['/money/grants', 'Grants'] ];
+  const money = [ ['/money', '3D connections'], ['/money/receipts', 'Political receipts'], ['/discover', 'Government contracts'], ['/money/grants', 'Grants'], ['/connections', 'Programs & places'] ];
   const active = (path, params = new URLSearchParams()) => {
-    if (/^\/(money|map|discover)(\/|$)/.test(path)) return 'money';
+    if (/^\/(money|map|discover|connections)(\/|$)/.test(path)) return 'money';
     if (path.startsWith('/subject/topic')) return 'topics';
     if (/^\/(subject|declared)(\/|$)/.test(path)) return 'people';
     if (/^\/bills?(\/|$)/.test(path)) return 'bills';
@@ -46,8 +46,10 @@
     return 'research';
   };
   const esc = s => String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
+  // Contracts and the connections directory are not split by jurisdiction.
+  const oneJurisdiction = new Set(['/discover', '/connections']);
   function moneyNav(path, jur) {
-    return `<nav class="area-nav money-area-nav" aria-label="Money">${money.map(([href,label]) => `<a href="${href}${jur && jur !== 'federal' && href !== '/discover' ? '?jur='+encodeURIComponent(jur) : ''}"${href===path?' aria-current="page"':''}>${label}</a>`).join('')}</nav>`;
+    return `<nav class="area-nav money-area-nav" aria-label="Money">${money.map(([href,label]) => `<a href="${href}${jur && jur !== 'federal' && !oneJurisdiction.has(href) ? '?jur='+encodeURIComponent(jur) : ''}"${href===path?' aria-current="page"':''}>${label}</a>`).join('')}</nav>`;
   }
   globalThis.OpaxNavigation = { sections, money, active, moneyNav };
   if (typeof document === 'undefined') return;

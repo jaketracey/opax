@@ -102,3 +102,39 @@ test('empty search, quota and provider failure never fabricate a summary',async(
  const invalid=fixture({invalid:true});assert.equal((await invalid.run()).status,502);await invalid.run();assert.equal(invalid.calls.filter(c=>c.path).length,4,'Failures are not cached');
 });
 test.after(()=>rmSync(dir,{recursive:true,force:true}));
+
+test('the point stream yields each object as it closes, across chunk boundaries and braces inside quotes',()=>{
+ const s=new summary.SummaryPointStream();
+ const whole='```json\n{"points":[{"text":"First point about {braces} in text.","citations":[{"id":"s1","quote":"a \\"quoted\\" excerpt with } inside"}]},\n {"text":"Second point.","citations":[{"id":"s2","quote":"x"}]}]}\n```';
+ const out=[];
+ for(let i=0;i<whole.length;i+=7) out.push(...s.push(whole.slice(i,i+7)));
+ assert.equal(out.length,2);assert.equal(out[0].text,'First point about {braces} in text.');assert.equal(out[0].citations[0].quote,'a "quoted" excerpt with } inside');assert.equal(out[1].text,'Second point.');
+ assert.deepEqual(new summary.SummaryPointStream().push('{"points":[{"text":"unfinished'),[]);
+});
+
+test('the streamed overview sends each validated point as it lands, then the cached payload as done',async()=>{
+ const calls=[],cache=new Map();
+ const answer=JSON.stringify({points:[...draft().points,{text:'An invented claim that must be dropped.',citations:[{id:'s1',quote:'not in the record at all, really not'}]}]});
+ const chunks=[];for(let i=0;i<answer.length;i+=11) chunks.push(JSON.stringify({item:{type:'answer',text:answer.slice(i,i+11)}})+'\n');
+ chunks.unshift(JSON.stringify({item:{type:'reasoning',text:''}})+'\n');
+ const ctx={...summary,URL,Request,Response,AbortSignal,Error,TransformStream,TextEncoder,TextDecoder,JSON,json:(x,status=200)=>Response.json(x,{status}),
+  SSE_HEADERS:{'content-type':'text/event-stream; charset=utf-8'},ragBase:()=>'https://rag.test/kb',
+  fetch:async(url,init)=>{calls.push({url,body:JSON.parse(init.body)});const enc=new TextEncoder();return new Response(new ReadableStream({start(c){for(const ch of chunks)c.enqueue(enc.encode(ch));c.close()}}),{status:200})},
+  apiUnifiedSearch:async()=>Response.json({results:rows,index_version:'v1'}),
+  cacheRequest:(kind,key)=>new Request('https://cache.test/'+kind+'/'+key),sha256Hex:async s=>createHash('sha256').update(s).digest('hex'),
+  readGenerationCache:async(_e,_c,key)=>cache.get(key.url)?.clone(),storeGenerationCache:(_e,_c,key,res)=>cache.set(key.url,res.clone()),withCacheStatus:res=>res,
+  rateLimited:async()=>null,kbFetch:async()=>{throw new Error('the streamed path must not fall back to a synchronous generation when points validated')}};
+ const fn=runInNewContext(code+';apiSearchSummary',ctx);
+ const pending=[];const u=new URL('https://opax.test/api/search-summary?q=agriculture&kind=all&stream=1');
+ const res=await fn(new Request(u),u,{CACHE_EPOCH:'v1'},{waitUntil:p=>pending.push(p)});
+ assert.match(res.headers.get('content-type'),/text\/event-stream/);
+ const text=await res.text();await Promise.all(pending);
+ const events=text.split('\n\n').filter(Boolean).map(b=>{const m=b.match(/^event: (\w+)\ndata: ([\s\S]*)$/);return {e:m[1],d:JSON.parse(m[2])}});
+ assert.deepEqual(events.map(e=>e.e),['point','done']);
+ assert.equal(events[0].d.text,draft().points[0].text);assert.deepEqual(events[0].d.source_ids,['s1']);
+ assert.equal(events[1].d.status,'ready');assert.equal(events[1].d.points.length,1);assert.equal(events[1].d.sources[0].href,'/doc/speech-1');
+ assert.equal(calls[0].url,'https://rag.test/kb/ask');assert.equal(calls[0].body.generative_model,'openai-compatible');
+ assert.equal(cache.size,1,'the done payload is cached like the synchronous answer');
+ const hit=await fn(new Request(u),u,{CACHE_EPOCH:'v1'},{waitUntil:()=>{}});
+ assert.doesNotMatch(hit.headers.get('content-type')||'',/text\/event-stream/);assert.equal((await hit.json()).status,'ready');
+});

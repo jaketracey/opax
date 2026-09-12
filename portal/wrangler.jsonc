@@ -59,12 +59,25 @@
     // answers built on the old record are never served again. Any string;
     // the convention is the date of the corpus change. See docs/STREAMING.md
     // "Caching" and the MIGRATION-ARAG.md invariants.
-    "CACHE_EPOCH": "2026-09-12-exposure-drafts",
+    "CACHE_EPOCH": "2026-09-13-samford-springfield-venues",
     "DAILY_POST_ENABLED": "true",
     // Networks refused on /api and /og. 45102/24429/37963 = Alibaba Cloud: a
     // 650-address headless-Chrome fleet in Singapore was making ~100x the real
     // readers' paid /api/ask calls from 4 Sep 2026. Edit here, no code change.
-    "BLOCKED_ASNS": "45102,24429,37963"
+    "BLOCKED_ASNS": "45102,24429,37963",
+    // Generative model per pipeline. Edit here, no code change. Values are
+    // platform model names. "openai-compatible" is the KB's one OpenRouter
+    // slot (model_id @preset/opax-pro = DeepSeek V4 Pro pinned to DeepSeek,
+    // reasoning off; re-point it with scripts/arag_byok_openrouter.py).
+    // Everything stays on that slot so generation bills to OpenRouter only:
+    // a platform-native name (gemini-*, claude-*) would burn ARAG tokens
+    // instead. ASK_MODEL is folded into the ask cache key, so changing it
+    // retires the previous model's cached answers.
+    "ASK_MODEL": "openai-compatible",
+    "POSITION_RECOVERY_MODEL": "openai-compatible",
+    "SEARCH_SUMMARY_MODEL": "openai-compatible",
+    "JOURNEY_STORY_MODEL": "openai-compatible",
+    "FOLLOWUPS_MODEL": "openai-compatible"
   },
 
   // Workers Rate Limiting bindings (wrangler >= 4.36 top-level `ratelimits`;
@@ -95,7 +108,7 @@
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-12-exposure-drafts", "DAILY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963" },
+      "vars": { "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-13-samford-springfield-venues", "DAILY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963" },
       "ratelimits": [],
       // Never post from staging; triggers would otherwise be inherited.
       "triggers": { "crons": [] },

@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
-  "as_of": "2026-09-09",
-  "checked_at": "2026-09-09T08:49:57.818501+00:00",
+  "as_of": "2026-09-13",
+  "checked_at": "2026-09-12T18:43:42.233998+00:00",
   "coverage": {
     "total_awards": 89,
     "total_invitations": 226,
     "total_invitation_records": 227,
     "mapped_awards": 7,
-    "mapped_invitations": 6,
+    "mapped_invitations": 15,
     "mapped_award_value": 12715000.0,
-    "mapped_invitation_value": 11070000,
+    "mapped_invitation_value": 15097000,
     "total_award_value": 242781386.0,
     "total_invitation_value": 559241712,
     "award_site_count": 9,
-    "invitation_site_count": 6,
+    "invitation_site_count": 15,
     "unmapped_awards": 82,
-    "unmapped_invitations": 220,
+    "unmapped_invitations": 211,
     "payment_verified_records": 0
   },
   "methodology": [
@@ -1143,6 +1143,904 @@
         ],
         "notes": [
           "Invitation recorded on 14 November 2025. It is a separate stage from the later award; the amounts must not be added together."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-067",
+      "record_type": "invitation",
+      "title": "Jabiru Swimming Pool – Sanitation System Upgrade",
+      "value": 250000,
+      "state": "NT",
+      "locality": "Jabiru",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-067"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "jabiru-pool",
+          "site_name": "Jabiru Alberto Luglietti Memorial Swimming Pool",
+          "address": "56 Kinchela Road, Jabiru NT 0886",
+          "locality": "Jabiru",
+          "state": "NT",
+          "latitude": -12.675365,
+          "longitude": 132.8320834,
+          "location_source_url": "https://northernterritory.com/kakadu-and-surrounds/see-and-do/jabiru-alberto-luglietti-memorial-swimming-pool",
+          "site_precision": "venue",
+          "electorate_2025": "Lingiari",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T16:42:56.474061+00:00",
+            "method": "Council identifies the pool address; Tourism NT names the same facility and supplies its marker coordinates. Its public map implementation confirms the named venue information window is anchored to those coordinates. Cross-check point against AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://westarnhem.nt.gov.au/community-wellbeing/swimming-pools-and-facilities",
+                "excerpt": "Address : 56 Kinchela Road",
+                "role": "Council pool address",
+                "retrieved_at": "2026-09-12T16:32:06.639112+00:00",
+                "content_sha256": "9c15e30200497cfa1e296c3e4432faddf29919bdd6ec31b004d92c88185b67a7"
+              },
+              {
+                "url": "https://northernterritory.com/kakadu-and-surrounds/see-and-do/jabiru-alberto-luglietti-memorial-swimming-pool",
+                "excerpt": "{\"product_name\": \"Jabiru Alberto Luglietti Memorial Swimming Pool\", \"address\": \"56 Kinchela Rd, Jabiru, Northern Territory, 0886, Australia\", \"map_centre\": {\"latitude\": -12.675365, \"longitude\": 132.8320834}}",
+                "role": "Tourism NT named venue and map marker (structured page data)",
+                "retrieved_at": "2026-09-12T16:32:48.523320+00:00",
+                "content_sha256": "46fd8e6a3923cb4566b28d338525fd8ffbb4dda977a570c1aca4f4577e58fc3f"
+              },
+              {
+                "url": "https://northernterritory.com/_astro/map.B7BxG9fO.js?dpl=6aa5690b3c5fea000868b8bb",
+                "excerpt": "position:{lat:parseFloat(t.map_centre?.latitude||``),lng:parseFloat(t.map_centre?.longitude||``)}",
+                "role": "Public map implementation anchors the named venue information window to map_centre; not a generic map viewport",
+                "retrieved_at": "2026-09-12T16:35:44.835562+00:00",
+                "content_sha256": "840c5a005fb8af2670556973519e917a395a1ebde123892c9221a053fd2a62c7"
+              }
+            ],
+            "notes": [
+              "Pool venue marker shared by two separate invitation records. It is not the location of every piece of equipment or a surveyed construction footprint."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test all 150 AEC 2025 electoral polygons. Exactly one match. Measure boundary distance in GDA94 / MGA zone 53.",
+              "distance_to_boundary_metres": 67454,
+              "scope": "Venue point only; no allocation of grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T16:42:56.474061+00:00",
+        "method": "Read original departmental invitation and independently corroborate exact named works and amount against Council source. Match actual venue, retain original invitation stage, and avoid recipient-office or postcode inference.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Jabiru Swimming Pool – Sanitation System Upgrade",
+            "role": "Original invitation project name, amount and snapshot status"
+          },
+          {
+            "url": "https://westarnhem.nt.gov.au/news/bringing-communities-together-through-sport",
+            "excerpt": "$250,000 – Upgrade to saltwater chlorination system at the pool for a safer, modern facility",
+            "role": "Council exact project scope and amount, 4 June 2025",
+            "retrieved_at": "2026-09-12T16:32:06.638809+00:00",
+            "content_sha256": "6e0bf86913143d7b586ccf7b8134779a505f72438b3b1f49483d1fa49b909ab9"
+          }
+        ],
+        "notes": [
+          "Invitation dated 14 November 2025; not proof of an award, payment or completion. No later grant match is claimed."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-070",
+      "record_type": "invitation",
+      "title": "Jabiru Swimming Pool – Gym Refurbishment",
+      "value": 375000,
+      "state": "NT",
+      "locality": "Jabiru",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-070"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "jabiru-pool",
+          "site_name": "Jabiru Alberto Luglietti Memorial Swimming Pool",
+          "address": "56 Kinchela Road, Jabiru NT 0886",
+          "locality": "Jabiru",
+          "state": "NT",
+          "latitude": -12.675365,
+          "longitude": 132.8320834,
+          "location_source_url": "https://northernterritory.com/kakadu-and-surrounds/see-and-do/jabiru-alberto-luglietti-memorial-swimming-pool",
+          "site_precision": "venue",
+          "electorate_2025": "Lingiari",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T16:42:56.474061+00:00",
+            "method": "Council identifies the pool address; Tourism NT names the same facility and supplies its marker coordinates. Its public map implementation confirms the named venue information window is anchored to those coordinates. Cross-check point against AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://westarnhem.nt.gov.au/community-wellbeing/swimming-pools-and-facilities",
+                "excerpt": "Address : 56 Kinchela Road",
+                "role": "Council pool address",
+                "retrieved_at": "2026-09-12T16:32:06.639112+00:00",
+                "content_sha256": "9c15e30200497cfa1e296c3e4432faddf29919bdd6ec31b004d92c88185b67a7"
+              },
+              {
+                "url": "https://northernterritory.com/kakadu-and-surrounds/see-and-do/jabiru-alberto-luglietti-memorial-swimming-pool",
+                "excerpt": "{\"product_name\": \"Jabiru Alberto Luglietti Memorial Swimming Pool\", \"address\": \"56 Kinchela Rd, Jabiru, Northern Territory, 0886, Australia\", \"map_centre\": {\"latitude\": -12.675365, \"longitude\": 132.8320834}}",
+                "role": "Tourism NT named venue and map marker (structured page data)",
+                "retrieved_at": "2026-09-12T16:32:48.523320+00:00",
+                "content_sha256": "46fd8e6a3923cb4566b28d338525fd8ffbb4dda977a570c1aca4f4577e58fc3f"
+              },
+              {
+                "url": "https://northernterritory.com/_astro/map.B7BxG9fO.js?dpl=6aa5690b3c5fea000868b8bb",
+                "excerpt": "position:{lat:parseFloat(t.map_centre?.latitude||``),lng:parseFloat(t.map_centre?.longitude||``)}",
+                "role": "Public map implementation anchors the named venue information window to map_centre; not a generic map viewport",
+                "retrieved_at": "2026-09-12T16:35:44.835562+00:00",
+                "content_sha256": "840c5a005fb8af2670556973519e917a395a1ebde123892c9221a053fd2a62c7"
+              }
+            ],
+            "notes": [
+              "Pool venue marker shared by two separate invitation records. It is not the location of every piece of equipment or a surveyed construction footprint."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test all 150 AEC 2025 electoral polygons. Exactly one match. Measure boundary distance in GDA94 / MGA zone 53.",
+              "distance_to_boundary_metres": 67454,
+              "scope": "Venue point only; no allocation of grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T16:42:56.474061+00:00",
+        "method": "Read original departmental invitation and independently corroborate exact named works and amount against Council source. Match actual venue, retain original invitation stage, and avoid recipient-office or postcode inference.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Jabiru Swimming Pool – Gym Refurbishment",
+            "role": "Original invitation project name, amount and snapshot status"
+          },
+          {
+            "url": "https://westarnhem.nt.gov.au/news/bringing-communities-together-through-sport",
+            "excerpt": "$375,000 – Refurbishment of the gym at Jabiru Swimming Pool, including new toilets, showers, and changerooms",
+            "role": "Council exact project scope and amount, 4 June 2025",
+            "retrieved_at": "2026-09-12T16:32:06.638809+00:00",
+            "content_sha256": "6e0bf86913143d7b586ccf7b8134779a505f72438b3b1f49483d1fa49b909ab9"
+          }
+        ],
+        "notes": [
+          "Invitation dated 14 November 2025; not proof of an award, payment or completion. No later grant match is claimed."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-077",
+      "record_type": "invitation",
+      "title": "Gibson Park Lighting and Water Tank Upgrade",
+      "value": 350000,
+      "state": "QLD",
+      "locality": "Stafford",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-077"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "gibson-park",
+          "site_name": "Gibson Park",
+          "address": "10 Nicol Street, Stafford QLD 4053",
+          "locality": "Stafford",
+          "state": "QLD",
+          "latitude": -27.412694979085913,
+          "longitude": 153.0142366983262,
+          "location_source_url": "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-locations/records?where=park_number%3D%27D0204%27+OR+park_number%3D%27D0331%27&limit=10",
+          "site_precision": "venue",
+          "electorate_2025": "Brisbane",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T18:43:42.233998+00:00",
+            "method": "Match the exact named facility in Council project material to an official Council or Queensland Government venue record, then cross-check the official venue marker against AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-locations/records?where=park_number%3D%27D0204%27+OR+park_number%3D%27D0331%27&limit=10",
+                "excerpt": "GIBSON PARK | 10 NICOL STREET | STAFFORD 4053 | -27.412694979085913, 153.0142366983262",
+                "excerpt_kind": "structured Council park record",
+                "role": "Exact named park, address, polygon and centroid marker",
+                "retrieved_at": "2026-09-12T18:38:27.687440+00:00",
+                "content_sha256": "ccc4bf8bdc98f12790bb9c91ee92d3b17acda4f1764657a33a1330c48b349f95"
+              }
+            ],
+            "notes": [
+              "Council park centroid and full park polygon, not the precise lighting or water-tank construction footprint. Root geometry review found the whole park inside Brisbane division."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, test it against all 150 AEC March 2025 polygons, and measure distance to the matched boundary in EPSG:28356.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 281
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T18:43:42.233998+00:00",
+        "method": "Read the original departmental invitation row, independently corroborate the named facility, offered amount and scope in Brisbane City Council material, retain the invitation/application stage, and avoid recipient-office or postcode inference.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Gibson Park Lighting and Water Tank Upgrade | Brisbane | QLD | Awaiting Application | 350000",
+            "excerpt_kind": "structured departmental row extraction",
+            "role": "Original invitation project name, amount and snapshot status; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "source_date": "2025-11-14",
+            "hash_scope": "Original departmental PDF bytes; row extraction independently checked against page 160"
+          },
+          {
+            "url": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/about-council/publication-scheme-documents/2025/12/Attachment%20C%20-%20Major%20and%20Local%20Community%20Infrastructure%20Program.pdf",
+            "excerpt": "Gibson Park | Funding Offered $350,000 | New lighting and water tank upgrade",
+            "excerpt_kind": "structured Attachment B row extraction",
+            "role": "Council proposed-project facility, offered amount and scope; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+            "content_sha256": "4bdf5e700e0566e5d26077b2bff81fdc30a3c274eee0c8f2d7805d2dc8894c33",
+            "source_date": "2025-12-01"
+          }
+        ],
+        "notes": [
+          "Departmental record is an invitation with status Awaiting Application. Council E&C approved submission of applications for projects deemed appropriate after due diligence and allowed scope adjustment. This is not proof of an award, executed payment or completion; no later grant match is claimed."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-078",
+      "record_type": "invitation",
+      "title": "Centenary Stormers Field and Grandstand",
+      "value": 355000,
+      "state": "QLD",
+      "locality": "Darra",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-078"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "atthows-park-centenary-stormers-football-club",
+          "site_name": "Atthows Park — Centenary Stormers Football Club",
+          "address": "23 Sumners Road, Darra QLD 4076",
+          "locality": "Darra",
+          "state": "QLD",
+          "latitude": -27.559899251061278,
+          "longitude": 152.94517257569524,
+          "location_source_url": "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-locations/records?where=park_number%3D%27D0204%27+OR+park_number%3D%27D0331%27&limit=10",
+          "site_precision": "venue",
+          "electorate_2025": "Oxley",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T18:43:42.233998+00:00",
+            "method": "Match the exact named club and field 3 in Council project material to current primary club pages that place both the club and field 3 at Atthows Park, cross-check the venue with the Queensland Government club address and Brisbane City Council park record D0331, then test the Council park polygon and centroid against all AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-locations/records?where=park_number%3D%27D0204%27+OR+park_number%3D%27D0331%27&limit=10",
+                "excerpt": "ATTHOWS PARK | 23 SUMNERS ROAD | DARRA 4076 | -27.559899251061278, 152.94517257569524",
+                "excerpt_kind": "structured Council park record",
+                "role": "Exact park name, Council address, polygon and centroid marker",
+                "retrieved_at": "2026-09-12T18:38:27.687440+00:00",
+                "content_sha256": "ccc4bf8bdc98f12790bb9c91ee92d3b17acda4f1764657a33a1330c48b349f95"
+              },
+              {
+                "url": "https://www.centenarystormers.com.au/news/aboutus/",
+                "excerpt": "We are located at “Tornado Alley” at Atthows Park, 250 Monier Road, Darra",
+                "excerpt_kind": "verbatim excerpt",
+                "role": "Current primary club page bridges Centenary Stormers to Atthows Park and the Monier Road access",
+                "retrieved_at": "2026-09-12T18:42:01.398983+00:00",
+                "content_sha256": "52a39899def331cef41535240a5ac4975bbe2c7fafbffb001a4f422f63c6cebf"
+              },
+              {
+                "url": "https://www.centenarystormers.com.au/news/2024/02/05/%F0%9F%93%A3%F0%9F%93%A3-training-schedule%F0%9F%93%A3%F0%9F%93%A3/",
+                "excerpt": "Womens – Field 3 Atthows",
+                "excerpt_kind": "verbatim excerpt",
+                "role": "Current primary club archive explicitly identifies Field 3 at Atthows Park; its table caption states Atthows Park – Monier Rd, Darra",
+                "retrieved_at": "2026-09-12T18:42:01.400213+00:00",
+                "content_sha256": "94a8b6f5eb60e68828997e15e3a92075e2eec5c671325e1bf9cdfdebf38eae92",
+                "source_date": "2024-02-05"
+              },
+              {
+                "url": "https://www.qld.gov.au/recreation/sports/funding/playon/find-provider/supporting-assets/clubs-locator-rest?name=Centenary%20Stormers",
+                "excerpt": "Centenary Stormers F.C. Inc. | 250 Monier Road | Darra Queensland 4076",
+                "excerpt_kind": "structured Queensland Government provider-directory extraction",
+                "role": "Government directory independently identifies the club and Monier Road address; the Council park address remains the published venue address",
+                "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+                "content_sha256": "b45265904e01f1be4b4341f16068f68be342e9f58f38fb3340091baf3b93fcd8"
+              }
+            ],
+            "notes": [
+              "BCC D0331 centroid is an approximate Atthows Park venue marker. Current primary club material resolves Field 3 to Atthows Park, but does not survey the upgrade or portable-grandstand footprints.",
+              "The whole Council park polygon is inside Oxley, but no invitation value is allocated to the electorate."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official BCC park geometry and marker to GDA94; test all 150 AEC March 2025 polygons and measure centroid-to-boundary distance in EPSG:28356. The whole park is contained by Oxley.",
+              "distance_to_boundary_metres": 1731,
+              "scope": "Venue point and park polygon only; no allocation of invitation value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T18:43:42.233998+00:00",
+        "method": "Read the original departmental invitation row, independently corroborate the named club, offered amount and field/grandstand scope in Brisbane City Council material, retain invitation/application stage, and bridge field 3 to Atthows Park without claiming a precise works footprint.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Centenary Stormers Field and Grandstand | Brisbane | QLD | Awaiting Application | 355000",
+            "excerpt_kind": "structured departmental row extraction",
+            "role": "Original invitation project name, amount and snapshot status; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "source_date": "2025-11-14",
+            "hash_scope": "Original departmental PDF bytes; row extraction independently checked against page 160"
+          },
+          {
+            "url": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/about-council/publication-scheme-documents/2025/12/Attachment%20C%20-%20Major%20and%20Local%20Community%20Infrastructure%20Program.pdf",
+            "excerpt": "Centenary Stormers Football Club | Funding Offered $355,000 | Upgrade field 3 and new portable grandstands",
+            "excerpt_kind": "structured Attachment B row extraction",
+            "role": "Council proposed-project facility, offered amount and scope; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+            "content_sha256": "4bdf5e700e0566e5d26077b2bff81fdc30a3c274eee0c8f2d7805d2dc8894c33",
+            "source_date": "2025-12-01"
+          }
+        ],
+        "notes": [
+          "Departmental record is an invitation with status Awaiting Application. Council E&C approved submission of applications for projects deemed appropriate after due diligence and allowed scope adjustment. This is not proof of award, executed payment or completion; no later grant match is claimed."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-079",
+      "record_type": "invitation",
+      "title": "Forest Lake Water Play Park",
+      "value": 450000,
+      "state": "QLD",
+      "locality": "Forest Lake",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-079"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "the-lake-parklands",
+          "site_name": "The Lake Parklands",
+          "address": "7 Blue Lake Court, Forest Lake QLD 4078",
+          "locality": "Forest Lake",
+          "state": "QLD",
+          "latitude": -27.620192086892136,
+          "longitude": 152.96293396277923,
+          "location_source_url": "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-locations/records?limit=20&where=search%28park_name%2C+%22THE+LAKE+PARKLANDS%22%29",
+          "site_precision": "venue",
+          "electorate_2025": "Oxley",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T18:43:42.233998+00:00",
+            "method": "Match the exact named facility in Council project material to an official Council or Queensland Government venue record, then cross-check the official venue marker against AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-locations/records?limit=20&where=search%28park_name%2C+%22THE+LAKE+PARKLANDS%22%29",
+                "excerpt": "THE LAKE PARKLANDS | 7 BLUE LAKE COURT | FOREST LAKE 4078 | -27.620192086892136, 152.96293396277923",
+                "excerpt_kind": "structured Council park record",
+                "role": "Exact named park, address, polygon and centroid marker",
+                "retrieved_at": "2026-09-12T18:36:00Z",
+                "content_sha256": "aca1968f34ed31c5a39526c27c3eba0af6194868108eabf2e387688ea1da5d24"
+              },
+              {
+                "url": "https://www.brisbane.qld.gov.au/about-council/governance-and-strategy/annual-plan-and-budget/2026-27-brisbane-budget",
+                "excerpt": "Delivering better parks across the suburbs, including a new inclusive nature-based and water play playground at The Lake Parklands, Forest Lake",
+                "excerpt_kind": "verbatim excerpt",
+                "role": "Council explicitly bridges the water-play project to this park",
+                "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+                "content_sha256": "ce890332e26c2dacec23d7770b4b4bd615ebd17a2217ce1edafb362795700d2f",
+                "source_date": "2026-06-15"
+              }
+            ],
+            "notes": [
+              "Council budget explicitly places the new nature-based and water-play playground at The Lake Parklands. Park centroid is not the final construction footprint."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, test it against all 150 AEC March 2025 polygons, and measure distance to the matched boundary in EPSG:28356.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 1645
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T18:43:42.233998+00:00",
+        "method": "Read the original departmental invitation row, independently corroborate the named facility, offered amount and scope in Brisbane City Council material, retain the invitation/application stage, and avoid recipient-office or postcode inference.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Forest Lake Water Play Park | Brisbane | QLD | Awaiting Application | 450000",
+            "excerpt_kind": "structured departmental row extraction",
+            "role": "Original invitation project name, amount and snapshot status; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "source_date": "2025-11-14",
+            "hash_scope": "Original departmental PDF bytes; row extraction independently checked against page 160"
+          },
+          {
+            "url": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/about-council/publication-scheme-documents/2025/12/Attachment%20C%20-%20Major%20and%20Local%20Community%20Infrastructure%20Program.pdf",
+            "excerpt": "Forest Lake Waterplay Park | Funding Offered $450,000 | New nature waterplay park in the Lake Precinct",
+            "excerpt_kind": "structured Attachment B row extraction",
+            "role": "Council proposed-project facility, offered amount and scope; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+            "content_sha256": "4bdf5e700e0566e5d26077b2bff81fdc30a3c274eee0c8f2d7805d2dc8894c33",
+            "source_date": "2025-12-01"
+          }
+        ],
+        "notes": [
+          "Departmental record is an invitation with status Awaiting Application. Council E&C approved submission of applications for projects deemed appropriate after due diligence and allowed scope adjustment. This is not proof of an award, executed payment or completion; no later grant match is claimed."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-080",
+      "record_type": "invitation",
+      "title": "Wynnum Manly and District Men's Shed Expansion",
+      "value": 500000,
+      "state": "QLD",
+      "locality": "Wynnum",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-080"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "wynnum-manly-and-districts-mens-shed",
+          "site_name": "Wynnum Manly and Districts Men's Shed",
+          "address": "59 Granada Street, Wynnum QLD 4178",
+          "locality": "Wynnum",
+          "state": "QLD",
+          "latitude": -27.4329,
+          "longitude": 153.1719,
+          "location_source_url": "https://www.qld.gov.au/justice/fines-and-notices/work-and-development-order/find-hardship-partner",
+          "site_precision": "venue",
+          "electorate_2025": "Bonner",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T18:43:42.233998+00:00",
+            "method": "Match the exact named facility in Council project material to an official Council or Queensland Government venue record, then cross-check the official venue marker against AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://www.qld.gov.au/justice/fines-and-notices/work-and-development-order/find-hardship-partner",
+                "excerpt": "Wynnum Manly and Districts Men's Shed | 59 Granada Street | WYNNUM QLD 4178 | -27.4329, 153.1719",
+                "excerpt_kind": "structured Queensland Government directory record",
+                "role": "Exact named organisation, address and service marker",
+                "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+                "content_sha256": "b2bebfc2edc67ce8aa1e10abdc4eebb0c65c5fc3dbfb8639c222cf2b97c2000e"
+              }
+            ],
+            "notes": [
+              "Government organisation marker identifies the existing facility, not the siting of the additional shed. Elanora Park at 22 Saunders Place is a broader precinct alternative and is not substituted for this more specific marker."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, test it against all 150 AEC March 2025 polygons, and measure distance to the matched boundary in EPSG:28356.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 3364
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T18:43:42.233998+00:00",
+        "method": "Read the original departmental invitation row, independently corroborate the named facility, offered amount and scope in Brisbane City Council material, retain the invitation/application stage, and avoid recipient-office or postcode inference.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Wynnum Manly and District Men's Shed Expansion | Brisbane | QLD | Awaiting Application | 500000",
+            "excerpt_kind": "structured departmental row extraction",
+            "role": "Original invitation project name, amount and snapshot status; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "source_date": "2025-11-14",
+            "hash_scope": "Original departmental PDF bytes; row extraction independently checked against page 160"
+          },
+          {
+            "url": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/about-council/publication-scheme-documents/2025/12/Attachment%20C%20-%20Major%20and%20Local%20Community%20Infrastructure%20Program.pdf",
+            "excerpt": "Wynnum Manly and Districts Men's Shed | Funding Offered $500,000 | Install additional shed",
+            "excerpt_kind": "structured Attachment B row extraction",
+            "role": "Council proposed-project facility, offered amount and scope; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+            "content_sha256": "4bdf5e700e0566e5d26077b2bff81fdc30a3c274eee0c8f2d7805d2dc8894c33",
+            "source_date": "2025-12-01"
+          }
+        ],
+        "notes": [
+          "Departmental record is an invitation with status Awaiting Application. Council E&C approved submission of applications for projects deemed appropriate after due diligence and allowed scope adjustment. This is not proof of an award, executed payment or completion; no later grant match is claimed."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-081",
+      "record_type": "invitation",
+      "title": "Zillmere Community Centre Upgrades",
+      "value": 500000,
+      "state": "QLD",
+      "locality": "Zillmere",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-081"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "zillmere-community-centre-north-east-community-support-group-inc",
+          "site_name": "Zillmere Community Centre / North East Community Support Group Inc.",
+          "address": "54 Handford Road, Zillmere QLD 4034",
+          "locality": "Zillmere",
+          "state": "QLD",
+          "latitude": -27.35755497,
+          "longitude": 153.0381191,
+          "location_source_url": "https://www.qld.gov.au/community/women/support-for-women/find-a-support-service/view?title=Community+Centre+-+Zillmere+-+North+East+Community+Support+Group+Inc",
+          "site_precision": "venue",
+          "electorate_2025": "Lilley",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T18:43:42.233998+00:00",
+            "method": "Match the exact named facility in Council project material to an official Council or Queensland Government venue record, then cross-check the official venue marker against AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://www.qld.gov.au/community/women/support-for-women/find-a-support-service/view?title=Community+Centre+-+Zillmere+-+North+East+Community+Support+Group+Inc",
+                "excerpt": "Community Centre - Zillmere - North East Community Support Group Inc | 54 Handford Road | Zillmere QLD 4034 | -27.35755497, 153.0381191",
+                "excerpt_kind": "structured Queensland Government directory record",
+                "role": "Exact facility identity, street address and map marker",
+                "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+                "content_sha256": "92685674d04fe362d3c63c63c618b7e4af924e2537b3c84db46a2e93c9cf7dba"
+              },
+              {
+                "url": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/about-council/publication-scheme-documents/2025/09/Attachment%20B%20-%20Community%20Facility%20Solar%20and%20Energy%20Efficiency%20Program%20Funding%20Agreement.pdf",
+                "excerpt": "North East Community Support Group Inc. (also known as Zillmere Community Centre) | 54 Handford Road, Zillmere",
+                "excerpt_kind": "structured site-schedule extraction",
+                "role": "Council independently links facility alias and address; unrelated program amounts are intentionally omitted",
+                "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+                "content_sha256": "bcbabea296882cfa3f2bd24f7d89c8ef2f2ca0e1796313b6307293e5f1da1b2a",
+                "source_date": "2025-09"
+              }
+            ],
+            "notes": [
+              "Facility marker identifies the existing centre, not individual accessibility works within the parcel."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, test it against all 150 AEC March 2025 polygons, and measure distance to the matched boundary in EPSG:28356.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 668
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T18:43:42.233998+00:00",
+        "method": "Read the original departmental invitation row, independently corroborate the named facility, offered amount and scope in Brisbane City Council material, retain the invitation/application stage, and avoid recipient-office or postcode inference.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Zillmere Community Centre Upgrades | Brisbane | QLD | Awaiting Application | 500000",
+            "excerpt_kind": "structured departmental row extraction",
+            "role": "Original invitation project name, amount and snapshot status; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "source_date": "2025-11-14",
+            "hash_scope": "Original departmental PDF bytes; row extraction independently checked against page 160"
+          },
+          {
+            "url": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/about-council/publication-scheme-documents/2025/12/Attachment%20C%20-%20Major%20and%20Local%20Community%20Infrastructure%20Program.pdf",
+            "excerpt": "Zillmere Community Centre | Funding Offered $500,000 | Facility upgrades including accessibility for people with disabilities",
+            "excerpt_kind": "structured Attachment B row extraction",
+            "role": "Council proposed-project facility, offered amount and scope; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T18:37:10.132191+00:00",
+            "content_sha256": "4bdf5e700e0566e5d26077b2bff81fdc30a3c274eee0c8f2d7805d2dc8894c33",
+            "source_date": "2025-12-01"
+          }
+        ],
+        "notes": [
+          "Departmental record is an invitation with status Awaiting Application. Council E&C approved submission of applications for projects deemed appropriate after due diligence and allowed scope adjustment. This is not proof of an award, executed payment or completion; no later grant match is claimed."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-082",
+      "record_type": "invitation",
+      "title": "Samford Ranger Football Club",
+      "value": 547000,
+      "state": "QLD",
+      "locality": "Samford Valley",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-082"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "samford-parklands-rangers",
+          "site_name": "Samford Parklands — Samford Rangers Football Club",
+          "address": "2149 Mount Samson Road, Samford Valley QLD 4520",
+          "locality": "Samford Valley",
+          "state": "QLD",
+          "latitude": -27.3580542,
+          "longitude": 152.8848416,
+          "location_source_url": "https://www.moretonbay.qld.gov.au/Services/Sport-Recreation/Parks/Samford-Parklands",
+          "site_precision": "venue",
+          "electorate_2025": "Dickson",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T19:45:05.656581+00:00",
+            "method": "Match the named invitation venue to current primary operator and official location records; independently check the official venue marker against AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://www.moretonbay.qld.gov.au/Services/Sport-Recreation/Parks/Samford-Parklands",
+                "excerpt": "Samford Parklands | Samford Rangers Football Club | Mt Samson Road, Samford Valley 4520 | Location marker -27.3580542,152.8848416",
+                "excerpt_kind": "structured Council venue record",
+                "role": "Council identifies the shared park venue, its football club tenant and explicit map marker",
+                "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+                "content_sha256": "b83f1fb9c5bbfb75a6f11b50c7c751c4f8216e0c5ef6997cb3d2b4fb129c3614",
+                "retrieved_url": "https://www.moretonbay.qld.gov.au/Services/Sport-Recreation/Parks/Samford-Parklands?lang_update=638617823342447627"
+              },
+              {
+                "url": "https://www.samfordrangers.org.au/aboutus",
+                "excerpt": "Samford Parklands | 2149 Mt Samson Rd, Samford",
+                "excerpt_kind": "structured club contact extraction",
+                "role": "Current primary club venue and street address",
+                "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+                "content_sha256": "5d012926ea035c9e580135bba6e2135bdff600d04cb0dd996ab9bf98d927891a"
+              },
+              {
+                "url": "https://www.samfordrangers.org.au/OrgLocations.aspx?enc=DOE%2BtsgfcVYSFJIZVJTPMA%3D%3D",
+                "excerpt": "Parklands 1, 1a, 1b, 1c, 1d, 1e, 2, 2a, 3, 3a, 3b, 3c and 4",
+                "excerpt_kind": "structured club field inventory",
+                "role": "Current club inventory lists fields within Parklands; no individual funded field is identified",
+                "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+                "content_sha256": "15ee196339d1ffae63b738b16d319bf21cdce9b4c8939f548eb20d1f3b388ee3"
+              }
+            ],
+            "notes": [
+              "The Council marker identifies the shared Samford Parklands venue. Several clubs use the park; this is not a surveyed football field or funded-work footprint.",
+              "The invitation names Samford Ranger Football Club. Current primary club and Council sources identify Samford Rangers Football Club at Samford Parklands. The specific funded field or upgrade component remains unresolved."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, test it against all 150 AEC March 2025 polygons, and measure distance to the matched boundary in EPSG:28356.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 5108
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T19:45:05.656581+00:00",
+        "method": "Read the original departmental invitation row and independently verify the named existing venue using primary operator and official venue sources. Keep invitation and election-commitment stages separate from awards, payments and completion.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Samford Ranger Football Club | Moreton Bay | QLD | Awaiting Application | 547000",
+            "excerpt_kind": "structured departmental row extraction",
+            "role": "Original invitation project name, amount and snapshot status; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "source_date": "2025-11-14",
+            "hash_scope": "Original departmental PDF bytes; row extraction independently checked against page 160"
+          },
+          {
+            "url": "https://www.samfordrangers.org.au/aboutus",
+            "excerpt": "Samford Parklands | 2149 Mt Samson Rd, Samford",
+            "excerpt_kind": "structured club contact extraction",
+            "role": "Current primary club venue and street address",
+            "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+            "content_sha256": "5d012926ea035c9e580135bba6e2135bdff600d04cb0dd996ab9bf98d927891a"
+          },
+          {
+            "url": "https://www.moretonbay.qld.gov.au/Services/Sport-Recreation/Parks/Samford-Parklands",
+            "excerpt": "Samford Parklands | Samford Rangers Football Club | Mt Samson Road, Samford Valley 4520 | Location marker -27.3580542,152.8848416",
+            "excerpt_kind": "structured Council venue record",
+            "role": "Council identifies the shared park venue, its football club tenant and explicit map marker",
+            "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+            "content_sha256": "b83f1fb9c5bbfb75a6f11b50c7c751c4f8216e0c5ef6997cb3d2b4fb129c3614",
+            "retrieved_url": "https://www.moretonbay.qld.gov.au/Services/Sport-Recreation/Parks/Samford-Parklands?lang_update=638617823342447627"
+          }
+        ],
+        "notes": [
+          "Original 14 November 2025 invitation amount and Awaiting Application status retained. No new funding record, award match, payment, completion or electorate allocation is inferred.",
+          "The Council marker identifies the shared Samford Parklands venue. Several clubs use the park; this is not a surveyed football field or funded-work footprint.",
+          "The invitation names Samford Ranger Football Club. Current primary club and Council sources identify Samford Rangers Football Club at Samford Parklands. The specific funded field or upgrade component remains unresolved."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-085",
+      "record_type": "invitation",
+      "title": "Springfield YMCA Upgrades",
+      "value": 700000,
+      "state": "QLD",
+      "locality": "Springfield Central",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-085"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "ymca-springfield-central-community-centre",
+          "site_name": "YMCA Springfield Central Community Centre",
+          "address": "134A Parkland Drive, Springfield Central QLD 4300",
+          "locality": "Springfield Central",
+          "state": "QLD",
+          "latitude": -27.69203785,
+          "longitude": 152.90831134,
+          "location_source_url": "https://results.aec.gov.au/31496/Website/Downloads/GeneralPollingPlacesDownload-31496.csv",
+          "site_precision": "venue",
+          "electorate_2025": "Blair",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T19:45:05.656581+00:00",
+            "method": "Match the named invitation venue to current primary operator and official location records; independently check the official venue marker against AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://ymcaqueensland.org.au/services/community-centres/springfield-central",
+                "excerpt": "YMCA Springfield Central Community Centre | formerly Springfield Central Sport and Community Hall | 134A Parkland Dr, Springfield Central QLD 4300",
+                "excerpt_kind": "structured operator facility extraction",
+                "role": "Primary operator explicitly links current and former facility names to the street address",
+                "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+                "content_sha256": "988b5c2da7ed200aa20a7d17cbb2877591ca1753a5ee5450c5e0095f8878cff2"
+              },
+              {
+                "url": "https://results.aec.gov.au/31496/Website/Downloads/GeneralPollingPlacesDownload-31496.csv",
+                "excerpt": "Springfield Central Sport & Community Hall | 134A Parkland Dr | SPRINGFIELD CENTRAL QLD 4300 | -27.69203785,152.90831134",
+                "excerpt_kind": "structured AEC polling-place record",
+                "role": "Official AEC facility coordinates, matched by exact facility name and address; polling division labels are not used as location evidence",
+                "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+                "content_sha256": "34dd99a7779d97ec2552db7140bda0e201522b9eb08608b64e05f780ce7338d6",
+                "source_date": "2025-06-16"
+              },
+              {
+                "url": "https://shayneneumann.com.au/news/media-releases/labor-to-deliver-springfield-central-ymca-upgrades/",
+                "excerpt": "A completed mezzanine level will feature recording studios, meeting spaces, performance spaces, a kitchenette and other amenities",
+                "excerpt_kind": "source excerpt",
+                "role": "Primary 4 April 2025 campaign announcement ties the $700,000 proposed upgrades to Springfield Central YMCA; it is a commitment, not an award or payment",
+                "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+                "content_sha256": "9022b7cc55ae0305712166dc066a453aa605df52f64c05c91fffb3e0f7600139",
+                "source_date": "2025-04-04"
+              }
+            ],
+            "notes": [
+              "The AEC marker identifies the existing community hall, not individual mezzanine or downstairs works. The current operator explicitly identifies the former hall name.",
+              "The same hall serves both Blair and Oxley polling divisions. The physical venue point was independently checked against all 150 AEC March 2025 boundaries and lies in Blair; polling-service division labels were not used to assign its location.",
+              "The 4 April 2025 announcement is an election commitment for mezzanine and downstairs upgrades. The departmental 14 November 2025 record remains an invitation, with no award, payment or completed work established."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, test it against all 150 AEC March 2025 polygons, and measure distance to the matched boundary in EPSG:28356.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 959
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T19:45:05.656581+00:00",
+        "method": "Read the original departmental invitation row and independently verify the named existing venue using primary operator and official venue sources. Keep invitation and election-commitment stages separate from awards, payments and completion.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Springfield YMCA Upgrades | Ipswich | QLD | Awaiting Application | 700000",
+            "excerpt_kind": "structured departmental row extraction",
+            "role": "Original invitation project name, amount and snapshot status; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "source_date": "2025-11-14",
+            "hash_scope": "Original departmental PDF bytes; row extraction independently checked against page 160"
+          },
+          {
+            "url": "https://shayneneumann.com.au/news/media-releases/labor-to-deliver-springfield-central-ymca-upgrades/",
+            "excerpt": "A completed mezzanine level will feature recording studios, meeting spaces, performance spaces, a kitchenette and other amenities",
+            "excerpt_kind": "source excerpt",
+            "role": "Primary 4 April 2025 campaign announcement ties the $700,000 proposed upgrades to Springfield Central YMCA; it is a commitment, not an award or payment",
+            "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+            "content_sha256": "9022b7cc55ae0305712166dc066a453aa605df52f64c05c91fffb3e0f7600139",
+            "source_date": "2025-04-04"
+          },
+          {
+            "url": "https://ymcaqueensland.org.au/services/community-centres/springfield-central",
+            "excerpt": "YMCA Springfield Central Community Centre | formerly Springfield Central Sport and Community Hall | 134A Parkland Dr, Springfield Central QLD 4300",
+            "excerpt_kind": "structured operator facility extraction",
+            "role": "Primary operator explicitly links current and former facility names to the street address",
+            "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+            "content_sha256": "988b5c2da7ed200aa20a7d17cbb2877591ca1753a5ee5450c5e0095f8878cff2"
+          }
+        ],
+        "notes": [
+          "Original 14 November 2025 invitation amount and Awaiting Application status retained. No new funding record, award match, payment, completion or electorate allocation is inferred.",
+          "The AEC marker identifies the existing community hall, not individual mezzanine or downstairs works. The current operator explicitly identifies the former hall name.",
+          "The same hall serves both Blair and Oxley polling divisions. The physical venue point was independently checked against all 150 AEC March 2025 boundaries and lies in Blair; polling-service division labels were not used to assign its location.",
+          "The 4 April 2025 announcement is an election commitment for mezzanine and downstairs upgrades. The departmental 14 November 2025 record remains an invitation, with no award, payment or completed work established."
         ]
       }
     }

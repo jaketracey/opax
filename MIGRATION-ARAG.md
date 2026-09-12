@@ -11,7 +11,24 @@ KB `opax` (`d33c0a87-98cb-4169-b0d2-ff9b75573fb7`, account `7b5c9761…`) is liv
 `ray-test` KB was deleted 2026-09-01. No enrichment (DA) task is registered anywhere —
 gated on the cost sign-offs in §Costs. Branch: `worktree-arag-migration`.
 
-**Models (updated 2026-09-10 — BYOK LIVE, provider fallback enabled):**
+**Models (updated 2026-09-12 — everything on DeepSeek V4 Pro via OpenRouter, no platform-side generation):**
+The KB's one OpenRouter slot (`openai-compatible`) now has `model_id` **`@preset/opax-pro`**:
+`deepseek/deepseek-v4-pro-0813`, `provider: {only: ["deepseek"], allow_fallbacks: false}`,
+`reasoning: {enabled: false}` (preset created in the OpenRouter dashboard; the presets API is
+read-only). Switched with `python3 scripts/arag_byok_openrouter.py "@preset/opax-pro"`; rollback
+to Flash is the same command with `@preset/opax`. Why: on Flash, every footnote of an ask with
+structured records attached came back as `block-AA` (the first context block), so citations
+landed on one catalog row and the quote check sent the reader to the evidence-only fallback;
+Pro cites 8-17 distinct blocks and answers in ~13 s. Each Worker pipeline pins its model through
+wrangler vars (`ASK_MODEL`, `POSITION_RECOVERY_MODEL`, `SEARCH_SUMMARY_MODEL`,
+`JOURNEY_STORY_MODEL`, `FOLLOWUPS_MODEL`), all `openai-compatible` (the Pro slot) so nothing
+generates platform-side: follow-ups moved off `gemini-2.5-flash-lite` too (they use the line
+format, no json_schema, so BYOK is fine now that reasoning is off). `ASK_MODEL` is folded into
+the ask cache key. Note `scripts/check_preset_reasoning.py` still probes `@preset/opax`, not
+`opax-pro`. The `summary_model` config value is still `openai-compatible` (nothing in the Worker
+uses it).
+
+**Previous (2026-09-10 — BYOK LIVE, provider fallback enabled):**
 `generative_model` and `summary_model` are `openai-compatible` → OpenRouter →
 model_id **`@preset/opax`**, currently preset version 4:
 `deepseek/deepseek-v4-flash-0731`, with

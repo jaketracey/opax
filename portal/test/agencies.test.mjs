@@ -18,7 +18,7 @@ function node() {
 }
 function harness(fetch) {
   const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, procurementGraph };
-  runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart }; })());`, context);
+  runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract }; })());`, context);
   runInNewContext(source, context); return context;
 }
 const id = 'a-0123456789abcdef0123';

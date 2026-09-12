@@ -107,7 +107,7 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
       url = safeLink(origin, record) ?? origin + '/search'
       data = {...record, opax_url:url, coverage:manifest.coverage, record_note:'This is the published structured record, not a verbatim source transcript. Preserve its stated period and source. Awards are not payments; receipts are not necessarily gifts. Aggregates may overlap individual records.'}
     } else {
-      if (!/^(?:speech-\d+|legal-\d+|news-\d+|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/.test(slug)) throw new CommunityError(400, 'Use the record identifier returned by search.')
+      if (!/^(?:speech-\d+|legal-\d+|news-\d+|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/.test(slug)) throw new CommunityError(400, 'Use the record identifier returned by search.')
       url = origin + '/doc/' + slug
       data = {...await boundedJson(await readPublic('/api/resource/' + slug)), opax_url: url}
     }

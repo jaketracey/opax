@@ -15,6 +15,7 @@ function trackOutcome(event, properties = {}) {
 let corpusManifest = null; // /corpus.json
 let liveStats = null; // /api/stats
 let suggestions = []; // /suggestions.json
+let featuredSuggestions = [];
 let reportsIndex = null;
 // `key` is the search identity (query + filters, no page, no sort): it says
 // whether a run is a new result set or another page of the one on screen.
@@ -31,7 +32,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["money-records","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
+const PANELS = ["money-records","connections","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
 // /bills is the bill panel's index; it has no panel of its own, so isRoute has
 // to be told the word is ours before the click handler will follow it.
 const PANEL_ALIASES = { bills: "bill" };
@@ -230,6 +231,30 @@ function partyChipHTML(party) {
   const cls = hit ? hit[0] : "oth";
   const label = hit ? hit[1] : String(party).slice(0, 12);
   return `<span class="party party-${cls}"><i aria-hidden="true"></i>${esc(label)}</span>`;
+}
+
+/* A party's name as a sentence says it: "the Labor Party", "the Greens", "One
+   Nation". The money data's short labels ("Labor", "Liberal") take an article
+   and a noun; a name that is already a proper noun phrase stands as it is. */
+const PARTY_ASK_NAMES = {
+  labor: "the Labor Party", alp: "the Labor Party", "australian labor party": "the Labor Party",
+  liberal: "the Liberal Party", "liberal party": "the Liberal Party", "liberal party of australia": "the Liberal Party",
+  lnp: "the Liberal National Party", "liberal national party": "the Liberal National Party",
+  nationals: "the Nationals", national: "the Nationals", "national party": "the Nationals", "the nationals": "the Nationals",
+  greens: "the Greens", "australian greens": "the Greens", "the greens": "the Greens",
+  "one nation": "One Nation", "pauline hanson's one nation": "One Nation",
+  "country liberal party": "the Country Liberal Party", clp: "the Country Liberal Party",
+  "united australia party": "the United Australia Party", uap: "the United Australia Party",
+  "katter's australian party": "Katter's Australian Party",
+  "centre alliance": "Centre Alliance", "family first": "Family First",
+  "jacqui lambie network": "the Jacqui Lambie Network", independent: "independents",
+};
+function partyAskName(label) {
+  const name = String(label || "").trim();
+  const hit = PARTY_ASK_NAMES[name.toLowerCase()];
+  if (hit) return hit;
+  // "X Party" and "X Alliance/Network/Democrats" take "the"; a bare name does not.
+  return /\b(party|alliance|network|democrats|coalition)$/i.test(name) ? `the ${name}` : name;
 }
 
 const STATE_NAMES = { federal: "Federal", nsw: "NSW", vic: "VIC", sa: "SA", qld: "QLD" };
@@ -773,14 +798,15 @@ function sourcesCSV(rows, context) {
   return `${exportHeader(context)}\n${head}\n${body.join("\n")}\n`;
 }
 
-function offerExport(rows, context, baseName) {
+/** Write the rows out in one of the three formats the export menus offer. */
+function exportSources(format, rows, context, baseName) {
   if (!rows.length) return;
-  const choice = (window.prompt(
-    "Export format (type csv, bibtex or ris):", "csv") || "").trim().toLowerCase();
-  if (["csv", "bibtex", "bib", "ris"].includes(choice)) trackOutcome("opax_export", { format: choice === "bib" ? "bibtex" : choice, row_count: rows.length });
+  const choice = format === "bib" ? "bibtex" : String(format || "").trim().toLowerCase();
+  if (!["csv", "bibtex", "ris"].includes(choice)) return;
+  trackOutcome("opax_export", { format: choice, row_count: rows.length });
   if (choice === "csv") {
     download(`${baseName}.csv`, "text/csv;charset=utf-8", sourcesCSV(rows, context));
-  } else if (choice === "bibtex" || choice === "bib") {
+  } else if (choice === "bibtex") {
     const txt = `% ${exportHeader(context).replace(/\n/g, "\n% ")}\n\n` +
       rows.map(bibtexFor).join("\n\n") + "\n";
     download(`${baseName}.bib`, "application/x-bibtex;charset=utf-8", txt);
@@ -788,6 +814,61 @@ function offerExport(rows, context, baseName) {
     const txt = rows.map(risFor).join("\n") + "\n";
     download(`${baseName}.ris`, "application/x-research-info-systems;charset=utf-8", txt);
   }
+}
+
+/**
+ * A small format menu (CSV / BibTeX / RIS) on a trigger button: the search
+ * page's sort-menu idiom with plain menu items instead of radios. Opens on
+ * click or the arrow keys, walks with the arrows, closes on Escape, Tab or a
+ * click outside, and hands the chosen `data-format` to `onChoose`.
+ */
+function mountExportMenu(root, onChoose) {
+  if (!root) return null;
+  const trigger = root.querySelector('[aria-haspopup]');
+  const menu = root.querySelector('[role="menu"]');
+  const options = [...menu.querySelectorAll('[role="menuitem"]')];
+  function close(restoreFocus = false) {
+    menu.hidden = true;
+    trigger.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) trigger.focus();
+  }
+  function open(last = false) {
+    menu.hidden = false;
+    const box = trigger.getBoundingClientRect();
+    const below = document.documentElement.clientHeight - box.bottom;
+    const above = box.top;
+    const upward = below < 260 && above > below;
+    menu.classList.toggle('opens-up', upward);
+    const alignLeft = box.right < menu.getBoundingClientRect().width + 16;
+    menu.style.left = alignLeft ? '0' : '';
+    menu.style.right = alignLeft ? 'auto' : '';
+    trigger.setAttribute('aria-expanded', 'true');
+    (last ? options.at(-1) : options[0]).focus();
+  }
+  trigger.addEventListener('click', () => menu.hidden ? open() : close());
+  trigger.addEventListener('keydown', event => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); open(event.key === 'ArrowUp'); }
+  });
+  for (const option of options) option.addEventListener('click', () => {
+    close();
+    trigger.focus();
+    onChoose(option.dataset.format);
+  });
+  menu.addEventListener('keydown', event => {
+    const index = options.indexOf(document.activeElement);
+    let next;
+    if (event.key === 'ArrowDown') next = (index + 1) % options.length;
+    if (event.key === 'ArrowUp') next = (index - 1 + options.length) % options.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = options.length - 1;
+    if (next !== undefined) { event.preventDefault(); options[next].focus(); }
+    if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(true); }
+    if (event.key === 'Tab') close(true);
+  });
+  const outside = event => { if (!root.contains(event.target)) close(); };
+  document.addEventListener('pointerdown', outside);
+  root.addEventListener('focusout', event => { if (!root.contains(event.relatedTarget)) close(); });
+  return { close, destroy() { close(); document.removeEventListener('pointerdown', outside); } };
 }
 
 // --- panels & routing -------------------------------------------------------
@@ -846,6 +927,7 @@ const TITLES = {
   search: "Search the record · OPAX",
   discover: "Discover overlooked patterns · OPAX",
   money: "Money map · OPAX",
+  connections: "Connections in the record · OPAX",
   reports: "Reports · OPAX",
   doc: "From the record · OPAX",
   subject: "OPAX encyclopedia",
@@ -1169,7 +1251,7 @@ async function openMoneyRecords(kind, params) {
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=ia-ux-20260908-2' : '/ledger.js?v=ia-ux-20260908-2');
+    const mod = await import(grants ? '/grants.js?v=ia-ux-20260908-2' : '/ledger.js?v=receipt-years-20260913');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     moneyRecordsHandle = grants ? mod.mountGrants(body, { showHeading: false, displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, jurisdiction: params.get('jur') }) : mod.mountLedger(body, { jurisdiction: params.get('jur') });
@@ -1394,6 +1476,38 @@ async function openSupplierPage(name, params, manageFocus) {
   }
 }
 
+// --- connections: organisations, programs and places across the records -----
+// The module owns the panel's controls and list while the route is open and
+// hands them back clean on destroy, so a later visit mounts on a blank slate.
+let connectionsPage = null;
+let connectionsGeneration = 0;
+function destroyConnectionsPage() {
+  connectionsGeneration += 1;
+  connectionsPage?.destroy();
+  connectionsPage = null;
+}
+async function openConnectionsPage(params, manageFocus) {
+  const generation = connectionsGeneration;
+  const status = $("connection-status");
+  if (status) status.textContent = "Opening the records…";
+  if (manageFocus) $("connections-title")?.focus({ preventScroll: true });
+  try {
+    const module = await import("/connections.js");
+    if (generation !== connectionsGeneration) return;
+    connectionsPage = module.mountConnections($("connections-body"), {
+      params,
+      // A selection or a filter rewrites the address in place, so the page a
+      // reader copies reopens on the same connection: /connections?entity=…
+      onAddress(search) {
+        if (generation !== connectionsGeneration) return;
+        replaceRoute(`/connections${search}`);
+        syncPathMeta(); // canonical and og:url follow the selection, as the address bar does
+      },
+    });
+  } catch {
+    if (generation === connectionsGeneration && status) status.textContent = "Connection records are unavailable. Please try again later.";
+  }
+}
 
 async function openAgencyPage(name, params, manageFocus) {
   const generation = supplierPageGeneration;
@@ -1485,6 +1599,7 @@ function route() {
   const manageFocus = !firstRoute;
   firstRoute = false;
   destroySupplierPage();
+  destroyConnectionsPage();
   grantsResearchGeneration++;
   grantsResearchHandle?.destroy(); grantsResearchHandle = null;
 
@@ -1583,6 +1698,11 @@ function route() {
     document.title = `${title} · OPAX`;
     setCrumbs([{ label: 'Money', href: '/money' }, { label: title }]);
     openMoneyRecords(segs[1], params);
+  } else if (view === "connections") {
+    showPanel("connections");
+    document.title = TITLES.connections;
+    setCrumbs([{ label: "Money", href: "/money" }, { label: "Programs & places" }]);
+    openConnectionsPage(params, manageFocus);
   } else if (view === "money") {
     showPanel("money");
     document.title = TITLES.money;
@@ -1626,7 +1746,7 @@ function route() {
     if (view !== "ask" && view !== "") setCrumbs([{ label: "Not found" }]);
     else setCrumbs(q ? [{ label: "Ask" }] : null);
     if (view === "ask" && q && q !== lastAsk.question) {
-      $("ask-input").value = q;
+      setQueryValue("ask-input", q);
       if ($("ask-wide")) $("ask-wide").checked = params.get("kind") !== "speech";
       renderAskFilterChips(); // preserve an explicitly shared speech-only scope
       runAsk(q);
@@ -1657,7 +1777,7 @@ function resetAsk() {
   const askBtn = $("ask-form").querySelector('button[type="submit"]');
   if (askBtn) { askBtn.disabled = false; askBtn.classList.remove("btn-loading"); askBtn.textContent = "Ask the record"; }
   hideWombat();
-  $("ask-input").value = "";
+  setQueryValue("ask-input", "");
   setStatus($("ask-status"), "");
   $("ask-result").hidden = true;
   $("ask-money").hidden = true;
@@ -1803,26 +1923,77 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFall
   });
   return { close, go };
 }
-// The ask and search fields are one-line textareas: Enter submits (a shift-
-// Enter keeps a newline while typing), the value is flattened on submit,
-// and on a touch screen the field opens on focus and settles on blur.
+// Query text remains readable after submission, including shared links and
+// suggestions. Empty fields keep the compact single-line placeholder.
+function fitQueryField(field) {
+  if (!field || field.tagName !== "TEXTAREA") return;
+  field.classList.toggle("is-empty", !field.value);
+  // The ask box's clear cross shows only while there is something to clear.
+  field.parentElement?.classList.toggle("has-text", !!field.value);
+  if (!field.getClientRects().length) return; // refit when its panel becomes visible
+  field.style.height = "auto";
+  const height = field.scrollHeight + 2; // include the field's borders
+  field.style.height = `${Math.min(height, 260)}px`;
+  field.style.overflowY = height > 260 ? "auto" : "hidden";
+}
+function setQueryValue(id, value) {
+  const field = $(id);
+  field.value = value;
+  fitQueryField(field);
+}
 for (const id of ["ask-input", "search-input"]) {
   const field = $(id);
   if (!field || field.tagName !== "TEXTAREA") continue;
   const form = field.closest("form");
-  const fit = () => { field.style.height = "auto"; field.style.height = `${Math.min(field.scrollHeight, 260)}px`; };
-  field.classList.add("is-collapsed");
+  const fit = () => fitQueryField(field);
   field.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
       e.preventDefault();
       field.value = field.value.replace(/\s*\n\s*/g, " ").trim();
+      fit();
       form?.requestSubmit ? form.requestSubmit() : form?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
     }
   });
-  const touch = () => matchMedia("(hover: none) and (pointer: coarse)").matches;
-  field.addEventListener("focus", () => { field.classList.remove("is-collapsed"); if (touch()) { field.classList.add("is-open"); fit(); } });
-  field.addEventListener("input", () => { if (field.classList.contains("is-open")) fit(); });
-  field.addEventListener("blur", () => { field.style.height = ""; field.classList.remove("is-open"); field.classList.add("is-collapsed"); field.scrollTop = 0; });
+  for (const event of ["focus", "input", "blur"]) field.addEventListener(event, fit);
+  form?.addEventListener("reset", () => requestAnimationFrame(fit));
+  // Width changes include route reveals, rotation and desktop resizing. Ignore
+  // height changes from fitting so the observer cannot feed back on itself.
+  let width = -1;
+  new ResizeObserver(([entry]) => {
+    if (entry.contentRect.width === width) return;
+    width = entry.contentRect.width;
+    requestAnimationFrame(fit);
+  }).observe(field);
+  document.fonts.ready.then(fit);
+  fit();
+}
+
+// The ask box after an answer. The answered question stays in the box (the
+// link and the filters key on it), so the next question used to land on the
+// end of it and the site answered the concatenation. Now: focusing the box
+// while it still holds the answered question selects the lot, so typing
+// replaces it; the cross empties it; phones get a short placeholder in place
+// of the example question, which the narrow box could not show whole.
+{
+  const field = $("ask-input");
+  let holdSelection = false;
+  field.addEventListener("focus", () => {
+    if (!lastAsk.question || field.value.trim() !== lastAsk.question.trim()) return;
+    holdSelection = true;
+    field.select();
+  });
+  // The mouseup that follows a click would collapse the selection to a caret.
+  field.addEventListener("mouseup", (e) => { if (holdSelection) { e.preventDefault(); holdSelection = false; } });
+  for (const event of ["blur", "keydown"]) field.addEventListener(event, () => { holdSelection = false; });
+  $("ask-clear")?.addEventListener("click", () => {
+    setQueryValue("ask-input", "");
+    field.focus();
+  });
+  const example = field.placeholder;
+  const compact = matchMedia("(max-width: 1100px), (pointer: coarse)");
+  const syncPlaceholder = () => { field.placeholder = compact.matches ? "Ask a question of the record…" : example; };
+  compact.addEventListener("change", syncPlaceholder);
+  syncPlaceholder();
 }
 attachQuickSearch($("mast-q"), $("mast-sugg"), { idPrefix: "ms" });
 attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: () => closeNavDrawer() });
@@ -2427,9 +2598,16 @@ function renderAnswer(container, text, response = {}) {
       container.appendChild(h);
     } else if (block.kind === "list") {
       const list = document.createElement(block.ordered ? "ol" : "ul");
+      if (response.money_ranking && response.answer_status === "needs_scope" && block.items.every(item => /\]\(\/ask\?q=/.test(item.text))) list.className = "answer-money-choices";
       for (const item of block.items) {
         const li = document.createElement("li");
         appendInline(li, item.text);
+        // Correction choices are navigation within this app, including previews.
+        if (list.className === "answer-money-choices") {
+          for (const link of li.querySelectorAll("a")) {
+            if (link.pathname === "/ask") link.setAttribute("href", link.pathname + link.search);
+          }
+        }
         if (item.children.length) {
           const sub = document.createElement("ul");
           for (const child of item.children) {
@@ -2478,8 +2656,18 @@ function renderAnswer(container, text, response = {}) {
       table.append(thead, tbody);
       scroll.appendChild(table);
       container.appendChild(scroll);
+    } else if (response.money_ranking && response.money_context && block.text.startsWith("Coverage: ")) {
+      const details = document.createElement("details");
+      details.className = "answer-money-method";
+      const summary = document.createElement("summary");
+      summary.textContent = "About these numbers";
+      const p = document.createElement("p");
+      appendInline(p, block.text.slice("Coverage: ".length));
+      details.append(summary, p);
+      container.appendChild(details);
     } else {
       const p = document.createElement("p");
+      if (response.money_ranking && block.text === response.money_context) p.className = "answer-money-context";
       appendInline(p, block.text);
       container.appendChild(p);
     }
@@ -3965,7 +4153,7 @@ function expenseComparisonHTML(person, benchmark, source) {
       const title = `${r.category}: ${fmtMoney(r.total)} over ${years} years, about ${fmtMoney(r.annual)} a year; median of ${r.baseline.count} parliamentarians ${fmtMoney(r.baseline.median)} a year${r.baseline.p90 ? `, ninetieth percentile ${fmtMoney(r.baseline.p90)}` : ""}`;
       return `<div class="expense-row" title="${esc(title)}">
         ${term ? `<button type="button" class="expense-name barrow-term" data-term="${esc(term)}">${esc(r.category)}</button>` : `<span class="expense-name">${esc(r.category)}</span>`}
-        <span class="expense-track" aria-hidden="true"><i class="expense-bar" style="width:${Math.max((r.annual / scale) * 100, r.annual ? 1 : 0).toFixed(1)}%"></i><i class="expense-median" style="left:${Math.min((r.baseline.median / scale) * 100, 100).toFixed(1)}%">${i === 0 ? "<em>median</em>" : ""}</i></span>
+        <span class="expense-track" aria-hidden="true"><i class="expense-bar" style="width:${Math.max((r.annual / scale) * 100, r.annual ? 1 : 0).toFixed(1)}%"></i><i class="expense-median${(r.baseline.median / scale) * 100 > 60 ? " expense-median-end" : ""}" style="left:${Math.min((r.baseline.median / scale) * 100, 100).toFixed(1)}%">${i === 0 ? "<em>median</em>" : ""}</i></span>
         <span class="expense-value"><b>${amount(r.annual, `${r.category}, this parliamentarian ${fmtMoney(r.annual)} a year, IPEA source`)}</b> a year<small>median ${amount(r.baseline.median, `${r.category}, chamber median ${fmtMoney(r.baseline.median)} a year, IPEA source`)} · total ${amount(r.total, `${r.category}, total ${fmtMoney(r.total)}, IPEA source`)}</small></span>
       </div>`;
     }).join("")}</div>
@@ -4724,8 +4912,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   };
   // A single bar where the tag line will be: the same height as the line it
   // becomes, so nothing under the title moves when the entry arrives.
-  body.innerHTML = subjectSkeleton(SUBJECT_LABELS[kind] || "Donor", name,
+  body.innerHTML = subjectSkeleton(SUBJECT_LABELS[kind] || "Donor", kind === "electorate" ? "" : name,
     `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`);
+  // An electorate's address is a reference slug ("vic-vic-la-vic-berwick"), not
+  // its name, so the title is a bar until the index says what the place is.
+  if (kind === "electorate") $("subject-title").innerHTML = '<span class="visually-hidden">Loading electorate</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span>';
   if (manageFocus) $("subject-title")?.focus();
 
   if (kind === "electorate") {
@@ -4822,13 +5013,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         { primary: true }),
       actionBtn("ask",
         askHash(isParty
-          ? `What has parliament said about the ${node.label}?`
+          ? `What has parliament said about ${partyAskName(node.label)}?`
           : ["individual", "other", ""].includes(String(node.industry || "").toLowerCase())
             ? `What has parliament said about ${node.label}?`
             : `What has parliament said about ${industryLabel(node.industry)}?`),
         `Ask what parliament said about ${isParty ? "them" : (["individual", "other", ""].includes(String(node.industry || "").toLowerCase()) ? "this donor" : "this industry")}`),
       actionBtn("search", searchHash(`"${node.label}"`, {}), "Search mentions in the record"),
-      actionBtn("download", "/graph/money.json?v=suppliers-1", "Download the data"),
+      actionBtn("download", "/graph/money.json?v=suppliers-1", "Download the map data (JSON)"),
     ]);
     sections.insertAdjacentHTML("beforeend", barList(flowRows, {
       fmt: fmtMoney,
@@ -4942,8 +5133,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       const [data, people] = await Promise.all([module.loadIndex(), module.loadPeople().catch(() => ({ people: [] }))]);
       return { module, data, person: module.findPerson(people.people, name) };
     }).catch(() => null),
+    // The party pill below only points at the party's map entry when the
+    // money data has one; an independent's would land on "Not among the top
+    // 250 disclosed donors", so they get the map itself instead.
+    party ? loadMoneyData().catch(() => null) : null,
   ]);
   if (currentSubjectKey !== key) return;
+  const partyOnMap = Boolean(party && findMoneyNode("party", party));
   const electorateLinks = electorateReference
     ? electorateReference.module.personElectorateLinksHTML(electorateReference.person, representation.representations, electorateReference.data.electorates)
     : representation.representations.map((r) => esc(r.electorate)).join(', ');
@@ -4973,9 +5169,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   ]);
   renderPortraitCredit(name, key);
   // One row on wide screens: the jump links at the left, the money map button at the right.
-  sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav>${party
+  sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav>${partyOnMap
     ? `<p class="person-money-link"><a class="action-btn" href="${esc(subjectHash("party", party))}"><span class="btn-glyph" aria-hidden="true">$</span><span>Money map from ${esc(party)}</span></a></p>`
-    : ""}</div>`);
+    : `<p class="person-money-link"><a class="action-btn" href="/money"><span class="btn-glyph" aria-hidden="true">$</span><span>Money map</span></a></p>`}</div>`);
   sections.insertAdjacentHTML("beforeend", `
     <form class="query-line subject-ask-form" id="subject-ask-form">
       <label for="subject-ask-topic">Ask about their speeches</label>
@@ -5643,7 +5839,7 @@ async function openTopicsIndex(manageFocus) {
   </a></li>`;
   $("subject-sections").innerHTML = `
     <ul class="topic-index-list" role="list">${known.map(li).join("")}</ul>
-    <details class="topic-index-coverage"><summary>About these counts</summary><p>Counts cover speeches labelled so far. The small bars show each topic’s share of federal speeches over time, scaled within that topic.</p></details>`;
+    <details class="topic-index-coverage"><summary>About these numbers</summary><p>Counts cover speeches labelled so far. The small bars show each topic’s share of federal speeches over time, scaled within that topic.</p></details>`;
   const tide = await tidePromise;
   if (currentSubjectKey !== key || !tide) return;
   for (const spark of body.querySelectorAll('[data-topic-spark]')) {
@@ -5697,7 +5893,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=20260909-quick-facts").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=20260912-directory-faces").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -6008,7 +6204,7 @@ async function openDirectory(kind, params, manageFocus) {
   const build = {
     person: buildPeopleDirectory, party: buildPartiesDirectory,
     donor: buildDonorsDirectory, campaigner: buildCampaignersDirectory,
-    electorate: async () => (await loadElectorateModule()).directorySpec(),
+    electorate: async () => { const [module] = await Promise.all([loadElectorateModule(), loadPhotoMap()]); return module.directorySpec({ photoUrlFor, partyChipHTML }); },
   }[kind];
   let spec = null;
   try { spec = await build(); } catch { /* honest failure below */ }
@@ -7114,6 +7310,8 @@ function billDivisionHref(d) {
    whatever follows is a note and is set as one. Nothing is dropped. */
 /** Prose about a division rather than the motion put: it must not be set as a heading. */
 const BILL_DESCRIPTION = /^(this (is|division|motion|amendment)\b|the (majority|motion) )/i;
+/** The source's own placeholder where the motion text should be. */
+const BILL_PLACEHOLDER = /^(long debate text truncated|text truncated|no text recorded)\.?$/i;
 
 /* The record's prose arrives as Markdown — "[motion](https://…)", "_[For
    privatising government assets](/policies/21)_" — and flattening it to text
@@ -7179,7 +7377,9 @@ function billQuestionParts(division, bill) {
   const raw = billStripStage(
     billStripTitle(billNoteRepair(division?.question), bill), division?.stage);
   const plain = billFlat(raw);
-  if (!plain) return { head: "", note: "" };
+  // "Long debate text truncated." is the source saying it has nothing, not a
+  // motion: a row carrying only that placeholder is named by its stage and date.
+  if (!plain || BILL_PLACEHOLDER.test(plain)) return { head: "", note: "" };
   if (BILL_DESCRIPTION.test(plain)) return { head: "", note: raw };
   if (plain.length <= 110) return { head: plain, note: "" };
   // The first sentence stands as the heading, measured in words a reader sees
@@ -7259,13 +7459,15 @@ function billDivisionHTML(d, bill) {
   // With no motion in the field there is no heading to write. The division's
   // own facts lead — its stage is the closest thing the record gives to a
   // name for it — and the record's prose follows as the note it is.
-  const title = head || stage || "Division";
+  // Without a motion the link is named by the division's own facts, its stage
+  // and its date, so no row is ever labelled by a placeholder sentence.
+  const title = head || [stage || "Division", d.date ? fmtDate(d.date) : ""].filter(Boolean).join(", ");
   const meta = [
     // The stage always names itself here now: the heading is the question with
     // the stage taken off it, so the two no longer say the same words twice.
     head && stage ? esc(stage) : "",
     billHouse(d.house) ? esc(billHouse(d.house)) : "",
-    d.date ? esc(fmtDate(d.date)) : "",
+    head && d.date ? esc(fmtDate(d.date)) : "",
   ].filter(Boolean).join(" · ");
   return `<li class="bill-division${head ? "" : " bill-division-unnamed"}">
     ${target
@@ -7467,14 +7669,19 @@ async function openBill(key, manageFocus) {
       ${billRelatedHTML(bill)}
     </div>
     ${billSummaryHTML(bill)}
+    <p class="action-row bill-actions">
+      ${actionBtn("search", searchHash(`"${title}"`, {}), "Search the record for this bill", { primary: true })}
+      ${actionBtn("ask", askHash(`What did parliament say about the ${billName(bill)}?`), "Ask what parliament said about this bill")}
+      ${billhome ? actionBtn("external", billhome, "Official bill home", { external: true }) : ""}
+      ${actionBtn("entry", "/bills", "All bills")}
+    </p>
     ${billTimelineHTML(bill)}
     ${billDivisionsHTML(bill)}
     ${billSpeechesHTML(bill)}
     ${billActsHTML(bill)}
-    <p class="action-row bill-actions">
-      ${actionBtn("search", searchHash(`"${title}"`, {}), "Search the record for this bill", { primary: true })}
-      ${actionBtn("ask", askHash(`What did parliament say about the ${billName(bill)}?`), "Ask about it")}
-      ${billhome ? actionBtn("external", billhome, "Official bill home", { external: true }) : ""}
+    <p class="action-row bill-actions bill-actions-foot">
+      ${actionBtn("search", searchHash(`"${title}"`, {}), "Search the record for this bill")}
+      ${actionBtn("ask", askHash(`What did parliament say about the ${billName(bill)}?`), "Ask what parliament said about this bill")}
       ${actionBtn("entry", "/bills", "All bills")}
     </p>
     <p class="fineprint">${BILLS_FINEPRINT}</p>`;
@@ -7788,7 +7995,7 @@ const GAMES = {
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=ia-ux-20260908-2", mount: "mountLedger" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=receipt-years-20260913", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=ia-ux-20260908-2", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
@@ -8094,7 +8301,7 @@ async function renderFrontTopic() {
       </nav>` : ""}
       <p class="fineprint" style="margin-top:0.9rem">The topic rotates daily.
       <a href="/reports/${esc(today.slug)}">Read the full ${esc(report.title)} report</a> ·
-      ${mwTopic ? `<a href="${esc(subjectHash("topic", mwTopic))}">Follow the topic live</a> · ` : ""}
+      ${mwTopic ? `<a href="${esc(subjectHash("topic", mwTopic))}">Topic page: ${esc(TOPICS[mwTopic] || report.title)}</a> · ` : ""}
       <a href="/reports">All reports</a></p>`;
     $("mod-mw").hidden = false;
 
@@ -8656,6 +8863,7 @@ async function runAsk(question) {
   foldHero(true);
   $("ask-followups").hidden = true;
   $("ask-followups").replaceChildren();
+  $("ask-again").hidden = true;
   $("ask-answer").askEvidence = [];
   const btn = $("ask-submit");
   $("ask-money").hidden = true;
@@ -8751,7 +8959,7 @@ async function runAsk(question) {
     const citedList = cited.length ? cited : sources;
     const alsoList = cited.length ? retrieved : [];
     $("ask-answer").askEvidence = citedList;
-    lastAsk = { question, answer: answerText, sources, kind: askKind(), answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts };
+    lastAsk = { question, answer: answerText, sources, kind: askKind(), answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context };
     if (!data.money_ranking) prefetchAskFollowups(lastAsk);
 
     if (data.money_ranking) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
@@ -8765,6 +8973,9 @@ async function runAsk(question) {
     if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
       renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question) });
+      // A calculated money answer gets no generated follow-ups, so it carries
+      // two fixed next steps instead of dead-ending under its table.
+      if (data.money_ranking && data.answer_status === "calculated") renderMoneyNextSteps($("ask-answer"), answerText);
     } else {
       // Both attempts came back blank (it happens under model load). Own it
       // plainly and hand the reader a retry, rather than a bare sources list.
@@ -8784,9 +8995,9 @@ async function runAsk(question) {
     ].filter(Boolean).join(" · ");
     $("ask-stamp").textContent =
       `Viewed ${fmtDate(localISODate())}` +
-      (inferredScope ? ` · Records indexed under ${inferredScope}` : "") +
+      (inferredScope && !data.money_context ? ` · Records indexed under ${inferredScope}` : "") +
       (corpusVersion() !== "unversioned" ? ` · corpus v${corpusVersion()}` : "") +
-      ((askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
+      (!data.money_context && (askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
         ? ` · filtered: ${askFilterSummary(askFilters()) || `${speakerFilter}'s speeches`}` : "");
     renderAskDateRuler(sources, isCited);
     $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1, true)));
@@ -8802,6 +9013,7 @@ async function runAsk(question) {
     holdPeopleRail(600);
     setPeopleRail(citedList);
     setQuoteRail(citedList);
+    renderAskAgainChips();
     $("ask-answer").focus({ preventScroll: true });
   } catch (err) {
     if (askAbort !== myAbort) return; // a newer request owns the UI now
@@ -8809,7 +9021,14 @@ async function runAsk(question) {
     if (err.name === "AbortError") setStatus($("ask-status"), "Cancelled.");
     else {
       setStatus($("ask-status"),
-        `${err.message || err}. The record is still there; try again.`, true);
+        `${err.message || err}. The record is still there.`, true);
+      // The way back is a button, not a sentence.
+      const retry = document.createElement("button");
+      retry.type = "button";
+      retry.className = "action-btn ask-retry";
+      retry.textContent = "Try again";
+      retry.addEventListener("click", () => runAsk(question));
+      $("ask-status").append(" ", retry);
       // A failed ask leaves the page empty; the suggested starts return.
       // (A stream that broke after its first words leaves them standing.)
       if ($("ask-result").hidden) {
@@ -8843,8 +9062,8 @@ $("ask-copylink").addEventListener("click", (e) => {
     "Copied. Opening it re-asks the question; wording may vary");
 });
 
-$("ask-export").addEventListener("click", () => {
-  offerExport(lastAsk.sources,
+mountExportMenu($("ask-export-picker"), (format) => {
+  exportSources(format, lastAsk.sources,
     [`# question: ${lastAsk.question}`, `# note: sources retrieved for a generated answer`],
     "opax-ask-sources");
 });
@@ -8855,10 +9074,27 @@ $("ask-continue").addEventListener("click", () => {
   goRoute("/chat");
 });
 
+/** A suggested question, chosen: into the box, into the URL, and asked. */
+function askSuggestion(q) {
+  setQueryValue("ask-input", q);
+  replaceRoute(askHash(q));
+  setCrumbs([{ label: "Ask" }]);
+  runAsk(q);
+}
+
+function suggestionChip(q) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "chip";
+  b.textContent = q;
+  b.addEventListener("click", () => askSuggestion(q));
+  return b;
+}
+
 /**
  * Suggested questions as home-page cards. They exist to start a first journey,
- * so they leave the moment a question is asked (runAsk hides the block) and
- * only return if that ask fails and the page is empty again.
+ * so they leave the moment a question is asked (runAsk hides the block); under
+ * the answer, renderAskAgainChips brings a fresh four back.
  */
 function renderChips() {
   // An ask already underway (status set synchronously at runAsk start) or
@@ -8867,21 +9103,69 @@ function renderChips() {
   if (!suggestions.length) return;
   const row = $("chip-row");
   for (const el of row.querySelectorAll(".chip")) el.remove();
-  const picks = [...suggestions].sort(() => Math.random() - 0.5).slice(0, 4);
-  for (const q of picks) {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "chip";
-    b.textContent = q;
-    b.addEventListener("click", () => {
-      $("ask-input").value = q;
-      replaceRoute(askHash(q));
-      setCrumbs([{ label: "Ask" }]);
-      runAsk(q);
-    });
-    row.appendChild(b);
-  }
+  const picks = [...new Set([...featuredSuggestions, ...suggestions])].slice(0, 4);
+  for (const q of picks) row.appendChild(suggestionChip(q));
   $("ask-chips").hidden = false;
+}
+
+/** "Ask something else" under an answer: four examples, never the one just answered. */
+function renderAskAgainChips() {
+  const box = $("ask-again"), row = $("ask-again-row");
+  if (!box || !row || !suggestions.length) return;
+  row.replaceChildren();
+  const asked = (lastAsk.question || "").trim().toLowerCase();
+  const picks = suggestions.filter((q) => q.trim().toLowerCase() !== asked)
+    .sort(() => Math.random() - 0.5).slice(0, 4);
+  for (const q of picks) row.appendChild(suggestionChip(q));
+  box.hidden = !picks.length;
+}
+
+/**
+ * Next steps under a calculated money answer ("From disclosed receipts"). The
+ * answer's own "Explore these records" link carries the map's filters, and
+ * its table names the leading donor; both are read from the answer text the
+ * Worker wrote (src/ask-money.ts), so nothing is invented here.
+ */
+function moneyNextSteps(answer) {
+  const text = String(answer || "");
+  const explore = /\[Explore these records\]\(([^\s()]+)\)/.exec(text);
+  const href = explore && safeAnswerLink(explore[1]);
+  let map = null;
+  if (href) {
+    const url = new URL(href, "https://opax.com.au");
+    // The map applies these exact donor, party, jurisdiction and year filters.
+    // Keep the validated relative URL so a next step also stays in a preview.
+    if (url.pathname === "/money") map = href;
+  }
+  const table = /\|\s*(Donor → party|Donor|Recipient party)\s*\|[^\n]*\n\|[^\n]*\n\|\s*([^|\n]+?)\s*\|/.exec(text);
+  let donor = "";
+  if (table?.[1] === "Donor") donor = table[2];
+  else if (table?.[1] === "Donor → party") donor = table[2].split(" → ")[0].trim();
+  donor = donor.replace(/\*\*/g, "").trim();
+  return { map, donor };
+}
+
+function renderMoneyNextSteps(container, answer) {
+  const { map, donor } = moneyNextSteps(answer);
+  if (!map && !donor) return;
+  const nav = document.createElement("nav");
+  nav.className = "answer-money-next";
+  nav.setAttribute("aria-label", "Next steps");
+  if (map) {
+    const a = document.createElement("a");
+    a.className = "action-btn";
+    a.href = map;
+    a.textContent = "Explore this funding on the money map";
+    nav.appendChild(a);
+  }
+  if (donor) {
+    const a = document.createElement("a");
+    a.className = "action-btn";
+    a.href = askHash(`What has parliament said about ${donor}?`);
+    a.textContent = `Ask what parliament said about ${donor}`;
+    nav.appendChild(a);
+  }
+  container.appendChild(nav);
 }
 
 function setFrontPageHidden(hidden) {
@@ -8895,7 +9179,7 @@ function setFrontPageHidden(hidden) {
 
 // --- chat (keep asking) -----------------------------------------------------
 // Follow-up questions for the answer on the Ask page are generated as soon as
-// the answer lands, not when the reader chooses "Keep asking about this": by
+// the answer lands, not when the reader chooses "Continue in a conversation": by
 // then the chips are usually ready and the chat opens with them in place. The
 // result rides on lastAsk (so the seed carries it); an unfinished fetch is
 // registered so the chat view can await it instead of asking again.
@@ -8926,14 +9210,14 @@ function prefetchAskFollowups(ask) {
       renderFollowups(questions, $("ask-followups"), (item) => {
         $("ask-continue").click();
         sendChat(item.question, item);
-      });
+      }, "Suggested follow-ups · opens a conversation");
     }
     return questions;
   }).catch(() => []);
   askFollowupsInflight = { question: ask.question, answer: ask.answer, promise };
 }
 
-// The ask page's "Keep asking about this" button seeds a conversation with the
+// The ask page's "Continue in a conversation" button seeds a conversation with the
 // original question and answer; every later turn goes back to /api/ask with
 // the prior turns as context, and each answer offers follow-up questions the
 // Worker generated from the passages retrieved for that answer (a candidate it
@@ -8962,6 +9246,20 @@ function loadChatSession() {
   } catch { /* malformed storage reads as an empty thread */ }
 }
 
+// "Start a new conversation": drop the thread and its seed, clear the ask
+// page, and land on an empty Ask box.
+$("chat-new")?.addEventListener("click", () => {
+  chatAbort?.abort();
+  chatFollowAbort?.abort();
+  chatThread = [];
+  try {
+    sessionStorage.removeItem("opax-chat");
+    sessionStorage.removeItem("opax-chat-seed");
+  } catch { /* nothing stored to forget */ }
+  resetAsk();
+  goRoute("/ask");
+});
+
 function initChat(manageFocus) {
   if (!chatThread.length) loadChatSession();
   try {
@@ -8974,8 +9272,8 @@ function initChat(manageFocus) {
       if (seed?.question && seed?.answer &&
           !(chatThread[0]?.text === seed.question && chatThread[1]?.text === seed.answer)) {
         chatThread = [
-          { role: "user", text: seed.question },
-          { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts },
+          { role: "user", text: seed.question, fundingQuestion: seed.money_question },
+          { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context },
         ];
         chatKind = seed.kind === "speech" ? "speech" : "all";
         saveChatSession();
@@ -9008,7 +9306,10 @@ function renderChatThread() {
   if (!chatThread.length) {
     const p = document.createElement("p");
     p.className = "chat-hint";
-    p.textContent = "Ask the record a question below — or ask one on the Ask page and choose “Keep asking about this” to continue it here.";
+    const link = document.createElement("a");
+    link.href = "/ask";
+    link.textContent = "ask one on the Ask page";
+    p.append("Ask the record a question below, or ", link, " and choose “Continue in a conversation” to continue it here.");
     thread.appendChild(p);
     return;
   }
@@ -9132,7 +9433,7 @@ function renderChatNext(questions) {
   renderFollowups(questions, next, (item) => sendChat(item.question, item));
 }
 
-function renderFollowups(questions, next, onSelect) {
+function renderFollowups(questions, next, onSelect, caption) {
   if (!next || !questions.length) return;
   next.hidden = false;
   next.replaceChildren();
@@ -9141,6 +9442,12 @@ function renderFollowups(questions, next, onSelect) {
   kicker.className = "subject-section-title";
   kicker.textContent = "Ask next";
   next.appendChild(kicker);
+  if (caption) {
+    const note = document.createElement("p");
+    note.className = "chat-next-note";
+    note.textContent = caption;
+    next.appendChild(note);
+  }
   const row = document.createElement("div");
   row.className = "chat-next-btns";
   row.setAttribute("role", "group");
@@ -9178,7 +9485,7 @@ async function sendChat(question, carry) {
   chatAbort = myAbort;
   // Everything before this question travels as context for the retrieval.
   const context = chatThread
-    .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.text }))
+    .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.role === "user" && typeof m.fundingQuestion === "string" ? m.fundingQuestion : m.text }))
     .slice(-12);
   // A chip's question was proven against a passage retrieved for the PREVIOUS
   // answer; fresh retrieval on the chip's wording alone can miss that passage,
@@ -9191,7 +9498,8 @@ async function sendChat(question, carry) {
       text: `From the record${carry.source ? ` (${carry.source})` : ""}: "${carry.evidence}"`,
     });
   }
-  chatThread.push({ role: "user", text: q });
+  const userTurn = { role: "user", text: q };
+  chatThread.push(userTurn);
   saveChatSession();
   renderChatThread();
   $("chat-input").value = "";
@@ -9255,10 +9563,13 @@ async function sendChat(question, carry) {
     });
     live?.stop();
     if (chatAbort !== myAbort) return;
+    if (data.money_ranking && typeof data.money_question === "string") userTurn.fundingQuestion = data.money_question;
     chatThread.push({
       role: "answer",
       text: (data.answer || "").trim() || "(no answer)",
       answer_status: data.answer_status,
+      money_ranking: data.money_ranking,
+      money_context: data.money_context,
       evidence_excerpts: data.evidence_excerpts,
       sources: (data.sources || []).map((source) => ({
         ...source,
@@ -9544,12 +9855,21 @@ const FILTER_KIND_LABELS = {
   interest: "Declared interest", expense: "Parliamentary expenses", access: "Meeting or lobbying register",
   campaigner: "Campaigner or associated entity", report: "Research report",
 };
-function recordTypeHref(kind) {
+// A document kind narrows the search in hand: the query and filters travel
+// with it, so "Speeches" on a row is the same search, speeches only, rather
+// than an empty form. Dataset kinds go to their own hubs.
+function recordTypeHref(kind, q = "", f = {}) {
   const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/discover', grant:'/money/grants', bill:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports' };
-  return roots[kind] || '/search?' + new URLSearchParams({kind});
+  if (roots[kind]) return roots[kind];
+  const p = new URLSearchParams();
+  if (q) p.set("q", q);
+  for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
+  if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
+  p.set("kind", kind);
+  return '/search?' + p;
 }
-function recordTypeLink(kind) {
-  return `<a class="search-record-kind" href="${esc(recordTypeHref(kind))}">${esc(FILTER_KIND_LABELS[kind] || kind)}</a>`;
+function recordTypeLink(kind, q, f) {
+  return `<a class="search-record-kind" href="${esc(recordTypeHref(kind, q, f))}">${esc(FILTER_KIND_LABELS[kind] || kind)}</a>`;
 }
 const FILTER_MODE_LABELS = { hybrid: "Hybrid", semantic: "Semantic", keyword: "Keyword" };
 
@@ -9701,7 +10021,7 @@ function applySearchParams(params) {
   const key = params.toString();
   if (key === searchApplied) return;
   searchApplied = key;
-  $("search-input").value = params.get("q") || "";
+  setQueryValue("search-input", params.get("q") || "");
   for (const name of ["speaker", "party", "state", "topic"]) $("f-" + name).value = params.get(name) || "";
   for (const [name, fallback] of [["from", RECORD_FIRST_YEAR], ["to", RECORD_LAST_YEAR]]) {
     const year = Number(params.get(name)) || fallback;
@@ -9740,7 +10060,6 @@ function clearSearchResults() {
     briefs: {}, briefsLoading: false,
   };
   $("search-results").replaceChildren();
-  $("search-coverage").hidden = true;
   $("results-bar").hidden = true;
   $("search-date-ruler").hidden = true;
   $("search-date-ruler").replaceChildren();
@@ -9779,7 +10098,7 @@ function renderSearchChips() {
     b.style.setProperty("--i", String(i + 1));
     b.textContent = q;
     b.addEventListener("click", () => {
-      $("search-input").value = q;
+      setQueryValue("search-input", q);
       $("search-form").requestSubmit();
     });
     row.appendChild(b);
@@ -9836,7 +10155,7 @@ function renderResults(results) {
       const li = document.createElement("li");
       if (r.href) {
         li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
-          <div class="result-meta">${recordTypeLink(r.kind)}${r.source ? ` · ${esc(r.source)}` : ""}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}</div>
+          <div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${r.source ? ` · ${esc(r.source)}` : ""}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}</div>
           <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>
           <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>`;
         return li;
@@ -9854,9 +10173,11 @@ function renderResults(results) {
         r.date ? `<time datetime="${esc(r.date)}">${esc(fmtDate(r.date))}</time>` : "",
       ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
+      // Opening a speech row loads the whole speech in place, so its button says so.
+      const more = r.kind === "speech" ? "Read the full speech here" : "Read more";
       li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="/doc/${encodeURIComponent(r.slug)}">${esc(title)}</a></h3>
-        <div class="result-meta">${recordTypeLink(r.kind)}${meta ? ` · ${meta}` : ""}</div>${text}
-        <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>
+        <div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${meta ? ` · ${meta}` : ""}</div>${text}
+        <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false" data-more="${esc(more)}">${esc(more)}</button>
         ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a href="${esc(subjectHash("topic", topic))}">${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
       return li;
     }),
@@ -9876,7 +10197,7 @@ function refreshSearchPassageFolds() {
       const expanded = btn.getAttribute("aria-expanded") !== "true";
       text.classList.toggle("is-collapsed", !expanded);
       btn.setAttribute("aria-expanded", String(expanded));
-      btn.textContent = expanded ? "Show less" : "Read more";
+      btn.textContent = expanded ? "Show less" : (btn.dataset.more || "Read more");
       // The retrieved passage is a few sentences; the first opening swaps in
       // the speech itself, so reading on means reading the record.
       const slug = text.closest("li")?.querySelector(".result-title")?.getAttribute("href")?.replace(/^\/doc\//, "");
@@ -10061,6 +10382,31 @@ let searchAnswerAbort = null;
 let searchAnswerWanted = false;
 let searchAnswerKey = "";
 
+// The summary runs with every fresh search, but a reader who dismisses it has
+// said something: the dismissal is remembered across searches (and visits),
+// and "Show cited summary" in the results bar brings it back and forgets it.
+const SUMMARY_DISMISSED_KEY = "opax-search-summary-dismissed";
+function summaryDismissed() {
+  try { return localStorage.getItem(SUMMARY_DISMISSED_KEY) === "1"; } catch { return false; }
+}
+function setSummaryDismissed(on) {
+  try {
+    if (on) localStorage.setItem(SUMMARY_DISMISSED_KEY, "1");
+    else localStorage.removeItem(SUMMARY_DISMISSED_KEY);
+  } catch { /* no storage: the dismissal lasts the page */ }
+}
+function syncSummaryToggle() {
+  const btn = $("search-summary-show");
+  if (!btn) return;
+  btn.hidden = !(summaryDismissed() && lastSearch.key && !$("results-bar").hidden);
+}
+$("search-summary-show")?.addEventListener("click", () => {
+  setSummaryDismissed(false);
+  searchAnswerWanted = true;
+  syncSummaryToggle();
+  if (lastSearch.key) void runSearchAnswer(lastSearch.query, lastSearch.filters, lastSearch.key);
+});
+
 function giveUpSearchAnswer() {
   searchAnswerAbort?.abort();
   searchAnswerAbort = null;
@@ -10073,6 +10419,53 @@ function refreshSearchLayout() {
 }
 window.addEventListener("resize", refreshSearchLayout);
 document.fonts?.ready.then(refreshSearchLayout);
+
+/**
+ * Read a streamed search overview (docs/STREAMING.md): `point` events as each
+ * validated point lands, then `done` with the synchronous payload. A plain
+ * JSON reply (a cache hit, an empty result set, an error) is returned as is.
+ */
+async function readSummaryStream(url, signal, on) {
+  const res = await fetch(url, { headers: { accept: "text/event-stream" }, signal });
+  if (!(res.headers.get("content-type") || "").includes("text/event-stream")) {
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+    return data;
+  }
+  let final = null;
+  const dispatch = (block) => {
+    let event = "message";
+    const data = [];
+    for (const line of block.split("\n")) {
+      if (line.startsWith("event:")) event = line.slice(6).trim();
+      else if (line.startsWith("data:")) data.push(line.slice(5).replace(/^ /, ""));
+    }
+    if (!data.length) return;
+    let payload;
+    try { payload = JSON.parse(data.join("\n")); } catch { return; }
+    if (event === "point") on.point?.(payload);
+    else if (event === "done") final = payload;
+    else if (event === "error") throw new Error(payload.error || "Summary unavailable");
+  };
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    let at;
+    while ((at = buffer.indexOf("\n\n")) >= 0) {
+      const block = buffer.slice(0, at);
+      buffer = buffer.slice(at + 2);
+      if (block.trim()) dispatch(block);
+    }
+  }
+  buffer += decoder.decode();
+  if (buffer.trim()) dispatch(buffer);
+  if (!final) throw new Error("Summary unavailable");
+  return final;
+}
 
 async function runSearchAnswer(q, f, key) {
   searchAnswerAbort?.abort();
@@ -10092,17 +10485,40 @@ async function runSearchAnswer(q, f, key) {
   $("search-answer-retry").hidden = true;
   $("search-answer-status").classList.remove("visually-hidden");
   setStatus($("search-answer-status"), "Reading matching records…");
-  $("search-answer-dismiss").onclick = () => { searchAnswerWanted = false; giveUpSearchAnswer(); };
+  $("search-answer-dismiss").onclick = () => {
+    searchAnswerWanted = false;
+    setSummaryDismissed(true);
+    giveUpSearchAnswer();
+    syncSummaryToggle();
+  };
   $("search-answer-retry").onclick = () => runSearchAnswer(q, f, key);
+  // Points arrive one at a time over the stream and fade in as they land;
+  // `done` then attaches the numbered citations and the source list.
+  const shown = [];
+  const showPoint = (point, animate) => {
+    const skeleton = body.querySelector(".answer-skeleton");
+    if (skeleton && !skeleton.classList.contains("is-tail")) {
+      skeleton.replaceChildren(Object.assign(document.createElement("i"), { style: "width:62%" }));
+      skeleton.classList.add("is-tail");
+    }
+    const p = document.createElement("p");
+    p.className = "summary-point" + (animate ? " stream-in" : "");
+    p.append(document.createTextNode(point.text + " "));
+    if (skeleton) body.insertBefore(p, skeleton); else body.append(p);
+    shown.push(p);
+    return p;
+  };
   try {
-    const data = await api(`/api/search-summary?${searchQueryParams(q, f, 1, "relevance")}`, { signal: abort.signal });
+    const data = await readSummaryStream(`/api/search-summary?stream=1&${searchQueryParams(q, f, 1, "relevance")}`, abort.signal, {
+      point: (point) => { if (mine()) showPoint(point, true); },
+    });
     if (!mine()) return;
     if (data.status === "empty") { box.hidden = true; return; }
     if (!data.points?.length || !data.sources?.length) throw new Error("Summary unavailable");
     const sources = new Map(data.sources.map((s, i) => [s.id, { ...s, number: i + 1 }]));
-    body.replaceChildren(...data.points.map(point => {
-      const p = document.createElement("p");
-      p.append(document.createTextNode(point.text + " "));
+    body.querySelector(".answer-skeleton")?.remove();
+    data.points.forEach((point, i) => {
+      const p = shown[i] && shown[i].textContent.trim() === point.text ? shown[i] : (shown[i]?.remove(), shown[i] = showPoint(point, true));
       for (const id of point.source_ids) {
         const s = sources.get(id);
         if (!s || !/^\/(?!\/)/.test(s.href)) continue;
@@ -10113,8 +10529,8 @@ async function runSearchAnswer(q, f, key) {
         a.setAttribute("aria-label", `Source ${s.number}: ${s.title}`);
         p.append(a, document.createTextNode(" "));
       }
-      return p;
-    }));
+    });
+    for (const extra of shown.slice(data.points.length)) extra.remove();
     $("search-answer-sources").replaceChildren(...[...sources.values()].map(s => {
       const li = document.createElement("li"), a = document.createElement("a");
       a.className = "source-title";
@@ -10166,7 +10582,7 @@ async function runSearch(page = 1) {
   const analyticsStarted = performance.now();
   trackOutcome("opax_search_started", { page, filter_count: Object.values(f).filter(Boolean).length });
   if (fresh) {
-    searchAnswerWanted = !!(q || f.speaker);
+    searchAnswerWanted = !!(q || f.speaker) && !summaryDismissed();
     searchAnswerKey = key;
     searchAnswerAbort?.abort();
     $("search-answer").hidden = true;
@@ -10194,8 +10610,6 @@ async function runSearch(page = 1) {
     const data = await api(`/api/search-all?${searchQueryParams(q, f, page, sort)}`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
     const results = data.results || [];
-    $("search-coverage").hidden = !data.coverage;
-    $("search-coverage").querySelector("p").textContent = data.coverage || "";
     trackOutcome("opax_search_completed", { page, result_count: results.length, total_count: data.total ?? results.length, duration_ms: Math.round(performance.now() - analyticsStarted) });
     lastSearch = {
       key, query: q, filters: f, sort, results,
@@ -10227,6 +10641,7 @@ async function runSearch(page = 1) {
       const last = Math.min(lastSearch.page * lastSearch.perPage, lastSearch.total);
       $("results-count").innerHTML = `<span class="search-count-wide">${esc(resultsCountLine(lastSearch))}</span><span class="search-count-phone">${first}–${last} of ${lastSearch.total.toLocaleString()}${lastSearch.truncated ? " strongest matches" : " matches"}</span>`;
       $("results-bar").hidden = false;
+      syncSummaryToggle();
       renderSearchDateRuler(lastSearch.years, q, f);
       syncSearchReadBar();
       renderResults(results);
@@ -10301,10 +10716,10 @@ $("search-copylink").addEventListener("click", (e) => {
 
 // Export means the whole result set, not the page in hand. The Worker keeps
 // the retrieved window assembled, so `per` takes all of it in one request.
-$("search-export").addEventListener("click", async (e) => {
+mountExportMenu($("search-export-picker"), async (format) => {
   const s = lastSearch;
   if (!s.results.length) return;
-  const btn = e.currentTarget;
+  const btn = $("search-export");
   const label = btn.querySelector("span");
   const wording = label.textContent;
   let rows = s.results;
@@ -10325,7 +10740,7 @@ $("search-export").addEventListener("click", async (e) => {
     }
   }
   const f = s.filters;
-  offerExport(rows, [
+  exportSources(format, rows, [
     `# query: ${s.query}`,
     `# filters: ${activeFilterSummary(f) || "none"} · record type: ${f.kind || "all"} · mode: ${f.mode || "hybrid"} · sort: ${s.sort}`,
     `# scope: ${scope}`,
@@ -10376,6 +10791,7 @@ async function openDocPage(slug, manageFocus) {
   $("doc-cite-panel").hidden = true;
   $("doc-cite").setAttribute("aria-expanded", "false");
   $("doc-actions").hidden = true;
+  $("doc-foot-actions").hidden = true;
   $("doc-similar-panel").hidden = true;
   $("doc-similar-panel").replaceChildren();
   $("doc-similar-panel").removeAttribute("aria-busy");
@@ -10476,12 +10892,12 @@ async function openDocPage(slug, manageFocus) {
     renderDocBillPanel(doc, slug);
     renderDocText(doc);
     $("doc-ask").href = askHash(
-      isGovernmentRelease || isResearchRecord
-        ? `What does the record say about ${topic || doc.title}?`
-        : `What has parliament said about ${topic || doc.title}?`,
+      docAskQuestion(doc, topic, isGovernmentRelease || isResearchRecord),
       isGovernmentRelease || isResearchRecord ? "all" : undefined,
     );
+    $("doc-ask-foot").href = $("doc-ask").href;
     $("doc-actions").hidden = false;
+    $("doc-foot-actions").hidden = false;
     $("doc-profile").hidden = !doc.speaker;
     $("doc-more").hidden = !doc.speaker;
     $("doc-cite-panel").innerHTML = citePanelHTML(doc);
@@ -10499,6 +10915,32 @@ async function openDocPage(slug, manageFocus) {
         : String(err.message || err), true);
     $("doc-title").textContent = "Document unavailable";
   }
+}
+
+/* The question the Ask button carries. A bill debate's title is the full
+   name of every bill in it, which made a 130-character question about no
+   speech in particular; the topic label and the speaker name it better, and
+   the title stands in only when the record offers nothing shorter. */
+function docAskQuestion(doc, debate, isRecord) {
+  const trim = (value, max) => {
+    const text = String(value || "").replace(/\s+/g, " ").trim();
+    return text.length > max ? `${text.slice(0, max).replace(/\s+\S*$/, "")}…` : text;
+  };
+  const topicSlug = (Array.isArray(doc.topics) ? doc.topics : []).find((t) => TOPICS[t]);
+  // A title that is only the speaker and the date names no subject at all, and
+  // a debate heading like "Bills" or "Adjournment" names a slot, not a subject.
+  const generic = /^(bills?|motions?|statements?(?: by (?:members|senators))?|matters? of public importance|questions? (?:without|on) notice|adjournment|committees?|business|documents|petitions|ministerial statements?|condolences?|debate)$/i;
+  const stage = /\s+[-–—]\s+(?:first|second|third) reading$|\s+[-–—]\s+(?:in committee|consideration in detail|committee of the whole)$/i;
+  const named = (value) => { const text = String(value || "").replace(stage, "").trim(); return generic.test(text) ? "" : text; };
+  const fallback = named(titleSubject(doc));
+  const heading = named(debate);
+  const subject = topicSlug ? TOPICS[topicSlug] : heading.length <= 70 ? heading : trim(heading || fallback, 70);
+  let about = String(subject || trim(fallback, 70)).replace(/[.?!]+$/, "").trim();
+  if (/\bbill\b/i.test(about) && !/^(the|a|an)\s/i.test(about)) about = `the ${about}`;
+  if (isRecord) return `What does the record say about ${about || trim(doc.title, 70)}?`;
+  if (doc.speaker && about) return `What did ${doc.speaker} say about ${about}?`;
+  if (doc.speaker) return `What has ${doc.speaker} said in parliament?`;
+  return `What has parliament said about ${about || trim(doc.title, 70)}?`;
 }
 
 // Preserve the source verbatim, including whitespace. Only presentation changes.
@@ -10585,7 +11027,7 @@ async function renderDocSimilar(doc) {
           <p>${esc(excerpt(brief || row.snippet || "No passage available."))}</p>
           <p class="doc-related-meta">${brief ? "Machine summary · not part of the record" : "Passage from the record"}</p></li>`;
       }).join("")}</ul>` : '<p>No related speeches found for this subject.</p>') +
-      `<div class="doc-related-actions"><a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject ↗</a>
+      `<div class="doc-related-actions"><a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject →</a>
         <button type="button" class="action-btn" data-doc-close="doc-similar">Close similar</button></div>`;
   } catch {
     if (currentDoc !== doc) return;
@@ -10607,10 +11049,31 @@ function closeDocPanel(triggerId) {
 for (const [id, icon] of [
   ["doc-profile", "map"], ["doc-cite", "cite"], ["doc-more", "speeches"],
   ["doc-similar", "search"], ["doc-copylink", "link"],
+  ["doc-cite-foot", "cite"], ["doc-similar-foot", "search"], ["doc-copylink-foot", "link"],
 ]) {
   const btn = $(id);
   btn.innerHTML = `${iconSvg(icon)}<span>${esc(btn.textContent)}</span>`;
 }
+// The row at the end of the speech works the panels at the top: open them,
+// then bring the reader up to them, since the page can be very long.
+$("doc-cite-foot").addEventListener("click", () => {
+  const panel = $("doc-cite-panel");
+  if (panel.hidden) $("doc-cite").click();
+  panel.scrollIntoView({ block: "start" });
+  panel.setAttribute("tabindex", "-1");
+  panel.focus({ preventScroll: true });
+});
+$("doc-similar-foot").addEventListener("click", () => {
+  if (!currentDoc) return;
+  const panel = $("doc-similar-panel");
+  if (panel.hidden) $("doc-similar").click();
+  panel.scrollIntoView({ block: "start" });
+  panel.setAttribute("tabindex", "-1");
+  panel.focus({ preventScroll: true });
+});
+$("doc-copylink-foot").addEventListener("click", () => {
+  if (currentDocSlug) copyText(opaxUrl(currentDocSlug), $("doc-copylink-foot").querySelector("span"));
+});
 $("panel-doc").addEventListener("click", (event) => {
   const close = event.target.closest("[data-doc-close]");
   if (close) closeDocPanel(close.dataset.docClose);
@@ -12292,6 +12755,7 @@ fetch("/corpus.json").then((r) => r.json()).then((m) => {
 
 fetch("/suggestions.json").then((r) => r.json()).then((s) => {
   suggestions = s.questions || [];
+  featuredSuggestions = Array.isArray(s.featured) ? s.featured.filter(q => suggestions.includes(q)) : [];
   renderChips();
 }).catch(() => {});
 
@@ -12360,6 +12824,7 @@ const VIEW_DESCRIPTIONS = {
   discover: "Explore overlaps and concentrations across recorded party receipts and government contracts, with evidence and limitations for every investigation lead.",
   search: "Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year.",
   money: "Disclosed political donations as territory you can spin: donors, parties and 28 years of returns.",
+  connections: "Organisations, programs and places named across speeches, official releases and grant records, each opened to its source excerpts.",
   reports: "Standing investigations pairing the money with the words, every claim cited to the record.",
   subject: "An entry in the OPAX encyclopedia of Australian parliamentarians, parties, donors and topics.",
   doc: "A document from the Australian parliamentary record, with its speaker, date and official source.",

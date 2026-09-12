@@ -4,12 +4,86 @@ const {rankedMoneyAnswer,isMoneyRanking}=await import('data:text/javascript;base
 const graph=JSON.parse(await readFile(new URL('../public/graph/money.json',import.meta.url),'utf8'));
 const assets={fetch:async req=>new Response(await readFile(new URL('../public'+new URL(req.url).pathname,import.meta.url)))};
 const ask=(question,filters={})=>rankedMoneyAnswer({question,...filters},assets);
+const history=(...questions)=>questions.map(text=>({author:'user',text}));
 
 test('the live fossil-fuel ranking failure is corrected using all selected edges',async()=>{
  const r=await ask('Who receives the most funding from fossil fuel donors?');
  assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\$9,013,973/);assert.match(r.answer,/\$8,526,686/);
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/not every donor/);
  assert.ok(r.sources.some(s=>s.href.includes('industry=fossil_fuels')&&s.href.includes('party=party%3ALiberal')));
+});
+
+test('funding conversations replace party, industry, donor and financial year without generation',async()=>{
+ const turns=['Who donated the most to Labor from gambling in FY2020-21?'];
+ const follow=async(question,match,source)=>{
+  const result=await ask(question,{context:history(...turns)});
+  assert.equal(result?.answer_status,'calculated',question);assert.match(result.answer,match);
+  assert.ok(result.sources.some(s=>source(new URL(s.href,'https://opax.test').searchParams)),question);
+  turns.push(question);return result;
+ };
+ await follow('What about Liberal?',/Sportsbet.*\$175,500/s,p=>p.get('party')==='party:Liberal'&&p.get('industry')==='gambling'&&p.get('from')==='2020'&&p.get('to')==='2020');
+ await follow('And fossil fuel donors?',/Woodside.*\$137,000/s,p=>p.get('industry')==='fossil_fuels'&&p.get('party')==='party:Liberal'&&p.get('from')==='2020');
+ await follow('What about Tabcorp Holdings?',/Tabcorp.*\$87,300/s,p=>p.get('focus')==='donor:tabcorp'&&!p.has('industry')&&p.get('party')==='party:Liberal');
+ await follow('And in 2021-22?',/Tabcorp.*\$87,500/s,p=>p.get('from')==='2021'&&p.get('to')==='2021'&&p.get('party')==='party:Liberal');
+ const controlled=await ask('What about 2019-20?',{context:history(...turns),party:'Nationals',from:'2022',to:'2022'});
+ assert.equal(controlled.answer_status,'calculated');assert.match(controlled.answer,/Tabcorp.*\$30,650/s);
+ assert.match(controlled.money_context,/Financial years: 2022–23/);
+ assert.ok(controlled.sources.some(s=>s.href.includes('party%3ANationals')&&s.href.includes('from=2022')));
+});
+
+test('unknown follow-up scope and relative years never reuse a stale winner',async()=>{
+ const context=history('Who receives the most money from gambling donors in 2020?');
+ for(const question of ['And the unicorn lobby?','What about mining and unicorns?','And Westpac and the unicorn lobby?']) {
+  const result=await ask(question,{context});assert.equal(result?.answer_status,'needs_scope',question);
+  assert.deepEqual(result.citations,{});assert.deepEqual(result.sources,[]);assert.doesNotMatch(result.answer,/\$[\d,]+/);
+ }
+ for(const question of ['And last year?','What about January 2021?','And in 2020 and 2022?']) {
+  const result=await ask(question,{context});assert.equal(result?.answer_status,'needs_period',question);assert.deepEqual(result.sources,[]);
+ }
+ const missing=await ask('And in 1900?',{context});assert.equal(missing.answer_status,'evidence_gap');assert.deepEqual(missing.citations,{});
+});
+
+test('a self-contained money question resets history; non-funding turns end inherited receipt scope',async()=>{
+ const prior='Who donated the most to Labor from gambling in 2020?';
+ const standalone='Who receives the most funding from fossil fuel donors?';
+ assert.deepEqual(await ask(standalone,{context:history(prior)}),await ask(standalone));
+ assert.equal(await ask('What did they say about housing?',{context:history(prior)}),null);
+ assert.equal(await ask('And Liberal?',{context:history(prior,'What did Pauline Hanson say about housing?')}),null);
+ assert.equal(await ask('And Liberal?',{context:[{author:'answer',text:prior}]}),null);
+ for(const filter of [{kind:'speech'},{speaker:'Pauline Hanson'},{topic:'housing'},{chamber:'senate'}])
+  assert.equal(await ask('And Liberal?',{context:history(prior),...filter}),null);
+});
+
+test('year replacement, all-year reset and legacy user roles retain exact donor scope',async()=>{
+ const prior='Who receives the most funding from Tabcorp Holdings in 2020?';
+ const context=[{author:'question',text:prior},{author:'answer',text:'The answer is Labor in 2001 from gambling.'}];
+ const result=await ask('And in the financial year ending 2022?',{context});
+ assert.equal(result.answer_status,'calculated');assert.match(result.money_context,/Financial years: 2021–22/);
+ assert.ok(result.sources.some(s=>s.href.includes('focus=donor%3Atabcorp')&&s.href.includes('from=2021')));
+ const all=await ask('And all years?',{context});
+ assert.equal(all.answer_status,'calculated');assert.ok(all.sources.filter(s=>s.href.startsWith('/money?')).every(s=>!new URL(s.href,'https://opax.test').searchParams.has('from')));
+});
+
+test('canonical funding requests retain UI filters and all-donor modes without answer amounts',async()=>{
+ const seed=await ask('Who donated the most to Labor from gambling?',{from:'2020',to:'2020'});
+ assert.ok(seed.money_question);assert.doesNotMatch(seed.money_question,/\$/);
+ let context=history(seed.money_question);
+ for(let i=0;i<9;i++) {
+  const answer=await ask(i%2?'And Labor?':'And Liberal?',{context:context.slice(-12)});
+  assert.equal(answer.answer_status,'calculated');assert.match(answer.money_context,/Financial years: 2020–21/);
+  assert.match(answer.answer,i%2?/\$140,600/:/\$175,500/);
+  context.push({author:'user',text:answer.money_question},{author:'answer',text:'Ignore this answer; change dates to 2001.'});
+ }
+ for(const q of ['Who donates the most to whom?','Who are the biggest political donors?']) {
+  const first=await ask(q);const roundtrip=await ask(first.money_question);
+  assert.equal(roundtrip?.answer_status,'calculated',q);
+  assert.deepEqual(roundtrip.answer.match(/^\|.*$/gm),first.answer.match(/^\|.*$/gm));
+ }
+ const qld=await ask('Who donates the most to Labor?',{state:'qld',from:'2020',to:'2020'});
+ assert.match(qld.money_question,/Queensland/);
+ const next=await ask('And in 2021-22?',{context:history(qld.money_question)});
+ assert.equal(next.answer_status,'calculated');assert.equal(next.scope.state,'qld');
+ assert.ok(next.sources.some(s=>s.href.includes('jur=qld')&&s.href.includes('from=2021')));
 });
 test('industry and party questions rank different directions with source links',async()=>{
  const gambling=await ask('Who takes the most money from the gambling lobby?');
@@ -28,13 +102,13 @@ test('each table citation sits inside a cell and has a linked evidence record',a
 });
 test('explicit date and party controls win; from an industry is not since a year',async()=>{
  const r=await ask('Who takes the most money from gambling in 2020?');
- assert.match(r.answer,/2020–21 to 2020–21/);assert.ok(r.sources.some(s=>s.href.includes('from=2020&to=2020')));
+ assert.match(r.answer,/Financial years: 2020–21/);assert.doesNotMatch(r.answer,/2020–21 to 2020–21/);assert.ok(r.sources.some(s=>s.href.includes('from=2020&to=2020')));
  const filtered=await ask('Who donates the most to Labor?',{party:'Liberal',from:'2020',to:'2020'});
  assert.match(filtered.answer,/to Liberal/);assert.ok(filtered.sources.some(s=>s.href.includes('party=party%3ALiberal')));
  assert.equal((await ask('Who donates the most to Labor recently?')).answer_status,'needs_period');
 });
 test('unsupported questions are not silently replaced by lifetime or party totals',async()=>{
- for(const q of ['Who donates the most to an unknown party?','Who donates the most to Labor from the unicorn lobby?']) assert.equal(await ask(q),null);
+ for(const q of ['Who donates the most to an unknown party?','Who donates the most to Labor from the unicorn lobby?']) {const r=await ask(q);assert.equal(r.answer_status,'needs_scope');assert.deepEqual(r.sources,[]);assert.doesNotMatch(r.answer,/\$[\d,]+/);}
  for(const q of ['How much money did Labor receive?', 'What is the total gambling funding?', 'Who donates the most blood?','Which MPs personally received gambling money?','Who takes gambling money and what do they say about pokies?','Who receives the most grants?','Who donates the most to Labor excluding unions?']) assert.equal(isMoneyRanking({question:q}),false,q);
  assert.equal(await ask('Who donates the most to Labor?',{state:'nsw'}),null);
  assert.equal(isMoneyRanking({question:'Who donates the most to Labor?',speaker:'Pauline Hanson'}),false);
@@ -79,7 +153,9 @@ test('familiar corporate names find the donor without a model ranking',async()=>
 });
 
 test('unsupported comparisons and missing data never become a false winner',async()=>{
- for(const q of ['Who gets more money, Labor or Liberal or Greens?','Who gets more money from gambling or mining, Labor or Liberal?','Who gets more money from the unicorn lobby, Labor or Liberal?','Who gets more unicorn industry money, Labor or Liberal?','Compare gambling money, Labor in 2020 or Liberal in 2021?','Who gets more gambling money adjusted for inflation, Labor or Liberal?']) assert.equal(await ask(q),null,q);
+ for(const q of ['Who gets more money, Labor or Liberal or Greens?','Who gets more money from gambling or mining, Labor or Liberal?','Who gets more money from the unicorn lobby, Labor or Liberal?','Who gets more unicorn industry money, Labor or Liberal?','Who gets more gambling money adjusted for inflation, Labor or Liberal?']) assert.equal(await ask(q),null,q);
+ const mixedPeriods=await ask('Compare gambling money, Labor in 2020 or Liberal in 2021?');
+ assert.equal(mixedPeriods.answer_status,'needs_period');assert.doesNotMatch(mixedPeriods.answer,/\$/);
  const sharedRange=await ask('Who gets more gambling money, Labor or Liberal between 2020 and 2021?');
  assert.equal(sharedRange.answer_status,'calculated');assert.match(sharedRange.answer,/Labor received \$649,477 more/);assert.match(sharedRange.answer,/\$1,468,701/);assert.match(sharedRange.answer,/\$819,224/);
  const missing=await ask('Who gets more gambling money, Labor or Liberal in 1900?');
@@ -159,4 +235,103 @@ test('the whole-query check retains known aliases, reversed comparisons and expl
   'Who gets the most money from Mineralogy Pty Ltd?',
  ]) assert.equal((await ask(q)).answer_status,'calculated',q);
  assert.equal((await ask('Who gives the most money to Labor?',{party:'Liberal'})).answer_status,'calculated');
+});
+
+test('financial-year labels select one year, not two, with exact source links',async()=>{
+ for(const label of ['2020/2021','2020/21','2020–21','2020-21','2020‑21','FY2020-2021','financial year 2020–2021']) {
+  const r=await ask(`Who gets the most money from gambling in ${label}?`);
+  assert.equal(r.answer_status,'calculated',label);assert.match(r.answer,/\$457,673/);assert.doesNotMatch(r.answer,/\$1,468,701/);
+  assert.match(r.money_context,/Financial years: 2020–21/);assert.match(r.money_context,/7 donors with matching receipts/);
+  assert.ok(r.sources.some(s=>s.href.includes('from=2020&to=2020')),label);
+ }
+ const r=await ask('Who gets more gambling money, Labor or Liberal in 2020/2021?');
+ assert.match(r.answer,/\$97,478 more/);assert.doesNotMatch(r.answer,/\$649,477/);
+});
+
+test('comparisons between financial-year labels keep each year separate',async()=>{
+ const r=await ask('Did Labor receive more gambling money in 2020–21 or 2021–22?');
+ assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\$553,355 more/);
+ assert.match(r.money_context,/2020–21 and 2021–22/);
+ for(const y of ['2020','2021'])assert.ok(r.sources.some(s=>s.href.includes(`from=${y}&to=${y}`)));
+ const range=await ask('Who gets the most money from gambling from 2020–21 to 2022–23?');
+ assert.equal(range.answer_status,'calculated');assert.ok(range.sources.some(s=>s.href.includes('from=2020&to=2022')));
+});
+
+test('ambiguous or invalid year labels cannot silently change the period',async()=>{
+ for(const label of ['2020-2021','2020/22','2020/2022','2020–20','2020-01-01']) {
+  const r=await ask(`Who gets the most money from gambling in ${label}?`);
+  assert.equal(r.answer_status,'needs_period',label);assert.deepEqual(r.citations,{});assert.doesNotMatch(r.answer,/\$/);
+ }
+ const r=await ask('Who gets the most money from gambling in 2020 to 2021?');
+ assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\$1,468,701/);
+});
+
+test('a missing year has no fabricated ranking or calculation citation',async()=>{
+ const r=await ask('Who gets the most money from gambling in 1900/1901?');
+ assert.equal(r.answer_status,'evidence_gap');assert.deepEqual(r.sources,[]);assert.deepEqual(r.citations,{});
+ assert.match(r.answer,/does not establish that no funding occurred/);assert.doesNotMatch(r.answer,/\$0|received the most/);
+});
+
+test('year ending labels and requested versus actual coverage remain explicit',async()=>{
+ const r=await ask('Who gets the most money from gambling in financial year ending 2021?');
+ assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\$457,673/);assert.doesNotMatch(r.answer,/\$1,011,028/);
+ const sparse=await ask('Who gets the most money from gambling in 1900 to 2020?');
+ assert.match(sparse.money_context,/Financial years: 1900–01 to 2020–21/);
+ assert.match(sparse.money_context,/Matching recorded years: 1998–99 to 2020–21/);
+ for(const q of ['Who gets the most money from gambling in financial years 2019–20 and 2021–2022?', 'Who gets the most money from gambling in 2019–20, 2021–22?', 'Who gets the most money from gambling in 2019–20 & 2021–22?', 'Who gets the most money from gambling in calendar year 2020?', 'Who gets the most money from gambling from January to June 2020?', 'Who gets the most money from gambling on 2020-1-1?']) {
+  const answer=await ask(q);assert.equal(answer.answer_status,'needs_period',q);assert.doesNotMatch(answer.answer,/\$/);
+ }
+});
+
+
+test('an explicit year answers a period clarification without losing the funding selection',async()=>{
+ const seed=await ask('Who donated most to Liberal from Tabcorp Holdings in FY2020-21?');
+ for(const question of ['And last year?','What about January 2021?','And in 2020 and 2022?']) {
+  const clarification=await ask(question,{context:history(seed.money_question)});
+  assert.equal(clarification.answer_status,'needs_period');assert.equal(clarification.money_question,seed.money_question);
+  for(const prior of [question,clarification.money_question]) {
+   const correction=await ask('And in 2021-22?',{context:history(seed.money_question,prior)});
+   assert.equal(correction.answer_status,'calculated');assert.match(correction.answer,/Tabcorp.*\$87,500/s);
+  }
+ }
+ const unknown=await ask('And unicorns last year?',{context:history(seed.money_question)});
+ assert.equal(unknown.money_question,undefined);
+ assert.equal(await ask('And in 2021-22?',{context:history(seed.money_question,'And unicorns last year?')}),null);
+});
+
+
+const choiceQuestions=answer=>[...answer.matchAll(/\]\(\/ask\?q=([^)]*)\)/g)].map(m=>decodeURIComponent(m[1]));
+test('short donor names offer explicit choices without pooling organisations',async()=>{
+ for(const [name,expected] of [['Tabcorp',['Tabcorp Holdings Limited']],['Pratt',['Pratt Holdings Pty Ltd']],['Macquarie',['Macquarie Group Limited','Macquarie Technology Group Ltd']],['Crown',['Crown Castle Australia','Crown Resorts Limited']]]){
+  const result=await ask(`Who receives the most funding from ${name}?`);
+  assert.equal(result.answer_status,'needs_scope');assert.deepEqual(result.sources,[]);assert.deepEqual(result.citations,{});assert.doesNotMatch(result.answer,/\$[\d,]+/);
+  const choices=choiceQuestions(result.answer);assert.equal(choices.length,expected.length);
+  for(const label of expected)assert.ok(choices.some(q=>q.includes(label)),label);
+  for(const question of choices){const resolved=await ask(question);assert.equal(resolved.answer_status,'calculated');assert.ok(resolved.sources.every(x=>!x.href.startsWith('/money?')||new URL(x.href,'https://opax.test').searchParams.has('focus')));}
+ }
+ const castle=await ask('Who receives the most funding from Crown Castle Australia?');
+ assert.match(castle.answer,/Labor.*\$27,000/s);assert.doesNotMatch(castle.answer,/Crown Resorts/);
+ assert.ok(castle.sources.filter(s=>s.href.startsWith('/money?')).every(s=>new URL(s.href,'https://opax.test').searchParams.get('focus')==='donor:crown castle australia'));
+});
+test('donor choices retain UI controls, follow-up dates and explicit jurisdiction',async()=>{
+ const seed=await ask('Who donates most to Labor from gambling in 2020?');
+ const follow=await ask('And Tabcorp in 2021-22?',{context:history(seed.money_question)});
+ const q=choiceQuestions(follow.answer)[0];assert.ok(q);const result=await ask(q);
+ assert.equal(result.answer_status,'calculated');assert.match(result.money_context,/2021–22/);assert.match(result.answer,/Tabcorp/);
+ const controlled=await ask('Who receives the most funding from Tabcorp?',{party:'Liberal',from:'2020',to:'2020'});
+ const control=await ask(choiceQuestions(controlled.answer)[0]);assert.match(control.answer,/\$87,300/);assert.match(control.money_context,/2020–21/);
+ const qld=await ask('Who receives the most funding from Tabcorp?',{state:'qld',from:'2020',to:'2020'});
+ const choice=choiceQuestions(qld.answer)[0];assert.match(choice,/Queensland/);const state=await ask(choice);assert.equal(state.scope.state,'qld');
+});
+test('parenthesised donor names remain complete clickable choice URLs',async()=>{
+ const result=await ask('Who receives the most funding from Visa AP?');
+ assert.equal(result.answer_status,'needs_scope');assert.match(result.answer,/%28Australia%29/);
+ const choices=choiceQuestions(result.answer);assert.deepEqual(choices,['Who receives the most funding from Visa AP (Australia) Pty Ltd in federal records?']);
+ const resolved=await ask(choices[0]);assert.equal(resolved.answer_status,'calculated');assert.match(resolved.answer,/Labor.*\$1,969,126/s);
+ assert.ok(resolved.sources.filter(s=>s.href.startsWith('/money?')).every(s=>new URL(s.href,'https://opax.test').searchParams.get('focus')==='donor:visa ap australia'));
+});
+test('short-name suggestions never remove unsupported qualifiers or combined groups',async()=>{
+ for(const name of ['Tabcorp Holdings Europe','Pratt Holdings Mining','Macquarie Group Foundation','Tabcorp and unicorns']){
+  const result=await ask(`Who receives the most funding from ${name}?`);assert.equal(result.answer_status,'needs_scope',name);assert.deepEqual(choiceQuestions(result.answer),[],name);assert.deepEqual(result.sources,[]);assert.doesNotMatch(result.answer,/\$[\d,]+/);
+ }
 });
