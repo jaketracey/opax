@@ -1150,7 +1150,8 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   const gap: AskPayload = {answer:EVIDENCE_GAP_ANSWER,citations:{},sources:[],scope,answer_status:'evidence_gap'}
   if (!sources.length) return gap
   const payload: AskPayload = {...gap,sources}
-  return await recoverPositionAnswer(payload,{...body,position_question:input.question},env) || quotedPositionAnswer(payload,query,input.question) || gap
+  // A failed summary still shows the reader the speeches it was read from.
+  return await recoverPositionAnswer(payload,{...body,position_question:input.question},env) || quotedPositionAnswer(payload,query,input.question) || positionExcerptsAnswer(payload,query) || gap
 }
 
 /** A failed summary must not hide a usable, explicitly recorded proposal. */
@@ -1176,6 +1177,31 @@ function quotedPositionAnswer(payload: AskPayload, query: string, question = '')
   return {answer:answer.trim(),citations,scope:payload.scope,answer_status:'evidence_only',evidence_kind:'original_position_proposal',sources:sources.map(source => ({
     ...rows.find(row => row.href === source.href)!,resource:source.id,snippet:source.quote,cited:true,
   }))}
+}
+
+/** Neither a verified summary nor a proposal quote: list the originals read,
+ * with an on-topic excerpt from each of the top three, as the ordinary path
+ * does when it cannot verify a summary. Never a bare gap over real evidence. */
+function positionExcerptsAnswer(payload: AskPayload, query: string): AskPayload | null {
+  type Source = { resource?: string; slug?: string; snippet?: string; cited?: boolean }
+  const rows = payload.sources.filter((s): s is Source => !!s && typeof s === 'object')
+  const excerpts = rows.flatMap(row => {
+    const id = row.resource || row.slug || ''
+    const excerpt = typeof row.snippet === 'string' && id ? evidenceExcerpt(row.snippet, query) : { text: '', relevance: 0 }
+    return excerpt.text && excerpt.relevance ? [{ id, text: excerpt.text, relevance: excerpt.relevance }] : []
+  }).sort((a, b) => b.relevance - a.relevance).slice(0, 3)
+  if (!excerpts.length) return null
+  let answer = 'I couldn’t verify a summary of their position this time. These passages from their speeches may help.'
+  const citations: Record<string, number[][]> = {}
+  for (const excerpt of excerpts) {
+    answer += `\n\n> ${excerpt.text}`
+    const end = Array.from(answer).length
+    citations[excerpt.id] = [[end - 1, end]]
+  }
+  const used = new Map(excerpts.map(e => [e.id, e.text]))
+  return { ...payload, answer, citations, answer_status: 'evidence_only',
+    evidence_excerpts: excerpts.map(({ id, text }) => ({ resource: id, text })),
+    sources: rows.map(row => { const id = row.resource || row.slug || ''; return used.has(id) ? { ...row, resource: id, cited: true, snippet: used.get(id) } : { ...row, resource: id, cited: false } }) }
 }
 
 /** Recover a position with exact source excerpts, rather than inventing citation IDs. */

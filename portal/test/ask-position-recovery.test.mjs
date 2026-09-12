@@ -139,3 +139,19 @@ test('the speech year is accepted as a date phrase but never as a policy quantit
  assert.equal(evidenceHelpers.positionPointSupported('Albanese criticised the 2014 Abbott budget for adding a $7 co-payment to see a doctor.',budget,'What has he said about Medicare?','2014-05-27'),true);
  assert.equal(evidenceHelpers.positionPointSupported('The immigration cap would be 2014 per year.','We will cap arrivals.','What cap did he propose?','2014-05-27'),false);
 });
+
+test('a failed summary over real speeches lists them with on-topic excerpts instead of a bare gap',async()=>{
+ const askBundle=await build({entryPoints:[new URL('../src/ask-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
+ const askHelpers=await import('data:text/javascript;base64,'+Buffer.from(askBundle.outputFiles[0].text).toString('base64'));
+ const excerptStart=source.indexOf('function positionExcerptsAnswer(');
+ const excerptCode=source.slice(excerptStart,source.indexOf('/** Recover a position',excerptStart));
+ const excerpts=runInNewContext(ts.transpileModule(excerptCode,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';positionExcerptsAnswer',{...askHelpers,Intl,Date});
+ const rows=[{...payload.sources[0],resource:'r1',snippet:'I rise to speak on housing affordability. Rents have doubled and young people cannot buy a home.'},
+  {...payload.sources[0],resource:'r2',href:'/doc/speech-2',snippet:'The immigration cap will be 130,000 per year, and that is final.'},
+  {...payload.sources[0],resource:'r3',href:'/doc/speech-3',snippet:'Housing supply must rise; we will build more homes near transport.'}];
+ const out=excerpts({...payload,sources:rows},'housing');
+ assert.equal(out.answer_status,'evidence_only');assert.match(out.answer,/^I couldn’t verify a summary of their position/);
+ assert.equal(out.sources.length,3);assert.ok(out.sources.find(s=>s.resource==='r1').cited);assert.ok(out.sources.find(s=>s.resource==='r3').cited);assert.equal(out.sources.find(s=>s.resource==='r2').cited,false);
+ for(const [id,ranges] of Object.entries(out.citations)){assert.ok(out.sources.some(s=>s.resource===id&&s.cited));for(const [start,end] of ranges)assert.ok(start>=0&&end<=Array.from(out.answer).length);}
+ assert.equal(excerpts({...payload,sources:[]},'housing'),null);
+});
