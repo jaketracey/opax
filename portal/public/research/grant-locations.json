@@ -7,15 +7,15 @@
     "total_invitations": 226,
     "total_invitation_records": 227,
     "mapped_awards": 7,
-    "mapped_invitations": 13,
+    "mapped_invitations": 15,
     "mapped_award_value": 12715000.0,
-    "mapped_invitation_value": 13850000,
+    "mapped_invitation_value": 15097000,
     "total_award_value": 242781386.0,
     "total_invitation_value": 559241712,
     "award_site_count": 9,
-    "invitation_site_count": 13,
+    "invitation_site_count": 15,
     "unmapped_awards": 82,
-    "unmapped_invitations": 213,
+    "unmapped_invitations": 211,
     "payment_verified_records": 0
   },
   "methodology": [
@@ -1808,6 +1808,239 @@
         ],
         "notes": [
           "Departmental record is an invitation with status Awaiting Application. Council E&C approved submission of applications for projects deemed appropriate after due diligence and allowed scope adjustment. This is not proof of an award, executed payment or completion; no later grant match is claimed."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-082",
+      "record_type": "invitation",
+      "title": "Samford Ranger Football Club",
+      "value": 547000,
+      "state": "QLD",
+      "locality": "Samford Valley",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-082"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "samford-parklands-rangers",
+          "site_name": "Samford Parklands — Samford Rangers Football Club",
+          "address": "2149 Mount Samson Road, Samford Valley QLD 4520",
+          "locality": "Samford Valley",
+          "state": "QLD",
+          "latitude": -27.3580542,
+          "longitude": 152.8848416,
+          "location_source_url": "https://www.moretonbay.qld.gov.au/Services/Sport-Recreation/Parks/Samford-Parklands",
+          "site_precision": "venue",
+          "electorate_2025": "Dickson",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T19:45:05.656581+00:00",
+            "method": "Match the named invitation venue to current primary operator and official location records; independently check the official venue marker against AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://www.moretonbay.qld.gov.au/Services/Sport-Recreation/Parks/Samford-Parklands",
+                "excerpt": "Samford Parklands | Samford Rangers Football Club | Mt Samson Road, Samford Valley 4520 | Location marker -27.3580542,152.8848416",
+                "excerpt_kind": "structured Council venue record",
+                "role": "Council identifies the shared park venue, its football club tenant and explicit map marker",
+                "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+                "content_sha256": "b83f1fb9c5bbfb75a6f11b50c7c751c4f8216e0c5ef6997cb3d2b4fb129c3614",
+                "retrieved_url": "https://www.moretonbay.qld.gov.au/Services/Sport-Recreation/Parks/Samford-Parklands?lang_update=638617823342447627"
+              },
+              {
+                "url": "https://www.samfordrangers.org.au/aboutus",
+                "excerpt": "Samford Parklands | 2149 Mt Samson Rd, Samford",
+                "excerpt_kind": "structured club contact extraction",
+                "role": "Current primary club venue and street address",
+                "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+                "content_sha256": "5d012926ea035c9e580135bba6e2135bdff600d04cb0dd996ab9bf98d927891a"
+              },
+              {
+                "url": "https://www.samfordrangers.org.au/OrgLocations.aspx?enc=DOE%2BtsgfcVYSFJIZVJTPMA%3D%3D",
+                "excerpt": "Parklands 1, 1a, 1b, 1c, 1d, 1e, 2, 2a, 3, 3a, 3b, 3c and 4",
+                "excerpt_kind": "structured club field inventory",
+                "role": "Current club inventory lists fields within Parklands; no individual funded field is identified",
+                "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+                "content_sha256": "15ee196339d1ffae63b738b16d319bf21cdce9b4c8939f548eb20d1f3b388ee3"
+              }
+            ],
+            "notes": [
+              "The Council marker identifies the shared Samford Parklands venue. Several clubs use the park; this is not a surveyed football field or funded-work footprint.",
+              "The invitation names Samford Ranger Football Club. Current primary club and Council sources identify Samford Rangers Football Club at Samford Parklands. The specific funded field or upgrade component remains unresolved."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, test it against all 150 AEC March 2025 polygons, and measure distance to the matched boundary in EPSG:28356.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 5108
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T19:45:05.656581+00:00",
+        "method": "Read the original departmental invitation row and independently verify the named existing venue using primary operator and official venue sources. Keep invitation and election-commitment stages separate from awards, payments and completion.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Samford Ranger Football Club | Moreton Bay | QLD | Awaiting Application | 547000",
+            "excerpt_kind": "structured departmental row extraction",
+            "role": "Original invitation project name, amount and snapshot status; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "source_date": "2025-11-14",
+            "hash_scope": "Original departmental PDF bytes; row extraction independently checked against page 160"
+          },
+          {
+            "url": "https://www.samfordrangers.org.au/aboutus",
+            "excerpt": "Samford Parklands | 2149 Mt Samson Rd, Samford",
+            "excerpt_kind": "structured club contact extraction",
+            "role": "Current primary club venue and street address",
+            "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+            "content_sha256": "5d012926ea035c9e580135bba6e2135bdff600d04cb0dd996ab9bf98d927891a"
+          },
+          {
+            "url": "https://www.moretonbay.qld.gov.au/Services/Sport-Recreation/Parks/Samford-Parklands",
+            "excerpt": "Samford Parklands | Samford Rangers Football Club | Mt Samson Road, Samford Valley 4520 | Location marker -27.3580542,152.8848416",
+            "excerpt_kind": "structured Council venue record",
+            "role": "Council identifies the shared park venue, its football club tenant and explicit map marker",
+            "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+            "content_sha256": "b83f1fb9c5bbfb75a6f11b50c7c751c4f8216e0c5ef6997cb3d2b4fb129c3614",
+            "retrieved_url": "https://www.moretonbay.qld.gov.au/Services/Sport-Recreation/Parks/Samford-Parklands?lang_update=638617823342447627"
+          }
+        ],
+        "notes": [
+          "Original 14 November 2025 invitation amount and Awaiting Application status retained. No new funding record, award match, payment, completion or electorate allocation is inferred.",
+          "The Council marker identifies the shared Samford Parklands venue. Several clubs use the park; this is not a surveyed football field or funded-work footprint.",
+          "The invitation names Samford Ranger Football Club. Current primary club and Council sources identify Samford Rangers Football Club at Samford Parklands. The specific funded field or upgrade component remains unresolved."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-085",
+      "record_type": "invitation",
+      "title": "Springfield YMCA Upgrades",
+      "value": 700000,
+      "state": "QLD",
+      "locality": "Springfield Central",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-085"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "ymca-springfield-central-community-centre",
+          "site_name": "YMCA Springfield Central Community Centre",
+          "address": "134A Parkland Drive, Springfield Central QLD 4300",
+          "locality": "Springfield Central",
+          "state": "QLD",
+          "latitude": -27.69203785,
+          "longitude": 152.90831134,
+          "location_source_url": "https://results.aec.gov.au/31496/Website/Downloads/GeneralPollingPlacesDownload-31496.csv",
+          "site_precision": "venue",
+          "electorate_2025": "Blair",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T19:45:05.656581+00:00",
+            "method": "Match the named invitation venue to current primary operator and official location records; independently check the official venue marker against AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://ymcaqueensland.org.au/services/community-centres/springfield-central",
+                "excerpt": "YMCA Springfield Central Community Centre | formerly Springfield Central Sport and Community Hall | 134A Parkland Dr, Springfield Central QLD 4300",
+                "excerpt_kind": "structured operator facility extraction",
+                "role": "Primary operator explicitly links current and former facility names to the street address",
+                "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+                "content_sha256": "988b5c2da7ed200aa20a7d17cbb2877591ca1753a5ee5450c5e0095f8878cff2"
+              },
+              {
+                "url": "https://results.aec.gov.au/31496/Website/Downloads/GeneralPollingPlacesDownload-31496.csv",
+                "excerpt": "Springfield Central Sport & Community Hall | 134A Parkland Dr | SPRINGFIELD CENTRAL QLD 4300 | -27.69203785,152.90831134",
+                "excerpt_kind": "structured AEC polling-place record",
+                "role": "Official AEC facility coordinates, matched by exact facility name and address; polling division labels are not used as location evidence",
+                "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+                "content_sha256": "34dd99a7779d97ec2552db7140bda0e201522b9eb08608b64e05f780ce7338d6",
+                "source_date": "2025-06-16"
+              },
+              {
+                "url": "https://shayneneumann.com.au/news/media-releases/labor-to-deliver-springfield-central-ymca-upgrades/",
+                "excerpt": "A completed mezzanine level will feature recording studios, meeting spaces, performance spaces, a kitchenette and other amenities",
+                "excerpt_kind": "source excerpt",
+                "role": "Primary 4 April 2025 campaign announcement ties the $700,000 proposed upgrades to Springfield Central YMCA; it is a commitment, not an award or payment",
+                "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+                "content_sha256": "9022b7cc55ae0305712166dc066a453aa605df52f64c05c91fffb3e0f7600139",
+                "source_date": "2025-04-04"
+              }
+            ],
+            "notes": [
+              "The AEC marker identifies the existing community hall, not individual mezzanine or downstairs works. The current operator explicitly identifies the former hall name.",
+              "The same hall serves both Blair and Oxley polling divisions. The physical venue point was independently checked against all 150 AEC March 2025 boundaries and lies in Blair; polling-service division labels were not used to assign its location.",
+              "The 4 April 2025 announcement is an election commitment for mezzanine and downstairs upgrades. The departmental 14 November 2025 record remains an invitation, with no award, payment or completed work established."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, test it against all 150 AEC March 2025 polygons, and measure distance to the matched boundary in EPSG:28356.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 959
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T19:45:05.656581+00:00",
+        "method": "Read the original departmental invitation row and independently verify the named existing venue using primary operator and official venue sources. Keep invitation and election-commitment stages separate from awards, payments and completion.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Springfield YMCA Upgrades | Ipswich | QLD | Awaiting Application | 700000",
+            "excerpt_kind": "structured departmental row extraction",
+            "role": "Original invitation project name, amount and snapshot status; not a continuous verbatim quotation",
+            "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "source_date": "2025-11-14",
+            "hash_scope": "Original departmental PDF bytes; row extraction independently checked against page 160"
+          },
+          {
+            "url": "https://shayneneumann.com.au/news/media-releases/labor-to-deliver-springfield-central-ymca-upgrades/",
+            "excerpt": "A completed mezzanine level will feature recording studios, meeting spaces, performance spaces, a kitchenette and other amenities",
+            "excerpt_kind": "source excerpt",
+            "role": "Primary 4 April 2025 campaign announcement ties the $700,000 proposed upgrades to Springfield Central YMCA; it is a commitment, not an award or payment",
+            "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+            "content_sha256": "9022b7cc55ae0305712166dc066a453aa605df52f64c05c91fffb3e0f7600139",
+            "source_date": "2025-04-04"
+          },
+          {
+            "url": "https://ymcaqueensland.org.au/services/community-centres/springfield-central",
+            "excerpt": "YMCA Springfield Central Community Centre | formerly Springfield Central Sport and Community Hall | 134A Parkland Dr, Springfield Central QLD 4300",
+            "excerpt_kind": "structured operator facility extraction",
+            "role": "Primary operator explicitly links current and former facility names to the street address",
+            "retrieved_at": "2026-09-12T19:45:05.656581+00:00",
+            "content_sha256": "988b5c2da7ed200aa20a7d17cbb2877591ca1753a5ee5450c5e0095f8878cff2"
+          }
+        ],
+        "notes": [
+          "Original 14 November 2025 invitation amount and Awaiting Application status retained. No new funding record, award match, payment, completion or electorate allocation is inferred.",
+          "The AEC marker identifies the existing community hall, not individual mezzanine or downstairs works. The current operator explicitly identifies the former hall name.",
+          "The same hall serves both Blair and Oxley polling divisions. The physical venue point was independently checked against all 150 AEC March 2025 boundaries and lies in Blair; polling-service division labels were not used to assign its location.",
+          "The 4 April 2025 announcement is an election commitment for mezzanine and downstairs upgrades. The departmental 14 November 2025 record remains an invitation, with no award, payment or completed work established."
         ]
       }
     }
