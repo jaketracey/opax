@@ -1,4 +1,4 @@
-import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, isPositionEligibilityQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
+import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
 /**
@@ -945,7 +945,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
   const topic = str(input.topic)
   return JSON.stringify({
     epoch,
-    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v5' : ''),
+    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v6' : ''),
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
@@ -1169,17 +1169,25 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   // A paraphrase must not invent who qualifies. Quote the recorded criteria
   // and any deferred thresholds directly, without another generation call.
   if(isPositionEligibilityQuestion(input.question || ''))return quotedPositionAnswer(payload,query,input.question) || {...gap,answer:'I couldn’t verify who would qualify from these selected speeches. Try naming the proposal more specifically.'}
+  if(isPositionCostQuestion(input.question || '')) {
+    const quoted=quotedPositionAnswer(payload,query,input.question)
+    if(quoted)return quoted
+  }
   // A failed summary still shows the reader the speeches it was read from.
   return await recoverPositionAnswer(payload,{...body,position_question:input.question},env) || quotedPositionAnswer(payload,query,input.question) || positionExcerptsAnswer(payload,query) || gap
 }
 
 /** A failed summary must not hide a usable, explicitly recorded proposal. */
 function quotedPositionAnswer(payload: AskPayload, query: string, question = ''): AskPayload | null {
-  // Cost and reason need a verified summary; duration can use a proposal only
-  // when its quotation states the measure's duration, not a costing horizon.
-  if (/\b(?:cost|costing|price|why|reason)\b|^(?:and\s+)?how\s+much\b/i.test(question)) return null
+  // A reason still needs a verified summary; numeric details need an explicit
+  // term or linked cost in the original proposal quotation.
+  if (/\b(?:why|reason)\b/i.test(question)) return null
   const rows = payload.sources.filter((s): s is Record<string,unknown> => !!s && typeof s === 'object')
   const sources = summarySources(rows,6000).flatMap(source => {
+    if(isPositionCostQuestion(question)) {
+      const quote=positionCostQuote(source.snippet,query)
+      return quote?[{...source,quotes:[quote]}]:[]
+    }
     if(isPositionEligibilityQuestion(question)) {
       const quotes=positionEligibilityQuotes(source.snippet,query)
       return quotes.length?[{...source,quotes}]:[]
