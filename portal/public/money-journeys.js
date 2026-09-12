@@ -54,6 +54,8 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     for (const button of controls.querySelectorAll('[data-journey]')) button.setAttribute('aria-pressed', String(button.dataset.journey === active?.id));
     story.hidden = !active;
     stage.classList.toggle('has-journey', Boolean(active));
+    // The page chrome (the voice pill, for one) steps aside while a journey plays.
+    if (typeof document !== 'undefined') document.body?.classList?.toggle('journey-playing', Boolean(active && playing));
     if (!active) { story.innerHTML = ''; return; }
     const header = `<div class="journey-story-top"><h2 class="journey-title">${esc(active.title)}</h2><button type="button" data-action="exit" aria-label="End guided journey">×</button></div>`;
     const chooser = active.choices ? `<div class="journey-selector"><label for="journey-focus">${esc(active.selectorLabel || 'Focus')}</label><select id="journey-focus" data-focus="true" aria-label="${esc(active.selectorLabel || 'Focus')}"><option value="">Choose ${active.selectorLabel === 'Industry' ? 'an industry' : active.selectorLabel === 'Recipient' ? 'a recipient' : 'an organisation'}…</option>${active.choices.map(choice => `<option value="${esc(choice.value)}"${choice.value === active.selection ? ' selected' : ''}>${esc(choice.label)}</option>`).join('')}</select></div>` : '';
@@ -71,7 +73,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     story.innerHTML = `${header}${chooser}
       <div class="journey-steps" role="group" aria-label="Journey steps">${active.steps.map((item, i) => `<button type="button" data-step="${i}" aria-label="Step ${i + 1}: ${esc(item.title)}"${i === step ? ' aria-current="step"' : ''}>${i + 1}</button>`).join('')}</div>
       <div class="journey-narrative" aria-live="polite" aria-atomic="true"><h3>${esc(current.title)}</h3><p>${esc(current.body)}</p>${chart}${!chart && metric && Number.isFinite(Number(metric.value)) ? `<div class="journey-metric"><strong>${esc(metric.format === 'currency' ? money(metric.value) : Number(metric.value).toLocaleString('en-AU'))}</strong><span>${esc(metric.label)}</span></div>` : ''}</div>
-      <p class="journey-story-status" role="status">${esc(storyStatus())}</p><div class="journey-source-links">${(current.links || []).filter((link) => safeLink(link.href)).map((link) => `<a href="${esc(link.href)}">${esc(link.label)} <span aria-hidden="true">↗</span></a>`).join('')}</div>
+      <p class="journey-story-status" role="status">${esc(storyStatus())}</p><div class="journey-source-links">${(current.links || []).filter((link) => safeLink(link.href)).map((link) => `<a href="${esc(link.href)}">${esc(link.label)} <span aria-hidden="true">→</span></a>`).join('')}</div>
       <div class="journey-playback"><button type="button" data-action="previous" aria-label="Previous step"${step === 0 ? ' disabled' : ''}>←</button><button type="button" data-action="play"${reduced.matches ? ' disabled' : ''}>${playing ? 'Pause' : step === active.steps.length - 1 ? 'Replay journey' : reason ? 'Continue journey' : 'Play journey'}</button><button type="button" data-action="next" aria-label="Next step"${step === active.steps.length - 1 ? ' disabled' : ''}>→</button></div>
       <div class="journey-progress" aria-hidden="true">${playing ? '<span></span>' : ''}</div><p class="journey-help">${esc(reason || (reduced.matches ? 'Animation is off. Use the arrows to explore each step.' : playing ? 'The next view opens in 7 seconds. Touch the map to pause.' : 'Step through, or play the journey. Drag the map to explore.'))}</p>`;
     enhancePicker();
@@ -91,7 +93,11 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
     };
     const selected = choices.find(c => c.value === active.selection);
     const label = selected ? names[choices.indexOf(selected)] : select.options[0].textContent;
+    // The native select stays in the DOM as the value store behind the custom
+    // picker; it must not be announced as a second control.
     select.hidden = true;
+    select.setAttribute('aria-hidden', 'true');
+    select.tabIndex = -1;
     select.insertAdjacentHTML('afterend', `<div class="journey-picker"><button type="button" class="journey-picker-trigger" aria-haspopup="dialog" aria-expanded="false" aria-label="${esc(active.selectorLabel)}: ${esc(label)}"><span>${esc(label)}</span><span aria-hidden="true">⌄</span></button><div class="journey-picker-panel" role="dialog" aria-label="Choose ${esc(active.selectorLabel.toLowerCase())}" hidden><input type="search" class="journey-picker-search" aria-label="Search ${esc(active.selectorLabel.toLowerCase())}" placeholder="Search…" autocomplete="off"><div class="journey-picker-results"></div><p class="journey-picker-count" role="status"></p></div></div>`);
     const root = story.querySelector('.journey-picker');
     const trigger = root.querySelector('button');
@@ -298,6 +304,7 @@ export function mountMoneyJourneys(controls, story, stage, data, map, options = 
       document.removeEventListener('visibilitychange', visibility); reduced.removeEventListener('change', motion);
       if (active) map.clearScene();
       controls.innerHTML = ''; story.innerHTML = ''; story.hidden = true; stage.classList.remove('has-journey');
+      if (typeof document !== 'undefined') document.body?.classList?.remove('journey-playing');
     },
   };
 }

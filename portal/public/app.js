@@ -232,6 +232,30 @@ function partyChipHTML(party) {
   return `<span class="party party-${cls}"><i aria-hidden="true"></i>${esc(label)}</span>`;
 }
 
+/* A party's name as a sentence says it: "the Labor Party", "the Greens", "One
+   Nation". The money data's short labels ("Labor", "Liberal") take an article
+   and a noun; a name that is already a proper noun phrase stands as it is. */
+const PARTY_ASK_NAMES = {
+  labor: "the Labor Party", alp: "the Labor Party", "australian labor party": "the Labor Party",
+  liberal: "the Liberal Party", "liberal party": "the Liberal Party", "liberal party of australia": "the Liberal Party",
+  lnp: "the Liberal National Party", "liberal national party": "the Liberal National Party",
+  nationals: "the Nationals", national: "the Nationals", "national party": "the Nationals", "the nationals": "the Nationals",
+  greens: "the Greens", "australian greens": "the Greens", "the greens": "the Greens",
+  "one nation": "One Nation", "pauline hanson's one nation": "One Nation",
+  "country liberal party": "the Country Liberal Party", clp: "the Country Liberal Party",
+  "united australia party": "the United Australia Party", uap: "the United Australia Party",
+  "katter's australian party": "Katter's Australian Party",
+  "centre alliance": "Centre Alliance", "family first": "Family First",
+  "jacqui lambie network": "the Jacqui Lambie Network", independent: "independents",
+};
+function partyAskName(label) {
+  const name = String(label || "").trim();
+  const hit = PARTY_ASK_NAMES[name.toLowerCase()];
+  if (hit) return hit;
+  // "X Party" and "X Alliance/Network/Democrats" take "the"; a bare name does not.
+  return /\b(party|alliance|network|democrats|coalition)$/i.test(name) ? `the ${name}` : name;
+}
+
 const STATE_NAMES = { federal: "Federal", nsw: "NSW", vic: "VIC", sa: "SA", qld: "QLD" };
 
 /* Committee transcripts name witnesses as the transcript does, usually a
@@ -2628,7 +2652,7 @@ function renderAnswer(container, text, response = {}) {
       const details = document.createElement("details");
       details.className = "answer-money-method";
       const summary = document.createElement("summary");
-      summary.textContent = "About these figures";
+      summary.textContent = "About these numbers";
       const p = document.createElement("p");
       appendInline(p, block.text.slice("Coverage: ".length));
       details.append(summary, p);
@@ -4121,7 +4145,7 @@ function expenseComparisonHTML(person, benchmark, source) {
       const title = `${r.category}: ${fmtMoney(r.total)} over ${years} years, about ${fmtMoney(r.annual)} a year; median of ${r.baseline.count} parliamentarians ${fmtMoney(r.baseline.median)} a year${r.baseline.p90 ? `, ninetieth percentile ${fmtMoney(r.baseline.p90)}` : ""}`;
       return `<div class="expense-row" title="${esc(title)}">
         ${term ? `<button type="button" class="expense-name barrow-term" data-term="${esc(term)}">${esc(r.category)}</button>` : `<span class="expense-name">${esc(r.category)}</span>`}
-        <span class="expense-track" aria-hidden="true"><i class="expense-bar" style="width:${Math.max((r.annual / scale) * 100, r.annual ? 1 : 0).toFixed(1)}%"></i><i class="expense-median" style="left:${Math.min((r.baseline.median / scale) * 100, 100).toFixed(1)}%">${i === 0 ? "<em>median</em>" : ""}</i></span>
+        <span class="expense-track" aria-hidden="true"><i class="expense-bar" style="width:${Math.max((r.annual / scale) * 100, r.annual ? 1 : 0).toFixed(1)}%"></i><i class="expense-median${(r.baseline.median / scale) * 100 > 60 ? " expense-median-end" : ""}" style="left:${Math.min((r.baseline.median / scale) * 100, 100).toFixed(1)}%">${i === 0 ? "<em>median</em>" : ""}</i></span>
         <span class="expense-value"><b>${amount(r.annual, `${r.category}, this parliamentarian ${fmtMoney(r.annual)} a year, IPEA source`)}</b> a year<small>median ${amount(r.baseline.median, `${r.category}, chamber median ${fmtMoney(r.baseline.median)} a year, IPEA source`)} · total ${amount(r.total, `${r.category}, total ${fmtMoney(r.total)}, IPEA source`)}</small></span>
       </div>`;
     }).join("")}</div>
@@ -4978,13 +5002,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         { primary: true }),
       actionBtn("ask",
         askHash(isParty
-          ? `What has parliament said about the ${node.label}?`
+          ? `What has parliament said about ${partyAskName(node.label)}?`
           : ["individual", "other", ""].includes(String(node.industry || "").toLowerCase())
             ? `What has parliament said about ${node.label}?`
             : `What has parliament said about ${industryLabel(node.industry)}?`),
         `Ask what parliament said about ${isParty ? "them" : (["individual", "other", ""].includes(String(node.industry || "").toLowerCase()) ? "this donor" : "this industry")}`),
       actionBtn("search", searchHash(`"${node.label}"`, {}), "Search mentions in the record"),
-      actionBtn("download", "/graph/money.json?v=suppliers-1", "Download the data"),
+      actionBtn("download", "/graph/money.json?v=suppliers-1", "Download the map data (JSON)"),
     ]);
     sections.insertAdjacentHTML("beforeend", barList(flowRows, {
       fmt: fmtMoney,
@@ -5098,8 +5122,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       const [data, people] = await Promise.all([module.loadIndex(), module.loadPeople().catch(() => ({ people: [] }))]);
       return { module, data, person: module.findPerson(people.people, name) };
     }).catch(() => null),
+    // The party pill below only points at the party's map entry when the
+    // money data has one; an independent's would land on "Not among the top
+    // 250 disclosed donors", so they get the map itself instead.
+    party ? loadMoneyData().catch(() => null) : null,
   ]);
   if (currentSubjectKey !== key) return;
+  const partyOnMap = Boolean(party && findMoneyNode("party", party));
   const electorateLinks = electorateReference
     ? electorateReference.module.personElectorateLinksHTML(electorateReference.person, representation.representations, electorateReference.data.electorates)
     : representation.representations.map((r) => esc(r.electorate)).join(', ');
@@ -5129,9 +5158,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   ]);
   renderPortraitCredit(name, key);
   // One row on wide screens: the jump links at the left, the money map button at the right.
-  sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav>${party
+  sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav>${partyOnMap
     ? `<p class="person-money-link"><a class="action-btn" href="${esc(subjectHash("party", party))}"><span class="btn-glyph" aria-hidden="true">$</span><span>Money map from ${esc(party)}</span></a></p>`
-    : ""}</div>`);
+    : `<p class="person-money-link"><a class="action-btn" href="/money"><span class="btn-glyph" aria-hidden="true">$</span><span>Money map</span></a></p>`}</div>`);
   sections.insertAdjacentHTML("beforeend", `
     <form class="query-line subject-ask-form" id="subject-ask-form">
       <label for="subject-ask-topic">Ask about their speeches</label>
@@ -5799,7 +5828,7 @@ async function openTopicsIndex(manageFocus) {
   </a></li>`;
   $("subject-sections").innerHTML = `
     <ul class="topic-index-list" role="list">${known.map(li).join("")}</ul>
-    <details class="topic-index-coverage"><summary>About these counts</summary><p>Counts cover speeches labelled so far. The small bars show each topic’s share of federal speeches over time, scaled within that topic.</p></details>`;
+    <details class="topic-index-coverage"><summary>About these numbers</summary><p>Counts cover speeches labelled so far. The small bars show each topic’s share of federal speeches over time, scaled within that topic.</p></details>`;
   const tide = await tidePromise;
   if (currentSubjectKey !== key || !tide) return;
   for (const spark of body.querySelectorAll('[data-topic-spark]')) {
@@ -7270,6 +7299,8 @@ function billDivisionHref(d) {
    whatever follows is a note and is set as one. Nothing is dropped. */
 /** Prose about a division rather than the motion put: it must not be set as a heading. */
 const BILL_DESCRIPTION = /^(this (is|division|motion|amendment)\b|the (majority|motion) )/i;
+/** The source's own placeholder where the motion text should be. */
+const BILL_PLACEHOLDER = /^(long debate text truncated|text truncated|no text recorded)\.?$/i;
 
 /* The record's prose arrives as Markdown — "[motion](https://…)", "_[For
    privatising government assets](/policies/21)_" — and flattening it to text
@@ -7335,7 +7366,9 @@ function billQuestionParts(division, bill) {
   const raw = billStripStage(
     billStripTitle(billNoteRepair(division?.question), bill), division?.stage);
   const plain = billFlat(raw);
-  if (!plain) return { head: "", note: "" };
+  // "Long debate text truncated." is the source saying it has nothing, not a
+  // motion: a row carrying only that placeholder is named by its stage and date.
+  if (!plain || BILL_PLACEHOLDER.test(plain)) return { head: "", note: "" };
   if (BILL_DESCRIPTION.test(plain)) return { head: "", note: raw };
   if (plain.length <= 110) return { head: plain, note: "" };
   // The first sentence stands as the heading, measured in words a reader sees
@@ -7415,13 +7448,15 @@ function billDivisionHTML(d, bill) {
   // With no motion in the field there is no heading to write. The division's
   // own facts lead — its stage is the closest thing the record gives to a
   // name for it — and the record's prose follows as the note it is.
-  const title = head || stage || "Division";
+  // Without a motion the link is named by the division's own facts, its stage
+  // and its date, so no row is ever labelled by a placeholder sentence.
+  const title = head || [stage || "Division", d.date ? fmtDate(d.date) : ""].filter(Boolean).join(", ");
   const meta = [
     // The stage always names itself here now: the heading is the question with
     // the stage taken off it, so the two no longer say the same words twice.
     head && stage ? esc(stage) : "",
     billHouse(d.house) ? esc(billHouse(d.house)) : "",
-    d.date ? esc(fmtDate(d.date)) : "",
+    head && d.date ? esc(fmtDate(d.date)) : "",
   ].filter(Boolean).join(" · ");
   return `<li class="bill-division${head ? "" : " bill-division-unnamed"}">
     ${target
@@ -7623,14 +7658,19 @@ async function openBill(key, manageFocus) {
       ${billRelatedHTML(bill)}
     </div>
     ${billSummaryHTML(bill)}
+    <p class="action-row bill-actions">
+      ${actionBtn("search", searchHash(`"${title}"`, {}), "Search the record for this bill", { primary: true })}
+      ${actionBtn("ask", askHash(`What did parliament say about the ${billName(bill)}?`), "Ask what parliament said about this bill")}
+      ${billhome ? actionBtn("external", billhome, "Official bill home", { external: true }) : ""}
+      ${actionBtn("entry", "/bills", "All bills")}
+    </p>
     ${billTimelineHTML(bill)}
     ${billDivisionsHTML(bill)}
     ${billSpeechesHTML(bill)}
     ${billActsHTML(bill)}
-    <p class="action-row bill-actions">
-      ${actionBtn("search", searchHash(`"${title}"`, {}), "Search the record for this bill", { primary: true })}
-      ${actionBtn("ask", askHash(`What did parliament say about the ${billName(bill)}?`), "Ask about it")}
-      ${billhome ? actionBtn("external", billhome, "Official bill home", { external: true }) : ""}
+    <p class="action-row bill-actions bill-actions-foot">
+      ${actionBtn("search", searchHash(`"${title}"`, {}), "Search the record for this bill")}
+      ${actionBtn("ask", askHash(`What did parliament say about the ${billName(bill)}?`), "Ask what parliament said about this bill")}
       ${actionBtn("entry", "/bills", "All bills")}
     </p>
     <p class="fineprint">${BILLS_FINEPRINT}</p>`;
@@ -8250,7 +8290,7 @@ async function renderFrontTopic() {
       </nav>` : ""}
       <p class="fineprint" style="margin-top:0.9rem">The topic rotates daily.
       <a href="/reports/${esc(today.slug)}">Read the full ${esc(report.title)} report</a> ·
-      ${mwTopic ? `<a href="${esc(subjectHash("topic", mwTopic))}">Follow the topic live</a> · ` : ""}
+      ${mwTopic ? `<a href="${esc(subjectHash("topic", mwTopic))}">Topic page: ${esc(TOPICS[mwTopic] || report.title)}</a> · ` : ""}
       <a href="/reports">All reports</a></p>`;
     $("mod-mw").hidden = false;
 
@@ -10743,6 +10783,7 @@ async function openDocPage(slug, manageFocus) {
   $("doc-cite-panel").hidden = true;
   $("doc-cite").setAttribute("aria-expanded", "false");
   $("doc-actions").hidden = true;
+  $("doc-foot-actions").hidden = true;
   $("doc-similar-panel").hidden = true;
   $("doc-similar-panel").replaceChildren();
   $("doc-similar-panel").removeAttribute("aria-busy");
@@ -10843,12 +10884,12 @@ async function openDocPage(slug, manageFocus) {
     renderDocBillPanel(doc, slug);
     renderDocText(doc);
     $("doc-ask").href = askHash(
-      isGovernmentRelease || isResearchRecord
-        ? `What does the record say about ${topic || doc.title}?`
-        : `What has parliament said about ${topic || doc.title}?`,
+      docAskQuestion(doc, topic, isGovernmentRelease || isResearchRecord),
       isGovernmentRelease || isResearchRecord ? "all" : undefined,
     );
+    $("doc-ask-foot").href = $("doc-ask").href;
     $("doc-actions").hidden = false;
+    $("doc-foot-actions").hidden = false;
     $("doc-profile").hidden = !doc.speaker;
     $("doc-more").hidden = !doc.speaker;
     $("doc-cite-panel").innerHTML = citePanelHTML(doc);
@@ -10866,6 +10907,32 @@ async function openDocPage(slug, manageFocus) {
         : String(err.message || err), true);
     $("doc-title").textContent = "Document unavailable";
   }
+}
+
+/* The question the Ask button carries. A bill debate's title is the full
+   name of every bill in it, which made a 130-character question about no
+   speech in particular; the topic label and the speaker name it better, and
+   the title stands in only when the record offers nothing shorter. */
+function docAskQuestion(doc, debate, isRecord) {
+  const trim = (value, max) => {
+    const text = String(value || "").replace(/\s+/g, " ").trim();
+    return text.length > max ? `${text.slice(0, max).replace(/\s+\S*$/, "")}…` : text;
+  };
+  const topicSlug = (Array.isArray(doc.topics) ? doc.topics : []).find((t) => TOPICS[t]);
+  // A title that is only the speaker and the date names no subject at all, and
+  // a debate heading like "Bills" or "Adjournment" names a slot, not a subject.
+  const generic = /^(bills?|motions?|statements?(?: by (?:members|senators))?|matters? of public importance|questions? (?:without|on) notice|adjournment|committees?|business|documents|petitions|ministerial statements?|condolences?|debate)$/i;
+  const stage = /\s+[-–—]\s+(?:first|second|third) reading$|\s+[-–—]\s+(?:in committee|consideration in detail|committee of the whole)$/i;
+  const named = (value) => { const text = String(value || "").replace(stage, "").trim(); return generic.test(text) ? "" : text; };
+  const fallback = named(titleSubject(doc));
+  const heading = named(debate);
+  const subject = topicSlug ? TOPICS[topicSlug] : heading.length <= 70 ? heading : trim(heading || fallback, 70);
+  let about = String(subject || trim(fallback, 70)).replace(/[.?!]+$/, "").trim();
+  if (/\bbill\b/i.test(about) && !/^(the|a|an)\s/i.test(about)) about = `the ${about}`;
+  if (isRecord) return `What does the record say about ${about || trim(doc.title, 70)}?`;
+  if (doc.speaker && about) return `What did ${doc.speaker} say about ${about}?`;
+  if (doc.speaker) return `What has ${doc.speaker} said in parliament?`;
+  return `What has parliament said about ${about || trim(doc.title, 70)}?`;
 }
 
 // Preserve the source verbatim, including whitespace. Only presentation changes.
@@ -10952,7 +11019,7 @@ async function renderDocSimilar(doc) {
           <p>${esc(excerpt(brief || row.snippet || "No passage available."))}</p>
           <p class="doc-related-meta">${brief ? "Machine summary · not part of the record" : "Passage from the record"}</p></li>`;
       }).join("")}</ul>` : '<p>No related speeches found for this subject.</p>') +
-      `<div class="doc-related-actions"><a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject ↗</a>
+      `<div class="doc-related-actions"><a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject →</a>
         <button type="button" class="action-btn" data-doc-close="doc-similar">Close similar</button></div>`;
   } catch {
     if (currentDoc !== doc) return;
@@ -10974,10 +11041,31 @@ function closeDocPanel(triggerId) {
 for (const [id, icon] of [
   ["doc-profile", "map"], ["doc-cite", "cite"], ["doc-more", "speeches"],
   ["doc-similar", "search"], ["doc-copylink", "link"],
+  ["doc-cite-foot", "cite"], ["doc-similar-foot", "search"], ["doc-copylink-foot", "link"],
 ]) {
   const btn = $(id);
   btn.innerHTML = `${iconSvg(icon)}<span>${esc(btn.textContent)}</span>`;
 }
+// The row at the end of the speech works the panels at the top: open them,
+// then bring the reader up to them, since the page can be very long.
+$("doc-cite-foot").addEventListener("click", () => {
+  const panel = $("doc-cite-panel");
+  if (panel.hidden) $("doc-cite").click();
+  panel.scrollIntoView({ block: "start" });
+  panel.setAttribute("tabindex", "-1");
+  panel.focus({ preventScroll: true });
+});
+$("doc-similar-foot").addEventListener("click", () => {
+  if (!currentDoc) return;
+  const panel = $("doc-similar-panel");
+  if (panel.hidden) $("doc-similar").click();
+  panel.scrollIntoView({ block: "start" });
+  panel.setAttribute("tabindex", "-1");
+  panel.focus({ preventScroll: true });
+});
+$("doc-copylink-foot").addEventListener("click", () => {
+  if (currentDocSlug) copyText(opaxUrl(currentDocSlug), $("doc-copylink-foot").querySelector("span"));
+});
 $("panel-doc").addEventListener("click", (event) => {
   const close = event.target.closest("[data-doc-close]");
   if (close) closeDocPanel(close.dataset.docClose);

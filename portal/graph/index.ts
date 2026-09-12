@@ -329,8 +329,9 @@ const CSS = `
 .mm-connections ul { list-style: none; padding: 0; margin: 0; }
 .mm-connections li { margin: 0 0 22px; }
 .mm-connection-names { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.mm-connection-names button { flex: 1; min-width: 0; display: flex; gap: 6px; align-items: baseline; background: none; border: none; padding: 4px 0; font: inherit; color: inherit; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
-.mm-connection-names button:focus-visible { outline: 2px solid ${ACCENT}; outline-offset: 2px; }
+.mm-connection-names button, .mm-connection-names a { flex: 1; min-width: 0; display: flex; gap: 6px; align-items: baseline; background: none; border: none; padding: 4px 0; font: inherit; color: inherit; text-align: left; cursor: pointer; overflow-wrap: anywhere; text-decoration: none; }
+.mm-connection-names a span { text-decoration: underline; text-underline-offset: 3px; }
+.mm-connection-names button:focus-visible, .mm-connection-names a:focus-visible { outline: 2px solid ${ACCENT}; outline-offset: 2px; }
 .mm-connection-names i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
 .mm-connection-bar { height: 6px; background: #e4e7e6; border-radius: 4px; overflow: hidden; margin-top: 6px; }
 .mm-connection-bar span { display: block; height: 100%; background: #53788c; }
@@ -1275,6 +1276,8 @@ export async function mountMoneyMap(
     const cpiInput = el('input', '', cpi)
     cpiInput.type = 'checkbox'
     cpiInput.checked = adjustForInflation
+    // The label's long and short names are swapped by CSS; the control keeps one name of its own.
+    cpiInput.setAttribute('aria-label', 'Adjust for inflation')
     const cpiCopy = el('span', 'mm-cpi-copy', cpi)
     const cpiName = el('span', 'mm-cpi-name', cpiCopy)
     el('span', 'mm-cpi-long', cpiName).textContent = 'Adjust for inflation'
@@ -1350,6 +1353,8 @@ export async function mountMoneyMap(
     const item = el('li', '', parent)
     const body = el('button', 'mm-row', item)
     body.type = 'button'
+    // The row's pieces run together as one string otherwise ("Westpac$55.2m1998–2024").
+    body.setAttribute('aria-label', [name, formatMoney(amount), years].filter(Boolean).join(', '))
     if (!onClick) body.disabled = true
     else body.addEventListener('click', onClick)
     if (colour) {

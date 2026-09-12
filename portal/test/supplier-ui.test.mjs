@@ -43,7 +43,8 @@ test('profile resolves a unique source alias or established funding lookup to a 
     const root = node();
     const handle = context.mountSupplierProfile(root, name, { onCanonical: (value) => { canonical = value; } });
     await tick();
-    assert.deepEqual(calls, ['/suppliers.json', '/suppliers/01.json']);
+    // The agency directory supplies the ids the profile links its agencies by.
+    assert.deepEqual(calls, ['/suppliers.json', '/suppliers/01.json', '/agencies.json']);
     assert.equal(canonical, id);
     assert.match(root.innerHTML, /Acme Pty Ltd/);
     assert.match(root.innerHTML, /ABN 12345678901/);
