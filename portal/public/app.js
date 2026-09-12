@@ -1626,7 +1626,7 @@ function route() {
     if (view !== "ask" && view !== "") setCrumbs([{ label: "Not found" }]);
     else setCrumbs(q ? [{ label: "Ask" }] : null);
     if (view === "ask" && q && q !== lastAsk.question) {
-      $("ask-input").value = q;
+      setQueryValue("ask-input", q);
       if ($("ask-wide")) $("ask-wide").checked = params.get("kind") !== "speech";
       renderAskFilterChips(); // preserve an explicitly shared speech-only scope
       runAsk(q);
@@ -1657,7 +1657,7 @@ function resetAsk() {
   const askBtn = $("ask-form").querySelector('button[type="submit"]');
   if (askBtn) { askBtn.disabled = false; askBtn.classList.remove("btn-loading"); askBtn.textContent = "Ask the record"; }
   hideWombat();
-  $("ask-input").value = "";
+  setQueryValue("ask-input", "");
   setStatus($("ask-status"), "");
   $("ask-result").hidden = true;
   $("ask-money").hidden = true;
@@ -1803,26 +1803,47 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFall
   });
   return { close, go };
 }
-// The ask and search fields are one-line textareas: Enter submits (a shift-
-// Enter keeps a newline while typing), the value is flattened on submit,
-// and on a touch screen the field opens on focus and settles on blur.
+// Query text remains readable after submission, including shared links and
+// suggestions. Empty fields keep the compact single-line placeholder.
+function fitQueryField(field) {
+  if (!field || field.tagName !== "TEXTAREA") return;
+  field.classList.toggle("is-empty", !field.value);
+  if (!field.getClientRects().length) return; // refit when its panel becomes visible
+  field.style.height = "auto";
+  const height = field.scrollHeight + 2; // include the field's borders
+  field.style.height = `${Math.min(height, 260)}px`;
+  field.style.overflowY = height > 260 ? "auto" : "hidden";
+}
+function setQueryValue(id, value) {
+  const field = $(id);
+  field.value = value;
+  fitQueryField(field);
+}
 for (const id of ["ask-input", "search-input"]) {
   const field = $(id);
   if (!field || field.tagName !== "TEXTAREA") continue;
   const form = field.closest("form");
-  const fit = () => { field.style.height = "auto"; field.style.height = `${Math.min(field.scrollHeight, 260)}px`; };
-  field.classList.add("is-collapsed");
+  const fit = () => fitQueryField(field);
   field.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
       e.preventDefault();
       field.value = field.value.replace(/\s*\n\s*/g, " ").trim();
+      fit();
       form?.requestSubmit ? form.requestSubmit() : form?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
     }
   });
-  const touch = () => matchMedia("(hover: none) and (pointer: coarse)").matches;
-  field.addEventListener("focus", () => { field.classList.remove("is-collapsed"); if (touch()) { field.classList.add("is-open"); fit(); } });
-  field.addEventListener("input", () => { if (field.classList.contains("is-open")) fit(); });
-  field.addEventListener("blur", () => { field.style.height = ""; field.classList.remove("is-open"); field.classList.add("is-collapsed"); field.scrollTop = 0; });
+  for (const event of ["focus", "input", "blur"]) field.addEventListener(event, fit);
+  form?.addEventListener("reset", () => requestAnimationFrame(fit));
+  // Width changes include route reveals, rotation and desktop resizing. Ignore
+  // height changes from fitting so the observer cannot feed back on itself.
+  let width = -1;
+  new ResizeObserver(([entry]) => {
+    if (entry.contentRect.width === width) return;
+    width = entry.contentRect.width;
+    requestAnimationFrame(fit);
+  }).observe(field);
+  document.fonts.ready.then(fit);
+  fit();
 }
 attachQuickSearch($("mast-q"), $("mast-sugg"), { idPrefix: "ms" });
 attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: () => closeNavDrawer() });
@@ -2478,6 +2499,15 @@ function renderAnswer(container, text, response = {}) {
       table.append(thead, tbody);
       scroll.appendChild(table);
       container.appendChild(scroll);
+    } else if (response.money_ranking && response.money_context && block.text.startsWith("Coverage: ")) {
+      const details = document.createElement("details");
+      details.className = "answer-money-method";
+      const summary = document.createElement("summary");
+      summary.textContent = "About these figures";
+      const p = document.createElement("p");
+      appendInline(p, block.text.slice("Coverage: ".length));
+      details.append(summary, p);
+      container.appendChild(details);
     } else {
       const p = document.createElement("p");
       if (response.money_ranking && block.text === response.money_context) p.className = "answer-money-context";
@@ -8785,9 +8815,9 @@ async function runAsk(question) {
     ].filter(Boolean).join(" · ");
     $("ask-stamp").textContent =
       `Viewed ${fmtDate(localISODate())}` +
-      (inferredScope ? ` · Records indexed under ${inferredScope}` : "") +
+      (inferredScope && !data.money_context ? ` · Records indexed under ${inferredScope}` : "") +
       (corpusVersion() !== "unversioned" ? ` · corpus v${corpusVersion()}` : "") +
-      ((askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
+      (!data.money_context && (askFilterSummary(askFilters()) || (speakerFilter ? speakerFilter : ""))
         ? ` · filtered: ${askFilterSummary(askFilters()) || `${speakerFilter}'s speeches`}` : "");
     renderAskDateRuler(sources, isCited);
     $("ask-cited-list").replaceChildren(...citedList.map((s, i) => sourceItem(s, i + 1, true)));
@@ -8875,7 +8905,7 @@ function renderChips() {
     b.className = "chip";
     b.textContent = q;
     b.addEventListener("click", () => {
-      $("ask-input").value = q;
+      setQueryValue("ask-input", q);
       replaceRoute(askHash(q));
       setCrumbs([{ label: "Ask" }]);
       runAsk(q);
@@ -9702,7 +9732,7 @@ function applySearchParams(params) {
   const key = params.toString();
   if (key === searchApplied) return;
   searchApplied = key;
-  $("search-input").value = params.get("q") || "";
+  setQueryValue("search-input", params.get("q") || "");
   for (const name of ["speaker", "party", "state", "topic"]) $("f-" + name).value = params.get(name) || "";
   for (const [name, fallback] of [["from", RECORD_FIRST_YEAR], ["to", RECORD_LAST_YEAR]]) {
     const year = Number(params.get(name)) || fallback;
@@ -9780,7 +9810,7 @@ function renderSearchChips() {
     b.style.setProperty("--i", String(i + 1));
     b.textContent = q;
     b.addEventListener("click", () => {
-      $("search-input").value = q;
+      setQueryValue("search-input", q);
       $("search-form").requestSubmit();
     });
     row.appendChild(b);
