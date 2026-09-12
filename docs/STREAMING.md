@@ -123,6 +123,31 @@ Existing AbortControllers cancel the stream: the signal is on the fetch, so
 Model text still reaches the DOM only through `textContent` (`renderAnswer`
 and `appendInline`); no `innerHTML` is on the streaming path.
 
+## The search overview streams too (12 September 2026)
+
+`GET /api/search-summary?stream=1&…` answers as Server-Sent Events instead of
+one JSON body:
+
+    event: point   {text, source_ids}   a validated point, sent the moment its
+                                        JSON object closes in the model's reply
+    event: done    {status:'ready', points, sources, reviewed_count, partial}
+                                        the synchronous payload, verbatim; this
+                                        is what gets cached
+    event: error   {error}
+
+The Worker reads the platform's NDJSON answer chunks, pulls complete objects
+out of `{"points":[…]}` as they arrive (`SummaryPointStream`, which tracks
+JSON string state so braces inside quoted excerpts do not count), and runs
+each through `summaryPointValidator` — the same per-point rules as
+`parseSearchSummary`, shared so the streamed and synchronous paths cannot
+drift. If nothing validates, the repair generation runs synchronously as
+before and its points are sent together. A cache HIT, an empty result set and
+an error still answer as plain JSON; `readSummaryStream` in app.js accepts
+either shape. The page shows the skeleton at once, shrinks it to one bar as
+points land, fades each point in (`.summary-point.stream-in`, off under
+reduced-motion) and attaches numbered citations and the source list on `done`.
+Measured live: first point ~2.5 s before the whole payload used to arrive.
+
 ## Caching
 
 Every `/api/ask` miss is a paid generative call that takes 15-40 s, and the
