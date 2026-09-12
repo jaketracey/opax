@@ -1,6 +1,6 @@
 import type { RecordQuestion } from './ask-records'
 import { receiptPeriodQuery } from './receipt-period'
-import { receiptAnswer, unmatchedReceiptRankingScope, type ReceiptGraph } from './voice-money'
+import { receiptAnswer, receiptDonorChoices, unmatchedReceiptRankingScope, type ReceiptGraph } from './voice-money'
 
 export const fundingContinuation = (question:string) => /^(?:and\b|what about\b|how about\b)/i.test(question.trim())
 export const fundingUserTurns = (input:RecordQuestion) => Array.isArray(input.context)
@@ -24,6 +24,21 @@ export function fundingScopeQuestion(s:FundingSelection,jurisdiction:string):str
   const period=s.from===s.to&&s.from!==null?` in ${s.from}`:s.from!==null&&s.to!==null?` from ${s.from} to ${s.to}`:s.from!==null?` since ${s.from}`:s.to!==null?` through ${s.to}`:''
   const region=({federal:'federal',qld:'Queensland',vic:'Victoria',tas:'Tasmania'} as Record<string,string>)[jurisdiction]
   return `${stem}${s.party?' to '+s.party:''}${donor?' from '+donor:''}${!s.party&&!donor?' in all receipts':''}${region?' in '+region+' records':''}${period}?`
+}
+
+/** A choice replaces only the unresolved donor phrase and validates the whole
+ * resulting request, including current controls, before offering a link. */
+export function fundingNameChoice(graph:ReceiptGraph,fragment:string,jurisdiction:string,questionFor:(label:string)=>string,filters:RecordQuestion):Clarification|null {
+  const choices=receiptDonorChoices(graph,fragment).flatMap(node=>{
+    const question=questionFor(node.label)
+    const result=receiptAnswer(graph,question,jurisdiction,'https://opax.com.au',filters)
+    if(!result || 'needs_scope' in result || 'needs_period' in result || result.selected_parties.length>1 || result.selected_industries.length>1 || result.selected_donors.length!==1 || unmatchedReceiptRankingScope(graph,receiptPeriodQuery(question).query,result,filters.party))return []
+    const canonical=fundingScopeQuestion({party:result.selected_parties[0],donor:result.selected_donors[0],...result.requested_years,mode:result.selected_parties.length?'donors':'parties'},jurisdiction)
+    return [{label:node.label.replace(/[\[\]\n\r*]/g,' '),question:canonical}]
+  })
+  if(!choices.length)return null
+  const intro=choices.length===1?'Did you mean this organisation?':'Which organisation do you mean? These are separate records in this map.'
+  return clarify(intro+'\n\n'+choices.map(c=>`- [${c.label}](/ask?q=${encodeURIComponent(c.question).replace(/\(/g,'%28').replace(/\)/g,'%29')})`).join('\n')+'\n\nChoose a name to see its figures. No total has been calculated for this question yet.')
 }
 
 /** Reconstruct scope from user questions only. Answers and client amounts are
@@ -90,7 +105,7 @@ export function fundingFollowUp(input:RecordQuestion,graph:ReceiptGraph,jurisdic
           match.selected_parties.length>1 || match.selected_industries.length>1 ||
           (!match.selected_industries.length&&match.selected_donors.length>1) ||
           (!match.selected_parties.length&&!match.selected_industries.length&&!match.selected_donors.length)) {
-          if(last)return match&&'needs_scope' in match?clarify(match.answer):unknown()
+          if(last)return fundingNameChoice(graph,name,jurisdiction,label=>fundingScopeQuestion({...selected!,donor:label,industry:undefined},jurisdiction),input) || (match&&'needs_scope' in match?clarify(match.answer):unknown())
           selected=undefined;continue
         }
         if(match.selected_parties.length) selected={...selected,party:match.selected_parties[0],mode:'donors'}
