@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
-  "as_of": "2026-09-09",
-  "checked_at": "2026-09-09T08:49:57.818501+00:00",
+  "as_of": "2026-09-13",
+  "checked_at": "2026-09-12T16:42:56.474061+00:00",
   "coverage": {
     "total_awards": 89,
     "total_invitations": 226,
     "total_invitation_records": 227,
     "mapped_awards": 7,
-    "mapped_invitations": 6,
+    "mapped_invitations": 8,
     "mapped_award_value": 12715000.0,
-    "mapped_invitation_value": 11070000,
+    "mapped_invitation_value": 11695000,
     "total_award_value": 242781386.0,
     "total_invitation_value": 559241712,
     "award_site_count": 9,
-    "invitation_site_count": 6,
+    "invitation_site_count": 8,
     "unmapped_awards": 82,
-    "unmapped_invitations": 220,
+    "unmapped_invitations": 218,
     "payment_verified_records": 0
   },
   "methodology": [
@@ -1143,6 +1143,192 @@
         ],
         "notes": [
           "Invitation recorded on 14 November 2025. It is a separate stage from the later award; the amounts must not be added together."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-067",
+      "record_type": "invitation",
+      "title": "Jabiru Swimming Pool – Sanitation System Upgrade",
+      "value": 250000,
+      "state": "NT",
+      "locality": "Jabiru",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-067"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "jabiru-pool",
+          "site_name": "Jabiru Alberto Luglietti Memorial Swimming Pool",
+          "address": "56 Kinchela Road, Jabiru NT 0886",
+          "locality": "Jabiru",
+          "state": "NT",
+          "latitude": -12.675365,
+          "longitude": 132.8320834,
+          "location_source_url": "https://northernterritory.com/kakadu-and-surrounds/see-and-do/jabiru-alberto-luglietti-memorial-swimming-pool",
+          "site_precision": "venue",
+          "electorate_2025": "Lingiari",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T16:42:56.474061+00:00",
+            "method": "Council identifies the pool address; Tourism NT names the same facility and supplies its marker coordinates. Its public map implementation confirms the named venue information window is anchored to those coordinates. Cross-check point against AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://westarnhem.nt.gov.au/community-wellbeing/swimming-pools-and-facilities",
+                "excerpt": "Address : 56 Kinchela Road",
+                "role": "Council pool address",
+                "retrieved_at": "2026-09-12T16:32:06.639112+00:00",
+                "content_sha256": "9c15e30200497cfa1e296c3e4432faddf29919bdd6ec31b004d92c88185b67a7"
+              },
+              {
+                "url": "https://northernterritory.com/kakadu-and-surrounds/see-and-do/jabiru-alberto-luglietti-memorial-swimming-pool",
+                "excerpt": "{\"product_name\": \"Jabiru Alberto Luglietti Memorial Swimming Pool\", \"address\": \"56 Kinchela Rd, Jabiru, Northern Territory, 0886, Australia\", \"map_centre\": {\"latitude\": -12.675365, \"longitude\": 132.8320834}}",
+                "role": "Tourism NT named venue and map marker (structured page data)",
+                "retrieved_at": "2026-09-12T16:32:48.523320+00:00",
+                "content_sha256": "46fd8e6a3923cb4566b28d338525fd8ffbb4dda977a570c1aca4f4577e58fc3f"
+              },
+              {
+                "url": "https://northernterritory.com/_astro/map.B7BxG9fO.js?dpl=6aa5690b3c5fea000868b8bb",
+                "excerpt": "position:{lat:parseFloat(t.map_centre?.latitude||``),lng:parseFloat(t.map_centre?.longitude||``)}",
+                "role": "Public map implementation anchors the named venue information window to map_centre; not a generic map viewport",
+                "retrieved_at": "2026-09-12T16:35:44.835562+00:00",
+                "content_sha256": "840c5a005fb8af2670556973519e917a395a1ebde123892c9221a053fd2a62c7"
+              }
+            ],
+            "notes": [
+              "Pool venue marker shared by two separate invitation records. It is not the location of every piece of equipment or a surveyed construction footprint."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test all 150 AEC 2025 electoral polygons. Exactly one match. Measure boundary distance in GDA94 / MGA zone 53.",
+              "distance_to_boundary_metres": 67454,
+              "scope": "Venue point only; no allocation of grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T16:42:56.474061+00:00",
+        "method": "Read original departmental invitation and independently corroborate exact named works and amount against Council source. Match actual venue, retain original invitation stage, and avoid recipient-office or postcode inference.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Jabiru Swimming Pool – Sanitation System Upgrade",
+            "role": "Original invitation project name, amount and snapshot status"
+          },
+          {
+            "url": "https://westarnhem.nt.gov.au/news/bringing-communities-together-through-sport",
+            "excerpt": "$250,000 – Upgrade to saltwater chlorination system at the pool for a safer, modern facility",
+            "role": "Council exact project scope and amount, 4 June 2025",
+            "retrieved_at": "2026-09-12T16:32:06.638809+00:00",
+            "content_sha256": "6e0bf86913143d7b586ccf7b8134779a505f72438b3b1f49483d1fa49b909ab9"
+          }
+        ],
+        "notes": [
+          "Invitation dated 14 November 2025; not proof of an award, payment or completion. No later grant match is claimed."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-070",
+      "record_type": "invitation",
+      "title": "Jabiru Swimming Pool – Gym Refurbishment",
+      "value": 375000,
+      "state": "NT",
+      "locality": "Jabiru",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+      "invitation_ids": [
+        "mlci-invitation-070"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "jabiru-pool",
+          "site_name": "Jabiru Alberto Luglietti Memorial Swimming Pool",
+          "address": "56 Kinchela Road, Jabiru NT 0886",
+          "locality": "Jabiru",
+          "state": "NT",
+          "latitude": -12.675365,
+          "longitude": 132.8320834,
+          "location_source_url": "https://northernterritory.com/kakadu-and-surrounds/see-and-do/jabiru-alberto-luglietti-memorial-swimming-pool",
+          "site_precision": "venue",
+          "electorate_2025": "Lingiari",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-12T16:42:56.474061+00:00",
+            "method": "Council identifies the pool address; Tourism NT names the same facility and supplies its marker coordinates. Its public map implementation confirms the named venue information window is anchored to those coordinates. Cross-check point against AEC March 2025 polygons.",
+            "sources": [
+              {
+                "url": "https://westarnhem.nt.gov.au/community-wellbeing/swimming-pools-and-facilities",
+                "excerpt": "Address : 56 Kinchela Road",
+                "role": "Council pool address",
+                "retrieved_at": "2026-09-12T16:32:06.639112+00:00",
+                "content_sha256": "9c15e30200497cfa1e296c3e4432faddf29919bdd6ec31b004d92c88185b67a7"
+              },
+              {
+                "url": "https://northernterritory.com/kakadu-and-surrounds/see-and-do/jabiru-alberto-luglietti-memorial-swimming-pool",
+                "excerpt": "{\"product_name\": \"Jabiru Alberto Luglietti Memorial Swimming Pool\", \"address\": \"56 Kinchela Rd, Jabiru, Northern Territory, 0886, Australia\", \"map_centre\": {\"latitude\": -12.675365, \"longitude\": 132.8320834}}",
+                "role": "Tourism NT named venue and map marker (structured page data)",
+                "retrieved_at": "2026-09-12T16:32:48.523320+00:00",
+                "content_sha256": "46fd8e6a3923cb4566b28d338525fd8ffbb4dda977a570c1aca4f4577e58fc3f"
+              },
+              {
+                "url": "https://northernterritory.com/_astro/map.B7BxG9fO.js?dpl=6aa5690b3c5fea000868b8bb",
+                "excerpt": "position:{lat:parseFloat(t.map_centre?.latitude||``),lng:parseFloat(t.map_centre?.longitude||``)}",
+                "role": "Public map implementation anchors the named venue information window to map_centre; not a generic map viewport",
+                "retrieved_at": "2026-09-12T16:35:44.835562+00:00",
+                "content_sha256": "840c5a005fb8af2670556973519e917a395a1ebde123892c9221a053fd2a62c7"
+              }
+            ],
+            "notes": [
+              "Pool venue marker shared by two separate invitation records. It is not the location of every piece of equipment or a surveyed construction footprint."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform WGS84 venue point to GDA94 and test all 150 AEC 2025 electoral polygons. Exactly one match. Measure boundary distance in GDA94 / MGA zone 53.",
+              "distance_to_boundary_metres": 67454,
+              "scope": "Venue point only; no allocation of grant value to an electorate or surveyed works boundary is implied."
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-12T16:42:56.474061+00:00",
+        "method": "Read original departmental invitation and independently corroborate exact named works and amount against Council source. Match actual venue, retain original invitation stage, and avoid recipient-office or postcode inference.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=160",
+            "excerpt": "Jabiru Swimming Pool – Gym Refurbishment",
+            "role": "Original invitation project name, amount and snapshot status"
+          },
+          {
+            "url": "https://westarnhem.nt.gov.au/news/bringing-communities-together-through-sport",
+            "excerpt": "$375,000 – Refurbishment of the gym at Jabiru Swimming Pool, including new toilets, showers, and changerooms",
+            "role": "Council exact project scope and amount, 4 June 2025",
+            "retrieved_at": "2026-09-12T16:32:06.638809+00:00",
+            "content_sha256": "6e0bf86913143d7b586ccf7b8134779a505f72438b3b1f49483d1fa49b909ab9"
+          }
+        ],
+        "notes": [
+          "Invitation dated 14 November 2025; not proof of an award, payment or completion. No later grant match is claimed."
         ]
       }
     }
