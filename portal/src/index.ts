@@ -1053,7 +1053,10 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
 
   // Cache first: a HIT costs neither a model call nor rate-limit quota.
-  const keyText = askCacheInput(input, env.CACHE_EPOCH)
+  // The model is part of the key: re-pinning ASK_MODEL retires answers the
+  // previous model wrote instead of replaying them for seven days.
+  const askModel = env.ASK_MODEL || 'openai-compatible'
+  const keyText = askCacheInput(input, `${env.CACHE_EPOCH}:${askModel}`)
   const cacheKey = keyText ? cacheRequest('ask', await sha256Hex(keyText)) : null
   const bypass = cacheBypass(request, url)
   if (cacheKey && !bypass) {
@@ -1068,6 +1071,9 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   try { records = await retrieveAskRecords(input, env.ASSETS) }
   catch { return json({ error: 'Public-record search is temporarily unavailable. Please try again.' }, 503) }
   const body = buildAskBody(input, records)
+  // Pinned per pipeline through wrangler vars (see env.d.ts). The Ask rides the
+  // KB's OpenRouter slot; the side pipelines below stay on platform flash-lite.
+  body.generative_model = askModel
   const store = (payload: AskPayload): void => {
     if (cacheKey && cacheableAnswer(payload)) storeGenerationCache(env, ctx, cacheKey, json(payload), ASK_CACHE_TTL)
   }
@@ -1184,7 +1190,7 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
     while (sources.length && prompt.length > 19500) { sources.pop(); prompt = makePrompt() }
     if (!sources.length) return null
     const answer = await summaryModelAnswer(await kbFetch(env, '/ask', {
-      body:{query:prompt,top_k:1,reranker:'noop',generative_model:'openai-compatible',max_tokens:1800,
+      body:{query:prompt,top_k:1,reranker:'noop',generative_model:env.POSITION_RECOVERY_MODEL || 'gemini-2.5-flash-lite',max_tokens:1800,
         prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + POSITION_GROUNDING + ' Return only valid JSON in the requested points-and-citations schema, with no other text.',user:'{question}'}},
       headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(25_000),
     }))
@@ -1248,7 +1254,7 @@ async function apiSearchSummary(request: Request, url: URL, env: Env, ctx: Execu
   try {
     const prompt = summaryPrompt(query,filters,sources)
     const generate = async (query: string) => summaryModelAnswer(await kbFetch(env, '/ask', {
-      body: {query, top_k:1, reranker:'noop', generative_model:'openai-compatible', max_tokens:4096,
+      body: {query, top_k:1, reranker:'noop', generative_model:env.SEARCH_SUMMARY_MODEL || 'gemini-2.5-flash-lite', max_tokens:4096,
         prompt:{system:SEARCH_SUMMARY_SYSTEM, user:'{question}'}},
       headers:{'x-synchronous':'true'}, signal:AbortSignal.timeout(25_000),
     }))
@@ -1281,7 +1287,7 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
   try {
     const generate = async (query: string) => {
       const response = await kbFetch(env,'/ask',{
-        body:{query,top_k:1,reranker:'noop',generative_model:'openai-compatible',max_tokens:4096,
+        body:{query,top_k:1,reranker:'noop',generative_model:env.JOURNEY_STORY_MODEL || 'gemini-2.5-flash-lite',max_tokens:4096,
           prompt:{system:JOURNEY_STORY_SYSTEM,user:'{question}'}},
         headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(30_000),
       })
@@ -1801,7 +1807,7 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
     // The platform still retrieves against the prompt; that context is
     // incidental and the grounding filter below only trusts OUR passages.
     const res = await kbFetch(env, '/ask', {
-      body: { query: prompt, top_k: 5, max_tokens: 4096, generative_model: 'gemini-2.5-flash-lite' },
+      body: { query: prompt, top_k: 5, max_tokens: 4096, generative_model: env.FOLLOWUPS_MODEL || 'gemini-2.5-flash-lite' },
       headers: { 'x-synchronous': 'true' },
     })
     if (!res.ok) return withCacheStatus(json({ questions: [] }), cacheStatus, false)

@@ -64,7 +64,18 @@
     // Networks refused on /api and /og. 45102/24429/37963 = Alibaba Cloud: a
     // 650-address headless-Chrome fleet in Singapore was making ~100x the real
     // readers' paid /api/ask calls from 4 Sep 2026. Edit here, no code change.
-    "BLOCKED_ASNS": "45102,24429,37963"
+    "BLOCKED_ASNS": "45102,24429,37963",
+    // Generative model per pipeline. Edit here, no code change. Values are
+    // platform model names: "openai-compatible" is the KB's one OpenRouter
+    // slot (model_id @preset/opax-pro = DeepSeek V4 Pro pinned to DeepSeek,
+    // reasoning off; re-point it with scripts/arag_byok_openrouter.py); the
+    // gemini names generate platform-side. ASK_MODEL is folded into the ask
+    // cache key, so changing it retires the previous model's cached answers.
+    "ASK_MODEL": "openai-compatible",
+    "POSITION_RECOVERY_MODEL": "gemini-2.5-flash-lite",
+    "SEARCH_SUMMARY_MODEL": "gemini-2.5-flash-lite",
+    "JOURNEY_STORY_MODEL": "gemini-2.5-flash-lite",
+    "FOLLOWUPS_MODEL": "gemini-2.5-flash-lite"
   },
 
   // Workers Rate Limiting bindings (wrangler >= 4.36 top-level `ratelimits`;
