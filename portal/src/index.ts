@@ -54,7 +54,7 @@ interface FindResource {
 
 const SLUG_RE = /^(speech|legal|news)-(\d+)$/
 const PRESS_SLUG_RE = /^press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+$/
-const RESEARCH_SLUG_RE = /^(?:mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/
+const RESEARCH_SLUG_RE = /^(?:grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/
 // Division records (parli.ingest.votes_ingest) carry composite ids:
 // division-nsw-la-2025-12-22-3, division-federal-senate-10113. Public too.
 const DIVISION_SLUG_RE = /^division-[a-z0-9-]+$/
