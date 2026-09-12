@@ -1,4 +1,5 @@
 import type { RecordQuestion } from './ask-records'
+import { isMoneyRanking } from './ask-money'
 
 // Infer only an unambiguous political cohort, not arbitrary mentions of
 // independence (courts, inquiries, schools) or a comparison between parties.
@@ -107,6 +108,9 @@ export function resolveAskScope<T extends RecordQuestion>(input: T, people: read
   const question = typeof input.question === 'string' ? input.question : ''
   let scope: AskScope = {}
   for (const turn of [...userQuestions(input), question]) {
+    // Receipt selections belong to the calculation, not to a later question
+    // about speeches. In particular, do not inherit their financial-year keys.
+    if (isMoneyRanking({question:turn})) { scope={}; continue }
     const named = namedFollowUp(turn, people)
     const current = {...naturalScope(turn, people), ...(named ? {speaker:named.speaker,kind:'speech'} : {})}
     if (!inheritsSubject(turn) || named) scope = {}
@@ -162,6 +166,7 @@ export function askRetrievalQuery(input: RecordQuestion): string {
     if (topic) return topic
   }
   const previous = priorQuestion(input)
+  if (previous && isMoneyRanking({question:previous})) return question
   if (previous && REFERENTIAL.test(question.trim())) return `${previous}\nFollow-up question: ${question}`
   return question.replace(/^(what|how)\s+(?:would|might)\s+(.{3,80}?)\s+say\b/i, 'What has $2 said')
 }

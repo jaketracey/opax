@@ -8782,7 +8782,7 @@ async function runAsk(question) {
     const citedList = cited.length ? cited : sources;
     const alsoList = cited.length ? retrieved : [];
     $("ask-answer").askEvidence = citedList;
-    lastAsk = { question, answer: answerText, sources, kind: askKind(), answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts };
+    lastAsk = { question, answer: answerText, sources, kind: askKind(), answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context };
     if (!data.money_ranking) prefetchAskFollowups(lastAsk);
 
     if (data.money_ranking) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
@@ -9005,8 +9005,8 @@ function initChat(manageFocus) {
       if (seed?.question && seed?.answer &&
           !(chatThread[0]?.text === seed.question && chatThread[1]?.text === seed.answer)) {
         chatThread = [
-          { role: "user", text: seed.question },
-          { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts },
+          { role: "user", text: seed.question, fundingQuestion: seed.money_question },
+          { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context },
         ];
         chatKind = seed.kind === "speech" ? "speech" : "all";
         saveChatSession();
@@ -9209,7 +9209,7 @@ async function sendChat(question, carry) {
   chatAbort = myAbort;
   // Everything before this question travels as context for the retrieval.
   const context = chatThread
-    .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.text }))
+    .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.role === "user" && typeof m.fundingQuestion === "string" ? m.fundingQuestion : m.text }))
     .slice(-12);
   // A chip's question was proven against a passage retrieved for the PREVIOUS
   // answer; fresh retrieval on the chip's wording alone can miss that passage,
@@ -9222,7 +9222,8 @@ async function sendChat(question, carry) {
       text: `From the record${carry.source ? ` (${carry.source})` : ""}: "${carry.evidence}"`,
     });
   }
-  chatThread.push({ role: "user", text: q });
+  const userTurn = { role: "user", text: q };
+  chatThread.push(userTurn);
   saveChatSession();
   renderChatThread();
   $("chat-input").value = "";
@@ -9286,10 +9287,13 @@ async function sendChat(question, carry) {
     });
     live?.stop();
     if (chatAbort !== myAbort) return;
+    if (data.money_ranking && typeof data.money_question === "string") userTurn.fundingQuestion = data.money_question;
     chatThread.push({
       role: "answer",
       text: (data.answer || "").trim() || "(no answer)",
       answer_status: data.answer_status,
+      money_ranking: data.money_ranking,
+      money_context: data.money_context,
       evidence_excerpts: data.evidence_excerpts,
       sources: (data.sources || []).map((source) => ({
         ...source,
