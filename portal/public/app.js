@@ -15,6 +15,7 @@ function trackOutcome(event, properties = {}) {
 let corpusManifest = null; // /corpus.json
 let liveStats = null; // /api/stats
 let suggestions = []; // /suggestions.json
+let featuredSuggestions = [];
 let reportsIndex = null;
 // `key` is the search identity (query + filters, no page, no sort): it says
 // whether a run is a new result set or another page of the one on screen.
@@ -9102,7 +9103,7 @@ function renderChips() {
   if (!suggestions.length) return;
   const row = $("chip-row");
   for (const el of row.querySelectorAll(".chip")) el.remove();
-  const picks = [...suggestions].sort(() => Math.random() - 0.5).slice(0, 4);
+  const picks = [...new Set([...featuredSuggestions, ...suggestions])].slice(0, 4);
   for (const q of picks) row.appendChild(suggestionChip(q));
   $("ask-chips").hidden = false;
 }
@@ -9132,9 +9133,9 @@ function moneyNextSteps(answer) {
   let map = null;
   if (href) {
     const url = new URL(href, "https://opax.com.au");
-    const p = new URLSearchParams();
-    for (const k of ["party", "industry"]) if (url.searchParams.get(k)) p.set(k, url.searchParams.get(k));
-    map = url.pathname === "/money" ? `/money/receipts${p.toString() ? `?${p}` : ""}` : href;
+    // The map applies these exact donor, party, jurisdiction and year filters.
+    // Keep the validated relative URL so a next step also stays in a preview.
+    if (url.pathname === "/money") map = href;
   }
   const table = /\|\s*(Donor → party|Donor|Recipient party)\s*\|[^\n]*\n\|[^\n]*\n\|\s*([^|\n]+?)\s*\|/.exec(text);
   let donor = "";
@@ -9154,7 +9155,7 @@ function renderMoneyNextSteps(container, answer) {
     const a = document.createElement("a");
     a.className = "action-btn";
     a.href = map;
-    a.textContent = "See these donors on the money map";
+    a.textContent = "Explore this funding on the money map";
     nav.appendChild(a);
   }
   if (donor) {
@@ -12754,6 +12755,7 @@ fetch("/corpus.json").then((r) => r.json()).then((m) => {
 
 fetch("/suggestions.json").then((r) => r.json()).then((s) => {
   suggestions = s.questions || [];
+  featuredSuggestions = Array.isArray(s.featured) ? s.featured.filter(q => suggestions.includes(q)) : [];
   renderChips();
 }).catch(() => {});
 
