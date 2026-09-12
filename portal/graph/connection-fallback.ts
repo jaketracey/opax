@@ -64,22 +64,25 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
       for (const [index, id] of [edge.source, edge.target].entries()) {
         if (index) { const arrow = add('span', labels, '→'); arrow.setAttribute('aria-label', 'to') }
         const node = nodes.get(id)!
-        const button = add('button', labels) as HTMLButtonElement
-        button.type = 'button'
-        const dot = add('i', button)
+        // One control per name: a node with a profile page is a link to it;
+        // one without is a button that narrows the list to its connections.
+        const profile = node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl) ? node.profileUrl : null
+        const control = add(profile ? 'a' : 'button', labels) as HTMLAnchorElement | HTMLButtonElement
+        const dot = add('i', control)
         dot.setAttribute('aria-hidden', 'true')
         dot.style.background = /^#[0-9a-f]{6}$/i.test(node.colour ?? '') ? node.colour! : '#53788c'
-        add('span', button, node.label)
-        if (node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl)) {
-          const link = add('a', row, `Open ${node.label} profile`) as HTMLAnchorElement
-          link.href = node.profileUrl
+        add('span', control, node.label)
+        if (profile) {
+          (control as HTMLAnchorElement).href = profile
+        } else {
+          (control as HTMLButtonElement).type = 'button'
+          control.addEventListener('click', () => {
+            options.onInteract?.()
+            current = { focusId: id }
+            render()
+            options.onSelect?.(node)
+          })
         }
-        button.addEventListener('click', () => {
-          options.onInteract?.()
-          current = { focusId: id }
-          render()
-          options.onSelect?.(node)
-        })
       }
       add('strong', row, formatMoney(edge.total))
       const track = add('div', row)
