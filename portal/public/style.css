@@ -490,7 +490,7 @@ main.compact { padding-top: var(--space-6); }
   /* Narrow screens: the ask question takes its own line; the submit and the
      options icon share the next one. (The search row stays on one line — see
      the mobile block at the end of the file.) */
-  .ask-row > :is(input, .grow-field) { flex-basis: 100%; }
+  .ask-row > :is(input, .grow-field, .ask-field) { flex-basis: 100%; }
   .ask-row button.primary { flex: 1 1 auto; }
 }
 main:focus { outline: none; }
@@ -543,7 +543,20 @@ button.secondary:hover { border-color: var(--ink); }
 button.secondary:disabled { opacity: 0.55; cursor: wait; }
 
 .ask-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-.ask-row > :is(input, .grow-field) { flex: 1 1 320px; min-height: 56px; font-size: 1.0625rem; }
+.ask-row > :is(input, .grow-field, .ask-field) { flex: 1 1 320px; min-height: 56px; font-size: 1.0625rem; }
+/* The question box and its clear cross: the wrapper takes the row's flex
+   share, the box fills it, and the cross sits inside the box's right edge
+   (the box keeps room for it). The cross appears only once there is text. */
+.ask-field { position: relative; display: flex; min-width: 0; }
+.ask-field > .grow-field { flex: 1 1 auto; width: 100%; min-height: 56px; font-size: 1.0625rem; padding-right: 2.9rem; }
+.field-clear {
+  position: absolute; right: 8px; top: 10px; width: 36px; height: 36px;
+  display: none; align-items: center; justify-content: center;
+  border: 0; border-radius: 50%; background: transparent; color: var(--ink-faint); cursor: pointer;
+}
+.ask-field.has-text .field-clear { display: inline-flex; }
+.field-clear svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.field-clear:hover, .field-clear:focus-visible { background: var(--bronze-wash); color: var(--ink); }
 
 /* A flex item that stretches to the row, and a flex container so the button
    inside stretches with it: the textarea sets the row's height (its padding
@@ -553,8 +566,11 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
 /* The ask row and the search row carry the same control, so it is one rule.
    Held apart they drifted: search's was 48 square against a 56 tall submit. */
 #ask-options-btn, #search-options-btn {
-  min-height: 56px; width: 56px; justify-content: center; padding: 0; align-self: stretch;
+  min-height: 56px; width: auto; justify-content: center; padding: 0 14px; gap: 8px; align-self: stretch;
 }
+/* The word beside the icon ("Options", "Filters") shows at every width: an
+   unlabelled icon was the only control on the row without a name. */
+.options-word { font: 600 0.875rem/1.2 var(--sans); white-space: nowrap; }
 #ask-options-btn .btn-icon, #search-options-btn .btn-icon { width: 22px; height: 22px; }
 #ask-options-btn[aria-expanded="true"], #search-options-btn[aria-expanded="true"] { border-color: var(--ink); }
 .ask-options-pop {
@@ -885,6 +901,18 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .chat-sources .source-list li { padding: 0.55rem 0; }
 .chat-next { margin: 1.4rem 0 0.4rem; }
 .chat-next .kicker { margin: 0 0 0.6rem; }
+/* One muted line under the "Ask next" heading: the chips start a conversation
+   (a new model call), which the heading alone did not say. */
+.chat-next-note { margin: -0.4rem 0 0.7rem; color: var(--ink-faint); font: 400 0.8125rem/1.5 var(--sans); }
+/* "Ask something else" under an answer: the example questions, wrapping in
+   place rather than scrolling sideways under the answer. */
+.ask-again .chip-row { margin-top: 0; flex-wrap: wrap; overflow: visible; mask-image: none; animation: none; }
+/* A conversation's header: the kicker and the way out of it. */
+.chat-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem 1rem; margin-bottom: 0.4rem; }
+.chat-head .kicker { margin: 0; }
+/* Fixed next steps under a money answer (it has no generated follow-ups). */
+.answer-money-next { display: flex; flex-wrap: wrap; gap: 0.5rem 0.7rem; margin: 1.2rem 0 0.4rem; }
+.answer-money-next .action-btn { text-decoration: none; }
 /* Follow-ups stack as full-width cards (the suggest-card idiom): long
    questions wrap instead of overflowing, and each reads as a way on. */
 .chat-next-btns { display: flex; flex-direction: column; gap: 0.5rem; max-width: 34rem; }
@@ -1024,6 +1052,13 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 }
 .results-bar select:hover { border-color: var(--ink); }
 .results-actions { display: inline-flex; align-items: center; gap: 0.5rem 0.7rem; flex-wrap: wrap; }
+.results-lead { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 0.2rem 0.9rem; }
+#search-summary-show { font-size: 0.875rem; }
+/* The export menus (ask's "Download sources", search's "Export") borrow the
+   sort menu's dress but not its fixed width: they are one button among the
+   actions, and on a phone grid they fill their cell. */
+.search-sort-picker.export-picker .search-sort-trigger { min-width: 0; width: 100%; }
+.search-sort-picker.export-picker .search-sort-menu { width: 280px; }
 @media (max-width: 700px) {
   /* Phones: the count on its own line, then sort, copy and export in one row. */
   .results-bar { flex-direction: column; align-items: stretch; gap: 0.7rem; }
@@ -2574,10 +2609,11 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 /* ---- mobile ------------------------------------------------------------- */
 
 @media (max-width: 640px) {
-  .ask-row > :is(input, .grow-field) { min-height: 52px; }
-  /* Ask stretches, the options icon rides at its right on the same line. */
+  .ask-row > :is(input, .grow-field, .ask-field), .ask-field > .grow-field { min-height: 52px; }
+  .field-clear { top: 8px; }
+  /* Ask stretches, the options button rides at its right on the same line. */
   .ask-row button.primary { flex: 1 1 auto; min-height: 52px; }
-  #ask-options-btn, #search-options-btn { min-height: 52px; width: 52px; }
+  #ask-options-btn, #search-options-btn { min-height: 52px; }
   /* Search stays on ONE line: the query shrinks as far as it must, the
      submit keeps its natural width and the filter icon rides at the right —
      no second line for the button, no third for the icon. */
@@ -3318,7 +3354,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .search-passage-more[hidden] { display: none; }
 #panel-search #search-readbar { margin: 0; }
 
-#panel-search .search-filter-word { display: none; }
 #panel-search .search-year-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 #panel-search .search-year-fields label { display: grid; gap: 6px; }
 #panel-search .search-years-heading { display: block; margin-bottom: 12px; color: var(--ink-soft); font: 400 .875rem/1.5 var(--sans); }
@@ -3337,8 +3372,7 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
   #panel-search .query-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
   #panel-search #search-input { grid-column: 1 / -1; width: 100%; min-height: 48px; }
   #panel-search .query-line button.primary { min-height: 44px; }
-  #panel-search #search-options-btn { width: auto; min-height: 44px; padding: 0 14px; gap: 8px; }
-  #panel-search .search-filter-word { display: inline; }
+  #panel-search #search-options-btn { min-height: 44px; }
   #panel-search .search-answer { padding: 14px 16px; }
   #panel-search #search-answer .kicker { margin-bottom: 8px; padding-bottom: 8px; }
   #panel-search .search-results-grid { margin-top: 16px; }
@@ -3400,12 +3434,12 @@ textarea.grow-field {
 }
 textarea.grow-field.is-empty { white-space: nowrap; }
 .ask-row > .grow-field, .query-line > .grow-field { width: auto; min-width: 0; }
-.ask-row > .grow-field { --field-h: 56px; }
+.ask-row > .grow-field, .ask-field > .grow-field { --field-h: 56px; }
 .query-line > .grow-field { --field-h: 48px; }
-.ask-row > .grow-field, .query-line > .grow-field { padding-block: calc((var(--field-h) - 2px - 1.35em) / 2); }
+.ask-row > .grow-field, .ask-field > .grow-field, .query-line > .grow-field { padding-block: calc((var(--field-h) - 2px - 1.35em) / 2); }
 /* Buttons retain their familiar size when a query takes several lines. */
 .ask-row, .query-line { align-items: flex-start; }
-@media (max-width: 640px) { .ask-row > .grow-field, .query-line > .grow-field { --field-h: 52px; } }
+@media (max-width: 640px) { .ask-row > .grow-field, .ask-field > .grow-field, .query-line > .grow-field { --field-h: 52px; } }
 
 /* Keep the period and selected-donor coverage beside the funding finding. */
 .answer-money-context {
@@ -4832,10 +4866,8 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 
 .agency-directory-page .supplier-directory-row strong { font-size: 1.0625rem; line-height: 1.45; }
 
-/* Keep the compact question field clear on phones and tablets. */
-@media (max-width: 1100px), (pointer: coarse) {
-  #ask-input::placeholder { opacity: 0; }
-}
+/* Phones and tablets get a short placeholder instead of the example question
+   (app.js swaps it); the box is no longer an empty rectangle there. */
 
 /* Source-backed connections reuse the profile rhythm and native disclosure UI. */
 .evidence-years {display:grid;gap:.5rem;max-width:40rem;margin:1.5rem 0}

@@ -773,14 +773,15 @@ function sourcesCSV(rows, context) {
   return `${exportHeader(context)}\n${head}\n${body.join("\n")}\n`;
 }
 
-function offerExport(rows, context, baseName) {
+/** Write the rows out in one of the three formats the export menus offer. */
+function exportSources(format, rows, context, baseName) {
   if (!rows.length) return;
-  const choice = (window.prompt(
-    "Export format (type csv, bibtex or ris):", "csv") || "").trim().toLowerCase();
-  if (["csv", "bibtex", "bib", "ris"].includes(choice)) trackOutcome("opax_export", { format: choice === "bib" ? "bibtex" : choice, row_count: rows.length });
+  const choice = format === "bib" ? "bibtex" : String(format || "").trim().toLowerCase();
+  if (!["csv", "bibtex", "ris"].includes(choice)) return;
+  trackOutcome("opax_export", { format: choice, row_count: rows.length });
   if (choice === "csv") {
     download(`${baseName}.csv`, "text/csv;charset=utf-8", sourcesCSV(rows, context));
-  } else if (choice === "bibtex" || choice === "bib") {
+  } else if (choice === "bibtex") {
     const txt = `% ${exportHeader(context).replace(/\n/g, "\n% ")}\n\n` +
       rows.map(bibtexFor).join("\n\n") + "\n";
     download(`${baseName}.bib`, "application/x-bibtex;charset=utf-8", txt);
@@ -788,6 +789,61 @@ function offerExport(rows, context, baseName) {
     const txt = rows.map(risFor).join("\n") + "\n";
     download(`${baseName}.ris`, "application/x-research-info-systems;charset=utf-8", txt);
   }
+}
+
+/**
+ * A small format menu (CSV / BibTeX / RIS) on a trigger button: the search
+ * page's sort-menu idiom with plain menu items instead of radios. Opens on
+ * click or the arrow keys, walks with the arrows, closes on Escape, Tab or a
+ * click outside, and hands the chosen `data-format` to `onChoose`.
+ */
+function mountExportMenu(root, onChoose) {
+  if (!root) return null;
+  const trigger = root.querySelector('[aria-haspopup]');
+  const menu = root.querySelector('[role="menu"]');
+  const options = [...menu.querySelectorAll('[role="menuitem"]')];
+  function close(restoreFocus = false) {
+    menu.hidden = true;
+    trigger.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) trigger.focus();
+  }
+  function open(last = false) {
+    menu.hidden = false;
+    const box = trigger.getBoundingClientRect();
+    const below = document.documentElement.clientHeight - box.bottom;
+    const above = box.top;
+    const upward = below < 260 && above > below;
+    menu.classList.toggle('opens-up', upward);
+    const alignLeft = box.right < menu.getBoundingClientRect().width + 16;
+    menu.style.left = alignLeft ? '0' : '';
+    menu.style.right = alignLeft ? 'auto' : '';
+    trigger.setAttribute('aria-expanded', 'true');
+    (last ? options.at(-1) : options[0]).focus();
+  }
+  trigger.addEventListener('click', () => menu.hidden ? open() : close());
+  trigger.addEventListener('keydown', event => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); open(event.key === 'ArrowUp'); }
+  });
+  for (const option of options) option.addEventListener('click', () => {
+    close();
+    trigger.focus();
+    onChoose(option.dataset.format);
+  });
+  menu.addEventListener('keydown', event => {
+    const index = options.indexOf(document.activeElement);
+    let next;
+    if (event.key === 'ArrowDown') next = (index + 1) % options.length;
+    if (event.key === 'ArrowUp') next = (index - 1 + options.length) % options.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = options.length - 1;
+    if (next !== undefined) { event.preventDefault(); options[next].focus(); }
+    if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(true); }
+    if (event.key === 'Tab') close(true);
+  });
+  const outside = event => { if (!root.contains(event.target)) close(); };
+  document.addEventListener('pointerdown', outside);
+  root.addEventListener('focusout', event => { if (!root.contains(event.relatedTarget)) close(); });
+  return { close, destroy() { close(); document.removeEventListener('pointerdown', outside); } };
 }
 
 // --- panels & routing -------------------------------------------------------
@@ -1847,6 +1903,8 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFall
 function fitQueryField(field) {
   if (!field || field.tagName !== "TEXTAREA") return;
   field.classList.toggle("is-empty", !field.value);
+  // The ask box's clear cross shows only while there is something to clear.
+  field.parentElement?.classList.toggle("has-text", !!field.value);
   if (!field.getClientRects().length) return; // refit when its panel becomes visible
   field.style.height = "auto";
   const height = field.scrollHeight + 2; // include the field's borders
@@ -1883,6 +1941,34 @@ for (const id of ["ask-input", "search-input"]) {
   }).observe(field);
   document.fonts.ready.then(fit);
   fit();
+}
+
+// The ask box after an answer. The answered question stays in the box (the
+// link and the filters key on it), so the next question used to land on the
+// end of it and the site answered the concatenation. Now: focusing the box
+// while it still holds the answered question selects the lot, so typing
+// replaces it; the cross empties it; phones get a short placeholder in place
+// of the example question, which the narrow box could not show whole.
+{
+  const field = $("ask-input");
+  let holdSelection = false;
+  field.addEventListener("focus", () => {
+    if (!lastAsk.question || field.value.trim() !== lastAsk.question.trim()) return;
+    holdSelection = true;
+    field.select();
+  });
+  // The mouseup that follows a click would collapse the selection to a caret.
+  field.addEventListener("mouseup", (e) => { if (holdSelection) { e.preventDefault(); holdSelection = false; } });
+  for (const event of ["blur", "keydown"]) field.addEventListener(event, () => { holdSelection = false; });
+  $("ask-clear")?.addEventListener("click", () => {
+    setQueryValue("ask-input", "");
+    field.focus();
+  });
+  const example = field.placeholder;
+  const compact = matchMedia("(max-width: 1100px), (pointer: coarse)");
+  const syncPlaceholder = () => { field.placeholder = compact.matches ? "Ask a question of the record…" : example; };
+  compact.addEventListener("change", syncPlaceholder);
+  syncPlaceholder();
 }
 attachQuickSearch($("mast-q"), $("mast-sugg"), { idPrefix: "ms" });
 attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: () => closeNavDrawer() });
@@ -8726,6 +8812,7 @@ async function runAsk(question) {
   foldHero(true);
   $("ask-followups").hidden = true;
   $("ask-followups").replaceChildren();
+  $("ask-again").hidden = true;
   $("ask-answer").askEvidence = [];
   const btn = $("ask-submit");
   $("ask-money").hidden = true;
@@ -8835,6 +8922,9 @@ async function runAsk(question) {
     if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
       renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question) });
+      // A calculated money answer gets no generated follow-ups, so it carries
+      // two fixed next steps instead of dead-ending under its table.
+      if (data.money_ranking && data.answer_status === "calculated") renderMoneyNextSteps($("ask-answer"), answerText);
     } else {
       // Both attempts came back blank (it happens under model load). Own it
       // plainly and hand the reader a retry, rather than a bare sources list.
@@ -8872,6 +8962,7 @@ async function runAsk(question) {
     holdPeopleRail(600);
     setPeopleRail(citedList);
     setQuoteRail(citedList);
+    renderAskAgainChips();
     $("ask-answer").focus({ preventScroll: true });
   } catch (err) {
     if (askAbort !== myAbort) return; // a newer request owns the UI now
@@ -8879,7 +8970,14 @@ async function runAsk(question) {
     if (err.name === "AbortError") setStatus($("ask-status"), "Cancelled.");
     else {
       setStatus($("ask-status"),
-        `${err.message || err}. The record is still there; try again.`, true);
+        `${err.message || err}. The record is still there.`, true);
+      // The way back is a button, not a sentence.
+      const retry = document.createElement("button");
+      retry.type = "button";
+      retry.className = "action-btn ask-retry";
+      retry.textContent = "Try again";
+      retry.addEventListener("click", () => runAsk(question));
+      $("ask-status").append(" ", retry);
       // A failed ask leaves the page empty; the suggested starts return.
       // (A stream that broke after its first words leaves them standing.)
       if ($("ask-result").hidden) {
@@ -8913,8 +9011,8 @@ $("ask-copylink").addEventListener("click", (e) => {
     "Copied. Opening it re-asks the question; wording may vary");
 });
 
-$("ask-export").addEventListener("click", () => {
-  offerExport(lastAsk.sources,
+mountExportMenu($("ask-export-picker"), (format) => {
+  exportSources(format, lastAsk.sources,
     [`# question: ${lastAsk.question}`, `# note: sources retrieved for a generated answer`],
     "opax-ask-sources");
 });
@@ -8925,10 +9023,27 @@ $("ask-continue").addEventListener("click", () => {
   goRoute("/chat");
 });
 
+/** A suggested question, chosen: into the box, into the URL, and asked. */
+function askSuggestion(q) {
+  setQueryValue("ask-input", q);
+  replaceRoute(askHash(q));
+  setCrumbs([{ label: "Ask" }]);
+  runAsk(q);
+}
+
+function suggestionChip(q) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "chip";
+  b.textContent = q;
+  b.addEventListener("click", () => askSuggestion(q));
+  return b;
+}
+
 /**
  * Suggested questions as home-page cards. They exist to start a first journey,
- * so they leave the moment a question is asked (runAsk hides the block) and
- * only return if that ask fails and the page is empty again.
+ * so they leave the moment a question is asked (runAsk hides the block); under
+ * the answer, renderAskAgainChips brings a fresh four back.
  */
 function renderChips() {
   // An ask already underway (status set synchronously at runAsk start) or
@@ -8938,20 +9053,68 @@ function renderChips() {
   const row = $("chip-row");
   for (const el of row.querySelectorAll(".chip")) el.remove();
   const picks = [...suggestions].sort(() => Math.random() - 0.5).slice(0, 4);
-  for (const q of picks) {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "chip";
-    b.textContent = q;
-    b.addEventListener("click", () => {
-      setQueryValue("ask-input", q);
-      replaceRoute(askHash(q));
-      setCrumbs([{ label: "Ask" }]);
-      runAsk(q);
-    });
-    row.appendChild(b);
-  }
+  for (const q of picks) row.appendChild(suggestionChip(q));
   $("ask-chips").hidden = false;
+}
+
+/** "Ask something else" under an answer: four examples, never the one just answered. */
+function renderAskAgainChips() {
+  const box = $("ask-again"), row = $("ask-again-row");
+  if (!box || !row || !suggestions.length) return;
+  row.replaceChildren();
+  const asked = (lastAsk.question || "").trim().toLowerCase();
+  const picks = suggestions.filter((q) => q.trim().toLowerCase() !== asked)
+    .sort(() => Math.random() - 0.5).slice(0, 4);
+  for (const q of picks) row.appendChild(suggestionChip(q));
+  box.hidden = !picks.length;
+}
+
+/**
+ * Next steps under a calculated money answer ("From disclosed receipts"). The
+ * answer's own "Explore these records" link carries the map's filters, and
+ * its table names the leading donor; both are read from the answer text the
+ * Worker wrote (src/ask-money.ts), so nothing is invented here.
+ */
+function moneyNextSteps(answer) {
+  const text = String(answer || "");
+  const explore = /\[Explore these records\]\(([^\s()]+)\)/.exec(text);
+  const href = explore && safeAnswerLink(explore[1]);
+  let map = null;
+  if (href) {
+    const url = new URL(href, "https://opax.com.au");
+    const p = new URLSearchParams();
+    for (const k of ["party", "industry"]) if (url.searchParams.get(k)) p.set(k, url.searchParams.get(k));
+    map = url.pathname === "/money" ? `/money/receipts${p.toString() ? `?${p}` : ""}` : href;
+  }
+  const table = /\|\s*(Donor → party|Donor|Recipient party)\s*\|[^\n]*\n\|[^\n]*\n\|\s*([^|\n]+?)\s*\|/.exec(text);
+  let donor = "";
+  if (table?.[1] === "Donor") donor = table[2];
+  else if (table?.[1] === "Donor → party") donor = table[2].split(" → ")[0].trim();
+  donor = donor.replace(/\*\*/g, "").trim();
+  return { map, donor };
+}
+
+function renderMoneyNextSteps(container, answer) {
+  const { map, donor } = moneyNextSteps(answer);
+  if (!map && !donor) return;
+  const nav = document.createElement("nav");
+  nav.className = "answer-money-next";
+  nav.setAttribute("aria-label", "Next steps");
+  if (map) {
+    const a = document.createElement("a");
+    a.className = "action-btn";
+    a.href = map;
+    a.textContent = "See these donors on the money map";
+    nav.appendChild(a);
+  }
+  if (donor) {
+    const a = document.createElement("a");
+    a.className = "action-btn";
+    a.href = askHash(`What has parliament said about ${donor}?`);
+    a.textContent = `Ask what parliament said about ${donor}`;
+    nav.appendChild(a);
+  }
+  container.appendChild(nav);
 }
 
 function setFrontPageHidden(hidden) {
@@ -8965,7 +9128,7 @@ function setFrontPageHidden(hidden) {
 
 // --- chat (keep asking) -----------------------------------------------------
 // Follow-up questions for the answer on the Ask page are generated as soon as
-// the answer lands, not when the reader chooses "Keep asking about this": by
+// the answer lands, not when the reader chooses "Continue in a conversation": by
 // then the chips are usually ready and the chat opens with them in place. The
 // result rides on lastAsk (so the seed carries it); an unfinished fetch is
 // registered so the chat view can await it instead of asking again.
@@ -8996,14 +9159,14 @@ function prefetchAskFollowups(ask) {
       renderFollowups(questions, $("ask-followups"), (item) => {
         $("ask-continue").click();
         sendChat(item.question, item);
-      });
+      }, "Suggested follow-ups · opens a conversation");
     }
     return questions;
   }).catch(() => []);
   askFollowupsInflight = { question: ask.question, answer: ask.answer, promise };
 }
 
-// The ask page's "Keep asking about this" button seeds a conversation with the
+// The ask page's "Continue in a conversation" button seeds a conversation with the
 // original question and answer; every later turn goes back to /api/ask with
 // the prior turns as context, and each answer offers follow-up questions the
 // Worker generated from the passages retrieved for that answer (a candidate it
@@ -9031,6 +9194,20 @@ function loadChatSession() {
     chatKind = data.kind === "speech" ? "speech" : "all";
   } catch { /* malformed storage reads as an empty thread */ }
 }
+
+// "Start a new conversation": drop the thread and its seed, clear the ask
+// page, and land on an empty Ask box.
+$("chat-new")?.addEventListener("click", () => {
+  chatAbort?.abort();
+  chatFollowAbort?.abort();
+  chatThread = [];
+  try {
+    sessionStorage.removeItem("opax-chat");
+    sessionStorage.removeItem("opax-chat-seed");
+  } catch { /* nothing stored to forget */ }
+  resetAsk();
+  goRoute("/ask");
+});
 
 function initChat(manageFocus) {
   if (!chatThread.length) loadChatSession();
@@ -9078,7 +9255,10 @@ function renderChatThread() {
   if (!chatThread.length) {
     const p = document.createElement("p");
     p.className = "chat-hint";
-    p.textContent = "Ask the record a question below — or ask one on the Ask page and choose “Keep asking about this” to continue it here.";
+    const link = document.createElement("a");
+    link.href = "/ask";
+    link.textContent = "ask one on the Ask page";
+    p.append("Ask the record a question below, or ", link, " and choose “Continue in a conversation” to continue it here.");
     thread.appendChild(p);
     return;
   }
@@ -9202,7 +9382,7 @@ function renderChatNext(questions) {
   renderFollowups(questions, next, (item) => sendChat(item.question, item));
 }
 
-function renderFollowups(questions, next, onSelect) {
+function renderFollowups(questions, next, onSelect, caption) {
   if (!next || !questions.length) return;
   next.hidden = false;
   next.replaceChildren();
@@ -9211,6 +9391,12 @@ function renderFollowups(questions, next, onSelect) {
   kicker.className = "subject-section-title";
   kicker.textContent = "Ask next";
   next.appendChild(kicker);
+  if (caption) {
+    const note = document.createElement("p");
+    note.className = "chat-next-note";
+    note.textContent = caption;
+    next.appendChild(note);
+  }
   const row = document.createElement("div");
   row.className = "chat-next-btns";
   row.setAttribute("role", "group");
@@ -9618,12 +9804,21 @@ const FILTER_KIND_LABELS = {
   interest: "Declared interest", expense: "Parliamentary expenses", access: "Meeting or lobbying register",
   campaigner: "Campaigner or associated entity", report: "Research report",
 };
-function recordTypeHref(kind) {
+// A document kind narrows the search in hand: the query and filters travel
+// with it, so "Speeches" on a row is the same search, speeches only, rather
+// than an empty form. Dataset kinds go to their own hubs.
+function recordTypeHref(kind, q = "", f = {}) {
   const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/discover', grant:'/money/grants', bill:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports' };
-  return roots[kind] || '/search?' + new URLSearchParams({kind});
+  if (roots[kind]) return roots[kind];
+  const p = new URLSearchParams();
+  if (q) p.set("q", q);
+  for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
+  if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
+  p.set("kind", kind);
+  return '/search?' + p;
 }
-function recordTypeLink(kind) {
-  return `<a class="search-record-kind" href="${esc(recordTypeHref(kind))}">${esc(FILTER_KIND_LABELS[kind] || kind)}</a>`;
+function recordTypeLink(kind, q, f) {
+  return `<a class="search-record-kind" href="${esc(recordTypeHref(kind, q, f))}">${esc(FILTER_KIND_LABELS[kind] || kind)}</a>`;
 }
 const FILTER_MODE_LABELS = { hybrid: "Hybrid", semantic: "Semantic", keyword: "Keyword" };
 
@@ -9910,7 +10105,7 @@ function renderResults(results) {
       const li = document.createElement("li");
       if (r.href) {
         li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="${esc(searchResultHref(r))}">${esc(r.title)}</a></h3>
-          <div class="result-meta">${recordTypeLink(r.kind)}${r.source ? ` · ${esc(r.source)}` : ""}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}</div>
+          <div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${r.source ? ` · ${esc(r.source)}` : ""}${r.dateLabel ? ` · ${esc(r.dateLabel)}` : r.date ? ` · ${esc(fmtDate(r.date))}` : ""}</div>
           <p id="search-passage-${index}" class="search-result-text snippet" data-full="catalog">${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>
           <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>`;
         return li;
@@ -9928,9 +10123,11 @@ function renderResults(results) {
         r.date ? `<time datetime="${esc(r.date)}">${esc(fmtDate(r.date))}</time>` : "",
       ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
       const topics = [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => typeof t === "string" && t.trim()))];
+      // Opening a speech row loads the whole speech in place, so its button says so.
+      const more = r.kind === "speech" ? "Read the full speech here" : "Read more";
       li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="/doc/${encodeURIComponent(r.slug)}">${esc(title)}</a></h3>
-        <div class="result-meta">${recordTypeLink(r.kind)}${meta ? ` · ${meta}` : ""}</div>${text}
-        <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false">Read more</button>
+        <div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${meta ? ` · ${meta}` : ""}</div>${text}
+        <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false" data-more="${esc(more)}">${esc(more)}</button>
         ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a href="${esc(subjectHash("topic", topic))}">${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
       return li;
     }),
@@ -9950,7 +10147,7 @@ function refreshSearchPassageFolds() {
       const expanded = btn.getAttribute("aria-expanded") !== "true";
       text.classList.toggle("is-collapsed", !expanded);
       btn.setAttribute("aria-expanded", String(expanded));
-      btn.textContent = expanded ? "Show less" : "Read more";
+      btn.textContent = expanded ? "Show less" : (btn.dataset.more || "Read more");
       // The retrieved passage is a few sentences; the first opening swaps in
       // the speech itself, so reading on means reading the record.
       const slug = text.closest("li")?.querySelector(".result-title")?.getAttribute("href")?.replace(/^\/doc\//, "");
@@ -10135,6 +10332,31 @@ let searchAnswerAbort = null;
 let searchAnswerWanted = false;
 let searchAnswerKey = "";
 
+// The summary runs with every fresh search, but a reader who dismisses it has
+// said something: the dismissal is remembered across searches (and visits),
+// and "Show cited summary" in the results bar brings it back and forgets it.
+const SUMMARY_DISMISSED_KEY = "opax-search-summary-dismissed";
+function summaryDismissed() {
+  try { return localStorage.getItem(SUMMARY_DISMISSED_KEY) === "1"; } catch { return false; }
+}
+function setSummaryDismissed(on) {
+  try {
+    if (on) localStorage.setItem(SUMMARY_DISMISSED_KEY, "1");
+    else localStorage.removeItem(SUMMARY_DISMISSED_KEY);
+  } catch { /* no storage: the dismissal lasts the page */ }
+}
+function syncSummaryToggle() {
+  const btn = $("search-summary-show");
+  if (!btn) return;
+  btn.hidden = !(summaryDismissed() && lastSearch.key && !$("results-bar").hidden);
+}
+$("search-summary-show")?.addEventListener("click", () => {
+  setSummaryDismissed(false);
+  searchAnswerWanted = true;
+  syncSummaryToggle();
+  if (lastSearch.key) void runSearchAnswer(lastSearch.query, lastSearch.filters, lastSearch.key);
+});
+
 function giveUpSearchAnswer() {
   searchAnswerAbort?.abort();
   searchAnswerAbort = null;
@@ -10213,7 +10435,12 @@ async function runSearchAnswer(q, f, key) {
   $("search-answer-retry").hidden = true;
   $("search-answer-status").classList.remove("visually-hidden");
   setStatus($("search-answer-status"), "Reading matching records…");
-  $("search-answer-dismiss").onclick = () => { searchAnswerWanted = false; giveUpSearchAnswer(); };
+  $("search-answer-dismiss").onclick = () => {
+    searchAnswerWanted = false;
+    setSummaryDismissed(true);
+    giveUpSearchAnswer();
+    syncSummaryToggle();
+  };
   $("search-answer-retry").onclick = () => runSearchAnswer(q, f, key);
   // Points arrive one at a time over the stream and fade in as they land;
   // `done` then attaches the numbered citations and the source list.
@@ -10305,7 +10532,7 @@ async function runSearch(page = 1) {
   const analyticsStarted = performance.now();
   trackOutcome("opax_search_started", { page, filter_count: Object.values(f).filter(Boolean).length });
   if (fresh) {
-    searchAnswerWanted = !!(q || f.speaker);
+    searchAnswerWanted = !!(q || f.speaker) && !summaryDismissed();
     searchAnswerKey = key;
     searchAnswerAbort?.abort();
     $("search-answer").hidden = true;
@@ -10366,6 +10593,7 @@ async function runSearch(page = 1) {
       const last = Math.min(lastSearch.page * lastSearch.perPage, lastSearch.total);
       $("results-count").innerHTML = `<span class="search-count-wide">${esc(resultsCountLine(lastSearch))}</span><span class="search-count-phone">${first}–${last} of ${lastSearch.total.toLocaleString()}${lastSearch.truncated ? " strongest matches" : " matches"}</span>`;
       $("results-bar").hidden = false;
+      syncSummaryToggle();
       renderSearchDateRuler(lastSearch.years, q, f);
       syncSearchReadBar();
       renderResults(results);
@@ -10440,10 +10668,10 @@ $("search-copylink").addEventListener("click", (e) => {
 
 // Export means the whole result set, not the page in hand. The Worker keeps
 // the retrieved window assembled, so `per` takes all of it in one request.
-$("search-export").addEventListener("click", async (e) => {
+mountExportMenu($("search-export-picker"), async (format) => {
   const s = lastSearch;
   if (!s.results.length) return;
-  const btn = e.currentTarget;
+  const btn = $("search-export");
   const label = btn.querySelector("span");
   const wording = label.textContent;
   let rows = s.results;
@@ -10464,7 +10692,7 @@ $("search-export").addEventListener("click", async (e) => {
     }
   }
   const f = s.filters;
-  offerExport(rows, [
+  exportSources(format, rows, [
     `# query: ${s.query}`,
     `# filters: ${activeFilterSummary(f) || "none"} · record type: ${f.kind || "all"} · mode: ${f.mode || "hybrid"} · sort: ${s.sort}`,
     `# scope: ${scope}`,
