@@ -51,11 +51,15 @@ most three sentences; aim for one.
   programs or places, and only ones that are in the text. Every numeral must appear
   verbatim in the speech (commas may be dropped). Never add, round, convert or
   total figures; if unsure, leave the number out.
+  A number the speech spells out in words (`Seventy per cent`) stays in words; converting
+  it to digits fails the verbatim check.
 - Keep the source's tense and status: `will introduce` is not `introduced`.
 - Write years in full (`2026 to 2027`, not `2026-27`).
 - Summarise, do not quote. Plain ASCII punctuation, no curly quotes or em dashes.
 - Use only that speech's text. Never carry a claim, name or figure from another item
   in the batch.
+  Same-topic speeches often sit back to back in a batch; before submitting, re-check
+  each brief against its own rid's text.
 - Procedural fragments (a single interjection, a point of order, "I second the motion")
   still get an honest brief: `Seconded the motion.` is fine at 8 words or more; below
   40 characters the harness rejects, so add what the motion was.
