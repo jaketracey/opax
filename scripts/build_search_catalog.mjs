@@ -4,6 +4,7 @@ import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { normalize, tokens, bucket } from '../portal/src/catalog-query.mjs';
 import { moneyFlowType } from '../portal/public/money-records.js';
+import { recordsWithLocations } from '../portal/public/grants-research.js';
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url));
 const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
 const files = async p => (await readdir(join(root,p))).filter(n=>n.endsWith('.json')).sort();
@@ -85,7 +86,12 @@ for(const file of await files('reports')) {
 }
 const agencies=await read('agencies.json');
 const mlci=await read('research/mlci.json');
-for(const p of mlci.projects.filter(p=>p.status!=='Withdrawn')) add(p.id,'report',`${p.title} — MLCI invitation record`, '/reports/grants-allocation?'+new URLSearchParams({q:p.title}),`${cash(p.value)} invitation allocation. ${p.status}. ${p.lga}, ${p.state}. Not an awarded grant or payment.`,{date:mlci.invitation_snapshot,state:'federal',source:'Departmental project list',url:p.source_url,record_id:p.id});
+const grantLocations=await read('research/grant-locations.json');
+for(const p of recordsWithLocations(mlci,grantLocations,'invitations')) {
+ const venueText=p.sites.map(s=>`Verified venue: ${s.site_name}, ${s.address}; ${s.electorate_2025} electorate (2025). Venue point only, not a surveyed work footprint or a seat-level funding allocation.`).join(' ');
+ const target={stage:'invitations',project:p.id,q:p.title,...(p.sites.length?{}:{view:'list'})};
+ add(p.id,'report',`${p.title} — MLCI invitation record`, '/reports/grants-allocation?'+new URLSearchParams(target),`${cash(p.value)} invitation allocation. ${p.status}. ${p.lga}, ${p.state}. Not an awarded grant or payment. ${venueText}`.trim(),{date:mlci.invitation_snapshot,state:'federal',source:'Departmental project list',url:p.source_url,record_id:p.id});
+}
 add('research-cpi-mlci-2026','report','Public money, political advantage?','/reports/grants-allocation','Centre for Public Integrity research on pork barrelling, marginal seats and Major and Local Community Infrastructure Program invitations. CPI Table 3 reports $223,128,975 for marginal seats where Labor was competitive, versus $156,587,679 under a seat-count proportional baseline. Attributed CPI analysis, not independently replicated by Opax; no finding about individual project merit. '+mlci.cpi_comparison.map(r=>`${r.name}: ${cash(r.actual)} invitation value; ${cash(r.expected)} proportional baseline.`).join(' '),{date:'2026-09-08',state:'federal',source:'Centre for Public Integrity',url:mlci.sources.cpi_landing});
 add('mlci-program-coverage','report','MLCI program: invitations and awards','/reports/grants-allocation',`${mlci.projects.filter(p=>p.status!=='Withdrawn').length} active invitations total $559,241,712 at 14 November 2025; separately, ${mlci.awards.length} published awards total ${cash(mlci.awards.reduce((s,p)=>s+p.value,0))} in Opax at ${mlci.as_of}. Invitations are not awards or payments; do not add totals. `+Object.entries({NSW:'New South Wales',VIC:'Victoria',QLD:'Queensland',WA:'Western Australia',SA:'South Australia',TAS:'Tasmania',NT:'Northern Territory',ACT:'Australian Capital Territory'}).map(([state,name])=>`${name}: ${cash(mlci.projects.filter(p=>p.status!=='Withdrawn'&&p.state===state).reduce((sum,p)=>sum+p.value,0))} in active invitations.`).join(' '),{date:mlci.as_of,state:'federal',source:'Departmental invitation list and GrantConnect snapshot',url:mlci.sources.department});
 for(const s of mlci.seats) add('aec-seat:'+s.name,'report',`${s.name} — 2025 seat baseline`,'/reports/grants-allocation?'+new URLSearchParams({seat:s.name}),`${s.state}. ${s.party}. ${s.margin.toFixed(2)} percentage-point margin. ${{M:'Marginal',FS:'Fairly safe',S:'Safe'}[s.status]}. AEC notional baseline before the 2025 election, not the election result or current incumbent.`,{date:'2025-05-03',state:'federal',source:'AEC pre-election seat status',url:mlci.sources.aec+'#page='+s.page});
