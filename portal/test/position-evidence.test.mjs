@@ -61,7 +61,7 @@ function harness({rows,texts={},recover=true,unavailable=false}={}){
   apiResource:async(r,u,slug)=>{reads++;return unavailable?Response.json({error:'down'},{status:503}):Response.json(texts[slug]||{speaker:'Example MP',text:proposal+'\n\n1:08 pm\n\n'+other});},
   quotedPositionAnswer:()=>null, positionExcerptsAnswer:(payload)=>({...payload,answer_status:'evidence_only'}), recoverPositionAnswer:async(payload,body)=>{generated=payload;generationBody=body;return recover?{...payload,answer:'Verified proposal',answer_status:undefined}:null;},
  });
- return {run:()=>fn({question:'What rent limit did he propose?',speaker:'Example MP',kind:'speech',from:'2025',to:'2026',chamber:'senate',topic:'housing'},{query:'housing affordability'},{},{}),get query(){return query},get generated(){return generated},get generationBody(){return generationBody},get reads(){return reads}};
+ return {run:(question='What rent limit did he propose?')=>fn({question,speaker:'Example MP',kind:'speech',from:'2025',to:'2026',chamber:'senate',topic:'housing'},{query:'housing affordability'},{},{}),get query(){return query},get generated(){return generated},get generationBody(){return generationBody},get reads(){return reads}};
 }
 test('position retrieval honors filters and passes only original first-turn text to generation',async()=>{
  const h=harness();await h.run();assert.equal(h.query.topK,20);assert.equal(h.query.url.searchParams.get('speaker'),'Example MP');assert.equal(h.query.url.searchParams.get('from'),'2025');assert.equal(h.query.url.searchParams.get('chamber'),'senate');assert.equal(h.query.url.searchParams.get('topic'),'housing');
@@ -96,4 +96,14 @@ test('an explicit policy cap keeps its immediate capacity qualification',()=>{
  assert.equal(positionProposalQuote(policy+' '+condition+' We have no problem with immigration.','immigration cap'),policy+' '+condition);
  assert.equal(positionProposalQuote('A long procedural speech about migration.','immigration'),'');
  assert.equal(positionProposalQuote(policy+' '+condition,'housing affordability'),'');
+});
+
+test('proposal duration excludes policy age and costing horizons',()=>{
+ for(const text of ['I proposed retaining a five-year-old housing policy to improve housing affordability.','I proposed a four-year-old housing scheme for housing affordability.','I proposed a four-year costing policy to improve housing affordability.','I proposed a housing plan costing $1.4 billion over four years.'])assert.equal(positionProposalQuote(text,'housing affordability','How long would it last?'),'');
+ assert.equal(positionProposalQuote(proposal,'housing affordability','How long would it last?'),proposal);
+});
+
+test('eligibility without verified criteria preserves scope and never calls generation',async()=>{
+ const h=harness();const out=await h.run('Who would be eligible?');
+ assert.equal(h.generated,undefined);assert.equal(out.answer_status,'evidence_gap');assert.equal(out.scope.speaker,'Example MP');assert.equal(out.sources.length,0);assert.match(out.answer,/couldn’t verify who would qualify/);
 });

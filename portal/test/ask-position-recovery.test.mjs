@@ -69,8 +69,43 @@ test('a summary cannot merge proposal conditions from different dated speeches',
 });
 
 test('a missing cost or reason never falls back to a generic policy quote',()=>{
- for(const q of ['What did it cost?','Why did she propose it?','How long would it last?','And how long would it last?'])assert.equal(fallback(payload,'housing',q),null);
+ for(const q of ['What did it cost?','Why did she propose it?'])assert.equal(fallback(payload,'housing',q),null);
  assert.equal(fallback(payload,'housing','What cap did she propose?').answer_status,'evidence_only');
+});
+
+test('duration fallback uses the policy term and never a cost horizon',()=>{
+ const costing='This plan will cost $1.4 billion over the next four years.';
+ for(const question of ['How long would it last?','And how long would it last?']){
+  const out=fallback({...payload,sources:[{...payload.sources[0],snippet:quote+' '+costing}]},'housing affordability',question);
+  assert.equal(out.answer_status,'evidence_only');assert.match(out.answer,/five-year/);assert.doesNotMatch(out.answer,/four years|\$1.4/);assert.match(out.answer,/11 Feb 2025/);
+  assert.equal(fallback({...payload,sources:[{...payload.sources[0],snippet:'I propose a housing affordability plan. '+costing}]},'housing affordability',question),null);
+ }
+});
+
+test('generated duration cannot borrow a different costing horizon from its excerpt',async()=>{
+ const evidence=quote+' This plan will cost $1.4 billion over the next four years.';
+ for(const text of ['The GST moratorium would last four years.','The housing plan would cost $1.4 billion over four years.']){
+  const h=harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote:evidence}]}]}));
+  assert.equal(await h.recover({...payload,sources:[{...payload.sources[0],snippet:evidence}]},{query:'housing affordability duration',position_question:'How long would it last?'},{}),null);
+ }
+ assert.equal(evidenceHelpers.positionPointSupported('The GST moratorium would last five years.',evidence,'How long would it last?'),true);
+});
+
+test('eligibility answers retain the criteria and deferred threshold instead of a rent formula',async()=>{
+ const eligible='Under this legislation a proportion of such residential developments will be normally reserved for qualifying, income-eligible Australians to be housed at below-market rents.';
+ const rent='Affordable housing is a rental dwelling rented at a maximum of 75% of market rent or 30% of tenant household income, if that is lower.';
+ const rules='Maximum allowable household incomes will be specified under regulations.';
+ const rows=[{...payload.sources[0],snippet:eligible+' '+rent+' '+rules}];
+ for(const [text,quote] of [
+  ['He defined affordable housing as rent at 75% of market rent or 30% of household income, whichever is lower.',rent],
+  ['Income-eligible Australians would qualify for affordable housing.',eligible],
+  ['Australians with incomes below 30% of market rent would be eligible; income limits would be specified under regulations.',eligible+' '+rent+' '+rules]
+ ])assert.equal(await harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote}]}]})).recover({...payload,sources:rows},{query:'housing affordability',position_question:'Who would be eligible?'},{}),null);
+ const valid='He proposed housing for qualifying, income-eligible Australians, with maximum household incomes to be specified under regulations.';
+ assert.equal(await harness(JSON.stringify({points:[{text:valid,citations:[{id:'s1',quote:eligible},{id:'s1',quote:rules}]}]})).recover({...payload,sources:rows},{query:'housing affordability',position_question:'Who would be eligible?'},{}),null,'eligibility details use original excerpts, not generated categories');
+ for(const group of ['veterans','pensioners','families with children'])assert.equal(evidenceHelpers.positionPointSupported(`Income-eligible Australians including ${group} would qualify; limits would be specified under regulations.`,eligible+' '+rules,'Who would be eligible?'),false);
+ const quoted=fallback({...payload,sources:rows},'housing affordability','Who would be eligible?');assert.match(quoted.answer,/income-eligible/);assert.match(quoted.answer,/regulations/);assert.doesNotMatch(quoted.answer,/75%|30%/);assert.equal(Object.values(quoted.citations)[0].length,2);
+ assert.equal(fallback({...payload,sources:[{...payload.sources[0],snippet:rent}]},'housing affordability','Who would be eligible?'),null);
 });
 
 test('a cap follow-up cannot borrow an unquoted waiting period or substitute another immigration policy',async()=>{
