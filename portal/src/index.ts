@@ -1032,6 +1032,15 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
 
 async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const rawInput = ((await request.json().catch(() => ({}))) ?? {}) as AskInput
+  // Phase durations go out as a Server-Timing header on synchronous answers,
+  // so a slow ask can be split into our work and the platform's from outside.
+  const marks: [string, number][] = [['start', Date.now()]]
+  const mark = (name: string): void => { marks.push([name, Date.now()]) }
+  const timed = (res: Response): Response => {
+    const parts = marks.slice(1).map(([name, at], i) => `${name};dur=${at - marks[i][1]}`)
+    res.headers.set('server-timing', [...parts, `total;dur=${Date.now() - marks[0][1]}`].join(', '))
+    return res
+  }
   let people: { name: string }[] = []
   if (needsAskPeople(rawInput)) {
     try { people = (await loadPeople(env)).people }
@@ -1051,6 +1060,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     const ranked = await rankedMoneyAnswer(input, env.ASSETS)
     if (ranked) return json(ranked)
   } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
+  mark('prep')
 
   // Cache first: a HIT costs neither a model call nor rate-limit quota.
   // The model is part of the key: re-pinning ASK_MODEL retires answers the
@@ -1066,10 +1076,12 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
   const limited = await rateLimited(env.ASK_LIMITER, request)
   if (limited) return limited
+  mark('cache')
 
   let records: AskRecords
   try { records = await retrieveAskRecords(input, env.ASSETS) }
   catch { return json({ error: 'Public-record search is temporarily unavailable. Please try again.' }, 503) }
+  mark('records')
   const body = buildAskBody(input, records)
   // Pinned per pipeline through wrangler vars (see env.d.ts). Every pipeline
   // rides the KB's OpenRouter slot: generation bills to OpenRouter only.
@@ -1082,8 +1094,9 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     // uses a position-specific version, so older unverified drafts cannot replay.
     try {
       const payload = await documentedPositionAnswer(input, body, env, ctx)
+      mark('position')
       store(payload)
-      return withCacheStatus(json(payload), status, false)
+      return timed(withCacheStatus(json(payload), status, false))
     } catch { return json({ error: 'The speech records are temporarily unavailable. Please try again.' }, 503) }
   }
   if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records, scope })
@@ -1099,6 +1112,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   }
   const t0 = Date.now()
   let answer = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
+  mark('ask')
   // A stall or an upstream error gets one lighter attempt before the reader hears about it.
   if (answer instanceof Response) answer = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
   if (answer instanceof Response) return answer
@@ -1106,6 +1120,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
     if (!(again instanceof Response) && !isRefusal(again)) answer = again
   }
+  mark('retry')
   let payload = askPayload(answer, records, scope)
   if (isPositionBody(body) && payload.sources.length && (isEvidenceGap(payload.answer) || !Object.keys(payload.citations).length || hasUnsupportedQuotes(payload, answer))) {
     payload = await recoverPositionAnswer(payload, body, env) || payload
@@ -1116,8 +1131,9 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope) }
   }
   if (hasUnsupportedQuotes(payload, answer) || (!isRefusal(answer) && !Object.keys(payload.citations).length)) payload = evidenceOnlyAnswer(payload, answer, String(body.query ?? ''))
+  mark('verify')
   store(payload)
-  return withCacheStatus(json(payload), status, false)
+  return timed(withCacheStatus(json(payload), status, false))
 }
 
 /** Retrieve once, then generate only from original turns belonging to the index speaker. */
