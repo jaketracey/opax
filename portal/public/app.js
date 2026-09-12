@@ -1251,7 +1251,7 @@ async function openMoneyRecords(kind, params) {
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=ia-ux-20260908-2' : '/ledger.js?v=ia-ux-20260908-2');
+    const mod = await import(grants ? '/grants.js?v=ia-ux-20260908-2' : '/ledger.js?v=receipt-years-20260913');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     moneyRecordsHandle = grants ? mod.mountGrants(body, { showHeading: false, displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, jurisdiction: params.get('jur') }) : mod.mountLedger(body, { jurisdiction: params.get('jur') });
@@ -7995,7 +7995,7 @@ const GAMES = {
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=ia-ux-20260908-2", mount: "mountLedger" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=receipt-years-20260913", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=ia-ux-20260908-2", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
