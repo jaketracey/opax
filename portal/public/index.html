@@ -663,7 +663,8 @@
     <section id="panel-connections" class="panel" hidden aria-labelledby="connections-title">
       <div data-money-navigation></div>
       <div id="connections-body" class="supplier-page connections-page">
-        <h1 id="connections-title" tabindex="-1">Connections in the record</h1>
+        <!-- The Money sub-nav tab "Programs &amp; places" already names this view; the heading stays for assistive tech, the page title and focus on arrival. -->
+        <h1 id="connections-title" class="visually-hidden" tabindex="-1">Connections in the record</h1>
         <p class="connections-lede">Explore organisations, programs and places across speeches, official releases and grant records.</p>
         <div class="supplier-controls">
           <label>Find a connection<input id="connection-search" type="search" placeholder="Name, program or electorate" autocomplete="off"></label>
