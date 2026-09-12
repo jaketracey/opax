@@ -1,4 +1,4 @@
-import { positionEvidence, positionProposalQuote, positionPointSupported, normalizePositionDraft } from './position-evidence'
+import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, isPositionEligibilityQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
 /**
@@ -945,7 +945,7 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
   const topic = str(input.topic)
   return JSON.stringify({
     epoch,
-    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v4' : ''),
+    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v5' : ''),
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
@@ -1166,18 +1166,26 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   const gap: AskPayload = {answer:EVIDENCE_GAP_ANSWER,citations:{},sources:[],scope,answer_status:'evidence_gap'}
   if (!sources.length) return gap
   const payload: AskPayload = {...gap,sources}
+  // A paraphrase must not invent who qualifies. Quote the recorded criteria
+  // and any deferred thresholds directly, without another generation call.
+  if(isPositionEligibilityQuestion(input.question || ''))return quotedPositionAnswer(payload,query,input.question) || {...gap,answer:'I couldn’t verify who would qualify from these selected speeches. Try naming the proposal more specifically.'}
   // A failed summary still shows the reader the speeches it was read from.
   return await recoverPositionAnswer(payload,{...body,position_question:input.question},env) || quotedPositionAnswer(payload,query,input.question) || positionExcerptsAnswer(payload,query) || gap
 }
 
 /** A failed summary must not hide a usable, explicitly recorded proposal. */
 function quotedPositionAnswer(payload: AskPayload, query: string, question = ''): AskPayload | null {
-  // A generic proposal quote does not answer a missing cost, reason or duration.
-  if (/\b(?:cost|costing|price|why|reason)\b|^(?:and\s+)?how\s+(?:much|long)\b/i.test(question)) return null
+  // Cost and reason need a verified summary; duration can use a proposal only
+  // when its quotation states the measure's duration, not a costing horizon.
+  if (/\b(?:cost|costing|price|why|reason)\b|^(?:and\s+)?how\s+much\b/i.test(question)) return null
   const rows = payload.sources.filter((s): s is Record<string,unknown> => !!s && typeof s === 'object')
   const sources = summarySources(rows,6000).flatMap(source => {
-    const quote = positionProposalQuote(source.snippet,query)
-    return quote && (!/\b(?:cap|limit)\b/i.test(question) || /\b(?:cap|limit|maximum|up to)\b/i.test(quote)) ? [{...source,quote}] : []
+    if(isPositionEligibilityQuestion(question)) {
+      const quotes=positionEligibilityQuotes(source.snippet,query)
+      return quotes.length?[{...source,quotes}]:[]
+    }
+    const quote = positionProposalQuote(source.snippet,query,question)
+    return quote && (!/\b(?:cap|limit)\b/i.test(question) || /\b(?:cap|limit|maximum|up to)\b/i.test(quote)) ? [{...source,quotes:[quote]}] : []
   }).slice(0,2)
   if (!sources.length) return null
   let answer = '**From their speeches**\n\n'
@@ -1185,13 +1193,16 @@ function quotedPositionAnswer(payload: AskPayload, query: string, question = '')
   for (const source of sources) {
     const date = source.date?.slice(0,10) || source.title.match(/\b\d{4}-\d{2}-\d{2}\b/)?.[0]
     const timestamp = date && Number.isFinite(Date.parse(date)) ? new Intl.DateTimeFormat('en-AU',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(date)) : ''
-    answer += [source.speaker,timestamp].filter(Boolean).join(' · ') + ':\n\n> ' + source.quote
-    const end = Array.from(answer).length
-    citations[source.id] = [[end-1,end]]
-    answer += '\n\n'
+    answer += [source.speaker,timestamp].filter(Boolean).join(' · ') + ':\n\n'
+    for(const quote of source.quotes) {
+      answer += '> '+quote
+      const end = Array.from(answer).length
+      ;(citations[source.id] ||= []).push([end-1,end])
+      answer += '\n\n'
+    }
   }
   return {answer:answer.trim(),citations,scope:payload.scope,answer_status:'evidence_only',evidence_kind:'original_position_proposal',sources:sources.map(source => ({
-    ...rows.find(row => row.href === source.href)!,resource:source.id,snippet:source.quote,cited:true,
+    ...rows.find(row => row.href === source.href)!,resource:source.id,snippet:source.quotes.join(' … '),cited:true,
   }))}
 }
 

@@ -12,6 +12,27 @@ test('comparisons, exclusions, incidental mentions and nonpolitical independence
 test('only referential follow-ups inherit the prior user cohort, never model output',()=>{const context=[{author:'question',text:question},{author:'answer',text:'Labor MPs say something.'}];assert.equal(resolveAskScope({question:'And what about housing supply?',context}).input.party,'Independent');assert.equal(resolveAskScope({question:'What did Labor MPs say?',context}).input.party,'Labor');assert.equal(resolveAskScope({question:'How was the budget described?',context}).scope,undefined);assert.equal(resolveAskScope({question:'And Labor MPs?',context}).input.party,'Labor')});
 test('financial cohort questions keep full-record retrieval',()=>{const out=resolveAskScope({question:'Which independent MPs disclosed donations?',kind:'all'});assert.equal(out.input.party,'Independent');assert.equal(out.input.kind,'all')});
 
+test('compact eligibility follow-ups keep the named proposal and explicit dates',()=>{
+ const people=[{name:'David Pocock'}],context=[{author:'user',text:'What has David Pocock proposed about housing affordability in 2026?'}];
+ for(const question of ['Who would be eligible?','Who can qualify?','Which homes would qualify?','Which households are eligible?','Who would be eligible for it?','Which households would be eligible for this?']){
+  const raw={question,kind:'all',context};assert.equal(exports.needsAskPeople(raw),true);
+  const {input}=resolveAskScope(raw,people);assert.equal(input.speaker,'David Pocock');assert.equal(input.from,'2026');assert.equal(input.to,'2026');assert.equal(exports.isNamedPositionQuestion(input),true);assert.match(exports.askRetrievalQuery(input),/housing affordability/);assert.equal(exports.askRetrievalQuery(input),'housing affordability in 2026');
+ }
+ for(const question of ['Who won the election?','Which grants went to X?','Who would be eligible for citizenship?']){
+  const {input}=resolveAskScope({question,kind:'all',context},people);assert.equal(input.speaker,undefined);assert.equal(input.from,undefined);
+ }
+ assert.equal(resolveAskScope({question:'Who would be eligible?',kind:'all'},people).input.speaker,undefined);
+ assert.equal(resolveAskScope({question:'Who would be eligible?',kind:'all',context:[{author:'answer',text:context[0].text}]},people).input.speaker,undefined);
+ assert.equal(resolveAskScope({question:'Who would be eligible?',kind:'all',context,party:'Labor'},people).input.speaker,undefined);
+ const funding=resolveAskScope({question:'Who would be eligible?',kind:'all',context:[{author:'user',text:'Who donates the most to Labor in 2020?'}]},people).input;
+ assert.equal(funding.speaker,undefined);assert.equal(funding.from,undefined);
+});
+
+test('duration follow-ups retrieve the measure duration rather than the word last',()=>{
+ const raw={question:'How long would it last?',kind:'all',context:[{author:'user',text:'What would Pauline Hanson say about housing affordability?'}]};
+ const {input}=resolveAskScope(raw,[{name:'Pauline Hanson'}]);assert.equal(exports.askRetrievalQuery(input),'housing affordability');assert.equal(input.speaker,'Pauline Hanson');
+});
+
 test('receipt selections do not become speech filters after leaving a funding conversation',()=>{
  const context=[{author:'user',text:'Who donates the most to Labor from gambling donors in federal records in 2020?'}];
  const result=resolveAskScope({question:'What did they say about housing?',context});
