@@ -4911,8 +4911,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   };
   // A single bar where the tag line will be: the same height as the line it
   // becomes, so nothing under the title moves when the entry arrives.
-  body.innerHTML = subjectSkeleton(SUBJECT_LABELS[kind] || "Donor", name,
+  body.innerHTML = subjectSkeleton(SUBJECT_LABELS[kind] || "Donor", kind === "electorate" ? "" : name,
     `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`);
+  // An electorate's address is a reference slug ("vic-vic-la-vic-berwick"), not
+  // its name, so the title is a bar until the index says what the place is.
+  if (kind === "electorate") $("subject-title").innerHTML = '<span class="visually-hidden">Loading electorate</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span>';
   if (manageFocus) $("subject-title")?.focus();
 
   if (kind === "electorate") {
@@ -5889,7 +5892,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=20260909-quick-facts").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=20260912-directory-faces").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -6200,7 +6203,7 @@ async function openDirectory(kind, params, manageFocus) {
   const build = {
     person: buildPeopleDirectory, party: buildPartiesDirectory,
     donor: buildDonorsDirectory, campaigner: buildCampaignersDirectory,
-    electorate: async () => (await loadElectorateModule()).directorySpec(),
+    electorate: async () => { const [module] = await Promise.all([loadElectorateModule(), loadPhotoMap()]); return module.directorySpec({ photoUrlFor, partyChipHTML }); },
   }[kind];
   let spec = null;
   try { spec = await build(); } catch { /* honest failure below */ }
@@ -10056,7 +10059,6 @@ function clearSearchResults() {
     briefs: {}, briefsLoading: false,
   };
   $("search-results").replaceChildren();
-  $("search-coverage").hidden = true;
   $("results-bar").hidden = true;
   $("search-date-ruler").hidden = true;
   $("search-date-ruler").replaceChildren();
@@ -10607,8 +10609,6 @@ async function runSearch(page = 1) {
     const data = await api(`/api/search-all?${searchQueryParams(q, f, page, sort)}`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
     const results = data.results || [];
-    $("search-coverage").hidden = !data.coverage;
-    $("search-coverage").querySelector("p").textContent = data.coverage || "";
     trackOutcome("opax_search_completed", { page, result_count: results.length, total_count: data.total ?? results.length, duration_ms: Math.round(performance.now() - analyticsStarted) });
     lastSearch = {
       key, query: q, filters: f, sort, results,

@@ -1287,7 +1287,7 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 #search-answer-dismiss svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; }
 #search-answer.is-loading #search-answer-status::before { content: ""; display: inline-block; width: .8em; height: .8em; margin-right: .5em; border: 1.5px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: btnspin 800ms linear infinite; }
 #search-answer-body { max-width: 80ch; }
-.search-summary-citation { display: inline-flex; align-items: center; justify-content: center; min-height: 24px; min-width: 24px; font-family: var(--sans); font-size: .8em; font-weight: 600; white-space: nowrap; }
+.search-summary-citation { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; min-height: 24px; min-width: 24px; font-family: var(--sans); font-size: .8em; font-weight: 600; white-space: nowrap; }
 #search-answer-sources blockquote { margin: 4px 0 12px; border-left: 2px solid var(--line); padding-left: 12px; color: var(--ink-soft); font-size: .875rem; }
 #search-answer-retry { margin-top: 12px; }
 @media (max-width: 480px) {
@@ -1307,6 +1307,9 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .summary-point.stream-in { animation: summary-fade 0.55s ease-out both; }
 @keyframes summary-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .answer-skeleton.is-tail { padding-top: 0.55em; }
+/* An electorate page opens on a title-sized bar: its address is a slug, not a name. */
+.title-skel { display:block; width:min(60%, 18rem); margin:0.35rem 0 0.3rem; }
+.title-skel i { height:1.35rem; }
 @media (prefers-reduced-motion: reduce) { .summary-point.stream-in { animation: none; } }
 /* Entry pages while they open: the bars stand where the first section and
    the quick facts will, so the page has its shape before its words. */
@@ -4821,8 +4824,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 }
 
 #panel-search .search-record-kind { font-weight: 650; color: var(--navy); }
-#search-coverage { margin: .5rem 0 1rem; }
-#search-coverage summary { cursor: pointer; }
 /* Agency records share the supplier profile's measured type and spacing. */
 .supplier-bars li > div > a { color: var(--ink); text-decoration-color: var(--line); text-underline-offset: .2em; }
 .supplier-bars li > div > a:hover { color: var(--accent); }
@@ -5146,8 +5147,16 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 @media(prefers-reduced-motion:reduce) { #allocation-map .leaflet-zoom-animated { transition:none!important; } }
 
 /* Electorate reference directory and timeline. */
-.el-directory-row { display:grid; grid-template-columns:minmax(180px,1fr) minmax(160px,1fr) 150px; gap:1rem; align-items:start; padding:1rem 0; }
-.el-directory-row > a { display:grid; gap:.2rem; }
+.el-directory-row { display:grid; grid-template-columns:36px minmax(180px,1fr) minmax(160px,1fr) 150px; gap:1rem; align-items:center; padding:1rem 0; }
+/* The seat name is the link; the parliament line under it is plain text. */
+.el-directory-row .el-seat { display:grid; gap:.2rem; min-width:0; }
+.el-directory-row .el-name { font-weight:600; }
+.el-face, .el-face img { width:36px; height:36px; border-radius:50%; display:block; }
+.el-face img { object-fit:cover; border:1.5px solid var(--paper-raised); box-shadow:0 0 0 1px var(--line); }
+.el-face-blank { background:var(--paper-sunken); box-shadow:inset 0 0 0 1px var(--line); }
+.el-holders a.el-party { text-decoration:none; }
+.el-holders .party { vertical-align:baseline; }
+.el-download { display:inline-flex; text-decoration:none; }
 .el-directory-row .fineprint { margin:0; }
 .el-directory-row small,.el-members span,.el-section li > small { display:block; font-size:.78rem; opacity:.8; }
 .el-intro { display:grid; grid-template-columns:1.3fr 1fr; gap:3rem; margin:2rem 0; }
@@ -5191,7 +5200,8 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .el-section > ul li { margin:.65rem 0; }
 .el-id { overflow-wrap:anywhere; font-size:.75rem; }
 @media(max-width:650px) {
- .el-directory-row { grid-template-columns:1fr; gap:.45rem; }
+ .el-directory-row { grid-template-columns:36px minmax(0,1fr); gap:.45rem .7rem; }
+ .el-directory-row > .el-holders, .el-directory-row > .fineprint { grid-column:2; }
  .el-intro { grid-template-columns:1fr; gap:1.5rem; }
  .el-intro aside { max-width:360px; }
  .el-demographics { grid-template-columns:repeat(2,minmax(0,1fr)); }
