@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {buildFlows, filterFlows, windowFlow, aggregateDonors, sortRows, buildCSV} from '../public/ledger.js';
+import {buildFlows, filterFlows, windowFlow, aggregateDonors, sortRows, buildCSV, parseLedgerParams} from '../public/ledger.js';
 const row={donorId:'donor:test',donor:'Test',industry:'gambling',party:'Labor',partyColour:'#f00',total:105,count:4,firstYear:2020,lastYear:2022,byYear:{2020:[60,1],2022:[40,2]},undated:[5,1]};
 test('selected years recalculate amounts, counts and dates without mutating lifetime data',()=>{
  assert.equal(windowFlow(row,null,null),row);
@@ -42,6 +42,19 @@ test('published Queensland Tabcorp FY2020-21 ranks Labor first and agrees with A
  ]);
  assert.equal(aggregateDonors(rows)[0].total,24090);
  assert.equal(filterFlows(buildFlows(data),{q:'Tabcorp'}).reduce((s,r)=>s+r.total,0),184885);
+});
+test('shareable receipts params resolve exact IDs and retain dated donor scope',()=>{
+ const data=JSON.parse(readFileSync(new URL('../public/graph/money.qld.json',import.meta.url)));
+ const parsed=parseLedgerParams(new URLSearchParams('jur=qld&type=receipts&focus=donor:tabcorp&party=party:Labor&industry=gambling&from=2020&to=2020&min=0'),data);
+ assert.equal(parsed.ok,true); assert.deepEqual(parsed.filters,{q:'',industry:'gambling',industryId:'gambling',party:'Labor',partyId:'party:Labor',focusDonorId:'donor:tabcorp',focusDonor:'Tabcorp Holdings Limited',yearFrom:2020,yearTo:2020,min:0});
+ const rows=filterFlows(buildFlows(data),parsed.filters); assert.deepEqual(rows.map(r=>[r.donor,r.party,r.total]),[['Tabcorp Holdings Limited','Labor',12100]]);
+ assert.match(buildCSV('flows',rows,['donor = Tabcorp']),/donor = Tabcorp/);
+});
+test('unknown or unsupported receipts params fail closed rather than widening',()=>{
+ const data=JSON.parse(readFileSync(new URL('../public/graph/money.qld.json',import.meta.url)));
+ for(const query of ['jur=qld&type=grants','jur=qld&focus=donor:nope','jur=qld&party=party:nope','jur=qld&industry=nope','jur=qld&from=2027','jur=qld&from=2022&to=2020','jur=qld&view=compact','jur=constructor','jur=qld&party=party:Labor&party=party:LNP','jur=qld&from=2020&from=2021']) {
+  const parsed=parseLedgerParams(new URLSearchParams(query),data); assert.equal(parsed.ok,false,query); assert.match(parsed.error,/unsupported|unknown|between|earlier|minimum|more than one/i,query);
+ }
 });
 test('every published jurisdiction matches independently summed year cells, including gaps and one-sided ranges',()=>{
  for(const file of ['money.json','money.qld.json','money.vic.json','money.tas.json']) {
