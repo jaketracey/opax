@@ -1251,10 +1251,10 @@ async function openMoneyRecords(kind, params) {
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=ia-ux-20260908-2' : '/ledger.js?v=receipt-cards-20260913');
+    const mod = await import(grants ? '/grants.js?v=ia-ux-20260908-2' : '/ledger.js?v=scoped-receipts-20260913');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
-    moneyRecordsHandle = grants ? mod.mountGrants(body, { showHeading: false, displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, jurisdiction: params.get('jur') }) : mod.mountLedger(body, { jurisdiction: params.get('jur') });
+    moneyRecordsHandle = grants ? mod.mountGrants(body, { showHeading: false, displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, jurisdiction: params.get('jur') }) : mod.mountLedger(body, { jurisdiction: params.get('jur'), params });
     if (grants && (params.get('open') || params.get('jur'))) moneyRecordsHandle.open?.(params.get('open'), params.get('jur') || undefined);
   } catch { if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">These records could not load. <a href="'+(grants?'/money/grants':'/money/receipts')+'">Try again</a>.</p>'; }
 }
@@ -5169,9 +5169,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   ]);
   renderPortraitCredit(name, key);
   // One row on wide screens: the jump links at the left, the money map button at the right.
-  sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav>${partyOnMap
-    ? `<p class="person-money-link"><a class="action-btn" href="${esc(subjectHash("party", party))}"><span class="btn-glyph" aria-hidden="true">$</span><span>Money map from ${esc(party)}</span></a></p>`
-    : `<p class="person-money-link"><a class="action-btn" href="/money"><span class="btn-glyph" aria-hidden="true">$</span><span>Money map</span></a></p>`}</div>`);
+  sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav><div class="person-money-link">
+    <a class="action-btn" href="${partyOnMap ? esc(subjectHash("party", party)) : '/money'}" aria-describedby="person-money-note"><span class="btn-glyph" aria-hidden="true">$</span><span>${partyOnMap ? `Explore ${esc(party)} party receipts` : 'Explore party receipts'}</span></a>
+    <p class="fineprint person-money-note" id="person-money-note">Party disclosures, not this person’s finances.</p>
+  </div></div>`);
   sections.insertAdjacentHTML("beforeend", `
     <form class="query-line subject-ask-form" id="subject-ask-form">
       <label for="subject-ask-topic">Ask about their speeches</label>
@@ -7995,7 +7996,7 @@ const GAMES = {
   tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=receipt-cards-20260913", mount: "mountLedger" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=scoped-receipts-20260913", mount: "mountLedger" },
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=ia-ux-20260908-2", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
@@ -9142,15 +9143,33 @@ function moneyNextSteps(answer) {
   if (table?.[1] === "Donor") donor = table[2];
   else if (table?.[1] === "Donor → party") donor = table[2].split(" → ")[0].trim();
   donor = donor.replace(/\*\*/g, "").trim();
-  return { map, donor };
+  let receipts = null;
+  if (map) {
+    const url = new URL(map, "https://opax.com.au");
+    const supported = new Set(['jur', 'type', 'party', 'industry', 'focus', 'from', 'to', 'q', 'min']);
+    // A receipt list must represent the entire selection, never discard a
+    // graph-only condition (such as inflation or a journey) to make it fit.
+    if (!url.hash && [...url.searchParams.keys()].every(key => supported.has(key)) &&
+        (!url.searchParams.has('type') || url.searchParams.get('type') === 'receipts')) {
+      receipts = '/money/receipts' + url.search;
+    }
+  }
+  return { map, receipts, donor };
 }
 
 function renderMoneyNextSteps(container, answer) {
-  const { map, donor } = moneyNextSteps(answer);
+  const { map, receipts, donor } = moneyNextSteps(answer);
   if (!map && !donor) return;
   const nav = document.createElement("nav");
   nav.className = "answer-money-next";
   nav.setAttribute("aria-label", "Next steps");
+  if (receipts) {
+    const a = document.createElement("a");
+    a.className = "action-btn";
+    a.href = receipts;
+    a.textContent = "See matching receipts";
+    nav.appendChild(a);
+  }
   if (map) {
     const a = document.createElement("a");
     a.className = "action-btn";

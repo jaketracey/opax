@@ -185,8 +185,56 @@ export function filterFlows (flows, f) {
         !industryLabel(r.industry).toLowerCase().includes(q)) return false
     if (f.industry && r.industry !== f.industry) return false
     if (f.party && r.party !== f.party) return false
+    if (f.focusDonorId && r.donorId !== f.focusDonorId) return false
     return true
   }).map((r) => windowFlow(r, f.yearFrom, f.yearTo)).filter(Boolean)
+}
+
+/** Parse a shareable receipts URL against the loaded graph using exact IDs. */
+export function parseLedgerParams (params, data) {
+  const p = params instanceof URLSearchParams ? params : new URLSearchParams(params || '')
+  const supported = new Set(['jur', 'type', 'focus', 'party', 'industry', 'from', 'to', 'q', 'min'])
+  for (const key of p.keys()) {
+    if (!supported.has(key)) return { ok: false, error: 'This link uses an unsupported filter. Clear filters to choose a new selection.' }
+    if (p.getAll(key).length > 1) return { ok: false, error: 'This link contains more than one selection for the same filter. Clear filters to choose a new selection.' }
+  }
+  const jur = p.get('jur') || 'federal'
+  if (!Object.hasOwn(JURISDICTIONS, jur)) return { ok: false, error: 'Unknown jurisdiction. Clear filters, then choose Federal, Queensland, Victoria or Tasmania.' }
+  const type = p.get('type')
+  if (type && type !== 'receipts') return { ok: false, error: 'This link requests an unsupported record type. This list shows political receipts. Clear filters to start again.' }
+  const readYear = (key) => {
+    const raw = p.get(key)
+    if (raw == null || raw === '') return null
+    if (!/^\d{4}$/.test(raw) || Number(raw) < YEAR_MIN || Number(raw) > YEAR_MAX) return { error: `The ${key} year must be between ${YEAR_MIN} and ${YEAR_MAX}.` }
+    return Number(raw)
+  }
+  const yearFrom = readYear('from'); if (yearFrom?.error) return { ok: false, error: yearFrom.error }
+  const yearTo = readYear('to'); if (yearTo?.error) return { ok: false, error: yearTo.error }
+  if (yearFrom != null && yearTo != null && yearFrom > yearTo) return { ok: false, error: 'The start year must be the same as or earlier than the end year.' }
+  const minRaw = p.get('min')
+  const allowedMin = new Set([0, 100000, 1000000, 10000000])
+  const min = minRaw == null || minRaw === '' ? 0 : Number(minRaw)
+  if (!Number.isInteger(min) || !allowedMin.has(min)) return { ok: false, error: 'This minimum amount is not supported. Choose Any amount, $100K+, $1M+ or $10M+.' }
+  if (!data) return { ok: true, jurisdiction: jur, filters: { q: p.get('q') || '', yearFrom, yearTo, min, partyId: p.get('party') || '', industryId: p.get('industry') || '', focusDonorId: p.get('focus') || '' } }
+  const nodes = new Map((data.nodes || []).map((n) => [n.id, n]))
+  const exact = (key, kind, label) => {
+    const id = p.get(key)
+    if (!id) return { id: '', label: '' }
+    const node = nodes.get(id)
+    if (!node || node.kind !== kind) return { error: `This link names an unknown ${label}. Clear filters to choose a new selection.` }
+    return { id, label: node.label }
+  }
+  const party = exact('party', 'party', 'party')
+  if (party.error) return { ok: false, error: party.error }
+  const focus = exact('focus', 'donor', 'donor')
+  if (focus.error) return { ok: false, error: focus.error }
+  const industryId = p.get('industry') || ''
+  if (industryId && !nodesExistsIndustry(data, industryId)) return { ok: false, error: 'This link names an unknown industry. Clear filters to choose a new selection.' }
+  return { ok: true, jurisdiction: jur, filters: { q: p.get('q') || '', industry: industryId, industryId, party: party.label, partyId: party.id, focusDonorId: focus.id, focusDonor: focus.label, yearFrom, yearTo, min } }
+}
+
+function nodesExistsIndustry (data, industry) {
+  return (data.nodes || []).some((n) => n.kind === 'donor' && (n.industry || 'other') === industry)
 }
 
 const TEXT_KEYS = new Set(['donor', 'industry', 'party', 'topParty'])
@@ -334,6 +382,9 @@ const CSS = `
   font-variant-numeric: tabular-nums;
 }
 .lg-summary b { font-weight: 700; color: var(--ink, #23271F); }
+.lg-scope-chip { display: inline-flex; align-items: center; max-width: 100%; gap: .5rem; margin: 0 0 .6rem; padding: .3rem .55rem; border: 1px solid var(--bronze-ink, #8A5A12); background: var(--bronze-wash, rgba(160,118,27,.12)); font-size: .8125rem; }
+.lg-scope-chip > span { min-width: 0; overflow-wrap: anywhere; }
+.lg-chip-remove { font: inherit; flex: none; min-height: 44px; border: 0; background: transparent; color: var(--bronze-ink, #8A5A12); text-decoration: underline; cursor: pointer; padding: .1rem .3rem; }
 
 .lg-tablewrap {
   overflow: auto; max-height: min(65vh, 850px);
@@ -484,12 +535,17 @@ function yearsText (r) {
 export function mountLedger (container, opts = {}) {
   injectStyles()
 
+  const routeParams = opts.params instanceof URLSearchParams ? opts.params : new URLSearchParams(opts.params || '')
+  const routeJur = routeParams.get('jur')
+
   const state = {
-    jur: JURISDICTIONS[opts.jurisdiction] ? opts.jurisdiction : 'federal',
+    jur: Object.hasOwn(JURISDICTIONS, routeJur) ? routeJur : (Object.hasOwn(JURISDICTIONS, opts.jurisdiction) ? opts.jurisdiction : 'federal'),
     view: 'flows',                 // 'flows' | 'donors'
     q: '',
     industry: '',
     party: '',
+    focusDonorId: '',
+    focusDonor: '',
     yearFrom: null,
     yearTo: null,
     min: 0,
@@ -504,6 +560,8 @@ export function mountLedger (container, opts = {}) {
   let currentRows = []             // what the table shows now (for export)
   let loading = true
   let loadError = false
+  let paramError = ''
+  let initialParamsApplied = false
   let loadSeq = 0                  // a switch mid-load must not let the old file land
   const cache = new Map()          // jurisdiction -> parsed export
   const aborter = new AbortController()
@@ -566,6 +624,7 @@ export function mountLedger (container, opts = {}) {
     </div>
 
     <p class="lg-year-help" id="lg-year-help">Use the first year of a financial year (2020 for 2020–21), or the polling year for election returns.</p>
+    <div class="lg-scope-chip" id="lg-scope-chip" hidden></div>
     <p class="lg-summary" aria-live="polite" aria-atomic="true"></p>
 
     <div class="lg-compact-sort">
@@ -599,6 +658,7 @@ export function mountLedger (container, opts = {}) {
   const clearBtn = $('#lg-clear')
   const exportBtn = $('#lg-export')
   const summaryEl = $('.lg-summary')
+  const scopeEl = $('#lg-scope-chip')
   const statusEl = $('.lg-status')
   const tableEl = $('.lg-table')
   const captionEl = $('caption')
@@ -612,7 +672,7 @@ export function mountLedger (container, opts = {}) {
 
   const hasFilters = () =>
     state.q.trim() !== '' || state.industry !== '' || state.party !== '' ||
-    state.yearFrom != null || state.yearTo != null || state.min > 0
+    state.focusDonorId !== '' || state.yearFrom != null || state.yearTo != null || state.min > 0
 
   function computeRows () {
     const passing = filterFlows(flows, state)
@@ -719,7 +779,20 @@ export function mountLedger (container, opts = {}) {
   }
 
   function render () {
-    if (loading || loadError) { exportBtn.disabled = true; return }
+    if (loading || loadError || paramError) {
+      exportBtn.disabled = true
+      compactSortEl.disabled = directionBtn.disabled = true
+      tableEl.hidden = true
+      cardsEl.hidden = true
+      scopeEl.hidden = true
+      currentRows = []
+      if (paramError) {
+        statusEl.hidden = false
+        statusEl.textContent = paramError
+        clearBtn.hidden = false
+      }
+      return
+    }
     const invalidFrom = !yearFromEl.validity.valid
     const invalidTo = !yearToEl.validity.valid
     const reversed = state.yearFrom != null && state.yearTo != null && state.yearFrom > state.yearTo
@@ -788,6 +861,15 @@ export function mountLedger (container, opts = {}) {
     cardsEl.setAttribute('aria-label', captionEl.textContent)
 
     clearBtn.hidden = !hasFilters()
+    scopeEl.hidden = !state.focusDonorId
+    scopeEl.replaceChildren()
+    if (state.focusDonorId) {
+      scopeEl.append(el('span', null, `Exact donor: ${state.focusDonor}`))
+      const remove = el('button', 'lg-chip-remove', 'Remove')
+      remove.type = 'button'; remove.setAttribute('aria-label', `Remove donor filter: ${state.focusDonor}`)
+      remove.addEventListener('click', () => { state.focusDonorId = ''; state.focusDonor = ''; paramError = ''; render(); searchEl.focus() })
+      scopeEl.appendChild(remove)
+    }
   }
 
   // ---- CSV export ---------------------------------------------------------
@@ -797,6 +879,7 @@ export function mountLedger (container, opts = {}) {
     if (state.q.trim()) parts.push(`text ~ "${state.q.trim()}"`)
     if (state.industry) parts.push(`industry = ${industryLabel(state.industry)}`)
     if (state.party) parts.push(`party = ${state.party}`)
+    if (state.focusDonorId) parts.push(`donor = ${state.focusDonor}`)
     if (state.yearFrom != null || state.yearTo != null) {
       parts.push(`return years ${state.yearFrom ?? "any"}–${state.yearTo ?? "any"}; only dated amounts`)
     }
@@ -857,9 +940,11 @@ export function mountLedger (container, opts = {}) {
     state.q = ''; searchEl.value = ''
     state.industry = ''; industryEl.value = ''
     state.party = ''; partyEl.value = ''
+    state.focusDonorId = ''; state.focusDonor = ''
     state.yearFrom = null; yearFromEl.value = ''
     state.yearTo = null; yearToEl.value = ''
     state.min = 0; minEl.value = '0'
+    paramError = ''
     render()
     searchEl.focus()
   })
@@ -972,13 +1057,22 @@ export function mountLedger (container, opts = {}) {
   }
 
   async function load (jur = state.jur) {
-    state.jur = JURISDICTIONS[jur] ? jur : 'federal'
+    const previousJur = state.jur
+    state.jur = Object.hasOwn(JURISDICTIONS, jur) ? jur : 'federal'
+    const switchedJurisdiction = previousJur !== state.jur
     for (const b of root.querySelectorAll('.lg-jur')) {
       b.setAttribute('aria-pressed', b.dataset.jur === state.jur ? 'true' : 'false')
     }
     const token = ++loadSeq
     loading = true
     loadError = false
+    // A deliberate jurisdiction switch must never leave an exact donor from the old file.
+    if (switchedJurisdiction) {
+      state.focusDonorId = ''; state.focusDonor = ''; paramError = ''
+      // A newer explicit selection wins even if the first file is pending.
+      initialParamsApplied = true
+    }
+    scopeEl.hidden = true
     exportBtn.disabled = true
     compactSortEl.disabled = directionBtn.disabled = true
     cardsEl.hidden = true
@@ -995,6 +1089,27 @@ export function mountLedger (container, opts = {}) {
       loading = false
       meta = data.meta || {}
       flows = buildFlows(data)
+      if (!initialParamsApplied && routeParams.toString()) {
+        const parsed = parseLedgerParams(routeParams, data)
+        initialParamsApplied = true
+        if (!parsed.ok) {
+          paramError = parsed.error
+        } else {
+          paramError = ''
+          state.q = parsed.filters.q
+          state.industry = parsed.filters.industry
+          state.party = parsed.filters.party
+          state.focusDonorId = parsed.filters.focusDonorId
+          state.focusDonor = parsed.filters.focusDonor
+          state.yearFrom = parsed.filters.yearFrom
+          state.yearTo = parsed.filters.yearTo
+          state.min = parsed.filters.min
+          searchEl.value = state.q
+          yearFromEl.value = state.yearFrom ?? ''
+          yearToEl.value = state.yearTo ?? ''
+          minEl.value = String(state.min)
+        }
+      }
       populateSelects(data)
       renderFineprint(data)
       statusEl.hidden = true
