@@ -976,7 +976,8 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
    fixed rail so the two states share one top edge and neither adds height. */
 .people-card {
   position: absolute; top: 0; left: 0; width: 100%;
-  padding: 0.15rem 0 0.15rem 14px;
+  /* Room above the kicker so the card does not sit on the rail's top edge. */
+  padding: 1.35rem 0 0.15rem 14px;
   opacity: 0; transform: translateY(10px); pointer-events: none;
 }
 .people-card.shown { opacity: 1; transform: none; pointer-events: auto; }
