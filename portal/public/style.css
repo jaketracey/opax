@@ -3407,6 +3407,15 @@ textarea.grow-field.is-collapsed { white-space: nowrap; }
 }
 @media (prefers-reduced-motion: reduce) { textarea.grow-field { transition: none; } }
 
+/* Keep the period and selected-donor coverage beside the funding finding. */
+.answer-money-context {
+  padding: 1rem 0;
+  border-block: 1px solid var(--line);
+  color: var(--ink-soft);
+  font: 400 1rem/1.55 var(--sans);
+}
+.answer-money-context strong { display: block; color: var(--ink); margin-bottom: .35rem; }
+
 /* ==== ask sources: byline-led rows ==== */
 .source-byline { grid-column: 2; display: flex; align-items: center; gap: 0.65rem; }
 .source-face {

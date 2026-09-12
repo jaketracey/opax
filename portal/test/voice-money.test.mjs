@@ -67,3 +67,10 @@ test('published gambling data yields a bounded answer with the right map filters
  assert.ok(JSON.stringify(result).length<15000);assert.equal(new URL(result.sources[0].url).searchParams.get('industry'),'gambling');
 });
 test.after(()=>rmSync(dir,{recursive:true,force:true}));
+
+test('voice period labels and separate years cannot become a wider total',()=>{
+ const real=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
+ const one=receiptAnswer(real,'gambling in financial year ending 2021','federal','https://opax.test');
+ assert.equal(one.by_party.find(x=>x.name==='Labor').total_aud,457673);
+ for(const q of ['gambling in 2019–20 and 2021–22','gambling in January to June 2020','gambling on 2020-1-1','gambling in calendar year 2020','gambling on 1/1/2020','gambling on 30/06/2021','gambling on 2020.01.01','gambling in H1 2020','gambling in the 1st half of 2020']) assert.equal(receiptAnswer(real,q,'federal','https://opax.test').needs_period,true,q);
+});

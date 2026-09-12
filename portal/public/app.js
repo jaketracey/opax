@@ -2480,6 +2480,7 @@ function renderAnswer(container, text, response = {}) {
       container.appendChild(scroll);
     } else {
       const p = document.createElement("p");
+      if (response.money_ranking && block.text === response.money_context) p.className = "answer-money-context";
       appendInline(p, block.text);
       container.appendChild(p);
     }

@@ -1,3 +1,5 @@
+import {financialYear, receiptPeriodQuery, separateReceiptYears} from './receipt-period'
+
 type Node = { id:string; label:string; kind:string; industry?:string; group?:string; aliases?:string[] }
 type Edge = { source:string; target:string; total:number; count:number; flow?:string; grant?:boolean; firstYear?:number; lastYear?:number; byYear?:Record<string,number[]> }
 export type ReceiptGraph = { meta:Record<string,unknown>; nodes:Node[]; edges:Edge[] }
@@ -60,8 +62,12 @@ export function receiptJurisdiction(query:string): string | null {
 }
 
 /** Sum only donor-to-party receipt edges; node totals and public-money flows never enter the sum. */
-export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:string, origin:string, filters: {party?:string; from?:string; to?:string} = {}) {
+export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:string, origin:string, filters: {party?:string; from?:string; to?:string; compareYears?:boolean} = {}) {
   if(!Array.isArray(graph.nodes)||!Array.isArray(graph.edges)) return null
+  const periodQuery=receiptPeriodQuery(query)
+  if(periodQuery.error)return {needs_period:true,answer:periodQuery.error,sources:[],jurisdiction}
+  query=periodQuery.query
+  if(separateReceiptYears(query)&&!filters.compareYears&&!(filters.from&&filters.to)) return {needs_period:true,answer:'Choose one financial year or a continuous range using “from … to …”. Separate years cannot be pooled without including the years between them.',sources:[],jurisdiction}
   const q=normal(query), nodes=new Map(graph.nodes.map(n=>[n.id,n]))
   let industries=[...new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.industry).filter((v):v is string=>!!v))].filter(ind=>(aliases[ind]||[ind.replaceAll('_',' ')]).some(term=>contains(q,term)))
   const words=q.split(' ').filter(w=>!scaffolding.has(w)&&!/^\d+$/.test(w))
@@ -136,7 +142,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   if(to!==undefined)params.set('to',String(to))
   const url=origin+'/money?'+params
   const subject=industries.length?industries.map(i=>i.replaceAll('_',' ')).join(' and '):donors.length?donors.map(n=>n.label).slice(0,3).join(', '):parties.map(n=>n.label).join(', ')||'all donors shown'
-  const period=Number.isFinite(first)?`${first}–${String(first+1).slice(-2)} to ${last}–${String(last+1).slice(-2)}`:null
+  const period=Number.isFinite(first)?first===last?financialYear(first):`${financialYear(first)} to ${financialYear(last)}`:null
   const amount=new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(cents/100)
   return {
     answer:matching?`The ${jurisdiction} records shown on Opax list ${amount} in disclosed party receipts for ${subject}, across ${count} receipts${period?' in '+period:''}. This is the published map selection, not an exhaustive industry total.`:'No matching receipts are shown in this selection and period. This does not establish that no funding occurred.',

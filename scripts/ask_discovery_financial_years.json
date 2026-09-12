@@ -1,0 +1,130 @@
+{
+  "_doc": "Financial-year ranking checks. Expected amounts use the published 7 September 2026 selection. Structural checks do not replace independent sums.",
+  "questions": [
+    {
+      "id": "financial-year-slash",
+      "q": "Who gets the most money from gambling in 2020/2021?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$457,673"
+        ],
+        "hits": 1,
+        "must_not_terms": [
+          "$1,468,701"
+        ],
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "financial-year-short",
+      "q": "Who gets the most money from gambling in 2020\u201321?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$457,673"
+        ],
+        "hits": 1,
+        "must_not_terms": [
+          "$1,468,701"
+        ],
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "financial-year-ending",
+      "q": "Who gets the most money from gambling in financial year ending 2021?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$457,673"
+        ],
+        "hits": 1,
+        "must_not_terms": [
+          "$1,011,028"
+        ],
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "financial-year-party-comparison",
+      "q": "Who gets more gambling money, Labor or Liberal in 2020/2021?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$97,478"
+        ],
+        "hits": 1,
+        "must_not_terms": [
+          "$649,477"
+        ],
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "financial-year-comparison",
+      "q": "Did Labor receive more gambling money in 2020\u201321 or 2021\u201322?",
+      "expect": {
+        "answer_status": "calculated",
+        "any_terms": [
+          "$553,355"
+        ],
+        "hits": 1,
+        "must_not_terms": [],
+        "min_cited": 2
+      }
+    },
+    {
+      "id": "discrete-years",
+      "q": "Who gets the most money from gambling in 2019\u201320, 2021\u201322?",
+      "expect": {
+        "answer_status": "needs_period",
+        "any_terms": [],
+        "hits": 0,
+        "must_not_terms": [
+          "$"
+        ],
+        "min_cited": 0
+      }
+    },
+    {
+      "id": "calendar-period",
+      "q": "Who gets the most money from gambling in calendar year 2020?",
+      "expect": {
+        "answer_status": "needs_period",
+        "any_terms": [],
+        "hits": 0,
+        "must_not_terms": [
+          "$"
+        ],
+        "min_cited": 0
+      }
+    },
+    {
+      "id": "ambiguous-year-range",
+      "q": "Who gets the most money from gambling in 2020-2021?",
+      "expect": {
+        "answer_status": "needs_period",
+        "any_terms": [],
+        "hits": 0,
+        "must_not_terms": [
+          "$"
+        ],
+        "min_cited": 0
+      }
+    },
+    {
+      "id": "missing-financial-year",
+      "q": "Who gets the most money from gambling in 1900/1901?",
+      "expect": {
+        "answer_status": "evidence_gap",
+        "any_terms": [],
+        "hits": 0,
+        "must_not_terms": [
+          "$0"
+        ],
+        "min_cited": 0
+      }
+    }
+  ]
+}

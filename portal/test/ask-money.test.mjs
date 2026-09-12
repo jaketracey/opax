@@ -28,7 +28,7 @@ test('each table citation sits inside a cell and has a linked evidence record',a
 });
 test('explicit date and party controls win; from an industry is not since a year',async()=>{
  const r=await ask('Who takes the most money from gambling in 2020?');
- assert.match(r.answer,/2020–21 to 2020–21/);assert.ok(r.sources.some(s=>s.href.includes('from=2020&to=2020')));
+ assert.match(r.answer,/Financial years: 2020–21/);assert.doesNotMatch(r.answer,/2020–21 to 2020–21/);assert.ok(r.sources.some(s=>s.href.includes('from=2020&to=2020')));
  const filtered=await ask('Who donates the most to Labor?',{party:'Liberal',from:'2020',to:'2020'});
  assert.match(filtered.answer,/to Liberal/);assert.ok(filtered.sources.some(s=>s.href.includes('party=party%3ALiberal')));
  assert.equal((await ask('Who donates the most to Labor recently?')).answer_status,'needs_period');
@@ -79,7 +79,9 @@ test('familiar corporate names find the donor without a model ranking',async()=>
 });
 
 test('unsupported comparisons and missing data never become a false winner',async()=>{
- for(const q of ['Who gets more money, Labor or Liberal or Greens?','Who gets more money from gambling or mining, Labor or Liberal?','Who gets more money from the unicorn lobby, Labor or Liberal?','Who gets more unicorn industry money, Labor or Liberal?','Compare gambling money, Labor in 2020 or Liberal in 2021?','Who gets more gambling money adjusted for inflation, Labor or Liberal?']) assert.equal(await ask(q),null,q);
+ for(const q of ['Who gets more money, Labor or Liberal or Greens?','Who gets more money from gambling or mining, Labor or Liberal?','Who gets more money from the unicorn lobby, Labor or Liberal?','Who gets more unicorn industry money, Labor or Liberal?','Who gets more gambling money adjusted for inflation, Labor or Liberal?']) assert.equal(await ask(q),null,q);
+ const mixedPeriods=await ask('Compare gambling money, Labor in 2020 or Liberal in 2021?');
+ assert.equal(mixedPeriods.answer_status,'needs_period');assert.doesNotMatch(mixedPeriods.answer,/\$/);
  const sharedRange=await ask('Who gets more gambling money, Labor or Liberal between 2020 and 2021?');
  assert.equal(sharedRange.answer_status,'calculated');assert.match(sharedRange.answer,/Labor received \$649,477 more/);assert.match(sharedRange.answer,/\$1,468,701/);assert.match(sharedRange.answer,/\$819,224/);
  const missing=await ask('Who gets more gambling money, Labor or Liberal in 1900?');
@@ -159,4 +161,50 @@ test('the whole-query check retains known aliases, reversed comparisons and expl
   'Who gets the most money from Mineralogy Pty Ltd?',
  ]) assert.equal((await ask(q)).answer_status,'calculated',q);
  assert.equal((await ask('Who gives the most money to Labor?',{party:'Liberal'})).answer_status,'calculated');
+});
+
+test('financial-year labels select one year, not two, with exact source links',async()=>{
+ for(const label of ['2020/2021','2020/21','2020–21','2020-21','2020‑21','FY2020-2021','financial year 2020–2021']) {
+  const r=await ask(`Who gets the most money from gambling in ${label}?`);
+  assert.equal(r.answer_status,'calculated',label);assert.match(r.answer,/\$457,673/);assert.doesNotMatch(r.answer,/\$1,468,701/);
+  assert.match(r.money_context,/Financial years: 2020–21/);assert.match(r.money_context,/7 donors with matching receipts/);
+  assert.ok(r.sources.some(s=>s.href.includes('from=2020&to=2020')),label);
+ }
+ const r=await ask('Who gets more gambling money, Labor or Liberal in 2020/2021?');
+ assert.match(r.answer,/\$97,478 more/);assert.doesNotMatch(r.answer,/\$649,477/);
+});
+
+test('comparisons between financial-year labels keep each year separate',async()=>{
+ const r=await ask('Did Labor receive more gambling money in 2020–21 or 2021–22?');
+ assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\$553,355 more/);
+ assert.match(r.money_context,/2020–21 and 2021–22/);
+ for(const y of ['2020','2021'])assert.ok(r.sources.some(s=>s.href.includes(`from=${y}&to=${y}`)));
+ const range=await ask('Who gets the most money from gambling from 2020–21 to 2022–23?');
+ assert.equal(range.answer_status,'calculated');assert.ok(range.sources.some(s=>s.href.includes('from=2020&to=2022')));
+});
+
+test('ambiguous or invalid year labels cannot silently change the period',async()=>{
+ for(const label of ['2020-2021','2020/22','2020/2022','2020–20','2020-01-01']) {
+  const r=await ask(`Who gets the most money from gambling in ${label}?`);
+  assert.equal(r.answer_status,'needs_period',label);assert.deepEqual(r.citations,{});assert.doesNotMatch(r.answer,/\$/);
+ }
+ const r=await ask('Who gets the most money from gambling in 2020 to 2021?');
+ assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\$1,468,701/);
+});
+
+test('a missing year has no fabricated ranking or calculation citation',async()=>{
+ const r=await ask('Who gets the most money from gambling in 1900/1901?');
+ assert.equal(r.answer_status,'evidence_gap');assert.deepEqual(r.sources,[]);assert.deepEqual(r.citations,{});
+ assert.match(r.answer,/does not establish that no funding occurred/);assert.doesNotMatch(r.answer,/\$0|received the most/);
+});
+
+test('year ending labels and requested versus actual coverage remain explicit',async()=>{
+ const r=await ask('Who gets the most money from gambling in financial year ending 2021?');
+ assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\$457,673/);assert.doesNotMatch(r.answer,/\$1,011,028/);
+ const sparse=await ask('Who gets the most money from gambling in 1900 to 2020?');
+ assert.match(sparse.money_context,/Financial years: 1900–01 to 2020–21/);
+ assert.match(sparse.money_context,/Matching recorded years: 1998–99 to 2020–21/);
+ for(const q of ['Who gets the most money from gambling in financial years 2019–20 and 2021–2022?', 'Who gets the most money from gambling in 2019–20, 2021–22?', 'Who gets the most money from gambling in 2019–20 & 2021–22?', 'Who gets the most money from gambling in calendar year 2020?', 'Who gets the most money from gambling from January to June 2020?', 'Who gets the most money from gambling on 2020-1-1?']) {
+  const answer=await ask(q);assert.equal(answer.answer_status,'needs_period',q);assert.doesNotMatch(answer.answer,/\$/);
+ }
 });
