@@ -99,3 +99,10 @@ for (const stream of [false,true]) test(`${stream?'streamed':'synchronous'}: an 
  assert.equal(h.calls.length,1);assert.equal(result.answer,helpers.EVIDENCE_GAP_ANSWER);
  assert.equal(Object.keys(result.citations).length,0);assert.equal(result.answer_status,undefined);
 });
+
+test('a refusal wrapped in the model\'s own preamble still counts as a refusal', () => {
+  const { isRefusal } = runInNewContext(transpile(code) + ';({isRefusal})', { ...helpers, REFUSAL_PREFIXES: ['not enough data', 'the record retrieved for this question does not discuss'] });
+  assert.equal(isRefusal({ answer: 'I can’t answer that question from the retrieved record. The passages cover contract awards. The record retrieved for this question does not discuss it.' }), true);
+  assert.equal(isRefusal({ answer: 'The record retrieved for this question does not discuss it.' }), true);
+  assert.equal(isRefusal({ answer: 'Negative gearing was defended by the Treasurer in 2016 [^1].' }), false);
+});

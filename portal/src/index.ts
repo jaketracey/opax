@@ -647,7 +647,13 @@ const REFUSAL_PREFIXES = [
 
 const isRefusal = (a: AskAnswer): boolean => {
   const t = (a.answer ?? '').trim().toLowerCase()
-  return !t || isEvidenceGap(t) || REFUSAL_PREFIXES.some((p) => t.startsWith(p))
+  // The prompt asks for the canned sentence alone, but the model can wrap it
+  // in its own preamble ("I can't answer that question from the retrieved
+  // record. ... The record retrieved for this question does not discuss it.",
+  // seen live 2026-09-12). A prefix check let that ship as an answer, so the
+  // exact sentence counts wherever it lands.
+  return !t || isEvidenceGap(t) || REFUSAL_PREFIXES.some((p) => t.startsWith(p)) ||
+    t.includes('the record retrieved for this question does not discuss it')
 }
 
 // A refusal or empty answer over a healthy retrieval (5+ resources) is a

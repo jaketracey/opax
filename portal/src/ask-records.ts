@@ -14,7 +14,17 @@ const QUESTION_WORDS = new Set(('who whom whose which what when where why how do
   'it its and then government awarded awards award get gets got take takes taking taken give gives gave given receive receives received receiving ' +
   'have had been being not any all most much many more some recent latest please pls also ' +
   'politician politicians company companies organisation organisations money funding fund funds donation donations ' +
-  'donor donors receipt receipts contract contracts grant grants spend spending spent political party parties interest interests declared declare record records summary summaries').split(' ').flatMap(w => tokens(w)))
+  'donor donors receipt receipts contract contracts grant grants spend spending spent political party parties interest interests declared declare record records summary summaries ' +
+  // Filler that survives the scaffolding strip. Left in, "How have MPs described
+  // negative gearing over the years?" reached the any-term fallback as
+  // "mps described negative gearing over year" and came back with 32 records
+  // matched on "over", "year" and "mps" (OVER IP GROUP, Year 13 Pty Ltd, MPS
+  // Macmillan); the model read them and refused over 20 on-topic passages
+  // (2026-09-12).
+  'over years year time times since ever long across between during before after through describe described describing discuss discussed discussing ' +
+  'talk talked talking mention mentioned argue argued view views position positions stance stances change changed changes changing think thought ' +
+  'often always never still already again ago mp mps senator senators minister ministers member members house senate parliament parliamentary ' +
+  'federal state states australia australian').split(' ').flatMap(w => tokens(w)))
 
 export function recordQuery(input: RecordQuestion): string {
   const subject = (text: string) => tokens(text.replace(/\b(pokies|pokie|poker machines?|casinos?|betting|wagering)\b/gi, 'gambling'))
@@ -45,7 +55,15 @@ export async function retrieveAskRecords(input: RecordQuestion, assets: Fetcher)
   }
   const url = new URL('https://opax.com.au/api/search-all?' + params)
   let found = await searchCatalog(url, assets, { perKind: 16 })
-  if (!found.total) found = await searchCatalog(url, assets, { anyTerms: true, perKind: 16 })
+  // The union fallback matches any word, so only subject words may drive it:
+  // a filler-only remainder attaches nothing rather than a random slice of
+  // every register.
+  if (!found.total) {
+    const strong = tokens(q).filter((t: string) => t.length >= 4)
+    if (!strong.length) return empty
+    if (strong.length !== tokens(q).length) url.searchParams.set('q', strong.join(' '))
+    found = await searchCatalog(url, assets, { anyTerms: true, perKind: 16 })
+  }
   const records: CatalogRecord[] = []
   const counts = new Map<string, number>()
   for (const r of found.results) {
