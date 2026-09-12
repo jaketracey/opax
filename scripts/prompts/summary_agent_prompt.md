@@ -45,6 +45,8 @@ most three sentences; aim for one.
 - Do not name or infer the speaker from the title. Other people named in the
   speech may be named.
 - For questions and answers: `Asked whether ...; the minister said ...`.
+- Questions on notice open with a stock phrase (`asked the Minister ... in writing, on [date]:`).
+  A brief that reuses it is rejected as copying the opening; paraphrase what was asked.
 - Keep at most three concrete positions, figures, bill names, people, organisations,
   programs or places, and only ones that are in the text. Every numeral must appear
   verbatim in the speech (commas may be dropped). Never add, round, convert or
