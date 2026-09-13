@@ -1,6 +1,6 @@
 import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=recipient-pages-20260913';
 
-const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
+const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');
 const JURISDICTIONS = { federal: 'Commonwealth', qld: 'Queensland' };
 const SOURCES = { federal: 'https://www.grants.gov.au/', qld: 'https://www.data.qld.gov.au/dataset/queensland-government-investment-portal-expenditure' };
