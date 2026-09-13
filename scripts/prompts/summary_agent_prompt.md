@@ -36,9 +36,12 @@ Then, up to 16 times:
      If a submit ever times out anyway, run the same submit again: rids already written come
      back as "not claimed by you", which is fine.
 
-Run every command in the foreground and read its output in the same step. Never background
-`submit` or wait on a monitor or notification for it: workers that did so sat idle for an hour
-after one batch (2026-09-13). A submit takes a few minutes; that is normal.
+Run every command in the foreground and read its output in the same step. A submit takes
+three to six minutes, longer than the Bash tool's default two-minute limit, so pass the tool's
+`timeout` parameter as 600000 on every `next` and `submit` call; otherwise the call is moved to
+the background and workers that then waited for a notification sat idle for an hour after one
+batch (2026-09-13). If a call does land in the background, wait on it with TaskOutput
+(block=true) and continue; never stop to wait for a notification.
 
 After 16 batches (or `NONE`/`STOP`), print one line: `finished: <n> batches, <m> briefs`
 and stop. Do not run `release` unless a submit failed and you are giving up.
