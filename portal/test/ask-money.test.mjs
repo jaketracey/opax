@@ -381,3 +381,116 @@ test('disclosure sources explain the calculation without file paths or markdown 
   assert.match(r.answer,/Download the calculation data/);
  }
 });
+
+test('two-party funding comparisons retain both sides through financial-year follow-ups',async()=>{
+ const seed='Who gets more gambling money, Labor or Liberal?';
+ const first=await ask('And in 2020–21?',{context:history(seed)});
+ assert.deepEqual(first,await ask(seed.replace('?',' in 2020–21?')));
+ assert.match(first.answer,/Labor received \$97,478 more/);
+ assert.match(first.answer,/\| Labor \| \$457,673 \| 47 \|/);
+ assert.match(first.answer,/\| Liberal \| \$360,195 \| 33 \|/);
+ const next=await ask('And in 2021–22?',{context:history(seed,'And in 2020–21?')});
+ assert.deepEqual(next,await ask(seed.replace('?',' in 2021–22?')));
+ assert.match(next.answer,/Labor received \$551,999 more/);
+ assert.match(next.answer,/\| Labor \| \$1,011,028 \| 67 \|/);
+ assert.match(next.answer,/\| Liberal \| \$459,029 \| 31 \|/);
+ for(const r of [first,next]) {
+  assert.equal(r.answer_status,'calculated');assert.equal(r.scope.party,undefined);
+  assert.equal(r.sources.length,3);
+  assert.deepEqual(r.sources.slice(1).map(s=>new URL(s.href,'https://opax.test').searchParams.get('party')).sort(),['party:Labor','party:Liberal']);
+  for(const s of r.sources.slice(1)) {
+   const p=new URL(s.href,'https://opax.test').searchParams;
+   assert.equal(p.get('industry'),'gambling');assert.equal(p.get('jur'),'federal');
+   assert.equal(p.get('from'),r.scope.from);assert.equal(p.get('to'),r.scope.to);
+  }
+  for(const [key,spans] of Object.entries(r.citations)) {
+   assert.ok(r.sources.some(s=>s.resource===key&&s.cited));
+   for(const [start,end] of spans)assert.ok(start>=0&&end>start&&end<=Array.from(r.answer).length);
+  }
+ }
+});
+
+test('comparison canonical questions retain UI periods and survive truncated conversation history',async()=>{
+ const seed='Who gets more gambling money, Labor or Liberal?';
+ const r=await ask(seed,{from:'2020',to:'2020'});
+ assert.match(r.money_question,/Labor or Liberal/);assert.match(r.money_question,/in 2020/);assert.doesNotMatch(r.money_question,/\$/);
+ assert.deepEqual(await ask(r.money_question),r);
+ let last=r;
+ for(let n=0;n<14;n++) {
+  const year=n%2?2020:2021;
+  last=await ask(`And in ${year}?`,{context:history(last.money_question)});
+  assert.equal(last.answer_status,'calculated');assert.equal(last.scope.from,String(year));
+  assert.match(last.money_question,/Labor or Liberal/);
+ }
+ const controlled=await ask('And in 2021–22?',{context:history(last.money_question),from:'2022',to:'2022'});
+ assert.deepEqual(controlled,await ask(seed,{from:'2022',to:'2022'}));
+ assert.deepEqual(await ask(controlled.money_question),controlled);
+});
+
+test('comparison date clarification preserves the pair for an explicit correction',async()=>{
+ const seed=(await ask('Who gets more gambling money, Labor or Liberal in 2020?')).money_question;
+ for(const question of ['And last year?','What about January 2021?','And in calendar year 2021?','And in 2020 and 2022?','And in 2021–23?']) {
+  const r=await ask(question,{context:history(seed)});
+  assert.equal(r.answer_status,'needs_period',question);assert.equal(r.money_question,seed);
+  assert.deepEqual(r.sources,[]);assert.doesNotMatch(r.answer,/\$/);
+  for(const prior of [question,r.money_question]) {
+   const correction=await ask('And in 2021–22?',{context:history(seed,prior)});
+   assert.equal(correction.answer_status,'calculated',question);assert.match(correction.answer,/\$551,999 more/);
+  }
+ }
+});
+
+test('comparison periods replace shared bounds including all-years reset and missing-data recovery',async()=>{
+ const seed='Who gets more gambling money, Labor or Liberal in 2020?';
+ for(const question of ['And all years?','And over all years?','What about lifetime?']) {
+  const r=await ask(question,{context:history(seed)});
+  assert.deepEqual(r,await ask('Who gets more gambling money, Labor or Liberal?'),question);
+ }
+ const range=await ask('And between 2020 and 2021?',{context:history(seed)});
+ assert.match(range.answer,/\$649,477 more/);assert.equal(range.scope.from,'2020');assert.equal(range.scope.to,'2021');
+ const missing=await ask('And in 1900?',{context:history(seed)});
+ assert.equal(missing.answer_status,'evidence_gap');assert.deepEqual(missing.sources,[]);
+ assert.doesNotMatch(missing.answer,/\$0|received more/);assert.match(missing.money_question,/in 1900/);
+ const recovery=await ask('And in 2021–22?',{context:history(missing.money_question)});
+ assert.match(recovery.answer,/\$551,999 more/);
+});
+
+test('comparison history cannot silently change dimensions or borrow generated scope',async()=>{
+ const seed='Who gets more gambling money, Labor or Liberal?';
+ for(const question of ['And mining in 2021?','And Liberal?','And the unicorn lobby in 2021?','And in 2021 excluding coal?','What did they say?']) {
+  assert.equal(await ask(question,{context:history(seed)}),null,question);
+  assert.equal(await ask('And in 2021?',{context:history(seed,question)}),null,question);
+ }
+ for(const question of ['Who gets more gambling money, Labor or Liberal or Greens?',
+  'Compare mining and gambling money to Labor',
+  'How did gambling receipts to Labor change from 2020 to 2021?',
+  'Who gets more money from gambling and aerospace, Labor or Liberal?',
+  'Compare gambling money, Labor in 2020 or Liberal in 2021?'])
+  assert.equal(await ask('And in 2022?',{context:history(question)}),null,question);
+ assert.equal(await ask('And in 2021?',{context:[{author:'answer',text:seed}]}),null);
+ assert.equal(await ask('And in 2021?',{context:history(seed),speaker:'Pauline Hanson'}),null);
+});
+
+test('an exact donor comparison retains the donor and both parties when changing year',async()=>{
+ const seed='Who gets more funding from Tabcorp Holdings, Labor or Liberal in 2020?';
+ const r=await ask('And in the financial year ending 2022?',{context:history(seed)});
+ assert.deepEqual(r,await ask('Who gets more funding from Tabcorp Holdings, Labor or Liberal in 2021?'));
+ assert.equal(r.answer_status,'calculated');assert.match(r.money_question,/Tabcorp Holdings/);
+ assert.deepEqual(await ask(r.money_question),r);
+ assert.ok(r.sources.slice(1).every(s=>new URL(s.href,'https://opax.test').searchParams.get('focus')==='donor:tabcorp'));
+});
+
+test('comparison follow-ups cannot discard an unsupported time baseline',async()=>{
+ for(const suffix of ['than in 2020','than before','compared with 2020','compared to 2020','in 2020 versus 2021']) {
+  const seed=`Who gets more gambling money, Labor or Liberal, ${suffix}?`;
+  const result=await ask('And in 2021–22?',{context:history(seed)});
+  assert.equal(result,null,suffix);
+ }
+});
+
+test('comparison continuations use all established financial-year label forms',async()=>{
+ const context=history('Who gets more gambling money, Labor or Liberal?');
+ const expected=await ask('Who gets more gambling money, Labor or Liberal in 2021?');
+ for(const period of ['FY2021-22','FY2021–2022','2021/22','2021‑22','financial year 2021–2022','FY ending 2022'])
+  assert.deepEqual(await ask(`And during ${period}?`,{context}),expected,period);
+});
