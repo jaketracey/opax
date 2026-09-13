@@ -475,7 +475,7 @@ const CSS = `
   font: inherit; font-size: 0.8125rem; color: var(--ink, #23271F); background: var(--paper-raised, #FFFFFF);
   border: 1px solid var(--line-strong, #8D897B); border-radius: 2px; padding: 0.3rem 0.45rem; min-height: 1.95rem;
 }
-.gr-search { width: 13rem; max-width: 100%; }
+.gr-search { width: 11.5rem; max-width: 100%; }
 .gr-year { width: 5.25rem; font-variant-numeric: tabular-nums; }
 .gr-yearrow { display: flex; align-items: center; gap: 0.3rem; }
 .gr-yearrow span { color: var(--ink-faint, #6F7468); }
@@ -495,8 +495,9 @@ const CSS = `
   white-space: nowrap;
 }
 .gr-btn:hover { background: var(--paper-sunken, #F1EFE8); }
-.gr-export { border-color: var(--bronze-ink, #8A5A12); color: var(--bronze-ink, #8A5A12); margin-left: auto; }
+.gr-export { display: inline-flex; align-items: center; gap: 0.35rem; border-color: var(--bronze-ink, #8A5A12); color: var(--bronze-ink, #8A5A12); margin-left: auto; }
 .gr-export:hover { background: var(--bronze-wash, rgba(160, 118, 27, 0.16)); }
+.gr-export-icon { width: 14px; height: 14px; flex: none; }
 
 /* The secondary filters live behind one disclosure so the bar stays one line. */
 .gr-more { position: relative; }
@@ -521,6 +522,8 @@ const CSS = `
 
 .gr-tiles { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin: 0.2rem 0 0.6rem; }
 .gr-tile { padding: 0.4rem 0 0.1rem; min-width: 110px; flex: 1 1 120px; max-width: 220px; border-top: 2px solid var(--bronze, #A0761B); }
+/* In the hub the tiles open the tab, right under its strip: no rule of their own. */
+.gr-embedded .gr-tile { border-top: 0; padding-top: 0.1rem; }
 .gr-tile b { display: block; font: 700 1.3rem/1.1 var(--serif, Merriweather, Georgia, serif); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
 .gr-tile span { display: block; margin-top: 0.25rem; color: var(--ink-soft, #575C52); font-size: 0.75rem; line-height: 1.35; }
 
@@ -783,12 +786,18 @@ export function mountGrants (container, opts = {}) {
   const cols = () => viewColumns(state.view, state.jur)
 
   const root = el('section', 'gr-root')
+  // Embedded in the money hub (no heading of its own) the tiles sit directly
+  // under the hub's tab strip, so they drop their top rule there.
+  if (opts.showHeading === false) root.classList.add('gr-embedded')
   root.setAttribute('aria-label', 'Who gets the grants: grant recipients checked against the donor registers')
   root.innerHTML = `
     ${opts.showHeading === false ? '' : `<h2 class="gr-title">Who gets the grants</h2>
     <p class="gr-deck">Every published grant award, resolved to the organisations that receive it and
       checked against the donor registers: who gets public money, from which programs, in which seats,
       and which of them also fund parties.</p>`}
+
+    <div class="gr-tiles" aria-label="Headline figures"></div>
+    <div class="gr-chart" aria-label="Awarded by financial year"></div>
 
     <div class="gr-toolbar" role="group" aria-label="Grant filters">
       <div class="gr-views" role="group" aria-label="Jurisdiction">
@@ -841,11 +850,8 @@ export function mountGrants (container, opts = {}) {
           </div>
         </div>
       </details>
-      <button type="button" class="gr-btn gr-export" id="gr-export">Export CSV</button>
+      <button type="button" class="gr-btn gr-export" id="gr-export"><svg class="gr-export-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2.5v8"/><path d="M4.75 7.25 8 10.5l3.25-3.25"/><path d="M2.5 11v1.5a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V11"/></svg>Export CSV</button>
     </div>
-
-    <div class="gr-tiles" aria-label="Headline figures"></div>
-    <div class="gr-chart" aria-label="Awarded by financial year"></div>
 
     <p class="gr-summary" aria-live="polite" aria-atomic="true"></p>
 

@@ -1105,6 +1105,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   if (isPositionBody(body)) {
     // Read and bound original speaking turns before generation. A cached answer
     // uses a position-specific version, so older unverified drafts cannot replay.
+    if (wantStream) return streamPositionAnswer(input, body, env, ctx, { onDone: store, cacheStatus: status })
     try {
       const payload = await documentedPositionAnswer(input, body, env, ctx)
       mark('position')
@@ -1150,7 +1151,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
 }
 
 /** Retrieve once, then generate only from original turns belonging to the index speaker. */
-async function documentedPositionAnswer(input: AskInput, body: Record<string, unknown>, env: Env, ctx: ExecutionContext): Promise<AskPayload> {
+async function documentedPositionAnswer(input: AskInput, body: Record<string, unknown>, env: Env, ctx: ExecutionContext, progress?: SseSend): Promise<AskPayload> {
   const scope: AskScope = { speaker: canonicalSpeaker(input.speaker || ''), kind: 'speech',
     ...Object.fromEntries(['party','state','chamber','from','to'].flatMap(key => {
       const value = input[key as keyof AskInput]
@@ -1165,6 +1166,8 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   // Up to twelve originals; summarySources keeps ten and the prompt cap below
   // trims the rest. Eight left named-politician answers with one or two sources.
   const rows = found.results.filter(r => /^speech-\d+$/.test(r.slug) && r.speaker === scope.speaker).slice(0,12)
+  // What a waiting reader can be shown: the speeches found, named while they are read.
+  await progress?.('status', { phase: 'retrieved', sources: rows.slice(0, 4).map(r => ({ title: r.title, date: r.date, speaker: r.speaker })), total: rows.length })
   const reads = await Promise.allSettled(rows.map(async row => {
     const resourceUrl = new URL('/api/resource/'+row.slug, url)
     const response = await apiResource(new Request(resourceUrl), resourceUrl, row.slug, env, ctx)
@@ -1187,6 +1190,7 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
     if(quoted)return quoted
   }
   // A failed summary still shows the reader the speeches it was read from.
+  await progress?.('status', { phase: 'writing' })
   return await recoverPositionAnswer(payload,{...body,position_question:input.question},env) || quotedPositionAnswer(payload,query,input.question) || positionExcerptsAnswer(payload,query) || gap
 }
 
@@ -1483,6 +1487,7 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
 // once reasoning ends (4-12s in); the tail lands ~1.5s after the last word.
 //
 // We re-emit that as Server-Sent Events the browser can render progressively:
+//   event: status  {phase:'searching'}           the stream is open; retrieval in hand
 //   event: status  {phase:'reading', words}      the model is still thinking
 //   event: delta   {text}                        answer text to append
 //   event: retry   {reason:'refusal'|'empty'}    attempt one stumbled; text resets
@@ -1673,6 +1678,9 @@ function apiAskStream(
   ctx.waitUntil(
     (async () => {
       try {
+        // The question is read and the retrieval is in hand: the waiting
+        // state can move on before the platform has sent a byte (3-4 s).
+        await send('status', { phase: 'searching' })
         const t0 = Date.now()
         let result: AskAnswer
         try {
@@ -1726,6 +1734,56 @@ function apiAskStream(
     })(),
   )
 
+  return new Response(readable, { headers: { ...SSE_HEADERS, 'x-opax-cache': opts.cacheStatus } })
+}
+
+/**
+ * The position path as Server-Sent Events. Its answer is built whole (the
+ * originals are read and bounded before one generation call), so there are
+ * no deltas to stream; what the reader gets instead is the shape of the
+ * wait: `searching` the moment the stream opens, `retrieved` with the
+ * speeches found, `writing` once generation starts, then `done` carrying the
+ * synchronous payload verbatim. An error here is `final`: the browser must
+ * not fall back to the synchronous call and pay for the same failure twice.
+ */
+function streamPositionAnswer(
+  input: AskInput,
+  body: Record<string, unknown>,
+  env: Env,
+  ctx: ExecutionContext,
+  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus },
+): Response {
+  const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
+  const writer = writable.getWriter()
+  const encoder = new TextEncoder()
+  let clientGone = false
+  const send: SseSend = async (event, data) => {
+    if (clientGone) return
+    try {
+      await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
+    } catch {
+      clientGone = true
+    }
+  }
+  ctx.waitUntil(
+    (async () => {
+      try {
+        await send('status', { phase: 'searching' })
+        const payload = await documentedPositionAnswer(input, body, env, ctx, send)
+        await send('done', payload)
+        // Cached from the `done` payload even when the reader left early.
+        opts.onDone?.(payload)
+      } catch {
+        if (!clientGone) await send('error', { error: 'The speech records are temporarily unavailable. Please try again.', final: true })
+      } finally {
+        try {
+          await writer.close()
+        } catch {
+          /* already gone */
+        }
+      }
+    })(),
+  )
   return new Response(readable, { headers: { ...SSE_HEADERS, 'x-opax-cache': opts.cacheStatus } })
 }
 

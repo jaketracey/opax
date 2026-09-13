@@ -59,7 +59,13 @@ through a `TransformStream` (no body is ever buffered whole; the 80-113 KB
 
 ```
 event: status
+data: {"phase":"searching"}                   the stream is open: the question is read,
+                                              the cache checked, the retrieval in hand
+data: {"phase":"retrieved","sources":[...]}   position answers only: the speeches found
+                                              ({title, date, speaker} × up to 4, `total`)
+data: {"phase":"writing"}                     position answers only: generation has begun
 data: {"phase":"reading","words":<n>}        heartbeat every 2 s while the model reasons
+data: {"phase":"cached","cached_at":"..."}   a cached answer is being replayed
 
 event: delta
 data: {"text":"..."}                          answer text to append
@@ -71,8 +77,18 @@ event: done
 data: {"answer":"...","citations":{...},"sources":[...]}   the synchronous payload, verbatim
 
 event: error
-data: {"error":"..."}
+data: {"error":"...","final":true?}           `final`: the browser must not retry synchronously
 ```
+
+The `status` phases are what a waiting state is drawn from (13 September
+2026): a step the Worker never reports stays pending, so the page can never
+claim work that did not happen. Position answers (`isPositionBody`) are
+built whole by `documentedPositionAnswer` - retrieval, then the originals
+read and bounded, then one generation call - so with `?stream=1` they go out
+through `streamPositionAnswer`: `searching`, `retrieved`, `writing`, then
+`done` with the synchronous payload verbatim and no `delta` at all. A failure
+there is sent as a `final` error: the synchronous fallback would only pay for
+the same failure again.
 
 Rules the Worker keeps:
 
@@ -96,7 +112,18 @@ Rules the Worker keeps:
 
 - `readAskStream(body, signal, on)` reads the SSE response (`\n\n`-delimited
   blocks, `event:` / `data:` lines) and resolves with the `done` payload. A
-  thrown error carries `shown: true` once any `delta` has been handed on.
+  thrown error carries `shown: true` once any `delta` has been handed on, or
+  when the Worker marked the error `final`. `on.open` fires once the response
+  is known to be a stream; `on.status` gets every `status` payload.
+- `portal/public/stages.js` draws the waiting state the conversation shows
+  (`sendChat`): the three steps - reading your question, searching the
+  record, writing the answer - as a hairline run under the loading animal,
+  moved on by `open` / `searching`, `retrieved` + `writing` (or the
+  `reading` heartbeat), and finished by the first `delta` or by `done`. The
+  run then lifts away (`exit()`, a 340 ms beat) and the answer rises into
+  its place (`.answer-in`); what lands under the answer fades up after it
+  (`.answer-tail`). `cached` completes every step at once. All of it stops
+  under `prefers-reduced-motion`.
 - `askRecord(body, signal, on)` tries the stream and, if it fails before any
   text has been shown, falls back to the synchronous `api("/api/ask")` call
   with its one silent retry on a blank answer. A streamed `done` is taken as

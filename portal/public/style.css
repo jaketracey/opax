@@ -2885,6 +2885,28 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-ask .chat-next-btns, #panel-chat .chat-next-btns { flex-direction: row; flex-wrap: wrap; gap: 8px; max-width: none; }
 #panel-ask .chat-next-btn, #panel-chat .chat-next-btn { min-height: 44px; flex: 1 1 220px; padding: 10px 12px; font-size: 0.875rem; overflow-wrap: anywhere; }
 #panel-chat .chat-pending { min-height: 180px; max-width: 30rem; scroll-margin-block: 90px; }
+/* The waiting state in a conversation: the animal on its track, then the
+   answer's steps beneath it (stages.js), both set to the thread's left edge.
+   The animal's own caption is dropped; the run beneath says what is happening. */
+#panel-chat .chat-pending .wb-wrap { margin: 0.5rem 0 0.3rem; }
+#panel-chat .chat-pending .wb-label { display: none; }
+/* Three quiet dots under a streamed answer while its words are still arriving. */
+.answer-dots { display: inline-flex; align-items: center; gap: 0.32rem; height: 1rem; margin: 0.15rem 0 0 0.1rem; }
+.answer-dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--bronze-ink); opacity: 0.3; }
+@media (prefers-reduced-motion: no-preference) {
+  /* The answer rising into the space the steps left, and what lands under it
+     (sources, a carried-passage note) fading up in reading order a beat
+     later. Fill is backwards, not both: a finished animation held on
+     opacity/transform keeps a stacking context for good. */
+  .answer-in { animation: answerIn 420ms cubic-bezier(0.22, 0.7, 0.3, 1) backwards; }
+  @keyframes answerIn { from { opacity: 0; transform: translateY(8px); } }
+  .answer-tail { animation: answerTail 320ms cubic-bezier(0.22, 0.7, 0.3, 1) backwards; animation-delay: calc(240ms + var(--i, 0) * 60ms); }
+  @keyframes answerTail { from { opacity: 0; transform: translateY(4px); } }
+  .answer-dots i { animation: answerDot 1200ms cubic-bezier(0.22, 0.7, 0.3, 1) infinite; }
+  .answer-dots i:nth-child(2) { animation-delay: 160ms; }
+  .answer-dots i:nth-child(3) { animation-delay: 320ms; }
+  @keyframes answerDot { 0%, 60%, 100% { opacity: 0.3; transform: none; } 30% { opacity: 1; transform: translateY(-1.5px); } }
+}
 @media (prefers-reduced-motion: no-preference) {
   #panel-ask .chat-next-btn, #panel-chat .chat-next-btn { animation: page-ask-fade 220ms ease both; }
   @keyframes page-ask-fade { from { opacity: 0; } to { opacity: 1; } }

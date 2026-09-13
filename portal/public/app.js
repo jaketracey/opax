@@ -422,6 +422,9 @@ async function readAskStream(body, signal, on) {
     if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
     return data;
   }
+  // The stream is open: the Worker has read the question, checked its cache
+  // and put the retrieval in hand. A waiting state moves on to "searching".
+  on.open?.();
   let shown = false;
   let final = null;
   const fail = (message) => Object.assign(new Error(message), { shown });
@@ -448,7 +451,11 @@ async function readAskStream(body, signal, on) {
     } else if (event === "done") {
       final = payload;
     } else if (event === "error") {
-      throw fail(payload.error || "The answer stream failed.");
+      const err = fail(payload.error || "The answer stream failed.");
+      // A final error is the Worker's last word on this question: shown or
+      // not, the synchronous call would only pay for the same failure again.
+      if (payload.final) err.shown = true;
+      throw err;
     }
   };
   const reader = res.body.getReader();
@@ -1125,7 +1132,10 @@ async function renderDiscoveryPage(params, manageFocus) {
   $("discover-query").value = params.get("q") || "";
   $("discover-sort").value = params.get("sort") === "share" ? "share" : "value";
   $("discover-query-label").textContent = category === DISCOVERY_DEFAULT ? "Find an agency or company" : category === "recipient_concentration" ? "Find a party or contributor" : "Find a company";
-  if (manageFocus) $("discover-categories").focus({ preventScroll: true });
+  // Script focus on a <select> counts as keyboard focus to Chrome, so a bare
+  // focus() after a tab click drew the ring; focusVisible: false keeps it
+  // for a real Tab onto the switcher.
+  if (manageFocus) $("discover-categories").focus({ preventScroll: true, focusVisible: false });
   $("discover-results").setAttribute("aria-busy", "true");
   $("discover-results").innerHTML = '<p role="status">Loading comparisons…</p>';
   $("discover-detail").innerHTML = "";
@@ -9321,6 +9331,10 @@ $("chat-new")?.addEventListener("click", () => {
 
 function initChat(manageFocus) {
   if (!chatThread.length) loadChatSession();
+  // The waiting state's pieces, warmed now so a question's first frame does
+  // not wait on a module fetch.
+  import("/stages.js").catch(() => {});
+  import("/wombat.js").catch(() => {});
   try {
     const raw = sessionStorage.getItem("opax-chat-seed");
     if (raw) {
@@ -9358,7 +9372,11 @@ function scrollChatToEnd() {
     behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
   });
 }
-function renderChatThread() {
+// `landed`: the last answer has just arrived, so what sits under it (its
+// sources, a carried-passage note) fades up after it in reading order. With
+// `rise` the answer itself rises into the place the waiting state left, which
+// a streamed answer already did as its first words came.
+function renderChatThread({ landed = false, rise = false } = {}) {
   syncAskChatViewport();
   const thread = $("chat-thread");
   thread.replaceChildren();
@@ -9382,6 +9400,19 @@ function renderChatThread() {
       thread.appendChild(wrap);
     } else {
       thread.appendChild(chatAnswerEl(msg));
+    }
+  }
+  if (landed) {
+    const answers = thread.querySelectorAll(".chat-turn-answer");
+    const last = answers[answers.length - 1];
+    if (last) {
+      if (rise) last.classList.add("answer-in");
+      let i = 0;
+      for (const el of last.children) {
+        if (el.classList.contains("answer")) continue;
+        el.classList.add("answer-tail");
+        el.style.setProperty("--i", String(i++));
+      }
     }
   }
   const next = document.createElement("div");
@@ -9569,63 +9600,131 @@ async function sendChat(question, carry) {
   renderChatThread();
   $("chat-input").value = "";
   $("chat-send").disabled = true;
-  setStatus($("chat-status"), "Checking the record.");
-  $("chat-status").classList.add("visually-hidden"); // announced, not displayed
+  // The waiting state: the animal on its track, and beneath it the steps the
+  // answer moves through (stages.js) as the Worker reports them - the stream
+  // opening, searching, retrieved, writing - so the run never claims work
+  // that has not happened. The status line announces each step once; the
+  // run itself is not a live region.
+  const STEP_LABEL = { question: "Reading your question", search: "Searching the record", write: "Writing the answer" };
+  const announce = (message) => {
+    setStatus($("chat-status"), message);
+    $("chat-status").classList.add("visually-hidden"); // announced, not displayed
+  };
   const slot = document.createElement("div");
   slot.className = "chat-pending";
-  slot.setAttribute("role", "status");
+  const track = document.createElement("div");
+  track.className = "chat-pending-animal";
+  slot.appendChild(track);
   $("chat-thread").appendChild(slot);
+  const alive = () => chatAbort === myAbort && slot.isConnected;
   let trundler = null;
+  let stages = null;
+  // What the events have said so far, replayed onto the run when its module
+  // lands: a step the events have already passed mounts done.
+  let step = "question";
+  let cached = false;
+  let reading = [];
+  let note = "";
+  announce(`${STEP_LABEL.question}.`);
   import("/wombat.js")
     .then((mod) => {
-      if (chatAbort === myAbort && slot.isConnected) {
-        trundler = mod.mountWombat(slot, { label: "Checking the record.", ...PAGE_LOADER });
-        slot.scrollIntoView({ block: "nearest" });
-      }
+      if (!alive()) return;
+      trundler = mod.mountWombat(track, { label: "", ...PAGE_LOADER });
+    })
+    .catch(() => { /* the run beneath carries the state */ });
+  import("/stages.js")
+    .then((mod) => {
+      if (!alive()) return;
+      stages = mod.mountStages(slot);
+      if (cached) stages.complete(); else stages.set(step);
+      if (reading.length) stages.reading(reading);
+      if (note) stages.note(note);
+      slot.scrollIntoView({ block: "nearest" });
     })
     .catch(() => { /* the status line has it covered */ });
+  const setStep = (key) => {
+    if (step === key) return;
+    step = key;
+    stages?.set(key);
+    announce(`${STEP_LABEL[key]}.`);
+  };
+  const setNote = (text) => { note = text; stages?.note(text); };
+  const liftAway = () => (stages ? stages.exit() : Promise.resolve());
   const started = Date.now();
   clearInterval(chatTimer);
   chatTimer = setInterval(() => {
     const s = Math.round((Date.now() - started) / 1000);
-    if (s >= 10 && trundler) trundler.setLabel(`Still digging (${s}s). Long questions can take a minute.`);
+    if (s >= 10 && alive()) setNote(`Still digging (${s}s). Long questions can take a minute.`);
   }, 5000);
   let live = null;
   try {
     const chatBody = JSON.stringify({ question: q, kind: chatKind, context });
-    // The answer streams into a provisional turn beneath the loader's slot;
+    // The answer streams into a provisional turn beneath the waiting state;
     // the finished thread re-renders from chatThread as before.
     let liveWrap = null;
     let streamed = false;
+    let handoff = Promise.resolve();
     const data = await askRecord(chatBody, myAbort.signal, {
+      open() { if (alive()) setStep("search"); },
+      status(payload) {
+        if (!alive()) return;
+        const phase = payload?.phase;
+        if (phase === "cached") { cached = true; stages?.complete(); }
+        else if (phase === "searching") setStep("search");
+        else if (phase === "retrieved") {
+          reading = (payload.sources || []).map((s) => s?.title).filter(Boolean).slice(0, 3);
+          stages?.reading(reading);
+          setStep("write");
+        }
+        else if (phase === "writing" || phase === "reading") setStep("write");
+      },
       delta(text) {
-        if (chatAbort !== myAbort || !slot.isConnected) return;
+        if (!alive()) return;
         if (!live) {
           liveWrap = document.createElement("div");
-          liveWrap.className = "chat-turn chat-turn-answer";
+          liveWrap.className = "chat-turn chat-turn-answer answer-in";
+          liveWrap.hidden = true;
           const body = document.createElement("div");
           body.className = "answer";
-          liveWrap.appendChild(body);
+          // Three quiet dots under the text while it is still arriving.
+          const dots = document.createElement("span");
+          dots.className = "answer-dots";
+          dots.setAttribute("aria-hidden", "true");
+          dots.append(document.createElement("i"), document.createElement("i"), document.createElement("i"));
+          liveWrap.append(body, dots);
           slot.insertAdjacentElement("afterend", liveWrap);
-          live = streamRenderer(body, () => chatAbort === myAbort);
-        }
-        if (!streamed) {
-          streamed = true;
-          slot.hidden = true;
-          liveWrap.hidden = false;
-          liveWrap.scrollIntoView({ block: "start" });
+          live = streamRenderer(body, alive);
         }
         live.push(text);
+        if (!streamed) {
+          streamed = true;
+          // The first words: the run finishes and lifts away, and the answer
+          // rises into the space it leaves.
+          stages?.complete();
+          handoff = liftAway().then(() => {
+            if (!alive() || !streamed) return;
+            slot.hidden = true;
+            liveWrap.hidden = false;
+            liveWrap.scrollIntoView({ block: "start" });
+          });
+        }
       },
       retry() {
-        if (chatAbort !== myAbort) return;
+        if (!alive()) return;
         streamed = false;
         live?.reset();
         if (liveWrap) liveWrap.hidden = true;
         slot.hidden = false;
-        trundler?.setLabel("Reading the record again.");
+        stages?.reset();
+        step = "write";
+        stages?.set(step);
+        setNote("Reading the record again.");
+        announce("Reading the record again.");
       },
     });
+    live?.stop();
+    if (chatAbort !== myAbort) return;
+    if (data.money_ranking && typeof data.money_question === "string") userTurn.fundingQuestion = data.money_question;
     live?.stop();
     if (chatAbort !== myAbort) return;
     if (data.money_ranking && typeof data.money_question === "string") userTurn.fundingQuestion = data.money_question;
@@ -9648,9 +9747,18 @@ async function sendChat(question, carry) {
       ...(carry?.evidence ? { carried: { source: carry.source || "" } } : {}),
     });
     saveChatSession();
-    renderChatThread();
-    setStatus($("chat-status"), "Answer ready.");
-    $("chat-status").classList.add("visually-hidden");
+    if (streamed) {
+      await handoff;
+    } else {
+      // Nothing streamed (a position answer is built whole; a money answer
+      // comes back at once): the run finishes and lifts away first, then the
+      // finished answer rises into its place.
+      stages?.complete();
+      await liftAway();
+    }
+    if (chatAbort !== myAbort) return;
+    renderChatThread({ landed: true, rise: !streamed });
+    announce("Answer ready.");
     requestChatFollowups();
     if (!streamed) {
       // A streamed answer was scrolled to on its first words; the reader may
@@ -9670,6 +9778,7 @@ async function sendChat(question, carry) {
   } finally {
     live?.stop();
     trundler?.destroy?.();
+    stages?.destroy?.();
     if (chatAbort === myAbort) {
       clearInterval(chatTimer);
       $("chat-send").disabled = false;

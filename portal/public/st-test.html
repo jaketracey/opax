@@ -1,0 +1,74 @@
+<!doctype html>
+<!-- Throwaway harness for the answer stages (the chat's waiting state). Not linked from anywhere; delete freely. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>stages test</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    body { max-width: 860px; margin: 2rem auto; padding: 0 1rem; }
+    h2 { margin-top: 2.5rem; font: 600 1rem/1.4 var(--sans); color: var(--ink-soft); }
+    .rig { border-top: 1px solid var(--line); padding-top: 0.5rem; }
+    #panel-chat { display: block; }
+    .zoom { transform: scale(2.4); transform-origin: top left; margin-bottom: 120px; width: 22rem; }
+  </style>
+</head>
+<body>
+  <h1 style="font: 700 1.25rem/1.3 var(--serif)">stages test</h1>
+
+  <section id="panel-chat">
+    <h2>live (as in a conversation): the animal, then the run, driven by a script of fake events</h2>
+    <div id="chat-thread" class="chat-thread">
+      <div class="chat-turn chat-turn-user"><p>What would Pauline Hanson say about housing affordability?</p></div>
+      <div id="live" class="chat-pending rig"></div>
+    </div>
+  </section>
+
+  <h2>searching (second step in progress)</h2>
+  <div id="s1" class="rig"></div>
+
+  <h2>writing, with the passages being read</h2>
+  <div id="s2" class="rig"></div>
+
+  <h2>complete, plus a long-wait note</h2>
+  <div id="s3" class="rig"></div>
+
+  <h2>marks at 2.4x</h2>
+  <div class="zoom"><div id="s4"></div></div>
+
+  <script type="module">
+    import { mountStages } from '/stages.js'
+    import { mountWombat } from '/wombat.js'
+
+    // The live rig replays the shape of a real position answer: open at
+    // 0.4s, the speeches found at 1.6s, writing from 2.2s, first words
+    // (handoff) at 6s, then the run lifts away and an answer rises in.
+    const live = document.getElementById('live')
+    const track = document.createElement('div')
+    track.className = 'chat-pending-animal'
+    live.appendChild(track)
+    mountWombat(track, { label: '', phase: -5.5 })
+    const run = mountStages(live)
+    run.set('question')
+    const at = (ms, fn) => setTimeout(fn, ms)
+    at(400, () => run.set('search'))
+    at(1600, () => { run.reading(['Pauline Hanson — Committees — 2026-03-23', 'Pauline Hanson — Senate — 2025-02-11', 'Pauline Hanson — Senate — 2026-05-14']); run.set('write') })
+    at(6000, async () => {
+      run.complete()
+      await run.exit()
+      live.hidden = true
+      const turn = document.createElement('div')
+      turn.className = 'chat-turn chat-turn-answer answer-in'
+      turn.innerHTML = '<div class="answer"><p>Pauline Hanson announced a One Nation policy for a five-year moratorium on GST being charged on essential building materials for homes up to the value of $1 million.</p></div><details class="chat-sources answer-tail" style="--i:0"><summary>Sources (6)</summary></details><p class="fineprint answer-tail" style="--i:1">This suggested follow-up drew on a passage from “Pauline Hanson — Committees — 2026-03-23”, retrieved for the previous answer.</p>'
+      live.insertAdjacentElement('afterend', turn)
+    })
+    window.run = run
+
+    const s1 = mountStages(document.getElementById('s1')); s1.set('search')
+    const s2 = mountStages(document.getElementById('s2')); s2.set('write'); s2.reading(['Pauline Hanson — Committees — 2026-03-23', 'Pauline Hanson — Senate — 2025-02-11'])
+    const s3 = mountStages(document.getElementById('s3')); s3.complete(); s3.note('Still digging (14s). Long questions can take a minute.')
+    const s4 = mountStages(document.getElementById('s4')); s4.set('search')
+  </script>
+</body>
+</html>
