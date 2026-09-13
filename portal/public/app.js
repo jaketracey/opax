@@ -1065,7 +1065,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=precise-industry-20260912");
+    const { mountMoneyMap } = await import("/money-map.js?v=sources-chevron-20260913");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1248,10 +1248,11 @@ async function openMoneyRecords(kind, params) {
   const generation = ++moneyRecordsGeneration;
   moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
   const grants = kind === 'grants';
+  $('money-records-title').hidden = false;
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=program-files-20260913' : '/ledger.js?v=shareable-receipts-20260913');
+    const mod = await import(grants ? '/grants.js?v=recipient-pages-20260913' : '/ledger.js?v=shareable-receipts-20260913');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1271,6 +1272,27 @@ async function openMoneyRecords(kind, params) {
     if (grants && params.get('program')) moneyRecordsHandle.openProgram?.(params.get('program'), params.get('jur') || undefined);
     else if (grants && (params.get('open') || params.get('jur'))) moneyRecordsHandle.open?.(params.get('open'), params.get('jur') || undefined);
   } catch { if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">These records could not load. <a href="'+(grants?'/money/grants':'/money/receipts')+'">Try again</a>.</p>'; }
+}
+async function openGrantRecipient(jurisdiction, id, manageFocus) {
+  const generation = ++moneyRecordsGeneration;
+  moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
+  $('money-records-title').hidden = true;
+  const body = $('money-records-body');
+  body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
+  try {
+    const mod = await import('/grant-recipient.js?v=recipient-pages-20260913');
+    if (generation !== moneyRecordsGeneration) return;
+    moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
+      onTitle(name) {
+        if (generation !== moneyRecordsGeneration) return;
+        document.title = `${name} · Government grants · OPAX`;
+        setCrumbs([{ label: 'Money', href: '/money' }, { label: 'Government grants', href: '/money/grants?jur=' + jurisdiction }, { label: name }]);
+        syncPathMeta();
+      },
+    });
+  } catch {
+    if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">These recipient records could not load. <a href="'+esc(location.pathname)+'">Try again</a> or <a href="/money/grants">browse government grants</a>.</p>';
+  }
 }
 let moneyMapGeneration = 0;
 let moneyJourneys = null;
@@ -1332,7 +1354,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=precise-industry-20260912"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=sources-chevron-20260913"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1607,7 +1629,7 @@ function parseHash() {
 
 function route() {
   const frag = rawFragment();
-  if (frag && !frag.startsWith("/")) return; // plain #fragment — native anchor, not a route
+  if (frag && !frag.startsWith("/") && !firstRoute) return; // native anchors still need their page rendered on first load
   const { segs, params } = parseHash();
   const view = segs[0] || "ask";
   const manageFocus = !firstRoute;
@@ -1708,10 +1730,21 @@ function route() {
     }
   } else if (view === "money" && ["receipts", "grants"].includes(segs[1])) {
     showPanel("money-records");
-    const title = segs[1] === 'grants' ? 'Government grants' : 'Political receipts';
-    document.title = `${title} · OPAX`;
-    setCrumbs([{ label: 'Money', href: '/money' }, { label: title }]);
-    openMoneyRecords(segs[1], params);
+    const isGrantRecipient = segs[1] === 'grants' && ((segs[3] === 'recipient' && segs[4]) || (params.get('open') && !params.get('program')));
+    if (isGrantRecipient) {
+      const jurisdiction = segs[3] === 'recipient' ? segs[2] : (params.get('jur') || 'federal');
+      let id;
+      try { id = segs[3] === 'recipient' ? decodeURIComponent(segs[4]) : params.get('open'); } catch { id = ''; }
+      if (segs[3] !== 'recipient') replaceRoute(`/money/grants/${encodeURIComponent(jurisdiction)}/recipient/${encodeURIComponent(id)}`);
+      document.title = 'Grant recipient · OPAX';
+      setCrumbs([{ label: 'Money', href: '/money' }, { label: 'Government grants', href: '/money/grants' }, { label: 'Recipient' }]);
+      openGrantRecipient(jurisdiction, id, manageFocus);
+    } else {
+      const title = segs[1] === 'grants' ? 'Government grants' : 'Political receipts';
+      document.title = `${title} · OPAX`;
+      setCrumbs([{ label: 'Money', href: '/money' }, { label: title }]);
+      openMoneyRecords(segs[1], params);
+    }
   } else if (view === "connections") {
     showPanel("connections");
     document.title = TITLES.connections;
@@ -2779,11 +2812,17 @@ function sourceItem(s, num, passage = false) {
   // A record titled only "Speaker — 2013-03-19" has no debate name to show:
   // the row leads with the speaker in words and the byline carries the rest,
   // rather than the name twice and an ISO date in the title.
+  const receiptCalculation = /^receipt-(?:ranking|comparison|years)-/.test(s.resource || "");
   const subject = titleSubject(s);
   const nameOnly = !subject && s.speaker;
   btn.textContent = subject || String(s.title || s.slug || "");
   if (nameOnly) li.classList.add("source-name-only");
   const target = new URL(searchResultHref(s), location.origin);
+  if (receiptCalculation && /^\/graph\/money(?:\.[a-z]+)?\.json$/.test(target.pathname)) {
+    target.pathname = "/methods";
+    target.search = "";
+    btn.textContent = "How these funding totals were calculated";
+  }
   if (target.protocol === "https:" || (target.protocol === "http:" && target.origin === location.origin)) btn.href = target.href;
   if (num) {
     const numEl = document.createElement("span");
@@ -2817,7 +2856,9 @@ function sourceItem(s, num, passage = false) {
       if (url && face) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
     });
   } else {
-    const meta = s.resource?.startsWith("USER_CONTEXT_")
+    const meta = receiptCalculation
+      ? [s.source || "Published political disclosure records", "Calculated by Opax", s.date ? `Data updated ${fmtDate(s.date)}` : ""].filter(Boolean).map(esc).join(" · ")
+      : s.resource?.startsWith("USER_CONTEXT_")
       ? [s.source, s.dateLabel || (s.date ? fmtDate(s.date) : "")].filter(Boolean).map(esc).join(" · ")
       : metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage });
     if (meta) {
@@ -2832,7 +2873,10 @@ function sourceItem(s, num, passage = false) {
     const quote = document.createElement("p");
     quote.className = "ask-source-passage";
     // Retrieval marks elided text with runs of ellipses; one is enough.
-    quote.textContent = s.snippet.trim().replace(/\s+/g, " ").replace(/^(?:[…\.]{1,3}\s*){2,}/, "… ").replace(/(?:\s*…){2,}/g, " …");
+    const snippet = receiptCalculation
+      ? s.snippet.replace(/\*\*/g, "").replace(/Calculated from donor-to-party edges in \/graph\/money(?:\.[a-z]+)?\.json\.?/g, "Based on published political disclosure records in Opax’s selected map.")
+      : s.snippet;
+    quote.textContent = snippet.trim().replace(/\s+/g, " ").replace(/^(?:[…\.]{1,3}\s*){2,}/, "… ").replace(/(?:\s*…){2,}/g, " …");
     li.appendChild(quote);
   }
   if (nameOnly) {
@@ -3012,7 +3056,7 @@ function quoteCardHTML(s, i, n) {
 }
 
 function setQuoteRail(sources) {
-  quoteRail.sources = (sources || []).filter(s => !s.resource?.startsWith("USER_CONTEXT_"));
+  quoteRail.sources = (sources || []).filter(s => !s.resource?.startsWith("USER_CONTEXT_") && !/^receipt-(?:ranking|comparison|years)-/.test(s.resource || ""));
   quoteRail.idx = -1;
   updateQuoteRail();
 }
@@ -3971,7 +4015,7 @@ async function mountSubjectMap(nodeId) {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=precise-industry-20260912");
+    const { mountMoneyMap } = await import("/money-map.js?v=sources-chevron-20260913");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
@@ -8017,7 +8061,7 @@ const GAMES = {
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=shareable-receipts-20260913", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=program-files-20260913", mount: "mountGrants" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=recipient-pages-20260913", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js", mount: "mountThenVsNow" },
@@ -8701,7 +8745,7 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=precise-industry-20260912"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=sources-chevron-20260913"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
@@ -9028,6 +9072,8 @@ async function runAsk(question) {
     $("ask-retrieved").hidden = !alsoList.length;
     $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null, true)));
     $("ask-sources-sum").textContent = `Sources (${sources.length})`;
+    $("ask-calculation-note").hidden = !data.money_ranking;
+    $("ask-retrieval-note").hidden = !!data.money_ranking;
     $("ask-sources").open = false; // each new answer starts folded
     $("ask-sources").hidden = !sources.length;
     // The finished answer replaces the streamed one: let that settle before a
@@ -9408,6 +9454,12 @@ function chatAnswerEl(msg) {
     const sum = document.createElement("summary");
     sum.textContent = `Sources (${sources.length})`;
     det.appendChild(sum);
+    if (msg.money_ranking || shown.some(s => /^receipt-(?:ranking|comparison|years)-/.test(s.resource || ""))) {
+      const note = document.createElement("p");
+      note.className = "fineprint";
+      note.textContent = "Opax calculated these totals from selected public disclosure records. Open a source to explore the supporting funding records. Receipts include more than gifts, and this selection does not cover every donor.";
+      det.appendChild(note);
+    }
     const ol = document.createElement("ol");
     ol.className = "source-list chat-source-list";
     shown.forEach((s, i) => ol.appendChild(sourceItem(s, i + 1, true)));
@@ -12253,7 +12305,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=precise-industry-20260912");
+    const { mountMoneyMap } = await import("/money-map.js?v=sources-chevron-20260913");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
@@ -12886,6 +12938,8 @@ function syncPathMeta() {
   const view = path.replace(/^\//, "").split(/[/?]/)[0];
   const desc = landed
     ? BOOT_META.description
+    : path.startsWith('/money/grants')
+      ? 'Published government grant awards and Queensland expenditure records, with recipient details, donor-register context and original sources.'
     : view && view !== "ask"
       ? (VIEW_DESCRIPTIONS[view] || VIEW_DESCRIPTIONS.subject)
       : "Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.";

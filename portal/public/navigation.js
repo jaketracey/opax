@@ -49,7 +49,8 @@
   // Contracts and the connections directory are not split by jurisdiction.
   const oneJurisdiction = new Set(['/discover', '/connections']);
   function moneyNav(path, jur) {
-    return `<nav class="area-nav money-area-nav" aria-label="Money">${money.map(([href,label]) => `<a href="${href}${jur && jur !== 'federal' && !oneJurisdiction.has(href) ? '?jur='+encodeURIComponent(jur) : ''}"${href===path?' aria-current="page"':''}>${label}</a>`).join('')}</nav>`;
+    jur = jur || /^\/money\/grants\/(federal|qld)\/recipient\//.exec(path)?.[1];
+    return `<nav class="area-nav money-area-nav" aria-label="Money">${money.map(([href,label]) => `<a href="${href}${jur && jur !== 'federal' && !oneJurisdiction.has(href) ? '?jur='+encodeURIComponent(jur) : ''}"${href===path || href==='/money/grants' && path.startsWith('/money/grants/')?' aria-current="page"':''}>${label}</a>`).join('')}</nav>`;
   }
   globalThis.OpaxNavigation = { sections, money, active, moneyNav };
   if (typeof document === 'undefined') return;

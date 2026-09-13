@@ -2743,6 +2743,7 @@ type SeoRoute =
   | { kind: 'subject'; dir: DirectoryKind; name: string }
   | { kind: 'doc'; slug: string }
   | { kind: 'bill'; key: string }
+  | { kind: 'grant-recipient'; jurisdiction: 'federal' | 'qld'; id: string }
 
 /**
  * What the route's share image says (src/og.ts draws it). The portrait is
@@ -2775,6 +2776,7 @@ const SUPPLIER_NAME_MAX = 500
 // A bill key is jurisdiction plus source identity, lowercase and hyphenated.
 const BILL_KEY_MAX = 64
 const BILL_KEY_RE = /^[a-z][a-z0-9-]*$/
+const GRANT_RECIPIENT_ID_RE = /^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person:[a-z0-9 .'-]{2,120})$/
 
 /** Route table for real paths. Trailing slashes tolerated, never canonical. */
 function matchSeoRoute(url: URL): SeoRoute | null {
@@ -2787,6 +2789,7 @@ function matchSeoRoute(url: URL): SeoRoute | null {
   } catch {
     return null
   }
+  if (segs.length === 5 && dec[0] === 'money' && dec[1] === 'grants' && (dec[2] === 'federal' || dec[2] === 'qld') && dec[3] === 'recipient' && GRANT_RECIPIENT_ID_RE.test(dec[4])) return { kind: 'grant-recipient', jurisdiction: dec[2], id: dec[4] }
   if (segs.length === 2 && dec[0] === 'money' && ['receipts', 'grants'].includes(dec[1])) return { kind: 'static', page: dec.join('/') }
   if (segs.length === 1 && dec[0] in STATIC_PAGES) return { kind: 'static', page: dec[0] }
   if (dec[0] === 'reports' && /^[a-z][a-z0-9-]*$/.test(dec[1] ?? '')) {
@@ -3254,7 +3257,12 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
   })
 
   switch (route.kind) {
+    case 'grant-recipient': return grantRecipientMeta(route.jurisdiction, route.id, url, env)
     case 'static': {
+      // Existing shared query links retain their behavior and point search engines
+      // to the standalone recipient profile as the canonical record.
+      const jurisdiction = url.searchParams.get('jur'), recipientId = url.searchParams.get('open')
+      if (route.page === 'money/grants' && !url.searchParams.has('program') && (jurisdiction === 'federal' || jurisdiction === 'qld') && recipientId && GRANT_RECIPIENT_ID_RE.test(recipientId)) return grantRecipientMeta(jurisdiction, recipientId, url, env)
       const page = STATIC_PAGES[route.page]
       const q = url.searchParams.get('q')?.trim()
       const canonical = canonicalFor(url, Boolean(page.query))
@@ -3575,6 +3583,39 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       credit,
     },
   }
+}
+
+interface GrantRecipientSummary { id: string; n: string; t: number; c: number; sh: number }
+const grantRecipientsMemo = new Map<string, Promise<GrantRecipientSummary[]>>()
+function loadGrantRecipients(jurisdiction: 'federal' | 'qld', env: Env): Promise<GrantRecipientSummary[]> {
+  let pending = grantRecipientsMemo.get(jurisdiction)
+  if (!pending) {
+    pending = assetJson<{ recipients: GrantRecipientSummary[] }>(env, `/graph/grants.${jurisdiction}.json`).then(data => {
+      if (!Array.isArray(data.recipients) || data.recipients.some(r => !GRANT_RECIPIENT_ID_RE.test(r.id) || typeof r.n !== 'string' || !Number.isFinite(r.t) || !Number.isInteger(r.c) || !Number.isInteger(r.sh))) throw new Error('Invalid grant recipient index')
+      return data.recipients
+    }).catch(error => { grantRecipientsMemo.delete(jurisdiction); throw error })
+    grantRecipientsMemo.set(jurisdiction, pending)
+  }
+  return pending
+}
+async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, url: URL, env: Env): Promise<PageMeta> {
+  const canonical = `${SITE_ORIGIN}/money/grants/${jurisdiction}/recipient/${encodeURIComponent(id)}`
+  const recipients = await loadGrantRecipients(jurisdiction, env).catch(() => null)
+  const recipient = recipients?.find(row => row.id === id)
+  if (!recipient) return { title: recipients ? 'Grant recipient not found · OPAX' : 'Grant recipient temporarily unavailable · OPAX',
+    description: recipients ? 'This recipient is not in the current grant records. Browse the grants directory.' : 'Grant recipient records could not be loaded. Please try again.',
+    canonical, ogType: 'website', status: recipients ? 404 : 503, jsonLd: null, prerender: null, card: null }
+  const qld = jurisdiction === 'qld'
+  const basis = qld ? 'recorded Queensland expenditure' : 'published Commonwealth grant award values'
+  const countBasis = qld ? 'expenditure rows' : 'award records'
+  const facts = `${recipient.n}: ${money(recipient.t)} in ${basis} across ${num(recipient.c)} ${countBasis}.`
+  const caveat = qld ? 'A multi-year funding agreement can appear in several financial years; rows are not distinct grants.' : 'Published award values do not establish payments received.'
+  const description = withTail(facts, 'Explore programs, agencies and source records.')
+  return { title: `${clip(recipient.n, 90)} · Grant recipient · OPAX`, description, canonical, ogType: 'profile', status: 200,
+    jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: recipient.n, url: canonical, description,
+      mainEntity: { '@type': 'Thing', name: recipient.n, ...(id.startsWith('abn:') ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: id.slice(4) } } : {}) } },
+    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`, 'Grant recipient'),
+    card: { kicker: 'Grant recipient', title: recipient.n, lines: [`${money(recipient.t)} in ${basis}`, `${num(recipient.c)} ${countBasis}`, caveat] } }
 }
 
 interface AgencyRow {
