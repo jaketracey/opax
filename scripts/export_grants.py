@@ -440,9 +440,12 @@ def build_program_file(pid, key, jur, gs, ctx):
     top_recipients = sorted(recipients.values(), key=lambda r: -r[3])[:PROGRAM_RECIPIENTS_MAX]
     names = Counter()
     for g in gs:
-        names[g.get("pr") or g.get("n") or pid] += 1
+        if g.get("pr"):
+            names[g["pr"]] += 3
+        if g.get("n"):
+            names[g["n"]] += 1
     return {
-        "id": pid, "key": key, "n": names.most_common(1)[0][0] if names else pid, "jur": jur,
+        "id": pid, "key": key, "n": program_name(names) or pid, "jur": jur,
         "ag": agencies.most_common(1)[0][0] if agencies else "Agency not recorded",
         "agencies": [[a_, round(v)] for a_, v in agencies.most_common(6)],
         "t": round(total), "c": len(rows), "r": len(recipients), "dt": round(dt), "dr": len(donor_rids), "adhoc": round(adhoc),
@@ -480,9 +483,20 @@ def program_index_extras(pf, jur):
     return out
 
 
+def program_name(names) -> str:
+    """The commonest name that reads as a name: a few detail pages put the
+    program's description in its name field ("This is a demand-driven grant
+    program that was announced ..."), which must not become the heading."""
+    ranked = names.most_common()
+    for n, _ in ranked:
+        if n and len(n) <= 90 and not n.rstrip().endswith("."):
+            return n
+    return ranked[0][0] if ranked else ""
+
+
 SHARED_FUNCTIONS = (iso_day, program_key, government_at, bloc_for, holder_at, canonical_party, pretty_name, seat_holder,
                     margin_type_for, months_to_election_bucket, approval_bucket, build_program_file, fy_key,
-                    program_index_extras)
+                    program_index_extras, program_name)
 SHARED_CONSTANTS = ("ELECTIONS", "BLOCS", "GOVERNMENT", "BY_ELECTIONS", "PARTY_ALIASES", "PROGRAM_GRANTS_MAX",
                     "PROGRAM_RECIPIENTS_MAX", "SEAT_BLOCS", "MARGIN_TYPES", "APPROVAL_BUCKETS", "ELECTION_BUCKETS")
 
@@ -903,14 +917,21 @@ for g in grants:
     if g["adhoc"]:
         p["adhoc"] += g["v"]
     p["ag"][agency_idx[agency_label(g["ag"])]] += g["v"]
-    p["names"][(g["pr"] or g["n"] or key)] += 1
+    # Program names outrank activity titles three to one; the titles are the
+    # fallback when every recorded program name reads as a sentence.
+    if g["pr"]:
+        p["names"][g["pr"]] += 3
+    if g["n"]:
+        p["names"][g["n"]] += 1
+    if not g["pr"] and not g["n"]:
+        p["names"][key] += 1
     if g["fy"]:
         p["fy"].add(g["fy"])
 programs = []
 listed_programs = sorted(prog.items(), key=lambda kv: -kv[1]["t"])[:TOP_PROGRAMS]
 for key, p in listed_programs:
     fys = sorted(p["fy"], key=fy_key)
-    programs.append({"id": key, "n": p["names"].most_common(1)[0][0], "ag": p["ag"].most_common(1)[0][0],
+    programs.append({"id": key, "n": program_name(p["names"]), "ag": p["ag"].most_common(1)[0][0],
                      "t": round(p["t"]), "c": p["c"], "r": len(p["r"]), "dt": round(p["dt"]), "dr": len(p["dr"]),
                      "adhoc": round(p["adhoc"]), "y0": fys[0] if fys else None, "y1": fys[-1] if fys else None})
 

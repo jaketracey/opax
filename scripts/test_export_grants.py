@@ -399,3 +399,13 @@ class RemoteProgramTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ProgramNameTests(unittest.TestCase):
+    def test_description_sentences_never_become_the_name(self):
+        from collections import Counter
+        names = Counter({"This is a demand-driven grant program that was announced by the Prime Minister on 3 August 2020.": 5,
+                         "Disaster Recovery Funding Arrangements": 2})
+        self.assertEqual(eg.program_name(names), "Disaster Recovery Funding Arrangements")
+        self.assertEqual(eg.program_name(Counter({"Only a sentence.": 1})), "Only a sentence.")
+        self.assertEqual(eg.program_name(Counter()), "")
