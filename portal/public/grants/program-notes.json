@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-13T01:37:54.870Z",
+  "generated": "2026-09-13T01:50:26.937Z",
   "selection": {
     "Closed Non-Competitive": {
       "short": "Eligibility is limited to one or a few named grantees, invited by the agency; each proposal is assessed on its own, not against rivals.",
@@ -83,6 +83,18 @@
           }
         ],
         "hansard": "Community Development Grants"
+      },
+      "GO1043": {
+        "name": "Regional Growth Fund",
+        "summary": "The Regional Growth Fund (RGF) offered grants of $10 million or more for major transformational projects meant to support long-term economic growth and create jobs in regions, including regions undergoing structural adjustment. Selection ran in two stages: an initial application assessed competitively, then a full business case for shortlisted projects; initial applications closed on 27 April 2018 and grants were awarded over 2018-19 and 2019-20. In December 2019 Catherine King MP asked the Auditor-General to audit the RGF alongside three other regional programs; the Auditor-General took up the Building Better Regions Fund and the Drought Communities Program topics but did not add the RGF, and no ANAO audit of it has been published.",
+        "audits": [],
+        "hansard": "Regional Growth Fund"
+      },
+      "GO3173": {
+        "name": "Drought Communities Program",
+        "summary": "The Drought Communities Programme Extension paid eligible drought-affected councils a fixed grant of up to $1 million each to spend on local infrastructure and other drought-relief projects they chose themselves, so entry depended on being named an eligible council rather than on winning a competitive round. Guidelines were released on 28 September 2018 with 60 councils eligible, and by 28 January 2020 the list had grown to 180 councils with access to $301 million, administered through the Business Grants Hub. Requests from Joel Fitzgibbon MP and Catherine King MP led the Auditor-General to list a potential audit titled Administration of the Drought Communities Program and Drought Communities Program Extension in the 2020-21 work program, but no report on it has been published.",
+        "audits": [],
+        "hansard": "Drought Communities Program"
       },
       "GO4504": {
         "name": "Building Better Regions Fund",

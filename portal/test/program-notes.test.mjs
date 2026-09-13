@@ -6,7 +6,10 @@ import { dirname, join } from "node:path";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const notes = JSON.parse(readFileSync(join(here, "../public/grants/program-notes.json"), "utf8"));
-const index = JSON.parse(readFileSync(join(here, "../public/graph/grants.federal.json"), "utf8"));
+// PROGRAM_NOTES_INDEX lets the check run against an index built elsewhere
+// (for example a wider export in another worktree) before it lands here.
+const indexPath = process.env.PROGRAM_NOTES_INDEX || join(here, "../public/graph/grants.federal.json");
+const index = JSON.parse(readFileSync(indexPath, "utf8"));
 
 const SELECTION_KEYS = [
   "Closed Non-Competitive",
