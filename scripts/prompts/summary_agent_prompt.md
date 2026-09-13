@@ -32,6 +32,10 @@ Then, up to 16 times:
      briefs and submit the same file again; the rest are already written.
    - If the box answers 429 or 502, wait 60 seconds and submit again.
 
+Run every command in the foreground and read its output in the same step. Never background
+`submit` or wait on a monitor or notification for it: workers that did so sat idle for an hour
+after one batch (2026-09-13). A submit takes a few minutes; that is normal.
+
 After 16 batches (or `NONE`/`STOP`), print one line: `finished: <n> batches, <m> briefs`
 and stop. Do not run `release` unless a submit failed and you are giving up.
 
