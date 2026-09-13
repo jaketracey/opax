@@ -31,7 +31,9 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
     const programSlug=typeof row.slug==='string'?/^grant-program-(federal|qld)-([a-z0-9-]{1,80})$/.exec(row.slug):null
     const program=jurisdiction&&params?.get('program')?{jurisdiction,id:params.get('program') as string}:programSlug?{jurisdiction:programSlug[1],id:programSlug[2]}:null
     if(program)return {...row,opax_url,grant_program:program}
-    const recipient=jurisdiction&&params?.get('open')?{jurisdiction,id:params.get('open') as string}:null
+    const recipientPath=href?/^\/money\/grants\/(federal|qld)\/recipient\/([^/?#]+)(?:[?#]|$)/.exec(href):null
+    let recipientId:string|null=null;try{recipientId=recipientPath?decodeURIComponent(recipientPath[2]):null}catch{}
+    const recipient=recipientPath&&recipientId?{jurisdiction:recipientPath[1],id:recipientId}:jurisdiction&&params?.get('open')?{jurisdiction,id:params.get('open') as string}:null
     return recipient?{...row,opax_url,grant_recipient:recipient}:{...row,opax_url}
    })
    return {content:[{type:'text' as const,text:JSON.stringify(data)}],isError:false}
@@ -72,7 +74,7 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   const fileKey=(id:string)=>{const i=id.indexOf(':'),kind=i<0?'x':id.slice(0,i),slug=(i<0?id:id.slice(i+1)).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'x';return kind+'-'+slug}
   server.registerTool('read_grant_recipient',{description:'Open a public grant recipient by jurisdiction and id from a search_records grant result (its grant_recipient field). Returns totals, agencies, programs and individual grants, with grants.gov.au source links where available. program_lookup provides program IDs matched by label; candidates are not proof of grant membership. grants_total, grants_listed and truncated describe listing coverage; field_guide explains compact fields.',inputSchema:{jurisdiction:z.enum(['federal','qld']),id:z.string().regex(/^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person:[a-z0-9 .'-]{2,120})$/)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({jurisdiction,id})=>{
    const notFound={content:[{type:'text' as const,text:JSON.stringify({error:'not found'})}],isError:true}
-   const opax_url=env.COMMUNITY_ORIGIN+'/money/grants?'+new URLSearchParams({jur:jurisdiction,open:id})
+   const opax_url=env.COMMUNITY_ORIGIN+'/money/grants/'+jurisdiction+'/recipient/'+encodeURIComponent(id)
    const index=await grantIndex(jurisdiction)
    if(!index)return notFound
    const recipients=index.recipients
