@@ -1,0 +1,215 @@
+{
+  "generated": "2026-09-13T01:37:54.870Z",
+  "selection": {
+    "Closed Non-Competitive": {
+      "short": "Eligibility is limited to one or a few named grantees, invited by the agency; each proposal is assessed on its own, not against rivals.",
+      "long": "Under the Commonwealth Grants Rules and Principles a closed non-competitive process is one where eligibility is limited to a single grantee or a few grantees, who may be invited by the entity to submit an application or proposal. Applications are assessed individually against the selection criteria but are not compared with anyone else's submission. Finance's guidance says this approach is also used for election commitments of high value or where there is more than one potential grantee, and a non-application variant lets the entity skip the application entirely when it already holds enough information.",
+      "source": "https://www.finance.gov.au/government/commonwealth-grants/grants-toolkit/guidance-use-whole-government-grant-opportunity-guidelines-template-suite"
+    },
+    "Open Competitive": {
+      "short": "A round with published opening and closing dates in which any eligible applicant can apply and applications are ranked against each other.",
+      "long": "An open competitive process has open and closed nominated dates, and applications are assessed against the published eligibility and assessment criteria and against the comparative merits of the other applications. It is the default the grants rules point to for most programs because it gives every potential grantee the same chance and produces a merit ranking the decision-maker can be held to.",
+      "source": "https://www.finance.gov.au/government/commonwealth-grants/grants-toolkit/guidance-use-whole-government-grant-opportunity-guidelines-template-suite"
+    },
+    "Targeted or Restricted Competitive": {
+      "short": "Like open competitive, but only a small set of applicants defined by the grant's specialised needs may apply.",
+      "long": "A targeted or restricted competitive process works like an open competitive round, with opening and closing dates and applications ranked against each other, but the opportunity is open only to a small number of applicants whose eligibility is based on the specialised requirements of the grant activity. Finance gives the example of limiting eligibility to a sector such as universities or to an organisation type such as not-for-profits.",
+      "source": "https://www.finance.gov.au/government/commonwealth-grants/grants-toolkit/guidance-use-whole-government-grant-opportunity-guidelines-template-suite"
+    },
+    "Demand Driven": {
+      "short": "Anyone who meets objective eligibility criteria is funded, in order of receipt, until the money runs out; no merit assessment.",
+      "long": "A demand driven process uses only verifiable and objective eligibility criteria to allocate grants and does not use assessment criteria. Funding is typically a set amount or a formula applied to each eligible application in order of receipt until the appropriation is exhausted, or divided equally among all eligible applicants. Finance notes this approach is often used for rebates and subsidy-style entitlements that are not set up by specific legislation.",
+      "source": "https://www.finance.gov.au/government/commonwealth-grants/grants-toolkit/guidance-use-whole-government-grant-opportunity-guidelines-template-suite"
+    },
+    "Open Non-competitive": {
+      "short": "Applications are accepted at any time while the opportunity is open and each is assessed on its own merits, not ranked against others.",
+      "long": "In an open non-competitive process applications may be submitted at any time over the life of the grant opportunity. Each application is assessed individually against the selection criteria, and the funding decision for it is made without reference to the comparative merits of other applications. It suits ongoing opportunities where the aim is to fund every application that meets the bar rather than to pick the best of a batch.",
+      "source": "https://www.finance.gov.au/government/commonwealth-grants/grants-toolkit/guidance-use-whole-government-grant-opportunity-guidelines-template-suite"
+    },
+    "One-off or ad hoc": {
+      "short": "An urgent, unrepeated grant to one or a very few recipients where there was no opportunity to run any selection process.",
+      "long": "Paragraph 2.4.c of the Commonwealth Grants Rules and Principles defines a one-off ad hoc grant as one where all of the following apply: there is an urgent need to pay a person or body to address an unexpected or unforeseen need, there was no opportunity to establish a competitive or other non-competitive process, the grant is available only to one or a very small number of recipients, and it is not expected to be repeated or made on an ongoing basis. Finance's template for these grants also covers gifts of relevant money, sponsorships and single-recipient election commitments, and the guidelines do not need Finance review but must still be published on GrantConnect.",
+      "source": "https://www.finance.gov.au/government/commonwealth-grants/grants-toolkit/guidance-use-whole-government-grant-opportunity-guidelines-template-suite"
+    }
+  },
+  "rules": [
+    {
+      "title": "A minister may only approve a grant that is a proper use of public money",
+      "text": "Section 71 of the Public Governance, Performance and Accountability Act 2013 says a minister must not approve proposed expenditure of relevant money unless satisfied, after making reasonable inquiries, that it would be a proper use of that money. The grants rules add that ministers must record in writing the basis for approving a grant, with reference to the grant opportunity guidelines and the principle of achieving value with relevant money. A minister's approval is lawful even for a closed non-competitive grant, but the written record of why it is proper is what auditors later look for.",
+      "source": "https://www.finance.gov.au/government/managing-commonwealth-resources/commonwealth-grants-rmg-410/obligations-ministers"
+    },
+    {
+      "title": "Ministers must get written advice first and record any departure from it",
+      "text": "Under the Commonwealth Grants Rules and Principles a minister must not approve a grant before receiving written advice from officials on its merits. Officials must say which applications fully, partly or do not meet the selection criteria and must recommend rejecting those that meet none. If the minister funds a grant officials recommended be rejected, or refuses one they recommended, the minister must record the basis for that decision in writing, along with any conflict of interest.",
+      "source": "https://www.finance.gov.au/government/commonwealth-grants/changes-commonwealth-grants-framework-2024/briefing-and-reporting-changes"
+    },
+    {
+      "title": "Grants in a minister's own electorate must be reported to the Finance Minister",
+      "text": "Ministers, including assistant ministers and senators, must report to the Minister for Finance whenever they approve a grant in their own electorate or approve a grant officials assessed as recommended be rejected. The report is due as soon as practicable after approval and the Finance Minister must table copies in each House of Parliament as soon as practicable after the end of each quarter. A grant counts as being in the minister's electorate if the recipient's address is there or any of the funded activity will be delivered there.",
+      "source": "https://www.finance.gov.au/government/managing-commonwealth-resources/commonwealth-grants-rmg-410/publishing-reporting-requirements"
+    },
+    {
+      "title": "Ministerial discretion is lawful but must follow the published guidelines",
+      "text": "The ANAO's audit of the Community Sport Infrastructure program set out the position it applies to every program: ministers often lawfully make the decisions about which applications are funded under section 71 of the PGPA Act, but those approvals must be informed by appropriate advice and be consistent with the program guidelines. The grants rules contain a small number of requirements that bind ministers directly, on top of the legislative test. Where the guidelines say projects will be ranked on merit, a decision-maker who funds lower-ranked projects needs a documented reason that the guidelines allow.",
+      "source": "https://www.anao.gov.au/work/performance-audit/award-funding-under-the-community-sport-infrastructure-program"
+    },
+    {
+      "title": "Every grant must be published on GrantConnect within 21 days",
+      "text": "Non-corporate Commonwealth entities must report each grant on GrantConnect no later than 21 calendar days after the grant agreement takes effect, and reportable variations such as extra money or an extension into a new financial year within 21 days of the variation. Grant opportunity guidelines must also be published on GrantConnect before the opportunity opens. GrantConnect is the authoritative source, and anything published elsewhere must match it.",
+      "source": "https://www.finance.gov.au/government/managing-commonwealth-resources/commonwealth-grants-rmg-410/publishing-reporting-requirements"
+    },
+    {
+      "title": "Senate Order 23E keeps the electorate and against-advice reports in front of Parliament",
+      "text": "Reports that ministers make under paragraph 4.12 of the grants rules, covering grants approved against officials' advice, are tabled annually in Parliament under Senate Order 23E and are available on the Parliament of Australia website. The Department of Finance confirms the Senate Order is separate from the grants rules and remains in place; Finance collates the quarterly ministerial reports to meet it.",
+      "source": "https://www.finance.gov.au/government/commonwealth-grants/frequently-asked-questions"
+    },
+    {
+      "title": "The Auditor-General checks compliance after the fact and reports to Parliament",
+      "text": "The Auditor-General is an independent officer of the Parliament under the Auditor-General Act 1997, supported by the Australian National Audit Office, and has discretion over which audits to run and how. Performance audits of grant programs test whether the design and the award of funding complied with the grants rules and whether decisions were properly advised and documented. The ANAO cannot overturn a grant; its findings go to Parliament and to the Joint Committee of Public Accounts and Audit, and members of Parliament can write to request that a program be audited.",
+      "source": "https://www.anao.gov.au/about"
+    }
+  ],
+  "programs": {
+    "federal": {
+      "GO3141": {
+        "name": "Community Development Grants",
+        "summary": "The Community Development Grants Programme (CDGP) was the Coalition government's closed non-competitive vehicle for delivering its 2013 and 2016 election commitments to build or upgrade community facilities, administered by the infrastructure department. Projects entered the program as named commitments rather than through an application round, and the minister approved funding on departmental appraisal against three criteria; by 2018 the program had grown to $936.8 million with 680 approved projects. The Albanese government announced on 24 October 2022 that the CDG would cease, with uncontracted projects given six months to sign and a completion deadline of 30 June 2026.",
+        "audits": [
+          {
+            "title": "Award of Funding under the Community Development Grants Program",
+            "year": 2018,
+            "finding": "Auditor-General Report No. 3 of 2018-19 found the department effectively designed and ran the award of funding and that a non-competitive program for election commitments was consistent with the grants rules, but its briefings repeated proponents' claims about project benefits instead of assessing them and did not tell ministers whether each appraisal criterion had been met in full, in part or not at all.",
+            "url": "https://www.anao.gov.au/work/performance-audit/award-funding-under-the-community-development-grants-program"
+          }
+        ],
+        "hansard": "Community Development Grants"
+      },
+      "GO4504": {
+        "name": "Building Better Regions Fund",
+        "summary": "The Building Better Regions Fund (BBRF) was an open competitive program run from 2016 that funded infrastructure and community investment projects in rural and regional Australia, with the department's Business Grants Hub assessing applications against four published merit criteria. Funding decisions were made by a ministerial panel whose membership was not disclosed in the guidelines and which could apply a list of other factors to override the merit ranking. Six rounds were run; the ANAO audited the first five, under which $1.15 billion went to 1293 projects, and the program was closed by the incoming government in 2022.",
+        "audits": [
+          {
+            "title": "Award of Funding under the Building Better Regions Fund",
+            "year": 2022,
+            "finding": "Auditor-General Report No. 1 of 2022-23 found the award of funding across the first five rounds was only partly effective and partly consistent with the grants rules: the ministerial panel's decisions were not appropriately informed by departmental advice, particularly in rounds three and five, the basis for decisions was poorly documented, and applications assessed as highly meritorious were often passed over. Compared with the merit results, electorates held by The Nationals received $104 million (29 per cent) more than they would otherwise have.",
+            "url": "https://www.anao.gov.au/work/performance-audit/award-funding-under-the-building-better-regions-fund"
+          }
+        ],
+        "hansard": "Building Better Regions Fund"
+      },
+      "GO3202": {
+        "name": "Building Better Regions Fund",
+        "summary": "The Building Better Regions Fund (BBRF) was an open competitive program run from 2016 that funded infrastructure and community investment projects in rural and regional Australia, with the department's Business Grants Hub assessing applications against four published merit criteria. Funding decisions were made by a ministerial panel whose membership was not disclosed in the guidelines and which could apply a list of other factors to override the merit ranking. Six rounds were run; the ANAO audited the first five, under which $1.15 billion went to 1293 projects, and the program was closed by the incoming government in 2022.",
+        "audits": [
+          {
+            "title": "Award of Funding under the Building Better Regions Fund",
+            "year": 2022,
+            "finding": "Auditor-General Report No. 1 of 2022-23 found the award of funding across the first five rounds was only partly effective and partly consistent with the grants rules: the ministerial panel's decisions were not appropriately informed by departmental advice, particularly in rounds three and five, the basis for decisions was poorly documented, and applications assessed as highly meritorious were often passed over. Compared with the merit results, electorates held by The Nationals received $104 million (29 per cent) more than they would otherwise have.",
+            "url": "https://www.anao.gov.au/work/performance-audit/award-funding-under-the-building-better-regions-fund"
+          }
+        ],
+        "hansard": "Building Better Regions Fund"
+      },
+      "GO6048": {
+        "name": "Investing in Our Communities Program",
+        "summary": "The Investing in Our Communities Program (IOCP) delivers the Albanese government's 2022 election commitments worth up to $5 million each, plus Community Development Grants commitments the previous government announced through the 2022 Pre-election Economic and Fiscal Outlook. It is a one-off, invitation-only round: only proponents named by the government were invited to apply, applications closed on 30 November 2023 and the program is funded from 2022-23 to 2026-27. In November 2024 the independent MP Helen Haines asked the Auditor-General to investigate the program together with its larger sibling, and the Auditor-General replied on 2 December 2024 that the matter warranted consideration for the 2025-26 audit work program; no audit report had been published when these notes were written.",
+        "audits": [],
+        "hansard": "Investing in Our Communities"
+      },
+      "GO6047": {
+        "name": "Priority Community Infrastructure Program",
+        "summary": "The Priority Community Infrastructure Program (PCIP) delivers the Albanese government's 2022 election commitments worth more than $5 million each, alongside Community Development Grants commitments announced in the 2022 Pre-election Economic and Fiscal Outlook. Like the Investing in Our Communities Program it is a one-off, invitation-only round in which only proponents named by the government could apply; applications closed on 30 November 2023 and funding runs from 2022-23 to 2026-27. Helen Haines MP asked the Auditor-General on 4 November 2024 to investigate both programs, and the Auditor-General said on 2 December 2024 the request warranted consideration for the 2025-26 audit work program; no audit report had been published when these notes were written.",
+        "audits": [],
+        "hansard": "Priority Community Infrastructure"
+      },
+      "activity:Female Facilities & Water Safety Stream": {
+        "name": "Female Facilities and Water Safety Stream",
+        "summary": "The Female Facilities and Water Safety Stream (FFWSS) was a $150 million component of the Community Sport Infrastructure program announced in the April 2019 Budget to fund female change rooms and water safety facilities. No guidelines, tender or application process was ever put in place; within weeks of the Budget the Coalition announced 41 projects as election commitments during the May 2019 campaign, and the ABC reported that about 80 per cent of the money went to swimming pools in 11 Coalition-held seats. Senators Janet Rice and Larissa Waters asked the Auditor-General in February 2020 to investigate the stream; the ANAO said it would consider it for its 2020-21 work program but has not published an audit of the stream itself.",
+        "audits": [
+          {
+            "title": "Award of Funding under the Community Sport Infrastructure Program",
+            "year": 2020,
+            "finding": "Auditor-General Report No. 23 of 2019-20 audited the sibling Community Sport Infrastructure Grant program, not this stream, and found the award of funding was not informed by an appropriate assessment process and sound advice: the Minister's Office ran a parallel assessment, there was no record the Minister had been advised of a legal basis for approving the grants, and funding skewed away from Sport Australia's merit ranking.",
+            "url": "https://www.anao.gov.au/work/performance-audit/award-funding-under-the-community-sport-infrastructure-program"
+          }
+        ],
+        "hansard": "Female Facilities and Water Safety"
+      },
+      "GO4117": {
+        "name": "Local Roads and Community Infrastructure Program",
+        "summary": "The Local Roads and Community Infrastructure (LRCI) Program gives every Australian council a formula-based allocation to spend on local road and community infrastructure projects it nominates itself, so there is no competitive application round and no ministerial choice between projects. It began as a COVID-19 stimulus measure with $500 million from July 2020 and grew through four phases to $3.25 billion, with Phase 4 adding $750 million from July 2023 including $250 million targeted at rural, regional and outer urban roads. The ANAO has not published a performance audit of the program.",
+        "audits": [],
+        "hansard": "Local Roads and Community Infrastructure"
+      },
+      "GO4555": {
+        "name": "Local Roads and Community Infrastructure Program",
+        "summary": "The Local Roads and Community Infrastructure (LRCI) Program gives every Australian council a formula-based allocation to spend on local road and community infrastructure projects it nominates itself, so there is no competitive application round and no ministerial choice between projects. It began as a COVID-19 stimulus measure with $500 million from July 2020 and grew through four phases to $3.25 billion, with Phase 4 adding $750 million from July 2023 including $250 million targeted at rural, regional and outer urban roads. The ANAO has not published a performance audit of the program.",
+        "audits": [],
+        "hansard": "Local Roads and Community Infrastructure"
+      },
+      "GO5254": {
+        "name": "Local Roads and Community Infrastructure Program",
+        "summary": "The Local Roads and Community Infrastructure (LRCI) Program gives every Australian council a formula-based allocation to spend on local road and community infrastructure projects it nominates itself, so there is no competitive application round and no ministerial choice between projects. It began as a COVID-19 stimulus measure with $500 million from July 2020 and grew through four phases to $3.25 billion, with Phase 4 adding $750 million from July 2023 including $250 million targeted at rural, regional and outer urban roads. The ANAO has not published a performance audit of the program.",
+        "audits": [],
+        "hansard": "Local Roads and Community Infrastructure"
+      },
+      "GO4946": {
+        "name": "Black Summer Bushfire Recovery Grants",
+        "summary": "The Black Summer Bushfire Recovery Grants Program offered about $276 million over 2021-22 to 2023-24 for community recovery and resilience projects in local government areas affected by the 2019-20 bushfires, drawing on $280 million left unspent in the National Bushfire Recovery Fund. It was run as an open competitive round published on GrantConnect in July 2021 by the National Recovery and Resilience Agency, later the National Emergency Management Agency, with eligibility tied to a list of bushfire-affected local government areas. The ANAO has not audited the award of these grants.",
+        "audits": [
+          {
+            "title": "Administration of the National Bushfire Recovery Agency",
+            "year": 2021,
+            "finding": "Auditor-General Report No. 46 of 2020-21 found the Department of the Prime Minister and Cabinet's administration of the agency and the National Bushfire Recovery Fund was largely effective, and records that the $280 million Black Summer Bushfire Recovery Grants program was announced on 24 April 2021 from unspent fund money; it did not examine how those grants were awarded.",
+            "url": "https://www.anao.gov.au/work/performance-audit/administration-the-national-bushfire-recovery-agency"
+          }
+        ],
+        "hansard": "Black Summer Bushfire Recovery Grants"
+      },
+      "GO4190": {
+        "name": "Mobile Black Spot Program Round 1",
+        "summary": "The Mobile Black Spot Program (MBSP) co-funds new or upgraded base stations to improve handheld mobile coverage in regional and remote Australia, with contributions from carriers, states and local communities. Round 1, announced in 2015, selected 499 base stations at a Commonwealth cost of $110 million through a competitive merit-based process that let MPs nominate priority black spots; by 2023 the program had awarded $271.4 million across rounds one to 5A and activated 1,118 base stations. The department has since run further rounds, including an election-commitment round audited in 2024.",
+        "audits": [
+          {
+            "title": "Award of Funding under the Mobile Black Spot Programme",
+            "year": 2016,
+            "finding": "Auditor-General Report No. 10 of 2016-17 found the department set up the key elements of a competitive merit-based program and largely followed its Round 1 guidelines, but the assessment criteria did not sufficiently target new coverage: 89 of the 499 funded base stations delivered minimal new coverage at a combined cost of $28 million, and the technical and financial assessment methodologies were weak.",
+            "url": "https://www.anao.gov.au/work/performance-audit/award-funding-under-the-mobile-black-spot-programme"
+          },
+          {
+            "title": "Award of Funding under the Mobile Black Spot Program",
+            "year": 2024,
+            "finding": "Auditor-General Report No. 28 of 2023-24 examined the $40 million Improving Mobile Coverage Round that delivered 2022 election commitments and found the design and award of funding largely effective; the minister complied with the relevant frameworks when approving grants and recording decisions, and outcomes were proportionate to the electoral and geographic spread of the target locations.",
+            "url": "https://www.anao.gov.au/work/performance-audit/award-funding-under-the-mobile-black-spot-program"
+          }
+        ],
+        "hansard": "Mobile Black Spot"
+      },
+      "GO4167": {
+        "name": "Regional Connectivity Program",
+        "summary": "The Regional Connectivity Program (RCP) funds place-based telecommunications infrastructure in regional, rural and remote Australia, with co-contributions from other governments, grantees and third parties. Recipients are chosen by the department through a competitive merit-based assessment against published eligibility and merit criteria: Round 1 awarded up to $117.8 million to 131 projects, Round 2 up to $137.2 million to 93 projects, and Round 3, run jointly with Round 7 of the Mobile Black Spot Program and announced in December 2023, $115.2 million to 74 projects. The ANAO has not published a performance audit of the RCP.",
+        "audits": [],
+        "hansard": "Regional Connectivity Program"
+      },
+      "GO5285": {
+        "name": "Regional Connectivity Program",
+        "summary": "The Regional Connectivity Program (RCP) funds place-based telecommunications infrastructure in regional, rural and remote Australia, with co-contributions from other governments, grantees and third parties. Recipients are chosen by the department through a competitive merit-based assessment against published eligibility and merit criteria: Round 1 awarded up to $117.8 million to 131 projects, Round 2 up to $137.2 million to 93 projects, and Round 3, run jointly with Round 7 of the Mobile Black Spot Program and announced in December 2023, $115.2 million to 74 projects. The ANAO has not published a performance audit of the RCP.",
+        "audits": [],
+        "hansard": "Regional Connectivity Program"
+      },
+      "GO6185": {
+        "name": "Regional Connectivity Program",
+        "summary": "The Regional Connectivity Program (RCP) funds place-based telecommunications infrastructure in regional, rural and remote Australia, with co-contributions from other governments, grantees and third parties. Recipients are chosen by the department through a competitive merit-based assessment against published eligibility and merit criteria: Round 1 awarded up to $117.8 million to 131 projects, Round 2 up to $137.2 million to 93 projects, and Round 3, run jointly with Round 7 of the Mobile Black Spot Program and announced in December 2023, $115.2 million to 74 projects. The ANAO has not published a performance audit of the RCP.",
+        "audits": [],
+        "hansard": "Regional Connectivity Program"
+      },
+      "GO7867": {
+        "name": "Major and Local Community Infrastructure Program",
+        "summary": "The Major and Local Community Infrastructure Program is the Albanese government's one-off round for delivering community infrastructure commitments from the 2025 federal election, the 2025-26 Budget and the Pre-Election Fiscal Outlook, funding community and sporting facilities, open space and other local priorities over four years from 2025-26. It opened on 1 September 2025 as an invitation-only program: only organisations identified by the government were invited to apply for their nominated projects, with applications due by 1 December 2025. It is too new to have been audited.",
+        "audits": [],
+        "hansard": "Major and Local Community Infrastructure"
+      }
+    },
+    "qld": {}
+  }
+}
