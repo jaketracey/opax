@@ -2795,6 +2795,8 @@ function ogImageFor(canonical: string): string {
   const out = new URL(`${SITE_ORIGIN}/og${u.pathname}.png`)
   const q = u.searchParams.get('q')
   if (q) out.searchParams.set('q', q)
+  const award = u.searchParams.get('award')
+  if (award) out.searchParams.set('award', award)
   out.searchParams.set('v', OG_VERSION)
   return out.toString()
 }
@@ -3453,13 +3455,16 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       const r = reports.bySlug.get(route.slug)
       const canonical = `${SITE_ORIGIN}/reports/${route.slug}`
       if (!r) return base({ title: 'Report not found · OPAX', description: STATIC_PAGES.reports.description, canonical, status: 404 })
+      const report = await assetJson<{ stats?: { speech_count?: number; unique_speakers?: number } }>(env, `/reports/${encodeURIComponent(route.slug)}.json`).catch(() => null)
+      const speechCount = report?.stats?.speech_count
+      const speakerCount = report?.stats?.unique_speakers
       const description = withTail(`${r.title}: ${r.blurb}`, 'A standing OPAX investigation, every claim cited.')
       return base({
         title: `${r.title} · Reports · OPAX`,
         description,
         canonical,
         ogType: 'article',
-        card: { kicker: 'Report', title: r.title, lines: [r.blurb, 'A standing OPAX investigation, every claim cited.'] },
+        card: { kicker: 'Parliamentary record', title: r.title, lines: [r.blurb, speakerCount ? `${num(speakerCount)} speakers in this collection.` : 'Explore the evidence and original sources.'], ...(speechCount && Number.isFinite(speechCount) ? { stat: { value: num(speechCount), label: 'collected speeches' } } : {}) },
         jsonLd: {
           '@context': 'https://schema.org',
           '@type': 'Article',
@@ -3608,6 +3613,8 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
   if (b.divisions) counts.push(`${num(b.divisions)} division${b.divisions === 1 ? '' : 's'}`)
   if (b.speeches) counts.push(`${num(b.speeches)} speech${b.speeches === 1 ? '' : 'es'}`)
   const tail = counts.length ? `${andList(counts)} in the record.` : 'The official record, on OPAX.'
+  const detail = b.has_summary ? await assetJson<{ summary?: { sentences?: string[] } }>(env, `/bills/${encodeURIComponent(key)}.json`).catch(() => null) : null
+  const summary = detail?.summary?.sentences?.[0]?.trim()
   const facts = `${name}. ${opening}`.trim()
   const description = withTail(facts, tail)
   return {
@@ -3630,7 +3637,7 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
       publisher,
     },
     prerender: prerenderBlock(name, `${facts} ${tail}`, 'Bill'),
-    card: { kicker: 'Bill · Federal parliament', title: name, lines: [opening, tail] },
+    card: { kicker: summary ? 'Bill summary' : 'Bill · Federal parliament', title: summary || name, lines: summary ? [name, opening] : [opening, tail], wide: !!summary },
   }
 }
 
@@ -3734,7 +3741,8 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     card: {
       kicker: 'Parliamentarian',
       title: display,
-      lines: [[p.party, where].filter(Boolean).join(' · '), `${num(p.speeches)} speeches on the record, ${years(p.first, p.last)}`],
+      lines: [[p.party, where].filter(Boolean).join(' · '), `Collected records: ${years(p.first, p.last)}`],
+      stat: { value: num(p.speeches), label: 'speeches in the Opax record' },
       dot: partyColour(moneyData, p.party),
       portraitId,
       credit,
@@ -3762,6 +3770,25 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
   if (!recipient) return { title: recipients ? 'Grant recipient not found · OPAX' : 'Grant recipient temporarily unavailable · OPAX',
     description: recipients ? 'This recipient is not in the current grant records. Browse the grants directory.' : 'Grant recipient records could not be loaded. Please try again.',
     canonical, ogType: 'website', status: recipients ? 404 : 503, jsonLd: null, prerender: null, card: null }
+  const awardId = url.searchParams.get('award')
+  if (awardId) {
+    // Resolve the source shard, not the rotating publication shortlist: old
+    // shared awards must keep working after they are no longer recent candidates.
+    type Award = { id: string; v: number; n?: string; desc?: string; s?: string; guid?: string }
+    const fileKey = id.toLowerCase().replace(':', '-').replace(/[^a-z0-9-]+/g, '-').replace(/-+$/g, '')
+    const data = jurisdiction === 'federal' && /^GA\d+(?:-A\d+)?$/.test(awardId)
+      ? await assetJson<Record<string, { grants?: Award[] }>>(env, `/grants/federal/shard-${String(recipient.sh).padStart(2, '0')}.json`).catch(() => null) : null
+    const award = data?.[fileKey]?.grants?.find(g => g.id === awardId)
+    const selected = `${canonical}?award=${encodeURIComponent(awardId)}`
+    if (!award || !Number.isFinite(award.v)) return { title: 'Grant award not found · OPAX', description: 'This award is not available on this recipient page.', canonical: selected, ogType: 'website', status: 404, jsonLd: null, prerender: null, card: null }
+    const purpose = award.desc || award.n || award.id
+    const description = `${money(award.v)} published award value for ${recipient.n}. ${purpose}${award.s ? ` Agreement starts ${award.s}.` : ''} Award value does not establish payments received.`
+    const original = award.guid ? `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(award.guid)}` : `https://www.grants.gov.au/Ga/ListResult?Type=Ga&AgencyStatus=-1&GaId=${encodeURIComponent(award.id)}`
+    return { title: `${award.id}: ${recipient.n} · OPAX`, description, canonical: selected, ogType: 'article', status: 200,
+      jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: `${award.id}: ${recipient.n}`, description, url: selected, citation: original },
+      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description, 'Grant award'),
+      card: { kicker: `${award.id}${award.s ? ` · Starts ${award.s}` : ''}`, title: recipient.n, lines: [purpose, 'Award value, not payments received.'], stat: { value: money(award.v), label: 'published grant award' } } }
+  }
   const qld = jurisdiction === 'qld'
   const basis = qld ? 'recorded Queensland expenditure' : 'published Commonwealth grant award values'
   const countBasis = qld ? 'expenditure rows' : 'award records'
@@ -4241,7 +4268,11 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
   const jpeg = m[2] === 'jpg'
   const pagePath = m[1].replace(/\/+$/, '') || '/home'
   const q = url.searchParams.get('q')?.trim() ?? ''
-  const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${m[2]}${pagePath}${q ? `?q=${encodeURIComponent(q)}` : ''}`)
+  const award = url.searchParams.get('award') ?? ''
+  const variants = new URLSearchParams()
+  if (q) variants.set('q', q)
+  if (award) variants.set('award', award)
+  const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
   if (!cacheBypass(request, url)) {
     const hit = await caches.default.match(cacheKey)
     if (hit) return withCacheStatus(request.method === 'HEAD' ? new Response(null, hit) : hit, 'HIT')
@@ -4256,6 +4287,7 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
     } else {
       const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
       if (q) pageUrl.searchParams.set('q', q)
+      if (award) pageUrl.searchParams.set('award', award)
       const route = matchSeoRoute(pageUrl)
       if (route) {
         const meta = await buildMeta(route, pageUrl, request, env, ctx)
@@ -4270,6 +4302,7 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
         'content-type': jpeg ? 'image/jpeg' : 'image/png',
         'content-length': String(png.byteLength),
         'x-opax-og': pagePath,
+        ...(award ? { 'x-opax-award': award } : {}),
       },
     })
     cacheStore(ctx, cacheKey, res, OG_CACHE_TTL)

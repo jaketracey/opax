@@ -16,7 +16,7 @@ export const OG_HEIGHT = 630
 
 /** Bump when the drawing changes: it is folded into every og:image URL so the
  *  social crawlers (which cache by URL, some for weeks) fetch the new card. */
-export const OG_VERSION = '3'
+export const OG_VERSION = '4'
 
 /** The faces the card sets, as served from /fonts/og/ (static instances of the
  *  same two OFL families the site self-hosts; satori cannot read a variable
@@ -46,6 +46,8 @@ export interface OgCard {
   credit?: string | null
   /** Home and fallback cards: the headline runs wider and larger. */
   wide?: boolean
+  /** A source statistic takes the place of decorative art, or sits below a portrait. */
+  stat?: { value: string; label: string }
 }
 
 // --- palette: style.css :root, the navy band's values --------------------------
@@ -167,7 +169,7 @@ const PORTRAIT = 300
 export function cardTree(card: OgCard): El {
   const hasPortrait = Boolean(card.portrait)
   const gutter = hasPortrait ? 56 : 48
-  const artWidth = hasPortrait ? PORTRAIT : 290
+  const artWidth = hasPortrait ? PORTRAIT : card.wide ? 140 : 290
   const textWidth = OG_WIDTH - PAD * 2 - artWidth - gutter
   const titleMax = card.wide ? 76 : card.italic ? 62 : 72
   // House style has no em dashes; a summary or a motion may arrive with one.
@@ -238,15 +240,20 @@ export function cardTree(card: OgCard): El {
     ...factLines,
   )
 
+  const statistic = card.stat ? h('div', { style: { display: 'flex', flexDirection: 'column', width: artWidth, marginTop: hasPortrait ? 16 : 0, textAlign: hasPortrait ? 'center' : 'left', alignItems: hasPortrait ? 'center' : 'flex-start' } },
+    h('div', { style: { fontFamily: SANS, fontSize: card.stat.value.length > 12 ? 40 : 54, fontWeight: 700, color: BRONZE_BRIGHT, lineHeight: 1.15 } }, card.stat.value),
+    h('div', { style: { fontFamily: SANS, fontSize: 22, color: SOFT, marginTop: 6, lineHeight: 1.35 } }, card.stat.label)) : null
+  const photoSize = card.stat ? 220 : PORTRAIT - 14
   const art = hasPortrait
     ? h(
         'div',
-        { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', width: artWidth, marginLeft: gutter } },
+        { style: { display: 'flex', flexDirection: 'column', alignItems: card.stat ? 'center' : 'flex-end', justifyContent: 'center', width: artWidth, marginLeft: gutter } },
         h(
           'div',
           { style: { display: 'flex', padding: 6, border: `1px solid rgba(217,168,74,0.7)`, borderRadius: 4 } },
-          h('img', { src: card.portrait as string, width: PORTRAIT - 14, height: PORTRAIT - 14, style: { borderRadius: 2, objectFit: 'cover' } }),
+          h('img', { src: card.portrait as string, width: photoSize, height: photoSize, style: { borderRadius: 2, objectFit: 'cover' } }),
         ),
+        statistic,
         card.credit
           ? h(
               'div',
@@ -258,7 +265,7 @@ export function cardTree(card: OgCard): El {
     : h(
         'div',
         { style: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: artWidth, marginLeft: gutter } },
-        h('img', { src: ENGRAVING_URI, width: 270, height: 246, style: { opacity: 0.9 } }),
+        statistic || h('img', { src: ENGRAVING_URI, width: card.wide ? 140 : 270, height: card.wide ? 128 : 246, style: { opacity: 0.9 } }),
       )
 
   const body = h('div', { style: { display: 'flex', flex: 1, alignItems: 'center', padding: `0 ${PAD}px` } }, text, art)

@@ -1,12 +1,12 @@
 /**
- * A daily source-based edition: one politician, bill or topic, rotating.
+ * A daily source-based edition: politician statistics, bills, grants and topics.
  * All facts come from the site's published records; no model runs at post time.
  * social-publication.ts freezes the edition and records each channel delivery.
  * See docs/DAILY-POST.md for connection and preview instructions.
  */
 import { TOPIC_NAMES } from './topic-names.mjs'
 
-export const DAILY_POST_KINDS = ['politician', 'bill', 'topic'] as const
+export const DAILY_POST_KINDS = ['politician', 'bill', 'grant', 'topic'] as const
 export type DailyPostKind = typeof DAILY_POST_KINDS[number]
 
 export interface DailyPost {
@@ -41,11 +41,6 @@ export const ORIGIN = 'https://opax.com.au'
 export const X_URL_WEIGHT = 23
 export const X_LIMIT = 280
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-const WHERE: Record<string, string> = {
-  federal: 'federal parliament', nsw: 'the NSW parliament', vic: 'the Victorian parliament',
-  qld: 'the Queensland parliament', sa: 'the South Australian parliament',
-}
-
 // ---------------------------------------------------------------- helpers
 
 /** Calendar date in Melbourne as YYYY-MM-DD; the cron fires in UTC. */
@@ -174,6 +169,7 @@ interface Person {
   party?: string | null
   party_now?: string | null
   first?: number
+  last?: number
   representation?: { jurisdiction?: string; chamber?: string; electorate?: string | null; state?: string | null }[]
 }
 
@@ -190,23 +186,23 @@ async function politicianPost(date: string, sources: DailyPostSources, exclude: 
     : (rep.electorate ? `Member for ${rep.electorate}` : '')
   const party = prettyParty(person.party_now || person.party)
   const who = [party, seat].filter(Boolean).join(', ')
-  const where = WHERE[rep.jurisdiction ?? 'federal'] ?? 'parliament'
   const topics = (await sources.personTopics(person.name))
-    .slice(0, 3)
-    .map(t => (TOPIC_NAMES[t.slug] ?? t.slug).toLowerCase())
+    .filter(t => Number.isFinite(t.share) && t.share > 0 && t.share <= 1)
+    .sort((a, b) => b.share - a.share).slice(0, 3)
+  const topicText = topics.map(t => `${TOPIC_NAMES[t.slug] ?? t.slug} ${Math.round(t.share * 100)}%`)
   const url = `${ORIGIN}/subject/person/${encodeURIComponent(person.name)}`
   const head = [
-    `What does ${person.name} talk about in parliament?`,
-    `OPAX records ${formatNumber(person.speeches ?? 0)} speeches in ${where}${person.first ? ` since ${person.first}` : ''}.`,
+    `${person.name}: ${formatNumber(person.speeches ?? 0)} speeches in the Opax record.`,
+    topics.length ? `Top topic labels: ${topicText.slice(0, 2).join('; ')}.` : [who, person.first ? `Records from ${person.first}${person.last ? ` to ${person.last}` : ''}.` : ''].filter(Boolean).join('\n'),
+    topics.length ? 'Shares of labelled speeches; labels overlap.' : '',
   ]
   const optional = [
-    topics.length ? `Talks most about ${joinList(topics)}.` : '',
-    'Explore the speeches and their sources:',
+    topics.length && person.first ? `Records: ${person.first}${person.last ? `–${person.last}` : ' onwards'}.` : '',
   ]
   return {
     date, kind: 'politician', subject: `person:${person.name}`, title: person.name, url,
     text: fit(head, optional, url),
-    caption: [...head, who, ...optional, 'Counts and topics describe the records collected by OPAX; coverage varies by parliament and year.', url].filter(Boolean).join('\n\n'),
+    caption: [head[0], who, `Collected parliamentary records${person.first ? `, ${person.first}${person.last ? `–${person.last}` : ' onwards'}` : ''}.`, topics.length ? `Most common topic labels:\n${topicText.map(t => `• ${t}`).join('\n')}` : '', 'What do those speeches actually say? Explore the record and its sources.', topics.length ? 'Topic shares cover labelled speeches, not all activity; a speech can have several labels.' : 'Speech counts describe Opax’s collected records, not all parliamentary activity.', url].filter(Boolean).join('\n\n'),
   }
 }
 
@@ -230,41 +226,80 @@ function daysBetween(a: string, b: string): number {
 
 async function billPost(date: string, sources: DailyPostSources, exclude: string[]): Promise<DailyPost | null> {
   const index = await sources.asset('/bills/index.json') as { bills?: BillIndexItem[] } | null
-  const bills = (index?.bills ?? []).filter(b => b.has_summary && b.key && b.title && (
-    b.status === 'before_parliament' || b.status === 'exposure_draft' ||
-    (b.status === 'passed' && b.status_as_of && daysBetween(b.status_as_of, date) >= 0 && daysBetween(b.status_as_of, date) <= 365)
-  )).sort((a, b) => a.key.localeCompare(b.key))
-  const bill = seededPick(bills, `bill:${date}`, b => `bill:${b.key}`, exclude)
+  const relevantDate = (b: BillIndexItem) => b.status === 'passed' ? b.status_as_of : b.introduced
+  const bills = (index?.bills ?? []).filter(b => {
+    const at = relevantDate(b)
+    return b.has_summary && b.key && b.title && at && /^\d{4}-\d{2}-\d{2}$/.test(at.slice(0, 10)) &&
+      daysBetween(at, date) >= 0 && daysBetween(at, date) <= 365 &&
+      ['before_parliament', 'exposure_draft', 'passed'].includes(b.status ?? '') && !exclude.includes(`bill:${b.key}`)
+  }).sort((a, b) => (relevantDate(b) ?? '').localeCompare(relevantDate(a) ?? '') || a.key.localeCompare(b.key)).slice(0, 14)
+  let bill: BillIndexItem | null = null
+  let sentences: string[] = []
+  const tried: string[] = []
+  for (let i = 0; i < Math.min(bills.length, 8); i++) {
+    const candidate = seededPick(bills, `bill:${date}`, b => b.key, tried)
+    if (!candidate) break
+    tried.push(candidate.key)
+    const file = await sources.asset(`/bills/${encodeURIComponent(candidate.key)}.json`) as { summary?: { sentences?: string[] } } | null
+    const summary = (file?.summary?.sentences ?? []).map(s => s.trim()).filter(Boolean)
+    if (!summary[0] || summary[0].length < 30) continue
+    bill = candidate; sentences = summary; break
+  }
   if (!bill) return null
-  const file = await sources.asset(`/bills/${encodeURIComponent(bill.key)}.json`) as { summary?: { sentences?: string[] } } | null
-  const sentences = (file?.summary?.sentences ?? []).map(s => s.trim()).filter(Boolean)
   const sponsor = prettySponsor(bill.sponsor)
   const party = prettyParty(bill.sponsor_party)
   const by = sponsor ? ` by ${sponsor}${party ? ` (${party})` : ''}` : (bill.portfolio ? ` (${bill.portfolio} portfolio)` : '')
   const status = bill.status === 'exposure_draft'
-    ? `Exposure draft released ${formatDate(bill.introduced)}${by}. Open for consultation, not yet introduced.`
+    ? `Exposure draft released ${formatDate(bill.introduced)}${by}. Not yet introduced to parliament.`
     : bill.status === 'passed'
     ? `Passed ${formatDate(bill.status_as_of)}. Introduced ${formatDate(bill.introduced)}${by}.`
     : `Introduced ${formatDate(bill.introduced)}${by}. Still before parliament.`
   const url = `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`
-  const head = [bill.short_title || bill.title]
-  const statusShort = bill.status === 'exposure_draft' ? 'Exposure draft; not yet introduced.' : bill.status === 'passed' ? `Passed ${formatDate(bill.status_as_of)}.` : 'Before parliament.'
-  // A summary sentence is the point of the post: clip the first one to whatever
-  // room is left rather than dropping it when the explanatory memorandum runs long.
-  const room = X_LIMIT - xLength(fit(head, [statusShort], url)) - 15
-  const first = sentences[0] ? clip(sentences[0], room) : ''
+  const statusShort = bill.status === 'exposure_draft' ? `Draft released ${formatDate(bill.introduced)}; not introduced.`
+    : bill.status === 'passed' ? `Passed ${formatDate(bill.status_as_of)}.` : `Introduced ${formatDate(bill.introduced)}; before parliament.`
   return {
     date, kind: 'bill', subject: `bill:${bill.key}`, title: bill.title, url,
-    text: fit(head, [room >= 40 ? `Summary: ${first}` : '', statusShort], url),
-    caption: [bill.title, status, ...sentences.slice(0, 2), 'Machine-written summary. Check the bill text and official sources before relying on it.', url].join('\n\n'),
+    text: fit([clip(sentences[0], 145), statusShort], [clip(bill.short_title || bill.title, 75)], url),
+    caption: [sentences[0], bill.title, status, sentences.length > 1 ? `What else is in the bill?\n${sentences.slice(1, 3).map(s => `• ${s}`).join('\n')}` : '', 'Read the bill, its progress and the source documents.', 'Machine-written summary; check the bill text for the full detail.', url].filter(Boolean).join('\n\n'),
   }
+
+}
+
+export interface GrantPublicationRecord {
+  id: string; recipientId: string; recipient: string; amount: number; start: string
+  purpose: string; agency?: string; program?: string; category?: string; sourceUrl: string
+}
+export function formatMoney(amount: number): string {
+  return new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(amount)
+}
+
+async function grantPost(date: string, sources: DailyPostSources, exclude: string[]): Promise<DailyPost | null> {
+  const catalog = await sources.asset('/social/grants.json') as { grants?: GrantPublicationRecord[] } | null
+  const all = catalog?.grants ?? []
+  const recentRecipients = new Set(all.filter(g => exclude.includes(`grant:${g.id}`)).map(g => g.recipientId))
+  const grants = all.filter(g => /^GA\d+(?:-A\d+)?$/.test(g.id) && /^abn:\d{11}$/.test(g.recipientId) &&
+    Number.isFinite(g.amount) && g.amount > 0 && g.purpose?.length >= 55 &&
+    /^\d{4}-\d{2}-\d{2}$/.test(g.start) && daysBetween(g.start, date) >= 0 && daysBetween(g.start, date) <= 120 &&
+    !recentRecipients.has(g.recipientId) && /^https:\/\/www\.grants\.gov\.au\/Ga\/Show\//.test(g.sourceUrl))
+    .sort((a, b) => b.start.localeCompare(a.start) || a.id.localeCompare(b.id)).slice(0, 14)
+  const grant = seededPick(grants, `grant:${date}`, g => `grant:${g.id}`, exclude)
+  if (!grant) return null
+  const url = `${ORIGIN}/money/grants/federal/recipient/${encodeURIComponent(grant.recipientId)}?award=${encodeURIComponent(grant.id)}`
+  const amount = formatMoney(grant.amount)
+  return { date, kind: 'grant', subject: `grant:${grant.id}`, title: `${grant.id}: ${grant.recipient}`, url,
+    text: fit([`${amount} grant award: ${clip(grant.purpose, 125)}`, `Start: ${formatDate(grant.start)}. Award value, not payments.`], [clip(grant.recipient, 65)], url),
+    caption: [`${amount} in published grant funding for ${grant.recipient}.`, grant.purpose,
+      [grant.program ? `Program: ${grant.program}` : '', grant.agency ? `Agency: ${grant.agency}` : '', `Agreement starts: ${formatDate(grant.start)}`, `Award: ${grant.id}`].filter(Boolean).join('\n'),
+      'What is the funding intended to deliver? Read the award and its original GrantConnect record.',
+      'This is a published award value, not evidence of payments received.', url].join('\n\n') }
 }
 
 interface Report {
   slug: string
   title: string
   blurb?: string
-  stats?: { speech_count?: number; unique_speakers?: number }
+  generated_at?: string
+  stats?: { speech_count?: number; unique_speakers?: number; timeline?: [string, number][]; top_speakers?: [string, number][] }
   voices?: { now?: { speaker: string; party?: string | null; count?: number }[] }
 }
 
@@ -280,24 +315,25 @@ async function topicPost(date: string, sources: DailyPostSources, exclude: strin
     const count = report?.stats?.speech_count
     if (!report || !count) continue
     const speakers = report.stats?.unique_speakers
-    const voices = (report.voices?.now ?? []).slice(0, 3)
-      .map(v => v.party ? `${v.speaker} (${v.party})` : v.speaker)
+    const voices = (report.stats?.top_speakers ?? []).slice(0, 3).map(([name, count]) => `${name}: ${formatNumber(count)}`)
+    const completeYears = (report.stats?.timeline ?? []).filter(([year, n]) => /^\d{4}$/.test(year) && Number(year) < Number(date.slice(0, 4)) && Number.isFinite(n) && n > 0)
+    const peak = [...completeYears].sort((a, b) => b[1] - a[1])[0]
     const url = `${ORIGIN}/reports/${encodeURIComponent(slug)}`
     const head = [
-      `${report.title} in OPAX's parliamentary record: ${formatNumber(count)} speeches${speakers ? ` from ${formatNumber(speakers)} speakers` : ''}.`,
+      `${report.title}: ${formatNumber(count)} collected speeches${speakers ? ` from ${formatNumber(speakers)} speakers` : ''}.`,
     ]
     const optional = [
-      voices.length ? `Leading speakers in this report: ${joinList(voices)}.` : '',
+      peak ? `Most in a completed year: ${formatNumber(peak[1])} in ${peak[0]}. Coverage varies.` : '',
       report.blurb ?? '',
-      'Explore the debate and check the sources:',
+      'Explore what parliament said:',
     ]
-    return { date, kind: 'topic', subject: `topic:${slug}`, title: report.title, url, text: fit(head, optional, url), caption: [...head, report.blurb ?? '', ...optional.filter(s => s !== report.blurb), 'Figures describe this report’s collected records, not all parliamentary activity.', url].filter(Boolean).join('\n\n') }
+    return { date, kind: 'topic', subject: `topic:${slug}`, title: report.title, url, text: fit(head, optional, url), caption: [...head, report.blurb ?? '', optional[0], voices.length ? `Most speeches in this collection:\n${voices.map(v => `• ${v}`).join('\n')}` : '', 'Explore the arguments, speakers and original sources.', `Figures describe collected records, not all parliamentary activity.${report.generated_at ? ` Report updated ${formatDate(report.generated_at)}.` : ''}`, url].filter(Boolean).join('\n\n') }
   }
   return null
 }
 
 const COMPOSERS: Record<DailyPostKind, (date: string, sources: DailyPostSources, exclude: string[]) => Promise<DailyPost | null>> = {
-  politician: politicianPost, bill: billPost, topic: topicPost,
+  politician: politicianPost, bill: billPost, grant: grantPost, topic: topicPost,
 }
 
 /** Composes the post for a date; falls back through the other kinds if one has nothing to say. */

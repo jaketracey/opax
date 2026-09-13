@@ -5389,3 +5389,5 @@ h3, #panel-methods h3, #panel-expenses h3 {
   .bill-text-version-field, .bill-text-section-field { flex-basis: 100%; }
   .bill-text-source { font-size: .9375rem; line-height: 1.8; }
 }
+.grant-recipient-page .grant-recipient-award-value { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-block: .3rem .7rem; }
+#featured-award { margin-block: 1.5rem 2rem; padding: 1.5rem; background: var(--paper-sunken); border-left: 3px solid var(--bronze); }

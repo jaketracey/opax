@@ -10,8 +10,8 @@ channels are enabled. X still needs its four posting credentials installed.
 
 ## Editorial approach
 
-Rotate parliamentary members, bills and topic reports. Lead with a question or an
-explanation of what a bill changes. Count only the records collected by Opax and
+Rotate politician statistics, bills, individual grant awards and topic reports.
+Lead with a concrete number or an explanation of what a bill changes. Count only the records collected by Opax and
 avoid describing an old report as current. Link to the exact source page. Bill
 captions identify machine-written summaries and invite readers to check official
 sources. No model runs at posting time; source data and summaries can still contain
@@ -28,6 +28,27 @@ The first schedule is 22:00 UTC (08:00 AEST / 09:00 AEDT). Checks at +5 and +10
 minutes finish an Instagram container that is still processing. They do not resend
 successful posts. A container still pending after the third check needs operator
 review; the following day is a new edition.
+
+## Source selection and refresh
+
+Politician captions include top topic shares when available. The denominator is
+labelled speeches and labels can overlap. Topic comparisons use completed years
+only and describe the collected records, not changing levels of political activity.
+Bills must have a usable summary and a non-future introduction/passage date within
+a year; selection favours the newest unfeatured records. Exposure drafts are not
+assumed to remain open for consultation.
+
+`npm run build:social` builds `public/social/grants.json` from published federal
+recipient shards. Both deploy scripts include this step. The shortlist retains
+organisation awards with descriptions and direct GrantConnect source links.
+Publication chooses from the newest eligible awards with agreement start dates in
+the preceding 120 days. These are start dates, not announcement dates. Award values
+are not payments. A recently featured recipient is skipped even for a new award.
+
+Grant URLs use `?award=GA…` to show the exact award above the recipient overview.
+The page and share-image canonical URLs retain that award identifier; the publisher
+checks the image's award identifier before posting. Missing or mismatched awards
+fail closed. The share-image version is 4.
 
 ## Connection
 

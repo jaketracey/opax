@@ -32,6 +32,8 @@ export function publicationCopy(post: DailyPost, channel: Channel): { text: stri
   link.searchParams.set('utm_campaign', 'daily_record')
   link.searchParams.set('utm_content', post.date)
   const image = new URL(`https://opax.com.au/og${new URL(post.url).pathname}.jpg`)
+  const award = new URL(post.url).searchParams.get('award')
+  if (award) image.searchParams.set('award', award)
   image.searchParams.set('v', OG_VERSION)
   const full = (post.caption || post.text).replace(post.url, '').trim()
   const text = channel === 'x' ? post.text.replace(post.url, link.toString())
@@ -130,6 +132,8 @@ export async function runSocialPublication(env: SocialEnv, options: {
         for (const target of [post.url, copy.image]) {
           const res = options.sourceResponse ? await options.sourceResponse(target) : await fetchImpl(target, { method: 'HEAD', signal: AbortSignal.timeout(20000), redirect: 'error' })
           if (!res.ok || (target === copy.image && (!res.headers.get('content-type')?.startsWith('image/jpeg') || res.headers.get('x-opax-og') !== new URL(post.url).pathname))) throw new Error('Source page or matching image unavailable')
+          const award = new URL(post.url).searchParams.get('award')
+          if (target === copy.image && award && res.headers.get('x-opax-award') !== award) throw new Error('Grant award image mismatch')
         }
         const claim = await db.prepare("INSERT OR IGNORE INTO social_deliveries(edition_date,channel,status,updated_at) VALUES(?,?,'sending',?)").bind(date, channel, at).run()
         if (!claim.meta.changes) { results[channel] = 'claimed by another run'; continue }
@@ -166,7 +170,7 @@ export async function runSocialPublication(env: SocialEnv, options: {
       await db.prepare("UPDATE social_deliveries SET status='posted',post_id=?,detail=NULL,updated_at=? WHERE edition_date=? AND channel=?").bind(id, at, date, channel).run()
       results[channel] = 'posted'
     } catch (error) {
-      const known = error instanceof Error && /^(Provider HTTP \d+|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable)|Source page or matching image unavailable|Meta API version not configured)$/.test(error.message) ? error.message : 'Publication request failed'
+      const known = error instanceof Error && /^(Provider HTTP \d+|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable)|Source page or matching image unavailable|Grant award image mismatch|Meta API version not configured)$/.test(error.message) ? error.message : 'Publication request failed'
       if (claimed) await db.prepare('UPDATE social_deliveries SET status=?,detail=?,updated_at=? WHERE edition_date=? AND channel=?').bind(writeStarted ? 'review_required' : 'failed', known, at, date, channel).run()
       // Preflight errors are recorded as well, so an operator can see the problem.
       else if (receipt) await db.prepare("UPDATE social_deliveries SET status='failed',detail=?,updated_at=? WHERE edition_date=? AND channel=? AND status='preparing'").bind(known, at, date, channel).run()

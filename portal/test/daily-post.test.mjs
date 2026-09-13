@@ -19,13 +19,13 @@ const bills = { bills: [
 ] };
 const billFiles = {
   'au-federal-r7537': { summary: { sentences: ['This bill would require providers of covered advanced AI systems to maintain ways to restrict, suspend or shut them down.', 'It would introduce incident reporting and ministerial emergency directions when serious harm is threatened.', 'A third sentence that should not be needed.'] } },
-  'au-federal-r7400': { summary: { sentences: ['It changes a tax thing.'] } },
-  'au-federal-ed-draft-2026': { summary: { sentences: ['It would impose a duty of care.'] } },
+  'au-federal-r7400': { summary: { sentences: ['It changes how the tax system treats eligible household payments.'] } },
+  'au-federal-ed-draft-2026': { summary: { sentences: ['It would impose a duty of care on covered digital platforms.'] } },
 };
 const reports = { reports: [{ slug: 'grants-allocation', title: 'Where community funding goes' }, { slug: 'housing', title: 'Housing' }] };
 const reportFiles = {
   'grants-allocation': { slug: 'grants-allocation', title: 'Where community funding goes' },
-  housing: { slug: 'housing', title: 'Housing', blurb: 'Decades of affordability promises, negative gearing fights and supply debates.', stats: { speech_count: 19369, unique_speakers: 1292 }, voices: { now: [{ speaker: 'Andrew Bragg', party: 'Liberal', count: 164 }, { speaker: 'Harriet Shing', party: null, count: 137 }, { speaker: 'Ben Riley', party: 'Labor', count: 90 }] } },
+  housing: { slug: 'housing', title: 'Housing', blurb: 'Decades of affordability promises, negative gearing fights and supply debates.', stats: { speech_count: 19369, unique_speakers: 1292, timeline: [['2024',1627],['2025',2843],['2026',5000]], top_speakers: [['Andrew Bragg',164],['Harriet Shing',137]] }, voices: { now: [{ speaker: 'Andrew Bragg', party: 'Liberal', count: 164 }, { speaker: 'Harriet Shing', party: null, count: 137 }, { speaker: 'Ben Riley', party: 'Labor', count: 90 }] } },
 };
 function sources(recent = []) {
   return {
@@ -43,9 +43,9 @@ function sources(recent = []) {
 }
 
 test('kinds rotate one per day and the same date always maps to the same kind', () => {
-  const kinds = ['2026-09-10', '2026-09-11', '2026-09-12', '2026-09-13'].map(kindFor);
-  assert.deepEqual(new Set(kinds.slice(0, 3)).size, 3);
-  assert.equal(kinds[3], kinds[0]);
+  const kinds = ['2026-09-10', '2026-09-11', '2026-09-12', '2026-09-13', '2026-09-14'].map(kindFor);
+  assert.deepEqual(new Set(kinds.slice(0, 4)).size, 4);
+  assert.equal(kinds[4], kinds[0]);
   assert.equal(kindFor('2026-09-10'), kindFor('2026-09-10'));
 });
 
@@ -86,8 +86,8 @@ test('politician post names the member, seat, count and top topics', async () =>
   const post = await composeDailyPost('2026-09-10', sources(), 'politician');
   assert.equal(post.kind, 'politician');
   assert.ok(['Anthony Albanese', 'Penny Wong'].includes(post.title), 'only current members with enough speeches');
-  assert.ok(post.text.includes('Talks most about health, tax & budget and unions & workplace.'));
-  assert.ok(post.text.includes('speeches in federal parliament since'));
+  assert.ok(post.text.includes('Health 20%; Tax & budget 16%'));
+  assert.ok(post.text.includes('Shares of labelled speeches; labels overlap.'));
   assert.ok(post.text.endsWith(post.url) && post.url.startsWith('https://opax.com.au/subject/person/'));
   assert.ok(xLength(post.text) <= X_LIMIT);
   const other = await composeDailyPost('2026-09-10', sources([post.subject]), 'politician');
@@ -98,10 +98,10 @@ test('bill post uses the summary sentences and a readable sponsor', async () => 
   const post = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
   assert.equal(post.kind, 'bill');
   assert.equal(post.subject, 'bill:au-federal-r7537');
-  assert.ok(post.text.startsWith('AI Kill Switch and Data Centre Control Bill 2026'));
-  assert.ok(post.text.includes('Before parliament.'));
+  assert.ok(post.text.startsWith('This bill would require providers'));
+  assert.ok(post.text.includes('before parliament.'));
   assert.ok(post.caption.includes('Introduced 7 Sep 2026 by Andrew Gee (Independent).'));
-  assert.ok(post.caption.includes('Machine-written summary.'));
+  assert.ok(post.caption.includes('Machine-written summary;'));
   assert.ok(post.text.includes('This bill would require providers'));
   assert.ok(!post.text.includes('A third sentence'));
   assert.ok(post.text.endsWith('https://opax.com.au/bill/au-federal-r7537'));
@@ -114,8 +114,8 @@ test('bill post uses the summary sentences and a readable sponsor', async () => 
 test('an exposure draft is a bill candidate and says it is a draft', async () => {
   const post = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-r7537']), 'bill');
   assert.equal(post.subject, 'bill:au-federal-ed-draft-2026');
-  assert.ok(post.caption.includes('Exposure draft released 8 Sep 2026 (Communications portfolio). Open for consultation, not yet introduced.'), post.text);
-  assert.ok(post.text.includes('It would impose a duty of care.'));
+  assert.ok(post.caption.includes('Exposure draft released 8 Sep 2026 (Communications portfolio). Not yet introduced to parliament.'), post.text);
+  assert.ok(post.text.includes('It would impose a duty of care on covered digital platforms.'));
   assert.ok(post.text.endsWith('https://opax.com.au/bill/au-federal-ed-draft-2026'));
 });
 
@@ -130,12 +130,12 @@ test('a long first summary sentence is clipped to fit rather than dropped', asyn
   assert.equal(clip('the quick brown fox jumps', 16), 'the quick brown…');
 });
 
-test('topic post skips reports without speech stats and names the loudest voices', async () => {
+test('topic post skips reports without speech stats and uses completed-year statistics and labels collection coverage', async () => {
   const post = await composeDailyPost('2026-09-10', sources(), 'topic');
   assert.equal(post.kind, 'topic');
   assert.equal(post.subject, 'topic:housing');
-  assert.ok(post.text.startsWith("Housing in OPAX's parliamentary record: 19,369 speeches from 1,292 speakers."));
-  assert.ok(post.text.includes('Leading speakers in this report: Andrew Bragg (Liberal), Harriet Shing and Ben Riley (Labor).'));
+  assert.ok(post.text.startsWith('Housing: 19,369 collected speeches from 1,292 speakers.'));
+  assert.ok(post.text.includes('2,843 in 2025. Coverage varies.'));
   assert.ok(post.text.endsWith('https://opax.com.au/reports/housing'));
   assert.ok(xLength(post.text) <= X_LIMIT);
 });
@@ -144,6 +144,33 @@ test('a kind with nothing to say falls through to the next kind', async () => {
   const empty = { ...sources(), async asset(path) { return path === '/bills/index.json' ? { bills: [] } : sources().asset(path); } };
   const post = await composeDailyPost('2026-09-10', empty, 'bill');
   assert.notEqual(post.kind, 'bill');
+});
+
+test('grant editions keep the award amount, purpose, start date and exact recipient together', async () => {
+  const grant = { id:'GA123', recipientId:'abn:18374210672', recipient:'City of Greater Geelong', amount:4000000, start:'2026-08-27', purpose:'The project will redevelop Windsor Park with new netball courts, cricket nets and improvements to the main pavilion.', agency:'Infrastructure', sourceUrl:'https://www.grants.gov.au/Ga/Show/verified-guid' };
+  const src = { ...sources(), async asset(path) { return path === '/social/grants.json' ? {grants:[{...grant,id:'GA999',start:'2026-12-01'},grant]} : null; } };
+  const post = await composeDailyPost('2026-09-14',src,'grant');
+  assert.equal(post.subject,'grant:GA123');
+  assert.equal(new URL(post.url).searchParams.get('award'),'GA123');
+  assert.match(post.text,/\$4,000,000/); assert.match(post.text,/Award value, not payments/);
+  assert.match(post.caption,/City of Greater Geelong/); assert.match(post.caption,/27 Aug 2026/);
+  assert.match(post.caption,/netball courts/); assert.ok(xLength(post.text)<=280);
+  assert.equal(await composeDailyPost('2027-09-14',src,'grant'),null,'stale start dates are not offered as recent grants');
+  assert.equal(await composeDailyPost('2026-09-14',{...src,recent:async()=>['grant:GA123']},'grant'),null,'already featured recipient is skipped');
+});
+
+test('bill publication skips future dates and missing summaries', async () => {
+  const src = { ...sources(), async asset(path) {
+    if(path==='/bills/index.json')return {bills:[
+      {key:'future',title:'Future Bill',introduced:'2027-01-01',status:'before_parliament',has_summary:true},
+      {key:'empty',title:'Empty Bill',introduced:'2026-09-01',status:'before_parliament',has_summary:true},
+      bills.bills[0],
+    ]};
+    return sources().asset(path);
+  } };
+  const post=await composeDailyPost('2026-09-14',src,'bill');
+  assert.equal(post.subject,'bill:au-federal-r7537');
+  assert.ok(post.text.startsWith('This bill would require'));
 });
 
 test('OAuth 1.0a signature matches the reference vector from the X docs', async () => {

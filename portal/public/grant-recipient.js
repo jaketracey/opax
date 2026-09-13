@@ -103,6 +103,17 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     downloadUrl = URL.createObjectURL(new Blob([JSON.stringify({ ...data, source_url: SOURCES[jurisdiction], source_meta: index.meta }, null, 2)], { type: 'application/json' }));
     const download = link(downloadUrl, 'Download recipient data'); download.download = `${jurisdiction}-${fileKey(id)}.json`; actions.append(download);
     header.append(actions); root.append(header);
+    const selectedAward = jurisdiction === 'federal' ? new URLSearchParams(location.search).get('award') : null;
+    const grants = Array.isArray(data.grants) ? data.grants : [];
+    const selectedIndex = grants.findIndex(g => g.id === selectedAward);
+    if (selectedIndex >= 0) {
+      const award = grants[selectedIndex], featured = section(`Grant award ${award.id}`, 'featured-award');
+      featured.append(node('p', money(award.v), 'grant-recipient-award-value'), node('p', award.desc || award.n));
+      featured.append(definitionList([['Recipient', data.n], ['Agency', award.ag], ['Agreement starts', award.s], ['Program', award.pr]]));
+      featured.append(node('p', 'Published award value, not evidence of payments received.', 'grant-recipient-note'));
+      const original = link(recipientSourceUrl(jurisdiction, award), 'Read the original GrantConnect award', 'grant-recipient-source-link'); original.target = '_blank'; original.rel = 'noopener'; featured.append(original);
+      root.append(featured);
+    }
     const metrics = node('dl', null, 'grant-recipient-metrics');
     for (const [label, value] of [[qld ? 'Published expenditure' : 'Published award value', money(data.t)], [recordNoun, NUMBER.format(data.c)], ['Financial years', data.y0 === data.y1 ? data.y0 : `${data.y0 || '—'} to ${data.y1 || '—'}`]]) {
       const item = node('div'); item.append(node('dt', label), node('dd', value)); metrics.append(item);
@@ -113,12 +124,11 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     root.append(jump);
     const layout = node('div', null, 'grant-recipient-layout'), main = node('div'), aside = node('aside');
     const records = section(qld ? 'Expenditure records' : 'Grant awards', 'recipient-records');
-    const grants = Array.isArray(data.grants) ? data.grants : [];
     const omitted = Math.max(Number(data.more) || 0, Number(data.c) - grants.length);
     records.append(node('p', omitted > 0
       ? `The ${NUMBER.format(grants.length)} largest of ${NUMBER.format(data.c)} ${recordNoun} are published in this recipient file. ${NUMBER.format(omitted)} further rows are included in the total but are not available individually here.`
       : `All ${NUMBER.format(grants.length)} ${recordNoun} in this recipient file, largest value first.`, 'grant-recipient-note'));
-    let page = 0;
+    let page = selectedIndex >= 0 ? Math.floor(selectedIndex / 20) : 0;
     const list = node('ol', null, 'grant-recipient-records'), pagination = node('nav', null, 'grant-recipient-pagination');
     pagination.setAttribute('aria-label', 'Recipient record pages');
     function renderRecords(focus = false) {

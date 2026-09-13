@@ -75,6 +75,14 @@ test('Instagram processing resumes the same container without repeating successf
 test('wrong or generic social image prevents every publish',async()=>{
  const h=harness({},async(url,init)=>init.method==='HEAD'&&url.includes('/og/')?new Response(null,{headers:{'content-type':'image/png'}}):null);await h.run();assert.equal(h.calls.filter(c=>c.init.method==='POST').length,0);
 });
+test('an award post cannot publish a recipient-total image or a different award',async()=>{
+ const h=harness({},async (url,init)=>init.method==='HEAD'?new Response(null,{headers:{'content-type':'image/jpeg','x-opax-og':'/money/grants/federal/recipient/abn%3A18374210672','x-opax-award':'GA999'}}):null);
+ const grant={...post,kind:'grant',url:'https://opax.com.au/money/grants/federal/recipient/abn%3A18374210672?award=GA123'};
+ h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify(grant));
+ const copy=publicationCopy(grant,'instagram');assert.equal(new URL(copy.image).searchParams.get('award'),'GA123');
+ await h.run();assert.equal(h.calls.filter(c=>c.init.method==='POST').length,0);
+ assert.equal(h.sqlite.prepare("SELECT detail FROM social_deliveries WHERE channel='x'").get().detail,'Grant award image mismatch');
+});
 test('legacy X daily receipt is respected during migration',async()=>{
  const h=harness({GENERATION_CACHE:{async get(){return 'existing-id'}}});await h.run();assert.equal(h.calls.filter(c=>new URL(c.url).hostname === 'api.x.com').length,0);
 });
