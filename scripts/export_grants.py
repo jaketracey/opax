@@ -486,12 +486,20 @@ def program_index_extras(pf, jur):
 def program_name(names) -> str:
     """The commonest name that reads as a name: a few detail pages put the
     program's description in its name field ("This is a demand-driven grant
-    program that was announced ..."), which must not become the heading."""
-    ranked = names.most_common()
-    for n, _ in ranked:
-        if n and len(n) <= 90 and not n.rstrip().endswith("."):
+    program that was announced ..."), which must not become the heading, and
+    a register row can leave an award's value where its title belongs
+    ("$4,672.80" on GA184725 under GO4911, "0" on a QLD disaster program).
+    A value is never a name; when nothing else reads as one, the commonest
+    remaining name stands, however long (GO4911's 103-character title)."""
+    ranked = [(n, w) for n, w in names.most_common() if n]
+    value_like = re.compile(r"^[\s$]*[\d,]+(\.\d+)?\s*$")
+    named = [n for n, _ in ranked if not value_like.match(n)]
+    if not named:
+        return ranked[0][0] if ranked else ""
+    for n in named:
+        if len(n) <= 90 and not n.rstrip().endswith("."):
             return n
-    return ranked[0][0] if ranked else ""
+    return named[0]
 
 
 SHARED_FUNCTIONS = (iso_day, program_key, government_at, bloc_for, holder_at, canonical_party, pretty_name, seat_holder,

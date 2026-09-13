@@ -409,3 +409,21 @@ class ProgramNameTests(unittest.TestCase):
         self.assertEqual(eg.program_name(names), "Disaster Recovery Funding Arrangements")
         self.assertEqual(eg.program_name(Counter({"Only a sentence.": 1})), "Only a sentence.")
         self.assertEqual(eg.program_name(Counter()), "")
+
+    def test_a_stray_value_never_outranks_the_title_the_awards_agree_on(self):
+        # GO4911: 1,946 awards carry the 103-character IFAM title and one register
+        # row (GA184725) has its dollar value where the title belongs.
+        from collections import Counter
+        title = ("Temporary emergency mechanism to support international airfreight capacity "
+                 "as part of COVID-19 response")
+        self.assertEqual(eg.program_name(Counter({title: 1946, "$4,672.80": 1})), title)
+        # A value never reads as a name, even when nothing else is on offer.
+        self.assertEqual(eg.program_name(Counter({"$4,672.80": 5, title: 1})), title)
+        self.assertEqual(eg.program_name(Counter({"12,000": 3, "Grant 12": 1})), "Grant 12")
+        # A long title still yields to a real name, however rare (GO4117: 550
+        # awards titled with a sentence, 11 detail pages naming the program).
+        self.assertEqual(eg.program_name(Counter({title: 10, "Freight Assistance": 2})), "Freight Assistance")
+        sentence = ("Provide financial support to local councils to deliver priority local road "
+                    "and community infrastructure projects.")
+        self.assertEqual(eg.program_name(Counter({sentence: 550, "Local Roads and Community Infrastructure Program": 33})),
+                         "Local Roads and Community Infrastructure Program")
