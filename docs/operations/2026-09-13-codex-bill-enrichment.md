@@ -16,6 +16,8 @@ Two `gpt-5.6-luna` agents drafted disjoint groups at medium reasoning effort. Th
 
 The publisher refuses to write while automatic tasks are enabled or running. It backs up prior metadata, checks for a null processing sequence in every write response, and reads each result back. Missing resources are recorded as `unpublished`; their reviewed enrichment remains staged. Repeating the same input is idempotent.
 
+The completed run enriched all **221 already-published versions across 144 bills**. The remaining **137 reviewed versions** are staged because their original text resources have not been published. The [final receipt](data/bill-enrichment-2026-09-13-receipt.json) contains 192 unchanged records from the earlier batches, 29 final-batch writes with null processing sequences, and 137 unpublished records. A final task check reported zero running tasks and zero enabled configurations; the automatic publisher remained inactive and disabled, while the source-only crawler remained active.
+
 This boundary matters because the KB's existing automatic summaries can incur OpenRouter charges when source content is processed. Upstream NucliaDB's [`maybe_send_to_process` implementation](https://github.com/nuclia/nucliadb/blob/main/nucliadb/src/nucliadb/writer/api/v1/resource.py) only sends populated processing fields. The metadata-only smoke update returned `seqid: null`, preserved the source checksum and `PROCESSED` status, and left zero running tasks. No processing request was observed for this enrichment run.
 
 The previous [OpenRouter stop instruction](2026-09-13-bill-text-openrouter.md) remains in force. The source-only crawler can continue collecting text. Unpublished text must not be ingested through the old automatic publisher as part of this workflow.
