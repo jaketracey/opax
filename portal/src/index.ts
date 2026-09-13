@@ -1488,6 +1488,7 @@ async function apiJourneyStory(request: Request, input: Record<string, unknown>,
 //
 // We re-emit that as Server-Sent Events the browser can render progressively:
 //   event: status  {phase:'searching'}           the stream is open; retrieval in hand
+//   event: status  {phase:'writing'}             first platform item: retrieval done
 //   event: status  {phase:'reading', words}      the model is still thinking
 //   event: delta   {text}                        answer text to append
 //   event: retry   {reason:'refusal'|'empty'}    attempt one stumbled; text resets
@@ -1543,6 +1544,7 @@ async function streamAskOnce(
   let failure: string | null = null
   let words = 0
   let lastStatusAt = 0
+  let begun = false
   const gate = new RefusalGate()
 
   const handle = async (line: string): Promise<void> => {
@@ -1554,6 +1556,13 @@ async function streamAskOnce(
     }
     if (!item) return
     onProgress?.()
+    // The platform's first item of any kind means retrieval and rerank are
+    // done and generation has begun (a model without a reasoning phase sends
+    // no heartbeat before its first word, so this is the only signal).
+    if (!begun) {
+      begun = true
+      await send('status', { phase: 'writing' })
+    }
     switch (item.type) {
       case 'answer': {
         const text = typeof item.text === 'string' ? item.text : ''

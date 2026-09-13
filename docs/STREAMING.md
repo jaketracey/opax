@@ -63,7 +63,9 @@ data: {"phase":"searching"}                   the stream is open: the question i
                                               the cache checked, the retrieval in hand
 data: {"phase":"retrieved","sources":[...]}   position answers only: the speeches found
                                               ({title, date, speaker} × up to 4, `total`)
-data: {"phase":"writing"}                     position answers only: generation has begun
+data: {"phase":"writing"}                     generation has begun: the platform's first
+                                              item (retrieval and rerank done), or the
+                                              position path's one generation call
 data: {"phase":"reading","words":<n>}        heartbeat every 2 s while the model reasons
 data: {"phase":"cached","cached_at":"..."}   a cached answer is being replayed
 
