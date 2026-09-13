@@ -48,7 +48,7 @@ export function publicationCopy(post: DailyPost, channel: Channel): { text: stri
 async function api(url: string, token: string, fetchImpl: typeof fetch, body?: Record<string, unknown>): Promise<Record<string, unknown>> {
   const res = await fetchImpl(url, {
     method: body ? 'POST' : 'GET', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-    ...(body ? { body: JSON.stringify(body) } : {}), signal: AbortSignal.timeout(20000), redirect: 'error',
+    ...(body ? { body: JSON.stringify(body) } : {}), signal: AbortSignal.timeout(20000), redirect: 'manual',
   })
   if (!res.ok) throw new Error(`Provider HTTP ${res.status}`)
   return await res.json() as Record<string, unknown>
@@ -66,7 +66,8 @@ async function verifyAccount(channel: Channel, env: SocialEnv, fetchImpl: typeof
   if (channel === 'x') {
     const url = 'https://api.x.com/2/users/me'
     const authorization = await oauth1Header('GET', url, xCredentials(env)!)
-    const res = await fetchImpl(url, { headers: { authorization }, signal: AbortSignal.timeout(20000), redirect: 'error' })
+    // Workers' fetch has no redirect: 'error'; a redirect is refused by hand.
+    const res = await fetchImpl(url, { headers: { authorization }, signal: AbortSignal.timeout(20000), redirect: 'manual' })
     if (!res.ok) throw new Error(`X identity HTTP ${res.status}`)
     const body = await res.json() as { data?: { id?: string; username?: string } }
     if (body.data?.id !== env.X_ACCOUNT_ID || body.data?.username?.toLowerCase() !== env.X_USERNAME?.toLowerCase()) throw new Error('X account mismatch')
@@ -140,7 +141,7 @@ export async function runSocialPublication(env: SocialEnv, options: {
       if (!receipt) {
         // Preflight the actual linked page and image before any social write.
         for (const target of [post.url, copy.image]) {
-          const res = options.sourceResponse ? await options.sourceResponse(target) : await fetchImpl(target, { method: 'HEAD', signal: AbortSignal.timeout(20000), redirect: 'error' })
+          const res = options.sourceResponse ? await options.sourceResponse(target) : await fetchImpl(target, { method: 'HEAD', signal: AbortSignal.timeout(20000), redirect: 'manual' })
           if (!res.ok || (target === copy.image && (!res.headers.get('content-type')?.startsWith('image/jpeg') || res.headers.get('x-opax-og') !== new URL(post.url).pathname))) throw new Error('Source page or matching image unavailable')
           const award = new URL(post.url).searchParams.get('award')
           if (target === copy.image && award && res.headers.get('x-opax-award') !== award) throw new Error('Grant award image mismatch')
@@ -182,6 +183,8 @@ export async function runSocialPublication(env: SocialEnv, options: {
       await db.prepare("UPDATE social_deliveries SET status='posted',post_id=?,detail=NULL,updated_at=? WHERE edition_date=? AND channel=?").bind(id, at, date, channel).run()
       results[channel] = 'posted'
     } catch (error) {
+      // The journal keeps a bounded reason; the log keeps the message (never a token).
+      console.error('daily-post', JSON.stringify({ channel, date, error: error instanceof Error ? `${error.name}: ${error.message}`.slice(0, 300) : String(error).slice(0, 300) }))
       const known = error instanceof Error && /^(Provider HTTP \d+|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable)|Source page or matching image unavailable|Grant award image mismatch|Portrait image unavailable|Meta API version not configured)$/.test(error.message) ? error.message : 'Publication request failed'
       if (claimed) await db.prepare('UPDATE social_deliveries SET status=?,detail=?,updated_at=? WHERE edition_date=? AND channel=?').bind(writeStarted ? 'review_required' : 'failed', known, at, date, channel).run()
       // Preflight errors are recorded as well, so an operator can see the problem.
