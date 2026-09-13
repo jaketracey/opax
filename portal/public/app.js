@@ -1248,10 +1248,11 @@ async function openMoneyRecords(kind, params) {
   const generation = ++moneyRecordsGeneration;
   moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
   const grants = kind === 'grants';
+  $('money-records-title').hidden = false;
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=program-files-20260913' : '/ledger.js?v=shareable-receipts-20260913');
+    const mod = await import(grants ? '/grants.js?v=recipient-pages-20260913' : '/ledger.js?v=shareable-receipts-20260913');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1271,6 +1272,27 @@ async function openMoneyRecords(kind, params) {
     if (grants && params.get('program')) moneyRecordsHandle.openProgram?.(params.get('program'), params.get('jur') || undefined);
     else if (grants && (params.get('open') || params.get('jur'))) moneyRecordsHandle.open?.(params.get('open'), params.get('jur') || undefined);
   } catch { if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">These records could not load. <a href="'+(grants?'/money/grants':'/money/receipts')+'">Try again</a>.</p>'; }
+}
+async function openGrantRecipient(jurisdiction, id, manageFocus) {
+  const generation = ++moneyRecordsGeneration;
+  moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
+  $('money-records-title').hidden = true;
+  const body = $('money-records-body');
+  body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
+  try {
+    const mod = await import('/grant-recipient.js?v=recipient-pages-20260913');
+    if (generation !== moneyRecordsGeneration) return;
+    moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
+      onTitle(name) {
+        if (generation !== moneyRecordsGeneration) return;
+        document.title = `${name} · Government grants · OPAX`;
+        setCrumbs([{ label: 'Money', href: '/money' }, { label: 'Government grants', href: '/money/grants?jur=' + jurisdiction }, { label: name }]);
+        syncPathMeta();
+      },
+    });
+  } catch {
+    if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">These recipient records could not load. <a href="'+esc(location.pathname)+'">Try again</a> or <a href="/money/grants">browse government grants</a>.</p>';
+  }
 }
 let moneyMapGeneration = 0;
 let moneyJourneys = null;
@@ -1607,7 +1629,7 @@ function parseHash() {
 
 function route() {
   const frag = rawFragment();
-  if (frag && !frag.startsWith("/")) return; // plain #fragment — native anchor, not a route
+  if (frag && !frag.startsWith("/") && !firstRoute) return; // native anchors still need their page rendered on first load
   const { segs, params } = parseHash();
   const view = segs[0] || "ask";
   const manageFocus = !firstRoute;
@@ -1708,10 +1730,21 @@ function route() {
     }
   } else if (view === "money" && ["receipts", "grants"].includes(segs[1])) {
     showPanel("money-records");
-    const title = segs[1] === 'grants' ? 'Government grants' : 'Political receipts';
-    document.title = `${title} · OPAX`;
-    setCrumbs([{ label: 'Money', href: '/money' }, { label: title }]);
-    openMoneyRecords(segs[1], params);
+    const isGrantRecipient = segs[1] === 'grants' && ((segs[3] === 'recipient' && segs[4]) || (params.get('open') && !params.get('program')));
+    if (isGrantRecipient) {
+      const jurisdiction = segs[3] === 'recipient' ? segs[2] : (params.get('jur') || 'federal');
+      let id;
+      try { id = segs[3] === 'recipient' ? decodeURIComponent(segs[4]) : params.get('open'); } catch { id = ''; }
+      if (segs[3] !== 'recipient') replaceRoute(`/money/grants/${encodeURIComponent(jurisdiction)}/recipient/${encodeURIComponent(id)}`);
+      document.title = 'Grant recipient · OPAX';
+      setCrumbs([{ label: 'Money', href: '/money' }, { label: 'Government grants', href: '/money/grants' }, { label: 'Recipient' }]);
+      openGrantRecipient(jurisdiction, id, manageFocus);
+    } else {
+      const title = segs[1] === 'grants' ? 'Government grants' : 'Political receipts';
+      document.title = `${title} · OPAX`;
+      setCrumbs([{ label: 'Money', href: '/money' }, { label: title }]);
+      openMoneyRecords(segs[1], params);
+    }
   } else if (view === "connections") {
     showPanel("connections");
     document.title = TITLES.connections;
@@ -8028,7 +8061,7 @@ const GAMES = {
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=shareable-receipts-20260913", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=program-files-20260913", mount: "mountGrants" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=recipient-pages-20260913", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js", mount: "mountThenVsNow" },
@@ -12905,6 +12938,8 @@ function syncPathMeta() {
   const view = path.replace(/^\//, "").split(/[/?]/)[0];
   const desc = landed
     ? BOOT_META.description
+    : path.startsWith('/money/grants')
+      ? 'Published government grant awards and Queensland expenditure records, with recipient details, donor-register context and original sources.'
     : view && view !== "ask"
       ? (VIEW_DESCRIPTIONS[view] || VIEW_DESCRIPTIONS.subject)
       : "Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.";

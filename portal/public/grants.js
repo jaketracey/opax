@@ -108,6 +108,10 @@ export function fileKey (rid) {
   return `${kind}-${slug}`
 }
 
+export function grantRecipientUrl (jurisdiction, id) {
+  return `/money/grants/${encodeURIComponent(jurisdiction)}/recipient/${encodeURIComponent(id)}`
+}
+
 /** First and last financial year present in the aligned year cells. */
 export function yearSpan (by, years) {
   let y0 = null
@@ -1103,10 +1107,7 @@ export function mountGrants (container, opts = {}) {
 
   function renderRecipientRow (tr, r) {
     const nameTd = tr.appendChild(el('td'))
-    const btn = el('button', 'gr-open', r.n)
-    btn.type = 'button'
-    btn.dataset.id = r.id
-    btn.setAttribute('aria-expanded', state.open === r.id ? 'true' : 'false')
+    const btn = link(grantRecipientUrl(state.jur, r.id), r.n, 'gr-open')
     nameTd.appendChild(btn)
     tr.appendChild(el('td', null, kindLabel(r.k)))
     tr.appendChild(moneyCell(r.wt))
@@ -1459,9 +1460,7 @@ export function mountGrants (container, opts = {}) {
     if (d.other) {
       const o = el('p', 'gr-note')
       o.textContent = `Also received ${fmtMoney(d.other.t)} in ${NUM.format(d.other.c)} ${d.other.jur === 'qld' ? 'Queensland funding lines' : 'Commonwealth grants'}. `
-      const b = el('button', 'gr-open', `Open its ${JURISDICTIONS[d.other.jur].label} file`)
-      b.type = 'button'
-      b.addEventListener('click', () => { state.open = r.id; state.q = d.n; searchEl.value = d.n; load(d.other.jur) })
+      const b = link(grantRecipientUrl(d.other.jur, r.id), `Open its ${JURISDICTIONS[d.other.jur].label} file`, 'gr-open')
       o.appendChild(b)
       right.appendChild(o)
     }
@@ -1578,10 +1577,7 @@ export function mountGrants (container, opts = {}) {
   function recipientRef (rid, name) {
     const listed = rid && recipientIndex().has(rid)
     if (!listed) return el('span', null, name)
-    const b = el('button', 'gr-open', name)
-    b.type = 'button'
-    b.dataset.rid = rid
-    return b
+    return link(grantRecipientUrl(state.jur, rid), name, 'gr-open')
   }
   let recipientIds = null
   function recipientIndex () {
