@@ -954,6 +954,37 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 .chat-next-btn .next-arrow { flex: 0 0 auto; color: var(--ink-faint); }
 .chat-next-btn:hover .next-arrow { color: var(--bronze-ink); }
 .chat-error { color: var(--ink-soft); font-size: 0.9375rem; margin: 0.6rem 0; }
+/* Saved conversations: a quiet list under the head, open on demand. */
+.chat-history { margin: 0 0 1rem; max-width: 46rem; }
+.chat-history-list > summary {
+  cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px;
+  font: 600 0.9375rem/1.4 var(--sans); color: var(--ink-soft);
+}
+.chat-history-list > summary::-webkit-details-marker { display: none; }
+.chat-history-list > summary::before {
+  content: ""; width: 7px; height: 7px; flex: 0 0 auto;
+  border-right: 1.8px solid currentColor; border-bottom: 1.8px solid currentColor;
+  transform: rotate(-45deg); margin-top: -2px;
+}
+.chat-history-list[open] > summary::before { transform: rotate(45deg); margin-top: -4px; }
+.chat-history-list ul { list-style: none; margin: 0.2rem 0 0; padding: 0; }
+.chat-history-list li { display: flex; align-items: center; gap: 0.6rem; border-top: 1px solid var(--line); }
+.chat-history-list li:last-child { border-bottom: 1px solid var(--line); }
+.chat-history-open {
+  flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 0.1rem;
+  min-height: 44px; padding: 0.55rem 0.2rem; border: 0; background: none; text-align: left; cursor: pointer;
+  font: 400 0.9375rem/1.4 var(--sans); color: var(--ink);
+}
+.chat-history-open > span:first-child { overflow-wrap: anywhere; }
+.chat-history-open:hover > span:first-child { color: var(--bronze-ink); }
+.chat-history-list li[aria-current="true"] .chat-history-open > span:first-child { font-weight: 600; }
+.chat-history-meta { font-size: 0.8125rem; color: var(--ink-faint); }
+.chat-history-delete {
+  flex: none; min-height: 44px; padding: 0 0.5rem; border: 0; background: none; cursor: pointer;
+  font: 400 0.8125rem/1 var(--sans); color: var(--ink-faint);
+}
+.chat-history-delete:hover, .chat-history-delete:focus-visible { color: var(--bronze-ink); text-decoration: underline; }
+.chat-history-list .fineprint { margin: 0.5rem 0 0; }
 /* The question the record was actually asked, when a follow-up was rewritten. */
 .chat-asked-as { margin: -0.7rem 0 1rem; font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-faint); max-width: 32rem; }
 .chat-hint { color: var(--ink-faint); font-size: 0.9375rem; margin: 0 0 0.5rem; }
@@ -2848,6 +2879,9 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-chat .chat-turn-user { justify-content: flex-start; margin: 2rem 0 1.2rem; }
 #panel-chat .chat-turn-user p { font: 600 1rem/1.6 var(--sans); border-radius: 3px; }
 #panel-chat .chat-turn-answer { padding-bottom: 1.2rem; border-bottom: 1px solid var(--line); }
+/* The last answer runs straight into "Ask next": no rule of its own above the
+   suggestions - the composer beneath draws the closing line. */
+#panel-chat .chat-turn-answer:has(+ #chat-next) { border-bottom: 0; padding-bottom: 0.2rem; }
 #panel-chat .chat-composer { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
 @media (max-width: 600px) {
   #ask-result .action-row { display: grid; grid-template-columns: 1fr 1fr; }

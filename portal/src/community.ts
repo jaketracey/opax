@@ -21,6 +21,14 @@ async function route(req:Request,env:Env):Promise<Response>{
  const listId=path.match(/^\/api\/community\/lists\/([\w-]+)$/)?.[1]
  if(listId&&read){const list=await env.COMMUNITY_DB.prepare('SELECT l.*,m.display_name FROM reading_lists l JOIN members m ON m.id=l.member_id WHERE l.id=? AND m.disabled=0').bind(listId).first<{member_id:string,public:number}>();const m=await member(req,env);if(!list||(!list.public&&list.member_id!==m?.id))throw new CommunityError(404,'This reading list is unavailable.');const items=await env.COMMUNITY_DB.prepare('SELECT * FROM reading_list_items WHERE list_id=? ORDER BY created_at,id LIMIT 100').bind(listId).all();return json({list,items:items.results})}
  const m=await requireMember(req,env)
+ // Saved conversations: the chat's threads, mirrored from the browser once a
+ // reader is signed in. One owner reads and writes each as a unit; the
+ // reader's own clock decides between two devices (last write wins).
+ if(path==='/api/community/chats'&&read){const rows=await env.COMMUNITY_DB.prepare('SELECT id,title,kind,turns,created_at,updated_at FROM member_chats WHERE member_id=? ORDER BY updated_at DESC LIMIT 50').bind(m.id).all();return json({chats:rows.results})}
+ const chatId=path.match(/^\/api\/community\/chats\/([\w-]{8,64})$/)?.[1]
+ if(chatId&&read){const row=await env.COMMUNITY_DB.prepare('SELECT id,title,kind,turns,data,created_at,updated_at FROM member_chats WHERE id=? AND member_id=?').bind(chatId,m.id).first<{data:string}>();if(!row)throw new CommunityError(404,'This conversation is unavailable.');return json({chat:{...row,data:JSON.parse(row.data)}})}
+ if(chatId&&req.method==='PUT'){const c=chatRecord(await body(req,CHAT_BYTES));await limit(env,'chats:'+m.id,600,3600);const r=await env.COMMUNITY_DB.prepare('INSERT INTO member_chats(id,member_id,title,kind,turns,data,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET title=excluded.title,kind=excluded.kind,turns=excluded.turns,data=excluded.data,updated_at=excluded.updated_at WHERE member_chats.member_id=excluded.member_id AND excluded.updated_at>=member_chats.updated_at').bind(chatId,m.id,c.title,c.kind,c.turns,c.data,t,c.updated).run();if(!r.meta.changes){const own=await env.COMMUNITY_DB.prepare('SELECT updated_at FROM member_chats WHERE id=? AND member_id=?').bind(chatId,m.id).first<{updated_at:number}>();if(!own)throw new CommunityError(404,'This conversation is unavailable.');return json({ok:true,updated_at:own.updated_at,stale:true})}await env.COMMUNITY_DB.prepare('DELETE FROM member_chats WHERE member_id=? AND id NOT IN (SELECT id FROM member_chats WHERE member_id=? ORDER BY updated_at DESC LIMIT 50)').bind(m.id,m.id).run();return json({ok:true,updated_at:c.updated})}
+ if(chatId&&req.method==='DELETE'){const r=await env.COMMUNITY_DB.prepare('DELETE FROM member_chats WHERE id=? AND member_id=?').bind(chatId,m.id).run();if(!r.meta.changes)throw new CommunityError(404,'This conversation is unavailable.');return json({ok:true})}
  if(path==='/api/community/profile'&&req.method==='PATCH'){const d=await body(req);const name=text(d.name,2,60,'Display name'),bio=text(d.bio??'',0,280,'Bio');await env.COMMUNITY_DB.prepare('UPDATE members SET display_name=?,bio=? WHERE id=?').bind(name,bio,m.id).run();return json({saved:true})}
  if(path==='/api/community/threads'&&req.method==='POST'){if(!m.display_name)throw new CommunityError(400,'Choose a display name in your account first.');const d=await body(req);await limit(env,'thread:'+m.id,10,86400);const id=crypto.randomUUID();await env.COMMUNITY_DB.prepare('INSERT INTO community_threads(id,member_id,title,body,source_path,created_at) VALUES (?,?,?,?,?,?)').bind(id,m.id,text(d.title,5,140,'Title'),text(d.body,10,5000,'Discussion'),sourcePath(d.source_path),t).run();return json({id},201)}
  if(threadId&&req.method==='POST'){if(!m.display_name)throw new CommunityError(400,'Choose a display name in your account first.');const d=await body(req);await limit(env,'reply:'+m.id,30,86400);const result=await env.COMMUNITY_DB.prepare('INSERT INTO community_replies(id,thread_id,member_id,body,created_at) SELECT ?,id,?,?,? FROM community_threads WHERE id=? AND hidden=0').bind(crypto.randomUUID(),m.id,text(d.body,2,3000,'Reply'),t,threadId).run();if(!result.meta.changes)throw new CommunityError(404,'This discussion is unavailable.');return json({saved:true},201)}
@@ -41,4 +49,16 @@ async function route(req:Request,env:Env):Promise<Response>{
  const keyId=path.match(/^\/api\/community\/keys\/([\w-]+)$/)?.[1]
  if(keyId&&req.method==='DELETE'){const r=await env.COMMUNITY_DB.prepare('UPDATE mcp_keys SET revoked_at=? WHERE id=? AND member_id=?').bind(t,keyId,m.id).run();if(!r.meta.changes)throw new CommunityError(404,'This key is unavailable.');return json({revoked:true})}
  throw new CommunityError(404,'This action is unavailable.')
+}
+
+/** A saved conversation's body: a title, its kind, the reader's clock and up to eighty turns. */
+const CHAT_BYTES=600000
+function chatRecord(d:Record<string,unknown>){
+ const title=text(d.title??'Conversation',1,160,'Title')
+ const kind=d.kind==='speech'?'speech':'all'
+ const thread=Array.isArray(d.thread)?d.thread as Record<string,unknown>[]:null
+ if(!thread||thread.length===0||thread.length>80||!thread.every(m=>m&&typeof m==='object'&&(m.role==='user'||m.role==='answer')&&typeof m.text==='string'))throw new CommunityError(400,'A conversation needs its turns.')
+ const t=now()
+ const updated=typeof d.updated==='number'&&Number.isFinite(d.updated)&&d.updated>0&&d.updated<=t+60?Math.floor(d.updated):t
+ return {title,kind,turns:thread.filter(m=>m.role==='user').length,updated,data:JSON.stringify({thread})}
 }

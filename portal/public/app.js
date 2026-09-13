@@ -9291,40 +9291,281 @@ function prefetchAskFollowups(ask) {
 // the prior turns as context, and each answer offers follow-up questions the
 // Worker generated from the passages retrieved for that answer (a candidate it
 // cannot ground in those passages is discarded, so a chip is never a question
-// the record would refuse). Thread lives in sessionStorage: it survives
-// reload and navigation, and ends with the tab, like a conversation should.
+// the record would refuse).
+//
+// Conversations are kept: every one in this browser's localStorage (twenty,
+// newest first, inside a byte budget), and a signed-in reader's in their
+// account as well, so the same threads open on another device. corpuskit's
+// model without its anonymous server mirror - an account is the only thing
+// that leaves the browser. The browser and the account reconcile on each
+// conversation's `updated` clock: the newer write wins.
 
-let chatThread = []; // {role: 'user'|'answer', text, sources?, next?}
+let chatThread = []; // {role: 'user'|'answer', text, sources?, next?, askedAs?}
 let chatKind = "all";
 let chatAbort = null;
 let chatFollowAbort = null;
 let chatTimer = null;
+let chatBusy = false; // a question is in flight: the active thread is not replaced under it
+
+const CHAT_STORE_KEY = "opax-chats";
+const CHAT_STORE_MAX = 20;
+const CHAT_STORE_BYTES = 1500000; // well inside localStorage's ~5 MB, with room for the rest of the site
+let chatStore = null; // { v: 1, active: id|null, chats: [{ id, title, kind, created, updated, thread }] }
+let chatMember; // undefined until /api/community/status answers; null when signed out
+let chatSyncTimer = 0;
+const chatSyncPending = new Set();
+
+function isSavedChat(c) {
+  return !!c && typeof c.id === "string" && /^[\w-]{8,64}$/.test(c.id) && Array.isArray(c.thread) &&
+    c.thread.every((m) => m && (m.role === "user" || m.role === "answer") && typeof m.text === "string");
+}
+
+function chatTitleFor(thread) {
+  const first = (thread.find((m) => m.role === "user")?.text || "").replace(/\s+/g, " ").trim();
+  return first.length > 90 ? `${first.slice(0, 89).trimEnd()}…` : first || "Conversation";
+}
+
+function newSavedChat(kind, thread) {
+  const t = Math.floor(Date.now() / 1000);
+  return { id: crypto.randomUUID(), title: chatTitleFor(thread), kind, created: t, updated: t, thread };
+}
+
+function chatStoreRead() {
+  if (chatStore) return chatStore;
+  let data = null;
+  try { data = JSON.parse(localStorage.getItem(CHAT_STORE_KEY) || "null"); } catch { /* unreadable or blocked: start empty */ }
+  const chats = Array.isArray(data?.chats) ? data.chats.filter(isSavedChat).slice(0, CHAT_STORE_MAX) : [];
+  chatStore = { v: 1, active: typeof data?.active === "string" && chats.some((c) => c.id === data.active) ? data.active : null, chats };
+  // The one thread the tab kept before conversations were saved: carried over once.
+  try {
+    const legacy = JSON.parse(sessionStorage.getItem("opax-chat") || "null");
+    if (!chats.length && Array.isArray(legacy?.thread) && legacy.thread.length) {
+      const chat = newSavedChat(legacy.kind === "speech" ? "speech" : "all", legacy.thread.filter((m) => m && typeof m.text === "string"));
+      if (isSavedChat(chat)) { chatStore.chats.unshift(chat); chatStore.active = chat.id; chatStoreWrite(); }
+    }
+    sessionStorage.removeItem("opax-chat");
+  } catch { /* nothing carried over */ }
+  return chatStore;
+}
+
+// What a saved answer keeps: everything the history renders, with the
+// retrieval's long passages cut short and the list capped, so twenty
+// conversations stay inside the budget. The thread in memory keeps it all.
+function trimTurn(m) {
+  if (m.role !== "answer") return m;
+  const sources = Array.isArray(m.sources) ? m.sources : [];
+  const kept = [...sources.filter((s) => s?.cited), ...sources.filter((s) => !s?.cited)].slice(0, 30).map((s) => {
+    const out = {};
+    for (const [k, v] of Object.entries(s || {})) out[k] = typeof v === "string" && v.length > 240 && k !== "href" && k !== "url" ? `${v.slice(0, 239)}…` : v;
+    return out;
+  });
+  return { ...m, sources: kept };
+}
+
+function chatStoreWrite() {
+  const store = chatStoreRead();
+  store.chats.sort((a, b) => b.updated - a.updated);
+  store.chats = store.chats.slice(0, CHAT_STORE_MAX);
+  const serialise = () => JSON.stringify({ v: 1, active: store.active, chats: store.chats.map((c) => ({ ...c, thread: c.thread.map(trimTurn) })) });
+  let text = serialise();
+  while (text.length > CHAT_STORE_BYTES && store.chats.length > 1) { store.chats.pop(); text = serialise(); }
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try { localStorage.setItem(CHAT_STORE_KEY, text); return; }
+    catch { if (store.chats.length <= 1) return; store.chats.pop(); text = serialise(); } // quota: the oldest goes first
+  }
+}
+
+function activeChat(create) {
+  const store = chatStoreRead();
+  let chat = store.chats.find((c) => c.id === store.active) || null;
+  if (!chat && create) { chat = newSavedChat(chatKind, []); store.chats.unshift(chat); store.active = chat.id; }
+  return chat;
+}
 
 function saveChatSession() {
-  try {
-    sessionStorage.setItem("opax-chat", JSON.stringify({ kind: chatKind, thread: chatThread }));
-  } catch { /* private windows: the thread just won't survive reload */ }
+  if (!chatThread.length) return;
+  const chat = activeChat(true);
+  chat.kind = chatKind;
+  chat.thread = chatThread;
+  chat.title = chatTitleFor(chatThread);
+  chat.updated = Math.floor(Date.now() / 1000);
+  chatStoreWrite();
+  renderChatHistory();
+  // Only a thread with an answer in it is worth an account write.
+  if (chatThread.some((m) => m.role === "answer")) chatSyncLater(chat.id);
+}
+
+// A question the reader left before its answer came (navigated away, closed
+// the tab) would sit at the end of the thread unanswered; it goes, so the
+// conversation reopens on its last answer and the question can be put again.
+function trimUnanswered(chat) {
+  if (chat.thread.length && chat.thread[chat.thread.length - 1].role === "user") chat.thread.pop();
+  return chat;
 }
 
 function loadChatSession() {
-  try {
-    const data = JSON.parse(sessionStorage.getItem("opax-chat") || "null");
-    if (!data || !Array.isArray(data.thread)) return;
-    chatThread = data.thread.filter((m) => m && typeof m.text === "string");
-    chatKind = data.kind === "speech" ? "speech" : "all";
-  } catch { /* malformed storage reads as an empty thread */ }
+  const chat = activeChat(false);
+  if (!chat) return;
+  trimUnanswered(chat);
+  chatThread = chat.thread;
+  chatKind = chat.kind === "speech" ? "speech" : "all";
 }
 
-// "Start a new conversation": drop the thread and its seed, clear the ask
-// page, and land on an empty Ask box.
+function openSavedChat(id) {
+  const store = chatStoreRead();
+  const chat = store.chats.find((c) => c.id === id);
+  if (!chat || chatBusy) return;
+  chatAbort?.abort();
+  chatFollowAbort?.abort();
+  store.active = id;
+  trimUnanswered(chat);
+  chatThread = chat.thread;
+  chatKind = chat.kind === "speech" ? "speech" : "all";
+  chatStoreWrite();
+  renderChatThread();
+  renderChatHistory();
+  requestChatFollowups();
+  requestAnimationFrame(() => scrollChatToEnd());
+}
+
+function deleteSavedChat(id) {
+  const store = chatStoreRead();
+  if (chatBusy && store.active === id) return;
+  store.chats = store.chats.filter((c) => c.id !== id);
+  if (store.active === id) { store.active = null; chatThread = []; renderChatThread(); }
+  chatStoreWrite();
+  renderChatHistory();
+  chatSyncPending.delete(id);
+  if (chatMember) api(`/api/community/chats/${encodeURIComponent(id)}`, { method: "DELETE" }).catch(() => { /* the browser copy is gone either way */ });
+}
+
+// The list under the head: every saved conversation, the open one marked,
+// each a way back in and a way out. Hidden while there is only the one.
+function renderChatHistory() {
+  const box = $("chat-history");
+  if (!box) return;
+  const store = chatStoreRead();
+  const chats = store.chats.filter((c) => c.thread.some((m) => m.role === "answer"));
+  const wasOpen = !!box.querySelector("details[open]");
+  box.replaceChildren();
+  if (chats.length < 2 && !(chats.length === 1 && chats[0].id !== store.active)) { box.hidden = true; return; }
+  box.hidden = false;
+  const det = document.createElement("details");
+  det.className = "chat-history-list";
+  det.open = wasOpen;
+  const sum = document.createElement("summary");
+  sum.textContent = `Your conversations (${chats.length})`;
+  det.appendChild(sum);
+  const ul = document.createElement("ul");
+  for (const c of chats) {
+    const li = document.createElement("li");
+    if (c.id === store.active) li.setAttribute("aria-current", "true");
+    const open = document.createElement("button");
+    open.type = "button";
+    open.className = "chat-history-open";
+    const title = document.createElement("span");
+    title.textContent = c.title;
+    const meta = document.createElement("span");
+    meta.className = "chat-history-meta";
+    const n = c.thread.filter((m) => m.role === "user").length;
+    meta.textContent = `${n} ${n === 1 ? "question" : "questions"} · ${new Date(c.updated * 1000).toLocaleDateString("en-AU", { day: "numeric", month: "short" })}`;
+    open.append(title, meta);
+    open.addEventListener("click", () => openSavedChat(c.id));
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "chat-history-delete";
+    del.setAttribute("aria-label", `Delete conversation: ${c.title}`);
+    del.textContent = "Delete";
+    del.addEventListener("click", () => deleteSavedChat(c.id));
+    li.append(open, del);
+    ul.appendChild(li);
+  }
+  det.appendChild(ul);
+  const note = document.createElement("p");
+  note.className = "fineprint";
+  note.textContent = chatMember
+    ? "Saved to your account and in this browser."
+    : "Saved in this browser. Sign in to keep them across devices.";
+  det.appendChild(note);
+  box.appendChild(det);
+}
+
+// --- the account mirror --------------------------------------------------------
+
+async function chatAccount() {
+  if (chatMember !== undefined) return chatMember;
+  try { chatMember = (await api("/api/community/status"))?.member || null; }
+  catch { chatMember = null; }
+  return chatMember;
+}
+
+// Writes are debounced and fire-and-forget: a conversation is saved here
+// first, and the account catches up a moment later.
+function chatSyncLater(id) {
+  chatSyncPending.add(id);
+  clearTimeout(chatSyncTimer);
+  chatSyncTimer = setTimeout(chatSyncPush, 1500);
+}
+
+async function chatSyncPush() {
+  if (!(await chatAccount())) { chatSyncPending.clear(); return; }
+  const store = chatStoreRead();
+  for (const id of [...chatSyncPending]) {
+    chatSyncPending.delete(id);
+    const chat = store.chats.find((c) => c.id === id);
+    if (!chat) continue;
+    api(`/api/community/chats/${encodeURIComponent(id)}`, {
+      method: "PUT",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ title: chat.title, kind: chat.kind, updated: chat.updated, thread: chat.thread.map(trimTurn) }),
+    }).catch(() => { /* the browser has it; the next save tries again */ });
+  }
+}
+
+// On opening the chat: pull the account's conversations and push any this
+// browser has that the account lacks or holds older. Last write wins.
+async function chatSyncPull() {
+  if (!(await chatAccount())) { renderChatHistory(); return; }
+  let remote;
+  try { remote = (await api("/api/community/chats")).chats || []; } catch { return; }
+  const store = chatStoreRead();
+  let changed = false;
+  for (const r of remote) {
+    const local = store.chats.find((c) => c.id === r.id);
+    if (local && local.updated >= r.updated_at) continue;
+    if (chatBusy && r.id === store.active) continue;
+    try {
+      const { chat } = await api(`/api/community/chats/${encodeURIComponent(r.id)}`);
+      const thread = Array.isArray(chat?.data?.thread) ? chat.data.thread : null;
+      if (!thread || !isSavedChat({ id: chat.id, thread })) continue;
+      const next = { id: chat.id, title: chat.title || chatTitleFor(thread), kind: chat.kind === "speech" ? "speech" : "all", created: chat.created_at, updated: chat.updated_at, thread };
+      if (local) Object.assign(local, next); else store.chats.push(next);
+      changed = true;
+    } catch { /* that one stays as it was */ }
+  }
+  for (const c of store.chats) {
+    const r = remote.find((x) => x.id === c.id);
+    if (c.thread.some((m) => m.role === "answer") && (!r || c.updated > r.updated_at)) chatSyncLater(c.id);
+  }
+  if (changed) {
+    chatStoreWrite();
+    const active = activeChat(false);
+    if (active && active.thread !== chatThread && !chatBusy) { chatThread = active.thread; chatKind = active.kind; renderChatThread(); requestChatFollowups(); }
+  }
+  renderChatHistory();
+}
+
+// "Start a new conversation": the open one stays in the list; the next
+// question begins another. The ask page is cleared and the reader lands on
+// an empty Ask box.
 $("chat-new")?.addEventListener("click", () => {
   chatAbort?.abort();
   chatFollowAbort?.abort();
+  const store = chatStoreRead();
+  store.active = null;
+  chatStoreWrite();
   chatThread = [];
-  try {
-    sessionStorage.removeItem("opax-chat");
-    sessionStorage.removeItem("opax-chat-seed");
-  } catch { /* nothing stored to forget */ }
+  try { sessionStorage.removeItem("opax-chat-seed"); } catch { /* nothing stored to forget */ }
   resetAsk();
   goRoute("/ask");
 });
@@ -9340,21 +9581,32 @@ function initChat(manageFocus) {
     if (raw) {
       sessionStorage.removeItem("opax-chat-seed");
       const seed = JSON.parse(raw);
-      // Re-seeding with the SAME ask keeps the thread (and its later turns);
-      // a different ask starts a fresh conversation.
-      if (seed?.question && seed?.answer &&
-          !(chatThread[0]?.text === seed.question && chatThread[1]?.text === seed.answer)) {
-        chatThread = [
-          { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-          { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context },
-        ];
-        chatKind = seed.kind === "speech" ? "speech" : "all";
-        saveChatSession();
+      if (seed?.question && seed?.answer) {
+        const store = chatStoreRead();
+        // The same ask again re-opens its conversation (and its later turns);
+        // a different ask begins a fresh one.
+        const same = store.chats.find((c) => c.thread[0]?.text === seed.question && c.thread[1]?.text === seed.answer);
+        if (same) {
+          store.active = same.id;
+          chatThread = same.thread;
+          chatKind = same.kind === "speech" ? "speech" : "all";
+          chatStoreWrite();
+        } else {
+          store.active = null;
+          chatThread = [
+            { role: "user", text: seed.question, fundingQuestion: seed.money_question },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context },
+          ];
+          chatKind = seed.kind === "speech" ? "speech" : "all";
+          saveChatSession();
+        }
       }
     }
   } catch { /* a bad seed leaves the existing thread standing */ }
   renderChatThread();
+  renderChatHistory();
   requestChatFollowups();
+  chatSyncPull();
   // Land at the end of the thread: the history above is context, the last
   // answer, its chips and the input are the point of this view. The composer
   // is sticky at the viewport's foot, so scrolling IT into view moves nothing;
@@ -9365,6 +9617,75 @@ function initChat(manageFocus) {
     if (manageFocus) $("chat-input").focus({ preventScroll: true });
   }));
 }
+
+// --- following the answer down the page ---------------------------------------
+// While a question is in flight the page keeps pace with what arrives - the
+// steps, the passages being read, a word on a long wait, then the words of
+// the answer - easing towards the end of the thread a little each frame
+// rather than jumping, so each new line lands in view and the motion reads as
+// one continuous movement down. A reader who scrolls up takes over: following
+// pauses until they bring the view back to the end. Readers who ask for less
+// motion get the end brought into view without the easing.
+const chatFollower = (() => {
+  let active = false, paused = false, raf = 0, observer = null, lastTop = 0;
+  const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const end = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  const nearEnd = () => end() - window.scrollY < 120;
+  const tick = () => {
+    raf = 0;
+    if (!active || paused) return;
+    const target = end();
+    const y = window.scrollY;
+    const gap = target - y;
+    if (gap <= 0.5) return;
+    if (reduce()) { lastTop = Math.round(target); window.scrollTo(0, target); return; }
+    const next = gap < 1.5 ? target : y + Math.max(1, gap * 0.16);
+    lastTop = Math.round(next);
+    window.scrollTo(0, next);
+    raf = requestAnimationFrame(tick);
+  };
+  const nudge = () => { if (active && !paused && !raf) raf = requestAnimationFrame(tick); };
+  const resume = () => { if (paused && nearEnd()) { paused = false; nudge(); } };
+  const onWheel = (e) => { if (e.deltaY < 0) paused = true; };
+  const onKey = (e) => { if (e.key === "ArrowUp" || e.key === "PageUp" || e.key === "Home") paused = true; };
+  const onTouchStart = () => { paused = true; };
+  const onScroll = () => {
+    // Our own frames land where we put them; a view that moved up is the reader's.
+    if (window.scrollY < lastTop - 2) paused = true;
+    resume();
+  };
+  return {
+    start() {
+      if (active) return;
+      active = true;
+      paused = false;
+      lastTop = Math.round(window.scrollY);
+      observer = new ResizeObserver(nudge);
+      observer.observe($("chat-thread"));
+      addEventListener("wheel", onWheel, { passive: true });
+      addEventListener("touchstart", onTouchStart, { passive: true });
+      addEventListener("touchend", resume, { passive: true });
+      addEventListener("keydown", onKey);
+      addEventListener("scroll", onScroll, { passive: true });
+      nudge();
+    },
+    stop() {
+      if (!active) return;
+      active = false;
+      observer?.disconnect();
+      observer = null;
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      removeEventListener("wheel", onWheel);
+      removeEventListener("touchstart", onTouchStart);
+      removeEventListener("touchend", resume);
+      removeEventListener("keydown", onKey);
+      removeEventListener("scroll", onScroll);
+    },
+    nudge,
+    nearEnd,
+  };
+})();
 
 function scrollChatToEnd() {
   window.scrollTo({
@@ -9527,9 +9848,13 @@ async function requestChatFollowups() {
     if (!questions.length) return;
     last.next = questions;
     saveChatSession();
+    // They arrive under the answer, above the sticky composer, and are brought
+    // fully into view for a reader at the end of the thread. Measured before
+    // they land: once rendered they are what moves the end. A reader who has
+    // scrolled up to read is left where they are.
+    const wasAtEnd = chatFollower.nearEnd();
     renderChatNext(questions);
-    // They arrive under the answer, above the sticky composer: bring them into view.
-    requestAnimationFrame(() => scrollChatToEnd());
+    if (wasAtEnd) requestAnimationFrame(() => scrollChatToEnd());
   } catch { /* follow-ups are an extra, never an error */ }
 }
 
@@ -9588,6 +9913,7 @@ async function sendChat(question, carry) {
   if (chatFollowAbort) chatFollowAbort.abort();
   const myAbort = new AbortController();
   chatAbort = myAbort;
+  chatBusy = true;
   // Everything before this question travels as context for the retrieval.
   // A user turn travels as the question the record was actually asked: the
   // money path's resolved question, or the Worker's standalone rewrite of a
@@ -9605,6 +9931,19 @@ async function sendChat(question, carry) {
       author: "answer",
       text: `From the record${carry.source ? ` (${carry.source})` : ""}: "${carry.evidence}"`,
     });
+  }
+  // The records the last two answers cited travel too: the Worker gives each
+  // its own pinned retrieval pass, so a follow-up keeps the conversation's
+  // records in the pool whatever its new wording finds (corpuskit's
+  // prior-paper prequeries). Cited first, then the rest of the retrieval.
+  const priorResources = [];
+  for (const m of chatThread.filter((t) => t.role === "answer").slice(-2).reverse()) {
+    const sources = Array.isArray(m.sources) ? m.sources : [];
+    for (const s of [...sources.filter((x) => x?.cited), ...sources.filter((x) => !x?.cited)]) {
+      // Platform record ids only: the local records an answer cites travel as
+      // USER_CONTEXT_n extra context and cannot be pinned.
+      if (typeof s?.resource === "string" && /^[0-9a-f]{32}$/i.test(s.resource) && !priorResources.includes(s.resource)) priorResources.push(s.resource);
+    }
   }
   const userTurn = { role: "user", text: q };
   chatThread.push(userTurn);
@@ -9628,6 +9967,7 @@ async function sendChat(question, carry) {
   track.className = "chat-pending-animal";
   slot.appendChild(track);
   $("chat-thread").appendChild(slot);
+  chatFollower.start();
   const alive = () => chatAbort === myAbort && slot.isConnected;
   let trundler = null;
   let stages = null;
@@ -9651,7 +9991,7 @@ async function sendChat(question, carry) {
       if (cached) stages.complete(); else stages.set(step);
       if (reading.length) stages.reading(reading);
       if (note) stages.note(note);
-      slot.scrollIntoView({ block: "nearest" });
+      chatFollower.nudge();
     })
     .catch(() => { /* the status line has it covered */ });
   const setStep = (key) => {
@@ -9670,7 +10010,7 @@ async function sendChat(question, carry) {
   }, 5000);
   let live = null;
   try {
-    const chatBody = JSON.stringify({ question: q, kind: chatKind, context });
+    const chatBody = JSON.stringify({ question: q, kind: chatKind, context, prior_resources: priorResources.slice(0, 6) });
     // The answer streams into a provisional turn beneath the waiting state;
     // the finished thread re-renders from chatThread as before.
     let liveWrap = null;
@@ -9717,7 +10057,7 @@ async function sendChat(question, carry) {
             if (!alive() || !streamed) return;
             slot.hidden = true;
             liveWrap.hidden = false;
-            liveWrap.scrollIntoView({ block: "start" });
+            chatFollower.nudge();
           });
         }
       },
@@ -9768,6 +10108,9 @@ async function sendChat(question, carry) {
       // finished answer rises into its place.
       stages?.complete();
       await liftAway();
+      // The whole answer lands at once: the reader starts at its top, not
+      // its end, so following stops before it renders.
+      chatFollower.stop();
     }
     if (chatAbort !== myAbort) return;
     renderChatThread({ landed: true, rise: !streamed });
@@ -9793,6 +10136,8 @@ async function sendChat(question, carry) {
     trundler?.destroy?.();
     stages?.destroy?.();
     if (chatAbort === myAbort) {
+      chatFollower.stop();
+      chatBusy = false;
       clearInterval(chatTimer);
       $("chat-send").disabled = false;
     }
