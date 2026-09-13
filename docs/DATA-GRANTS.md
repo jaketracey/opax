@@ -114,14 +114,16 @@ award itself was 21% federal at export time and rises with the detail harvest.
 `scripts/export_grants.py {federal|qld}` streams a stdlib-only program to the DB host and
 writes:
 
-- `portal/public/graph/grants.<jur>.json` (federal ~565 KB raw / 159 KB gz, QLD ~450 KB /
-  132 KB): `meta` (source, licence, coverage, caveats, counts, the government of the day
+- `portal/public/graph/grants.<jur>.json` (federal ~1,181 KB raw / 329 KB gz, QLD ~961 KB /
+  280 KB): `meta` (source, licence, coverage, caveats, counts, the government of the day
   by date, party blocs, years, chart years), `agencies[]` and `categories[]` (referenced
-  by index), `recipients[]` (the 1,200 largest by dollars plus every donor among them,
-  cap 3,600: 1,861 federal, 1,607 QLD), `programs[]` (top 300 by dollars; federal grouped
-  by GO ID, QLD by program), `electorates[]` (per federal division: totals, donor share,
-  the members who held it since 2017 from `members`, margins from `electorates` 2019 and
-  2022), `years{}`, `kinds{}`.
+  by index), `recipients[]` (the 3,800 largest by dollars plus every donor among them,
+  cap 6,000, plus any recipient the *other* jurisdiction's export already lists by ABN
+  forced in regardless of rank so a shard's cross-jurisdiction pointer never dangles:
+  4,688 federal, 4,268 QLD, measured 2026-09-13), `programs[]` (top 300 by dollars;
+  federal grouped by GO ID, QLD by program), `electorates[]` (per federal division:
+  totals, donor share, the members who held it since 2017 from `members`, margins from
+  `electorates` 2019 and 2022), `years{}`, `kinds{}`.
 - `portal/public/grants/<jur>/shard-NN.json`: the listed recipients' files in 40 shards by
   crc32 of the file key (`sh` on the index entry): the recipient's 40 largest grants,
   ABR record, aliases, agencies, programs, selection mix, electorates, the donor entity

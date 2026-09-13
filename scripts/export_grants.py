@@ -66,8 +66,9 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 
 JUR = sys.argv[1]
-TOP_RECIPIENTS = int(sys.argv[2]) if len(sys.argv) > 2 else 1200
-CAP_RECIPIENTS = int(sys.argv[3]) if len(sys.argv) > 3 else 3600
+TOP_RECIPIENTS = int(sys.argv[2]) if len(sys.argv) > 2 else 3800
+CAP_RECIPIENTS = int(sys.argv[3]) if len(sys.argv) > 3 else 6000
+FORCE_ABNS = [a for a in sys.argv[4].split(",")] if len(sys.argv) > 4 and sys.argv[4] else []
 TOP_PROGRAMS = 300
 GRANTS_PER_DETAIL = 40
 DB = "/home/jake/.cache/autoresearch/parli.db"
@@ -319,6 +320,20 @@ for x in donor_rids:
     if len(listed) >= CAP_RECIPIENTS:
         break
     listed.append(x); seen.add(x[0])
+# A recipient listed in the other jurisdiction's export (matched by ABN) is
+# always listed here too, when it has any grants in this jurisdiction, so the
+# "pointer to its grants in the other jurisdiction" in the shard files is
+# never dangling. This overrides both --top and --cap.
+if FORCE_ABNS:
+    rows_by_rid = {x[0]: x for x in recipient_rows}
+    for abn in FORCE_ABNS:
+        rid = f"abn:{abn}"
+        if rid in seen:
+            continue
+        x = rows_by_rid.get(rid)
+        if x is None or x[1]["kind"] == "undisclosed":
+            continue
+        listed.append(x); seen.add(x[0])
 listed.sort(key=lambda x: -x[3])
 
 all_years = sorted({g["fy"] for g in grants if g["fy"]}, key=fy_key)
@@ -544,11 +559,26 @@ def main() -> int:
     ap.add_argument("jurisdiction", choices=["federal", "qld"])
     ap.add_argument("--out-dir", default=str(DEFAULT_OUT))
     ap.add_argument("--host", default=DB_HOST)
-    ap.add_argument("--top", type=int, default=1200, help="largest recipients listed by dollars")
-    ap.add_argument("--cap", type=int, default=3600, help="hard cap on listed recipients (donors fill up to it)")
+    ap.add_argument("--top", type=int, default=3800, help="largest recipients listed by dollars")
+    ap.add_argument("--cap", type=int, default=6000, help="hard cap on listed recipients (donors fill up to it)")
     args = ap.parse_args()
 
-    proc = subprocess.run(["ssh", args.host, "python3", "-", args.jurisdiction, str(args.top), str(args.cap)],
+    # A recipient listed in the *other* jurisdiction's export (by ABN) is
+    # always forced into this one's listed set when it has any grants here,
+    # so a shard file's pointer into the other jurisdiction never dangles.
+    other_jur = "qld" if args.jurisdiction == "federal" else "federal"
+    other_index = Path(args.out_dir) / "graph" / f"grants.{other_jur}.json"
+    force_abns: list[str] = []
+    if other_index.exists():
+        other_data = json.loads(other_index.read_text(encoding="utf-8"))
+        force_abns = sorted({
+            rid.split(":", 1)[1]
+            for rid in (r["id"] for r in other_data.get("recipients", []))
+            if rid.startswith("abn:")
+        })
+
+    proc = subprocess.run(["ssh", args.host, "python3", "-", args.jurisdiction, str(args.top), str(args.cap),
+                          ",".join(force_abns)],
                           input=REMOTE, capture_output=True, text=True, timeout=3600)
     if proc.returncode != 0:
         sys.stderr.write(proc.stderr[-4000:])
