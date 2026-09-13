@@ -191,6 +191,28 @@ class BillTextTests(unittest.TestCase):
             with patch.object(cli, "load_documents", return_value=[DOC]), patch.object(cli, "discover", return_value=[VERSION]), patch.object(cli, "walk_version", side_effect=outcome if isinstance(outcome, Exception) else None, return_value=outcome) as walker, contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(cli.crawl(args, self.db), expected)
                 self.assertEqual(walker.call_count, attempts)
+    def test_legacy_discovery_distinguishes_source_refusal_and_exhausted_listing_gap(self):
+        import contextlib
+        import io
+        import sys
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from scripts import publish_bill_texts as cli
+        from parli.ingest.bill_texts import SourceBlocked
+        sys.path.insert(0, str(cli.ROOT / "scripts/bills_registry"))
+        import bills_fetch as registry
+        legacy = {**DOC, "key": "au-federal-alrc-55", "sources": []}
+        args = SimpleNamespace(bills_dir=self.root, keys=None, parliaments=None, limit=None,
+            state_dir=self.root, home_cache=self.root / "homes", registry_db=self.root / "missing.db", reconcile_network=True, source_rate=0.7)
+        with patch.object(cli, "load_documents", return_value=[legacy]), patch.object(registry, "enumerate_parliament", side_effect=registry.bc.Blocked("source refused")):
+            with self.assertRaises(SourceBlocked): cli.reconcile(args, self.db)
+        with patch.object(cli, "load_documents", return_value=[legacy]), patch.object(registry, "enumerate_parliament", side_effect=RuntimeError("listing unavailable")), contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(cli.reconcile(args, self.db), 2)
+        report = json.loads((self.root / "identity-reconciliation.json").read_text())
+        self.assertEqual(len(report["source_errors"]), 1)
+        self.assertEqual(report["records"][0]["status"], "unresolved")
+        with patch.object(cli, "reconcile", return_value=2), contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(cli.finish_legacy(args, self.db), 2)
     def test_fetcher_rejects_download_and_external_endpoints(self):
         fetcher = SourceFetcher(self.root / "cache")
         for url in ["https://parlinfo.aph.gov.au/parlInfo/download/legislation/bills/a.pdf", "https://evil.test/parlInfo/search/display/x"]:

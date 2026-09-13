@@ -187,14 +187,20 @@ def reconcile(args, db):
                 if re.fullmatch(r"[rs]\d+", code): candidates[key].add(code)
         finally:
             connection.close()
+    source_errors = []
     if args.reconcile_network:
         # This explicit mode uses the registry's existing browser UA, cache and
         # fixed 0.7 req/s limiter for BOTH listings and homepages.
         common.CACHE = args.home_cache.parent
         common.RATE = 1 / args.source_rate
         for parliament in sorted({doc.get("parliament") for doc in documents if doc.get("parliament")}):
-            for row in registry.enumerate_parliament(parliament):
-                by_title[common.norm(row["title"])].add(row["code"])
+            try:
+                for row in registry.enumerate_parliament(parliament):
+                    by_title[common.norm(row["title"])].add(row["code"])
+            except common.Blocked as error:
+                raise SourceBlocked(str(error)) from error
+            except RuntimeError as error:
+                source_errors.append({"parliament": parliament, "error": str(error)})
     results = []
     for doc in documents:
         key = doc["key"]
@@ -202,8 +208,14 @@ def reconcile(args, db):
         verified = []
         for code in sorted(candidate_codes):
             if code not in homes and args.reconcile_network:
-                body, _, _ = common.fetch(display_url("legislation/billhome/" + code), "billhome", code)
-                if body: homes[code] = registry.parse_billhome(body, code)
+                try:
+                    body, _, _ = common.fetch(display_url("legislation/billhome/" + code), "billhome", code)
+                except common.Blocked as error:
+                    raise SourceBlocked(str(error)) from error
+                if body:
+                    homes[code] = registry.parse_billhome(body, code)
+                else:
+                    source_errors.append({"code": code, "error": "Billhome unavailable after bounded source attempts"})
             home = homes.get(code)
             if not home: continue
             if exact_identity_match(doc, home, common.norm):
@@ -220,10 +232,10 @@ def reconcile(args, db):
         else:
             outcome["status"] = "ambiguous" if len(verified) > 1 else "unresolved"
         results.append(outcome)
-    atomic_json(args.state_dir / "identity-reconciliation.json", {"generated_at": now(), "records": results})
+    atomic_json(args.state_dir / "identity-reconciliation.json", {"generated_at": now(), "source_errors": source_errors, "records": results})
     counts = {status: sum(row["status"] == status for row in results) for status in ("resolved", "unresolved", "ambiguous")}
-    print(json.dumps({**counts, "network": args.reconcile_network, "report": str(args.state_dir / "identity-reconciliation.json")}))
-    return 0
+    print(json.dumps({**counts, "source_errors": len(source_errors), "network": args.reconcile_network, "report": str(args.state_dir / "identity-reconciliation.json")}))
+    return 2 if source_errors else 0
 
 
 def exact_identity_match(doc, home, normalize):
@@ -235,18 +247,19 @@ def exact_identity_match(doc, home, normalize):
 def finish_legacy(args, db):
     """Run after the main crawler exits; reconcile then acquire verified legacy bills."""
     args.reconcile_network = True
-    reconcile(args, db)
+    reconciliation_exit = reconcile(args, db)
     report = json.loads((args.state_dir / "identity-reconciliation.json").read_text())
     keys = [row["bill_key"] for row in report["records"] if row["status"] == "resolved"]
     if not keys:
         print(json.dumps({"legacy_crawl": "No verified legacy bill identities", "unresolved": len(report["records"])}), flush=True)
-        return 0
+        return reconciliation_exit
     args.keys = ",".join(keys)
     args.limit = None
     args.browser_ua = True
     args.refresh_discovery = False
     time.sleep(1 / args.source_rate)  # preserve pacing across the two source clients
-    return crawl(args, db)
+    acquisition_exit = crawl(args, db)
+    return acquisition_exit or reconciliation_exit
 
 
 def main():
@@ -269,6 +282,9 @@ def main():
         else:
             print(json.dumps(report(db)))
         return 0
+    except (SourceBlocked, KeyboardInterrupt) as error:
+        print(json.dumps({"stopped": type(error).__name__, "message": str(error)}), flush=True)
+        return 130
     finally:
         db.close()
 
