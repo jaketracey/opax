@@ -26,12 +26,17 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
    if(Array.isArray(data.results))data.results=data.results.map((row:Record<string,unknown>)=>{
     const href=typeof row.href==='string'?row.href:null
     const opax_url=href&&href.startsWith('/')&&!href.startsWith('//')?env.COMMUNITY_ORIGIN+href:typeof row.slug==='string'?env.COMMUNITY_ORIGIN+'/doc/'+encodeURIComponent(row.slug):null
-    const grant=href&&href.startsWith('/money/grants?')?(()=>{const p=new URLSearchParams(href.slice(href.indexOf('?')+1)),jurisdiction=p.get('jur'),id=p.get('open');return jurisdiction&&id?{jurisdiction,id}:null})():null
-    return grant?{...row,opax_url,grant_recipient:grant}:{...row,opax_url}
+    const params=href&&href.startsWith('/money/grants?')?new URLSearchParams(href.slice(href.indexOf('?')+1)):null,jurisdiction=params?.get('jur')
+    // Program rows carry a stable catalog slug (grant-program-<jur>-<key>) and a program= deep link; recipient rows carry open=<id>.
+    const programSlug=typeof row.slug==='string'?/^grant-program-(federal|qld)-([a-z0-9-]{1,80})$/.exec(row.slug):null
+    const program=jurisdiction&&params?.get('program')?{jurisdiction,id:params.get('program') as string}:programSlug?{jurisdiction:programSlug[1],id:programSlug[2]}:null
+    if(program)return {...row,opax_url,grant_program:program}
+    const recipient=jurisdiction&&params?.get('open')?{jurisdiction,id:params.get('open') as string}:null
+    return recipient?{...row,opax_url,grant_recipient:recipient}:{...row,opax_url}
    })
    return {content:[{type:'text' as const,text:JSON.stringify(data)}],isError:false}
   }
-  server.registerTool('search_records',{description:'Search Australian parliamentary speeches, official releases, bills, divisions and government grants (kind grant). Grant results carry a grant_recipient id to open with read_grant_recipient. Returns record links and source excerpts.',inputSchema:{query:z.string().min(2).max(300),kind:z.enum(['all','speech','press_release','bill','division','grant']).default('all')},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({query,kind})=>result('/api/search-all?'+new URLSearchParams({q:query,kind,per:'10',page:'1'})))
+  server.registerTool('search_records',{description:'Search Australian parliamentary speeches, official releases, bills, divisions and government grants (kind grant). Grant results carry a grant_recipient id to open with read_grant_recipient, or a grant_program id to open with read_grant_program. Returns record links and source excerpts.',inputSchema:{query:z.string().min(2).max(300),kind:z.enum(['all','speech','press_release','bill','division','grant']).default('all')},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({query,kind})=>result('/api/search-all?'+new URLSearchParams({q:query,kind,per:'10',page:'1'})))
   server.registerTool('read_record',{description:'Open an Opax public record using its slug from search results.',inputSchema:{slug:z.string().regex(/^(?:speech-\d+|legal-\d+|news-\d+|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({slug})=>result('/api/resource/'+encodeURIComponent(slug)))
   server.registerTool('find_connections',{description:'Find organisations, programs, places or electorates in the audited connections dataset. Returns names and links; a matching phrase does not establish influence.',inputSchema:{query:z.string().min(2).max(120)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({query})=>{
    const response=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/evidence/index.json'));if(!response.ok)return {content:[{type:'text' as const,text:'Connection records are unavailable.'}],isError:true}
@@ -56,6 +61,26 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
    const grants=Array.isArray(detail.grants)?detail.grants.map((g:Record<string,unknown>)=>typeof g.guid==='string'?{...g,source_url:'https://www.grants.gov.au/Ga/Show/'+g.guid}:g):detail.grants
    const payload=JSON.stringify({...detail,grants,opax_url})
    if(new TextEncoder().encode(payload).length>180000)return {content:[{type:'text' as const,text:JSON.stringify({error:'This response is too large. Open the record instead.',url:opax_url})}],isError:true}
+   return {content:[{type:'text' as const,text:payload}],isError:false}
+  })
+  // Program file key: contract section 1 (lowercase, non-alphanumeric runs to '-', trimmed, at most 80 chars). The key alone is the file name, so no path can escape /grants/<jur>/programs/.
+  const programKey=(id:string)=>id.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80)
+  server.registerTool('read_grant_program',{description:'Open a public grant program by jurisdiction and id from a search_records grant result (its grant_program field) or from the programs list of a read_grant_recipient file. Returns totals, agencies, selection processes, seat and margin splits, election timing, top recipients, electorates and individual grants with grants.gov.au source links where available. Large files list only the first 200 grants and set truncated: true.',inputSchema:{jurisdiction:z.enum(['federal','qld']),id:z.string().trim().min(1).max(200)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({jurisdiction,id})=>{
+   const notFound={content:[{type:'text' as const,text:JSON.stringify({error:'not found'})}],isError:true}
+   const key=programKey(id);if(!key)return notFound
+   const response=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/grants/'+jurisdiction+'/programs/'+key+'.json'))
+   if(!response.ok)return notFound
+   let file:Record<string,unknown>;try{file=await response.json() as Record<string,unknown>}catch{return notFound}
+   // A missing asset can come back as a 200 fallback page; only a real program file (id, name, grants[]) counts.
+   if(!file||typeof file!=='object'||typeof file.id!=='string'||typeof file.n!=='string'||!Array.isArray(file.grants))return notFound
+   const programId=typeof file.id==='string'&&file.id?file.id:id
+   const opax_url=env.COMMUNITY_ORIGIN+'/money/grants?'+new URLSearchParams({jur:jurisdiction,program:programId})
+   const grants=Array.isArray(file.grants)?file.grants.map((g:Record<string,unknown>)=>typeof g.guid==='string'?{...g,source_url:'https://www.grants.gov.au/Ga/Show/'+g.guid}:g):file.grants
+   const size=(text:string)=>new TextEncoder().encode(text).length
+   let payload=JSON.stringify({...file,grants,opax_url})
+   // Over the cap: keep the object whole and shorten grants[] to the first 200 rows instead of cutting JSON text.
+   if(size(payload)>180000&&Array.isArray(grants)&&grants.length>200){const listed=grants.slice(0,200);payload=JSON.stringify({...file,grants:listed,grants_listed:listed.length,truncated:true,opax_url})}
+   if(size(payload)>180000)return {content:[{type:'text' as const,text:JSON.stringify({error:'This response is too large. Open the record instead.',url:opax_url})}],isError:true}
    return {content:[{type:'text' as const,text:payload}],isError:false}
   })
   const transport=new WebStandardStreamableHTTPServerTransport({sessionIdGenerator:undefined,enableJsonResponse:true})

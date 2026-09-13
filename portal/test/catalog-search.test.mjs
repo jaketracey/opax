@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {searchCatalog,matchesCatalogFilters} from '../src/catalog-search.ts';
 import {tokens,normalize,bucket} from '../src/catalog-query.mjs';
+import {programRecord,programKey} from '../../scripts/build_search_catalog.mjs';
 const assets={fetch:async request=>{
  const path=new URL(request.url).pathname;
  assert.match(path,/^\/search-catalog\/(manifest\.json|[a-f0-9]{16}\/(meta|terms-\d+|records-\d+)\.json)$/);
@@ -80,4 +81,37 @@ test('verified invitation venues are searchable and open their own funding stage
  const row=unresolved.results.find(r=>r.record_id==='mlci-invitation-069');
  assert.ok(row);assert.equal(new URL(row.href,'https://opax.com.au').searchParams.get('view'),'list');
  assert.doesNotMatch(row.snippet,/Verified venue:/);
+});
+
+test('grant program rows follow the program contract: key, title, deep link, snippet and a stable slug',()=>{
+ assert.equal(programKey('GO3141'),'go3141');
+ assert.equal(programKey('activity:Some title'),'activity-some-title');
+ assert.equal(programKey('  Transport Service Contracts (QLD) '),'transport-service-contracts-qld');
+ assert.equal(programKey('a'.repeat(100)).length,80);
+ // Fixture index with two listed programs: one federal row with the new cnc/selk columns, one QLD row without them.
+ const index={meta:{jurisdiction:'federal'},agencies:['Department of Health','Department of Infrastructure, Transport, Regional Development, Communications and the Arts'],programs:[
+  {id:'GO3141',key:'go3141',n:'Community Development Grants',ag:1,t:1294810388,c:530,r:383,dt:71413000,dr:7,adhoc:0,y0:'2013-14',y1:'2022-23',cnc:900000000,selk:1200000000,gov:500000000,elk:1000000000,marg:200000000},
+  {id:'Transport Service Contracts',n:'Transport Service Contracts',ag:0,t:12311691092,c:6,r:1,dt:0,dr:0,adhoc:0,y0:'2017-18',y1:'2024-25'}
+ ]};
+ const [federal,qld]=[programRecord('federal',index.programs[0],index.agencies),programRecord('qld',index.programs[1],['Transport and Main Roads (DTMR)'])];
+ assert.equal(federal.key,'federal:grant-program:GO3141');
+ assert.equal(federal.kind,'grant');
+ assert.equal(federal.title,'Community Development Grants (grant program)');
+ assert.equal(federal.href,'/money/grants?jur=federal&program=GO3141');
+ assert.equal(federal.snippet,'$1,294,810,388.00 across 530 grants to 383 recipients, Department of Infrastructure, Transport, Regional Development, Communications and the Arts; 75% closed non-competitive where recorded');
+ assert.equal(federal.extra.slug,'grant-program-federal-go3141');
+ assert.equal(federal.extra.record_id,'GO3141');
+ assert.equal(federal.extra.state,'federal');
+ assert.equal(federal.extra.from,2013);assert.equal(federal.extra.to,2022);
+ assert.equal(federal.extra.source,'Grant program profile');
+ assert.match(federal.extra.aliases,/GO3141 go3141/);
+ assert.equal(qld.kind,'grant');
+ assert.equal(qld.title,'Transport Service Contracts (grant program)');
+ assert.equal(qld.href,'/money/grants?jur=qld&program=Transport+Service+Contracts');
+ assert.equal(qld.snippet,'$12,311,691,092.00 across 6 grants to 1 recipients, Transport and Main Roads (DTMR)');
+ assert.doesNotMatch(qld.snippet,/closed non-competitive/);
+ assert.equal(qld.extra.slug,'grant-program-qld-transport-service-contracts');
+ assert.equal(new URL(qld.href,'https://opax.com.au').searchParams.get('program'),'Transport Service Contracts');
+ // The MCP recognises a program row by this slug shape, independent of its catalog position.
+ for(const r of [federal,qld])assert.match(r.extra.slug,/^grant-program-(federal|qld)-[a-z0-9-]{1,80}$/);
 });

@@ -13,7 +13,31 @@ The public record stays open. An email account enables private or shared reading
 - Reading lists start private. Owners control sharing and deletion; public profiles omit email. Saved records use Opax's `/doc/` paths.
 - Members can report discussion content; moderators can review reports and hide content. Assign moderation ownership before opening discussions.
 - MCP supports stateless HTTP POST with personal bearer tokens. Tokens are stored hashed, expire after 90 days and can be revoked. A member can have three active tokens. Compatible clients need bearer-token support; OAuth discovery is not implemented.
-- MCP tools cover record search (`search_records`, including a `grant` kind), record reading (`read_record`), grant recipient detail (`read_grant_recipient`), connection search (`find_connections`) and corpus coverage (`corpus_coverage`) — all read-only. Search/read results include absolute Opax citations. Oversized record responses are stopped while streaming.
+- MCP tools cover record search (`search_records`, including a `grant` kind), record reading (`read_record`), grant recipient detail (`read_grant_recipient`), grant program detail (`read_grant_program`), connection search (`find_connections`) and corpus coverage (`corpus_coverage`) — all read-only. Search/read results include absolute Opax citations. Oversized record responses are stopped while streaming.
+- Grant search hits point at the file to open next. A recipient row carries `grant_recipient: {jurisdiction, id}` for `read_grant_recipient`; a program row (catalog slug `grant-program-<jur>-<key>`, title ending in "(grant program)") carries `grant_program: {jurisdiction, id}` for `read_grant_program`.
+- `read_grant_program({jurisdiction: "federal" | "qld", id})` reads `/grants/<jur>/programs/<key>.json`, where the key is the id lowercased with every run of non-alphanumerics replaced by "-", trimmed and cut to 80 characters ("GO3141" -> "go3141", "activity:Some title" -> "activity-some-title"; QLD ids are program names). The file holds totals, agencies, selection processes, seat and margin splits (federal only), election timing, top recipients, electorates and the grants table, plus an `opax_url` deep link (`/money/grants?jur=<jur>&program=<id>`); grants with a GrantConnect guid gain `source_url`. When the file is over the 180 KB cap the object is kept whole and `grants` is cut to its first 200 rows with `grants_listed: 200` and `truncated: true`. An unknown program returns `{"error": "not found"}` as a tool error, the same shape as `read_record`.
+
+  Example: Community Development Grants.
+
+  ```json
+  {"name": "read_grant_program", "arguments": {"jurisdiction": "federal", "id": "GO3141"}}
+  ```
+
+  returns (abridged)
+
+  ```json
+  {"id": "GO3141", "key": "go3141", "n": "Community Development Grants", "jur": "federal",
+   "ag": "Department of Infrastructure, Transport, Regional Development, Communications and the Arts",
+   "t": 1294810388, "c": 530, "r": 383, "y0": "2013-14", "y1": "2022-23",
+   "sel": {"Closed Non-Competitive": [1000000000, 400]}, "sel_known": [1200000000, 500],
+   "seats": {"gov": [900000000, 350], "opp": [300000000, 150], "cross": [50000000, 20], "unknown": [44810388, 10]},
+   "recipients": [["abn:97694995462", "The Trustee for the Qantas Foundation Memorial Trust", "trust", 11300000, 1, true]],
+   "grants": [{"id": "GA34203", "v": 11300000, "n": "Qantas Founders Museum", "rid": "abn:97694995462", "fy": "2018-19", "s": "2019-02-12",
+               "sel": "Closed Non-Competitive", "el": "Kennedy", "holder": ["Bob Katter", "Katter's Australian Party"], "bloc": "cross",
+               "guid": "...", "source_url": "https://www.grants.gov.au/Ga/Show/..."}],
+   "grants_total": 530, "grants_listed": 530,
+   "opax_url": "https://opax.com.au/money/grants?jur=federal&program=GO3141"}
+  ```
 
 ## Configuration and launch requirements
 
