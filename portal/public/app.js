@@ -9606,6 +9606,19 @@ async function sendChat(question, carry) {
       text: `From the record${carry.source ? ` (${carry.source})` : ""}: "${carry.evidence}"`,
     });
   }
+  // The records the last two answers cited travel too: the Worker gives each
+  // its own pinned retrieval pass, so a follow-up keeps the conversation's
+  // records in the pool whatever its new wording finds (corpuskit's
+  // prior-paper prequeries). Cited first, then the rest of the retrieval.
+  const priorResources = [];
+  for (const m of chatThread.filter((t) => t.role === "answer").slice(-2).reverse()) {
+    const sources = Array.isArray(m.sources) ? m.sources : [];
+    for (const s of [...sources.filter((x) => x?.cited), ...sources.filter((x) => !x?.cited)]) {
+      // Platform record ids only: the local records an answer cites travel as
+      // USER_CONTEXT_n extra context and cannot be pinned.
+      if (typeof s?.resource === "string" && /^[0-9a-f]{32}$/i.test(s.resource) && !priorResources.includes(s.resource)) priorResources.push(s.resource);
+    }
+  }
   const userTurn = { role: "user", text: q };
   chatThread.push(userTurn);
   saveChatSession();
@@ -9670,7 +9683,7 @@ async function sendChat(question, carry) {
   }, 5000);
   let live = null;
   try {
-    const chatBody = JSON.stringify({ question: q, kind: chatKind, context });
+    const chatBody = JSON.stringify({ question: q, kind: chatKind, context, prior_resources: priorResources.slice(0, 6) });
     // The answer streams into a provisional turn beneath the waiting state;
     // the finished thread re-renders from chatThread as before.
     let liveWrap = null;

@@ -181,7 +181,12 @@ async function kbFetch(
 const ASK_STALL_MS = 25_000
 const ASK_SYNC_TIMEOUT_MS = 40_000
 const ASK_RETRY_BUDGET_MS = 20_000
-const lighterAsk = (body: Record<string, unknown>): Record<string, unknown> => ({ ...body, reranker: 'noop', top_k: 12 })
+// The lighter retry also drops the pinned prior-record passes: if the platform
+// refused them (a stale or foreign id), the question still gets answered.
+const lighterAsk = (body: Record<string, unknown>): Record<string, unknown> => ({
+  ...body, reranker: 'noop', top_k: 12,
+  ...(Array.isArray(body.rag_strategies) ? { rag_strategies: (body.rag_strategies as { name?: string }[]).filter((s) => s?.name !== 'prequeries') } : {}),
+})
 
 /** Snap a snippet window start back to the nearest preceding space. */
 function lower_bound(text: string, at: number): number {
@@ -638,6 +643,13 @@ interface AskInput {
   from?: string
   to?: string
   context?: { author?: string; text?: string }[]
+  /**
+   * Resource ids the conversation's earlier answers cited, sent by the chat.
+   * Each gets its own pinned retrieval pass (a `prequeries` strategy, as
+   * corpuskit does for a follow-up's prior papers), so the records the
+   * conversation is about stay in the pool whatever the new wording finds.
+   */
+  prior_resources?: string[]
 }
 
 type AskAnswer = {
@@ -724,6 +736,23 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
     // Keep history for generation, but search the explicit query unchanged.
     body.chat_history_relevance_threshold = 1
     body.rephrase = false
+  }
+  // The records earlier turns cited, each searched on its own beside the main
+  // query. Weight 1 and a small budget: they stay in the pool, they do not
+  // crowd out what the new question retrieves. The platform caps a
+  // prequeries strategy at ten queries; four prior records is corpuskit's cap.
+  // Platform resource ids only (32 hex): the local records an answer cites
+  // travel as USER_CONTEXT_n extra context and the platform rejects them as
+  // filters (a 422 that would fail the whole ask).
+  const prior = [...new Set((input.prior_resources ?? []).filter((id) => typeof id === 'string' && /^[0-9a-f]{32}$/i.test(id)))].slice(0, 4)
+  if (prior.length > 0) {
+    (body.rag_strategies as Record<string, unknown>[]).push({
+      name: 'prequeries',
+      queries: prior.map((id) => ({
+        request: { query: body.query, features: ['keyword', 'semantic'], resource_filters: [id], top_k: 10 },
+        weight: 1,
+      })),
+    })
   }
   const filters = filterExpression({ kind: kind ?? 'all', speaker, party, state, chamber, topic, from, to })
   if (filters) body.filter_expression = filters
@@ -952,6 +981,7 @@ function evidenceOnlyAnswer(payload: AskPayload, raw: AskAnswer, question: strin
  */
 function askCacheInput(input: AskInput, epoch: string): string | null {
   if (Array.isArray(input.context) && input.context.length > 0) return null
+  if (Array.isArray(input.prior_resources) && input.prior_resources.length > 0) return null
   const str = (s: string | undefined): string => (s ?? '').trim().replace(/\s+/g, ' ')
   const yr = (s: string | undefined): string => (/^\d{4}$/.test(str(s)) ? str(s) : '')
   const kind = input.kind ?? 'all'

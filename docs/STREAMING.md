@@ -102,6 +102,14 @@ alone). Scope, retrieval and the prompt then work from the rewrite, and the
 `done` payload carries it as `asked_as`; the chat shows it under the reader's
 turn as "Understood as: …" and sends it, not the typed words, as later
 context. A conversation turn takes its rate-limit token before the rewrite.
+The chat also sends `prior_resources` - the platform ids (32 hex) of the
+records its last two answers cited - and `buildAskBody` gives each of the
+first four its own pinned retrieval pass (a `prequeries` rag strategy,
+`resource_filters: [id]`, `top_k: 10`, weight 1, corpuskit's prior-paper
+passes), so the records the conversation is about stay in the pool whatever
+the new wording retrieves. Local records cited as `USER_CONTEXT_n` are never
+pinned (the platform rejects them, 422), and the lighter retry body drops
+the strategy altogether.
 
 Rules the Worker keeps:
 
