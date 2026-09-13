@@ -15,29 +15,19 @@ The public record stays open. An email account enables private or shared reading
 - MCP supports stateless HTTP POST with personal bearer tokens. Tokens are stored hashed, expire after 90 days and can be revoked. A member can have three active tokens. Compatible clients need bearer-token support; OAuth discovery is not implemented.
 - MCP tools cover record search (`search_records`, including a `grant` kind), record reading (`read_record`), grant recipient detail (`read_grant_recipient`), grant program detail (`read_grant_program`), connection search (`find_connections`) and corpus coverage (`corpus_coverage`) — all read-only. Search/read results include absolute Opax citations. Oversized record responses are stopped while streaming.
 - Grant search hits point at the file to open next. A recipient row carries `grant_recipient: {jurisdiction, id}` for `read_grant_recipient`; a program row (catalog slug `grant-program-<jur>-<key>`, title ending in "(grant program)") carries `grant_program: {jurisdiction, id}` for `read_grant_program`.
-- `read_grant_program({jurisdiction: "federal" | "qld", id})` reads `/grants/<jur>/programs/<key>.json`, where the key is the id lowercased with every run of non-alphanumerics replaced by "-", trimmed and cut to 80 characters ("GO3141" -> "go3141", "activity:Some title" -> "activity-some-title"; QLD ids are program names). The file holds totals, agencies, selection processes, seat and margin splits (federal only), election timing, top recipients, electorates and the grants table, plus an `opax_url` deep link (`/money/grants?jur=<jur>&program=<id>`); grants with a GrantConnect guid gain `source_url`. When the file is over the 180 KB cap the object is kept whole and `grants` is cut to its first 200 rows with `grants_listed: 200` and `truncated: true`. An unknown program returns `{"error": "not found"}` as a tool error, the same shape as `read_record`.
+- `read_grant_recipient` adds `program_lookup` entries for its top program labels. Each entry includes the recipient value and catalog `candidates` with `{jurisdiction, id, name, opax_url}`. These are label matches; verify membership in the program's grants. An empty candidate list means no matching exported program, not that no program exists.
+- `read_grant_program({jurisdiction: "federal" | "qld", id})` resolves a canonical catalog ID, file key, or unique exact program label against `/graph/grants.<jur>.json`. It uses the catalog's file key, including exporter collision suffixes and truncation. Multiple programs with the same label return an error with candidates; an unknown program returns `{"error":"not found"}`. Only exported catalog programs are available.
+- Both grant readers include `field_guide`, `coverage`, `dataset_source_url`, `grants_total` and `grants_listed`. Recipient agencies/programs/electorates and program top recipients may be partial summaries. Queensland values are annual expenditure lines, including grants, service agreements and other assistance; an agreement can recur in several years. Federal values are published award values, not evidence of payments received. Do not combine counts as unique grants or totals as payments received.
+- A known GrantConnect GUID yields a row `source_url` with `source_kind: "original_record"`. Queensland rows without an individual URL instead link to the source dataset with `source_kind: "dataset"`. Missing individual record URLs are explicit in `original_source_status`. Dataset provenance does not verify an individual record, and external link availability is not guaranteed.
+- Grant output is capped at 180 KB. If necessary, the grant list is shortened to at most 200 rows, then further reduced until the JSON fits; totals and metadata are preserved and `truncated: true` is set. Recipient asset omissions also set `truncated`. If metadata alone exceeds the cap, the tool returns an error with the Opax URL. Search currently returns the first ten results and has no MCP pagination argument.
 
-  Example: Community Development Grants.
+  Example: use the candidate returned for Community Development Grants:
 
   ```json
   {"name": "read_grant_program", "arguments": {"jurisdiction": "federal", "id": "GO3141"}}
   ```
 
-  returns (abridged)
-
-  ```json
-  {"id": "GO3141", "key": "go3141", "n": "Community Development Grants", "jur": "federal",
-   "ag": "Department of Infrastructure, Transport, Regional Development, Communications and the Arts",
-   "t": 1294810388, "c": 530, "r": 383, "y0": "2013-14", "y1": "2022-23",
-   "sel": {"Closed Non-Competitive": [1000000000, 400]}, "sel_known": [1200000000, 500],
-   "seats": {"gov": [900000000, 350], "opp": [300000000, 150], "cross": [50000000, 20], "unknown": [44810388, 10]},
-   "recipients": [["abn:97694995462", "The Trustee for the Qantas Foundation Memorial Trust", "trust", 11300000, 1, true]],
-   "grants": [{"id": "GA34203", "v": 11300000, "n": "Qantas Founders Museum", "rid": "abn:97694995462", "fy": "2018-19", "s": "2019-02-12",
-               "sel": "Closed Non-Competitive", "el": "Kennedy", "holder": ["Bob Katter", "Katter's Australian Party"], "bloc": "cross",
-               "guid": "...", "source_url": "https://www.grants.gov.au/Ga/Show/..."}],
-   "grants_total": 530, "grants_listed": 530,
-   "opax_url": "https://opax.com.au/money/grants?jur=federal&program=GO3141"}
-  ```
+  The exact label `"Community Development Grants"` also resolves when unique. The response includes the canonical `id: "GO3141"`, `key: "go3141"` and `opax_url: "https://opax.com.au/money/grants?jur=federal&program=GO3141"` alongside current program data and coverage notes.
 
 ## Configuration and launch requirements
 
@@ -52,7 +42,7 @@ The current release removes payment routes, SDK dependencies, promotional copy a
 
 ## Verification
 
-Thirteen automated tests cover single-use links, expiration, sessions, origins, login rate limiting, private list ownership/sharing, public profile privacy, moderation, disabled accounts and member MCP access. MCP tests exercise tool discovery, search/read citations, invalid arguments, bounded responses, hashed keys and revocation. External email is simulated in these tests.
+Automated tests cover single-use links, expiration, sessions, origins, login rate limiting, private list ownership/sharing, public profile privacy, moderation, disabled accounts and member MCP access. MCP tests exercise tool discovery, search/read citations, invalid arguments, bounded responses, hashed keys and revocation. Grant regressions cover recipient-to-program candidates, exact-label resolution, ambiguous names, authoritative collision keys, malformed assets, source provenance, jurisdiction-specific value semantics and adaptive truncation. External email is simulated in these tests.
 
 The mobile browser harness exercises sign-in, profile editing, reading lists, discussions and token creation/revocation in Chromium and WebKit at 390, 768 and 1280 pixels. TypeScript, syntax and asset-stamp checks are also required.
 
