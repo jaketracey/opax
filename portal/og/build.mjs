@@ -3,9 +3,11 @@
 //
 //   node og/build.mjs portraits            # public/photos/jpg/<id>.jpg from every .webp
 //   node og/build.mjs default              # public/og-default.png, the home card
-//   node og/build.mjs preview [outdir]     # a sample of every card kind, for the eye
+//   node og/build.mjs preview [outdir] [both|landscape|portrait]
+//                                          # a sample of every card kind, for the eye:
+//                                          # <name>.png (1200x630) and <name>-portrait.png (1080x1350)
 //
-// The Worker draws the same cards live (src/og-render.ts) from the same tree
+// The Worker draws the same cards live (src/og-render.ts) from the same trees
 // (src/og.ts). This script exists because satori cannot read WebP, so the
 // portraits need a JPEG twin, and because the home page is an asset hit that
 // never reaches the Worker, so its card is a file. Needs Node >= 23.6 (imports
@@ -17,7 +19,7 @@ import { fileURLToPath } from 'node:url'
 import satori, { init as initSatori } from 'satori/wasm'
 import initYoga from 'yoga-wasm-web'
 import { initWasm, Resvg } from '@resvg/resvg-wasm'
-import { OG_FONT_FILES, OG_HEIGHT, OG_WIDTH, cardTree, homeCard } from '../src/og.ts'
+import { OG_FONT_FILES, homeCard, ogLayout } from '../src/og.ts'
 
 const PORTAL = join(dirname(fileURLToPath(import.meta.url)), '..')
 const PUBLIC = join(PORTAL, 'public')
@@ -29,9 +31,10 @@ async function engines() {
   initSatori(yoga)
   await initWasm(readFileSync(join(PORTAL, 'node_modules/@resvg/resvg-wasm/index_bg.wasm')))
   const fonts = OG_FONT_FILES.map((f) => ({ name: f.name, weight: f.weight, style: f.style, data: readFileSync(join(PUBLIC, 'fonts/og', f.file)) }))
-  return async function render(card) {
-    const svg = await satori(cardTree(card), { width: OG_WIDTH, height: OG_HEIGHT, fonts })
-    const r = new Resvg(svg, { fitTo: { mode: 'width', value: OG_WIDTH } })
+  return async function render(card, format = 'landscape') {
+    const layout = ogLayout(format)
+    const svg = await satori(layout.tree(card), { width: layout.width, height: layout.height, fonts })
+    const r = new Resvg(svg, { fitTo: { mode: 'width', value: layout.width } })
     const png = r.render().asPng()
     r.free()
     return png
@@ -65,14 +68,16 @@ async function defaultCard() {
   console.log(`og-default.png: ${png.length} bytes`)
 }
 
-async function preview(outdir) {
+async function preview(outdir, formats) {
   const render = await engines()
   mkdirSync(outdir, { recursive: true })
   const samples = {
     home: homeCard(),
+    // The daily edition's politician card, as personMeta builds it: a statistic under the face.
     person: {
       kicker: 'Parliamentarian', title: 'Anthony Albanese', dot: '#D93025',
-      lines: ['Labor · House of Representatives', '5,408 speeches on the record, 1998 to 2026'],
+      lines: ['Labor · House of Representatives', 'Collected records: 1998 to 2026'],
+      stat: { value: '5,408', label: 'speeches in the Opax record' },
       portrait: portraitUri('10007'),
     },
     'person-long': {
@@ -137,20 +142,30 @@ async function preview(outdir) {
       kicker: 'Directory', title: 'Parliamentarians',
       lines: ['Every parliamentarian in the OPAX record: 1,557 speakers since 1993, searchable by name, party and parliament.'],
     },
+    // A grant award as grantRecipientMeta builds it (GA576236, public/social/grants.json).
+    award: {
+      kicker: 'GA576236 · Starts 2026-07-31', title: 'City of Greater Geelong',
+      lines: ['The project will deliver two competition-compliant courts with lighting, run-off areas and line marking. It will also construct a dedicated warm-up and shooting area and redevelop the ageing amenities building.', 'Award value, not payments received.'],
+      stat: { value: '$5.5M', label: 'published grant award' },
+    },
   }
   for (const [name, card] of Object.entries(samples)) {
-    const t = performance.now()
-    const png = await render(card)
-    writeFileSync(join(outdir, `${name}.png`), png)
-    console.log(`${name.padEnd(16)} ${String(png.length).padStart(7)} bytes  ${(performance.now() - t).toFixed(0)} ms`)
+    for (const format of formats) {
+      const t = performance.now()
+      const png = await render(card, format)
+      const file = format === 'portrait' ? `${name}-portrait.png` : `${name}.png`
+      writeFileSync(join(outdir, file), png)
+      console.log(`${file.padEnd(26)} ${String(png.length).padStart(7)} bytes  ${(performance.now() - t).toFixed(0)} ms`)
+    }
   }
 }
 
-const [cmd, arg] = process.argv.slice(2)
+const [cmd, arg, which] = process.argv.slice(2)
+const formats = which === 'portrait' ? ['portrait'] : which === 'landscape' ? ['landscape'] : ['landscape', 'portrait']
 if (cmd === 'portraits') await portraits()
 else if (cmd === 'default') await defaultCard()
-else if (cmd === 'preview') await preview(arg ?? join(PORTAL, '.og-preview'))
+else if (cmd === 'preview') await preview(arg ?? join(PORTAL, '.og-preview'), formats)
 else {
-  console.error('usage: node og/build.mjs portraits | default | preview [outdir]')
+  console.error('usage: node og/build.mjs portraits | default | preview [outdir] [both|landscape|portrait]')
   process.exit(2)
 }

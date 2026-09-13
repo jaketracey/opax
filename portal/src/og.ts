@@ -146,20 +146,28 @@ const SERIF_EM = 0.52
 const SANS_EM = 0.47
 const TITLE_SIZES = [84, 76, 68, 60, 54, 48, 42, 38]
 
+/** The ladder of sizes a layout tries, and the size at or under which a third line is allowed. */
+interface TitleFit { sizes: number[]; tripleAt: number }
+const LANDSCAPE_FIT: TitleFit = { sizes: TITLE_SIZES, tripleAt: 54 }
+
 /**
  * The largest size that sets the title in two lines; failing that, the largest
- * at or under 54 that sets it in three (a registered legal name, a motion); and
- * failing that, the smallest size with the text trimmed to three lines.
+ * at or under `tripleAt` that sets it in three (a registered legal name, a
+ * motion); and failing that, the smallest size with the text trimmed to three
+ * lines.
  */
-function fitTitle(text: string, width: number, maxSize: number): { size: number; text: string } {
-  for (const size of TITLE_SIZES) {
+function fitTitle(text: string, width: number, maxSize: number, fit: TitleFit = LANDSCAPE_FIT): { size: number; text: string } {
+  for (const size of fit.sizes) {
     if (size > maxSize) continue
     const lines = wrapLines(text, width, size, SERIF_EM)
-    if (lines <= 2 || (size <= 54 && lines <= 3)) return { size, text }
+    if (lines <= 2 || (size <= fit.tripleAt && lines <= 3)) return { size, text }
   }
-  const size = TITLE_SIZES[TITLE_SIZES.length - 1]
+  const size = fit.sizes[fit.sizes.length - 1]
   return { size, text: clipToLines(text, width, size, SERIF_EM, 3) }
 }
+
+/** House style has no em dashes; a summary or a motion may arrive with one. */
+const plain = (s: string): string => s.replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim()
 
 // --- the card ------------------------------------------------------------------------
 
@@ -172,8 +180,6 @@ export function cardTree(card: OgCard): El {
   const artWidth = hasPortrait ? PORTRAIT : card.wide ? 140 : 290
   const textWidth = OG_WIDTH - PAD * 2 - artWidth - gutter
   const titleMax = card.wide ? 76 : card.italic ? 62 : 72
-  // House style has no em dashes; a summary or a motion may arrive with one.
-  const plain = (s: string): string => s.replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim()
   const title = fitTitle(plain(card.title), textWidth, titleMax)
   const given = card.lines.map(plain).filter(Boolean).slice(0, 2)
   const lineSize = title.size >= 60 ? 28 : 26
@@ -287,6 +293,179 @@ export function cardTree(card: OgCard): El {
     footer,
     bottomRule,
   )
+}
+
+// --- the portrait card, 1080 x 1350 -------------------------------------------------
+//
+// Instagram's feed and grid are portrait (4:5), and the landscape card dropped
+// in there is cropped to its middle: half a title, no wordmark. This is the same
+// card stood upright, in the same register: masthead and rule at the top, the
+// wordmark footer and thick rule at the bottom, and between them the person's
+// portrait large and centred when there is one, the headline set big enough to
+// read as a grid thumbnail, and the statistic as the largest figure on the card.
+// The engraving is drawn only when a card has neither a portrait nor a
+// statistic to fill the room. Public Sans sets tabular figures by default, so
+// the statistic's digits align without a feature setting satori cannot read.
+
+export const PORTRAIT_WIDTH = 1080
+export const PORTRAIT_HEIGHT = 1350
+
+export type OgFormat = 'landscape' | 'portrait'
+
+/** The format a request asked for: only the exact word `portrait` is honoured. */
+export const ogFormat = (value: string | null | undefined): OgFormat => (value === 'portrait' ? 'portrait' : 'landscape')
+
+const P_PAD = 72
+const P_TEXT_WIDTH = PORTRAIT_WIDTH - P_PAD * 2
+const P_TITLE_SIZES = [128, 116, 104, 92, 84, 76, 68, 60, 54]
+const P_LINE_SIZE = 34
+const P_RULE = 'rgba(217,168,74,0.45)'
+
+export function portraitTree(card: OgCard): El {
+  const hasPortrait = Boolean(card.portrait)
+  const centred = hasPortrait
+  const align = centred ? 'center' : 'flex-start'
+  const textAlign = centred ? 'center' : 'left'
+  // A face takes the top of the card, so the headline under it is held to two
+  // lines at the larger sizes; a card that is all type may run to three sooner.
+  const titleMax = hasPortrait ? 104 : card.italic ? 84 : card.wide ? 116 : 128
+  const title = fitTitle(plain(card.title), P_TEXT_WIDTH, titleMax, { sizes: P_TITLE_SIZES, tripleAt: hasPortrait ? 68 : 84 })
+  const given = card.lines.map(plain).filter(Boolean).slice(0, hasPortrait ? 2 : 3)
+  const rows = hasPortrait ? 2 : 3
+  const lines = given.map((l) => clipToLines(l, P_TEXT_WIDTH, P_LINE_SIZE, SANS_EM, rows))
+
+  const masthead = h(
+    'div',
+    { style: { display: 'flex', alignItems: 'center', padding: `56px ${P_PAD}px 0 ${P_PAD}px` } },
+    h('img', { src: MARK_URI, width: 88, height: 80 }),
+    h(
+      'div',
+      { style: { marginLeft: 26, fontFamily: SANS, fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', color: SOFT } },
+      'Open Parliamentary Accountability eXchange',
+    ),
+  )
+
+  const rule = h('div', { style: { height: 1, margin: `28px ${P_PAD}px 0 ${P_PAD}px`, background: P_RULE } })
+
+  const photoSize = card.stat ? 400 : 480
+  const picture = hasPortrait
+    ? h(
+        'div',
+        { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', width: P_TEXT_WIDTH } },
+        h(
+          'div',
+          { style: { display: 'flex', padding: 8, border: `1px solid rgba(217,168,74,0.7)`, borderRadius: 6 } },
+          h('img', { src: card.portrait as string, width: photoSize, height: photoSize, style: { borderRadius: 3, objectFit: 'cover' } }),
+        ),
+        card.credit
+          ? h(
+              'div',
+              { style: { fontFamily: SANS, fontSize: 18, lineHeight: 1.35, color: SOFT, opacity: 0.85, marginTop: 12, width: photoSize, textAlign: 'center' } },
+              clipToLines(card.credit, photoSize, 18, SANS_EM, 2),
+            )
+          : null,
+      )
+    : null
+
+  const kicker = card.kicker
+    ? h(
+        'div',
+        { style: { fontFamily: SANS, fontSize: 26, fontWeight: 700, letterSpacing: '0.14em', color: BRONZE_BRIGHT, textTransform: 'uppercase', marginBottom: 18, textAlign } },
+        card.kicker,
+      )
+    : null
+
+  const headline = h(
+    'div',
+    {
+      style: {
+        fontFamily: SERIF,
+        fontSize: title.size,
+        fontStyle: card.italic ? 'italic' : 'normal',
+        fontWeight: 400,
+        lineHeight: 1.12,
+        letterSpacing: '-0.005em',
+        color: WHITE,
+        width: P_TEXT_WIDTH,
+        textAlign,
+      },
+    },
+    title.text,
+  )
+
+  const factLines = lines.map((l, i) =>
+    h(
+      'div',
+      { style: { display: 'flex', alignItems: 'flex-start', justifyContent: align, fontFamily: SANS, fontSize: P_LINE_SIZE, lineHeight: 1.4, color: SOFT, marginTop: i === 0 ? 28 : 8, width: P_TEXT_WIDTH } },
+      i === 0 && card.dot
+        ? h('div', { style: { width: 20, height: 20, borderRadius: 10, background: card.dot, marginRight: 16, marginTop: Math.round((P_LINE_SIZE * 1.4 - 20) / 2), flexShrink: 0 } })
+        : null,
+      h('div', { style: { display: 'flex', flexShrink: 1, textAlign } }, l),
+    ),
+  )
+
+  const text = h(
+    'div',
+    { style: { display: 'flex', flexDirection: 'column', alignItems: align, width: P_TEXT_WIDTH, marginTop: hasPortrait ? 36 : 0 } },
+    kicker,
+    headline,
+    ...factLines,
+  )
+
+  // The statistic is the biggest figure on the card, under a short bronze hairline.
+  const valueSize = hasPortrait ? 96 : card.stat && card.stat.value.length > 12 ? 84 : card.stat && card.stat.value.length > 8 ? 108 : 132
+  const statistic = card.stat
+    ? h(
+        'div',
+        { style: { display: 'flex', flexDirection: 'column', alignItems: align, width: P_TEXT_WIDTH, marginTop: hasPortrait ? 32 : 48 } },
+        h('div', { style: { width: 96, height: 1, background: P_RULE, marginBottom: hasPortrait ? 24 : 32 } }),
+        h('div', { style: { fontFamily: SANS, fontSize: valueSize, fontWeight: 700, color: BRONZE_BRIGHT, lineHeight: 1.05, textAlign } }, card.stat.value),
+        h('div', { style: { fontFamily: SANS, fontSize: hasPortrait ? 26 : 30, color: SOFT, marginTop: 10, lineHeight: 1.35, textAlign } }, card.stat.label),
+      )
+    : null
+
+  const engraving = !hasPortrait && !card.stat
+    ? h(
+        'div',
+        { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: 56 } },
+        h('img', { src: ENGRAVING_URI, width: 340, height: 310, style: { opacity: 0.9 } }),
+      )
+    : null
+
+  // Centred in the room between the rules; clipped there rather than into the footer.
+  const body = h(
+    'div',
+    { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', padding: `0 ${P_PAD}px`, overflow: 'hidden' } },
+    picture,
+    text,
+    statistic,
+    engraving,
+  )
+
+  const footer = h(
+    'div',
+    { style: { display: 'flex', padding: `24px ${P_PAD}px 44px ${P_PAD}px` } },
+    h('div', { style: { fontFamily: SANS, fontSize: 28, fontWeight: 700, letterSpacing: '0.16em', color: BRONZE_BRIGHT } }, 'OPAX.COM.AU'),
+  )
+
+  const bottomRule = h('div', { style: { height: 8, background: BRONZE } })
+
+  return h(
+    'div',
+    { style: { display: 'flex', flexDirection: 'column', width: PORTRAIT_WIDTH, height: PORTRAIT_HEIGHT, background: NAVY, color: WHITE, fontFamily: SANS } },
+    masthead,
+    rule,
+    body,
+    footer,
+    bottomRule,
+  )
+}
+
+/** The tree and canvas for a format: what every renderer hands to satori. */
+export function ogLayout(format: OgFormat): { width: number; height: number; tree: (card: OgCard) => El } {
+  return format === 'portrait'
+    ? { width: PORTRAIT_WIDTH, height: PORTRAIT_HEIGHT, tree: portraitTree }
+    : { width: OG_WIDTH, height: OG_HEIGHT, tree: cardTree }
 }
 
 /** The home page and the card every failure falls back to. */

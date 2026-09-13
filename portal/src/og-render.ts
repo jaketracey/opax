@@ -10,7 +10,7 @@ import initYoga from 'yoga-wasm-web'
 import yogaWasm from 'yoga-wasm-web/dist/yoga.wasm'
 import { initWasm, Resvg } from '@resvg/resvg-wasm'
 import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm'
-import { OG_HEIGHT, OG_WIDTH, cardTree, type OgCard } from './og'
+import { ogLayout, type OgCard, type OgFormat } from './og'
 
 export interface OgFont {
   name: string
@@ -32,19 +32,23 @@ function ensureEngines(): Promise<void> {
   return engines
 }
 
-export async function renderOgPng(card: OgCard, fonts: OgFont[]): Promise<Uint8Array> {
+/** The card laid out at its format's size (landscape 1200x630, portrait 1080x1350), ready to rasterise. */
+async function rasterise(card: OgCard, fonts: OgFont[], format: OgFormat): Promise<InstanceType<typeof Resvg>> {
   await ensureEngines()
-  const svg = await satori(cardTree(card) as never, { width: OG_WIDTH, height: OG_HEIGHT, fonts })
-  const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: OG_WIDTH } })
+  const layout = ogLayout(format)
+  const svg = await satori(layout.tree(card) as never, { width: layout.width, height: layout.height, fonts })
+  return new Resvg(svg, { fitTo: { mode: 'width', value: layout.width } })
+}
+
+export async function renderOgPng(card: OgCard, fonts: OgFont[], format: OgFormat = 'landscape'): Promise<Uint8Array> {
+  const resvg = await rasterise(card, fonts, format)
   const rendered = resvg.render()
   try { return rendered.asPng() } finally { rendered.free(); resvg.free() }
 }
 
 /** Instagram requires JPEG. Use the same card and fonts as the link preview. */
-export async function renderOgJpeg(card: OgCard, fonts: OgFont[]): Promise<Uint8Array> {
-  await ensureEngines()
-  const svg = await satori(cardTree(card) as never, { width: OG_WIDTH, height: OG_HEIGHT, fonts })
-  const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: OG_WIDTH } })
+export async function renderOgJpeg(card: OgCard, fonts: OgFont[], format: OgFormat = 'landscape'): Promise<Uint8Array> {
+  const resvg = await rasterise(card, fonts, format)
   const rendered = resvg.render()
   try {
     return new Uint8Array(encode({ data: rendered.pixels, width: rendered.width, height: rendered.height }, 90).data)

@@ -25,7 +25,7 @@ function harness(overrides = {}, handler) {
  const calls=[];
  const fetchImpl=async(url,init={})=>{
   calls.push({url,init}); const changed=await handler?.(url,init); if(changed)return changed;
-  if(init.method==='HEAD')return new Response(null,{headers:{'content-type':'image/jpeg','x-opax-og':new URL(post.url).pathname}});
+  if(init.method==='HEAD')return new Response(null,{headers:{'content-type':'image/jpeg','x-opax-og':new URL(post.url).pathname,...(new URL(url).searchParams.get('format')==='portrait'?{'x-opax-format':'portrait'}:{})}});
   if(url.endsWith('/2/users/me'))return Response.json({data:{id:'123',username:'OpaxAustralia'}});
   if(url.endsWith('/me?fields=id'))return Response.json({id:'456'});
   if(url.endsWith('/789?fields=id,username'))return Response.json({id:'789',username:'opaxaustralia'});
@@ -39,11 +39,15 @@ function harness(overrides = {}, handler) {
  const run=()=>runSocialPublication(env,{now,personTopics:async()=>Response.json({}),fetchImpl});
  return {env,db,sqlite,calls,run};
 }
-test('platform copy uses attribution, real JPEG and a bio CTA for Instagram',()=>{
+test('platform copy uses attribution, real JPEG, a portrait card and a bio CTA for Instagram',()=>{
  for(const channel of ['x','facebook','instagram']) {
   const c=publicationCopy(post,channel);assert.equal(new URL(c.link).searchParams.get('utm_source'),channel);assert.match(c.image,/\.jpg\?v=/);
+  // Instagram's feed and grid are 4:5; X and Facebook previews stay landscape.
+  assert.equal(new URL(c.image).searchParams.get('format'),channel==='instagram'?'portrait':null,channel);
   if(channel==='instagram'){assert.match(c.text,/link in bio/);assert.doesNotMatch(c.text,/https:\/\//)}
  }
+ const award=new URL(publicationCopy({...post,url:post.url+'?award=GA123'},'instagram').image);
+ assert.equal(award.pathname,'/og/subject/person/Test%20Member.jpg');assert.equal(award.searchParams.get('award'),'GA123');assert.match(award.searchParams.get('v'),/^\d+$/);assert.equal(award.searchParams.get('format'),'portrait');
  assert.throws(()=>publicationCopy({...post,url:'https://evil.example/'},'x'));
 });
 test('missing account identity and staging fail closed',async()=>{
@@ -104,4 +108,15 @@ test('only posted subjects in the preceding 90 days are excluded from new copy',
   assert.notEqual(candidate.subject,'person:Already Featured');seen.add(candidate.subject);
  }
  assert.deepEqual(seen,new Set(['person:Failed Delivery','person:Old Feature']));
+});
+test('a landscape answer to the portrait request keeps Instagram closed without blocking X or Facebook',async()=>{
+ // An older Worker (or a fallback) answers the portrait URL with the landscape card: no x-opax-format header.
+ const h=harness({},async(url,init)=>init.method==='HEAD'&&url.includes('format=portrait')?new Response(null,{headers:{'content-type':'image/jpeg','x-opax-og':new URL(post.url).pathname}}):null);
+ await h.run();
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media')).length,0);
+ const ig=h.sqlite.prepare("SELECT status,detail FROM social_deliveries WHERE channel='instagram'").get();assert.equal(ig.status,'failed');assert.equal(ig.detail,'Portrait image unavailable');
+ for(const channel of ['x','facebook'])assert.equal(h.sqlite.prepare('SELECT status FROM social_deliveries WHERE channel=?').get(channel).status,'posted',channel);
+ // The Instagram preflight asked for the portrait card, and only Instagram did.
+ const heads=h.calls.filter(c=>c.init.method==='HEAD'&&c.url.includes('/og/'));
+ assert.equal(heads.filter(c=>c.url.includes('format=portrait')).length,1);assert.equal(heads.length,3);
 });

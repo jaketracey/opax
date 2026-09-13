@@ -18,9 +18,11 @@ sources. No model runs at posting time; source data and summaries can still cont
 errors, so they are not a guarantee of factual accuracy.
 
 X gets concise copy within 280 characters; Facebook gets a longer caption and a
-clickable link; Instagram gets the matching JPEG, a longer caption and a link-in-bio
-instruction. Set Instagram's profile link to https://opax.com.au. Share images use
-the same metadata and fonts as the page, including bill-specific cards. X/Facebook
+clickable link; Instagram gets the matching JPEG as the portrait card (1080 x 1350,
+`?format=portrait`, the same data stood upright so the feed and grid do not crop
+it), a longer caption and a link-in-bio instruction. Set Instagram's profile link
+to https://opax.com.au. Share images use the same metadata and fonts as the page,
+including bill-specific cards; the page's own og:image stays landscape. X/Facebook
 links include platform-specific UTM attribution. Do not tag unrelated people, send
 DMs, automate replies, or imply a funding relationship proves wrongdoing.
 
@@ -113,7 +115,10 @@ unsent. No public endpoint can trigger posting or reset these receipts.
 Before publishing, the runner checks that the source page and matching JPEG return
 success. A generic fallback image or mismatched route prevents posting. PNG cards
 remain available for X/Facebook. `/og/<page>.jpg` returns actual JPEG bytes and an
-error rather than a misleading PNG fallback when no matching card exists.
+error rather than a misleading PNG fallback when no matching card exists. The
+Instagram image must also answer `x-opax-format: portrait`; a landscape answer to
+the portrait URL (an older Worker, a fallback) is recorded as `Portrait image
+unavailable` and only that channel fails.
 
 Brand exports: `node scripts/build_social_brand.mjs` renders the existing Opax
 favicon to public/social/opax-avatar.png and updates the editable SVG covers.

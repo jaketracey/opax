@@ -36,7 +36,7 @@ import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STO
 
 import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer, summaryPointValidator, SummaryPointStream, type SearchSummary } from './search-summary'
 
-import { OG_FONT_FILES, OG_VERSION, homeCard, type OgCard } from './og'
+import { OG_FONT_FILES, OG_VERSION, homeCard, ogFormat, type OgCard } from './og'
 import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 
 interface FindParagraph {
@@ -4243,7 +4243,10 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
 //
 // GET /og/<page path>.png[?q=...][&v=N] draws the card for that page: the path
 // is run through the same route table and buildMeta() as the HTML head, so the
-// picture and the page can never disagree. Rasterised in wasm (src/og-render.ts),
+// picture and the page can never disagree. `?format=portrait` draws the same
+// card at 1080x1350 for Instagram's feed and grid (the og:image meta stays
+// landscape); the answer carries `x-opax-format: portrait` so the publisher can
+// tell it from a landscape card. Rasterised in wasm (src/og-render.ts),
 // so a MISS costs a few hundred milliseconds of CPU; the result is held in the
 // edge cache for a day under CACHE_EPOCH and OG_VERSION, and a limiter stands in
 // front of the MISS path. Whatever cannot be drawn (unknown page, KB down, a
@@ -4299,9 +4302,12 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
   const pagePath = m[1].replace(/\/+$/, '') || '/home'
   const q = url.searchParams.get('q')?.trim() ?? ''
   const award = url.searchParams.get('award') ?? ''
+  const format = ogFormat(url.searchParams.get('format'))
+  const portrait = format === 'portrait'
   const variants = new URLSearchParams()
   if (q) variants.set('q', q)
   if (award) variants.set('award', award)
+  if (portrait) variants.set('format', format)
   const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
   if (!cacheBypass(request, url)) {
     const hit = await caches.default.match(cacheKey)
@@ -4326,13 +4332,14 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
     }
     if (!spec) return jpeg ? new Response('No card available', { status: 404 }) : ogFallback(env, request)
     const [card, fonts] = await Promise.all([resolveCard(spec, env), loadOgFonts(env)])
-    const png = await (jpeg ? renderOgJpeg(card, fonts) : renderOgPng(card, fonts))
+    const png = await (jpeg ? renderOgJpeg(card, fonts, format) : renderOgPng(card, fonts, format))
     const res = new Response(png, {
       headers: {
         'content-type': jpeg ? 'image/jpeg' : 'image/png',
         'content-length': String(png.byteLength),
         'x-opax-og': pagePath,
         ...(award ? { 'x-opax-award': award } : {}),
+        ...(portrait ? { 'x-opax-format': format } : {}),
       },
     })
     cacheStore(ctx, cacheKey, res, OG_CACHE_TTL)
