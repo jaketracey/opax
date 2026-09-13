@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
   "as_of": "2026-09-13",
-  "checked_at": "2026-09-13T00:49:03.547566+00:00",
+  "checked_at": "2026-09-13T02:51:51.054335+00:00",
   "coverage": {
     "total_awards": 89,
     "total_invitations": 226,
     "total_invitation_records": 227,
     "mapped_awards": 7,
-    "mapped_invitations": 20,
+    "mapped_invitations": 21,
     "mapped_award_value": 12715000.0,
-    "mapped_invitation_value": 24797000,
+    "mapped_invitation_value": 29797000,
     "total_award_value": 242781386.0,
     "total_invitation_value": 559241712,
     "award_site_count": 9,
-    "invitation_site_count": 20,
+    "invitation_site_count": 21,
     "unmapped_awards": 82,
-    "unmapped_invitations": 206,
+    "unmapped_invitations": 205,
     "payment_verified_records": 0
   },
   "methodology": [
@@ -2616,6 +2616,123 @@
           "The original invitation is titled “2 Toovey Street Caboolture Upgrades”. Council identifies the community precinct as 1–11 Toovey Street. Both source descriptions are retained; the marker locates the precinct, not an individual funded building or surveyed works footprint.",
           "Council describes proposed refurbishment of selected former PCYC and OSHC buildings and precinct improvements under MLCIP. This does not establish completion, an individual award notice or payment.",
           "Council uses the wording “2024 Federal Election commitment”. That apparent date anomaly is preserved as source wording and is not adopted as a verified election date."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-115",
+      "record_type": "invitation",
+      "title": "Adelaide Jaguars Women's Soccer Club Redevelopment",
+      "value": 5000000,
+      "state": "SA",
+      "locality": "West Lakes Shore",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161",
+      "invitation_ids": [
+        "mlci-invitation-115"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "jubilee-reserve-adelaide-jaguars",
+          "site_name": "Jubilee Reserve — Adelaide Jaguars Women’s Soccer Club",
+          "address": "Hawkesbury Drive / Hawkesbury Way, West Lakes Shore SA 5020",
+          "locality": "West Lakes Shore",
+          "state": "SA",
+          "latitude": -34.8631760316164,
+          "longitude": 138.48519309003237,
+          "location_source_url": "https://www.charlessturt.sa.gov.au/community/sports-and-recreation/parks-reserves-and-playgrounds/jubilee-reserve",
+          "site_precision": "venue",
+          "electorate_2025": "Hindmarsh",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-13T02:50:28.724055+00:00",
+            "method": "Match original invitation to Council consultation, named club venue and official map marker; independently verify AEC 2025 point containment.",
+            "sources": [
+              {
+                "url": "https://www.yoursaycharlessturt.com.au/jubilee-reserve-redevelopment/jubilee-reserve-consultation-stage-1",
+                "excerpt": "$5 million election pledge | Adelaide Jaguars Women’s Soccer Club | Jubilee Reserve | eligible to apply for Major and Local Community Infrastructure Program | Hawkesbury Way, West Lakes Shore",
+                "excerpt_kind": "structured primary-source extraction",
+                "role": "Council consultation links the named club, venue, pledge and MLCIP application opportunity; no award or payment.",
+                "checked_at": "2026-09-13T02:50:28.724055+00:00",
+                "content_sha256": "a9f21bf8f197b0fad7c0824803699941b30d841c0a55d5079d26bd7c596d9b08",
+                "hash_scope": "Original current downloaded official HTML response bytes.",
+                "retrieved_at": "2026-09-13T02:42:12.467668+00:00"
+              },
+              {
+                "url": "https://www.charlessturt.sa.gov.au/community/sports-and-recreation/parks-reserves-and-playgrounds/jubilee-reserve",
+                "excerpt": "Jubilee Reserve | Hawkesbury Drive, West Lakes Shore SA 5020 | data-marker-lat -34.8631760316164 | data-marker-lng 138.48519309003237",
+                "excerpt_kind": "structured primary-source extraction",
+                "role": "Official Council reserve identity, address and explicit map marker.",
+                "checked_at": "2026-09-13T02:50:28.724055+00:00",
+                "content_sha256": "56db995d1953f68ed62607c9091d7058477e12cd8e62b7826e74317344a7f2e0",
+                "hash_scope": "Original official HTML archived in the 0140 research batch; independently re-extracted this run. Current direct fetch returned HTTP 403."
+              }
+            ],
+            "notes": [
+              "The original 14 November 2025 invitation amount and Awaiting Application status are retained. No award match, payment, completion or electorate-value allocation is inferred.",
+              "The marker locates Jubilee Reserve, the named club venue. It is not a surveyed redevelopment footprint; the consultation describes proposed pitches, lighting and female-friendly club facilities, with final design unresolved.",
+              "Council consultation uses Hawkesbury Way; the official reserve listing uses Hawkesbury Drive. Both descriptions refer to Jubilee Reserve in West Lakes Shore and are retained.",
+              "Council consultation says “June 2025 federal election”. This apparent date anomaly is retained as source wording and is not adopted as a verified election date.",
+              "Separate earlier Council pitch and lighting works are not treated as the scope, award or completion of this $5 million invitation."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, test containment against all 150 AEC March 2025 polygons, then measure matched-boundary distance in GDA94/MGA zone 54.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 692.85,
+              "distance_crs": "EPSG:28354"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-13T02:50:28.724055+00:00",
+        "method": "Independent original-table and primary venue checks. Preserve the invitation snapshot and venue-only precision.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161",
+            "excerpt": "Adelaide Jaguars Women's Soccer Club Redevelopment | Charles Sturt | SA | $5,000,000 | Awaiting Application",
+            "excerpt_kind": "structured primary-source extraction",
+            "role": "Original departmental invitation identity, amount and snapshot status; page 161 independently extracted and visually checked.",
+            "checked_at": "2026-09-13T02:50:28.724055+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "hash_scope": "Original departmental PDF archived in the 0140 research batch; independently reused this run. Current direct fetch returned HTTP 403. Structured row, not continuous quotation.",
+            "source_date": "2025-11-14"
+          },
+          {
+            "url": "https://www.yoursaycharlessturt.com.au/jubilee-reserve-redevelopment/jubilee-reserve-consultation-stage-1",
+            "excerpt": "$5 million election pledge | Adelaide Jaguars Women’s Soccer Club | Jubilee Reserve | eligible to apply for Major and Local Community Infrastructure Program | Hawkesbury Way, West Lakes Shore",
+            "excerpt_kind": "structured primary-source extraction",
+            "role": "Council consultation links the named club, venue, pledge and MLCIP application opportunity; no award or payment.",
+            "checked_at": "2026-09-13T02:50:28.724055+00:00",
+            "content_sha256": "a9f21bf8f197b0fad7c0824803699941b30d841c0a55d5079d26bd7c596d9b08",
+            "hash_scope": "Original current downloaded official HTML response bytes.",
+            "retrieved_at": "2026-09-13T02:42:12.467668+00:00"
+          },
+          {
+            "url": "https://www.charlessturt.sa.gov.au/community/sports-and-recreation/parks-reserves-and-playgrounds/jubilee-reserve",
+            "excerpt": "Jubilee Reserve | Hawkesbury Drive, West Lakes Shore SA 5020 | data-marker-lat -34.8631760316164 | data-marker-lng 138.48519309003237",
+            "excerpt_kind": "structured primary-source extraction",
+            "role": "Official Council reserve identity, address and explicit map marker.",
+            "checked_at": "2026-09-13T02:50:28.724055+00:00",
+            "content_sha256": "56db995d1953f68ed62607c9091d7058477e12cd8e62b7826e74317344a7f2e0",
+            "hash_scope": "Original official HTML archived in the 0140 research batch; independently re-extracted this run. Current direct fetch returned HTTP 403."
+          }
+        ],
+        "notes": [
+          "The original 14 November 2025 invitation amount and Awaiting Application status are retained. No award match, payment, completion or electorate-value allocation is inferred.",
+          "The marker locates Jubilee Reserve, the named club venue. It is not a surveyed redevelopment footprint; the consultation describes proposed pitches, lighting and female-friendly club facilities, with final design unresolved.",
+          "Council consultation uses Hawkesbury Way; the official reserve listing uses Hawkesbury Drive. Both descriptions refer to Jubilee Reserve in West Lakes Shore and are retained.",
+          "Council consultation says “June 2025 federal election”. This apparent date anomaly is retained as source wording and is not adopted as a verified election date.",
+          "Separate earlier Council pitch and lighting works are not treated as the scope, award or completion of this $5 million invitation."
         ]
       }
     }
