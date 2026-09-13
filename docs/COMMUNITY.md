@@ -13,7 +13,7 @@ The public record stays open. An email account enables private or shared reading
 - Reading lists start private. Owners control sharing and deletion; public profiles omit email. Saved records use Opax's `/doc/` paths.
 - Members can report discussion content; moderators can review reports and hide content. Assign moderation ownership before opening discussions.
 - MCP supports stateless HTTP POST with personal bearer tokens. Tokens are stored hashed, expire after 90 days and can be revoked. A member can have three active tokens. Compatible clients need bearer-token support; OAuth discovery is not implemented.
-- MCP search/read results include absolute Opax citations. Oversized record responses are stopped while streaming. Tools only read public data.
+- MCP tools cover record search (`search_records`, including a `grant` kind), record reading (`read_record`), grant recipient detail (`read_grant_recipient`), connection search (`find_connections`) and corpus coverage (`corpus_coverage`) — all read-only. Search/read results include absolute Opax citations. Oversized record responses are stopped while streaming.
 
 ## Configuration and launch requirements
 
