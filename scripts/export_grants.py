@@ -22,6 +22,15 @@ Writes (default --out-dir portal/public):
                                       and each exposed state register, never
                                       summed), and a pointer to its grants in the
                                       other jurisdiction
+    grants/<jur>/programs/<key>.json  one file per listed program (the index row
+                                      carries `key`): totals, selection mix, seat
+                                      holders and government / opposition /
+                                      crossbench split at the grant date, seat
+                                      margins at the latest prior election,
+                                      election timing, top recipients and the
+                                      grants themselves (largest first, at most
+                                      1500). See docs/DATA-GRANTS.md "Program
+                                      files" for the rules.
 
 The heavy lifting runs on the DB host: the REMOTE string below is streamed to
 `ssh desktop python3 -` (stdlib only there), and the JSON it prints is split
@@ -48,11 +57,14 @@ Rules the numbers follow (repeated in each file's meta.caveats):
 from __future__ import annotations
 
 import argparse
+import inspect
 import json
 import os
 import re
 import subprocess
 import sys
+from collections import Counter, defaultdict
+from datetime import date
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -60,16 +72,460 @@ ROOT = HERE.parent
 DEFAULT_OUT = ROOT / "portal" / "public"
 DB_HOST = os.environ.get("OPAX_DB_HOST", "desktop")
 
-REMOTE = r'''
-import json, re, sqlite3, sys
-from collections import Counter, defaultdict
-from datetime import datetime, timezone
 
+# -- shared rules: run here (tests, file writing) and on the DB host ----------
+# Everything between here and REMOTE_BODY is stdlib only and is streamed to the
+# DB host verbatim (see remote_program), so the tests exercise the same code
+# the export runs.
+
+ELECTIONS = {
+    "federal": ["2013-09-07", "2016-07-02", "2019-05-18", "2022-05-21", "2025-05-03"],
+    "qld": ["2015-01-31", "2017-11-25", "2020-10-31", "2024-10-26"],
+}
+BLOCS = {"Liberal": "Coalition", "Nationals": "Coalition", "LNP": "Coalition",
+         "Country Liberal Party": "Coalition", "Labor": "Labor"}
+GOVERNMENT = {
+    "federal": [["2013-09-18", "2022-05-23", "Coalition"], ["2022-05-23", None, "Labor"]],
+    "qld": [["2012-03-26", "2015-02-14", "LNP"], ["2015-02-14", "2024-10-28", "Labor"], ["2024-10-28", None, "LNP"]],
+}
+# Federal House by-elections since the 2019 election: [seat, polling day, winner, party].
+# The electorates table only records general-election winners, so these six are
+# applied on top for the term they fall in.
+BY_ELECTIONS = {"federal": [
+    ["Eden-Monaro", "2020-07-04", "Kristy McBain", "Labor"], ["Groom", "2020-11-28", "Garth Hamilton", "LNP"],
+    ["Aston", "2023-04-01", "Mary Doyle", "Labor"], ["Fadden", "2023-07-15", "Cameron Caldwell", "LNP"],
+    ["Dunkley", "2024-03-02", "Jodie Belyea", "Labor"], ["Cook", "2024-04-13", "Simon Kennedy", "Liberal"],
+]}
+# Party spellings the roster and the election results use for the same party.
+PARTY_ALIASES = {"A.L.P.": "Labor", "ALP": "Labor", "LP": "Liberal", "NAT": "Nationals", "NP": "Nationals",
+                 "CLP": "Country Liberal Party", "Queensland Greens": "Greens", "The Greens": "Greens",
+                 "Australian Greens": "Greens", "KAP": "Katter's Australian Party"}
+PROGRAM_GRANTS_MAX = 1500
+PROGRAM_RECIPIENTS_MAX = 60
+SEAT_BLOCS = ("gov", "opp", "cross", "unknown")
+MARGIN_TYPES = ("marginal", "fairly_safe", "safe", "unknown")
+APPROVAL_BUCKETS = ("before_approval", "0_30", "31_90", "91_365", "over_365")
+ELECTION_BUCKETS = ("0_3", "3_6", "6_12", "12_24", "over_24", "unknown")
+ISO_DAY = re.compile(r"^\d{4}-\d{2}-\d{2}")
+
+
+def iso_day(s):
+    """The YYYY-MM-DD prefix of an ISO date or datetime string, else None.
+
+    The sources carry a few non-dates ('unknown', a run of hash marks): they
+    read as no date rather than as a date that sorts somewhere.
+    """
+    if not s or not isinstance(s, str) or not ISO_DAY.match(s):
+        return None
+    return s[:10]
+
+
+def program_key(pid):
+    """File key for a program id: lowercase, every run of non-alphanumerics -> '-',
+    trimmed of leading/trailing '-', at most 80 chars. 'GO3141' -> 'go3141';
+    'activity:Some title' -> 'activity-some-title'."""
+    k = re.sub(r"[^a-z0-9]+", "-", (pid or "").lower()).strip("-")
+    return k[:80].rstrip("-") or "x"
+
+
+def government_at(periods, day):
+    """Who governed on day, from [[start, end | None, bloc], ...] (end exclusive)."""
+    if not day:
+        return None
+    for start, end, who in periods:
+        if day >= start and (end is None or day < end):
+            return who
+    return None
+
+
+def bloc_for(party, day, blocs, government):
+    """gov / opp / cross / unknown for a seat holder's party on a grant date.
+
+    The party maps through blocs (Liberal, Nationals, LNP, CLP -> Coalition;
+    Labor -> Labor); a party outside the table is the crossbench. gov when the
+    bloc governed on the day, opp when it is the other major bloc, unknown when
+    the party or the day is missing or no government is recorded for the day.
+    """
+    if not party or not day:
+        return "unknown"
+    mine = blocs.get(party)
+    if mine is None:
+        return "cross"
+    gov = government_at(government, day)
+    if gov is None:
+        return "unknown"
+    return "gov" if mine == blocs.get(gov, gov) else "opp"
+
+
+def holder_at(members, day):
+    """The member row [name, party, entered, left] whose dates span day.
+
+    A missing entered or left date is an open end; a row whose dates are both
+    unreadable ('unknown') spans nothing. A member with no dates at all (some
+    current members in the roster) is taken as the holder only once every dated
+    member of the seat has left and only when there is exactly one such member.
+    None when nobody spans the day.
+    """
+    if not day or not members:
+        return None
+    best = None
+    best_entered = ""
+    undated = []
+    last_left = None
+    for m in members:
+        entered, left = iso_day(m[2]), iso_day(m[3])
+        if entered is None and left is None:
+            if m[2] is None and m[3] is None:
+                undated.append(m)
+            continue   # dates that are not dates at all ('unknown') span nothing
+        if left and (last_left is None or left > last_left):
+            last_left = left
+        if entered and day < entered:
+            continue
+        if left and day > left:
+            continue
+        if best is None or (entered or "") > best_entered:
+            best, best_entered = m, entered or ""
+    if best:
+        return best
+    if len(undated) == 1 and (last_left is None or day > last_left):
+        return undated[0]
+    return None
+
+
+def canonical_party(party):
+    """One spelling per party across the roster and the election results."""
+    if not party:
+        return None
+    return PARTY_ALIASES.get(party, party)
+
+
+def pretty_name(name):
+    """'Bridget Kathleen ARCHER' -> 'Bridget Archer' (first given name + surname)."""
+    parts = (name or "").replace(",", " ").split()
+    if not parts:
+        return name
+    if len(parts) == 1:
+        return parts[0].title()
+    return f"{parts[0].title()} {parts[-1].title()}"
+
+
+def seat_holder(seat, day, seat_members, margins, current_seats=None):
+    """[name, party] of the member holding a federal seat on day, or None.
+
+    The roster's service dates are unreliable for a tenth of the seats, so the
+    recorded election winner (the electorates table: 2019 and 2022, with the
+    candidate at index 4 of each margins row) decides the term after each of
+    those elections, with BY_ELECTIONS applied; from the last listed federal
+    election on, current_seats (the portal's current roster) decides; before
+    May 2019, and wherever the tables have no row, the roster's dates decide
+    (holder_at). When the winner is the same person as the roster's holder the
+    roster's spelling of the name is kept.
+    """
+    if not day or not seat:
+        return None
+    roster = holder_at(seat_members.get(seat) if seat_members else None, day)
+    roster_out = [roster[0], canonical_party(roster[1])] if roster else None
+    elections = ELECTIONS["federal"]
+    if day >= elections[-1]:
+        cur = (current_seats or {}).get(seat)
+        return [cur[0], canonical_party(cur[1])] if cur else roster_out
+    term = None
+    for e in elections:
+        if e <= day:
+            term = e
+    if term:
+        latest = None
+        for s, d, name, party in BY_ELECTIONS["federal"]:
+            if s == seat and term <= d <= day and (latest is None or d > latest[0]):
+                latest = (d, name, party)
+        if latest:
+            return [latest[1], canonical_party(latest[2])]
+        row = (margins or {}).get(seat, {}).get(term[:4])
+        if row and len(row) > 4 and row[4]:
+            surname = row[4].replace(",", " ").split()[-1].lower()
+            roster_name = roster[0].lower() if roster else ""
+            if roster and (surname in roster_name.replace("-", " ").split() or roster_name.endswith(surname)):
+                return roster_out
+            return [pretty_name(row[4]), canonical_party(row[1])]
+    return roster_out
+
+
+def margin_type_for(margins, day, elections):
+    """Seat type (marginal / fairly_safe / safe) at the latest election on or
+    before day that has a row in margins ({"2019": [pct, party, type, ...]}),
+    else None. The electorates table only holds 2019 and 2022, so a grant
+    before 18 May 2019 has no margin type."""
+    if not day or not margins:
+        return None
+    best = None
+    for e in elections:
+        row = margins.get(e[:4])
+        if row and e <= day and (best is None or e > best[0]):
+            best = (e, row)
+    return best[1][2] if best else None
+
+
+def months_to_election_bucket(day, elections):
+    """Bucket of months from day to the next election in elections (sorted ISO
+    days). A day after the last listed election is 'unknown'."""
+    if not day:
+        return "unknown"
+    nxt = next((e for e in elections if e >= day), None)
+    if nxt is None:
+        return "unknown"
+    try:
+        days = (date.fromisoformat(nxt) - date.fromisoformat(day)).days
+    except ValueError:
+        return "unknown"
+    months = days / 30.4375
+    for limit, name in ((3, "0_3"), (6, "3_6"), (12, "6_12"), (24, "12_24")):
+        if months < limit:
+            return name
+    return "over_24"
+
+
+def approval_bucket(start, approval):
+    """Bucket of (start date minus approval date) in days; None when either is missing."""
+    if not start or not approval:
+        return None
+    try:
+        d = (date.fromisoformat(start) - date.fromisoformat(approval)).days
+    except ValueError:
+        return None
+    if d < 0:
+        return "before_approval"
+    if d <= 30:
+        return "0_30"
+    if d <= 90:
+        return "31_90"
+    if d <= 365:
+        return "91_365"
+    return "over_365"
+
+
+def build_program_file(pid, key, jur, gs, ctx):
+    """The program file (docs/DATA-GRANTS.md "Program files") for one program.
+
+    gs: the program's grant dicts as the remote program builds them (id, rid,
+    v, n, ag, cat, fy, s, a, pbs, sel, el, elst, adhoc, guid, desc, raw).
+    ctx: recips (rid -> {canonical_name, kind, donor_entity_id}), seat_members
+    (seat -> [[name, party, entered, left], ...]), margins (seat -> {year:
+    [pct, party, type, state, candidate]}), current_seats (seat -> [name,
+    party], optional), blocs, government, elections (the file's own
+    jurisdiction, for the election timing; seat holders always follow the
+    federal calendar), agency_label (callable), generated (iso timestamp).
+    Federal-only fields (pbs, seats, margins, bloc, mt, a, approval timing,
+    electorate gov/opp/cross) are null in a QLD file: QLD electorates are
+    federal divisions and state money against federal seats would mislead.
+    """
+    federal = jur == "federal"
+    recips = ctx["recips"]
+    seat_members = ctx["seat_members"]
+    margins = ctx["margins"]
+    current_seats = ctx.get("current_seats")
+    blocs, government, elections = ctx["blocs"], ctx["government"], ctx["elections"]
+    label = ctx["agency_label"]
+
+    def pair():
+        return [0.0, 0]
+
+    def add(p, v):
+        p[0] += v
+        p[1] += 1
+
+    def out_pair(p):
+        return [round(p[0]), p[1]]
+
+    agencies = Counter()
+    cats = Counter()
+    pbs = Counter()
+    sel = defaultdict(pair)
+    sel_known = pair()
+    by = defaultdict(pair)
+    el_known = pair()
+    seats = {k: pair() for k in SEAT_BLOCS}
+    margin_mix = {k: pair() for k in MARGIN_TYPES}
+    approval_known = pair()
+    ab = {k: pair() for k in APPROVAL_BUCKETS}
+    mte = {k: pair() for k in ELECTION_BUCKETS}
+    el_rows = defaultdict(lambda: {"t": 0.0, "c": 0, "gov": 0.0, "opp": 0.0, "cross": 0.0,
+                                   "st": Counter(), "holders": Counter()})
+    recipients = {}
+    donor_rids = set()
+    dt = 0.0
+    adhoc = 0.0
+    fys = set()
+    rows = []
+    for g in gs:
+        v = g["v"] or 0.0
+        s = iso_day(g.get("s"))
+        a = iso_day(g.get("a")) if federal else None
+        day = s or a
+        rec = recips.get(g["rid"]) if g.get("rid") else None
+        rkey = g.get("rid") or ("name:" + (g.get("raw") or ""))
+        r = recipients.get(rkey)
+        if r is None:
+            r = recipients[rkey] = [g.get("rid"), (rec["canonical_name"] if rec else g.get("raw")) or "Recipient not recorded",
+                                    (rec["kind"] if rec else None), 0.0, 0, bool(rec and rec.get("donor_entity_id"))]
+        r[3] += v
+        r[4] += 1
+        if r[5]:
+            dt += v
+            donor_rids.add(rkey)
+        agencies[label(g.get("ag"))] += v
+        cats[g.get("cat") or "Not categorised"] += v
+        if federal and g.get("pbs"):
+            pbs[g["pbs"]] += v
+        if g.get("sel"):
+            add(sel[g["sel"]], v)
+            add(sel_known, v)
+        if g.get("fy"):
+            add(by[g["fy"]], v)
+            fys.add(g["fy"])
+        if g.get("adhoc"):
+            adhoc += v
+        el = g.get("el")
+        holder = seat_holder(el, day, seat_members, margins, current_seats) if el else None
+        holder_out = holder
+        bloc = mt = None
+        if federal:
+            bloc = bloc_for(holder[1], day, blocs, government) if (el and holder) else "unknown"
+            mt = margin_type_for(margins.get(el), day, elections) if el else None
+            add(seats[bloc], v)
+            add(margin_mix[mt or "unknown"], v)
+            if a:
+                add(approval_known, v)
+            b = approval_bucket(s, a)
+            if b:
+                add(ab[b], v)
+        add(mte[months_to_election_bucket(day, elections)], v)
+        if el:
+            add(el_known, v)
+            e = el_rows[el]
+            e["t"] += v
+            e["c"] += 1
+            if g.get("elst"):
+                e["st"][g["elst"]] += 1
+            if federal and bloc in ("gov", "opp", "cross"):
+                e[bloc] += v
+            if holder:
+                e["holders"][(holder[0], holder[1])] += v
+        row = {"id": g["id"], "v": round(v), "n": g.get("n"), "rid": g.get("rid"), "rn": r[1], "k": r[2],
+               "fy": g.get("fy"), "s": s, "a": a, "sel": g.get("sel"), "el": el, "elst": g.get("elst") if el else None,
+               "holder": holder_out, "bloc": bloc, "mt": mt, "adhoc": 1 if g.get("adhoc") else 0, "guid": g.get("guid")}
+        if g.get("desc"):
+            row["desc"] = g["desc"]
+        rows.append((v, row))
+    rows.sort(key=lambda x: -x[0])
+    total = sum(v for v, _ in rows)
+    fys_sorted = sorted(fys, key=fy_key)
+    electorates = []
+    for name, e in sorted(el_rows.items(), key=lambda kv: -kv[1]["t"]):
+        st = e["st"].most_common(1)[0][0] if e["st"] else None
+        if not st:
+            m = margins.get(name) or {}
+            st = next((v[3] for v in m.values() if len(v) > 3 and v[3]), None)
+        row = {"n": name, "st": st, "t": round(e["t"]), "c": e["c"]}
+        if federal:
+            row.update({"gov": round(e["gov"]), "opp": round(e["opp"]), "cross": round(e["cross"])})
+        # one row per member: the roster and the election results can spell the
+        # same member's party differently (Nationals vs Liberal for an LNP seat)
+        by_member = {}
+        for (n, p), v in e["holders"].most_common():
+            m = by_member.setdefault(n, {"t": 0.0, "parties": Counter()})
+            m["t"] += v
+            m["parties"][p] += v
+        row["holders"] = [[n, m["parties"].most_common(1)[0][0], round(m["t"])]
+                          for n, m in sorted(by_member.items(), key=lambda kv: -kv[1]["t"])]
+        electorates.append(row)
+    top_recipients = sorted(recipients.values(), key=lambda r: -r[3])[:PROGRAM_RECIPIENTS_MAX]
+    names = Counter()
+    for g in gs:
+        names[g.get("pr") or g.get("n") or pid] += 1
+    return {
+        "id": pid, "key": key, "n": names.most_common(1)[0][0] if names else pid, "jur": jur,
+        "ag": agencies.most_common(1)[0][0] if agencies else "Agency not recorded",
+        "agencies": [[a_, round(v)] for a_, v in agencies.most_common(6)],
+        "t": round(total), "c": len(rows), "r": len(recipients), "dt": round(dt), "dr": len(donor_rids), "adhoc": round(adhoc),
+        "y0": fys_sorted[0] if fys_sorted else None, "y1": fys_sorted[-1] if fys_sorted else None,
+        "cats": [[c, round(v)] for c, v in cats.most_common(8)],
+        "pbs": ([[p_, round(v)] for p_, v in pbs.most_common(6)] if federal else None),
+        "sel": {k: out_pair(v) for k, v in sorted(sel.items(), key=lambda kv: -kv[1][0])},
+        "sel_known": out_pair(sel_known),
+        "by": {fy: out_pair(by[fy]) for fy in fys_sorted},
+        "el_known": out_pair(el_known),
+        "seats": ({k: out_pair(v) for k, v in seats.items()} if federal else None),
+        "margins": ({k: out_pair(v) for k, v in margin_mix.items()} if federal else None),
+        "electorates": electorates,
+        "recipients": [[r[0], r[1], r[2], round(r[3]), r[4], r[5]] for r in top_recipients],
+        "timing": {
+            "approval_known": out_pair(approval_known) if federal else None,
+            "approval_to_start_days": ({k: out_pair(v) for k, v in ab.items()} if federal else None),
+            "months_to_election": {k: out_pair(v) for k, v in mte.items()},
+        },
+        "grants": [row for _, row in rows[:PROGRAM_GRANTS_MAX]],
+        "grants_total": len(rows), "grants_listed": min(len(rows), PROGRAM_GRANTS_MAX),
+        "generated": ctx["generated"],
+    }
+
+
+def fy_key(fy):
+    return int(fy[:4]) if fy and fy[:4].isdigit() else -1
+
+
+def program_index_extras(pf, jur):
+    """The fields a programs[] index row gains from its program file."""
+    out = {"key": pf["key"], "cnc": pf["sel"].get("Closed Non-Competitive", [0, 0])[0], "selk": pf["sel_known"][0]}
+    if jur == "federal":
+        out.update({"gov": pf["seats"]["gov"][0], "elk": pf["el_known"][0], "marg": pf["margins"]["marginal"][0]})
+    return out
+
+
+SHARED_FUNCTIONS = (iso_day, program_key, government_at, bloc_for, holder_at, canonical_party, pretty_name, seat_holder,
+                    margin_type_for, months_to_election_bucket, approval_bucket, build_program_file, fy_key,
+                    program_index_extras)
+SHARED_CONSTANTS = ("ELECTIONS", "BLOCS", "GOVERNMENT", "BY_ELECTIONS", "PARTY_ALIASES", "PROGRAM_GRANTS_MAX",
+                    "PROGRAM_RECIPIENTS_MAX", "SEAT_BLOCS", "MARGIN_TYPES", "APPROVAL_BUCKETS", "ELECTION_BUCKETS")
+
+
+def current_seats_from_roster(path: Path) -> dict:
+    """seat -> [name, party] for the current federal House from portal/public/parliamentarians.json
+    (the APH current list; when a seat has two current rows the one with more speeches wins)."""
+    if not path.exists():
+        return {}
+    people = json.loads(path.read_text(encoding="utf-8")).get("people", [])
+    best: dict = {}
+    for p in people:
+        if not p.get("current"):
+            continue
+        for r in p.get("representation", []):
+            if r.get("jurisdiction") == "federal" and r.get("chamber") == "representatives" and r.get("electorate"):
+                seat = r["electorate"]
+                cand = (p.get("speeches") or 0, p["name"], p.get("party_now") or p.get("party"))
+                if seat not in best or cand[0] > best[seat][0]:
+                    best[seat] = cand
+    return {seat: [name, party] for seat, (_, name, party) in sorted(best.items())}
+
+
+def remote_program(current_seats: dict | None = None) -> str:
+    """The stdlib-only program streamed to the DB host: shared rules + REMOTE_BODY."""
+    head = ["from __future__ import annotations",
+            "import json, re, sqlite3, sys, zlib",
+            "from collections import Counter, defaultdict",
+            "from datetime import date, datetime, timezone",
+            "ISO_DAY = re.compile(r'^\\d{4}-\\d{2}-\\d{2}')"]
+    for name in SHARED_CONSTANTS:
+        head.append(f"{name} = {globals()[name]!r}")
+    head.append(f"CURRENT_SEATS = {current_seats or {}!r}")
+    return "\n".join(head) + "\n\n" + "\n\n".join(inspect.getsource(f) for f in SHARED_FUNCTIONS) + "\n" + REMOTE_BODY
+
+REMOTE_BODY = r'''
 JUR = sys.argv[1]
 TOP_RECIPIENTS = int(sys.argv[2]) if len(sys.argv) > 2 else 3800
 CAP_RECIPIENTS = int(sys.argv[3]) if len(sys.argv) > 3 else 6000
 FORCE_ABNS = [a for a in sys.argv[4].split(",")] if len(sys.argv) > 4 and sys.argv[4] else []
-TOP_PROGRAMS = 300
+TOP_PROGRAMS = int(sys.argv[5]) if len(sys.argv) > 5 else 500
 GRANTS_PER_DETAIL = 40
 DB = "/home/jake/.cache/autoresearch/parli.db"
 
@@ -79,12 +535,6 @@ db.row_factory = sqlite3.Row
 q = lambda s, *p: db.execute(s, p).fetchall()
 has = lambda t: bool(q("SELECT name FROM sqlite_master WHERE name = ?", t))
 
-BLOCS = {"Liberal": "Coalition", "Nationals": "Coalition", "LNP": "Coalition",
-         "Country Liberal Party": "Coalition", "Labor": "Labor"}
-GOVERNMENT = {
-    "federal": [["2013-09-18", "2022-05-23", "Coalition"], ["2022-05-23", None, "Labor"]],
-    "qld": [["2012-03-26", "2015-02-14", "LNP"], ["2015-02-14", "2024-10-28", "Labor"], ["2024-10-28", None, "LNP"]],
-}
 EXPOSED_STATES = ("qld", "vic", "tas")
 
 def fy_of(iso):
@@ -93,9 +543,6 @@ def fy_of(iso):
     y, m = int(iso[:4]), int(iso[5:7])
     s = y if m >= 7 else y - 1
     return f"{s}-{str(s + 1)[2:]}"
-
-def fy_key(fy):
-    return int(fy[:4]) if fy and fy[:4].isdigit() else -1
 
 def slug(s):
     s = re.sub(r"[^a-z0-9]+", "-", (s or "").lower()).strip("-")
@@ -129,7 +576,8 @@ if JUR == "federal":
     details = {}
     if has("ext_grant_details"):
         for r in q("SELECT ga_id, guid, recipient_abn, selection_process, program, delivery_postcode, "
-                   "recipient_postcode, delivery_state, recipient_state FROM ext_grant_details WHERE http_status = 200"):
+                   "recipient_postcode, delivery_state, recipient_state, approval_date, pbs_program "
+                   "FROM ext_grant_details WHERE http_status = 200"):
             details[r["ga_id"]] = r
     for r in q("SELECT ga_id, activity, agency, category, publish_date, start_date, end_date, financial_year, "
                "value, go_id, recipient_name, ad_hoc, aggregate FROM ext_grants"):
@@ -151,6 +599,7 @@ if JUR == "federal":
             "adhoc": int(r["ad_hoc"] or 0), "sel": (d["selection_process"] if d else None),
             "el": el, "elst": elst, "abn": abn, "raw": name,
             "guid": (d["guid"] if d and d["guid"] else None),
+            "a": (d["approval_date"] if d else None), "pbs": (d["pbs_program"] if d else None),
         })
     src_meta = {
         "jurisdiction": "federal", "label": "Commonwealth", "sourceShort": "GrantConnect grant awards",
@@ -359,7 +808,6 @@ def by_year_cells(gs):
     return [b[fy] if fy in b else 0 for fy in all_years]
 
 SHARDS = 40
-import zlib
 def shard_of(key):
     return zlib.crc32(key.encode("utf-8")) % SHARDS
 
@@ -423,13 +871,27 @@ for rid, rec, gs, t in listed:
                   if (other_total or 0) > 0 else None),
     }
 
-# programs
-prog = defaultdict(lambda: {"t": 0.0, "c": 0, "r": set(), "dt": 0.0, "dr": set(), "adhoc": 0.0, "ag": Counter(), "names": Counter(), "fy": set()})
+# programs. 136k federal awards carry no GO id in the register; when a fetched
+# detail page names a program that only one GO id uses, the award files under
+# that GO id (GA34203, Community Development Grants -> GO3141). Otherwise an
+# award without a GO id is its own "activity:<title>" program, as before.
+go_by_name = {}
+if JUR == "federal":
+    name_gos = defaultdict(Counter)
+    for g in grants:
+        if g["go"] and g["pr"]:
+            name_gos[" ".join(g["pr"].split()).lower()][g["go"]] += 1
+    go_by_name = {n: next(iter(c)) for n, c in name_gos.items() if len(c) == 1}
+prog = defaultdict(lambda: {"t": 0.0, "c": 0, "r": set(), "dt": 0.0, "dr": set(), "adhoc": 0.0, "ag": Counter(), "names": Counter(), "fy": set(), "grants": []})
 for g in grants:
-    key = (g["go"] or "") if JUR == "federal" else (g["pr"] or "")
+    if JUR == "federal":
+        key = g["go"] or (go_by_name.get(" ".join(g["pr"].split()).lower()) if g["pr"] else None) or ""
+    else:
+        key = " ".join((g["pr"] or "").split())
     if not key:
         key = "activity:" + (g["n"] or "")
     p = prog[key]
+    p["grants"].append(g)
     p["t"] += g["v"]; p["c"] += 1
     if g["rid"]:
         p["r"].add(g["rid"])
@@ -443,7 +905,8 @@ for g in grants:
     if g["fy"]:
         p["fy"].add(g["fy"])
 programs = []
-for key, p in sorted(prog.items(), key=lambda kv: -kv[1]["t"])[:TOP_PROGRAMS]:
+listed_programs = sorted(prog.items(), key=lambda kv: -kv[1]["t"])[:TOP_PROGRAMS]
+for key, p in listed_programs:
     fys = sorted(p["fy"], key=fy_key)
     programs.append({"id": key, "n": p["names"].most_common(1)[0][0], "ag": p["ag"].most_common(1)[0][0],
                      "t": round(p["t"]), "c": p["c"], "r": len(p["r"]), "dt": round(p["dt"]), "dr": len(p["dr"]),
@@ -468,15 +931,37 @@ for g in grants:
     if g["adhoc"]:
         e["adhoc"] += g["v"]
 mps = defaultdict(list)
+seat_members = defaultdict(list)
 for r in q("SELECT full_name, party_canonical, party, electorate, entered_house, left_house FROM members "
            "WHERE chamber = 'representatives' AND state = 'federal' AND electorate IS NOT NULL "
-           "AND (left_house IS NULL OR left_house >= '2017-01-01') AND (entered_house IS NULL OR entered_house <= '2026-12-31')"):
+           "AND (left_house IS NULL OR left_house >= '2010-01-01') AND (entered_house IS NULL OR entered_house <= '2026-12-31')"):
     if not r["full_name"] or (r["entered_house"] is None and r["left_house"] is None and not r["party_canonical"]):
         continue
-    mps[r["electorate"]].append([r["full_name"], r["party_canonical"] or r["party"], r["entered_house"], r["left_house"]])
+    row = [r["full_name"], r["party_canonical"] or r["party"], r["entered_house"], r["left_house"]]
+    seat_members[r["electorate"]].append(row)
+    if r["left_house"] is None or r["left_house"] >= "2017-01-01":
+        mps[r["electorate"]].append(row)
 margins = defaultdict(dict)
-for r in q("SELECT electorate_name, state, year, margin_pct, winning_party, seat_type FROM electorates"):
-    margins[r["electorate_name"]][str(r["year"])] = [r["margin_pct"], r["winning_party"], r["seat_type"], (r["state"] or "").lower()]
+for r in q("SELECT electorate_name, state, year, margin_pct, winning_party, seat_type, winning_candidate FROM electorates"):
+    margins[r["electorate_name"]][str(r["year"])] = [r["margin_pct"], r["winning_party"], r["seat_type"], (r["state"] or "").lower(),
+                                                     r["winning_candidate"]]
+
+# program files (one per listed program) and the index row extras
+generated = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+program_ctx = {"recips": recips, "seat_members": seat_members, "margins": margins, "current_seats": CURRENT_SEATS,
+               "blocs": BLOCS, "government": GOVERNMENT[JUR], "elections": ELECTIONS[JUR], "agency_label": agency_label,
+               "generated": generated}
+programs_out = {}
+for row, (key, p) in zip(programs, listed_programs):
+    fkey = program_key(key)
+    if fkey in programs_out:   # two ids that slug the same way: the larger keeps the clean key
+        n = 2
+        while f"{fkey}-{n}" in programs_out:
+            n += 1
+        fkey = f"{fkey}-{n}"
+    pf = build_program_file(key, fkey, JUR, p["grants"], program_ctx)
+    programs_out[fkey] = pf
+    row.update(program_index_extras(pf, JUR))
 electorates = []
 for name, e in sorted(el_rows.items(), key=lambda kv: -kv[1]["t"]):
     st = e["st"].most_common(1)[0][0] if e["st"] else (next(iter(margins.get(name, {}).values()), [None, None, None, None])[3])
@@ -505,13 +990,13 @@ for g in grants:
 
 meta = dict(src_meta)
 meta.update({
-    "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "generated": generated,
     "coverage": (f"awards published {min(g['s'] or '9999' for g in grants)[:10]} to {max((g['s'] or '') for g in grants)[:10]}"
                  if JUR == "federal" else f"financial years {all_years[0]} to {all_years[-1]}"),
     "years": all_years,
     "chart_years": [fy for fy in all_years if years[fy]["t"] >= max(v["t"] for v in years.values()) * 0.01],
     "shards": SHARDS,
-    "government": GOVERNMENT[JUR], "blocs": BLOCS,
+    "government": GOVERNMENT[JUR], "blocs": BLOCS, "elections": ELECTIONS[JUR],
     "counts": {
         "grants": len(grants), "dollars": round(total_dollars),
         "recipients": len(recipient_rows), "recipients_listed": len(index_recipients),
@@ -523,6 +1008,7 @@ meta.update({
         "electorate_known_share": round(el_known / total_dollars, 4) if total_dollars else 0,
         "details_fetched": details_fetched,
         "agencies": len(agency_idx), "programs_total": len(prog), "programs_listed": len(programs),
+        "program_files": len(programs_out),
     },
     "selection_mix": {k: round(v) for k, v in sel_mix.most_common()},
     "caveats": [
@@ -549,9 +1035,66 @@ out = {
         "kinds": {k: {"t": round(v["t"]), "c": v["c"], "r": v["r"], "dt": round(v["dt"]), "dr": v["dr"]} for k, v in sorted(kinds.items(), key=lambda kv: -kv[1]["t"])},
     },
     "details": details_out,   # shard name -> {file key -> detail}
+    "programs": programs_out,   # file key -> program file
 }
 json.dump(out, sys.stdout, ensure_ascii=False, separators=(",", ":"))
 '''
+
+
+INDEX_SIZE_LIMIT = 1_600_000   # bytes; over it the listed programs fall back to 300
+
+
+def write_outputs(data: dict, out: Path, jur: str) -> dict:
+    """Split the remote program's JSON into the index, the shards and the program files.
+
+    Stale files (a recipient or program that fell off the list) are removed so
+    each directory is exactly the listed set. Returns what was written.
+    """
+    graph = out / "graph"
+    graph.mkdir(parents=True, exist_ok=True)
+    index_path = graph / f"grants.{jur}.json"
+    with open(index_path, "w", encoding="utf-8") as f:
+        json.dump(data["index"], f, ensure_ascii=False, separators=(",", ":"))
+    ddir = out / "grants" / jur
+    ddir.mkdir(parents=True, exist_ok=True)
+    keep = set()
+    for shard, bundle in data["details"].items():
+        keep.add(f"{shard}.json")
+        with open(ddir / f"{shard}.json", "w", encoding="utf-8") as f:
+            json.dump(bundle, f, ensure_ascii=False, separators=(",", ":"))
+    removed = 0
+    for p in ddir.glob("*.json"):
+        if p.name not in keep:
+            p.unlink()
+            removed += 1
+    pdir = ddir / "programs"
+    pdir.mkdir(parents=True, exist_ok=True)
+    keep_programs = set()
+    for key, pf in data.get("programs", {}).items():
+        keep_programs.add(f"{key}.json")
+        with open(pdir / f"{key}.json", "w", encoding="utf-8") as f:
+            json.dump(pf, f, ensure_ascii=False, separators=(",", ":"))
+    for p in pdir.glob("*.json"):
+        if p.name not in keep_programs:
+            p.unlink()
+            removed += 1
+    return {
+        "index_path": index_path, "index_size": index_path.stat().st_size,
+        "shards": len(keep), "detail_files": sum(len(b) for b in data["details"].values()),
+        "detail_bytes": sum((ddir / n).stat().st_size for n in keep),
+        "program_files": len(keep_programs), "program_bytes": sum((pdir / n).stat().st_size for n in keep_programs),
+        "removed": removed,
+    }
+
+
+def run_remote(host: str, jur: str, top: int, cap: int, force_abns: list[str], programs: int) -> dict | None:
+    current = current_seats_from_roster(ROOT / "portal" / "public" / "parliamentarians.json")
+    proc = subprocess.run(["ssh", host, "python3", "-", jur, str(top), str(cap), ",".join(force_abns), str(programs)],
+                          input=remote_program(current), capture_output=True, text=True, timeout=3600)
+    if proc.returncode != 0:
+        sys.stderr.write(proc.stderr[-4000:])
+        return None
+    return json.loads(proc.stdout)
 
 
 def main() -> int:
@@ -561,6 +1104,8 @@ def main() -> int:
     ap.add_argument("--host", default=DB_HOST)
     ap.add_argument("--top", type=int, default=3800, help="largest recipients listed by dollars")
     ap.add_argument("--cap", type=int, default=6000, help="hard cap on listed recipients (donors fill up to it)")
+    ap.add_argument("--programs", type=int, default=500,
+                    help="programs listed in the index, each with a file (falls back to 300 if the index passes 1.6 MB)")
     args = ap.parse_args()
 
     # A recipient listed in the *other* jurisdiction's export (by ABN) is
@@ -577,42 +1122,25 @@ def main() -> int:
             if rid.startswith("abn:")
         })
 
-    proc = subprocess.run(["ssh", args.host, "python3", "-", args.jurisdiction, str(args.top), str(args.cap),
-                          ",".join(force_abns)],
-                          input=REMOTE, capture_output=True, text=True, timeout=3600)
-    if proc.returncode != 0:
-        sys.stderr.write(proc.stderr[-4000:])
+    data = run_remote(args.host, args.jurisdiction, args.top, args.cap, force_abns, args.programs)
+    if data is None:
         return 1
-    data = json.loads(proc.stdout)
     out = Path(args.out_dir)
-    graph = out / "graph"
-    graph.mkdir(parents=True, exist_ok=True)
-    index_path = graph / f"grants.{args.jurisdiction}.json"
-    with open(index_path, "w", encoding="utf-8") as f:
-        json.dump(data["index"], f, ensure_ascii=False, separators=(",", ":"))
-    ddir = out / "grants" / args.jurisdiction
-    ddir.mkdir(parents=True, exist_ok=True)
-    # Stale detail files (a recipient that fell off the list) are removed so
-    # the directory is exactly the listed set.
-    keep = set()
-    for shard, bundle in data["details"].items():
-        keep.add(f"{shard}.json")
-        with open(ddir / f"{shard}.json", "w", encoding="utf-8") as f:
-            json.dump(bundle, f, ensure_ascii=False, separators=(",", ":"))
-    removed = 0
-    for p in ddir.glob("*.json"):
-        if p.name not in keep:
-            p.unlink()
-            removed += 1
+    w = write_outputs(data, out, args.jurisdiction)
+    if w["index_size"] > INDEX_SIZE_LIMIT and args.programs > 300:
+        print(f"index is {w['index_size']/1024:.0f} KB with {args.programs} programs; re-running with 300")
+        data = run_remote(args.host, args.jurisdiction, args.top, args.cap, force_abns, 300)
+        if data is None:
+            return 1
+        w = write_outputs(data, out, args.jurisdiction)
     c = data["index"]["meta"]["counts"]
-    size = index_path.stat().st_size
-    total_detail = sum((ddir / n).stat().st_size for n in keep)
-    n_detail = sum(len(b) for b in data["details"].values())
-    print(f"{index_path} {size/1024:.0f} KB; {n_detail} recipient files in {len(keep)} shards ({total_detail/1024/1024:.1f} MB), {removed} stale files removed")
+    print(f"{w['index_path']} {w['index_size']/1024:.0f} KB; {w['detail_files']} recipient files in {w['shards']} shards "
+          f"({w['detail_bytes']/1024/1024:.1f} MB); {w['program_files']} program files ({w['program_bytes']/1024/1024:.1f} MB); "
+          f"{w['removed']} stale files removed")
     print(f"  {c['grants']:,} grants, ${c['dollars']/1e9:.2f}B, {c['recipients']:,} recipients "
           f"({c['recipients_listed']:,} listed), donors: {c['donor_recipients']:,} recipients / "
           f"${c['donor_dollars']/1e9:.2f}B ({c['donor_share']*100:.1f}%); ABN known {c['abn_known_share']*100:.0f}% of dollars; "
-          f"electorate known {c['electorate_known_share']*100:.0f}%")
+          f"electorate known {c['electorate_known_share']*100:.0f}%; programs listed {c['programs_listed']} of {c['programs_total']:,}")
     return 0
 
 

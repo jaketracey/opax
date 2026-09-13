@@ -120,8 +120,9 @@ writes:
   by index), `recipients[]` (the 3,800 largest by dollars plus every donor among them,
   cap 6,000, plus any recipient the *other* jurisdiction's export already lists by ABN
   forced in regardless of rank so a shard's cross-jurisdiction pointer never dangles:
-  4,688 federal, 4,268 QLD, measured 2026-09-13), `programs[]` (top 300 by dollars;
-  federal grouped by GO ID, QLD by program), `electorates[]` (per federal division:
+  4,688 federal, 4,268 QLD, measured 2026-09-13), `programs[]` (top 500 by dollars;
+  federal grouped by GO ID, QLD by program name with stray whitespace collapsed; each
+  row carries the program file key, section 3.2), `electorates[]` (per federal division:
   totals, donor share, the members who held it since 2017 from `members`, margins from
   `electorates` 2019 and 2022), `years{}`, `kinds{}`.
 - `portal/public/grants/<jur>/shard-NN.json`: the listed recipients' files in 40 shards by
@@ -129,6 +130,100 @@ writes:
   ABR record, aliases, agencies, programs, selection mix, electorates, the donor entity
   with AEC donations by party and year and each exposed state register (qld, vic, tas)
   separately, and a pointer to its grants in the other jurisdiction.
+- `portal/public/grants/<jur>/programs/<key>.json`: one file per listed program (section
+  3.2).
+
+### 3.2 Program files (2026-09-13)
+
+The Programs view opens a program the way the Recipients view opens a recipient. The
+index lists the 500 largest programs per jurisdiction by dollars (`--programs`; the
+export falls back to 300 if the index would pass 1.6 MB) and writes a file for each of
+them, so `counts.program_files` equals `counts.programs_listed`.
+
+Grouping. Federal programs are GO ids. 136,454 awards ($51B, mostly published 2018-2020
+and since 2025) carry no GO id in the register; when such an award's fetched detail page
+names a program that only one GO id uses, the award files under that GO id (GA34203, the
+Qantas Founders Museum airpark roof, is a Community Development Grants award with no GO
+id and files under GO3141). Program names that several GO ids share (181 of 767, e.g.
+"Comprehensive Primary Health Care") are left alone. An award with no GO id and no such
+name is its own `activity:<title>` program, as before. QLD programs are program names
+with stray whitespace collapsed.
+
+Layout. A programs[] index row carries `key` (the file name: the program id lowercased,
+every run of non-alphanumerics to `-`, trimmed, at most 80 characters; `GO3141` ->
+`go3141`, `activity:Some title` -> `activity-some-title`; two ids that slug the same
+way get `-2`, `-3` on the smaller), `cnc` (Closed Non-Competitive dollars), `selk`
+(dollars with a selection process recorded) and, federal only, `gov` (dollars in
+government-held seats at the grant date), `elk` (dollars with an electorate mapped) and
+`marg` (dollars in seats that were marginal at the latest prior election with a row).
+`meta.elections` lists the election days the timing buckets use. The file itself holds
+the program's totals, agencies, top 8 categories, top 6 PBS program lines (federal, from
+each award's detail page), the selection mix, dollars by financial year, the seat split
+(`seats`: gov / opp / cross / unknown), the margin split, every electorate with a grant
+and the members who held it on the grant dates, the 60 largest recipients (each flagged
+when it is in the donor registers), the timing buckets, and the grants themselves,
+largest first, at most 1,500 (`grants_total` / `grants_listed` say how many there are
+and how many are listed). Every [d, c] pair is [dollars, count]. Federal-only fields are
+present in a QLD file with the value null.
+
+Rules.
+- The grant date is the start date, else the approval date (federal detail pages only),
+  else unknown. Seat holder, bloc, margin type and months to the election all use it;
+  an unknown date gives holder null, bloc "unknown", margin null and timing "unknown".
+  A source value that is not a date (a run of hash marks in one QLD line, "unknown" in a
+  few roster rows) reads as no date.
+- The holder is the member of the House for the seat on the grant date, layered because
+  the roster's service dates are wrong for about a tenth of the seats (Bass has Ross Hart
+  sitting until 2026 and Bridget Archer since 1907; the 2025 intake has no dates at
+  all): from 18 May 2019 to 2 May 2025 the recorded general-election winner
+  (`electorates`, 2019 and 2022 rows, `winning_candidate`) holds the seat for the term,
+  with the six House by-elections of those terms applied (Eden-Monaro, Groom, Aston,
+  Fadden, Dunkley, Cook; `BY_ELECTIONS` in the script); from 3 May 2025 the portal's
+  current roster (`portal/public/parliamentarians.json`, `current` federal
+  representatives) holds it; before May 2019, and wherever those tables have no row,
+  the member whose entered / left dates span the date (`members`, chamber
+  representatives, anyone who sat since 2010; the index's `electorates[].mps` keeps its
+  since-2017 window; a roster row with no dates at all counts only once every dated
+  member has left). Names keep the roster's spelling when the winner is the same
+  person; party spellings are unified (A.L.P. and ALP are Labor, KAP is Katter's
+  Australian Party). Measured 2026-09-13 before the layering: the roster alone
+  disagreed with the recorded winner in 16 of 151 seats for 2019 and 29 of 151 by
+  January 2024.
+- Bloc: the holder's party through `meta.blocs` (Liberal, Nationals, LNP, CLP =
+  Coalition; Labor = Labor); "gov" when that bloc governed on the grant date per
+  `meta.government`, "opp" when it is the other major bloc, "cross" for the Greens,
+  independents and minor parties, "unknown" when the electorate, the holder or the
+  holder's party is unknown or the date is before the government table starts
+  (September 2013; two awards).
+- Margin type: the `electorates` table only has the 2019 and 2022 results, so a grant
+  takes the seat type from the latest election day on or before its date that has a
+  row. Grants before 18 May 2019 have no margin type and count as "unknown" in the
+  split; the UI says so.
+- Months to the election: from the grant date to the next election day in the file's
+  own jurisdiction's list (federal 2013, 2016, 2019, 2022, 2025; QLD 2015, 2017, 2020,
+  2024), in months of 30.44 days: 0_3, 3_6, 6_12, 12_24, over_24. A date after the last
+  listed election is "unknown" (60,735 federal awards start after 3 May 2025).
+- Approval to start (federal): start date minus approval date in days: before_approval
+  (start before the recorded approval), 0_30, 31_90, 91_365, over_365; only where the
+  detail page has been fetched (`timing.approval_known`).
+
+Caveats.
+- Everything about seats is as of the grant date, not today: a seat that changed hands
+  in 2022 or 2025 shows the earlier member for earlier grants, and the electorates list
+  names every member who held the seat across the program's grants.
+- Federal electorates come from the delivery or recipient postcode of a fetched detail
+  page (highest-ratio division), so `el_known` grows with the detail harvest and a
+  postcode straddling a boundary is approximate. Redistributions are not tracked: a
+  2019 grant in a seat abolished since is still filed under that seat.
+- QLD grants are state money and their electorates are federal divisions, so the QLD
+  file has seats, margins, bloc, margin type, PBS lines and approval timing null. It keeps
+  electorates (with the federal members who held them), the selection mix (the load-time
+  grant type: formula, discretionary, one-off, multi-year) and the timing against
+  Queensland elections. 127,268 of the 230,007 QLD lines have no start date and so no
+  holder or election timing.
+- The remote program shares its rules with `scripts/test_export_grants.py`: the same
+  functions are sourced into the streamed program, so `python3 -m unittest
+  scripts/test_export_grants.py` exercises what the export runs, without the DB host.
 
 The module `portal/public/grants.js` (`mountGrants`, Explore card "Who gets the grants",
 megamenu and drawer links, `data-game="grants"`) has three views over one filtered set:
@@ -181,7 +276,7 @@ All from the worktree on the Mac unless noted. `uv run` fails here; use `.venv`.
 | Detail pages (background, on desktop) | `scp scripts/grantconnect_details.py desktop:/tmp/ && ssh desktop 'nohup python3 /tmp/grantconnect_details.py > /tmp/gc_details.log 2>&1 & echo $! > /tmp/gc_details.pid'`; status `ssh desktop 'tail -2 /tmp/gc_details.log'`; stop `ssh desktop 'kill $(cat /tmp/gc_details.pid)'`. Resumes where it left off. | started 2026-09-05 11:35 local, ~0.8 awards/s, ~5 days for the register |
 | Recipients | `rsync -a --exclude __pycache__ parli/ desktop:~/opax-sync/parli/ && ssh desktop 'cd ~/opax-sync && PYTHONPATH=. python3 -m parli.ingest.grant_recipients --db ~/.cache/autoresearch/parli.db --abr-dir ~/.cache/autoresearch/abr'` (~1 min) | after any grants load or donor-register rebuild, and daily while the detail harvest runs |
 | Export | `.venv/bin/python scripts/export_grants.py federal && .venv/bin/python scripts/export_grants.py qld`; money maps `ssh desktop python3 - < scripts/export_money_graph.py > portal/public/graph/money.json` and `ssh desktop python3 - qld < scripts/export_state_money.py > portal/public/graph/money.qld.json`, then `node graph/smoke-test.mjs` and `npm run deploy` from `portal/` | with the recipients step |
-| Tests | `cd portal && node --test test/grants.test.mjs` | with any change to grants.js |
+| Tests | `cd portal && node --test test/grants.test.mjs`; `python3 -m unittest scripts/test_export_grants.py` | with any change to grants.js / export_grants.py |
 
 ## 5. Open items
 
