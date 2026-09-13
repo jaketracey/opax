@@ -9124,6 +9124,18 @@ function suggestionChip(q) {
   return b;
 }
 
+/** Keep reviewed starting questions available after an answer, without repeats. */
+function suggestedQuestions(asked = "", limit = 4) {
+  const seen = new Set([String(asked).trim().toLowerCase()]);
+  return [...featuredSuggestions, ...suggestions].filter((question) => {
+    if (typeof question !== "string") return false;
+    const key = question.trim().toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, limit);
+}
+
 /**
  * Suggested questions as home-page cards. They exist to start a first journey,
  * so they leave the moment a question is asked (runAsk hides the block); under
@@ -9136,7 +9148,7 @@ function renderChips() {
   if (!suggestions.length) return;
   const row = $("chip-row");
   for (const el of row.querySelectorAll(".chip")) el.remove();
-  const picks = [...new Set([...featuredSuggestions, ...suggestions])].slice(0, 4);
+  const picks = suggestedQuestions();
   for (const q of picks) row.appendChild(suggestionChip(q));
   $("ask-chips").hidden = false;
 }
@@ -9146,9 +9158,7 @@ function renderAskAgainChips() {
   const box = $("ask-again"), row = $("ask-again-row");
   if (!box || !row || !suggestions.length) return;
   row.replaceChildren();
-  const asked = (lastAsk.question || "").trim().toLowerCase();
-  const picks = suggestions.filter((q) => q.trim().toLowerCase() !== asked)
-    .sort(() => Math.random() - 0.5).slice(0, 4);
+  const picks = suggestedQuestions(lastAsk.question);
   for (const q of picks) row.appendChild(suggestionChip(q));
   box.hidden = !picks.length;
 }
