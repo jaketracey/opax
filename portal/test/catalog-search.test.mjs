@@ -115,3 +115,11 @@ test('grant program rows follow the program contract: key, title, deep link, sni
  // The MCP recognises a program row by this slug shape, independent of its catalog position.
  for(const r of [federal,qld])assert.match(r.extra.slug,/^grant-program-(federal|qld)-[a-z0-9-]{1,80}$/);
 });
+
+test('grant recipient and award search hits open the standalone recipient profile',async()=>{
+ const result=await find('64062160614',{kind:'grant'});
+ const profile=result.results.find(row=>row.source==='Grant recipient profile');
+ assert.ok(profile);assert.match(profile.title,/Serendipity/i);
+ assert.equal(profile.href,'/money/grants/federal/recipient/abn%3A64062160614');
+ assert.ok(result.results.filter(row=>row.record_id?.startsWith('GA')).every(row=>row.href===profile.href));
+});
