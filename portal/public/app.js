@@ -1763,6 +1763,10 @@ function route() {
     if (view === "ask" && q && q !== lastAsk.question) {
       setQueryValue("ask-input", q);
       if ($("ask-wide")) $("ask-wide").checked = params.get("kind") !== "speech";
+      // A topic page hands its label over as the ask's topic filter; an
+      // unknown slug leaves the select at "any topic".
+      const askTopic = params.get("topic");
+      if (askTopic && $("a-topic")) $("a-topic").value = TOPICS[askTopic] ? askTopic : "";
       renderAskFilterChips(); // preserve an explicitly shared speech-only scope
       runAsk(q);
     } else if (!q && $("ask-result").hidden) {
@@ -5724,15 +5728,16 @@ async function openTopicPage(slug, manageFocus) {
   body.querySelector('.subject-head').insertAdjacentHTML('beforeend', `
     <div class="topic-reader-tools">
       <form class="topic-ask-form">
-        <label for="topic-question">Ask about ${esc(name)}</label>
-        <div><textarea id="topic-question" name="question" required rows="2">${esc(`What has parliament said about ${phrase}?`)}</textarea><button type="submit">Ask</button></div>
+        <label for="topic-question">Ask the record</label>
+        <div><textarea id="topic-question" name="question" required rows="2" placeholder="${esc(`Ask a question about ${phrase}`)}"></textarea><button type="submit">Ask</button></div>
       </form>
       <p class="topic-reader-links"><a href="${esc(searchTopic)}">Search this topic</a>${report ? `<a href="/reports/${esc(report.slug)}">Read the ${esc(report.title)} report</a>` : ''}</p>
     </div>`);
   body.querySelector('.topic-ask-form').addEventListener('submit', (event) => {
     event.preventDefault();
     const question = body.querySelector('#topic-question').value.trim();
-    if (question) goRoute(askHash(question));
+    // The topic page's label rides along as the ask's topic filter.
+    if (question) goRoute(`${askHash(question)}&topic=${encodeURIComponent(slug)}`);
   });
   box.hidden = true;
 
