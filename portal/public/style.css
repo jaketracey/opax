@@ -2879,6 +2879,9 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-chat .chat-turn-user { justify-content: flex-start; margin: 2rem 0 1.2rem; }
 #panel-chat .chat-turn-user p { font: 600 1rem/1.6 var(--sans); border-radius: 3px; }
 #panel-chat .chat-turn-answer { padding-bottom: 1.2rem; border-bottom: 1px solid var(--line); }
+/* The last answer runs straight into "Ask next": no rule of its own above the
+   suggestions - the composer beneath draws the closing line. */
+#panel-chat .chat-turn-answer:has(+ #chat-next) { border-bottom: 0; padding-bottom: 0.2rem; }
 #panel-chat .chat-composer { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
 @media (max-width: 600px) {
   #ask-result .action-row { display: grid; grid-template-columns: 1fr 1fr; }

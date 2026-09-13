@@ -9608,6 +9608,74 @@ function initChat(manageFocus) {
   }));
 }
 
+// --- following the answer down the page ---------------------------------------
+// While a question is in flight the page keeps pace with what arrives - the
+// steps, the passages being read, a word on a long wait, then the words of
+// the answer - easing towards the end of the thread a little each frame
+// rather than jumping, so each new line lands in view and the motion reads as
+// one continuous movement down. A reader who scrolls up takes over: following
+// pauses until they bring the view back to the end. Readers who ask for less
+// motion get the end brought into view without the easing.
+const chatFollower = (() => {
+  let active = false, paused = false, raf = 0, observer = null, lastTop = 0;
+  const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const end = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  const nearEnd = () => end() - window.scrollY < 120;
+  const tick = () => {
+    raf = 0;
+    if (!active || paused) return;
+    const target = end();
+    const y = window.scrollY;
+    const gap = target - y;
+    if (gap <= 0.5) return;
+    if (reduce()) { lastTop = Math.round(target); window.scrollTo(0, target); return; }
+    const next = gap < 1.5 ? target : y + Math.max(1, gap * 0.16);
+    lastTop = Math.round(next);
+    window.scrollTo(0, next);
+    raf = requestAnimationFrame(tick);
+  };
+  const nudge = () => { if (active && !paused && !raf) raf = requestAnimationFrame(tick); };
+  const resume = () => { if (paused && nearEnd()) { paused = false; nudge(); } };
+  const onWheel = (e) => { if (e.deltaY < 0) paused = true; };
+  const onKey = (e) => { if (e.key === "ArrowUp" || e.key === "PageUp" || e.key === "Home") paused = true; };
+  const onTouchStart = () => { paused = true; };
+  const onScroll = () => {
+    // Our own frames land where we put them; a view that moved up is the reader's.
+    if (window.scrollY < lastTop - 2) paused = true;
+    resume();
+  };
+  return {
+    start() {
+      if (active) return;
+      active = true;
+      paused = false;
+      lastTop = Math.round(window.scrollY);
+      observer = new ResizeObserver(nudge);
+      observer.observe($("chat-thread"));
+      addEventListener("wheel", onWheel, { passive: true });
+      addEventListener("touchstart", onTouchStart, { passive: true });
+      addEventListener("touchend", resume, { passive: true });
+      addEventListener("keydown", onKey);
+      addEventListener("scroll", onScroll, { passive: true });
+      nudge();
+    },
+    stop() {
+      if (!active) return;
+      active = false;
+      observer?.disconnect();
+      observer = null;
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      removeEventListener("wheel", onWheel);
+      removeEventListener("touchstart", onTouchStart);
+      removeEventListener("touchend", resume);
+      removeEventListener("keydown", onKey);
+      removeEventListener("scroll", onScroll);
+    },
+    nudge,
+  };
+})();
+
 function scrollChatToEnd() {
   window.scrollTo({
     top: document.documentElement.scrollHeight,
@@ -9884,6 +9952,7 @@ async function sendChat(question, carry) {
   track.className = "chat-pending-animal";
   slot.appendChild(track);
   $("chat-thread").appendChild(slot);
+  chatFollower.start();
   const alive = () => chatAbort === myAbort && slot.isConnected;
   let trundler = null;
   let stages = null;
@@ -9907,7 +9976,7 @@ async function sendChat(question, carry) {
       if (cached) stages.complete(); else stages.set(step);
       if (reading.length) stages.reading(reading);
       if (note) stages.note(note);
-      slot.scrollIntoView({ block: "nearest" });
+      chatFollower.nudge();
     })
     .catch(() => { /* the status line has it covered */ });
   const setStep = (key) => {
@@ -9973,7 +10042,7 @@ async function sendChat(question, carry) {
             if (!alive() || !streamed) return;
             slot.hidden = true;
             liveWrap.hidden = false;
-            liveWrap.scrollIntoView({ block: "start" });
+            chatFollower.nudge();
           });
         }
       },
@@ -10024,6 +10093,9 @@ async function sendChat(question, carry) {
       // finished answer rises into its place.
       stages?.complete();
       await liftAway();
+      // The whole answer lands at once: the reader starts at its top, not
+      // its end, so following stops before it renders.
+      chatFollower.stop();
     }
     if (chatAbort !== myAbort) return;
     renderChatThread({ landed: true, rise: !streamed });
@@ -10049,6 +10121,7 @@ async function sendChat(question, carry) {
     trundler?.destroy?.();
     stages?.destroy?.();
     if (chatAbort === myAbort) {
+      chatFollower.stop();
       chatBusy = false;
       clearInterval(chatTimer);
       $("chat-send").disabled = false;
