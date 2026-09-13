@@ -61,7 +61,7 @@ function proposalDurations(text:string):string[] {
 export function firstSpeechTurn(text: string): string {
   const value = text.replace(/\r\n?/g, '\n').trim()
     .replace(/^\d{1,2}[:.]\d{2}\s*(?:am|pm)\s*\n+/i, '')
-  const boundary = /\(Time expired\)|\n\s*\n\s*(?:\d{1,2}[:.]\d{2}\s*(?:am|pm)\b|(?:I|We) thank (?:Senator|the (?:member|minister))\b|(?:Senator|Mr|Ms|Mrs|Dr)\s+[A-Z][\p{L}'’-]+(?:\s+[A-Z][\p{L}'’-]+){0,3}\s*[:,]|The (?:PRESIDENT|SPEAKER|DEPUTY SPEAKER)\b)/iu.exec(value)
+  const boundary = /\(Time expired\)|\n\s*\n\s*(?:\d{1,2}[:.]\d{2}\s*(?:am|pm)\b|(?:I|We) thank (?:Senator|the (?:member|minister))\b|Thank you,\s*(?:Senator|the (?:member|minister))\b|(?:Senator|Mr|Ms|Mrs|Dr)\s+[A-Z][\p{L}'’-]+(?:\s+[A-Z][\p{L}'’-]+){0,3}\s*[:,]|The (?:PRESIDENT|SPEAKER|DEPUTY SPEAKER)\b)/iu.exec(value)
   return value.slice(0, boundary?.index ?? value.length).trim()
 }
 
