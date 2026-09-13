@@ -25,7 +25,51 @@ test('position recovery binds every displayed point to a verified original excer
 });
 test('unverifiable position recovery does not turn fabricated excerpts into citations',async()=>{
  const h=harness(draft('This fabricated sentence does not exist in the speech.'));
- assert.equal(await h.recover(payload,{query:'housing'},{}),null);assert.equal(h.calls,1);
+ // A drafted point that fails verification earns one repair attempt, never a citation.
+ assert.equal(await h.recover(payload,{query:'housing'},{}),null);assert.equal(h.calls,2);
+ assert.match(h.request.body.prompt.user,/previous attempt failed verification/);
+ const none=harness(JSON.stringify({points:[]}));assert.equal(await none.recover(payload,{query:'housing'},{}),null);assert.equal(none.calls,1,'an empty draft is not retried');
+});
+test('a first draft that fails verification is written again and the verified retry is used',async()=>{
+ const answers=[draft('This fabricated sentence does not exist in the speech.'),draft()];let calls=0;const phases=[];
+ const recover=runInNewContext(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';recoverPositionAnswer',{...helpers,...evidenceHelpers,POSITION_GROUNDING:'Ground positions.',AbortSignal,Intl,Date,kbFetch:async()=>{calls++;return Response.json({answer:answers.shift()})}});
+ const out=await recover(payload,{query:'housing'},{},async(event,data)=>{phases.push([event,data])});
+ assert.equal(calls,2);assert.match(out.answer,/five-year/);assert.equal(out.sources[0].cited,true);
+ assert.equal(JSON.stringify(phases),JSON.stringify([['status',{phase:'writing',attempt:2}]]));
+});
+test('a general question may state a figure from elsewhere in the same verified speech; a detail follow-up may not',async()=>{
+ const speech=quote+' The scheme would help around 55,000 households across 30,000 tenancies.';
+ const text='Example MP proposed a five-year GST moratorium on building materials, saying the scheme would help around 55,000 households.';
+ const general=await harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote}]}]})).recover({...payload,sources:[{...payload.sources[0],snippet:speech}]},{query:'housing',position_question:'What did he say about housing?'},{});
+ assert.match(general.answer,/55,000/);assert.equal(general.sources[0].snippet,quote);
+ assert.equal(await harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote}]}]})).recover({...payload,sources:[{...payload.sources[0],snippet:speech}]},{query:'housing cap',position_question:'What cap did he propose?'},{}),null);
+ assert.equal(evidenceHelpers.positionPointSupported('He said the scheme would help 55,000 households.',quote,'What did he say about housing?','',speech),true);
+ assert.equal(evidenceHelpers.positionPointSupported('He said the scheme would help 55,000 households.',quote,'What did he say about housing?','',''),false);
+ assert.equal(evidenceHelpers.positionPointSupported('He said the scheme would help 55,000 households.',quote,'How much would it cost?','',speech),false);
+});
+test('a pronoun one and a month-and-year date phrase are not unquoted figures',()=>{
+ const evidence='The bill prohibits the Commonwealth from building a coal-fired power station or purchasing an existing station.';
+ assert.equal(evidenceHelpers.positionPointSupported('He proposed prohibiting the Commonwealth from building a coal-fired power station or purchasing one.',evidence,'What has he said about coal?','2017-10-16'),true);
+ assert.equal(evidenceHelpers.positionPointSupported('In February 2026, she moved to suspend standing orders for a motion on the royal commission.','That so much of the standing orders be suspended as would prevent me moving a motion on the royal commission.','What did she say about veterans?','2026-02-04'),true);
+ assert.equal(evidenceHelpers.positionPointSupported('On 4 February 2026 she moved a motion on the royal commission.','She moved a motion on the royal commission.','What did she say about veterans?','2026-02-04'),true);
+ assert.equal(evidenceHelpers.positionPointSupported('She proposed 2026 places for veterans.','She proposed places for veterans.','What did she say about veterans?','2026-02-04'),false);
+});
+test('a quotation may bridge omitted words with an ellipsis when each part is verbatim and in order',async()=>{
+ const speech='Crocodiles are protected in North Queensland, and the people are not allowed to go near waterways. Our member says all we are asking for is that our waterways be returned to us.';
+ const bridged='Crocodiles are protected in North Queensland ... all we are asking for is that our waterways be returned to us.';
+ assert.equal(helpers.quotedInOrder(bridged,speech),true);
+ assert.equal(helpers.quotedInOrder('all we are asking for is that our waterways be returned to us ... Crocodiles are protected',speech),false,'parts out of order');
+ assert.equal(helpers.quotedInOrder('Crocodiles are protected ... in the Northern Territory',speech),false);
+ assert.equal(helpers.quotedInOrder('Crocodiles are protected in North Queensland ... to us.',speech),false,'a short bridged fragment proves nothing');
+ const out=await harness(JSON.stringify({points:[{text:'Example MP argued crocodiles were protected while people were kept from waterways, and asked for the waterways to be returned.',citations:[{id:'s1',quote:bridged}]}]})).recover({...payload,sources:[{...payload.sources[0],snippet:speech}]},{query:'crocodiles',position_question:'What did he say about crocodiles?'},{});
+ assert.match(out.answer,/waterways/);assert.equal(out.sources[0].cited,true);
+});
+test('a position answer keeps up to four longer points where the search overview keeps three',()=>{
+ const sources=[{id:'s1',title:'T',href:'/doc/speech-1',snippet:'We propose an immigration cap of 130,000 per year. We propose stricter screening. We propose faster processing. We propose a regional visa.',kind:'speech'}];
+ const point=(quote)=>({text:'Example MP proposed '+quote.slice(11).replace(/\.$/,'')+', a position stated at length in the chamber that day.',citations:[{id:'s1',quote}]});
+ const answer=JSON.stringify({points:['We propose an immigration cap of 130,000 per year.','We propose stricter screening.','We propose faster processing.','We propose a regional visa.'].map(point)});
+ assert.equal(helpers.parseSearchSummary(answer,sources,true).points.length,3);
+ assert.equal(helpers.parseSearchSummary(answer,sources,true,{maxPoints:4,wordBudget:220,maxQuote:1200}).points.length,4);
 });
 test('position recovery does not invent a dated answer from empty sources',async()=>{
  const h=harness(draft());assert.equal(await h.recover({...payload,sources:[]},{query:'housing'},{}),null);assert.equal(h.calls,0);

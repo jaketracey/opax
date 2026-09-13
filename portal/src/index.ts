@@ -1,5 +1,5 @@
 import { runSocialPublication, socialStatus, publicationCopy, previewPublication } from './social-publication'
-import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
+import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
 /**
@@ -34,7 +34,7 @@ import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
 
-import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer, summaryPointValidator, SummaryPointStream, type SearchSummary } from './search-summary'
+import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer, summaryPointValidator, SummaryPointStream, quotedInOrder, type SearchSummary } from './search-summary'
 
 import { OG_FONT_FILES, OG_VERSION, homeCard, ogFormat, type OgCard } from './og'
 import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
@@ -1296,7 +1296,7 @@ async function documentedPositionAnswer(input: AskInput, body: Record<string, un
   }
   // A failed summary still shows the reader the speeches it was read from.
   await progress?.('status', { phase: 'writing' })
-  return await recoverPositionAnswer(payload,{...body,position_question:input.question},env) || quotedPositionAnswer(payload,query,input.question) || positionExcerptsAnswer(payload,query) || gap
+  return await recoverPositionAnswer(payload,{...body,position_question:input.question},env,progress) || quotedPositionAnswer(payload,query,input.question) || positionExcerptsAnswer(payload,query) || gap
 }
 
 /** A failed summary must not hide a usable, explicitly recorded proposal. */
@@ -1362,16 +1362,23 @@ function positionExcerptsAnswer(payload: AskPayload, query: string): AskPayload 
 }
 
 /** Recover a position with exact source excerpts, rather than inventing citation IDs. */
-async function recoverPositionAnswer(payload: AskPayload, body: Record<string,unknown>, env: Env): Promise<AskPayload | null> {
+async function recoverPositionAnswer(payload: AskPayload, body: Record<string,unknown>, env: Env, progress?: SseSend): Promise<AskPayload | null> {
   const sourceRows = payload.sources.filter((s): s is Record<string,unknown> => !!s && typeof s === 'object')
   const sources = summarySources(sourceRows, 6000)
   if (!sources.length) return null
+  const query = String(body.query || '')
+  const question = String(body.position_question || '')
+  // A detail follow-up (a cap, a cost, a duration, who qualifies) keeps every
+  // figure inside its own quoted excerpt. A general "what did they say"
+  // question may state a figure from elsewhere in the same verified speech.
+  const detail = isPositionDetailQuestion(question)
+  const folded = (text: string) => text.normalize('NFKC').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim()
   try {
-    const makePrompt = () => summaryPrompt(String(body.query || '').slice(0,2000), {speaker:payload.scope?.speaker || ''}, sources) +
+    const makePrompt = (repair: string) => summaryPrompt(query.slice(0,2000), {speaker:payload.scope?.speaker || ''}, sources) +
       '\nLatest reader question: ' + JSON.stringify(String(body.position_question || body.query || '').slice(0,2000)) +
-      '\nAnswer that latest question specifically. The query topic supplies its subject. If they ask when, explain the recorded date; if they ask why, attribute only the reasons stated in the speech; if they ask about cost, give only a stated costing with attribution. Do not substitute a generic policy overview for a request for a particular detail. If the requested detail is absent, return {"points":[]}.' +
-      '\nDescribe only this named politician’s own documented positions on the query topic, in past tense. Never roleplay or predict. Omit ministerial replies even when the document is indexed under the politician. Prefer concrete policy proposals over allegations or rhetoric. The passages are limited to the indexed speaker’s first speaking turn; no later speaker or ministerial reply may be inferred. Preserve policy limits and duration exactly; omit attack statistics. Return up to four points, each citing a different original speech where the record supports it. Each point must cite exactly one original speech; never merge policy details from different dates into one proposal. Lead with a concrete proposal and preserve its eligibility, duration and numeric limits, including any lower-of conditions. Each point must be one concrete proposal or position, in one short sentence. Do not append attack statistics or commentary about opponents to a proposal. Each point must be supported in full by an exact excerpt from the passage itself, never its title. Include the proposal conditions in that excerpt, and every number, year or amount the point states must appear inside the excerpt. Omit costs unless the excerpt includes the speaker’s stated costing, and explicitly attribute any estimate to them. If the passages do not establish their position, return {"points":[]}.'
-    let prompt = makePrompt()
+      '\nAnswer that latest question specifically. The query topic supplies its subject. If they ask when, explain the recorded date; if they ask why, attribute only the reasons stated in the speech; if they ask about cost, give only a stated costing with attribution. Do not substitute a generic policy overview for a request for a particular detail; if a requested detail is absent from every passage, return {"points":[]}.' +
+      '\nDescribe only this named politician’s own documented positions on the query topic, in past tense. Never roleplay or predict. Omit ministerial replies even when the document is indexed under the politician. Prefer concrete policy proposals, but a clearly attributed argument, criticism, claim or call for action on the query topic also counts as a documented position. The passages are limited to the indexed speaker’s first speaking turn; no later speaker or ministerial reply may be inferred. Preserve policy limits and duration exactly; omit attack statistics. Return up to four points, each citing a different original speech where the record supports it. Each point must cite exactly one original speech; never merge policy details from different dates into one proposal. Lead with a concrete proposal and preserve its eligibility, duration and numeric limits, including any lower-of conditions. Each point must be one concrete proposal or position, in one short sentence. Do not append attack statistics or commentary about opponents to a proposal. Each point must be supported in full by an exact excerpt from the passage itself, never its title: copy the whole sentence or sentences that carry the point, verbatim, as one contiguous run of up to about 1,000 characters, with no ellipses or edits. Every number, year or amount the point states must appear inside that excerpt. Omit costs unless the excerpt includes the speaker’s stated costing, and explicitly attribute any estimate to them. Return {"points":[]} only if no passage addresses the query topic at all.' +
+      repair
     // The evidence travels in the prompt's user template, not `query`: the
     // platform caps `query` at 20,000 characters (422 above it), which used to
     // drop all but three to five originals. The template is format-style, so
@@ -1379,32 +1386,53 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
     // Budget ~15k tokens: ten originals at their full 5,600-character evidence
     // windows fit; a 62k template was accepted live.
     const POSITION_PROMPT_CHARS = 60000
-    while (sources.length && prompt.length > POSITION_PROMPT_CHARS) { sources.pop(); prompt = makePrompt() }
-    if (!sources.length) return null
-    const answer = await summaryModelAnswer(await kbFetch(env, '/ask', {
-      body:{query:String(body.position_question || body.query || '').slice(0,2000),top_k:1,reranker:'noop',generative_model:env.POSITION_RECOVERY_MODEL || 'openai-compatible',max_tokens:1800,
-        prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + POSITION_GROUNDING + ' Return only valid JSON in the requested points-and-citations schema, with no other text.',
-          user:prompt.replace(/[{}]/g, brace => brace + brace) + '\nReader question: {question}'}},
-      headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(40_000),
-    }))
-    const summary = answer && parseSearchSummary(normalizePositionDraft(answer, sources), sources, true)
-    if (!summary) return null
-    const folded = (text: string) => text.normalize('NFKC').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim()
-    // Keep useful verified points when another point quotes a title or strays
-    // onto an unrelated topic mentioned elsewhere in a long speech.
-    summary.points = summary.points.filter(point => point.source_ids.length === 1 && positionEvidence(point.text, String(body.query || '')) &&
-      point.source_ids.every(id => {
-        const source = summary.sources.find(source => source.id === id)
-        const evidence = point.evidence?.[id] || []
-        // The excerpt is judged with its surroundings in the verified original:
-        // "cap arrivals at 130,000" answers an immigration question when the
-        // sentences around it are about immigration.
-        const around = (quote: string) => { const at = folded(source?.snippet || '').indexOf(folded(quote).slice(0, 60)); return at < 0 ? quote : folded(source!.snippet).slice(Math.max(0, at - 300), at + quote.length + 300) }
-        return source && evidence.length && (positionEvidence(evidence.join(' '), String(body.query || '')) || positionEvidence(around(evidence[0]), String(body.query || ''))) &&
-          positionPointSupported(point.text, evidence.join(' '), String(body.position_question || ''), source.date) &&
-          evidence.every(quote => folded(source.snippet).includes(folded(quote)))
-      })).slice(0,4)
-    if (!summary.points.length) return null
+    const attempt = async (repair: string): Promise<{ summary: SearchSummary | null; drafted: string[] }> => {
+      let prompt = makePrompt(repair)
+      while (sources.length && prompt.length > POSITION_PROMPT_CHARS) { sources.pop(); prompt = makePrompt(repair) }
+      if (!sources.length) return { summary: null, drafted: [] }
+      const answer = await summaryModelAnswer(await kbFetch(env, '/ask', {
+        body:{query:String(body.position_question || body.query || '').slice(0,2000),top_k:1,reranker:'noop',generative_model:env.POSITION_RECOVERY_MODEL || 'openai-compatible',max_tokens:2600,
+          prompt:{system:SEARCH_SUMMARY_SYSTEM + ' ' + POSITION_GROUNDING + ' Return only valid JSON in the requested points-and-citations schema, with no other text.',
+            user:prompt.replace(/[{}]/g, brace => brace + brace) + '\nReader question: {question}'}},
+        headers:{'x-synchronous':'true'},signal:AbortSignal.timeout(40_000),
+      }))
+      if (!answer) return { summary: null, drafted: [] }
+      const draft = normalizePositionDraft(answer, sources)
+      // What the model offered before verification, so a failed first attempt
+      // can be retried with the reason instead of silently falling back.
+      let drafted: string[] = []
+      try {
+        const parsed = JSON.parse(draft) as { points?: { text?: unknown }[] }
+        drafted = (Array.isArray(parsed.points) ? parsed.points : []).map(point => typeof point?.text === 'string' ? point.text : '').filter(Boolean)
+      } catch { /* not JSON: nothing was drafted */ }
+      const summary = parseSearchSummary(draft, sources, true, { maxPoints: 4, wordBudget: 220, maxQuote: 1200 })
+      if (!summary) return { summary: null, drafted }
+      // Keep useful verified points when another point quotes a title or strays
+      // onto an unrelated topic mentioned elsewhere in a long speech.
+      summary.points = summary.points.filter(point => point.source_ids.length === 1 &&
+        point.source_ids.every(id => {
+          const source = summary.sources.find(source => source.id === id)
+          const evidence = point.evidence?.[id] || []
+          if (!source || !evidence.length) return false
+          // The excerpt is judged with its surroundings in the verified original:
+          // "cap arrivals at 130,000" answers an immigration question when the
+          // sentences around it are about immigration.
+          const around = (quote: string) => { const at = folded(source.snippet).indexOf(folded(quote).slice(0, 60)); return at < 0 ? quote : folded(source.snippet).slice(Math.max(0, at - 300), at + quote.length + 300) }
+          return !!(positionEvidence(evidence.join(' '), query) || positionEvidence(around(evidence[0]), query)) &&
+            positionPointSupported(point.text, evidence.join(' '), question, source.date, detail ? '' : source.snippet) &&
+            evidence.every(quote => quotedInOrder(quote, source.snippet))
+        })).slice(0,4)
+      return { summary, drafted }
+    }
+    let { summary, drafted } = await attempt('')
+    // Every drafted point failed a check (usually a figure outside its excerpt,
+    // or an excerpt that is not verbatim): one more try, told what went wrong.
+    if (!summary?.points.length && drafted.length) {
+      await progress?.('status', { phase: 'writing', attempt: 2 })
+      ;({ summary } = await attempt('\nA previous attempt failed verification and was discarded. Its points were: ' + JSON.stringify(drafted.slice(0, 4)) +
+        ' Write the answer again so that each point is supported by one contiguous verbatim excerpt from its own passage containing every number, year, amount and duration the point states; leave out any point that cannot be quoted that way.'))
+    }
+    if (!summary?.points.length) return null
     const used = new Set(summary.points.flatMap(point => point.source_ids))
     summary.sources = summary.sources.filter(source => used.has(source.id)).map(source => ({...source,
       evidence:[...new Set(summary.points.flatMap(point => point.evidence?.[source.id] || []))],

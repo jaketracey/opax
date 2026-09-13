@@ -101,6 +101,12 @@ test('fallback selects a concrete proposal, never a procedural or irrelevant pas
  assert.equal(positionProposalQuote('I spoke about agriculture.\n\n1:08 pm\n\n'+gst,'housing affordability'),'');
 });
 
+test('a motion to suspend standing orders is procedure, not a quoted position',()=>{
+ const motion='Pursuant to contingent notice, I move: That so much of the standing orders be suspended as would prevent me moving a motion relating to the Royal Commission into Defence and Veteran Suicide to be moved immediately and determined without amendment.';
+ assert.equal(positionProposalQuote(motion,'veterans'),'');
+ const amendment='My amendment attempts to level the playing field for veterans by allowing legal representation before the Veterans\' Review Board.';
+ assert.equal(positionProposalQuote(motion+' '+amendment,'veterans'),amendment);
+});
 test('an explicit policy cap keeps its immediate capacity qualification',()=>{
  const policy="One Nation's policy is to cap immigration at approximately 130,000 per year, numbers we can actually accommodate.";
  const condition='When we can, then we can look at increasing those numbers over a period of time.';

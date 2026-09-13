@@ -3,6 +3,11 @@ import { evidenceExcerpt, guardPositionAnswer, EVIDENCE_GAP_ANSWER } from './ask
 export const isPositionDurationQuestion = (question:string):boolean => /^(?:and\s+)?how\s+long\b|\b(?:duration|how many (?:days|weeks|months|years))\b/i.test(question.trim())
 export const isPositionEligibilityQuestion = (question:string):boolean => /\b(?:eligible|eligibility|qualify|qualifies)\b/i.test(question)
 export const isPositionCostQuestion = (question:string):boolean => /\b(?:cost|costing|price)\b|^(?:and\s+)?how\s+much\b/i.test(question)
+/** A follow-up asking for one particular figure or rule of a proposal, where a
+ * paraphrase must not borrow a number from anywhere but its own excerpt. */
+export const isPositionDetailQuestion = (question:string):boolean =>
+  isPositionEligibilityQuestion(question) || isPositionCostQuestion(question) || isPositionDurationQuestion(question) ||
+  /\b(?:cap|capped|limits?|threshold|rate|how many|what (?:number|figure|amount|percentage))\b/i.test(question)
 const eligibilityTerms = /\b(?:eligible|eligibility|qualifying|qualify|qualifies)\b/i
 const deferredEligibility = (text:string) => text.split(/(?<=[.!?])\s+/).filter(sentence=>/\b(?:eligibility|incomes?|thresholds?)\b.*\b(?:regulations|to be (?:set|specified|determined))\b/i.test(sentence))
 
@@ -94,8 +99,10 @@ export function positionEvidence(text: string, query: string): string {
  */
 export function positionProposalQuote(text: string, query: string, question = ''): string {
   const sentences = firstSpeechTurn(text).replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+(?=[\p{Lu}“‘"'])/u)
-  const proposal = /\b(?:I|we)\s+(?:propose|proposed|recommend|recommended)|\b(?:my|our)\s+propos(?:al|ed)|\bthis\s+(?:bill|legislation)\s+(?:will|would)|\b(?:announces?|announced)\s+a\s+policy|\bpolicy\s+is\s+to\b|\b(?:moratorium|amendment)\b/i
-  const at = sentences.findIndex(sentence => sentence.length >= 45 && sentence.length <= 700 &&
+  const proposal = /\b(?:I|we)\s+(?:propose|proposed|recommend|recommended)|\b(?:my|our)\s+propos(?:al|ed)|\bthis\s+(?:bill|legislation)\s+(?:will|would)|\b(?:announces?|announced)\s+a\s+policy|\bpolicy\s+is\s+to\b|\bmoratorium\b|\b(?:my|our|this|an?)\s+amendments?\b/i
+  // A motion to suspend standing orders "without amendment" is procedure, not a position.
+  const procedural = /^(?:Pursuant to\b|That so much of the standing orders\b|I move\b)/i
+  const at = sentences.findIndex(sentence => sentence.length >= 45 && sentence.length <= 700 && !procedural.test(sentence) &&
     proposal.test(sentence) && positionEvidence(sentence, query) &&
     (!isPositionDurationQuestion(question) || proposalDurations(sentence).length>0))
   if (at < 0) return ''
@@ -112,24 +119,29 @@ export function positionProposalQuote(text: string, query: string, question = ''
 /** A number elsewhere in a long speech cannot support a different quoted claim.
  * This conservative check is not semantic entailment; rejected drafts can still
  * use the verified proposal quotation without another model call. */
-export function positionPointSupported(text: string, evidence: string, question: string, date = ''): boolean {
+export function positionPointSupported(text: string, evidence: string, question: string, date = '', context = ''): boolean {
   // Eligible groups are easy to expand accidentally in a paraphrase. These
   // detail answers use the separate original eligibility excerpts instead.
   if(isPositionEligibilityQuestion(question))return false
+  // "one" is a pronoun far more often than a quantity ("purchasing one", "no
+  // one"), so it is never read as a number; a digit still has to be quoted.
   const words = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen']
   const numbers = (value: string) => value.toLowerCase()
-    .replace(new RegExp(`\\b(${words.join('|')})\\b`, 'g'), word => String(words.indexOf(word)))
+    .replace(new RegExp(`\\b(${words.filter(word => word !== 'one').join('|')})\\b`, 'g'), word => String(words.indexOf(word)))
     .match(/\d+(?:[,.]\d+)*|\b(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion)\b/g)
     ?.map(number => /^\d/.test(number) ? String(Number(number.replaceAll(',', ''))) : number) || []
-  // Only numbers in the quoted excerpt count: a neighbouring sentence's figure
-  // cannot support a different claim (the prompt asks the model to quote every
-  // number it states, so "after 2030" belongs inside the excerpt).
-  const allowed = new Set(numbers(evidence))
+  // For a detail follow-up only numbers in the quoted excerpt count: a
+  // neighbouring sentence's figure cannot support a different claim (the
+  // prompt asks the model to quote every number it states, so "after 2030"
+  // belongs inside the excerpt). A general question may also state a figure
+  // from elsewhere in the same verified speech, passed as `context`.
+  const allowed = new Set([...numbers(evidence), ...numbers(isPositionDetailQuestion(question) ? '' : context)])
   // A source's August date is not evidence for an eight-year policy. Permit
-  // its year only as a date phrase ("in 2014", "the 2014 budget"), never as a
-  // policy quantity ("2025 per year").
+  // its year only as a date phrase ("in 2014", "the 2014 budget", "in February
+  // 2026"), never as a policy quantity ("2025 per year").
   const year = /^\d{4}/.exec(date)?.[0]
-  const claim = year ? text.replace(new RegExp(`\\b(?:in|from|the|his|her|their|of|since|before|after|during|by|until|a)\\s+(?:(?:his|her|their|the)\\s+)?${year}\\b`, 'gi'), '') : text
+  const months = '(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)'
+  const claim = year ? text.replace(new RegExp(`\\b(?:(?:in|from|the|his|her|their|of|since|before|after|during|by|until|a|on|at)\\s+(?:(?:his|her|their|the|early|mid|late)[ -])?(?:\\d{1,2}\\s+)?(?:${months}\\.?\\s+)?(?:\\d{1,2},?\\s+)?${year}|${months}\\.?\\s+${year})\\b`, 'gi'), '') : text
   if (numbers(claim).some(number => !allowed.has(number))) return false
   if (isPositionDurationQuestion(question)) {
     const durations=proposalDurations(text),supported=new Set(proposalDurations(evidence))
