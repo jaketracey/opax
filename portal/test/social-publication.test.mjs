@@ -76,7 +76,7 @@ test('wrong or generic social image prevents every publish',async()=>{
  const h=harness({},async(url,init)=>init.method==='HEAD'&&url.includes('/og/')?new Response(null,{headers:{'content-type':'image/png'}}):null);await h.run();assert.equal(h.calls.filter(c=>c.init.method==='POST').length,0);
 });
 test('legacy X daily receipt is respected during migration',async()=>{
- const h=harness({GENERATION_CACHE:{async get(){return 'existing-id'}}});await h.run();assert.equal(h.calls.filter(c=>c.url.includes('api.x.com')).length,0);
+ const h=harness({GENERATION_CACHE:{async get(){return 'existing-id'}}});await h.run();assert.equal(h.calls.filter(c=>new URL(c.url).hostname === 'api.x.com').length,0);
 });
 
 test('preview returns the frozen edition even when source assets are unavailable',async()=>{
