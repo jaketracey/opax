@@ -93,3 +93,17 @@ test('catalog pagination is complete; empty and failing catalogs never negative-
   const bad=harness(()=>Response.json({resources:{one:resource()},fulltext:{total:2,next_page:true}}));
   assert.equal((await bad.run()).status,502);assert.equal(bad.stored.size,0);
 });
+
+test('Codex notes must match the verified version and operative source evidence', async()=>{
+  const entry={bill_key:key,version_id:'r7542-first-reps',source_sha256:createHash('sha256').update(source).digest('hex'),
+    brief:'An overview of this proposed bill.',topics:['education'],review_scope:'selected-provisions',confidence:'medium',model:'gpt-5.6-luna',
+    evidence:[{topic:'education',quote:source.split('\n\n')[0],section_id:'first'}]};
+  const good=await(await harness(()=>Response.json(resource('first-reps',{codex_enrichment:entry}))).run('r7542-first-reps')).json();
+  assert.equal(good.enrichment.brief,entry.brief);assert.equal(good.text,source);
+  for(const override of [{version_id:'r7542-aspassed'},{source_sha256:'0'.repeat(64)},{confidence:'low'},
+    {evidence:[{topic:'education',quote:'This quotation was invented and is not in the source.',section_id:'first'}]},
+    {topics:['education','health']},{evidence:[{topic:'education',quote:source.split('\n\n')[0],section_id:'schedule'}]}]){
+    const body=await(await harness(()=>Response.json(resource('first-reps',{codex_enrichment:{...entry,...override}}))).run('r7542-first-reps')).json();
+    assert.equal(body.enrichment,null);assert.equal(body.text,source);
+  }
+});

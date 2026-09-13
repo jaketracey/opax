@@ -116,6 +116,28 @@ export function mountBillText(container, { bill, requestedVersion = null, open =
       const complete = document.complete === true && version.status === 'complete'; loadedComplete = complete;
       const provenance = element('p', complete ? 'Published bill text, transcribed from the original document. Check the original for authoritative formatting.' : 'This is an incomplete extraction. Missing or unreadable material may include provisions or schedules. Use the original document for the full bill.', complete ? 'fineprint bill-text-provenance' : 'bill-text-warning');
       if (!complete) provenance.setAttribute('role', 'status'); content.append(provenance);
+      const enrichment = complete && document.enrichment;
+      if (enrichment && typeof enrichment.brief === 'string') {
+        const overview = element('aside', null, 'bill-text-overview');
+        overview.setAttribute('aria-label', 'Overview of this version');
+        overview.append(element('h4', 'In this version'), element('p', enrichment.brief));
+        const topics = element('div', null, 'bill-text-topics');
+        for (const topic of Array.isArray(enrichment.topics) ? enrichment.topics : []) {
+          if (typeof topic !== 'string' || !/^[a-z]+(?:-[a-z]+)*$/.test(topic)) continue;
+          const link = element('a', topic.replaceAll('-', ' ')); link.href = `/subject/topic/${topic}`; topics.append(link);
+        }
+        overview.append(topics, element('p', 'AI overview of selected provisions in this version. Read the full text for all proposed changes.', 'fineprint'));
+        const evidence = element('details', null, 'bill-text-evidence'); evidence.append(element('summary', 'Supporting passages'));
+        const seen = new Set();
+        for (const item of Array.isArray(enrichment.evidence) ? enrichment.evidence : []) {
+          const index = sections.findIndex(section => section.id === item.section_id && section.text.includes(item.quote));
+          if (index < 0 || seen.has(item.quote)) continue; seen.add(item.quote);
+          const quote = element('blockquote', item.quote);
+          const link = element('a', 'Read this section'); link.href = `#bill-text-part-${index}`;
+          quote.append(element('br'), link); evidence.append(quote);
+        }
+        overview.append(evidence); content.append(overview);
+      }
       const tools = element('div', null, 'bill-text-tools');
       if (sections.length > 1) {
         const label = element('label', 'Jump to section or page'); label.htmlFor = 'bill-text-section';
