@@ -19,6 +19,31 @@ const aliases:Record<string,string[]> = {
 }
 const scaffolding = new Set('how much how many money political donations donation funding funded fund funds receipts receipt gave given give has have did does do from to the a an of for in on by and or all total totals industry industries sector government parties party over years year between since before after flowed flow show me please federal australian australia queensland qld victoria vic tasmania tas'.split(' '))
 const contains = (q:string, phrase:string) => (' '+q+' ').includes(' '+normal(phrase)+' ')
+const receiptPartyNames = (party:Node):string[] => [party.label,...(party.aliases||[]),
+  ...(party.label==='Labor'?['ALP']:[]),
+  ...(party.label==='Nationals'?['National Party']:[]),
+  ...(['LNP','Liberal National Party'].includes(party.label)?['LNP','Liberal National Party']:[])]
+
+/** Resolve each mention independently. A full party name masks only the
+ * shorter names inside that occurrence, not another party elsewhere. */
+function exactReceiptParties(graph:ReceiptGraph,query:string) {
+  const parties=graph.nodes.filter(n=>n.kind==='party')
+  // These compound identities must not become a shorter party (or coalition)
+  // merely because the requested jurisdiction does not include that node.
+  const unavailable=['LNP','Liberal National Party','Country Liberal Party'].find(name=>contains(query,name)&&
+    !parties.some(p=>receiptPartyNames(p).some(alias=>normal(alias)===normal(name))))
+  const q=' '+query+' ',matches:{node:Node;start:number;end:number}[]=[]
+  for(const node of parties) {
+    for(const phrase of new Set(receiptPartyNames(node).map(normal))) {
+      if(!phrase)continue
+      let start=q.indexOf(' '+phrase+' ')
+      while(start>=0){matches.push({node,start,end:start+phrase.length+2});start=q.indexOf(' '+phrase+' ',start+1)}
+    }
+  }
+  const specific=matches.filter(m=>!matches.some(other=>other.start<=m.start&&other.end>=m.end&&(other.start<m.start||other.end>m.end)))
+  const ambiguous=specific.some(m=>specific.some(other=>other.start===m.start&&other.end===m.end&&other.node.id!==m.node.id))
+  return {nodes:[...new Map(specific.map(m=>[m.node.id,m.node])).values()],ambiguous,unavailable}
+}
 /** Shared vocabulary for routing and calculation; unknown terms stay unmatched. */
 export function mentionedReceiptIndustries(query:string, industries:string[]=Object.keys(aliases)):string[] {
   const q=normal(query)
@@ -55,7 +80,10 @@ function exactReceiptDonors(graph:ReceiptGraph, query:string) {
     // A short alias shared with another organisation's name needs a choice.
     if(match.phrase!==normal(match.node.label) && receiptDonorChoices(graph,match.phrase).some(n=>n.id!==match.node.id))return {nodes:[],ambiguous:match.phrase}
   }
-  return {nodes:[...new Map(specific.map(m=>[m.node.id,m.node])).values()],ambiguous:undefined}
+  // A party word inside an identified organisation is part of the donor's
+  // name. Mask that occurrence only; a separate recipient mention remains.
+  const partyQuery=specific.reduce((text,m)=>text.slice(0,m.start)+' '.repeat(m.end-m.start)+text.slice(m.end),q).replace(/\s+/g,' ').trim()
+  return {nodes:[...new Map(specific.map(m=>[m.node.id,m.node])).values()],ambiguous:undefined,partyQuery}
 }
 const rankingWords = new Set('who which what are is was were be been being gets get got getting takes take took taking receives receive received receiving gives giving donates donate donated donating donors donor contributors contribution contributions largest biggest most top more less higher lower compare comparison compared versus vs than both either these those each with financial nominal aud dollars dollar amount amounts disclosed published recorded records record shown included selected selection lifetime across throughout during up until through starting ending between lobby lobbies to whom s change changed changes increase increased increases decrease decreased decreases grew growth rose fell'.split(' '))
 
@@ -77,10 +105,7 @@ export function unmatchedReceiptRankingScope(graph:ReceiptGraph, query:string, s
   })
   for(const industry of selected.selected_industries) phrases.push(industry.replaceAll('_',' '),...(aliases[industry]||[]))
   for(const party of graph.nodes.filter(n=>n.kind==='party'&&(partyFilter||selected.selected_parties.includes(n.label)))) {
-    phrases.push(party.label,...(party.aliases||[]))
-    if(party.label==='Labor')phrases.push('ALP')
-    if(party.label==='Nationals')phrases.push('National Party')
-    if(['LNP','Liberal National Party'].includes(party.label))phrases.push('LNP','Liberal National Party')
+    phrases.push(...receiptPartyNames(party))
   }
   let remainder=' '+normal(query)+' '
   for(const phrase of [...new Set(phrases.map(normal))].sort((a,b)=>b.length-a.length)) {
@@ -106,8 +131,6 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   if(separateReceiptYears(query)&&!filters.compareYears&&!(filters.from&&filters.to)) return {needs_period:true,answer:'Choose one financial year or a continuous range using “from … to …”. Separate years cannot be pooled without including the years between them.',sources:[],jurisdiction}
   const q=normal(query), nodes=new Map(graph.nodes.map(n=>[n.id,n]))
   let industries=mentionedReceiptIndustries(query,[...new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.industry).filter((v):v is string=>!!v))])
-  const words=q.split(' ').filter(w=>!scaffolding.has(w)&&!/^\d+$/.test(w))
-  const nameMatches=(n:Node) => [n.label,...(n.aliases||[])].some(label=>contains(q,label) || (words.length>0 && words.every(w=>normal(label).split(' ').includes(w))))
   const named=exactReceiptDonors(graph,q)
   if(named.ambiguous)return {needs_scope:true,donor_query:named.ambiguous,answer:'Which organisation do you mean? Matching names in this map include '+receiptDonorChoices(graph,named.ambiguous).map(n=>n.label).join('; ')+'. Please use the full organisation name.',sources:[],jurisdiction}
   const exactDonors=named.nodes
@@ -115,8 +138,11 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   if(!exactDonors.length && /\benergy\b/.test(q) && !industries.includes('fossil_fuels')) return {needs_scope:true,answer:'Energy can include fossil fuels and renewables. Please name the industry or company you want to compare.',sources:[],jurisdiction}
   if(exactDonors.length) industries=[]
   const donors=exactDonors.length?exactDonors:graph.nodes.filter(n=>n.kind==='donor' && industries.includes(n.industry||''))
-  const lnp=/\bliberal national party\b|\blnp\b/.test(q)
-  const parties=graph.nodes.filter(n=>n.kind==='party' && (filters.party ? normal(n.label)===normal(filters.party) : lnp?['LNP','Liberal National Party'].includes(n.label):(nameMatches(n) || (n.label==='Labor' && /\balp\b/.test(q)) || (n.label==='Nationals' && /\bnational party\b/.test(q)))))
+  const namedParties=exactReceiptParties(graph,named.partyQuery??q)
+  if(!filters.party&&namedParties.unavailable)return {needs_scope:true,answer:`${namedParties.unavailable} is not a recipient party in this map. Choose the matching jurisdiction or a party listed in this map. No total has been calculated.`,sources:[],jurisdiction}
+  if(!filters.party&&namedParties.ambiguous)return {needs_scope:true,answer:'That name matches more than one recipient party in this map. Please use the full party name so separate records are not combined.',sources:[],jurisdiction}
+  const partyFilter=filters.party
+  const parties=partyFilter?graph.nodes.filter(n=>n.kind==='party'&&normal(n.label)===normal(partyFilter)):namedParties.nodes
   const all=/\b(?:all|total) (?:political )?(?:receipts|donations|party funding)\b/.test(q) || /^(?:who donates the most(?: money)?(?: to who(?:m)?)?|(?:who are the )?(?:biggest|largest|top) political donors)$/.test(q)
   if(filters.party && !parties.length) return null
   if(!donors.length&&!industries.length){
