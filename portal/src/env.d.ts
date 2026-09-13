@@ -7,6 +7,8 @@ interface Env {
   /** Comma-separated ASNs refused on /api and /og (network-block.ts). */
   BLOCKED_ASNS?: string
   DAILY_POST_ENABLED?: string
+  /** Bearer secret for POST /api/daily-post/run (an operator\'s chosen edition). */
+  DAILY_POST_OPERATOR_SECRET?: string
   X_API_KEY?: string
   X_API_SECRET?: string
   X_ACCESS_TOKEN?: string
@@ -46,6 +48,7 @@ declare namespace Cloudflare {
     /** Comma-separated ASNs refused on /api and /og (network-block.ts). */
     BLOCKED_ASNS?: string
     DAILY_POST_ENABLED?: string
+    DAILY_POST_OPERATOR_SECRET?: string
     X_API_KEY?: string
     X_API_SECRET?: string
     X_ACCESS_TOKEN?: string

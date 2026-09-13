@@ -4675,6 +4675,44 @@ async function route(
         response.headers.set('cache-control', 'no-store')
         return response
       }
+      if (url.pathname === '/api/daily-post/run' && request.method === 'POST') {
+        // An operator's run: compose a chosen edition (a kind, or a named
+        // subject such as grant:GA34203@abn:97694995462) under a journal date
+        // and deliver it to chosen channels, or dry-run it. Bearer-guarded by
+        // DAILY_POST_OPERATOR_SECRET; the journal prevents double delivery.
+        const secret = env.DAILY_POST_OPERATOR_SECRET
+        if (!secret || request.headers.get('authorization') !== `Bearer ${secret}`) return json({ error: 'operator secret required' }, 401)
+        const body = await readJsonBody(request)
+        if (body instanceof Response) return body
+        const v = body.value as Record<string, unknown>
+        const date = typeof v.date === 'string' ? v.date : melbourneDate()
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date + 'T12:00:00Z')) || new Date(date + 'T12:00:00Z').toISOString().slice(0, 10) !== date) return json({ error: 'bad date' }, 400)
+        const kind = (DAILY_POST_KINDS as readonly string[]).includes(String(v.kind ?? '')) ? v.kind as DailyPostKind : undefined
+        const subject = typeof v.subject === 'string' && v.subject.length <= 120 ? v.subject : undefined
+        const channels = Array.isArray(v.channels) ? v.channels.filter((c): c is 'x' | 'facebook' | 'instagram' => c === 'x' || c === 'facebook' || c === 'instagram') : undefined
+        if (v.dry_run) {
+          const post = await previewPublication(env, date, name => personTopicsFor(name, env), kind, subject)
+          const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
+          response.headers.set('cache-control', 'no-store')
+          return response
+        }
+        const result = await runSocialPublication(env, {
+          personTopics: name => personTopicsFor(name, env), date, kind, subject, channels,
+          sourceResponse: async target => {
+            const u = new URL(target)
+            const head = new Request(target, { method: 'HEAD' })
+            if (u.pathname.startsWith('/og/')) return serveOgImage(u, head, env, ctx)
+            const route = matchSeoRoute(u)
+            if (!route) return new Response(null, { status: 404 })
+            const meta = await buildMeta(route, u, head, env, ctx)
+            return new Response(null, { status: meta.card ? meta.status : 404 })
+          },
+        })
+        console.log('daily-post', JSON.stringify({ operator: true, result }))
+        const response = json(result)
+        response.headers.set('cache-control', 'no-store')
+        return response
+      }
       if (url.pathname === '/api/daily-post/preview' && request.method === 'GET') {
         // What the cron would post for a date (default today, Melbourne). Never posts.
         const date = url.searchParams.get('date') ?? melbourneDate()

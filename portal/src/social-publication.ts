@@ -84,8 +84,8 @@ export async function socialStatus(env: SocialEnv, date = melbourneDate()): Prom
   return { date, schedule: '08:00 AEST / 09:00 AEDT; pending Instagram containers checked at +5 and +10 minutes', channels: readiness(env), deliveries: deliveries.results }
 }
 
-export async function previewPublication(env: SocialEnv, date: string, personTopics: (name: string) => Promise<Response>, kind?: DailyPostKind): Promise<DailyPost | null> {
-  if (!kind) {
+export async function previewPublication(env: SocialEnv, date: string, personTopics: (name: string) => Promise<Response>, kind?: DailyPostKind, subject?: string): Promise<DailyPost | null> {
+  if (!kind && !subject) {
     const existing = await env.COMMUNITY_DB.prepare('SELECT post_json FROM social_editions WHERE date=?').bind(date).first<{ post_json: string }>()
     if (existing) return JSON.parse(existing.post_json) as DailyPost
   }
@@ -93,25 +93,33 @@ export async function previewPublication(env: SocialEnv, date: string, personTop
   const since = new Date(Date.parse(date + 'T12:00:00Z') - 90 * 86400000).toISOString().slice(0, 10)
   const recent = await env.COMMUNITY_DB.prepare("SELECT DISTINCT e.subject FROM social_editions e JOIN social_deliveries d ON d.edition_date=e.date WHERE d.status='posted' AND e.date>=? AND e.date<? ORDER BY e.date DESC LIMIT 90").bind(since, date).all<{ subject: string }>()
   const legacyRecent = await sources.recent()
-  return composeDailyPost(date, { ...sources, recent: async () => [...legacyRecent, ...recent.results.map(r => r.subject)] }, kind)
+  return composeDailyPost(date, { ...sources, recent: async () => [...legacyRecent, ...recent.results.map(r => r.subject)] }, kind, subject)
 }
 
 export async function runSocialPublication(env: SocialEnv, options: {
   now?: number; personTopics: (name: string) => Promise<Response>; fetchImpl?: typeof fetch
   /** Production resolves its own routes in-process, avoiding a recursive Worker fetch. */
   sourceResponse?: (url: string) => Promise<Response>
+  /**
+   * An operator's run: the journal date to post under (the cron uses today's),
+   * a kind or a named subject to compose instead of the rotation, and the
+   * channels to deliver to (default: every ready channel). The journal still
+   * rules: an edition already stored under the date is reused, and a channel
+   * already delivered for it is not posted again.
+   */
+  date?: string; kind?: DailyPostKind; subject?: string; channels?: Channel[]
 }): Promise<unknown> {
   const ready = readiness(env)
-  const channels = CHANNELS.filter(c => ready[c].ready)
+  const channels = CHANNELS.filter(c => ready[c].ready && (!options.channels || options.channels.includes(c)))
   if (!channels.length) return { status: 'skipped', channels: ready }
   const now = options.now ?? Date.now()
-  const date = melbourneDate(now)
+  const date = options.date ?? melbourneDate(now)
   const at = new Date(now).toISOString()
   const db = env.COMMUNITY_DB
   const fetchImpl = options.fetchImpl ?? fetch
   let edition = await db.prepare('SELECT post_json FROM social_editions WHERE date=?').bind(date).first<{ post_json: string }>()
   if (!edition) {
-    const post = await previewPublication(env, date, options.personTopics)
+    const post = await previewPublication(env, date, options.personTopics, options.kind, options.subject)
     if (!post) return { status: 'skipped', reason: 'no unfeatured source records' }
     await db.prepare('INSERT OR IGNORE INTO social_editions(date,subject,post_json,created_at) VALUES(?,?,?,?)').bind(date, post.subject, JSON.stringify(post), at).run()
     edition = await db.prepare('SELECT post_json FROM social_editions WHERE date=?').bind(date).first<{ post_json: string }>()

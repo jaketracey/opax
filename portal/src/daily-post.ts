@@ -284,6 +284,11 @@ async function grantPost(date: string, sources: DailyPostSources, exclude: strin
     .sort((a, b) => b.start.localeCompare(a.start) || a.id.localeCompare(b.id)).slice(0, 14)
   const grant = seededPick(grants, `grant:${date}`, g => `grant:${g.id}`, exclude)
   if (!grant) return null
+  return grantEdition(date, grant)
+}
+
+/** The edition for one award record: the same words whether the rotation or an operator chose it. */
+function grantEdition(date: string, grant: GrantPublicationRecord): DailyPost {
   const url = `${ORIGIN}/money/grants/federal/recipient/${encodeURIComponent(grant.recipientId)}?award=${encodeURIComponent(grant.id)}`
   const amount = formatMoney(grant.amount)
   return { date, kind: 'grant', subject: `grant:${grant.id}`, title: `${grant.id}: ${grant.recipient}`, url,
@@ -292,6 +297,31 @@ async function grantPost(date: string, sources: DailyPostSources, exclude: strin
       [grant.program ? `Program: ${grant.program}` : '', grant.agency ? `Agency: ${grant.agency}` : '', `Agreement starts: ${formatDate(grant.start)}`, `Award: ${grant.id}`].filter(Boolean).join('\n'),
       'What is the funding intended to deliver? Read the award and its original GrantConnect record.',
       'This is a published award value, not evidence of payments received.', url].join('\n\n') }
+}
+
+/**
+ * One named award for an operator's run (`grant:<GA…>@<abn:…>`), read from the
+ * recipient's source shard rather than the rotating shortlist, so an award of
+ * any age can be posted on request. The same checks the shortlist applies:
+ * an organisation recipient, a positive published value, an agreement start
+ * date and a GrantConnect record to link to.
+ */
+export async function grantPostFor(date: string, sources: DailyPostSources, subject: string): Promise<DailyPost | null> {
+  const m = /^grant:(GA\d+(?:-A\d+)?)@(abn:\d{11})$/.exec(subject)
+  if (!m) return null
+  const [, awardId, recipientId] = m
+  const index = await sources.asset('/graph/grants.federal.json') as { recipients?: { id: string; n: string; sh: number }[] } | null
+  const recipient = index?.recipients?.find(r => r.id === recipientId)
+  if (!recipient || !Number.isInteger(recipient.sh) || typeof recipient.n !== 'string') return null
+  const fileKey = recipientId.toLowerCase().replace(':', '-').replace(/[^a-z0-9-]+/g, '-').replace(/-+$/g, '')
+  type Award = { id: string; v: number; n?: string; desc?: string; s?: string; guid?: string; ag?: string; pr?: string; cat?: string }
+  const shard = await sources.asset(`/grants/federal/shard-${String(recipient.sh).padStart(2, '0')}.json`) as Record<string, { grants?: Award[] }> | null
+  const award = shard?.[fileKey]?.grants?.find(g => g.id === awardId)
+  if (!award || !Number.isFinite(award.v) || award.v <= 0 || !award.guid || !/^\d{4}-\d{2}-\d{2}$/.test(award.s ?? '')) return null
+  const purpose = String(award.desc || award.n || '').replace(/\s+/g, ' ').trim()
+  if (purpose.length < 20) return null
+  return grantEdition(date, { id: award.id, recipientId, recipient: recipient.n, amount: award.v, start: award.s as string, purpose,
+    agency: award.ag, program: award.pr, category: award.cat, sourceUrl: `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(award.guid)}` })
 }
 
 interface Report {
@@ -337,7 +367,9 @@ const COMPOSERS: Record<DailyPostKind, (date: string, sources: DailyPostSources,
 }
 
 /** Composes the post for a date; falls back through the other kinds if one has nothing to say. */
-export async function composeDailyPost(date: string, sources: DailyPostSources, kind: DailyPostKind = kindFor(date)): Promise<DailyPost | null> {
+export async function composeDailyPost(date: string, sources: DailyPostSources, kind: DailyPostKind = kindFor(date), subject?: string): Promise<DailyPost | null> {
+  // A named subject is an operator's choice: only the grant form exists so far.
+  if (subject) return subject.startsWith('grant:') ? grantPostFor(date, sources, subject) : null
   const recent = await sources.recent()
   const order = [kind, ...DAILY_POST_KINDS.filter(k => k !== kind)]
   for (const k of order) {

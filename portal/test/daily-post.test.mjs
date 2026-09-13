@@ -183,3 +183,24 @@ test('OAuth 1.0a signature matches the reference vector from the X docs', async 
   assert.ok(header.startsWith('OAuth '));
   assert.ok(header.includes('oauth_signature="hCtSmYh%2BiHYCEqBWrE7C7hYmtUk%3D"'), header);
 });
+
+test('an operator can name one award and it is composed from the source shard', async () => {
+  const { grantPostFor } = await import('../src/daily-post.ts');
+  const assets = {
+    '/graph/grants.federal.json': { recipients: [{ id: 'abn:97694995462', n: 'The Trustee for the Qantas Foundation Memorial Trust', t: 1, c: 1, sh: 23 }] },
+    '/grants/federal/shard-23.json': { 'abn-97694995462': { grants: [
+      { id: 'GA34203', v: 11300000, desc: 'Construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld', s: '2019-02-12', guid: 'c0341dc2-c04e-1177-4ab0-99b9ae0d1b26', ag: 'Department of Infrastructure', pr: 'Building Better Regions Fund' },
+      { id: 'GA1', v: 5, desc: 'No source record', s: '2019-02-12' },
+    ] } },
+  };
+  const src = { asset: async p => assets[p] ?? null, personTopics: async () => [], recent: async () => [] };
+  const post = await grantPostFor('2026-09-12', src, 'grant:GA34203@abn:97694995462');
+  assert.equal(post.subject, 'grant:GA34203');
+  assert.equal(post.url, 'https://opax.com.au/money/grants/federal/recipient/abn%3A97694995462?award=GA34203');
+  assert.match(post.text, /^\$11,300,000 grant award: Construct an airpark roof/);
+  assert.ok(xLength(post.text) <= X_LIMIT);
+  assert.match(post.caption, /Program: Building Better Regions Fund/);
+  assert.equal(await grantPostFor('2026-09-12', src, 'grant:GA1@abn:97694995462'), null, 'no GrantConnect record, no post');
+  assert.equal(await grantPostFor('2026-09-12', src, 'grant:GA34203@abn:00000000000'), null, 'unknown recipient');
+  assert.equal(await grantPostFor('2026-09-12', src, 'person:someone'), null, 'only the grant form exists');
+});
