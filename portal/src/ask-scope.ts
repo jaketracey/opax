@@ -59,6 +59,9 @@ function namedPositionRequest(question: string): {subject:string;topic:string} |
 export const POSITION_GROUNDING = 'When asked what a politician would or might say, explain their documented position in the third person. Do not roleplay them, write a fictional quote, or predict their response. Start with what their recorded statements support, with dates and citations. Distinguish their own statements from another speaker describing them. If the record does not establish their position on this topic, say so rather than inferring it from their party or another topic. For a named politician position question, give a short takeaway followed by up to three concrete policy positions or proposals, each with its own citation. Prefer specific proposals over rhetorical attacks. Keep it under 180 words. Do not spend space summarising ministerial replies; exclude them from the position summary. Attribute criticism and claimed effects to the politician. Do not repeat illustrative population counts, economic forecasts or attack statistics unless the user requests those figures. For an actual proposed policy retain its specified duration, limit or amount exactly. Never confuse arrivals with net migration or departures. Include a source date when provided, and never describe an old statement as a current promise. '
 
 const REFERENTIAL = /^(?:and\b|what about\b|how about\b)|^(?:what|how|why|when|did|does|has|would)\b.*\b(?:he|she|they|his|her|their|it|that)\b/i
+// Only a whole follow-up can clear inferred dates. A topic such as "all years
+// of schooling" must stay a topic, and explicit request controls still win.
+const ALL_YEARS_FOLLOWUP = /^(?:and\s+)?(?:(?:what|how)\s+about\s+)?(?:across\s+|over\s+)?all\s+(?:years|time)\s*[?!.]*$/i
 // Compact policy-detail questions often omit a pronoun. Keep only these
 // specific forms; a fresh "Who won the election?" must start a new subject.
 const ELIGIBILITY_FOLLOWUP = /^(?:and\s+)?(?:who\s+(?:(?:would|could|can)\s+(?:be\s+)?(?:eligible|qualify)|(?:is|was|are|were)\s+eligible|qualifies)|which\s+(?:homes|households|people|properties|projects|businesses)\s+(?:(?:would|could|can)\s+(?:qualify|be\s+eligible)|(?:are|were)\s+eligible|qualify))(?:\s+for\s+(?:it|that|this|the (?:scheme|proposal|policy|housing)))?\s*[?!.]*$/i
@@ -72,7 +75,7 @@ const userQuestions = (input: RecordQuestion): string[] => Array.isArray(input.c
 const priorQuestion = (input: RecordQuestion) => userQuestions(input).at(-1)
 const partySubject = (question: string) => !!cohort(question) || PARTIES.some(p =>
   new RegExp(`^(?:and\\s+)?(?:(?:what|how)\\s+about\\s+)?${p.name}\\b`, 'i').test(question.trim()))
-const inheritsSubject = (question: string) => (REFERENTIAL.test(question.trim()) || ELIGIBILITY_FOLLOWUP.test(question.trim()) || /^(?:he|she|they)$/i.test(stanceRequest(question)?.subject || '')) && !namedPositionRequest(question) && !partySubject(question)
+const inheritsSubject = (question: string) => (REFERENTIAL.test(question.trim()) || ALL_YEARS_FOLLOWUP.test(question.trim()) || ELIGIBILITY_FOLLOWUP.test(question.trim()) || /^(?:he|she|they)$/i.test(stanceRequest(question)?.subject || '')) && !namedPositionRequest(question) && !partySubject(question)
 function namedFollowUp(question: string, people: readonly {name:string}[]): {speaker:string;topic?:string} | undefined {
   const rest = question.trim().replace(/^(?:and\s+)?(?:(?:what|how)\s+about\s+)/i, '').replace(/^and\s+/i, '')
   if (rest === question.trim()) return
@@ -87,7 +90,7 @@ function namedFollowUp(question: string, people: readonly {name:string}[]): {spe
 export function needsAskPeople(input: RecordQuestion): boolean {
   if (input.speaker || (input.kind && !['all', 'speech'].includes(input.kind))) return false
   return !!namedPositionRequest(input.question || '') || !!stanceRequest(input.question || '') ||
-    REFERENTIAL.test((input.question || '').trim()) || ELIGIBILITY_FOLLOWUP.test((input.question || '').trim())
+    REFERENTIAL.test((input.question || '').trim()) || ALL_YEARS_FOLLOWUP.test((input.question || '').trim()) || ELIGIBILITY_FOLLOWUP.test((input.question || '').trim())
 }
 
 function naturalScope(question: string, people: readonly { name: string }[]): AskScope {
@@ -146,7 +149,7 @@ export function resolveAskScope<T extends RecordQuestion>(input: T, people: read
     const current = {...naturalScope(turn, people), ...(named ? {speaker:named.speaker,kind:'speech'} : {})}
     if (!inheritsSubject(turn) || named) scope = {}
     // A new date window replaces the old window, not just one of its bounds.
-    if (current.from || current.to) { delete scope.from; delete scope.to }
+    if (current.from || current.to || ALL_YEARS_FOLLOWUP.test(turn.trim())) { delete scope.from; delete scope.to }
     scope = { ...scope, ...current }
   }
   // Explicit controls win independently. Do not combine an inferred political
@@ -174,7 +177,11 @@ function topicFromQuestion(question: string): string {
 function nextTopic(question: string, previous: string): string {
   // A replacement period belongs to the structured date filters. Do not keep
   // searching for an obsolete year from the prior question as a topic term.
-  const withoutPriorPeriod = () => previous.replace(/\s+(?:(?:in|during|before|after|since)\s+(?:19|20)\d{2}|(?:between|from)\s+(?:19|20)\d{2}\s+(?:and|to|through|until|[–-])\s+(?:19|20)\d{2})\s*[?!.]*$/i, '').trim() || previous
+  // A detail follow-up may have appended words after the period, or the first
+  // question may put it before the topic. Remove that clause, not bare years
+  // in event names such as "the 2011 Fukushima disaster".
+  const withoutPriorPeriod = () => previous.replace(/(?:^|\s+)(?:(?:between|from)\s+(?:19|20)\d{2}\s+(?:and|to|through|until|[–-])\s+(?:19|20)\d{2}|(?:in|during|before|after|since)\s+(?:19|20)\d{2})(?=\s|[?!.]|$)/i, ' ').replace(/^\s*(?:about|on)\s+/i, '').replace(/\s+/g, ' ').replace(/[?!.]+$/, '').trim() || previous
+  if (ALL_YEARS_FOLLOWUP.test(question.trim())) return withoutPriorPeriod()
   if (/^(?:and\s+)?(?:(?:what|how)\s+about\s+|what\s+(?:is|was|are|were)\s+(?:his|her|their)\s+(?:position|stance|views?)\s+)?(?:(?:in|during|before|after|since)\s+(?:19|20)\d{2}|(?:between|from)\s+(?:19|20)\d{2}\s+(?:and|to|through|until|[–-])\s+(?:19|20)\d{2})\s*[?!.]*$/i.test(question.trim())) return withoutPriorPeriod()
   // Duration is a request about the existing proposal, not a new topic word
   // that its original speech must literally contain. Generation gets it apart.

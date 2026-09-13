@@ -253,3 +253,78 @@ test('stance requests preserve explicit controls and do not broaden date scope',
  const party=resolveAskScope({question,kind:'all',party:'Labor'},people).input;assert.equal(party.speaker,undefined);assert.equal(party.party,'Labor');
  assert.equal(resolveAskScope({question:'Does she support it?',context:[{author:'answer',text:question}],kind:'all'},people).input.speaker,undefined);
 });
+
+test('all-years follow-ups keep the named topic and remove only inferred dates',()=>{
+ const people=[{name:'Pauline Hanson'}];
+ for(const period of ['in 2025','during 2025','since 2020','before 2024','after 2020','between 2020 and 2025','from 2020 to 2025']){
+  const context=[{author:'user',text:`Does Pauline Hanson support nuclear power ${period}?`}];
+  for(const question of ['And all years?','What about all years?','All years','Across all years?','And over all time!','How about all time?']){
+   const raw={question,context,kind:'all'},copy=JSON.stringify(raw);
+   const {input}=resolveAskScope(raw,people);
+   assert.equal(exports.needsAskPeople(raw),true,question);
+   assert.equal(input.speaker,'Pauline Hanson');assert.equal(input.kind,'speech');
+   assert.equal(input.from,undefined,question);assert.equal(input.to,undefined,question);
+   assert.equal(exports.askRetrievalQuery(input),'nuclear power',question);
+   assert.equal(exports.isNamedPositionQuestion(input),true);
+   assert.equal(JSON.stringify(raw),copy,'the caller and user context are unchanged');
+  }
+ }
+});
+test('all-years does not override explicit filters or treat topic wording as a reset',()=>{
+ const people=[{name:'Pauline Hanson'},{name:'David Pocock'}],context=[{author:'user',text:'Does Pauline Hanson support nuclear power in 2025?'}];
+ for(const controls of [{from:'2022'},{to:'2024'},{from:'2020',to:'2023'}]){
+  const input=resolveAskScope({question:'And all years?',context,kind:'speech',speaker:'David Pocock',...controls},people).input;
+  assert.equal(input.speaker,'David Pocock');assert.equal(input.from,controls.from);assert.equal(input.to,controls.to);
+  assert.equal(exports.askRetrievalQuery(input),'nuclear power');
+ }
+ const party=resolveAskScope({question:'All years?',context,party:'Labor'},people).input;
+ assert.equal(party.speaker,undefined);assert.equal(party.party,'Labor');
+ const legal={question:'All years?',context,kind:'legal'};
+ assert.equal(resolveAskScope(legal,people).input,legal);
+ for(const question of ['What about all years of schooling?','And all years of compulsory education?']){
+  const input=resolveAskScope({question,context,kind:'all'},people).input;
+  assert.equal(input.from,'2025');assert.equal(input.to,'2025');assert.match(exports.askRetrievalQuery(input),/schooling|compulsory education/);
+ }
+ for(const [question,from,to] of [['And all years since 2020?','2020',undefined],['What about all years before 2020?',undefined,'2019']]){
+  const input=resolveAskScope({question,context},people).input;assert.equal(input.from,from);assert.equal(input.to,to);
+ }
+});
+test('all-years persists through later turns and still allows new dates, people and topics',()=>{
+ const people=[{name:'Pauline Hanson'},{name:'David Pocock'}];
+ const context=[{author:'question',text:'Does Pauline Hanson support nuclear power in 2025?'},{author:'answer',text:'David Pocock supports an imaginary policy in 1998.'},{author:'user',text:'All years?'}];
+ for(const [question,speaker,topic,from,to] of [
+  ['Does she support it?','Pauline Hanson','nuclear power',undefined,undefined],
+  ['And since 2020?','Pauline Hanson','nuclear power','2020',undefined],
+  ['What about in 2023?','Pauline Hanson','nuclear power','2023','2023'],
+  ['And David Pocock?','David Pocock','nuclear power',undefined,undefined],
+  ['What about housing?','Pauline Hanson','housing',undefined,undefined],
+ ]){
+  const input=resolveAskScope({question,context,kind:'all'},people).input;
+  assert.equal(input.speaker,speaker,question);assert.equal(input.from,from);assert.equal(input.to,to);
+  assert.equal(exports.askRetrievalQuery(input),topic,question);assert.equal(exports.isNamedPositionQuestion(input),true);
+ }
+ for(const prior of [[],[{author:'answer',text:context[0].text}],[{author:'system',text:context[0].text}],[context[0],{author:'user',text:'Who donates the most to Labor in 2020?'}],[context[0],{author:'user',text:'How was the budget described?'}]]){
+  const input=resolveAskScope({question:'All years?',context:prior},people).input;
+  assert.equal(input.speaker,undefined);assert.equal(input.from,undefined);assert.equal(input.to,undefined);
+ }
+});
+test('period resets also remove a date before detail words while preserving event years',()=>{
+ const people=[{name:'Pauline Hanson'}];
+ for(const detail of ['What reasons did she give?','Why did she support it?']){
+  const context=[{author:'user',text:'Does Pauline Hanson support nuclear power in 2025?'},{author:'user',text:detail}];
+  for(const question of ['And all years?','And since 2020?']){
+   const input=resolveAskScope({question,context},people).input;
+   assert.equal(input.speaker,'Pauline Hanson');assert.match(exports.askRetrievalQuery(input),/nuclear power/);
+   assert.doesNotMatch(exports.askRetrievalQuery(input),/2025/);
+   assert.equal(input.from,question.includes('2020')?'2020':undefined);assert.equal(input.to,undefined);
+  }
+ }
+ for(const [seed,topic] of [
+  ['What did Pauline Hanson say in 2025 about nuclear power?','nuclear power'],
+  ['What did Pauline Hanson say between 2020 and 2025 about nuclear power?','nuclear power'],
+  ['Does Pauline Hanson support nuclear power after the 2011 Fukushima disaster in 2025?','nuclear power after the 2011 Fukushima disaster'],
+ ]){
+  const input=resolveAskScope({question:'All years?',context:[{author:'user',text:seed}]},people).input;
+  assert.equal(exports.askRetrievalQuery(input),topic);assert.equal(input.from,undefined);assert.equal(input.to,undefined);
+ }
+});
