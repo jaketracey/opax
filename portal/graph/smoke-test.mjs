@@ -227,3 +227,56 @@ for (const jur of ['qld', 'vic', 'tas']) {
       `${stateCentres.size} clusters (${state.meta.sourceShort}, ${state.meta.coverage})`,
   )
 }
+
+// Card actions (planCardActions): every node card offers at most one filled
+// primary, the profile, and a quiet row of short verb-first actions. The
+// page's own subject promotes nothing; every capability stays reachable.
+{
+  const { planCardActions, shortName } = bundle
+  assert.equal(typeof planCardActions, 'function', 'planCardActions exported')
+  assert.equal(shortName('Pratt Holdings Pty Ltd'), 'Pratt Holdings')
+  const ctx = {
+    grantsOn: true, routeBase: '', askUrl: (industry) => `/ask?q=${encodeURIComponent(industry)}`, topIndustry: 'mining',
+  }
+  const plans = raw.nodes.map((node) => [node, planCardActions(node, ctx)])
+  for (const [node, plan] of plans) {
+    assert.ok(plan.primary === null || plan.primary.label === 'View profile', `${node.id}: the only filled action is the profile`)
+    const ids = plan.actions.map((a) => a.id)
+    assert.equal(new Set(ids).size, ids.length, `${node.id}: no repeated action`)
+    for (const a of plan.actions) {
+      const words = a.label.trim().split(/\s+/)
+      assert.ok(words.length >= 1 && words.length <= 3, `${node.id}: short label "${a.label}"`)
+      assert.ok(a.name.startsWith(words[0]), `${node.id}: accessible name "${a.name}" begins with the visible "${a.label}"`)
+      assert.ok(!/[—‘’“”]/.test(a.label + a.name), `${node.id}: no em dash or curly quotes`)
+      if (a.id === 'explain' || a.id === 'sources') assert.equal(a.href, undefined, `${node.id}: ${a.id} is a behaviour, not a link`)
+      else assert.ok(typeof a.href === 'string' && a.href.startsWith('/'), `${node.id}: ${a.id} links somewhere`)
+    }
+    if (node.kind === 'donor') {
+      assert.deepEqual(plan.primary, { label: 'View profile', href: `/subject/donor/${encodeURIComponent(node.label)}` })
+      for (const id of ['search', 'explain', 'sources']) assert.ok(ids.includes(id), `${node.id}: donor keeps ${id}`)
+      assert.equal(ids.includes('ask'), !['individual', 'other', ''].includes(node.industry.toLowerCase()), `${node.id}: ask follows the industry`)
+      assert.equal(ids.includes('grants'), !!node.grants?.rid, `${node.id}: grants file follows the grants block`)
+      assert.equal(ids.includes('suppliers'), !!node.contracts, `${node.id}: supplier records follow the contracts block`)
+      assert.equal(plan.actions.find((a) => a.id === 'search').href, `/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`)
+    } else if (node.kind === 'party') {
+      assert.equal(plan.primary.href, `/subject/party/${encodeURIComponent(node.label)}`)
+      assert.deepEqual(ids, ['ask', 'explain'], `${node.id}: party row is ask then explain`)
+    } else if (node.kind === 'grantor') {
+      assert.equal(plan.primary, null, `${node.id}: a public-money hub has no profile to fill`)
+      assert.deepEqual(ids, node.flow === 'contracts' ? ['discover', 'suppliers'] : ['grants'])
+    }
+  }
+  const donor = raw.nodes.find((n) => n.kind === 'donor' && n.grants?.rid)
+  if (donor) {
+    const own = planCardActions(donor, { ...ctx, subject: donor.id })
+    assert.equal(own.primary, null, 'the subject page card promotes nothing')
+    assert.deepEqual(own.actions.map((a) => a.id), planCardActions(donor, ctx).actions.map((a) => a.id), 'but keeps its row')
+    const off = planCardActions(donor, { ...ctx, grantsOn: false })
+    assert.ok(!off.actions.some((a) => a.id === 'grants' || a.id === 'suppliers'), 'public-money links go with the layer')
+    const state = planCardActions({ ...donor, contracts: donor.grants }, { ...ctx, jurisdiction: 'qld' })
+    assert.ok(!state.actions.some((a) => a.id === 'suppliers'), 'a state file has no supplier records page')
+  }
+  const party = raw.nodes.find((n) => n.kind === 'party')
+  assert.deepEqual(planCardActions(party, { ...ctx, topIndustry: null }).actions.map((a) => a.id), ['explain'], 'no leading industry, no ask')
+  console.log(`card actions OK - ${plans.length} node cards, one filled action at most`)
+}

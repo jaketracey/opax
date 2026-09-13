@@ -473,7 +473,7 @@ export function mountWordsLayer(ctx: WordsLayerContext): WordsLayer {
     const host = document.createElement('div')
     host.className = 'mm-words'
     host.hidden = true
-    const firstTrigger = card.querySelector('.mm-ask')
+    const firstTrigger = card.querySelector('.mm-ask, .mm-actions')
     if (firstTrigger) card.insertBefore(host, firstTrigger)
     else card.appendChild(host)
     withMatrix((m) => {

@@ -447,15 +447,36 @@ const CSS = `
   font-size: 12px; line-height: 1.5; color: #4a4942; }
 .mm-award-project-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .mm-award-project-amount { flex: none; font-weight: 600; font-variant-numeric: tabular-nums; }
+/* The card's one filled action: the subject's profile. Nothing else on a
+   card is filled; every other way onward sits in the quiet row beneath. */
 .mm-ask { display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; min-height: 44px;
   margin-top: 12px; padding: 8px 12px; border: 0; border-radius: 9px;
   background: #142a43; color: #ffffff; font-size: 13px; font-weight: 600;
   font-family: inherit; line-height: 1.35; text-decoration: none; text-align: center;
   cursor: pointer; }
 .mm-ask:hover { background: #1d3a5c; color: #ffffff; }
-.mm-ask-quiet { background: none; color: #33322e !important; border: 1px solid #d5d1c4;
-  margin-top: 8px; }
-.mm-ask-quiet:hover { background: rgba(0, 0, 0, 0.05); color: #26251f !important; }
+.mm-ask:focus-visible { outline: 2px solid #8a5a12; outline-offset: 2px; }
+/* The quiet row: short verb-first text actions in the bronze register, each
+   a 44px target through its padding, wrapping at narrow widths. A hairline
+   dot trails every item but the last, so a wrapped line ends on a dot rather
+   than starting with one. */
+.mm-actions { display: flex; flex-wrap: wrap; align-items: center; margin: 4px -6px 0; }
+.mm-action { display: inline-flex; align-items: center; box-sizing: border-box; min-height: 44px; margin: 0;
+  padding: 0 6px; border: 0; border-radius: 6px; background: none; font: inherit; font-size: 12.5px;
+  font-weight: 600; line-height: 1.2; color: #8a5a12; text-decoration: none; white-space: nowrap; cursor: pointer; }
+.mm-action:hover { color: #26251f; }
+.mm-action:hover .mm-action-label { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #a0761b; }
+.mm-action:focus-visible { outline: 2px solid #8a5a12; outline-offset: -2px; }
+.mm-action:disabled { color: #8a8578; cursor: progress; }
+.mm-action:disabled .mm-action-label { text-decoration: none; }
+.mm-action:not(:last-child)::after { content: '·'; margin-left: 9px; color: #b7b3a8; font-weight: 400; }
+.mm-action-chevron { display: inline-block; margin-left: 3px; font-size: 16px; line-height: 1; color: #a0761b;
+  transform: rotate(90deg); transition: transform 160ms ease; }
+.mm-action[aria-expanded='true'] .mm-action-chevron { transform: rotate(-90deg); }
+@media (prefers-reduced-motion: reduce) { .mm-action-chevron { transition: none; } }
+/* The source-record excerpts the Sources disclosure opens under the row. */
+.mm-evidence { margin: 2px 0 0; padding-top: 8px; border-top: 1px solid #e4e1d8; font-size: 12px; }
+.mm-evidence-note { margin: 0; font-size: 12px; line-height: 1.45; color: #8a8578; }
 .mm-zoom { position: absolute; right: 12px; bottom: 12px; display: flex;
   flex-direction: column; gap: 4px; }
 .mm-zoom button { width: 34px; height: 34px; border: 1px solid #e4e1d8;
@@ -637,6 +658,112 @@ function el<K extends keyof HTMLElementTagNameMap>(
   if (className) node.className = className
   parent.appendChild(node)
   return node
+}
+
+// ---------------------------------------------------------------------------
+// Card actions.
+// ---------------------------------------------------------------------------
+
+/** Company-suffix-free name for question copy ("Pratt Holdings", not "…Pty Ltd"). */
+export const shortName = (label: string) =>
+  label.replace(/\s+(Pty\.?\s*)?(Ltd|Limited|Incorporated|Inc)\.?$/i, '')
+
+export type CardActionId = 'ask' | 'search' | 'explain' | 'sources' | 'grants' | 'suppliers' | 'discover'
+
+/** One entry in a card's quiet row. Links carry an href; explain and sources are behaviours the renderer wires. */
+export type CardAction = {
+  id: CardActionId
+  /** Short and verb-first, one to three words: what the reader sees. */
+  label: string
+  /** The full sentence the label stands for; the accessible name and tooltip. */
+  name: string
+  href?: string
+}
+
+export type CardActions = {
+  /** The one filled action, the entity's profile; null when the card is the page's own subject or there is no profile. */
+  primary: { label: string; href: string } | null
+  actions: CardAction[]
+}
+
+export type CardActionContext = {
+  /** The page's own subject; its card promotes nothing. */
+  subject?: string
+  /** A state file's jurisdiction; undefined for the federal file. */
+  jurisdiction?: string
+  /** Whether the public-money layer is showing (its links go with it). */
+  grantsOn: boolean
+  routeBase: string
+  askUrl: (industry: string) => string
+  /** For a party: the industry that gave it the most, or null. */
+  topIndustry?: string | null
+}
+
+/**
+ * What a node's card offers beyond its figures: at most one filled primary
+ * (the profile) and a quiet row of short actions. Pure, so the shape of every
+ * card can be checked without a DOM; the renderer only maps ids to behaviour.
+ */
+export function planCardActions(node: MoneyNode, ctx: CardActionContext): CardActions {
+  const own = node.id === ctx.subject
+  const profile = (kind: 'donor' | 'party') =>
+    own ? null : { label: 'View profile', href: `/subject/${kind}/${encodeURIComponent(node.label)}` }
+  if (node.kind === 'agency' || node.kind === 'supplier') {
+    const hasProfile = !!node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl)
+    return { primary: hasProfile && !own ? { label: 'View profile', href: node.profileUrl! } : null, actions: [] }
+  }
+  if (node.kind === 'grantor') {
+    const actions: CardAction[] = []
+    if (node.flow === 'contracts') {
+      // The Discover page follows Commonwealth contracts; a state hub has no page of its own yet.
+      if (!ctx.jurisdiction) {
+        actions.push({ id: 'discover', label: 'Follow contracts', name: 'Follow the big contracts', href: `${ctx.routeBase}/discover` })
+        actions.push({ id: 'suppliers', label: 'Browse suppliers', name: 'Browse supplier profiles', href: `${ctx.routeBase}/subject/supplier` })
+      }
+    } else {
+      actions.push({
+        id: 'grants', label: 'Explore grants', name: 'Explore Who gets the grants',
+        href: `${ctx.routeBase}/explore?game=grants&jur=${encodeURIComponent(node.explorer ?? 'federal')}`,
+      })
+    }
+    return { primary: null, actions }
+  }
+  if (node.kind === 'party') {
+    const actions: CardAction[] = []
+    if (ctx.topIndustry) {
+      const question = `What has ${node.label} said about ${ctx.topIndustry}?`
+      actions.push({ id: 'ask', label: 'Ask', name: `Ask ${question.charAt(0).toLowerCase()}${question.slice(1)}`, href: `/ask?q=${encodeURIComponent(question)}` })
+    }
+    actions.push({ id: 'explain', label: 'Explain', name: 'Explain this flow' })
+    return { primary: profile('party'), actions }
+  }
+  // A donor: the industry question is the specific ask; the quoted-name search
+  // is what parliament said about the donor itself. Quote the suffix-stripped
+  // name: MPs say "Philip Morris", never "Philip Morris Limited".
+  const actions: CardAction[] = []
+  const industry = node.industry.replace(/_/g, ' ')
+  if (!['individual', 'other', ''].includes(node.industry.toLowerCase())) {
+    actions.push({ id: 'ask', label: 'Ask', name: `Ask what parliament said about ${industry}`, href: ctx.askUrl(industry) })
+  }
+  const short = shortName(node.label)
+  actions.push({ id: 'search', label: 'Search', name: `Search what was said about ${short}`, href: `/search?q=${encodeURIComponent(`"${short}"`)}` })
+  actions.push({ id: 'explain', label: 'Explain', name: 'Explain this flow' })
+  actions.push({ id: 'sources', label: 'Sources', name: 'Sources: mentions in the source records' })
+  if (ctx.grantsOn) {
+    if (node.grants?.rid) {
+      actions.push({
+        id: 'grants', label: 'Open grants file', name: 'Open their grants file',
+        href: `${ctx.routeBase}/explore?game=grants&jur=${encodeURIComponent(node.grants.jur ?? 'federal')}&open=${encodeURIComponent(node.grants.rid)}`,
+      })
+    }
+    if (node.contracts && !ctx.jurisdiction) {
+      actions.push({
+        id: 'suppliers', label: 'Open supplier records', name: 'Open their supplier records',
+        href: `${ctx.routeBase}/subject/supplier?donor=${encodeURIComponent(node.id)}`,
+      })
+    }
+  }
+  return { primary: profile('donor'), actions }
 }
 
 // ---------------------------------------------------------------------------
@@ -1404,15 +1531,38 @@ export async function mountMoneyMap(
     }
   }
 
-  /** A question-trigger or profile link on a card. */
-  const trigger = (parent: HTMLElement, href: string, label: string, quiet = false, external = false) => {
-    const a = el('a', quiet ? 'mm-ask mm-ask-quiet' : 'mm-ask', parent)
+  /** The card's one filled action. */
+  const primary = (parent: HTMLElement, href: string, label: string) => {
+    const a = el('a', 'mm-ask', parent)
     a.href = href
     a.textContent = label
-    if (external) { a.target = '_blank'; a.rel = 'noopener' }
   }
-  const subjectUrl = (kind: 'donor' | 'party', label: string) =>
-    `/subject/${kind}/${encodeURIComponent(label)}`
+  /** The quiet row under a card's figures; the actions go in with `action`. */
+  const actionRow = (parent: HTMLElement) => {
+    const row = el('div', 'mm-actions', parent)
+    row.setAttribute('role', 'group')
+    row.setAttribute('aria-label', 'More about this')
+    return row
+  }
+  /**
+   * One short action in the row: a real link when it has an href, a button
+   * when it does something here. `name` is the full sentence the short label
+   * stands for, so the accessible name still begins with the visible words.
+   */
+  const action = (row: HTMLElement, label: string, opts: { name?: string; href?: string; onClick?: () => void }) => {
+    const node = opts.href ? el('a', 'mm-action', row) : el('button', 'mm-action', row)
+    if (node instanceof HTMLAnchorElement) node.href = opts.href!
+    else node.type = 'button'
+    // The label is its own span so the hover underline stops short of the
+    // trailing dot and the Sources chevron.
+    el('span', 'mm-action-label', node).textContent = label
+    if (opts.name && opts.name !== label) {
+      node.setAttribute('aria-label', opts.name)
+      node.title = opts.name
+    }
+    if (opts.onClick) node.addEventListener('click', opts.onClick)
+    return node
+  }
   const jurisdiction = typeof raw.meta?.jurisdiction === 'string'
     ? raw.meta.jurisdiction
     : 'federal'
@@ -1423,16 +1573,78 @@ export async function mountMoneyMap(
       '(all groups, Australia, financial-year average). Nominal figures are on the returns.'
   }
   /** Keep the map independent of the page shell: it only describes the held flow. */
-  const explain = (parent: HTMLElement, detail: Record<string, string>) => {
-    const button = el('button', 'mm-ask mm-ask-quiet', parent)
-    button.type = 'button'
-    button.textContent = 'Explain this flow'
-    button.addEventListener('click', () => {
-      container.dispatchEvent(new CustomEvent('opax:explain', {
-        bubbles: true,
-        detail: { ...detail, jurisdiction },
-      }))
+  const explainAction = (row: HTMLElement, detail: Record<string, string>) =>
+    action(row, 'Explain', {
+      name: 'Explain this flow',
+      onClick: () => {
+        container.dispatchEvent(new CustomEvent('opax:explain', {
+          bubbles: true,
+          detail: { ...detail, jurisdiction },
+        }))
+      },
     })
+  /**
+   * The Sources disclosure: verified excerpts from the source records, loaded
+   * on first open into a slot under the row and toggled after that. Loading,
+   * nothing-found and failure each read as a note in the slot; a failure
+   * leaves the button armed so the next press tries again.
+   */
+  let evidenceSeq = 0
+  const sourcesAction = (row: HTMLElement, card: HTMLElement, node: MoneyNode) => {
+    const button = action(row, 'Sources', { name: 'Sources: mentions in the source records' }) as HTMLButtonElement
+    const chevron = el('span', 'mm-action-chevron', button)
+    chevron.textContent = '›'
+    chevron.setAttribute('aria-hidden', 'true')
+    const slot = el('section', 'mm-evidence', card)
+    slot.id = `mm-evidence-${++evidenceSeq}`
+    slot.hidden = true
+    slot.setAttribute('aria-label', 'Source records')
+    slot.setAttribute('aria-live', 'polite')
+    button.setAttribute('aria-controls', slot.id)
+    button.setAttribute('aria-expanded', 'false')
+    const setOpen = (open: boolean) => {
+      slot.hidden = !open
+      button.setAttribute('aria-expanded', String(open))
+    }
+    const note = (text: string) => {
+      slot.replaceChildren()
+      el('p', 'mm-evidence-note', slot).textContent = text
+      setOpen(true)
+    }
+    const alive = () => !destroyed && selectedId === node.id && slot.isConnected
+    let loaded: boolean | null = null // null until a load settles; then whether excerpts were found
+    button.addEventListener('click', async () => {
+      if (loaded !== null) { setOpen(slot.hidden); return }
+      button.disabled = true
+      button.setAttribute('aria-busy', 'true')
+      note('Finding source excerpts…')
+      try {
+        const { mountEvidence } = await import('../public/evidence.js')
+        const found = await mountEvidence(slot, { name: node.label }, { compact: true, alive })
+        if (!alive()) return
+        loaded = found
+        if (found) setOpen(true)
+        else note('No verified excerpts available yet.')
+      } catch {
+        if (slot.isConnected) note('The source excerpts could not be loaded. Press Sources to try again.')
+      } finally {
+        if (slot.isConnected) {
+          button.disabled = false
+          button.removeAttribute('aria-busy')
+        }
+      }
+    })
+  }
+  /** Lays a node card's planned actions out: the filled primary, then the quiet row, then the Sources slot. */
+  const renderActions = (card: HTMLElement, node: MoneyNode, plan: CardActions, explainDetail: Record<string, string>) => {
+    if (plan.primary) primary(card, plan.primary.href, plan.primary.label)
+    if (!plan.actions.length) return
+    const row = actionRow(card)
+    for (const item of plan.actions) {
+      if (item.id === 'explain') explainAction(row, explainDetail)
+      else if (item.id === 'sources') sourcesAction(row, card, node)
+      else action(row, item.label, { name: item.name, href: item.href })
+    }
   }
 
   /** The industry that gave a party the most, for its ask-trigger. */
@@ -1463,6 +1675,14 @@ export async function mountMoneyMap(
     close.textContent = '✕'
     close.setAttribute('aria-label', 'Close details')
     close.addEventListener('click', () => setSelection(null, { user: true }))
+    const plan = planCardActions(node, {
+      subject: opts.subject,
+      jurisdiction: typeof raw.meta.jurisdiction === 'string' && raw.meta.jurisdiction ? raw.meta.jurisdiction : undefined,
+      grantsOn,
+      routeBase,
+      askUrl,
+      topIndustry: node.kind === 'party' ? topIndustryOf(node.id) : null,
+    })
 
     if (node.kind === 'agency' || node.kind === 'supplier') {
       el('h2', '', card).textContent = node.label
@@ -1475,7 +1695,7 @@ export async function mountMoneyMap(
         const other = view.nodes.get(edge.source === node.id ? edge.target : edge.source)
         if (other) row(list, other.colour ?? null, other.label, edge.total, `${edge.count.toLocaleString()} contracts`, () => setSelection(other.id, { user: true }))
       }
-      if (node.profileUrl && /^\/subject\/(agency|supplier)\//.test(node.profileUrl)) trigger(card, node.profileUrl, 'Full profile')
+      renderActions(card, node, plan, {})
       el('p', 'mm-card-fine', card).textContent = 'Recorded contract commitments, not verified payments. The map shows the largest relationships; the profile lists all available records.'
       return
     }
@@ -1557,50 +1777,8 @@ export async function mountMoneyMap(
           const why = el('p', 'mm-card-fine', card)
           why.textContent = 'On the map for the public money it holds, not for the size of its donations.'
         }
-        if (node.grants?.rid) {
-          trigger(card,
-            `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.grants.jur ?? 'federal')}&open=${encodeURIComponent(node.grants.rid)}`,
-            'Open their grants file', true)
-        }
-        if (node.contracts && !raw.meta.jurisdiction) {
-          trigger(card, `${routeBase}/subject/supplier?donor=${encodeURIComponent(node.id)}`, 'Explore supplier records', true)
-        }
       }
-      if (!['individual', 'other', ''].includes(node.industry.toLowerCase())) {
-        trigger(card, askUrl(node.industry.replace(/_/g, ' ')),
-          'What did parliament say about this industry?', true)
-      }
-      // Quote the suffix-stripped name: MPs say "Philip Morris", never
-      // "Philip Morris Limited" - the full label finds nothing.
-      trigger(card,
-        `/search?q=${encodeURIComponent(`"${shortName(node.label)}"`)}`,
-        `What was said about ${shortName(node.label)}?`, true)
-      const evidenceButton = el('button', 'mm-ask mm-ask-quiet', card)
-      evidenceButton.type = 'button'
-      evidenceButton.textContent = 'See mentions in the source records'
-      const evidenceSlot = el('section', 'mm-evidence', card)
-      evidenceSlot.hidden = true
-      evidenceButton.addEventListener('click', async () => {
-        evidenceButton.disabled = true
-        evidenceButton.textContent = 'Finding source excerpts…'
-        try {
-          const { mountEvidence } = await import('../public/evidence.js')
-          const found = await mountEvidence(evidenceSlot, { name: node.label }, {
-            compact: true, alive: () => !destroyed && selectedId === node.id && evidenceSlot.isConnected,
-          })
-          if (!destroyed && selectedId === node.id && evidenceSlot.isConnected) {
-            evidenceButton.hidden = found
-            if (!found) evidenceButton.textContent = 'No verified excerpts available yet'
-          }
-        } catch {
-          if (evidenceSlot.isConnected) {
-            evidenceButton.textContent = 'Try loading source excerpts again'
-            evidenceButton.disabled = false
-          }
-        }
-      })
-      explain(card, { kind: 'donor', from: node.label })
-      if (node.id !== opts.subject) trigger(card, subjectUrl('donor', node.label), 'Full profile')
+      renderActions(card, node, plan, { kind: 'donor', from: node.label })
     } else if (node.kind === 'grantor') {
       const contracts = node.flow === 'contracts'
       listTitle.textContent = contracts
@@ -1629,14 +1807,7 @@ export async function mountMoneyMap(
       fine.textContent = typeof source === 'string'
         ? `${source}.${coverage} Public money is drawn the other way from donations and never summed with them; a donor ${contracts ? 'holding a contract' : 'receiving a grant'} is a fact, not a finding.`
         : 'Public money is drawn the other way from donations and never summed with them.'
-      // The Discover page follows Commonwealth contracts; a state hub has no page of its own yet.
-      if (contracts) {
-        if (!raw.meta.jurisdiction) {
-          trigger(card, `${routeBase}/discover`, 'Follow the big contracts', false)
-          trigger(card, `${routeBase}/subject/supplier`, 'Browse supplier profiles', true)
-        }
-      } else trigger(card, `${routeBase}/explore?game=grants&jur=${encodeURIComponent(node.explorer ?? 'federal')}`,
-        'Open Who gets the grants', false)
+      renderActions(card, node, plan, {})
     } else {
       listTitle.textContent = 'Top donors shown on the map'
       const incoming = view.edges
@@ -1655,22 +1826,9 @@ export async function mountMoneyMap(
           () => setSelection(donor.id, { user: true }),
         )
       }
-      const industry = topIndustryOf(node.id)
-      if (industry) {
-        trigger(card,
-          `/ask?q=${
-            encodeURIComponent(`What has ${node.label} said about ${industry}?`)
-          }`,
-          `Ask what ${node.label} said about ${industry}`, true)
-      }
-      explain(card, { kind: 'party', to: node.label })
-      if (node.id !== opts.subject) trigger(card, subjectUrl('party', node.label), 'Full profile')
+      renderActions(card, node, plan, { kind: 'party', to: node.label })
     }
   }
-
-  /** Company-suffix-free name for question copy ("Pratt Holdings", not "…Pty Ltd"). */
-  const shortName = (label: string) =>
-    label.replace(/\s+(Pty\.?\s*)?(Ltd|Limited|Incorporated|Inc)\.?$/i, '')
 
   /**
    * The card for an aggregated flow - a folded cluster's summed giving to
@@ -1717,16 +1875,17 @@ export async function mountMoneyMap(
       row(list, style.colour, donor.label, flow.total, yearSpan(flow.firstYear, flow.lastYear),
         () => setSelection(donor.id, { user: true }))
     }
+    const actions = actionRow(card)
     if (!['individuals', 'other'].includes(group)) {
-      trigger(card, askUrl(group), `What has parliament said about ${group}?`)
+      action(actions, 'Ask', { name: `Ask what parliament has said about ${group}`, href: askUrl(group) })
     }
-    explain(card, { kind: 'industry', from: groupName, to: party.label })
-    const open = el('button', 'mm-ask mm-ask-quiet', card)
-    open.type = 'button'
-    open.textContent = `Show only ${group} on the map`
-    open.addEventListener('click', () => {
-      setEdgeSelection(null)
-      applyIsolate(group)
+    explainAction(actions, { kind: 'industry', from: groupName, to: party.label })
+    action(actions, `Show only ${group}`, {
+      name: `Show only ${group} on the map`,
+      onClick: () => {
+        setEdgeSelection(null)
+        applyIsolate(group)
+      },
     })
   }
 
@@ -1762,9 +1921,10 @@ export async function mountMoneyMap(
     const fine = el('p', 'mm-card-fine', card)
     fine.textContent = 'Public money going the other way; not summed with the donations. A donor receiving a grant is a fact, not a finding.'
     if (donor.grants?.rid) {
-      trigger(card,
-        `${routeBase}/explore?game=grants&jur=${encodeURIComponent(donor.grants.jur ?? 'federal')}&open=${encodeURIComponent(donor.grants.rid)}`,
-        'Open their grants file', true)
+      action(actionRow(card), 'Open grants file', {
+        name: 'Open their grants file',
+        href: `${routeBase}/explore?game=grants&jur=${encodeURIComponent(donor.grants.jur ?? 'federal')}&open=${encodeURIComponent(donor.grants.rid)}`,
+      })
     }
   }
 
@@ -1824,14 +1984,16 @@ export async function mountMoneyMap(
     row(list, party.colour ?? '#9AA0A8', party.label,
       party.total, '', () => setSelection(party.id, { user: true }))
 
+    const actions = actionRow(card)
     if (edge.firstYear && edge.lastYear) {
       const industry = donor.industry.replace(/_/g, ' ')
-      trigger(card,
-        `/search?q=${encodeURIComponent(industry)}` +
+      action(actions, 'Search', {
+        name: `Search what was said about ${industry} in ${span}`,
+        href: `/search?q=${encodeURIComponent(industry)}` +
           `&from=${edge.firstYear}&to=${edge.lastYear}`,
-        `What was said about ${industry} in ${span}?`)
+      })
     }
-    explain(card, { kind: 'donor', from: donor.label, to: party.label })
+    explainAction(actions, { kind: 'donor', from: donor.label, to: party.label })
   }
 
   /**

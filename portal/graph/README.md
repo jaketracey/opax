@@ -56,6 +56,14 @@ Embed notes for subject pages:
 - Card triggers route via `#/ask?q=`, `#/search?q=[&from=&to=]` and
   `#/subject/{donor|party}/{label}`; on a non-SPA page (map.html) the same
   routes are emitted with a leading `/`.
+- A card ends with at most one filled action, "View profile" (donor, party,
+  agency or supplier with a profile; none when the node is the page's own
+  `subject`), then one quiet row of short verb-first actions: Ask (the
+  industry question), Search (the quoted short name), Explain (dispatches
+  `opax:explain`), Sources (a disclosure that loads verified excerpts from
+  `public/evidence.js` under the row), plus the grants-file and
+  supplier-records links where they apply. `planCardActions` is the pure
+  planner behind node cards; the smoke test checks every node's plan.
 - Interactions in full chrome: click a node (info card), click a flow line
   (edge card with a year-scoped search trigger), find-in-map (prefix-fuzzy),
   and a year-range scrub that re-sums every node, flow and card from the
