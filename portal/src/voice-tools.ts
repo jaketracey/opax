@@ -1,6 +1,6 @@
 import {CommunityError, text} from './community-core'
 import {CATALOG_KINDS} from './catalog-search'
-import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptJurisdiction} from './voice-money'
+import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptGraphForQuestion} from './voice-money'
 
 type Data = Record<string, unknown>
 export type PublicReader = (path: string) => Promise<Response>
@@ -73,11 +73,12 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
   const asset = async (path: string, limit: number) => boundedJson(await env.ASSETS.fetch(new Request(origin + path)), limit)
   const receipts = async (query:string) => {
     if(/\b(?:grants?|contracts?|expenditure|expenses?|government spending|public funding)\b/i.test(query)) return null
-    const jurisdiction=receiptJurisdiction(query)
-    if(!jurisdiction) return null
-    const file=jurisdiction==='federal'?'money.json':`money.${jurisdiction}.json`
-    const graph=await asset('/graph/'+file,2_000_000)
-    if(!isReceiptGraph(graph)) return null
+    const selection=await receiptGraphForQuestion(query,async file=>{
+      const graph=await asset(file,2_000_000)
+      return isReceiptGraph(graph)?graph:null
+    })
+    if(!selection)return null
+    const {graph,jurisdiction}=selection
     const found=receiptAnswer(graph,query,jurisdiction,origin)
     return found ? {source_notice:evidenceNotice, sources:found.sources, data:compact(found)} : null
   }

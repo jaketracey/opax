@@ -7,7 +7,7 @@ import {pathToFileURL} from 'node:url';
 import {build} from 'esbuild';
 const dir=mkdtempSync(join(tmpdir(),'opax-voice-money-'));
 await build({entryPoints:[new URL('../src/voice-money.ts',import.meta.url).pathname,new URL('../src/voice-tools.ts',import.meta.url).pathname],outdir:dir,bundle:true,platform:'node',format:'esm'});
-const {receiptAnswer,receiptJurisdiction}=await import(pathToFileURL(join(dir,'voice-money.js')));
+const {receiptAnswer,receiptJurisdiction,receiptGraphForQuestion}=await import(pathToFileURL(join(dir,'voice-money.js')));
 const {runVoiceTool}=await import(pathToFileURL(join(dir,'voice-tools.js')));
 const graph={meta:{coverage:'2020–2022',methodology:'Selected donors only'},nodes:[
  {id:'a',kind:'donor',label:'Example Casino',industry:'gambling',group:'gambling',total:99999},
@@ -22,6 +22,31 @@ const graph={meta:{coverage:'2020–2022',methodology:'Selected donors only'},no
  {source:'gov',target:'a',total:999999,count:1,firstYear:2020,lastYear:2020,byYear:{2020:[999999,1]}},
 ]};
 const answer=q=>receiptAnswer(graph,q,'federal','https://opax.test');
+test('graph selection masks exact donor names only when resolving conflicting region words',async()=>{
+ const reads=[];
+ const load=async file=>{reads.push(file);return JSON.parse(readFileSync(new URL('../public'+file,import.meta.url),'utf8'))};
+ const query='money from The Federal Group in Tasmania';
+ const selection=await receiptGraphForQuestion(query,load);
+ assert.equal(selection.jurisdiction,'tas');assert.equal(selection.file,'/graph/money.tas.json');
+ assert.deepEqual(reads,['/graph/money.json','/graph/money.tas.json']);
+ reads.length=0;assert.equal((await receiptGraphForQuestion('gambling in Queensland',load)).jurisdiction,'qld');assert.equal(reads.length,1);
+ reads.length=0;assert.equal((await receiptGraphForQuestion(query,load,'tas')).jurisdiction,'tas');assert.deepEqual(reads,['/graph/money.tas.json']);
+ for(const q of ['money from The Federal Group in federal and Tasmania records','gambling in federal and Tasmania','gambling in NSW',
+  'money from Queensland Nickel Pty Ltd and Federal Secretariat']) {
+  reads.length=0;assert.equal(await receiptGraphForQuestion(q,load),null,q);assert.ok(reads.length<=2);
+ }
+ const ambiguous={nodes:[{id:'a',kind:'donor',label:'A Pty Ltd',aliases:['The Federal Group']},{id:'b',kind:'donor',label:'B Pty Ltd',aliases:['The Federal Group']}],edges:[]};
+ assert.equal(await receiptGraphForQuestion(query,async()=>ambiguous),null);
+});
+
+test('voice receipt tools calculate the same named Tasmanian donor without speech retrieval',async()=>{
+ const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async req=>new Response(readFileSync(new URL('../public'+new URL(req.url).pathname,import.meta.url)))}};
+ for(const [tool,args] of [['search_records',{query:'How much funding from The Federal Group in Tasmania in 2025–26?'}],['find_connections',{query:'The Federal Group in Tasmania in 2025–26'}]]) {
+  const out=await runVoiceTool(tool,args,env,async()=>{throw Error('Unexpected speech retrieval')});
+  assert.equal(out.data.total_aud,10142);assert.equal(out.data.receipts,2);assert.equal(out.data.jurisdiction,'tas');
+  assert.match(out.sources[0].url,/jur=tas/);assert.match(out.sources[0].url,/focus=donor%3Afederal\+group/);
+ }
+});
 test('industry totals sum receipt edges once and exclude public money and node totals',()=>{
  const result=answer('How much money flowed from the gambling industry to government?');
  assert.equal(result.total_aud,350);assert.equal(result.receipts,5);

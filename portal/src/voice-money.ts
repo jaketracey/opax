@@ -114,12 +114,39 @@ export function unmatchedReceiptRankingScope(graph:ReceiptGraph, query:string, s
   return remainder.trim().split(' ').filter(w=>w&&!scaffolding.has(w)&&!rankingWords.has(w)&&!/^(?:19|20)\d{2}$/.test(w)).join(' ')
 }
 export const moneyQuestion = (q:string) => /\b(?:money|donat\w*|donors?|receipts?|funding|funded|contributions?)\b/i.test(q)
+const receiptRegions=[['federal'],['qld','queensland'],['vic','victoria'],['tas','tasmania'],['nsw','new south wales'],['wa','western australia'],['sa','south australia'],['nt','northern territory'],['act','australian capital territory']]
+const mentionedReceiptRegions=(query:string)=>receiptRegions.filter(names=>names.some(n=>contains(normal(query),n))).map(names=>names[0])
 export function receiptJurisdiction(query:string): string | null {
-  const q=normal(query)
-  const matched=[['qld','queensland'],['vic','victoria'],['tas','tasmania'],['nsw','new south wales'],['wa','western australia'],['sa','south australia'],['nt','northern territory'],['act','australian capital territory']].filter(names=>names.some(n=>contains(q,n)))
-  if(matched.length>1 || (matched.length && /\bfederal\b/.test(q))) return null
-  const jur=matched[0]?.[0] || 'federal'
+  const matched=mentionedReceiptRegions(query)
+  if(matched.length>1) return null
+  const jur=matched[0] || 'federal'
   return ['federal','qld','vic','tas'].includes(jur) ? jur : null
+}
+
+/** Ordinary questions read one graph. If region words conflict, a complete
+ * donor name may explain one of them ("The Federal Group in Tasmania").
+ * Check only named, supported regions and require the remaining words to
+ * identify that same graph. Never merge jurisdictions or guess from totals. */
+export async function receiptGraphForQuestion(query:string, load:(file:string)=>Promise<ReceiptGraph|null>, state?:string) {
+  const direct=state || receiptJurisdiction(query)
+  const read=async(jurisdiction:string)=>{
+    const file='/graph/'+(jurisdiction==='federal'?'money.json':`money.${jurisdiction}.json`)
+    const graph=await load(file)
+    return graph?{graph,file,jurisdiction}:null
+  }
+  if(direct)return ['federal','qld','vic','tas'].includes(direct)?read(direct):null
+  const candidates=mentionedReceiptRegions(query).filter(j=>['federal','qld','vic','tas'].includes(j))
+  let selected:Awaited<ReturnType<typeof read>>=null
+  for(const jurisdiction of candidates) {
+    const candidate=await read(jurisdiction)
+    if(!candidate)continue
+    const donor=exactReceiptDonors(candidate.graph,normal(query))
+    const remaining=mentionedReceiptRegions(donor.partyQuery??query)
+    if(donor.ambiguous || !donor.nodes.length || remaining.length!==1 || remaining[0]!==jurisdiction)continue
+    if(selected)return null
+    selected=candidate
+  }
+  return selected
 }
 
 /** Sum only donor-to-party receipt edges; node totals and public-money flows never enter the sum. */

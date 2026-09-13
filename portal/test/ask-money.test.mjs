@@ -6,6 +6,38 @@ const assets={fetch:async req=>new Response(await readFile(new URL('../public'+n
 const ask=(question,filters={})=>rankedMoneyAnswer({question,...filters},assets);
 const history=(...questions)=>questions.map(text=>({author:'user',text}));
 
+test('a donor name containing Federal does not block a Tasmanian comparison or its follow-ups',async()=>{
+ const question='Who gets more funding from The Federal Group, Labor or Liberal in Tasmania in 2025–26?';
+ const result=await ask(question);
+ assert.equal(result?.answer_status,'calculated');
+ assert.match(result.answer,/Labor received \$1,698 more from The Federal Group than Liberal/);
+ assert.match(result.answer,/\| Labor \| \$5,920 \| 1 \|/);assert.match(result.answer,/\| Liberal \| \$4,222 \| 1 \|/);
+ assert.equal(result.scope.state,'tas');
+ const links=result.sources.filter(s=>s.href.startsWith('/money?')).map(s=>new URL(s.href,'https://opax.test').searchParams);
+ assert.deepEqual(links.map(p=>p.get('party')).sort(),['party:Labor','party:Liberal']);
+ for(const p of links){assert.equal(p.get('jur'),'tas');assert.equal(p.get('focus'),'donor:federal group');assert.equal(p.get('from'),'2025');assert.equal(p.get('to'),'2025')}
+ assert.deepEqual(await ask(result.money_question),result);
+ const missing=await ask('And in 2024–25?',{context:history(result.money_question)});
+ assert.equal(missing.answer_status,'evidence_gap');assert.deepEqual(missing.sources,[]);
+ const recovered=await ask('And in 2025–26?',{context:history(missing.money_question)});
+ assert.deepEqual(recovered,result);
+ const all=await ask('And all years?',{context:history(recovered.money_question)});
+ assert.equal(all.answer_status,'calculated');assert.match(all.money_question,/The Federal Group.*Tasmania/);
+ assert.ok(all.sources.filter(s=>s.href.startsWith('/money?')).every(s=>!new URL(s.href,'https://opax.test').searchParams.has('from')));
+});
+
+test('donor region disambiguation also retains single rankings and separate jurisdiction words',async()=>{
+ const query='Who receives the most funding from The Federal Group in Tasmania in 2025–26?';
+ const ranking=await ask(query);assert.equal(ranking.answer_status,'calculated');assert.match(ranking.answer,/^\*\*Labor\*\*/);
+ assert.deepEqual(ranking,await ask(query,{state:'tas'}));
+ for(const query of [
+  'Who gets more funding from The Federal Group, Labor or Liberal in federal and Tasmania records in 2025?',
+  'Who gets more funding from The Federal Group, Labor or Liberal in NSW and Tasmania in 2025?',
+  'Who gets more gambling money, Labor or Liberal in federal and Tasmania records in 2025?',
+  'Who gets more funding from Unknown Federal Company, Labor or Liberal in Tasmania in 2025?',
+ ])assert.equal(await ask(query),null,query);
+});
+
 test('ordinary industry recipient rankings do not require the word money',async()=>{
  const answer=await ask('Who gets the most from mining?');
  assert.equal(answer.answer_status,'calculated');
