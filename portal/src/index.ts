@@ -2929,7 +2929,7 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   },
   about: {
     title: 'About · OPAX',
-    description: 'What OPAX is, what you can do here, and how answers are produced from the Australian parliamentary record and disclosed donations.',
+    description: 'What OPAX is for, who makes it, and how answers are produced from the Australian parliamentary record, disclosed money and the public registers around it.',
   },
   methods: {
     title: 'Methods · OPAX',

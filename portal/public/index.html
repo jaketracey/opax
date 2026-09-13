@@ -1090,13 +1090,19 @@
 
     <section id="panel-about" class="panel" hidden aria-label="About OPAX">
       <h2>What OPAX is</h2>
-      <p>OPAX, the Open Parliamentary Accountability eXchange, exposes governance blind spots by
-      cross-referencing what politicians say on the record with the money that flows around them.
-      A politician who gives two hundred speeches about a problem but votes against every reform,
-      or an industry that donates millions while its regulation stalls, leaves a paper trail.
-      OPAX makes that trail searchable and citable. It started as speeches and donations; it now
-      also carries the votes those speeches led to, the bills those votes decided, the government
-      grants that sometimes follow the same money, and the registers that record who lobbies whom.</p>
+      <p>OPAX, the Open Parliamentary Accountability eXchange, has one intent: to put as much of
+      the open data about Australian politics as possible in one place, cross-referenced and
+      citable, so that the blind spots become findable. What a politician said on the record, how
+      they voted, what they declared, who gave money to their party, who lobbied whom, which
+      grants and contracts followed: each of these is published somewhere, in its own format,
+      under its own terms, and almost never beside the others. Put side by side, a politician who
+      gives two hundred speeches about a problem but votes against every reform, or an industry
+      that donates millions while its regulation stalls, leaves a paper trail. OPAX makes that
+      trail searchable and citable. It started as speeches and donations; it now also carries the
+      votes those speeches led to, the bills those votes decided, the government grants and
+      contracts that sometimes follow the same money, and the registers that record who lobbies
+      whom. Every claim on the site links back to the primary record it came from, because a
+      blind spot is only worth finding if someone else can check it.</p>
 
       <h2>What you can do here</h2>
       <ul class="about-list">
@@ -1281,6 +1287,35 @@
       <p class="fineprint">The corpus's own technical limits — what Hansard is and is not, where
       coverage is thin, which members' records are unreliable — are on the
       <a href="/methods">methods page</a>, not repeated here.</p>
+
+      <h2>Who makes it</h2>
+      <p>OPAX is a side project of Jake Tracey, of <a href="https://noice.net.au"
+      rel="noopener">Noice</a>. It is independent and non-partisan, built outside working hours,
+      and the data it carries belongs to the public bodies that published it. Three things make
+      it possible.</p>
+      <ul class="about-list">
+        <li><strong>Noice</strong> (<a href="https://noice.net.au" rel="noopener">noice.net.au</a>)
+        is a Melbourne digital agency for the AI era, building digital experiences and AI
+        automation for government and large organisations. The craft OPAX runs on, from how a
+        page is built to how a model is kept honest, was learned there, and the tooling comes
+        with it.</li>
+        <li><strong>Progress Agentic RAG</strong> (<a
+        href="https://www.progress.com/agentic-rag?utm_source=opax&amp;utm_medium=referral&amp;utm_campaign=about"
+        rel="noopener">progress.com/agentic-rag</a>) holds the corpus. Every speech, bill,
+        division and statement is indexed in a knowledge box on the platform, which does the
+        retrieval, the reranking and the citation binding behind every answer on the Ask page.
+        OPAX writes the prompts and checks the answers; the platform finds the passages.</li>
+        <li><strong>CorpusKit</strong> (<a href="https://corpuskit.org?utm_source=opax&amp;utm_medium=referral&amp;utm_campaign=about"
+        rel="noopener">corpuskit.org</a>) is the open source research portal that grew alongside
+        OPAX: point it at an empty knowledge box and it reads the corpus, designs the taxonomy
+        and the knowledge graph around it, writes the questions worth asking and opens as a
+        branded portal. Much of what works here was built there first, and the parts that
+        generalise flow back to it. It is Apache 2.0, and any organisation with a body of
+        research can use it.</li>
+      </ul>
+      <p>If OPAX helps you find a blind spot, that is the point. If you find one in OPAX itself,
+      a missing source, a wrong number, a jurisdiction not yet covered, the fastest fix is an
+      issue on GitHub, below.</p>
 
       <h2>Licences and reuse</h2>
       <p>OPAX's own code is open source under AGPL-3.0, at
