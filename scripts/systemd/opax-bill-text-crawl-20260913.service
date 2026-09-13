@@ -1,0 +1,18 @@
+[Unit]
+Description=Resume federal original bill source acquisition
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/home/jake/opax-bill-full-text
+ExecCondition=/usr/bin/test ! -f /home/jake/.cache/opax/bill-text-import-20260913/workflow-complete.json
+ExecStart=/home/jake/opax/.venv/bin/python -u scripts/publish_bill_texts.py crawl --browser-ua --state-dir /home/jake/.cache/opax/bill-text-import-20260913 --output-dir portal/public/bill-texts --export-every 25
+Restart=on-failure
+RestartSec=15min
+RestartPreventExitStatus=2 130
+TimeoutStopSec=90
+KillMode=control-group
+UMask=0077
+
+[Install]
+WantedBy=default.target

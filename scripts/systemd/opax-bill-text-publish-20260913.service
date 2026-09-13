@@ -1,0 +1,20 @@
+[Unit]
+Description=Publish federal bill text and finish legacy identity reconciliation
+Wants=opax-bill-text-crawl-20260913.service
+After=opax-bill-text-crawl-20260913.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/home/jake/opax-bill-full-text
+ExecCondition=/usr/bin/test ! -f /home/jake/.cache/opax/bill-text-import-20260913/workflow-complete.json
+ExecStart=/home/jake/opax/.venv/bin/python -u scripts/watch_bill_texts.py --state-dir /home/jake/.cache/opax/bill-text-import-20260913 --env /home/jake/opax/.env --crawl-unit opax-bill-text-crawl-20260913.service --interval 60 --finish-legacy
+Restart=on-failure
+RestartSec=15min
+RestartPreventExitStatus=130
+TimeoutStopSec=90
+KillMode=control-group
+UMask=0077
+
+[Install]
+WantedBy=default.target
