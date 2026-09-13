@@ -1,5 +1,5 @@
 import type { RecordQuestion } from './ask-records'
-import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQuestion, fundingUserTurns} from './ask-money-followup'
+import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQuestion, fundingUserTurns, samePeriodFundingComparison} from './ask-money-followup'
 import {financialYear, receiptPeriodQuery} from './receipt-period'
 import {isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptJurisdiction, unmatchedReceiptRankingScope, type ReceiptGraph} from './voice-money'
 
@@ -93,15 +93,18 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
   if(!partyComparison&&!industryComparison)return null
   // This selection cannot answer change over time or comparisons with an
   // unspecified baseline by pooling the two periods into one number.
-  if(/\b(?:increase\w*|decrease\w*|growth|change\w*|than (?:before|after|in)|compared (?:with|to) (?:19|20)\d{2})\b/i.test(query))return null
-  if(/\b(?:19|20)\d{2}\s+(?:vs|versus)\s+(?:19|20)\d{2}\b/i.test(query) || [...query.matchAll(/\bin\s+(?:19|20)\d{2}\b/gi)].length>1)return null
+  if(!samePeriodFundingComparison(query))return null
   const dimension=partyComparison?result.selected_parties:result.selected_industries
   const values=partyComparison?result.by_party:result.by_industry
   const rows=dimension.map(name=>values.find(r=>partyComparison?r.name===name:r.id===name) || {id:name,name:name.replaceAll('_',' '),total_aud:0,receipts:0})
     .map(r=>({...r,name:industryComparison?r.name.charAt(0).toUpperCase()+r.name.slice(1):r.name})).sort((a,b)=>b.total_aud-a.total_aud)
   const [first,second]=rows
+  const money_question=partyComparison && (result.selected_industries.length || result.selected_donors.length<=1)
+    ? fundingScopeQuestion({compareParties:result.selected_parties as [string,string],industry:result.selected_industries[0],
+      donor:result.selected_industries.length?undefined:result.selected_donors[0],...result.requested_years,mode:'parties'},result.jurisdiction)
+    : undefined
   // Absence from a selected export does not establish an actual zero.
-  if(rows.some(r=>!r.receipts))return {answer:'There are not enough matching receipts for both sides of that comparison in this selection and period. A missing total does not establish that no funding occurred.',citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true}
+  if(rows.some(r=>!r.receipts))return {answer:'There are not enough matching receipts for both sides of that comparison in this selection and period. A missing total does not establish that no funding occurred.',citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true,money_question}
   const difference=Math.round((first.total_aud-second.total_aud)*100)/100
   const sector=result.selected_industries.map(i=>i.replaceAll('_',' ')).join(' and ')
   const subject=partyComparison?(sector?` from ${plain(sector)} donors`:result.selected_donors.length?` from ${plain(result.subject)}`:''):(result.selected_parties.length?` to ${plain(result.selected_parties[0])}`:' to parties')
@@ -128,7 +131,7 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
   }
   answer+='\n\nCoverage: These are **party receipts, not personal payments or a gifts-only donation total**. Only donors in Opax’s published map are included, not every donor. Industry labels do not establish lobbying or influence. Both sides use the same year filters; undated records are excluded when filtering by year.'
   answer+=`\n\n[Download the calculation data](https://opax.com.au${file})`
-  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,money_context:context,scope:{state:result.jurisdiction,...(bounds.from!==null?{from:String(bounds.from)}:{}),...(bounds.to!==null?{to:String(bounds.to)}:{})}}
+  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,money_context:context,money_question,scope:{state:result.jurisdiction,...(bounds.from!==null?{from:String(bounds.from)}:{}),...(bounds.to!==null?{to:String(bounds.to)}:{})}}
 }
 
 export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) {
