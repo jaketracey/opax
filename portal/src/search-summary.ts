@@ -5,6 +5,9 @@ export interface SummarySource {
   id: string; title: string; href: string; snippet: string; kind: string
   speaker?: string; party?: string; state?: string; date?: string
 }
+/** How much a caller lets through: the search overview keeps three short
+ * points; a named politician's position answer may run to four longer ones. */
+export interface SummaryLimits { maxPoints?: number; wordBudget?: number; maxQuote?: number }
 export interface SearchSummary {
   points: { text: string; source_ids: string[]; evidence?: Record<string, string[]> }[]
   sources: (SummarySource & { evidence: string[] })[]
@@ -12,6 +15,22 @@ export interface SearchSummary {
 const clean = (value: unknown, max: number) => typeof value === 'string'
   ? value.replace(/<[^>]*(?:>|$)/g, '').replaceAll('>', '').replace(/\s+/g, ' ').trim().slice(0, max) : ''
 const fold = (value: string) => value.normalize('NFKC').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim()
+
+/** A quotation is verbatim when it appears in the text as written; it may
+ * bridge omitted words with an ellipsis, each part then appearing in order. */
+export function quotedInOrder(quote: string, text: string): boolean {
+  const haystack = fold(text)
+  const parts = fold(quote).split(/\s*(?:\.{3}|…)\s*/).map(part => part.trim()).filter(Boolean)
+  // Bridged fragments must each be substantial, or "the … the" would stitch anything together.
+  if (!parts.length || (parts.length > 1 && parts.some(part => part.length < 15))) return false
+  let offset = 0
+  for (const part of parts) {
+    const at = haystack.indexOf(part, offset)
+    if (at < 0) return false
+    offset = at + part.length
+  }
+  return true
+}
 
 /** Only server-retrieved passages enter the prompt; briefs and client prose do not. */
 export function summarySources(rows: Record<string, unknown>[], snippetLimit = 1800): SummarySource[] {
@@ -51,7 +70,8 @@ SEARCH DATA:\n${JSON.stringify({query, filters, sources})}`
 /** The per-point rules behind parseSearchSummary, usable one point at a time so
  * a streamed overview can show each point the moment its JSON object closes.
  * State (word budget, three-point cap, cited excerpts) lives in the validator. */
-export function summaryPointValidator(sources: SummarySource[], perPointEvidence = false) {
+export function summaryPointValidator(sources: SummarySource[], perPointEvidence = false, limits: SummaryLimits = {}) {
+  const { maxPoints = 3, wordBudget = 125, maxQuote = 700 } = limits
   const known = new Map(sources.map(s => [s.id, s]))
   const cited = new Map<string, Set<string>>()
   const points: SearchSummary['points'] = []
@@ -64,7 +84,7 @@ export function summaryPointValidator(sources: SummarySource[], perPointEvidence
     for (const citation of point.citations) {
       if (!citation || typeof citation.id !== 'string' || typeof citation.quote !== 'string') return null
       const source = known.get(citation.id), quote = citation.quote.trim()
-      if (!source || quote.length < 20 || quote.length > 700 || ![source.snippet, source.title].some(text => fold(text).includes(fold(quote)))) return null
+      if (!source || quote.length < 20 || quote.length > maxQuote || ![source.snippet, source.title].some(text => quotedInOrder(quote, text))) return null
       if (!evidence.has(source.id)) evidence.set(source.id,{source,quotes:new Set()})
       evidence.get(source.id)!.quotes.add(quote)
     }
@@ -82,10 +102,10 @@ export function summaryPointValidator(sources: SummarySource[], perPointEvidence
   }
   /** Accept one model point; returns the stored point or null when rejected or over budget. */
   const accept = (point: unknown): SearchSummary['points'][number] | null => {
-    if (points.length >= 3) return null
+    if (points.length >= maxPoints) return null
     const valid = validatePoint(point)
     if (!valid) return null
-    if (points.reduce((n,p) => n+p.text.split(/\s+/).length,0)+valid.text.split(/\s+/).length > 125) return null
+    if (points.reduce((n,p) => n+p.text.split(/\s+/).length,0)+valid.text.split(/\s+/).length > wordBudget) return null
     const stored = {text:valid.text,source_ids:[...valid.evidence.keys()],
       ...(perPointEvidence ? {evidence:Object.fromEntries([...valid.evidence].map(([id,{quotes}]) => [id,[...quotes]]))} : {}),
     }
@@ -102,14 +122,14 @@ export function summaryPointValidator(sources: SummarySource[], perPointEvidence
   return { accept, result, get count() { return points.length } }
 }
 
-export function parseSearchSummary(answer: string, sources: SummarySource[], perPointEvidence = false): SearchSummary | null {
+export function parseSearchSummary(answer: string, sources: SummarySource[], perPointEvidence = false, limits: SummaryLimits = {}): SearchSummary | null {
   try {
     const raw = JSON.parse(answer.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, ''))
-    if (!Array.isArray(raw.points) || !raw.points.length || raw.points.length > 6) return null
-    const validator = summaryPointValidator(sources, perPointEvidence)
+    if (!Array.isArray(raw.points) || !raw.points.length || raw.points.length > 8) return null
+    const validator = summaryPointValidator(sources, perPointEvidence, limits)
     for (const point of raw.points) {
       validator.accept(point)
-      if (validator.count === 3) break
+      if (validator.count === (limits.maxPoints ?? 3)) break
     }
     return validator.result()
   } catch { return null }
