@@ -146,6 +146,8 @@ export type MoneyMapOptions = {
   chrome?: 'full' | 'mini'
   /** A quiet, fitted industry overview; groups open only when chosen. */
   overview?: boolean
+  /** Embedded homepage: wheel and touch gestures belong to the page. */
+  pageScroll?: boolean
   /**
    * The year scrub, on its own. Defaults to `chrome === 'full'`; set it true
    * to give mini chrome the two thumbs - one compact row docked bottom left,
@@ -882,10 +884,13 @@ export async function mountMoneyMap(
   // --- DOM scaffolding -------------------------------------------------
   const canvas = el('canvas', 'mm-canvas', container)
   canvas.tabIndex = 0
+  if (opts.pageScroll) canvas.style.touchAction = 'auto'
   canvas.setAttribute('role', 'application')
   canvas.setAttribute(
     'aria-label',
-    'Money map - drag to orbit, pinch or scroll to zoom, click a node for details. ' +
+    (opts.pageScroll
+      ? 'Money map - scroll to move the page, drag with a mouse to orbit, or use the zoom buttons. Tap a node for details. '
+      : 'Money map - drag to orbit, pinch or scroll to zoom, click a node for details. ') +
       'With the keyboard: arrows orbit, plus and minus zoom, Enter selects the node ' +
       'nearest the middle, Escape clears the selection.',
   )
@@ -991,7 +996,7 @@ export async function mountMoneyMap(
   card.setAttribute('aria-label', 'Details for the selected node')
   card.hidden = true
 
-  const zoom = full ? el('div', 'mm-zoom', container) : null
+  const zoom = full || opts.pageScroll ? el('div', 'mm-zoom', container) : null
   if (zoom) {
     const zoomButton = (label: string, title: string, onClick: () => void) => {
       const button = el('button', '', zoom)
@@ -1041,6 +1046,7 @@ export async function mountMoneyMap(
         recoveryNotice?.remove()
         recoveryNotice = null
       },
+      opts.pageScroll === true,
     )
   } catch {
     container.replaceChildren()

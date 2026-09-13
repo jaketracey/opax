@@ -1,5 +1,7 @@
 # Federal bill text import — 13 September 2026
 
+> **Stopped at the user’s request on 13 September 2026:** paid OpenRouter bill enrichment is paused. The `opax-bill-text-topics` task configuration was removed, and `opax-bill-text-publish-20260913.service` was stopped and disabled. The source-only crawler may continue collecting text; it makes no LLM calls. Published text remains available. Do not recreate the OpenRouter bill labeller or re-enable automatic publishing under the current instruction. The user intends to use Codex agents for labelling instead. Any later publishing workflow must also account for the KB’s existing automatic summaries, which can incur OpenRouter charges. The verification below records the earlier configuration, not its current enabled state.
+
 This import adds original federal bill text to the existing bill pages and KB. It does not replace bill summaries, change their routes, or ingest Acts, explanatory memoranda or exposure-draft PDFs.
 
 ## Scope and evidence
