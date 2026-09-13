@@ -2,8 +2,9 @@
 
 The production Worker prepares one source-based edition per Melbourne calendar day.
 X: https://x.com/OpaxAustralia (account ID 2099044188113485825).
-Facebook and Instagram require their own connected brand accounts before enabling.
-Preferred matching handle: OpaxAustralia; availability is not yet confirmed on Meta.
+Facebook: https://www.facebook.com/OpaxAustralia/ (Page created and branded).
+Facebook and Instagram still require verified API connections before enabling.
+Instagram: https://www.instagram.com/opaxaustralia/ (account created).
 
 ## Editorial approach
 
@@ -86,4 +87,6 @@ remain available for X/Facebook. `/og/<page>.jpg` returns actual JPEG bytes and 
 error rather than a misleading PNG fallback when no matching card exists.
 
 Brand exports: `node scripts/build_social_brand.mjs` renders the existing Opax
-favicon and brand fonts into public/social/opax-avatar.png and opax-header.png.
+favicon to public/social/opax-avatar.png and updates the editable SVG covers.
+The approved opax-header.png and opax-facebook-cover.png are preserved by default;
+`--render-covers` explicitly replaces them with new SVG raster exports.
