@@ -174,13 +174,18 @@ const DETAIL_WORDS = new Set('and what who which how why when did does has have 
 function topicFromQuestion(question: string): string {
   return namedPositionRequest(question)?.topic ?? question.trim()
 }
+// Dates belong in source filters, not in the topic a quoted sentence must
+// repeat. Keep bare event years; only remove an explicit period clause.
+function withoutTopicPeriod(topic: string): string {
+  return topic.replace(/(?:^|\s+)(?:(?:between|from)\s+(?:19|20)\d{2}\s+(?:and|to|through|until|[–-])\s+(?:19|20)\d{2}|(?:in|during|before|after|since)\s+(?:19|20)\d{2})(?=\s|[?!.]|$)/i, ' ').replace(/^\s*(?:about|on)\s+/i, '').replace(/\s+/g, ' ').replace(/[?!.]+$/, '').trim() || topic
+}
 function nextTopic(question: string, previous: string): string {
   // A replacement period belongs to the structured date filters. Do not keep
   // searching for an obsolete year from the prior question as a topic term.
   // A detail follow-up may have appended words after the period, or the first
   // question may put it before the topic. Remove that clause, not bare years
   // in event names such as "the 2011 Fukushima disaster".
-  const withoutPriorPeriod = () => previous.replace(/(?:^|\s+)(?:(?:between|from)\s+(?:19|20)\d{2}\s+(?:and|to|through|until|[–-])\s+(?:19|20)\d{2}|(?:in|during|before|after|since)\s+(?:19|20)\d{2})(?=\s|[?!.]|$)/i, ' ').replace(/^\s*(?:about|on)\s+/i, '').replace(/\s+/g, ' ').replace(/[?!.]+$/, '').trim() || previous
+  const withoutPriorPeriod = () => withoutTopicPeriod(previous)
   if (ALL_YEARS_FOLLOWUP.test(question.trim())) return withoutPriorPeriod()
   if (/^(?:and\s+)?(?:(?:what|how)\s+about\s+|what\s+(?:is|was|are|were)\s+(?:his|her|their)\s+(?:position|stance|views?)\s+)?(?:(?:in|during|before|after|since)\s+(?:19|20)\d{2}|(?:between|from)\s+(?:19|20)\d{2}\s+(?:and|to|through|until|[–-])\s+(?:19|20)\d{2})\s*[?!.]*$/i.test(question.trim())) return withoutPriorPeriod()
   // Duration is a request about the existing proposal, not a new topic word
@@ -214,7 +219,7 @@ export function askRetrievalQuery(input: RecordQuestion): string {
       topic = named ? (named.topic || topic) : inheritsSubject(turn) && topic ? nextTopic(turn, topic) :
         /^(?:it|that|this)\??$/i.test(direct) && topic ? topic : direct
     }
-    if (topic) return topic
+    if (topic) return input.from || input.to ? withoutTopicPeriod(topic) : topic
   }
   const previous = priorQuestion(input)
   if (previous && isMoneyRanking({question:previous})) return question

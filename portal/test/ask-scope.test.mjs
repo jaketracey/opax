@@ -16,7 +16,7 @@ test('compact eligibility follow-ups keep the named proposal and explicit dates'
  const people=[{name:'David Pocock'}],context=[{author:'user',text:'What has David Pocock proposed about housing affordability in 2026?'}];
  for(const question of ['Who would be eligible?','Who can qualify?','Which homes would qualify?','Which households are eligible?','Who would be eligible for it?','Which households would be eligible for this?']){
   const raw={question,kind:'all',context};assert.equal(exports.needsAskPeople(raw),true);
-  const {input}=resolveAskScope(raw,people);assert.equal(input.speaker,'David Pocock');assert.equal(input.from,'2026');assert.equal(input.to,'2026');assert.equal(exports.isNamedPositionQuestion(input),true);assert.match(exports.askRetrievalQuery(input),/housing affordability/);assert.equal(exports.askRetrievalQuery(input),'housing affordability in 2026');
+  const {input}=resolveAskScope(raw,people);assert.equal(input.speaker,'David Pocock');assert.equal(input.from,'2026');assert.equal(input.to,'2026');assert.equal(exports.isNamedPositionQuestion(input),true);assert.match(exports.askRetrievalQuery(input),/housing affordability/);assert.equal(exports.askRetrievalQuery(input),'housing affordability');
  }
  for(const question of ['Who won the election?','Which grants went to X?','Who would be eligible for citizenship?']){
   const {input}=resolveAskScope({question,kind:'all',context},people);assert.equal(input.speaker,undefined);assert.equal(input.from,undefined);
@@ -182,7 +182,7 @@ test('plain stance questions resolve an exact person and enter original-turn evi
  const people=[{name:'Pauline Hanson'},{name:'David Pocock'},{name:'Andrew Wilkie'}];
  for(const [question,speaker,topic] of [
   ['Does Pauline Hanson support nuclear power?','Pauline Hanson','nuclear power'],
-  ['Did Senator Pauline Hanson oppose nuclear power in 2025?','Pauline Hanson','nuclear power in 2025'],
+  ['Did Senator Pauline Hanson oppose nuclear power in 2025?','Pauline Hanson','nuclear power'],
   ['What does Andrew Wilkie think about poker machines?','Andrew Wilkie','poker machines'],
   ['What did Andrew Wilkie believe about poker machines?','Andrew Wilkie','poker machines'],
   ['What is David Pocock’s position on gambling advertising?','David Pocock','gambling advertising'],
@@ -327,4 +327,14 @@ test('period resets also remove a date before detail words while preserving even
   const input=resolveAskScope({question:'All years?',context:[{author:'user',text:seed}]},people).input;
   assert.equal(exports.askRetrievalQuery(input),topic);assert.equal(input.from,undefined);assert.equal(input.to,undefined);
  }
+});
+test('dated named questions filter source metadata without requiring the year in quotations',()=>{
+ const people=[{name:'Pauline Hanson'}];
+ for(const [period,from,to] of [['in 2025','2025','2025'],['before 2024',undefined,'2023'],['since 2020','2020',undefined],['between 2020 and 2025','2020','2025']]){
+  const input=resolveAskScope({question:`Does Pauline Hanson support nuclear power ${period}?`},people).input;
+  assert.equal(input.from,from);assert.equal(input.to,to);assert.equal(exports.askRetrievalQuery(input),'nuclear power');
+ }
+ const input=resolveAskScope({question:'What did Pauline Hanson say about the 2011 Fukushima disaster in 2025?',from:'2025',to:'2025'},people).input;
+ assert.equal(exports.askRetrievalQuery(input),'the 2011 Fukushima disaster');
+ assert.equal(input.from,'2025');assert.equal(input.to,'2025');
 });

@@ -22,6 +22,7 @@ test('original-turn version expires only named position answers, preserving othe
  const position={question:'What would Example MP say about housing?',speaker:'Example MP',kind:'speech'};
  assert.equal(JSON.parse(api.askCacheInput(position,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v7');
  assert.equal(JSON.parse(api.askCacheInput({...position,question:'What did Example MP say about housing?'},'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v7');
+ for(const controls of [{from:'2025',to:'2025'},{from:'2020'},{to:'2024'}])assert.equal(JSON.parse(api.askCacheInput({...position,...controls},'epoch')).pipeline,exports.ASK_PIPELINE_VERSION+':original-turns-v7:dated-topic-v1');
  for(const input of [{question:'Who funds Labor?'},{...position,kind:'all'}])assert.equal(JSON.parse(api.askCacheInput(input,'epoch')).pipeline,exports.ASK_PIPELINE_VERSION);
 });
 test('footnotes resolve through provider mappings with Unicode offsets',()=>{const p=api.askPayload(fixture());assert.equal(p.answer,'😀 A fact. Another fact.');assert.deepEqual(plain(p.citations[id]),[[7,8]]);assert.deepEqual(plain(p.citations[neighbour]),[[21,22]]);assert.equal(p.sources[0].cited,true)});
