@@ -490,21 +490,77 @@ def program_name(names) -> str:
     a register row can leave an award's value where its title belongs
     ("$4,672.80" on GA184725 under GO4911, "0" on a QLD disaster program).
     A value is never a name; when nothing else reads as one, the commonest
-    remaining name stands, however long (GO4911's 103-character title)."""
+    remaining name stands, however long (GO4911's 103-character title).
+    And a title that only one or two awards share, in a program of twenty or
+    more, names a project, not the program: GO4286 (the RISE Fund) holds 539
+    awards under 535 titles and was headed "Dark Mofo". Then there is no name
+    to give, and the caller shows the program's id instead. A fetched detail
+    page's program name weighs three, so one fetched award is enough."""
     ranked = [(n, w) for n, w in names.most_common() if n]
     value_like = re.compile(r"^[\s$]*[\d,]+(\.\d+)?\s*$")
-    named = [n for n, _ in ranked if not value_like.match(n)]
+    named = [n for n, w in ranked if not value_like.match(n)]
     if not named:
         return ranked[0][0] if ranked else ""
+    if sum(names.values()) >= 20 and names[named[0]] <= 2:
+        return ""
     for n in named:
         if len(n) <= 90 and not n.rstrip().endswith("."):
             return n
     return named[0]
 
 
+def unmangle(s):
+    """Undo UTF-8 that was read as cp1252, which is how GrantConnect's export
+    ships curly quotes and dashes in about 500 titles: a-circumflex, euro sign,
+    trademark sign where an apostrophe belongs. Sequence by sequence, so a
+    title mixing real and mangled characters keeps the real ones; text mangled
+    twice comes right on the second pass. Where the source could not show the
+    last byte of a closing quote or dash (0x9D became "?" or nothing), the
+    two characters left behind read as the quote or dash they began."""
+    if not isinstance(s, str) or not re.search("[\xc2-\xf4]", s):
+        return s
+    tables = getattr(unmangle, "tables", None)
+    if tables is None:
+        cont = {}
+        for b in range(0x80, 0xC0):
+            try:
+                cont[bytes([b]).decode("cp1252")] = b
+            except UnicodeDecodeError:
+                cont[chr(b)] = b
+        cls = "[" + "".join(re.escape(c) for c in cont) + "]"
+        rx = re.compile("[\xf0-\xf4]" + cls + "{3}|[\xe0-\xef]" + cls + "{2}|[\xc2-\xdf]" + cls)
+        tables = unmangle.tables = (cont, rx)
+    cont, rx = tables
+
+    def fix(m):
+        t = m.group(0)
+        try:
+            return bytes([ord(t[0])] + [cont[c] for c in t[1:]]).decode("utf-8")
+        except UnicodeDecodeError:
+            return t
+
+    for _ in range(3):
+        out = rx.sub(fix, s)
+        if out == s:
+            break
+        s = out
+    s = s.replace("\xe2\u20ac?", "\u201d")
+    s = re.sub(" \xe2\u20ac ", " \u2013 ", s)
+    s = re.sub("\xe2\u20ac(?=\\S|$)", "\u2014", s)
+    return s
+
+
+def clean_row(row, cols):
+    """A query row as a dict, with the named text columns unmangled."""
+    out = {k: row[k] for k in row.keys()}
+    for c in cols:
+        out[c] = unmangle(out[c])
+    return out
+
+
 SHARED_FUNCTIONS = (iso_day, program_key, government_at, bloc_for, holder_at, canonical_party, pretty_name, seat_holder,
                     margin_type_for, months_to_election_bucket, approval_bucket, build_program_file, fy_key,
-                    program_index_extras, program_name)
+                    program_index_extras, program_name, unmangle, clean_row)
 SHARED_CONSTANTS = ("ELECTIONS", "BLOCS", "GOVERNMENT", "BY_ELECTIONS", "PARTY_ALIASES", "PROGRAM_GRANTS_MAX",
                     "PROGRAM_RECIPIENTS_MAX", "SEAT_BLOCS", "MARGIN_TYPES", "APPROVAL_BUCKETS", "ELECTION_BUCKETS")
 
@@ -574,6 +630,8 @@ def file_key(rid):
 
 # ── recipients + keys ────────────────────────────────────────────────────────
 recips = {r["recipient_id"]: dict(r) for r in q("SELECT * FROM ext_grant_recipients")}
+for rec in recips.values():
+    rec["canonical_name"] = unmangle(rec["canonical_name"])
 keys = {}
 for r in q("SELECT source, key_type, key_value, recipient_id FROM ext_grant_recipient_keys"):
     keys[(r["source"], r["key_type"], r["key_value"])] = r["recipient_id"]
@@ -599,8 +657,9 @@ if JUR == "federal":
                    "recipient_postcode, delivery_state, recipient_state, approval_date, pbs_program "
                    "FROM ext_grant_details WHERE http_status = 200"):
             details[r["ga_id"]] = r
-    for r in q("SELECT ga_id, activity, agency, category, publish_date, start_date, end_date, financial_year, "
-               "value, go_id, recipient_name, ad_hoc, aggregate FROM ext_grants"):
+    for row in q("SELECT ga_id, activity, agency, category, publish_date, start_date, end_date, financial_year, "
+                 "value, go_id, recipient_name, ad_hoc, aggregate FROM ext_grants"):
+        r = clean_row(row, ("activity", "recipient_name"))
         d = details.get(r["ga_id"])
         abn = d["recipient_abn"] if d else None
         name = r["recipient_name"]
@@ -629,9 +688,10 @@ if JUR == "federal":
         "threshold": "Every Commonwealth grant award must be published on GrantConnect within 21 days of the agreement taking effect (mandatory since 31 December 2017). Aggregate awards bundle many small recipients and are shown as not disclosed.",
     }
 else:
-    for r in q("SELECT grant_id, title, description, recipient, recipient_abn, amount, agency, program, electorate, "
-               "start_date, end_date, grant_type, source_url, category, recipient_type, financial_year "
-               "FROM government_grants WHERE source = 'qld_expenditure'"):
+    for row in q("SELECT grant_id, title, description, recipient, recipient_abn, amount, agency, program, electorate, "
+                 "start_date, end_date, grant_type, source_url, category, recipient_type, financial_year "
+                 "FROM government_grants WHERE source = 'qld_expenditure'"):
+        r = clean_row(row, ("title", "description", "recipient", "program"))
         abn = re.sub(r"\D", "", r["recipient_abn"] or "")
         rid = rid_for("qld_expenditure", abn if abn not in ("", "0") else None, r["recipient"])
         grants.append({
@@ -939,7 +999,7 @@ programs = []
 listed_programs = sorted(prog.items(), key=lambda kv: -kv[1]["t"])[:TOP_PROGRAMS]
 for key, p in listed_programs:
     fys = sorted(p["fy"], key=fy_key)
-    programs.append({"id": key, "n": program_name(p["names"]), "ag": p["ag"].most_common(1)[0][0],
+    programs.append({"id": key, "n": program_name(p["names"]) or key, "ag": p["ag"].most_common(1)[0][0],
                      "t": round(p["t"]), "c": p["c"], "r": len(p["r"]), "dt": round(p["dt"]), "dr": len(p["dr"]),
                      "adhoc": round(p["adhoc"]), "y0": fys[0] if fys else None, "y1": fys[-1] if fys else None})
 

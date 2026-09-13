@@ -255,6 +255,48 @@ def _yes(v) -> int:
     return 1 if str(v or "").strip().lower() == "yes" else 0
 
 
+def unmangle(s):
+    """Undo UTF-8 that was read as cp1252, which is how GrantConnect's export
+    ships curly quotes and dashes in about 500 titles: a-circumflex, euro sign,
+    trademark sign where an apostrophe belongs. Sequence by sequence, so a
+    title mixing real and mangled characters keeps the real ones; text mangled
+    twice comes right on the second pass. Where the source could not show the
+    last byte of a closing quote or dash (0x9D became "?" or nothing), the
+    two characters left behind read as the quote or dash they began."""
+    if not isinstance(s, str) or not re.search("[\xc2-\xf4]", s):
+        return s
+    tables = getattr(unmangle, "tables", None)
+    if tables is None:
+        cont = {}
+        for b in range(0x80, 0xC0):
+            try:
+                cont[bytes([b]).decode("cp1252")] = b
+            except UnicodeDecodeError:
+                cont[chr(b)] = b
+        cls = "[" + "".join(re.escape(c) for c in cont) + "]"
+        rx = re.compile("[\xf0-\xf4]" + cls + "{3}|[\xe0-\xef]" + cls + "{2}|[\xc2-\xdf]" + cls)
+        tables = unmangle.tables = (cont, rx)
+    cont, rx = tables
+
+    def fix(m):
+        t = m.group(0)
+        try:
+            return bytes([ord(t[0])] + [cont[c] for c in t[1:]]).decode("utf-8")
+        except UnicodeDecodeError:
+            return t
+
+    for _ in range(3):
+        out = rx.sub(fix, s)
+        if out == s:
+            break
+        s = out
+    s = s.replace("\xe2\u20ac?", "\u201d")
+    s = re.sub(" \xe2\u20ac ", " \u2013 ", s)
+    s = re.sub("\xe2\u20ac(?=\\S|$)", "\u2014", s)
+    return s
+
+
+
 def parse_xlsx(path: Path) -> list[dict]:
     wb = openpyxl.load_workbook(path, read_only=True)
     ws = wb.worksheets[0]
@@ -278,11 +320,11 @@ def parse_xlsx(path: Path) -> list[dict]:
         ga, version = m.group(1), int(m.group(2) or 0)
         start = _iso(rec.get("Start Date"))
         publish = _iso(rec.get("Publish Date"))
-        name = (str(rec.get("Recipient Name") or "").strip()) or None
+        name = unmangle((str(rec.get("Recipient Name") or "").strip())) or None
         out.append({
             "ga_id": ga,
             "version": version,
-            "activity": (str(rec.get("Grant Activity") or "").strip()) or None,
+            "activity": unmangle((str(rec.get("Grant Activity") or "").strip())) or None,
             "agency": (str(rec.get("Agency") or "").strip()) or None,
             "category": (str(rec.get("Category") or "").strip()) or None,
             "publish_date": publish,

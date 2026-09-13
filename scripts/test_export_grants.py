@@ -401,6 +401,26 @@ if __name__ == "__main__":
     unittest.main()
 
 
+class UnmangleTests(unittest.TestCase):
+    def test_utf8_read_as_cp1252_comes_back(self):
+        self.assertEqual(eg.unmangle("Australia\xe2\u20ac\u2122s native sorghums"), "Australia\u2019s native sorghums")
+        self.assertEqual(eg.unmangle("The \xe2\u20ac\u0153New\xe2\u20ac\x9d Biochemistry"), "The \u201cNew\u201d Biochemistry")
+        self.assertEqual(eg.unmangle("Smart\u2013Idler\xc2\xae"), "Smart\u2013Idler\xae")  # real dash kept, mangled sign fixed
+
+    def test_the_byte_the_source_dropped(self):
+        self.assertEqual(eg.unmangle("Innovative \xe2\u20ac\u0153Fruit Water\xe2\u20ac? Closed"), "Innovative \u201cFruit Water\u201d Closed")
+        self.assertEqual(eg.unmangle("Metro Theatre \xe2\u20ac Revive 2021"), "Metro Theatre \u2013 Revive 2021")
+        self.assertEqual(eg.unmangle("KNOWN\xe2\u20aca series of publications"), "KNOWN\u2014a series of publications")
+
+    def test_twice_mangled_text(self):
+        self.assertEqual(eg.unmangle("Determination of \xc3\xa2\xe2\u201a\xac\xc5\u201cactionable targets\xc3\xa2\xe2\u201a\xac\xc2\x9d for"),
+                         "Determination of \u201cactionable targets\u201d for")
+
+    def test_real_text_is_left_alone(self):
+        for s in ("S\xe3o Tom\xe9", "Caf\xe9", "Se\xf1or", "plain ascii", "", None):
+            self.assertEqual(eg.unmangle(s), s)
+
+
 class ProgramNameTests(unittest.TestCase):
     def test_description_sentences_never_become_the_name(self):
         from collections import Counter
@@ -427,3 +447,15 @@ class ProgramNameTests(unittest.TestCase):
                     "and community infrastructure projects.")
         self.assertEqual(eg.program_name(Counter({sentence: 550, "Local Roads and Community Infrastructure Program": 33})),
                          "Local Roads and Community Infrastructure Program")
+
+    def test_a_project_title_never_heads_a_program_of_many(self):
+        # GO4286: 539 awards under 535 titles, two of them "Dark Mofo".
+        from collections import Counter
+        projects = Counter({f"Project {i}": 1 for i in range(537)})
+        projects["Dark Mofo"] = 2
+        self.assertEqual(eg.program_name(projects), "")
+        # One fetched detail page names the program (weight 3) and settles it.
+        projects["Restart Investment to Sustain and Expand (RISE) Fund"] = 3
+        self.assertEqual(eg.program_name(projects), "Restart Investment to Sustain and Expand (RISE) Fund")
+        # A small program keeps its only title.
+        self.assertEqual(eg.program_name(Counter({"Regional Arts Fund": 1, "Other": 1})), "Regional Arts Fund")

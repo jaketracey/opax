@@ -149,6 +149,21 @@ id and files under GO3141). Program names that several GO ids share (181 of 767,
 name is its own `activity:<title>` program, as before. QLD programs are program names
 with stray whitespace collapsed.
 
+A program's heading (`program_name`) is the commonest name its awards carry that reads
+as a name: detail-page program names weigh three, activity titles one; descriptions
+(over 90 characters or ending in a full stop), bare values ("$4,672.80", "0") and a
+title shared by only one or two awards in a program of twenty or more are never
+headings. That last rule matters for research rounds and the RISE Fund, where every
+award is its own project: such a program needs at least one fetched detail page to be
+named at all, else it shows its GO id. On 2026-09-13, 58 of the top 500 were in that
+state and were named by fetching two awards each
+(`grantconnect_details.py --ids ...`); a fresh top-500 entrant can need the same.
+
+GrantConnect's export ships curly quotes and dashes as UTF-8 read as cp1252 in about
+500 titles ("Australiaâ€™s"). `unmangle` in the export and in
+`parli.ingest.grantconnect.parse_xlsx` reverses it sequence by sequence, including
+twice-mangled text and the closing-quote byte the source drops.
+
 Layout. A programs[] index row carries `key` (the file name: the program id lowercased,
 every run of non-alphanumerics to `-`, trimmed, at most 80 characters; `GO3141` ->
 `go3141`, `activity:Some title` -> `activity-some-title`; two ids that slug the same
