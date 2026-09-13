@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
   "as_of": "2026-09-13",
-  "checked_at": "2026-09-12T21:48:29.964517+00:00",
+  "checked_at": "2026-09-13T00:49:03.547566+00:00",
   "coverage": {
     "total_awards": 89,
     "total_invitations": 226,
     "total_invitation_records": 227,
     "mapped_awards": 7,
-    "mapped_invitations": 18,
+    "mapped_invitations": 20,
     "mapped_award_value": 12715000.0,
-    "mapped_invitation_value": 19097000,
+    "mapped_invitation_value": 24797000,
     "total_award_value": 242781386.0,
     "total_invitation_value": 559241712,
     "award_site_count": 9,
-    "invitation_site_count": 18,
+    "invitation_site_count": 20,
     "unmapped_awards": 82,
-    "unmapped_invitations": 208,
+    "unmapped_invitations": 206,
     "payment_verified_records": 0
   },
   "methodology": [
@@ -2352,6 +2352,270 @@
           "Original 14 November 2025 invitation amount and Awaiting Application status retained. No new funding record, award match, payment, completion or electorate-value allocation is inferred.",
           "The Council project page identifies the proposed skate park and pump track within Mary Kathleen Memorial Park and records concept design. This marker is the park venue, not a surveyed future works footprint.",
           "Lighting is described as potential. The current project description does not establish an award, payment or completion of the 14 November 2025 invitation."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-094",
+      "record_type": "invitation",
+      "title": "Valley District Cricket Club",
+      "value": 2700000,
+      "state": "QLD",
+      "locality": "Ashgrove",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161",
+      "invitation_ids": [
+        "mlci-invitation-094"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "ashgrove-sportsground-valley-cricket",
+          "site_name": "Ashgrove Sportsground — Valley District Cricket Club",
+          "address": "Yoku Road, Ashgrove QLD 4060",
+          "locality": "Ashgrove",
+          "state": "QLD",
+          "latitude": -27.441886197388463,
+          "longitude": 152.97352538070533,
+          "location_source_url": "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-locations/records?where=park_number%3D%22D0186%22&limit=1",
+          "site_precision": "venue",
+          "electorate_2025": "Ryan",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-13T00:48:22.555851+00:00",
+            "method": "Match the original invitation to its named primary-source venue and official map marker; independently check AEC 2025 point containment. Preserve source discrepancies and venue-only precision.",
+            "sources": [
+              {
+                "url": "https://www.valleycricket.org.au/ourclub/contact",
+                "excerpt": "Valley District Cricket Club | Yoku Road, Ashgrove 4060",
+                "excerpt_kind": "structured primary-source extraction",
+                "role": "Primary club venue address",
+                "checked_at": "2026-09-13T00:48:22.555851+00:00",
+                "content_sha256": "262121110c46bab3510866adea94b7b6604a319d0079186020d588a491738f9b",
+                "retrieved_at": "2026-09-13T00:40:31.699093+00:00"
+              },
+              {
+                "url": "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-locations/records?where=park_number%3D%22D0186%22&limit=1",
+                "excerpt": "D0186 | ASHGROVE SPORTSGROUND PARK | 258 ACACIA DRIVE, ASHGROVE 4060 | -27.441886197388463,152.97352538070533",
+                "excerpt_kind": "structured primary-source extraction",
+                "role": "Official Council park record, venue marker and park polygon",
+                "checked_at": "2026-09-13T00:48:22.555851+00:00",
+                "content_sha256": "1e4042fffc620ab6b41d26f4a06f1262ca2327b59b1e5713bb17a6578201788b",
+                "retrieved_at": "2026-09-13T00:40:29.978169+00:00"
+              },
+              {
+                "url": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/about-council/publication-scheme-documents/2025/12/Attachment%20C%20-%20Major%20and%20Local%20Community%20Infrastructure%20Program.pdf#page=4",
+                "excerpt": "Valley District Cricket Club | $2,700,000 | New indoor facilities",
+                "excerpt_kind": "structured primary-source extraction",
+                "role": "Council MLCIP application sponsorship identifies proposed scope; not evidence of an award or payment",
+                "checked_at": "2026-09-13T00:48:22.555851+00:00",
+                "content_sha256": "4bdf5e700e0566e5d26077b2bff81fdc30a3c274eee0c8f2d7805d2dc8894c33",
+                "retrieved_at": "2026-09-13T00:40:29.997009+00:00"
+              },
+              {
+                "url": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/Community-support-and-safety/documents/lord-mayors-safer-suburbs-grants-2025-26-grant-recipients.pdf#page=6",
+                "excerpt": "Valley District Cricket Club | CCTV at Ashgrove Sportsground, Ashgrove | separate Safer Suburbs grant $10,000",
+                "excerpt_kind": "structured primary-source extraction",
+                "role": "Venue identity only. This separate Council grant is not the MLCIP invitation and its value or scope is not merged",
+                "checked_at": "2026-09-13T00:48:22.555851+00:00",
+                "content_sha256": "97ab3d863404fa54f757d74b05d4a275d4ecc0fb03c8b1e509841aa42d176dd9",
+                "retrieved_at": "2026-09-13T00:40:30.069526+00:00"
+              }
+            ],
+            "notes": [
+              "The original 14 November 2025 invitation amount and Awaiting Application status are retained. No new funding record, award match, payment, completion or electorate-value allocation is inferred.",
+              "The club lists its Yoku Road frontage. Council identifies the same venue as Ashgrove Sportsground Park (D0186), with park address 258 Acacia Drive. The marker represents the park venue, not a surveyed indoor-facility footprint.",
+              "Council MLCIP application sponsorship lists proposed new indoor facilities for $2,700,000. The final building design and works location remain unresolved; application scope does not establish an award or payment.",
+              "The separate $10,000 Council Safer Suburbs CCTV grant is used only to confirm the club at Ashgrove Sportsground. Its amount, funding stage and CCTV scope are not merged with this MLCIP invitation.",
+              "The marker is 176 metres from the Ryan boundary. The entire official D0186 park polygon is also within Ryan on the AEC 2025 boundaries. This labels the venue; it does not allocate the invitation amount to an electorate."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, check containment against all 150 AEC March 2025 polygons and measure boundary distance in GDA94/MGA zone 56.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 176.146,
+              "distance_crs": "EPSG:28356"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-13T00:48:22.555851+00:00",
+        "method": "Independently verify the original invitation row and primary venue evidence; preserve funding stages and map only the verified named venue.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161",
+            "excerpt": "Valley District Cricket Club | Brisbane | QLD | 2700000 | Awaiting Application",
+            "excerpt_kind": "structured primary-source extraction",
+            "role": "Original departmental invitation identity, amount and snapshot status, independently re-extracted from page 161",
+            "checked_at": "2026-09-13T00:48:22.555851+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "hash_scope": "Original archived departmental PDF bytes reused for independent page 161 extraction. This is a structured row extraction, not continuous quotation.",
+            "source_date": "2025-11-14"
+          },
+          {
+            "url": "https://www.valleycricket.org.au/ourclub/contact",
+            "excerpt": "Valley District Cricket Club | Yoku Road, Ashgrove 4060",
+            "excerpt_kind": "structured primary-source extraction",
+            "role": "Primary club venue address",
+            "checked_at": "2026-09-13T00:48:22.555851+00:00",
+            "content_sha256": "262121110c46bab3510866adea94b7b6604a319d0079186020d588a491738f9b",
+            "retrieved_at": "2026-09-13T00:40:31.699093+00:00"
+          },
+          {
+            "url": "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-locations/records?where=park_number%3D%22D0186%22&limit=1",
+            "excerpt": "D0186 | ASHGROVE SPORTSGROUND PARK | 258 ACACIA DRIVE, ASHGROVE 4060 | -27.441886197388463,152.97352538070533",
+            "excerpt_kind": "structured primary-source extraction",
+            "role": "Official Council park record, venue marker and park polygon",
+            "checked_at": "2026-09-13T00:48:22.555851+00:00",
+            "content_sha256": "1e4042fffc620ab6b41d26f4a06f1262ca2327b59b1e5713bb17a6578201788b",
+            "retrieved_at": "2026-09-13T00:40:29.978169+00:00"
+          },
+          {
+            "url": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/about-council/publication-scheme-documents/2025/12/Attachment%20C%20-%20Major%20and%20Local%20Community%20Infrastructure%20Program.pdf#page=4",
+            "excerpt": "Valley District Cricket Club | $2,700,000 | New indoor facilities",
+            "excerpt_kind": "structured primary-source extraction",
+            "role": "Council MLCIP application sponsorship identifies proposed scope; not evidence of an award or payment",
+            "checked_at": "2026-09-13T00:48:22.555851+00:00",
+            "content_sha256": "4bdf5e700e0566e5d26077b2bff81fdc30a3c274eee0c8f2d7805d2dc8894c33",
+            "retrieved_at": "2026-09-13T00:40:29.997009+00:00"
+          },
+          {
+            "url": "https://www.brisbane.qld.gov.au/content/dam/brisbanecitycouncil/corpwebsite/Community-support-and-safety/documents/lord-mayors-safer-suburbs-grants-2025-26-grant-recipients.pdf#page=6",
+            "excerpt": "Valley District Cricket Club | CCTV at Ashgrove Sportsground, Ashgrove | separate Safer Suburbs grant $10,000",
+            "excerpt_kind": "structured primary-source extraction",
+            "role": "Venue identity only. This separate Council grant is not the MLCIP invitation and its value or scope is not merged",
+            "checked_at": "2026-09-13T00:48:22.555851+00:00",
+            "content_sha256": "97ab3d863404fa54f757d74b05d4a275d4ecc0fb03c8b1e509841aa42d176dd9",
+            "retrieved_at": "2026-09-13T00:40:30.069526+00:00"
+          }
+        ],
+        "notes": [
+          "The original 14 November 2025 invitation amount and Awaiting Application status are retained. No new funding record, award match, payment, completion or electorate-value allocation is inferred.",
+          "The club lists its Yoku Road frontage. Council identifies the same venue as Ashgrove Sportsground Park (D0186), with park address 258 Acacia Drive. The marker represents the park venue, not a surveyed indoor-facility footprint.",
+          "Council MLCIP application sponsorship lists proposed new indoor facilities for $2,700,000. The final building design and works location remain unresolved; application scope does not establish an award or payment.",
+          "The separate $10,000 Council Safer Suburbs CCTV grant is used only to confirm the club at Ashgrove Sportsground. Its amount, funding stage and CCTV scope are not merged with this MLCIP invitation.",
+          "The marker is 176 metres from the Ryan boundary. The entire official D0186 park polygon is also within Ryan on the AEC 2025 boundaries. This labels the venue; it does not allocate the invitation amount to an electorate."
+        ]
+      }
+    },
+    {
+      "id": "mlci-invitation-097",
+      "record_type": "invitation",
+      "title": "2 Toovey Street Caboolture Upgrades",
+      "value": 3000000,
+      "state": "QLD",
+      "locality": "Caboolture",
+      "source_url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161",
+      "invitation_ids": [
+        "mlci-invitation-097"
+      ],
+      "award_ids": [],
+      "snapshot_date": "2025-11-14",
+      "status": "Awaiting Application",
+      "payment_verified": false,
+      "sites": [
+        {
+          "id": "toovey-street-community-precinct",
+          "site_name": "Toovey Street community precinct",
+          "address": "1–11 Toovey Street, Caboolture QLD 4510",
+          "locality": "Caboolture",
+          "state": "QLD",
+          "latitude": -27.06907727676311,
+          "longitude": 152.9588880288355,
+          "location_source_url": "https://www.moretonbay.qld.gov.au/Services/Projects/Parks/Toovey-Street-Community-Precinct-Upgrade",
+          "site_precision": "venue",
+          "electorate_2025": "Longman",
+          "verification": {
+            "status": "verified",
+            "checked_at": "2026-09-13T00:48:22.555851+00:00",
+            "method": "Match the original invitation to its named primary-source venue and official map marker; independently check AEC 2025 point containment. Preserve source discrepancies and venue-only precision.",
+            "sources": [
+              {
+                "url": "https://www.moretonbay.qld.gov.au/Services/Projects/Parks/Toovey-Street-Community-Precinct-Upgrade",
+                "excerpt": "Toovey Street building upgrade | 1–11 Toovey Street, Caboolture 4510 | -27.06907727676311,152.9588880288355 | former PCYC/OSHC precinct; MLCIP support",
+                "excerpt_kind": "structured primary-source extraction",
+                "role": "Official Council project venue, address, explicit map marker and proposed scope",
+                "checked_at": "2026-09-13T00:48:22.555851+00:00",
+                "content_sha256": "978233aed65ef42fead56cb0f1fa8ebcdba8c5ef3df0660de3bc7206f0fe6b56",
+                "hash_scope": "Archived structured extraction independently read from the current rendered official page; not original HTML bytes. Current direct HTML fetch returned HTTP 403."
+              },
+              {
+                "url": "https://www.moretonbay.qld.gov.au/Services/Projects/Parks/Toovey-Street-Community-Precinct-Upgrade",
+                "excerpt": "Toovey Street community precinct | 1–11 Toovey Street, Caboolture | -27.06907727676311,152.9588880288355",
+                "excerpt_kind": "structured primary-source extraction",
+                "role": "Archived official HTML independently checked against the current rendered project page",
+                "checked_at": "2026-09-13T00:48:22.555851+00:00",
+                "content_sha256": "9ae5bd8954f1f9aac2458f618e1e1668b3adb5032d8fd684e8746c12f82568b6",
+                "hash_scope": "Original official HTML archived 2026-09-12T22:40:44.612367+00:00; reused and independently checked this run, not a fresh HTML download."
+              }
+            ],
+            "notes": [
+              "The original 14 November 2025 invitation amount and Awaiting Application status are retained. No new funding record, award match, payment, completion or electorate-value allocation is inferred.",
+              "The original invitation is titled “2 Toovey Street Caboolture Upgrades”. Council identifies the community precinct as 1–11 Toovey Street. Both source descriptions are retained; the marker locates the precinct, not an individual funded building or surveyed works footprint.",
+              "Council describes proposed refurbishment of selected former PCYC and OSHC buildings and precinct improvements under MLCIP. This does not establish completion, an individual award notice or payment.",
+              "Council uses the wording “2024 Federal Election commitment”. That apparent date anomaly is preserved as source wording and is not adopted as a verified election date."
+            ],
+            "boundary": {
+              "election": 2025,
+              "source_url": "https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip",
+              "index_url": "https://www.aec.gov.au/Electorates/gis/gis_datadownload.htm",
+              "sha256": "bdc0393d8448477bf187ac84473978330f776b5ea2ed6343f7eb891187263a09",
+              "crs": "EPSG:4283",
+              "method": "Transform the official WGS84 venue marker to GDA94, check containment against all 150 AEC March 2025 polygons and measure boundary distance in GDA94/MGA zone 56.",
+              "scope": "Venue point only; no allocation of invitation value to an electorate or surveyed works boundary is implied.",
+              "distance_to_boundary_metres": 9313.499,
+              "distance_crs": "EPSG:28356"
+            }
+          }
+        }
+      ],
+      "verification": {
+        "status": "verified",
+        "checked_at": "2026-09-13T00:48:22.555851+00:00",
+        "method": "Independently verify the original invitation row and primary venue evidence; preserve funding stages and map only the verified named venue.",
+        "sources": [
+          {
+            "url": "https://www.aph.gov.au/-/media/Estimates/rrat/supp2526/Infrastructure_-_December/1_DITRDCSA_response_to_Senator_Canavan_Request.pdf#page=161",
+            "excerpt": "2 Toovey Street Caboolture Upgrades | Moreton Bay | QLD | 3000000 | Awaiting Application",
+            "excerpt_kind": "structured primary-source extraction",
+            "role": "Original departmental invitation identity, amount and snapshot status, independently re-extracted from page 161",
+            "checked_at": "2026-09-13T00:48:22.555851+00:00",
+            "content_sha256": "ab8b21ad90b571e810951a30269cd223c3e16c843354b4ecd851d91f34b2f52b",
+            "hash_scope": "Original archived departmental PDF bytes reused for independent page 161 extraction. This is a structured row extraction, not continuous quotation.",
+            "source_date": "2025-11-14"
+          },
+          {
+            "url": "https://www.moretonbay.qld.gov.au/Services/Projects/Parks/Toovey-Street-Community-Precinct-Upgrade",
+            "excerpt": "Toovey Street building upgrade | 1–11 Toovey Street, Caboolture 4510 | -27.06907727676311,152.9588880288355 | former PCYC/OSHC precinct; MLCIP support",
+            "excerpt_kind": "structured primary-source extraction",
+            "role": "Official Council project venue, address, explicit map marker and proposed scope",
+            "checked_at": "2026-09-13T00:48:22.555851+00:00",
+            "content_sha256": "978233aed65ef42fead56cb0f1fa8ebcdba8c5ef3df0660de3bc7206f0fe6b56",
+            "hash_scope": "Archived structured extraction independently read from the current rendered official page; not original HTML bytes. Current direct HTML fetch returned HTTP 403."
+          },
+          {
+            "url": "https://www.moretonbay.qld.gov.au/Services/Projects/Parks/Toovey-Street-Community-Precinct-Upgrade",
+            "excerpt": "Toovey Street community precinct | 1–11 Toovey Street, Caboolture | -27.06907727676311,152.9588880288355",
+            "excerpt_kind": "structured primary-source extraction",
+            "role": "Archived official HTML independently checked against the current rendered project page",
+            "checked_at": "2026-09-13T00:48:22.555851+00:00",
+            "content_sha256": "9ae5bd8954f1f9aac2458f618e1e1668b3adb5032d8fd684e8746c12f82568b6",
+            "hash_scope": "Original official HTML archived 2026-09-12T22:40:44.612367+00:00; reused and independently checked this run, not a fresh HTML download."
+          }
+        ],
+        "notes": [
+          "The original 14 November 2025 invitation amount and Awaiting Application status are retained. No new funding record, award match, payment, completion or electorate-value allocation is inferred.",
+          "The original invitation is titled “2 Toovey Street Caboolture Upgrades”. Council identifies the community precinct as 1–11 Toovey Street. Both source descriptions are retained; the marker locates the precinct, not an individual funded building or surveyed works footprint.",
+          "Council describes proposed refurbishment of selected former PCYC and OSHC buildings and precinct improvements under MLCIP. This does not establish completion, an individual award notice or payment.",
+          "Council uses the wording “2024 Federal Election commitment”. That apparent date anomaly is preserved as source wording and is not adopted as a verified election date."
         ]
       }
     }
