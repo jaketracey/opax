@@ -4,6 +4,7 @@
 // per isolate on first use. The fonts arrive from the caller (index.ts reads
 // them through the ASSETS binding and memoises the bytes).
 
+import { encode } from 'jpeg-js'
 import satori, { init as initSatori } from 'satori/wasm'
 import initYoga from 'yoga-wasm-web'
 import yogaWasm from 'yoga-wasm-web/dist/yoga.wasm'
@@ -35,7 +36,17 @@ export async function renderOgPng(card: OgCard, fonts: OgFont[]): Promise<Uint8A
   await ensureEngines()
   const svg = await satori(cardTree(card) as never, { width: OG_WIDTH, height: OG_HEIGHT, fonts })
   const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: OG_WIDTH } })
-  const png = resvg.render().asPng()
-  resvg.free()
-  return png
+  const rendered = resvg.render()
+  try { return rendered.asPng() } finally { rendered.free(); resvg.free() }
+}
+
+/** Instagram requires JPEG. Use the same card and fonts as the link preview. */
+export async function renderOgJpeg(card: OgCard, fonts: OgFont[]): Promise<Uint8Array> {
+  await ensureEngines()
+  const svg = await satori(cardTree(card) as never, { width: OG_WIDTH, height: OG_HEIGHT, fonts })
+  const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: OG_WIDTH } })
+  const rendered = resvg.render()
+  try {
+    return new Uint8Array(encode({ data: rendered.pixels, width: rendered.width, height: rendered.height }, 90).data)
+  } finally { rendered.free(); resvg.free() }
 }

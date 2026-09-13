@@ -1,3 +1,4 @@
+import { runSocialPublication, socialStatus, publicationCopy, previewPublication } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
@@ -26,7 +27,7 @@ import { proxyPostHog } from './posthog'
 import { networkBlock } from './network-block'
 import { handleBillText } from './bill-text'
 import { TOPIC_NAMES } from './topic-names.mjs'
-import { runDailyPost, composeDailyPost, envSources, melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-post'
+import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-post'
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
@@ -36,7 +37,7 @@ import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STO
 import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer, summaryPointValidator, SummaryPointStream, type SearchSummary } from './search-summary'
 
 import { OG_FONT_FILES, OG_VERSION, homeCard, type OgCard } from './og'
-import { renderOgPng, type OgFont } from './og-render'
+import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 
 interface FindParagraph {
   score: number
@@ -3486,6 +3487,7 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
       publisher,
     },
     prerender: prerenderBlock(name, `${facts} ${tail}`, 'Bill'),
+    card: { kicker: 'Bill · Federal parliament', title: name, lines: [opening, tail] },
   }
 }
 
@@ -4091,11 +4093,12 @@ async function ogFallback(env: Env, request: Request): Promise<Response> {
 }
 
 async function serveOgImage(url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-  const m = /^\/og(\/[^?]*)\.png$/.exec(url.pathname)
+  const m = /^\/og(\/[^?]*)\.(png|jpg)$/.exec(url.pathname)
   if (!m) return ogFallback(env, request)
+  const jpeg = m[2] === 'jpg'
   const pagePath = m[1].replace(/\/+$/, '') || '/home'
   const q = url.searchParams.get('q')?.trim() ?? ''
-  const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}${pagePath}${q ? `?q=${encodeURIComponent(q)}` : ''}`)
+  const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${m[2]}${pagePath}${q ? `?q=${encodeURIComponent(q)}` : ''}`)
   if (!cacheBypass(request, url)) {
     const hit = await caches.default.match(cacheKey)
     if (hit) return withCacheStatus(request.method === 'HEAD' ? new Response(null, hit) : hit, 'HIT')
@@ -4116,12 +4119,12 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
         if (meta.status !== 404) spec = meta.card ?? null
       }
     }
-    if (!spec) return ogFallback(env, request)
+    if (!spec) return jpeg ? new Response('No card available', { status: 404 }) : ogFallback(env, request)
     const [card, fonts] = await Promise.all([resolveCard(spec, env), loadOgFonts(env)])
-    const png = await renderOgPng(card, fonts)
+    const png = await (jpeg ? renderOgJpeg(card, fonts) : renderOgPng(card, fonts))
     const res = new Response(png, {
       headers: {
-        'content-type': 'image/png',
+        'content-type': jpeg ? 'image/jpeg' : 'image/png',
         'content-length': String(png.byteLength),
         'x-opax-og': pagePath,
       },
@@ -4130,7 +4133,7 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
     return withCacheStatus(request.method === 'HEAD' ? new Response(null, res) : res, 'MISS')
   } catch (err) {
     console.error(JSON.stringify({ level: 'error', path: url.pathname, message: `og render failed: ${String(err)}` }))
-    return ogFallback(env, request)
+    return jpeg ? new Response('Card unavailable', { status: 503 }) : ogFallback(env, request)
   }
 }
 
@@ -4454,14 +4457,19 @@ async function route(
       if (url.pathname === '/api/brief' && request.method === 'GET') {
         return await apiBrief(url, env)
       }
+      if (url.pathname === '/api/daily-post/status' && request.method === 'GET') {
+        const response = json(await socialStatus(env))
+        response.headers.set('cache-control', 'no-store')
+        return response
+      }
       if (url.pathname === '/api/daily-post/preview' && request.method === 'GET') {
         // What the cron would post for a date (default today, Melbourne). Never posts.
         const date = url.searchParams.get('date') ?? melbourneDate()
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return json({ error: 'bad date' }, 400)
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date + 'T12:00:00Z')) || new Date(date + 'T12:00:00Z').toISOString().slice(0, 10) !== date) return json({ error: 'bad date' }, 400)
         const kindParam = url.searchParams.get('kind')
         const kind = (DAILY_POST_KINDS as readonly string[]).includes(kindParam ?? '') ? kindParam as DailyPostKind : undefined
-        const post = await composeDailyPost(date, envSources(env, name => personTopicsFor(name, env)), kind)
-        const response = json(post ?? { error: 'nothing to post' }, post ? 200 : 404)
+        const post = await previewPublication(env, date, name => personTopicsFor(name, env), kind)
+        const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
         response.headers.set('cache-control', 'no-store')
         return response
       }
@@ -4583,9 +4591,20 @@ export default {
     }
   },
 
-  // Cron (wrangler.jsonc "triggers"): the daily X post. See docs/DAILY-POST.md.
+  // Cron: one daily edition across connected channels. See docs/DAILY-POST.md.
   async scheduled(controller: ScheduledController, env: Env, _ctx: ExecutionContext): Promise<void> {
-    const result = await runDailyPost(env, { now: controller.scheduledTime, personTopics: name => personTopicsFor(name, env) })
-    console.log('daily-post', JSON.stringify({ cron: controller.cron, status: result.status, reason: result.reason, id: result.id, subject: result.post?.subject }))
+    const result = await runSocialPublication(env, {
+      now: controller.scheduledTime, personTopics: name => personTopicsFor(name, env),
+      sourceResponse: async target => {
+        const url = new URL(target)
+        const request = new Request(target, { method: 'HEAD' })
+        if (url.pathname.startsWith('/og/')) return serveOgImage(url, request, env, _ctx)
+        const route = matchSeoRoute(url)
+        if (!route) return new Response(null, { status: 404 })
+        const meta = await buildMeta(route, url, request, env, _ctx)
+        return new Response(null, { status: meta.card ? meta.status : 404 })
+      },
+    })
+    console.log('daily-post', JSON.stringify({ cron: controller.cron, result }))
   },
 } satisfies ExportedHandler<Env>

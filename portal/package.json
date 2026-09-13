@@ -33,6 +33,7 @@
     "@elevenlabs/client": "1.25.0",
     "@modelcontextprotocol/sdk": "^1.30.0",
     "@resvg/resvg-wasm": "^2.6.2",
+    "jpeg-js": "0.4.4",
     "leaflet": "1.9.4",
     "posthog-js": "^1.427.2",
     "satori": "^0.12.2",

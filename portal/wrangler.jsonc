@@ -22,11 +22,11 @@
 
   "secrets": {"required":["ARAG_KB_ID","ARAG_KB_TOKEN","ELEVENLABS_API_KEY","VOICE_TOOL_SECRET"]},
 
-  // Daily X post at 22:00 UTC = 08:00 AEST / 09:00 AEDT. Posts only when
-  // DAILY_POST_ENABLED is "true" and the four X_* secrets exist; otherwise the
-  // run logs "skipped"/"dry-run". Preview: /api/daily-post/preview?date=YYYY-MM-DD.
-  //   npx wrangler secret put X_API_KEY / X_API_SECRET / X_ACCESS_TOKEN / X_ACCESS_TOKEN_SECRET
-  "triggers": { "crons": ["0 22 * * *"] },
+  // Daily social edition at 22:00 UTC = 08:00 AEST / 09:00 AEDT.
+  // +5/+10 minutes resume pending Instagram media. Each channel requires
+  // its own enabled flag, credentials and verified identity. See docs/DAILY-POST.md.
+  // Preview: /api/daily-post/preview. Readiness and receipts: /api/daily-post/status.
+  "triggers": { "crons": ["0,5,10 22 * * *"] },
 
   "observability": {
     "enabled": true,
@@ -61,6 +61,11 @@
     // "Caching" and the MIGRATION-ARAG.md invariants.
     "CACHE_EPOCH": "2026-09-13-codex-bill-enrichment",
     "DAILY_POST_ENABLED": "true",
+    "X_ACCOUNT_ID": "2099044188113485825",
+    "X_USERNAME": "OpaxAustralia",
+    "FACEBOOK_POST_ENABLED": "false",
+    "INSTAGRAM_POST_ENABLED": "false",
+    "META_API_VERSION": "v25.0",
     // Networks refused on /api and /og. 45102/24429/37963 = Alibaba Cloud: a
     // 650-address headless-Chrome fleet in Singapore was making ~100x the real
     // readers' paid /api/ask calls from 4 Sep 2026. Edit here, no code change.

@@ -233,7 +233,7 @@ test('relay refuses duplicate initiation, oversized audio and initialization sta
 
 test('real Worker integration preserves SDK protocol, proxy deadline and clean-close D1 reconciliation',async()=>{
   const {Miniflare,convertV4MiniflareOptions}=await import('miniflare');
-  const compiled=await build({entryPoints:[new URL('../src/index.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-unrelated-image-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'image-renderer',namespace:'voice-test'}));b.onLoad({filter:/.*/,namespace:'voice-test'},()=>({contents:'export async function renderOgPng(){throw Error("Image rendering is outside this test")}',loader:'js'}))}}]});
+  const compiled=await build({entryPoints:[new URL('../src/index.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-unrelated-image-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'image-renderer',namespace:'voice-test'}));b.onLoad({filter:/.*/,namespace:'voice-test'},()=>({contents:'export async function renderOgPng(){throw Error("Image rendering is outside this test")}; export const renderOgJpeg=renderOgPng;',loader:'js'}))}}]});
   const provider=`export default {async fetch(request){
     const url=new URL(request.url);
     if(url.pathname.endsWith('/get-signed-url')) {

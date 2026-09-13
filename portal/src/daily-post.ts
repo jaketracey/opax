@@ -1,9 +1,8 @@
 /**
- * Daily X post. One politician, one bill or one topic a day, rotating, drawn
- * from the site's own static data so nothing is generated at post time. The
- * cron in wrangler.jsonc fires `scheduled()`; /api/daily-post/preview shows
- * what a given day would say without posting. Posting needs four X secrets
- * (see docs/DAILY-POST.md); without them the run logs and does nothing.
+ * A daily source-based edition: one politician, bill or topic, rotating.
+ * All facts come from the site's published records; no model runs at post time.
+ * social-publication.ts freezes the edition and records each channel delivery.
+ * See docs/DAILY-POST.md for connection and preview instructions.
  */
 import { TOPIC_NAMES } from './topic-names.mjs'
 
@@ -18,6 +17,8 @@ export interface DailyPost {
   title: string
   text: string
   url: string
+  /** Longer, source-qualified copy for Facebook and Instagram. */
+  caption?: string
 }
 
 export interface DailyPostSources {
@@ -39,7 +40,6 @@ export const ORIGIN = 'https://opax.com.au'
 /** X counts every URL as 23 characters regardless of length. */
 export const X_URL_WEIGHT = 23
 export const X_LIMIT = 280
-const RECENT_WINDOW = 90
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const WHERE: Record<string, string> = {
   federal: 'federal parliament', nsw: 'the NSW parliament', vic: 'the Victorian parliament',
@@ -82,7 +82,7 @@ export function seededPick<T>(items: T[], key: string, id: (item: T) => string, 
     const item = items[(start + i) % items.length]
     if (!skip.has(id(item))) return item
   }
-  return items[start]
+  return null
 }
 
 export function xLength(text: string): number {
@@ -196,22 +196,24 @@ async function politicianPost(date: string, sources: DailyPostSources, exclude: 
     .map(t => (TOPIC_NAMES[t.slug] ?? t.slug).toLowerCase())
   const url = `${ORIGIN}/subject/person/${encodeURIComponent(person.name)}`
   const head = [
-    `Today's member: ${person.name}${who ? ` (${who})` : ''}.`,
-    `${formatNumber(person.speeches ?? 0)} speeches in ${where}${person.first ? ` since ${person.first}` : ''}.`,
+    `What does ${person.name} talk about in parliament?`,
+    `OPAX records ${formatNumber(person.speeches ?? 0)} speeches in ${where}${person.first ? ` since ${person.first}` : ''}.`,
   ]
   const optional = [
     topics.length ? `Talks most about ${joinList(topics)}.` : '',
-    'What they said, how they voted and who funds them, side by side:',
+    'Explore the speeches and their sources:',
   ]
   return {
     date, kind: 'politician', subject: `person:${person.name}`, title: person.name, url,
     text: fit(head, optional, url),
+    caption: [...head, who, ...optional, 'Counts and topics describe the records collected by OPAX; coverage varies by parliament and year.', url].filter(Boolean).join('\n\n'),
   }
 }
 
 interface BillIndexItem {
   key: string
   title: string
+  short_title?: string | null
   introduced?: string | null
   status?: string | null
   status_as_of?: string | null
@@ -223,14 +225,14 @@ interface BillIndexItem {
 
 function daysBetween(a: string, b: string): number {
   const toDay = (iso: string) => { const [y, m, d] = iso.slice(0, 10).split('-').map(Number); return Date.UTC(y, m - 1, d) / 86400000 }
-  return Math.abs(toDay(a) - toDay(b))
+  return toDay(b) - toDay(a)
 }
 
 async function billPost(date: string, sources: DailyPostSources, exclude: string[]): Promise<DailyPost | null> {
   const index = await sources.asset('/bills/index.json') as { bills?: BillIndexItem[] } | null
   const bills = (index?.bills ?? []).filter(b => b.has_summary && b.key && b.title && (
     b.status === 'before_parliament' || b.status === 'exposure_draft' ||
-    (b.status === 'passed' && b.status_as_of && daysBetween(b.status_as_of, date) <= 365)
+    (b.status === 'passed' && b.status_as_of && daysBetween(b.status_as_of, date) >= 0 && daysBetween(b.status_as_of, date) <= 365)
   )).sort((a, b) => a.key.localeCompare(b.key))
   const bill = seededPick(bills, `bill:${date}`, b => `bill:${b.key}`, exclude)
   if (!bill) return null
@@ -245,14 +247,16 @@ async function billPost(date: string, sources: DailyPostSources, exclude: string
     ? `Passed ${formatDate(bill.status_as_of)}. Introduced ${formatDate(bill.introduced)}${by}.`
     : `Introduced ${formatDate(bill.introduced)}${by}. Still before parliament.`
   const url = `${ORIGIN}/bill/${encodeURIComponent(bill.key)}`
-  const head = [bill.title, status]
+  const head = [bill.short_title || bill.title]
+  const statusShort = bill.status === 'exposure_draft' ? 'Exposure draft; not yet introduced.' : bill.status === 'passed' ? `Passed ${formatDate(bill.status_as_of)}.` : 'Before parliament.'
   // A summary sentence is the point of the post: clip the first one to whatever
   // room is left rather than dropping it when the explanatory memorandum runs long.
-  const room = X_LIMIT - xLength(fit(head, [], url)) - 2
+  const room = X_LIMIT - xLength(fit(head, [statusShort], url)) - 15
   const first = sentences[0] ? clip(sentences[0], room) : ''
   return {
     date, kind: 'bill', subject: `bill:${bill.key}`, title: bill.title, url,
-    text: fit(head, [room >= 40 ? first : '', sentences[1] ?? ''], url),
+    text: fit(head, [room >= 40 ? `Summary: ${first}` : '', statusShort], url),
+    caption: [bill.title, status, ...sentences.slice(0, 2), 'Machine-written summary. Check the bill text and official sources before relying on it.', url].join('\n\n'),
   }
 }
 
@@ -271,7 +275,7 @@ async function topicPost(date: string, sources: DailyPostSources, exclude: strin
   const start = slugs.length ? seed(`topic:${date}`) % slugs.length : 0
   const skip = new Set(exclude)
   const order = slugs.map((_, i) => slugs[(start + i) % slugs.length])
-  for (const slug of [...order.filter(s => !skip.has(`topic:${s}`)), ...order.filter(s => skip.has(`topic:${s}`))]) {
+  for (const slug of order.filter(s => !skip.has(`topic:${s}`))) {
     const report = await sources.asset(`/reports/${encodeURIComponent(slug)}.json`) as Report | null
     const count = report?.stats?.speech_count
     if (!report || !count) continue
@@ -280,14 +284,14 @@ async function topicPost(date: string, sources: DailyPostSources, exclude: strin
       .map(v => v.party ? `${v.speaker} (${v.party})` : v.speaker)
     const url = `${ORIGIN}/reports/${encodeURIComponent(slug)}`
     const head = [
-      `${report.title} in Australia's parliaments: ${formatNumber(count)} speeches${speakers ? ` from ${formatNumber(speakers)} speakers` : ''}.`,
+      `${report.title} in OPAX's parliamentary record: ${formatNumber(count)} speeches${speakers ? ` from ${formatNumber(speakers)} speakers` : ''}.`,
     ]
     const optional = [
-      voices.length ? `Most vocal lately: ${joinList(voices)}.` : '',
+      voices.length ? `Leading speakers in this report: ${joinList(voices)}.` : '',
       report.blurb ?? '',
-      'Who says what, and how they voted:',
+      'Explore the debate and check the sources:',
     ]
-    return { date, kind: 'topic', subject: `topic:${slug}`, title: report.title, url, text: fit(head, optional, url) }
+    return { date, kind: 'topic', subject: `topic:${slug}`, title: report.title, url, text: fit(head, optional, url), caption: [...head, report.blurb ?? '', ...optional.filter(s => s !== report.blurb), 'Figures describe this report’s collected records, not all parliamentary activity.', url].filter(Boolean).join('\n\n') }
   }
   return null
 }
@@ -356,9 +360,10 @@ export async function postToX(text: string, creds: XCredentials, fetchImpl: type
     signal: AbortSignal.timeout(20000),
   })
   const body = await response.text()
-  if (!response.ok) throw new Error(`X API ${response.status}: ${body.slice(0, 300)}`)
+  if (!response.ok) throw new Error(`X API HTTP ${response.status}`)
   const data = JSON.parse(body) as { data?: { id?: string } }
-  return { id: data.data?.id ?? '' }
+  if (!data.data?.id || !/^\d+$/.test(data.data.id)) throw new Error('X did not return a post id')
+  return { id: data.data.id }
 }
 
 // ---------------------------------------------------------------- runner
@@ -380,7 +385,6 @@ export function xCredentials(env: DailyPostEnv): XCredentials | null {
   return { apiKey: X_API_KEY, apiSecret: X_API_SECRET, accessToken: X_ACCESS_TOKEN, accessTokenSecret: X_ACCESS_TOKEN_SECRET }
 }
 
-const SENT_KEY = (date: string) => `daily-post:sent:${date}`
 const RECENT_KEY = 'daily-post:recent'
 
 export function envSources(env: DailyPostEnv, personTopics: (name: string) => Promise<Response>): DailyPostSources {
@@ -402,38 +406,5 @@ export function envSources(env: DailyPostEnv, personTopics: (name: string) => Pr
     async recent() {
       try { return (await env.GENERATION_CACHE.get<string[]>(RECENT_KEY, { type: 'json' })) ?? [] } catch { return [] }
     },
-  }
-}
-
-export interface DailyPostResult {
-  status: 'posted' | 'dry-run' | 'skipped' | 'failed'
-  reason?: string
-  post?: DailyPost
-  id?: string
-}
-
-export async function runDailyPost(env: DailyPostEnv, options: {
-  personTopics: (name: string) => Promise<Response>
-  now?: number
-  dryRun?: boolean
-  fetchImpl?: typeof fetch
-}): Promise<DailyPostResult> {
-  if (env.STAGING_API) return { status: 'skipped', reason: 'staging' }
-  if (env.DAILY_POST_ENABLED !== 'true') return { status: 'skipped', reason: 'DAILY_POST_ENABLED is not "true"' }
-  const date = melbourneDate(options.now ?? Date.now())
-  const sent = await env.GENERATION_CACHE.get(SENT_KEY(date)).catch(() => null)
-  if (sent) return { status: 'skipped', reason: `already posted ${date}`, id: sent }
-  const post = await composeDailyPost(date, envSources(env, options.personTopics))
-  if (!post) return { status: 'failed', reason: 'nothing to post' }
-  const creds = xCredentials(env)
-  if (options.dryRun || !creds) return { status: 'dry-run', reason: creds ? 'dry run' : 'X credentials not set', post }
-  try {
-    const { id } = await postToX(post.text, creds, options.fetchImpl)
-    await env.GENERATION_CACHE.put(SENT_KEY(date), id || 'posted', { expirationTtl: 14 * 86400 })
-    const recent = (await env.GENERATION_CACHE.get<string[]>(RECENT_KEY, { type: 'json' }).catch(() => null)) ?? []
-    await env.GENERATION_CACHE.put(RECENT_KEY, JSON.stringify([...recent, post.subject].slice(-RECENT_WINDOW)))
-    return { status: 'posted', post, id }
-  } catch (error) {
-    return { status: 'failed', reason: error instanceof Error ? error.message : String(error), post }
   }
 }
