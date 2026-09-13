@@ -6,6 +6,36 @@ const assets={fetch:async req=>new Response(await readFile(new URL('../public'+n
 const ask=(question,filters={})=>rankedMoneyAnswer({question,...filters},assets);
 const history=(...questions)=>questions.map(text=>({author:'user',text}));
 
+test('ordinary industry recipient rankings do not require the word money',async()=>{
+ const answer=await ask('Who gets the most from mining?');
+ assert.equal(answer.answer_status,'calculated');
+ assert.match(answer.answer,/^\*\*United Australia Party\*\*/);
+ assert.match(answer.answer,/\$155,465,435/);
+ assert.ok(answer.sources.some(s=>{const p=new URL(s.href,'https://opax.test').searchParams;return p.get('industry')==='mining'&&p.get('party')==='party:United Australia Party'}));
+ for(const [question,control] of [
+  ['Who takes the most from gambling?','Who takes the most money from gambling?'],
+  ['Which party receives the most from fossil fuels?','Which party receives the most funding from fossil fuels?'],
+  ['Who gets the most from the media industry?','Who gets the most funding from the media industry?'],
+  ['Who gets the most from mining in 2020?','Who gets the most funding from mining in 2020?'],
+ ]) assert.deepEqual(await ask(question),await ask(control),question);
+ const next=await ask('And in 2021?',{context:history('Who gets the most from mining in 2020?')});
+ assert.deepEqual(next,await ask('Who receives the most funding from mining donors in federal records in 2021?'));
+});
+
+test('implicit funding wording preserves scope restrictions and unknown qualifiers',async()=>{
+ for(const question of ['Who gets the most from housing?','Who benefits most from mining?',
+  'Who gets the most from the media?','Who gets the most from media?',
+  'Who gets the most grants from mining?','Who gets the most from mining and what do they say?',
+  'Which politicians get the most from mining?','Who gets the most from mining excluding coal?',
+  'Who gets the most from mining personally?']) assert.equal(await ask(question),null,question);
+ for(const question of ['Who gets the most from mining and unicorns?','Who gets the most from data mining?']) {
+  const answer=await ask(question);assert.equal(answer.answer_status,'needs_scope',question);
+  assert.deepEqual(answer.sources,[]);assert.doesNotMatch(answer.answer,/\$[\d,]+/);
+ }
+ for(const filter of [{kind:'speech'},{speaker:'Pauline Hanson'},{topic:'mining'},{chamber:'senate'}])
+  assert.equal(await ask('Who gets the most from mining?',filter),null);
+});
+
 test('the live fossil-fuel ranking failure is corrected using all selected edges',async()=>{
  const r=await ask('Who receives the most funding from fossil fuel donors?');
  assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\$9,013,973/);assert.match(r.answer,/\$8,526,686/);

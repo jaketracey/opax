@@ -1,7 +1,7 @@
 import type { RecordQuestion } from './ask-records'
 import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQuestion, fundingUserTurns} from './ask-money-followup'
 import {financialYear, receiptPeriodQuery} from './receipt-period'
-import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptJurisdiction, unmatchedReceiptRankingScope, type ReceiptGraph} from './voice-money'
+import {isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptJurisdiction, unmatchedReceiptRankingScope, type ReceiptGraph} from './voice-money'
 
 const comparisonQuestion = (q:string) => /\b(?:more|less|higher|lower|compare|versus|vs)\b/i.test(q)
 const yearComparisonQuestion = (q:string) => /\b(?:change[sd]?|increase[sd]?|decrease[sd]?|grew|growth|rose|fell)\b/i.test(q)
@@ -13,7 +13,15 @@ export function isMoneyRanking(input: RecordQuestion): boolean {
   const q=input.question||''
   if(input.kind && !['all','receipt'].includes(input.kind) || input.speaker || input.chamber || input.topic || input.context?.length) return false
   if(/\b(?:say|said|says|speeches?|stance|position|vot\w*|influence|favours?|why|personal\w*|MPs?|senators?|politicians?|grants?|contracts?|blood|organ|charity|except|excluding|without|percent\w*|share|average|inflation|real terms)\b/i.test(q)) return false
-  return (moneyQuestion(q)||/\b(?:takes?|gets?|receives?)\b.*\blobby\b/i.test(q)) && (/\b(?:largest|biggest|most|top)\b/i.test(q)||comparisonQuestion(q)||yearComparisonQuestion(q))
+  // Ordinary recipient questions often omit "money". Admit a known industry
+  // after "from"; the calculator still validates every remaining scope word.
+  const recipientIndustry=/^\s*(?:who|which\s+(?:party|parties))\s+(?:takes?|gets?|receives?)\b[^?!.]*\bfrom\s+(.+?)\s*[?!.]*$/i.exec(q)
+  const industries=recipientIndustry?mentionedReceiptIndustries(recipientIndustry[1]):[]
+  // "From the media" can mean coverage. Require a financial or sector cue
+  // rather than turning a question about attention into a receipt ranking.
+  const ambiguousMedia=industries.includes('media')&&!/\b(?:industry|sector|lobby)\b/i.test(q)
+  const impliedFunding=industries.length>0&&!ambiguousMedia
+  return (moneyQuestion(q)||impliedFunding||/\b(?:takes?|gets?|receives?)\b.*\blobby\b/i.test(q)) && (/\b(?:largest|biggest|most|top)\b/i.test(q)||comparisonQuestion(q)||yearComparisonQuestion(q))
 }
 const aud=(n:number)=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(n)
 const plain=(s:string)=>s.replace(/[|\n\r\[\]*]/g,' ')

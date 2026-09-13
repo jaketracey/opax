@@ -19,6 +19,11 @@ const aliases:Record<string,string[]> = {
 }
 const scaffolding = new Set('how much how many money political donations donation funding funded fund funds receipts receipt gave given give has have did does do from to the a an of for in on by and or all total totals industry industries sector government parties party over years year between since before after flowed flow show me please federal australian australia queensland qld victoria vic tasmania tas'.split(' '))
 const contains = (q:string, phrase:string) => (' '+q+' ').includes(' '+normal(phrase)+' ')
+/** Shared vocabulary for routing and calculation; unknown terms stay unmatched. */
+export function mentionedReceiptIndustries(query:string, industries:string[]=Object.keys(aliases)):string[] {
+  const q=normal(query)
+  return industries.filter(ind=>(aliases[ind]||[ind.replaceAll('_',' ')]).some(term=>contains(q,term)))
+}
 // A company suffix can be omitted, but a shortened name must identify one donor.
 const companyName = (name:string) => normal(name).replace(/\s+(?:(?:pty|proprietary)\s+)?(?:ltd|limited)$/, '')
 /** Suggestions are prefix matches, never an automatic corporate identity merge. */
@@ -100,7 +105,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   query=periodQuery.query
   if(separateReceiptYears(query)&&!filters.compareYears&&!(filters.from&&filters.to)) return {needs_period:true,answer:'Choose one financial year or a continuous range using “from … to …”. Separate years cannot be pooled without including the years between them.',sources:[],jurisdiction}
   const q=normal(query), nodes=new Map(graph.nodes.map(n=>[n.id,n]))
-  let industries=[...new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.industry).filter((v):v is string=>!!v))].filter(ind=>(aliases[ind]||[ind.replaceAll('_',' ')]).some(term=>contains(q,term)))
+  let industries=mentionedReceiptIndustries(query,[...new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.industry).filter((v):v is string=>!!v))])
   const words=q.split(' ').filter(w=>!scaffolding.has(w)&&!/^\d+$/.test(w))
   const nameMatches=(n:Node) => [n.label,...(n.aliases||[])].some(label=>contains(q,label) || (words.length>0 && words.every(w=>normal(label).split(' ').includes(w))))
   const named=exactReceiptDonors(graph,q)

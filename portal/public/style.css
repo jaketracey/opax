@@ -773,6 +773,7 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
   padding: 0.7rem 0.9rem; font-size: 0.8125rem; line-height: 1.5;
 }
 .answer .about-table { font-size: 0.9375rem; }
+.answer .about-table th { overflow-wrap: normal; }
 .answer ul.answer-money-choices { display: grid; gap: 0.65rem; max-width: 36rem; }
 .answer .answer-money-choices > li { margin: 0; }
 .answer .answer-money-choices > li::before { content: none; }
@@ -933,6 +934,7 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 /* "Ask something else" under an answer: the example questions, wrapping in
    place rather than scrolling sideways under the answer. */
 .ask-again .chip-row { margin-top: 0; flex-wrap: wrap; overflow: visible; mask-image: none; animation: none; }
+.ask-again .chip { min-height: 44px; }
 /* A conversation's header: the kicker and the way out of it. */
 .chat-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem 1rem; margin-bottom: 0.4rem; }
 .chat-head .kicker { margin: 0; }
