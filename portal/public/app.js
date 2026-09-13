@@ -9848,10 +9848,13 @@ async function requestChatFollowups() {
     if (!questions.length) return;
     last.next = questions;
     saveChatSession();
+    // They arrive under the answer, above the sticky composer, and are brought
+    // fully into view for a reader at the end of the thread. Measured before
+    // they land: once rendered they are what moves the end. A reader who has
+    // scrolled up to read is left where they are.
+    const wasAtEnd = chatFollower.nearEnd();
     renderChatNext(questions);
-    // They arrive under the answer, above the sticky composer: bring them into
-    // view - unless the reader has scrolled up to read, in which case they wait.
-    requestAnimationFrame(() => { if (chatFollower.nearEnd()) scrollChatToEnd(); });
+    if (wasAtEnd) requestAnimationFrame(() => scrollChatToEnd());
   } catch { /* follow-ups are an extra, never an error */ }
 }
 
