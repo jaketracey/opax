@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "accepted_licences": [
+  "CC0",
+  "Public domain",
+  "CC BY",
+  "CC BY-SA"
+ ],
+ "note": "Approved photographs for the daily edition covers. Every entry was chosen by a person; the Worker never posts a photo that is not in this file. Credit lines are drawn on the slide and repeated in the caption.",
+ "photos": {
+  "qantas-founders-roof": {
+   "file": "/social/photos/qantas-founders-roof.jpg",
+   "width": 1200,
+   "height": 794,
+   "description": "The airpark roof over the aircraft at the Qantas Founders Museum, Longreach",
+   "source_title": "File:Qantas Founders Museum, Longreach, 2024.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Qantas_Founders_Museum,_Longreach,_2024.jpg",
+   "author": "Kgbo",
+   "licence": "CC BY-SA 4.0",
+   "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "credit": "Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons"
+  },
+  "qantas-founders-twilight": {
+   "file": "/social/photos/qantas-founders-twilight.jpg",
+   "width": 1200,
+   "height": 900,
+   "description": "The Qantas Founders Museum hangar at twilight",
+   "source_title": "File:Qantas Founders Museum at twilight, Queensland, 2024, 03.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Qantas_Founders_Museum_at_twilight,_Queensland,_2024,_03.jpg",
+   "author": "Kgbo",
+   "licence": "CC BY-SA 4.0",
+   "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "credit": "Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons"
+  },
+  "parliament-house-flagpole": {
+   "file": "/social/photos/parliament-house-flagpole.jpg",
+   "width": 1200,
+   "height": 900,
+   "description": "Parliament House, Canberra, from the forecourt approach",
+   "source_title": "File:Exterior of Parliament House, Canberra, 2022, 01.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Exterior_of_Parliament_House,_Canberra,_2022,_01.jpg",
+   "author": "Kgbo",
+   "licence": "CC BY-SA 4.0",
+   "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "credit": "Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons"
+  },
+  "parliament-house-forecourt": {
+   "file": "/social/photos/parliament-house-forecourt.jpg",
+   "width": 1200,
+   "height": 900,
+   "description": "The forecourt mosaic and front of Parliament House, Canberra",
+   "source_title": "File:Exterior of Parliament House, Canberra, 2022, 04.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Exterior_of_Parliament_House,_Canberra,_2022,_04.jpg",
+   "author": "Kgbo",
+   "licence": "CC BY-SA 4.0",
+   "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "credit": "Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons"
+  },
+  "senate-chamber": {
+   "file": "/social/photos/senate-chamber.jpg",
+   "width": 1200,
+   "height": 750,
+   "description": "The Senate chamber, Parliament House, Canberra",
+   "source_title": "File:Australian Senate - Parliament of Australia.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Australian_Senate_-_Parliament_of_Australia.jpg",
+   "author": "JJ Harrison",
+   "licence": "CC BY-SA 3.0",
+   "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
+   "credit": "Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons"
+  },
+  "house-chamber": {
+   "file": "/social/photos/house-chamber.jpg",
+   "width": 1200,
+   "height": 714,
+   "description": "The House of Representatives chamber, Parliament House, Canberra",
+   "source_title": "File:Australian House of Representatives - Parliament of Australia.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Australian_House_of_Representatives_-_Parliament_of_Australia.jpg",
+   "author": "JJ Harrison",
+   "licence": "CC BY-SA 3.0",
+   "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
+   "credit": "Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons"
+  },
+  "parliament-house-front": {
+   "file": "/social/photos/parliament-house-front.jpg",
+   "width": 1200,
+   "height": 1571,
+   "description": "The front of Parliament House, Canberra, under the flag mast",
+   "source_title": "File:Exterior of Parliament House, Canberra, 2022, 05.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Exterior_of_Parliament_House,_Canberra,_2022,_05.jpg",
+   "author": "Kgbo",
+   "licence": "CC BY-SA 4.0",
+   "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "credit": "Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons"
+  }
+ },
+ "subjects": {
+  "grant:GA34203": [
+   "qantas-founders-roof",
+   "qantas-founders-twilight"
+  ],
+  "person:Bob Katter": [
+   "parliament-house-flagpole",
+   "parliament-house-forecourt"
+  ]
+ },
+ "kinds": {
+  "bill:senate": [
+   "senate-chamber",
+   "house-chamber"
+  ],
+  "bill:representatives": [
+   "house-chamber",
+   "senate-chamber"
+  ],
+  "bill": [
+   "senate-chamber",
+   "house-chamber"
+  ],
+  "politician": [
+   "parliament-house-flagpole",
+   "parliament-house-forecourt"
+  ],
+  "topic": [
+   "parliament-house-forecourt",
+   "parliament-house-flagpole",
+   "parliament-house-front"
+  ],
+  "grant": []
+ }
+}

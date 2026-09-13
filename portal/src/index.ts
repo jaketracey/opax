@@ -38,6 +38,9 @@ import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryP
 
 import { OG_FONT_FILES, OG_VERSION, homeCard, ogFormat, type OgCard } from './og'
 import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
+// The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
+import * as storyRender from './og-render'
+import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue } from './story'
 
 interface FindParagraph {
   score: number
@@ -4323,7 +4326,83 @@ async function ogFallback(env: Env, request: Request): Promise<Response> {
   return out
 }
 
+/** FNV-1a over a string, as eight hex digits: enough to tell one slide's text from another's. */
+function shortHash(text: string): string {
+  let h = 0x811c9dc5
+  for (let i = 0; i < text.length; i++) { h ^= text.charCodeAt(i); h = Math.imul(h, 0x01000193) }
+  return (h >>> 0).toString(16).padStart(8, '0')
+}
+
+/** A photograph from the approved catalogue (or a portrait twin) as a data: URI, or null. */
+async function storyImage(env: Env, path: string | null): Promise<string | null> {
+  if (!path) return null
+  const res = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}${path}`)).catch(() => null)
+  if (!res?.ok) return null
+  return `data:image/jpeg;base64,${base64(new Uint8Array(await res.arrayBuffer()))}`
+}
+
+/**
+ * One slide of the day's story: /og/story/<YYYY-MM-DD>/<n>.jpg, the JPEG
+ * Instagram fetches for a carousel item. The edition is the stored one for the
+ * date, or the one the cron would compose (previewPublication), so a slide can
+ * be looked at before it posts. Cached per slide on a hash of its text, so a
+ * preview that recomposes never serves yesterday's drawing. Photographs come
+ * only from the approved catalogue (public/social/photos.json).
+ */
+async function serveStorySlide(url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const m = /^\/og\/story\/(\d{4}-\d{2}-\d{2})\/(\d{1,2})\.jpg$/.exec(url.pathname)
+  if (!m) return new Response('Not found', { status: 404 })
+  const [, date, nRaw] = m
+  const n = Number(nRaw)
+  if (!Number.isFinite(Date.parse(date + 'T12:00:00Z')) || new Date(date + 'T12:00:00Z').toISOString().slice(0, 10) !== date) return new Response('Not found', { status: 404 })
+  if (!Number.isInteger(n) || n < 1 || n > 10) return new Response('Not found', { status: 404 })
+  let post: Awaited<ReturnType<typeof previewPublication>> = null
+  try { post = await previewPublication(env, date, name => personTopicsFor(name, env)) } catch (err) {
+    console.error(JSON.stringify({ level: 'error', path: url.pathname, message: `story edition failed: ${String(err)}` }))
+    return new Response('Slide unavailable', { status: 503 })
+  }
+  if (!post || !validStory(post.slides) || !post.slides[n - 1]) return new Response('Not found', { status: 404 })
+  const slide = post.slides[n - 1]
+  const cacheKey = cacheRequest('og', `story/${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${STORY_SLIDES_VERSION}/${date}/${n}/${shortHash(JSON.stringify(slide))}`)
+  if (!cacheBypass(request, url)) {
+    const hit = await caches.default.match(cacheKey)
+    if (hit) return withCacheStatus(request.method === 'HEAD' ? new Response(null, hit) : hit, 'HIT')
+  }
+  const limited = await rateLimited(env.OG_LIMITER, request)
+  if (limited) return limited
+  try {
+    const wantsPhoto = slide.type === 'cover' || slide.type === 'picture'
+    const catalogue = wantsPhoto && slide.photo ? await assetJson<PhotoCatalogue>(env, '/social/photos.json').catch(() => null) : null
+    const photo = wantsPhoto ? photoFor(catalogue, slide.photo) : null
+    const insetId = slide.type === 'cover' && slide.inset && /^[\w-]+$/.test(slide.inset) ? slide.inset : null
+    const [photoUri, insetUri, fonts] = await Promise.all([
+      storyImage(env, photo?.file ?? null),
+      storyImage(env, insetId ? `/photos/jpg/${insetId}.jpg` : null),
+      loadOgFonts(env),
+    ])
+    const images = { photo: photoUri, credit: photoUri ? photo?.credit ?? null : null, inset: insetUri, insetCredit: insetUri && slide.type === 'cover' ? slide.insetCredit ?? null : null }
+    const jpeg = await storyRender.renderStoryJpeg(slide, images, fonts)
+    const res = new Response(jpeg, {
+      headers: {
+        'content-type': 'image/jpeg',
+        'content-length': String(jpeg.byteLength),
+        'x-opax-story': `${date}/${n}`,
+        'x-opax-format': 'portrait',
+        'x-opax-subject': post.subject,
+      },
+    })
+    cacheStore(ctx, cacheKey, res, OG_CACHE_TTL)
+    return withCacheStatus(request.method === 'HEAD' ? new Response(null, res) : res, 'MISS')
+  } catch (err) {
+    console.error(JSON.stringify({ level: 'error', path: url.pathname, message: `story render failed: ${String(err)}` }))
+    return new Response('Slide unavailable', { status: 503 })
+  }
+}
+
 async function serveOgImage(url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  // The story slides live under /og/story/ and are reached through every
+  // caller of this function (public GETs, the publisher's in-process preflight).
+  if (url.pathname.startsWith('/og/story/')) return serveStorySlide(url, request, env, ctx)
   const m = /^\/og(\/[^?]*)\.(png|jpg)$/.exec(url.pathname)
   if (!m) return ogFallback(env, request)
   const jpeg = m[2] === 'jpg'

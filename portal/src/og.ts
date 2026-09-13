@@ -18,6 +18,8 @@ export const OG_HEIGHT = 630
  *  social crawlers (which cache by URL, some for weeks) fetch the new card. */
 export const OG_VERSION = '4'
 
+import type { StorySlide } from './story'
+
 /** The faces the card sets, as served from /fonts/og/ (static instances of the
  *  same two OFL families the site self-hosts; satori cannot read a variable
  *  woff2, so these are the 400/600/700 cuts as woff). */
@@ -466,6 +468,418 @@ export function ogLayout(format: OgFormat): { width: number; height: number; tre
   return format === 'portrait'
     ? { width: PORTRAIT_WIDTH, height: PORTRAIT_HEIGHT, tree: portraitTree }
     : { width: OG_WIDTH, height: OG_HEIGHT, tree: cardTree }
+}
+
+// --- the story: a daily edition as a carousel ---------------------------------------
+//
+// Nine slide types (src/story.ts), all 1080x1350 and all in the portrait card's
+// register: masthead and rule at the top, the wordmark footer and thick rule at
+// the bottom. The cover is the one photograph; every other slide is type on
+// navy, the way the portrait card is, so a carousel still reads as one account
+// mid-swipe. Photographs arrive as data: URIs already read by the caller; a
+// cover with none is drawn as the engraving card, so a story never fails for
+// want of a picture.
+
+/** Resolved pictures for one slide: data: URIs (JPEG or PNG), or null. */
+export interface StoryImages {
+  photo?: string | null
+  /** The catalogue's credit line, drawn on the footer (cover) or under the frame (picture). */
+  credit?: string | null
+  inset?: string | null
+  insetCredit?: string | null
+}
+
+const S_TITLE_SIZES = [116, 104, 92, 84, 76, 68, 60, 54]
+const S_SOFT_RULE = 'rgba(183,198,217,0.18)'
+const S_BRONZE_RULE = 'rgba(217,168,74,0.6)'
+const S_PHOTO_BAND = 880
+/** The source slide's call to action stops 260px short of the right edge, where the engraving sits. */
+const S_CTA_WIDTH = P_TEXT_WIDTH - 260
+
+/** House style, plus: the faces carry no arrow glyphs, so a path's arrows become middle dots. */
+const storyText = (s: string): string => plain(String(s ?? '')).replace(/\s*(?:→|←|->|=>)\s*/g, ' · ')
+
+/** The largest size that sets the title in `maxLines`; failing that, the smallest with the text trimmed. */
+function fitStoryTitle(text: string, maxSize: number, maxLines: number): { size: number; text: string } {
+  for (const size of S_TITLE_SIZES) {
+    if (size > maxSize) continue
+    if (wrapLines(text, P_TEXT_WIDTH, size, SERIF_EM) <= maxLines) return { size, text }
+  }
+  const size = S_TITLE_SIZES[S_TITLE_SIZES.length - 1]
+  return { size, text: clipToLines(text, P_TEXT_WIDTH, size, SERIF_EM, maxLines) }
+}
+
+/** A small chevron for the cover's "Swipe" cue: the sans has no arrow glyph. */
+const ARROW_URI = svgUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M3 12h16M13 6l6 6-6 6" fill="none" stroke="${SOFT}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`)
+
+function storyMasthead(): El {
+  return h(
+    'div',
+    { style: { display: 'flex', alignItems: 'center', padding: `56px ${P_PAD}px 0 ${P_PAD}px` } },
+    h('img', { src: MARK_URI, width: 88, height: 80 }),
+    h('div', { style: { marginLeft: 26, fontFamily: SANS, fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', color: SOFT } }, 'Open Parliamentary Accountability eXchange'),
+  )
+}
+
+const storyRule = (): El => h('div', { style: { height: 1, margin: `28px ${P_PAD}px 0 ${P_PAD}px`, background: P_RULE } })
+
+function storyFooter(credit?: string | null, swipe = false): El {
+  const right = credit || swipe
+    ? h(
+        'div',
+        { style: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', maxWidth: 620 } },
+        credit ? h('div', { style: { fontFamily: SANS, fontSize: 20, lineHeight: 1.3, color: SOFT, opacity: 0.85, textAlign: 'right' } }, clipToLines(storyText(credit), 620, 20, SANS_EM, 2)) : null,
+        swipe ? h('div', { style: { fontFamily: SANS, fontSize: 20, color: SOFT, opacity: 0.85, marginLeft: credit ? 18 : 0 } }, credit ? '· Swipe' : 'Swipe') : null,
+        swipe ? h('img', { src: ARROW_URI, width: 22, height: 22, style: { marginLeft: 8, opacity: 0.85 } }) : null,
+      )
+    : null
+  return h(
+    'div',
+    { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: `24px ${P_PAD}px 44px ${P_PAD}px` } },
+    h('div', { style: { fontFamily: SANS, fontSize: 28, fontWeight: 700, letterSpacing: '0.16em', color: BRONZE_BRIGHT } }, 'OPAX.COM.AU'),
+    right,
+  )
+}
+
+const storyBar = (): El => h('div', { style: { height: 8, background: BRONZE } })
+
+function storyKicker(text: string, centred = false): El | null {
+  const t = storyText(text)
+  return t ? h('div', { style: { fontFamily: SANS, fontSize: 26, fontWeight: 700, letterSpacing: '0.14em', color: BRONZE_BRIGHT, textTransform: 'uppercase', marginBottom: 18, textAlign: centred ? 'center' : 'left' } }, clipToLines(t, P_TEXT_WIDTH, 26, SANS_EM * 1.25, 1)) : null
+}
+
+function storyHeadline(text: string, maxSize: number, maxLines: number, centred = false, italic = false): El {
+  const title = fitStoryTitle(storyText(text), maxSize, maxLines)
+  return h('div', { style: { fontFamily: SERIF, fontSize: title.size, fontStyle: italic ? 'italic' : 'normal', fontWeight: 400, lineHeight: 1.12, letterSpacing: '-0.005em', color: WHITE, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } }, title.text)
+}
+
+/** Public Sans lines under a headline, each held to `rows` lines; the first stands 28px clear of the headline. */
+function storyLines(lines: string[], centred = false, rows = 3, first = 28): El[] {
+  return lines.map(plain).filter(Boolean).slice(0, 3).map((l, i) =>
+    h('div', { style: { display: 'flex', justifyContent: centred ? 'center' : 'flex-start', fontFamily: SANS, fontSize: P_LINE_SIZE, lineHeight: 1.4, color: SOFT, marginTop: i === 0 ? first : 8, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } },
+      clipToLines(l, P_TEXT_WIDTH, P_LINE_SIZE, SANS_EM, rows)),
+  )
+}
+
+function storyNote(text: string | null | undefined, centred = false): El | null {
+  const t = text ? storyText(text) : ''
+  return t ? h('div', { style: { fontFamily: SANS, fontSize: 24, lineHeight: 1.4, color: SOFT, opacity: 0.85, marginTop: 36, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } }, clipToLines(t, P_TEXT_WIDTH, 24, SANS_EM, 3)) : null
+}
+
+/** The engraving as a watermark in the lower right, behind the type. */
+const storyEngraving = (width: number, opacity: number): El =>
+  h('img', { src: ENGRAVING_URI, width, height: Math.round(width * 164 / 180), style: { position: 'absolute', right: P_PAD, bottom: 104, opacity } })
+
+/** The body: the room between the rules, centred, clipped there rather than into the footer. */
+function storyBody(children: (El | null)[], opts: { centred?: boolean; end?: boolean } = {}): El {
+  return h(
+    'div',
+    { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: opts.centred ? 'center' : 'flex-start', justifyContent: opts.end ? 'flex-end' : 'center', padding: `0 ${P_PAD}px`, overflow: 'hidden' } },
+    ...children,
+  )
+}
+
+function storyFrame(children: (El | null)[]): El {
+  return h('div', { style: { display: 'flex', flexDirection: 'column', width: PORTRAIT_WIDTH, height: PORTRAIT_HEIGHT, background: NAVY, color: WHITE, fontFamily: SANS } }, ...children)
+}
+
+function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: StoryImages): El {
+  const photo = images.photo ?? null
+  const inset = images.inset
+    ? h(
+        'div',
+        { style: { display: 'flex', padding: 8, border: `1px solid rgba(217,168,74,0.7)`, borderRadius: 6, background: NAVY, marginBottom: 40 } },
+        h('img', { src: images.inset, width: 300, height: 300, style: { borderRadius: 3, objectFit: 'cover' } }),
+      )
+    : null
+  const credit = [images.photo ? images.credit : null, images.inset ? images.insetCredit : null].filter(Boolean).join(' · ')
+  if (!photo) {
+    // No approved photograph: the engraving card, as the portrait card draws it.
+    return storyFrame([
+      storyMasthead(),
+      storyRule(),
+      storyBody([
+        inset,
+        storyKicker(slide.kicker),
+        storyHeadline(slide.title, 116, 2),
+        ...storyLines([slide.line], false, 3),
+        h('div', { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: 56 } }, h('img', { src: ENGRAVING_URI, width: 340, height: 310, style: { opacity: 0.9 } })),
+      ]),
+      storyFooter(credit, true),
+      storyBar(),
+    ])
+  }
+  const band = h('img', { src: photo, width: PORTRAIT_WIDTH, height: S_PHOTO_BAND, style: { position: 'absolute', left: 0, top: 0, objectFit: 'cover' } })
+  const wash = h('div', { style: { position: 'absolute', left: 0, top: 0, width: PORTRAIT_WIDTH, height: S_PHOTO_BAND, backgroundImage: 'linear-gradient(180deg, rgba(20,42,67,0.66) 0%, rgba(20,42,67,0.10) 26%, rgba(20,42,67,0) 53%, rgba(20,42,67,0.55) 80%, rgba(20,42,67,1) 100%)' } })
+  return storyFrame([
+    band,
+    wash,
+    storyMasthead(),
+    h(
+      'div',
+      { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-start', justifyContent: 'flex-end', padding: `0 ${P_PAD}px 28px ${P_PAD}px`, overflow: 'hidden' } },
+      inset,
+      storyKicker(slide.kicker),
+      storyHeadline(slide.title, 104, 2),
+      ...storyLines([slide.line], false, 3),
+    ),
+    storyFooter(credit, true),
+    storyBar(),
+  ])
+}
+
+function numberSlide(slide: Extract<StorySlide, { type: 'number' }>): El {
+  const value = storyText(slide.value)
+  const valueSize = value.length > 12 ? 84 : value.length > 8 ? 108 : 132
+  return storyFrame([
+    storyMasthead(),
+    storyRule(),
+    storyEngraving(300, 0.3),
+    storyBody([
+      storyKicker(slide.kicker),
+      storyHeadline(slide.title, 92, 3),
+      ...storyLines(slide.lines, false, 3),
+      h(
+        'div',
+        { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: P_TEXT_WIDTH, marginTop: 48 } },
+        h('div', { style: { width: 96, height: 1, background: P_RULE, marginBottom: 32 } }),
+        h('div', { style: { fontFamily: SANS, fontSize: valueSize, fontWeight: 700, color: BRONZE_BRIGHT, lineHeight: 1.05 } }, value),
+        h('div', { style: { fontFamily: SANS, fontSize: 30, color: SOFT, marginTop: 10, lineHeight: 1.35, width: P_TEXT_WIDTH } }, clipToLines(storyText(slide.label), P_TEXT_WIDTH, 30, SANS_EM, 2)),
+      ),
+    ]),
+    storyFooter(),
+    storyBar(),
+  ])
+}
+
+function pictureSlide(slide: Extract<StorySlide, { type: 'picture' }>, images: StoryImages): El {
+  const frame = images.photo
+    ? h(
+        'div',
+        { style: { display: 'flex', padding: 8, border: `1px solid rgba(217,168,74,0.7)`, borderRadius: 6 } },
+        h('img', { src: images.photo, width: 920, height: 540, style: { borderRadius: 3, objectFit: 'cover' } }),
+      )
+    : null
+  const credit = images.photo && images.credit
+    ? h('div', { style: { fontFamily: SANS, fontSize: 18, lineHeight: 1.35, color: SOFT, opacity: 0.85, marginTop: 12, marginBottom: 40, width: 920, textAlign: 'center' } }, clipToLines(storyText(images.credit), 920, 18, SANS_EM, 1))
+    : h('div', { style: { height: images.photo ? 40 : 0 } })
+  const quote = slide.quote ? storyText(slide.quote) : ''
+  return storyFrame([
+    storyMasthead(),
+    storyRule(),
+    storyBody([
+      frame,
+      credit,
+      storyKicker(slide.kicker, true),
+      storyHeadline(slide.title, 64, 2, true),
+      quote ? h('div', { style: { fontFamily: SERIF, fontStyle: 'italic', fontSize: 46, lineHeight: 1.3, color: WHITE, marginTop: 26, width: P_TEXT_WIDTH, textAlign: 'center' } }, clipToLines(quote, P_TEXT_WIDTH, 46, SERIF_EM, 4)) : null,
+      ...storyLines(slide.lines, true, 2, 28),
+    ], { centred: true }),
+    storyFooter(),
+    storyBar(),
+  ])
+}
+
+function barsSlide(slide: Extract<StorySlide, { type: 'bars' }>): El {
+  const items = slide.items.slice(0, 5).map((it) => {
+    const pct = Math.max(0, Math.min(100, Math.round(Number(it.pct) || 0)))
+    return h(
+      'div',
+      { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 30 } },
+      h(
+        'div',
+        { style: { display: 'flex', justifyContent: 'space-between', fontFamily: SANS, fontSize: 32, lineHeight: 1.2, color: WHITE } },
+        h('div', { style: { display: 'flex' } }, clipToLines(storyText(it.label), 760, 32, SANS_EM, 1)),
+        h('div', { style: { color: BRONZE_BRIGHT, fontWeight: 700 } }, `${pct}%`),
+      ),
+      h(
+        'div',
+        { style: { display: 'flex', height: 14, background: S_SOFT_RULE, marginTop: 14, width: P_TEXT_WIDTH } },
+        h('div', { style: { height: 14, width: Math.round(P_TEXT_WIDTH * pct / 100), background: BRONZE_BRIGHT } }),
+      ),
+    )
+  })
+  return storyFrame([
+    storyMasthead(),
+    storyRule(),
+    storyBody([
+      storyKicker(slide.kicker),
+      storyHeadline(slide.title, 84, 3),
+      ...storyLines(slide.lines, false, 3),
+      h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 14 } }, ...items),
+      storyNote(slide.note),
+    ]),
+    storyFooter(),
+    storyBar(),
+  ])
+}
+
+function ledgerSlide(slide: Extract<StorySlide, { type: 'ledger' }>): El {
+  const C1 = 150, AMT = 230, GAP = 24
+  const c2Width = P_TEXT_WIDTH - C1 - AMT - GAP * 2
+  const rows = slide.rows.slice(0, 5).map((r) =>
+    h(
+      'div',
+      { style: { display: 'flex', alignItems: 'flex-start', width: P_TEXT_WIDTH, paddingTop: 22, paddingBottom: 22, borderTop: `1px solid ${S_SOFT_RULE}`, fontFamily: SANS, fontSize: 29, lineHeight: 1.3 } },
+      h('div', { style: { width: C1, color: BRONZE_BRIGHT, fontWeight: 700, letterSpacing: '0.04em', flexShrink: 0 } }, clipToLines(storyText(r.c1), C1, 29, SANS_EM * 1.1, 1)),
+      h('div', { style: { display: 'flex', width: c2Width, marginLeft: GAP, color: WHITE } }, clipToLines(storyText(r.c2), c2Width, 29, SANS_EM, 2)),
+      h('div', { style: { width: AMT, marginLeft: GAP, color: WHITE, fontWeight: 700, textAlign: 'right', flexShrink: 0 } }, storyText(r.amount)),
+    ),
+  )
+  const total = slide.total
+    ? h(
+        'div',
+        { style: { display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', width: P_TEXT_WIDTH, paddingTop: 22, paddingBottom: 22, borderTop: `1px solid ${S_BRONZE_RULE}`, borderBottom: `1px solid ${S_BRONZE_RULE}`, fontFamily: SANS } },
+        h('div', { style: { fontSize: 29, color: SOFT } }, clipToLines(storyText(slide.total.label), P_TEXT_WIDTH - AMT - GAP, 29, SANS_EM, 1)),
+        h('div', { style: { fontSize: 36, color: BRONZE_BRIGHT, fontWeight: 700, textAlign: 'right' } }, storyText(slide.total.amount)),
+      )
+    : null
+  return storyFrame([
+    storyMasthead(),
+    storyRule(),
+    storyBody([
+      storyKicker(slide.kicker),
+      storyHeadline(slide.title, 84, 3),
+      ...storyLines(slide.lines, false, 3),
+      h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 44 } }, ...rows, total),
+      storyNote(slide.note),
+    ]),
+    storyFooter(),
+    storyBar(),
+  ])
+}
+
+function timelineSlide(slide: Extract<StorySlide, { type: 'timeline' }>): El {
+  const events = slide.events.slice(0, 6).map((e) =>
+    h(
+      'div',
+      { style: { display: 'flex', flexDirection: 'column', paddingTop: 16, paddingBottom: 18, position: 'relative' } },
+      h('div', { style: { position: 'absolute', left: -54, top: 30, width: 18, height: 18, borderRadius: 9, background: BRONZE_BRIGHT } }),
+      h('div', { style: { fontFamily: SANS, fontSize: 24, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: BRONZE_BRIGHT, lineHeight: 1.2 } }, storyText(e.date)),
+      h('div', { style: { fontFamily: SANS, fontSize: 32, lineHeight: 1.3, color: WHITE, marginTop: 6, width: P_TEXT_WIDTH - 60 } }, clipToLines(storyText(e.text), P_TEXT_WIDTH - 60, 32, SANS_EM, 2)),
+    ),
+  )
+  return storyFrame([
+    storyMasthead(),
+    storyRule(),
+    storyBody([
+      storyKicker(slide.kicker),
+      storyHeadline(slide.title, 84, 3),
+      ...storyLines(slide.lines, false, 3),
+      h('div', { style: { display: 'flex', flexDirection: 'column', marginTop: 44, marginLeft: 14, borderLeft: '2px solid rgba(217,168,74,0.5)', paddingLeft: 44 } }, ...events),
+    ]),
+    storyFooter(),
+    storyBar(),
+  ])
+}
+
+function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>): El {
+  const ayes = Math.max(0, Math.round(Number(slide.ayes) || 0))
+  const noes = Math.max(0, Math.round(Number(slide.noes) || 0))
+  const total = ayes + noes || 1
+  const side = (n: number, label: string, parties: [string, number][], colour: string): El =>
+    h(
+      'div',
+      { style: { display: 'flex', flexDirection: 'column', width: (P_TEXT_WIDTH - 60) / 2 } },
+      h('div', { style: { fontFamily: SANS, fontSize: 116, fontWeight: 700, lineHeight: 1, color: colour } }, String(n)),
+      h('div', { style: { fontFamily: SANS, fontSize: 24, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: SOFT, marginTop: 10, marginBottom: 22 } }, label),
+      ...parties.slice(0, 5).map(([party, count]) =>
+        h(
+          'div',
+          { style: { display: 'flex', justifyContent: 'space-between', fontFamily: SANS, fontSize: 30, lineHeight: 1.3, color: WHITE, paddingTop: 10, paddingBottom: 10, borderTop: `1px solid ${S_SOFT_RULE}` } },
+          h('div', { style: { display: 'flex' } }, clipToLines(storyText(party), 300, 30, SANS_EM, 1)),
+          h('div', { style: { color: SOFT } }, String(count)),
+        ),
+      ),
+    )
+  const ayeWidth = Math.round((P_TEXT_WIDTH - 4) * ayes / total)
+  return storyFrame([
+    storyMasthead(),
+    storyRule(),
+    storyBody([
+      storyKicker(slide.kicker),
+      storyHeadline(slide.title, 84, 3),
+      h('div', { style: { display: 'flex', justifyContent: 'space-between', width: P_TEXT_WIDTH, marginTop: 44 } }, side(ayes, 'Ayes', slide.ayeParties, BRONZE_BRIGHT), side(noes, 'Noes', slide.noParties, SOFT)),
+      h(
+        'div',
+        { style: { display: 'flex', height: 16, width: P_TEXT_WIDTH, marginTop: 40 } },
+        h('div', { style: { width: ayeWidth, height: 16, background: BRONZE_BRIGHT } }),
+        h('div', { style: { width: P_TEXT_WIDTH - 4 - ayeWidth, height: 16, marginLeft: 4, background: 'rgba(183,198,217,0.45)' } }),
+      ),
+      ...storyLines([slide.line], false, 2, 28),
+    ]),
+    storyFooter(),
+    storyBar(),
+  ])
+}
+
+function listSlide(slide: Extract<StorySlide, { type: 'list' }>): El {
+  const NUM = 84
+  const items = slide.items.slice(0, 4).map((text, i) =>
+    h(
+      'div',
+      { style: { display: 'flex', alignItems: 'flex-start', width: P_TEXT_WIDTH, paddingBottom: 30 } },
+      h('div', { style: { width: NUM, flexShrink: 0, fontFamily: SERIF, fontSize: 52, lineHeight: 1.2, color: BRONZE_BRIGHT, marginTop: -8 } }, String(i + 1)),
+      h('div', { style: { display: 'flex', width: P_TEXT_WIDTH - NUM, fontFamily: SANS, fontSize: 33, lineHeight: 1.4, color: WHITE } }, clipToLines(storyText(text), P_TEXT_WIDTH - NUM, 33, SANS_EM, 4)),
+    ),
+  )
+  return storyFrame([
+    storyMasthead(),
+    storyRule(),
+    storyBody([
+      storyKicker(slide.kicker),
+      storyHeadline(slide.title, 84, 3),
+      h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 40 } }, ...items),
+      storyNote(slide.note),
+    ]),
+    storyFooter(),
+    storyBar(),
+  ])
+}
+
+function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>): El {
+  // The address is the largest type on the slide and must never break mid-path:
+  // sized to one line on a bold-width estimate (0.6em a character), 36px at least.
+  const url = storyText(slide.url)
+  const urlSize = Math.max(36, Math.min(52, Math.floor(S_CTA_WIDTH / (Math.max(1, url.length) * 0.6))))
+  const rows = slide.rows.slice(0, 4).map((r) =>
+    h('div', { style: { display: 'flex', width: P_TEXT_WIDTH, fontFamily: SANS, fontSize: 30, lineHeight: 1.4, color: WHITE, paddingTop: 18, paddingBottom: 18, borderTop: `1px solid ${S_SOFT_RULE}` } }, clipToLines(storyText(r), P_TEXT_WIDTH, 30, SANS_EM, 2)),
+  )
+  return storyFrame([
+    storyMasthead(),
+    storyRule(),
+    storyEngraving(240, 0.38),
+    storyBody([
+      storyKicker(slide.kicker),
+      storyHeadline(slide.title, 84, 3),
+      h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 40 } }, ...rows),
+      // The call to action stops short of the engraving's column, so the two never share a line.
+      h(
+        'div',
+        { style: { display: 'flex', flexDirection: 'column', width: S_CTA_WIDTH, marginTop: 56 } },
+        h('div', { style: { width: 96, height: 1, background: P_RULE, marginBottom: 30 } }),
+        h('div', { style: { fontFamily: SANS, fontSize: urlSize, fontWeight: 700, lineHeight: 1.1, letterSpacing: '0.01em', color: BRONZE_BRIGHT, width: S_CTA_WIDTH } }, url),
+        h('div', { style: { fontFamily: SANS, fontSize: 30, lineHeight: 1.4, color: SOFT, marginTop: 12, width: S_CTA_WIDTH } }, clipToLines(storyText(slide.path), S_CTA_WIDTH, 30, SANS_EM, 2)),
+      ),
+    ]),
+    storyFooter(),
+    storyBar(),
+  ])
+}
+
+/** The element tree for one slide of a story, at 1080x1350. Alt text is never drawn. */
+export function storySlideTree(slide: StorySlide, images: StoryImages = {}): El {
+  switch (slide.type) {
+    case 'cover': return coverSlide(slide, images)
+    case 'number': return numberSlide(slide)
+    case 'picture': return pictureSlide(slide, images)
+    case 'bars': return barsSlide(slide)
+    case 'ledger': return ledgerSlide(slide)
+    case 'timeline': return timelineSlide(slide)
+    case 'division': return divisionSlide(slide)
+    case 'list': return listSlide(slide)
+    case 'source': return sourceSlide(slide)
+  }
 }
 
 /** The home page and the card every failure falls back to. */

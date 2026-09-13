@@ -3,6 +3,7 @@
  */
 import { composeDailyPost, envSources, melbourneDate, oauth1Header, postToX, xCredentials, type DailyPost, type DailyPostKind } from './daily-post'
 import { OG_VERSION } from './og'
+import { STORY_VERSION, validStory } from './story'
 
 export const CHANNELS = ['x', 'facebook', 'instagram'] as const
 export type Channel = typeof CHANNELS[number]
@@ -24,7 +25,13 @@ export function readiness(env: SocialEnv): Record<Channel, { enabled: boolean; r
   })) as ReturnType<typeof readiness>
 }
 
-export function publicationCopy(post: DailyPost, channel: Channel): { text: string; link: string; image: string } {
+/**
+ * What a channel posts. `slides` is present only for Instagram and Facebook and
+ * only when the edition carries a valid story (story.ts): the carousel's
+ * images in order, each drawn by /og/story/<date>/<n>.jpg from the frozen
+ * edition. X keeps the single card; so does any edition stored before stories.
+ */
+export function publicationCopy(post: DailyPost, channel: Channel): { text: string; link: string; image: string; slides?: string[] } {
   const link = new URL(post.url)
   if (link.origin !== 'https://opax.com.au') throw new Error('Publication requires an Opax source page')
   link.searchParams.set('utm_source', channel)
@@ -41,18 +48,33 @@ export function publicationCopy(post: DailyPost, channel: Channel): { text: stri
   const text = channel === 'x' ? post.text.replace(post.url, link.toString())
     : channel === 'facebook' ? full.slice(0, 5000)
     : `${full.slice(0, 1850)}\n\nExplore ${post.title} at opax.com.au — link in bio.\n\n#AustralianParliament #PublicRecords #Opax`
-  return { text, link: link.toString(), image: image.toString() }
+  const slides = channel !== 'x' && validStory(post.slides)
+    ? post.slides.map((_, i) => `https://opax.com.au/og/story/${post.date}/${i + 1}.jpg?v=${OG_VERSION}.${STORY_VERSION}`)
+    : undefined
+  return { text, link: link.toString(), image: image.toString(), ...(slides ? { slides } : {}) }
 }
 
 /** Only controlled error codes go to logs/receipts. Never persist a provider body or token. */
 async function api(url: string, token: string, fetchImpl: typeof fetch, body?: Record<string, unknown>): Promise<Record<string, unknown>> {
-  const res = await fetchImpl(url, {
-    method: body ? 'POST' : 'GET', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-    ...(body ? { body: JSON.stringify(body) } : {}), signal: AbortSignal.timeout(20000), redirect: 'manual',
-  })
+  // A Meta write that carries an image URL (a container, a photo upload) is
+  // answered only after Meta has fetched and checked the image, which can take
+  // well over twenty seconds; a read is quick. The cron has minutes, not seconds.
+  const timeout = body ? META_WRITE_TIMEOUT : META_READ_TIMEOUT
+  let res: Response
+  try {
+    res = await fetchImpl(url, {
+      method: body ? 'POST' : 'GET', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+      ...(body ? { body: JSON.stringify(body) } : {}), signal: AbortSignal.timeout(timeout), redirect: 'manual',
+    })
+  } catch (error) {
+    if (error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')) throw new Error('Provider timeout')
+    throw error
+  }
   if (!res.ok) throw new Error(`Provider HTTP ${res.status}`)
   return await res.json() as Record<string, unknown>
 }
+const META_READ_TIMEOUT = 20000
+const META_WRITE_TIMEOUT = 90000
 function returnedId(body: Record<string, unknown>): string {
   if (typeof body.id !== 'string' || !/^[\d_]+$/.test(body.id)) throw new Error('Provider omitted post id')
   return body.id
@@ -139,9 +161,16 @@ export async function runSocialPublication(env: SocialEnv, options: {
     try {
       await verifyAccount(channel, env, fetchImpl)
       if (!receipt) {
-        // Preflight the actual linked page and image before any social write.
-        for (const target of [post.url, copy.image]) {
+        // Preflight the actual linked page and image, or every slide of a story, before any social write.
+        const slides = copy.slides ?? []
+        for (const target of [post.url, ...(slides.length ? slides : [copy.image])]) {
           const res = options.sourceResponse ? await options.sourceResponse(target) : await fetchImpl(target, { method: 'HEAD', signal: AbortSignal.timeout(20000), redirect: 'manual' })
+          const n = slides.indexOf(target) + 1
+          if (n > 0) {
+            // A slide must be the frozen edition's own drawing, portrait, and the one the URL names.
+            if (!res.ok || !res.headers.get('content-type')?.startsWith('image/jpeg') || res.headers.get('x-opax-story') !== `${post.date}/${n}` || res.headers.get('x-opax-format') !== 'portrait') throw new Error('Story slide unavailable')
+            continue
+          }
           if (!res.ok || (target === copy.image && (!res.headers.get('content-type')?.startsWith('image/jpeg') || res.headers.get('x-opax-og') !== new URL(post.url).pathname))) throw new Error('Source page or matching image unavailable')
           const award = new URL(post.url).searchParams.get('award')
           if (target === copy.image && award && res.headers.get('x-opax-award') !== award) throw new Error('Grant award image mismatch')
@@ -161,13 +190,32 @@ export async function runSocialPublication(env: SocialEnv, options: {
         writeStarted = true
         id = (await postToX(copy.text, xCredentials(env)!, fetchImpl)).id
       } else if (channel === 'facebook') {
-        writeStarted = true
-        id = returnedId(await api(`${graphOrigin(env)}/${env.FACEBOOK_PAGE_ID}/feed`, env.FACEBOOK_PAGE_TOKEN!, fetchImpl, { message: copy.text, link: copy.link }))
+        if (copy.slides) {
+          // A story is a multi-photo post: unpublished uploads, then one feed post that attaches them.
+          // attached_media cannot be combined with link, so the link rides in the message.
+          const attached: { media_fbid: string }[] = []
+          for (const url of copy.slides) attached.push({ media_fbid: returnedId(await api(`${graphOrigin(env)}/${env.FACEBOOK_PAGE_ID}/photos`, env.FACEBOOK_PAGE_TOKEN!, fetchImpl, { url, published: false })) })
+          writeStarted = true
+          id = returnedId(await api(`${graphOrigin(env)}/${env.FACEBOOK_PAGE_ID}/feed`, env.FACEBOOK_PAGE_TOKEN!, fetchImpl, { message: `${copy.text}\n\n${copy.link}`, attached_media: attached }))
+        } else {
+          writeStarted = true
+          id = returnedId(await api(`${graphOrigin(env)}/${env.FACEBOOK_PAGE_ID}/feed`, env.FACEBOOK_PAGE_TOKEN!, fetchImpl, { message: copy.text, link: copy.link }))
+        }
       } else {
         let container = receipt?.container_id
         if (!container) {
+          let body: Record<string, unknown> = { image_url: copy.image, caption: copy.text }
+          if (copy.slides) {
+            // A story is a carousel: one child container per slide (never published on its own),
+            // then the parent that the journal records and later publishes.
+            const children: string[] = []
+            for (const [i, image_url] of copy.slides.entries()) {
+              children.push(returnedId(await api(`${graphOrigin(env)}/${env.INSTAGRAM_ACCOUNT_ID}/media`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl, { image_url, is_carousel_item: true, alt_text: post.slides![i].alt })))
+            }
+            body = { media_type: 'CAROUSEL', children: children.join(','), caption: copy.text }
+          }
           writeStarted = true
-          container = returnedId(await api(`${graphOrigin(env)}/${env.INSTAGRAM_ACCOUNT_ID}/media`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl, { image_url: copy.image, caption: copy.text }))
+          container = returnedId(await api(`${graphOrigin(env)}/${env.INSTAGRAM_ACCOUNT_ID}/media`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl, body))
           await db.prepare('UPDATE social_deliveries SET container_id=? WHERE edition_date=? AND channel=?').bind(container, date, channel).run()
           writeStarted = false // Container creation is not publication; it is now safely recorded.
         }
@@ -185,7 +233,7 @@ export async function runSocialPublication(env: SocialEnv, options: {
     } catch (error) {
       // The journal keeps a bounded reason; the log keeps the message (never a token).
       console.error('daily-post', JSON.stringify({ channel, date, error: error instanceof Error ? `${error.name}: ${error.message}`.slice(0, 300) : String(error).slice(0, 300) }))
-      const known = error instanceof Error && /^(Provider HTTP \d+|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable)|Source page or matching image unavailable|Grant award image mismatch|Portrait image unavailable|Meta API version not configured)$/.test(error.message) ? error.message : 'Publication request failed'
+      const known = error instanceof Error && /^(Provider HTTP \d+|Provider timeout|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable)|Source page or matching image unavailable|Grant award image mismatch|Portrait image unavailable|Story slide unavailable|Meta API version not configured)$/.test(error.message) ? error.message : 'Publication request failed'
       if (claimed) await db.prepare('UPDATE social_deliveries SET status=?,detail=?,updated_at=? WHERE edition_date=? AND channel=?').bind(writeStarted ? 'review_required' : 'failed', known, at, date, channel).run()
       // Preflight errors are recorded as well, so an operator can see the problem.
       else if (receipt) await db.prepare("UPDATE social_deliveries SET status='failed',detail=?,updated_at=? WHERE edition_date=? AND channel=? AND status='preparing'").bind(known, at, date, channel).run()

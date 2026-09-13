@@ -31,6 +31,53 @@ minutes finish an Instagram container that is still processing. They do not rese
 successful posts. A container still pending after the third check needs operator
 review; the following day is a new edition.
 
+## Carousels
+
+Since 14 September 2026 the edition is also told as a carousel: a run of three to
+ten slides at 1080 x 1350, one fact each, opened by a photograph and closed by the
+source. Instagram posts the run as one carousel; Facebook posts the same slides as
+a multi-photo post; X keeps its text and link. An edition composed before carousels
+existed, or one whose records do not support a story, posts as the single portrait
+card exactly as before.
+
+The slides are the edition's own records, no model at post time. `src/story.ts` is
+the contract: the nine slide types (cover, number, picture, bars, ledger, timeline,
+division, list, source), the licence check and the photo lookup. `daily-post.ts`
+writes `slides[]` beside `text` and `caption` for each kind; `og.ts` draws them;
+`social-publication.ts` posts them. Every slide keeps the masthead, the rule and the
+bronze foot so the run reads as Opax mid-swipe and in the grid. The slide after the
+cover is the edition's one number; the middle slides carry one fact each with its
+caveat on the slide; one slide is the cross-reference only Opax can make (the same
+recipient's other awards, the electorate's grants, the seat's member); the last
+slide is the source, with the page URL as the largest type because Instagram links
+do not click.
+
+Photographs come only from `public/social/photos.json`, a catalogue a person has
+approved: the file, author, licence, Commons page and the credit line drawn on the
+slide's foot and repeated in the caption. Accepted licences are CC0, public domain,
+CC BY and CC BY-SA (the decision to accept ShareAlike was taken on 14 September
+2026; the composed slide is offered on the same terms). The catalogue lists photo
+ids by subject (`grant:GA34203`, `person:Bob Katter`) and by kind (`bill:senate`,
+`bill:representatives`, `politician`, `topic`); the composer takes the subject's
+own photographs first, then the kind's. With no approved photograph the cover is the
+engraving card and the story still runs. `node scripts/propose_social_photos.mjs
+search "<query>"` lists what Wikimedia Commons has for a subject with its licence;
+`… approve "<File:…>" --id <slug> --subject <id> | --kind <kind>` downloads the file
+at 1200px into `public/social/photos/` and writes the catalogue entry. The Worker
+never posts a photograph that is not in the file.
+
+Slides are served at `/og/story/<date>/<n>.jpg` from the frozen edition (or, for a
+date with no stored edition, from the same composition the preview shows), each
+answering `x-opax-story: <date>/<n>` and `x-opax-format: portrait`. The publisher
+preflights every slide before any write and records `Story slide unavailable` for
+that channel if one does not answer; X still posts. Instagram's receipt records the
+carousel's parent container so a run that finds it still processing resumes the
+same container at the next check without recreating the children. Facebook's
+photos are uploaded unpublished and attached to one feed post, so an interrupted
+run leaves nothing visible. A Meta write that carries an image URL is answered only
+after Meta has fetched the image, so those calls are given 90 seconds (reads keep
+20); a call that still runs out is recorded as `Provider timeout`.
+
 ## Source selection and refresh
 
 Politician captions include top topic shares when available. The denominator is
@@ -111,7 +158,7 @@ through to another, never silently repeats an excluded subject.
   no credentials or raw provider error bodies).
 - Logs: `npx wrangler tail --env=''`; look for `daily-post`.
 - Tests: `node --test test/daily-post.test.mjs test/social-publication.test.mjs
-  test/bill-social-card.test.mjs` from portal/.
+  test/bill-social-card.test.mjs test/og-story.test.mjs` from portal/.
 
 `posted` requires a provider post ID. A timeout or malformed success after a write
 becomes `review_required`; do not retry it without reading the platform's actual

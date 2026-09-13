@@ -10,7 +10,8 @@ import initYoga from 'yoga-wasm-web'
 import yogaWasm from 'yoga-wasm-web/dist/yoga.wasm'
 import { initWasm, Resvg } from '@resvg/resvg-wasm'
 import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm'
-import { ogLayout, type OgCard, type OgFormat } from './og'
+import { ogLayout, storySlideTree, PORTRAIT_WIDTH, PORTRAIT_HEIGHT, type OgCard, type OgFormat, type StoryImages } from './og'
+import type { StorySlide } from './story'
 
 export interface OgFont {
   name: string
@@ -49,6 +50,17 @@ export async function renderOgPng(card: OgCard, fonts: OgFont[], format: OgForma
 /** Instagram requires JPEG. Use the same card and fonts as the link preview. */
 export async function renderOgJpeg(card: OgCard, fonts: OgFont[], format: OgFormat = 'landscape'): Promise<Uint8Array> {
   const resvg = await rasterise(card, fonts, format)
+  const rendered = resvg.render()
+  try {
+    return new Uint8Array(encode({ data: rendered.pixels, width: rendered.width, height: rendered.height }, 90).data)
+  } finally { rendered.free(); resvg.free() }
+}
+
+/** One slide of a story (src/story.ts) as the JPEG Instagram fetches, 1080x1350. */
+export async function renderStoryJpeg(slide: StorySlide, images: StoryImages, fonts: OgFont[]): Promise<Uint8Array> {
+  await ensureEngines()
+  const svg = await satori(storySlideTree(slide, images) as never, { width: PORTRAIT_WIDTH, height: PORTRAIT_HEIGHT, fonts })
+  const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: PORTRAIT_WIDTH } })
   const rendered = resvg.render()
   try {
     return new Uint8Array(encode({ data: rendered.pixels, width: rendered.width, height: rendered.height }, 90).data)

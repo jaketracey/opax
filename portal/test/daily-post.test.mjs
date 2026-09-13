@@ -1,9 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import {
+import { build } from 'esbuild';
+// daily-post.ts imports story.ts without an extension (the Worker is bundled), so the test bundles it the same way.
+const built = await build({ entryPoints: [new URL('../src/daily-post.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
+const dailyPost = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
+const {
   kindFor, seededPick, fit, xLength, prettySponsor, prettyParty, formatDate, joinList,
-  composeDailyPost, oauth1Header, X_LIMIT, clip,
-} from '../src/daily-post.ts';
+  composeDailyPost, oauth1Header, X_LIMIT, clip, grantPostFor, shortMoney, dayWords, creditParagraph,
+} = dailyPost;
+const { validStory } = await import('../src/story.ts');
 
 const roster = { people: [
   { name: 'Anthony Albanese', speeches: 5408, current: true, party_now: 'Labor', first: 1998, representation: [{ jurisdiction: 'federal', chamber: 'representatives', electorate: 'Grayndler', state: 'NSW' }] },
@@ -27,12 +32,49 @@ const reportFiles = {
   'grants-allocation': { slug: 'grants-allocation', title: 'Where community funding goes' },
   housing: { slug: 'housing', title: 'Housing', blurb: 'Decades of affordability promises, negative gearing fights and supply debates.', stats: { speech_count: 19369, unique_speakers: 1292, timeline: [['2024',1627],['2025',2843],['2026',5000]], top_speakers: [['Andrew Bragg',164],['Harriet Shing',137]] }, voices: { now: [{ speaker: 'Andrew Bragg', party: 'Liberal', count: 164 }, { speaker: 'Harriet Shing', party: null, count: 137 }, { speaker: 'Ben Riley', party: 'Labor', count: 90 }] } },
 };
-function sources(recent = []) {
+const catalogue = { version: 1, accepted_licences: ['CC0', 'Public domain', 'CC BY', 'CC BY-SA'],
+  photos: {
+    'roof': { file: '/social/photos/roof.jpg', width: 1200, height: 794, description: 'The roof', source_title: 'File:Roof.jpg', page: 'https://commons.wikimedia.org/wiki/File:Roof.jpg', author: 'Kgbo', licence: 'CC BY-SA 4.0', credit: 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons' },
+    'twilight': { file: '/social/photos/twilight.jpg', width: 1200, height: 900, description: 'Twilight', source_title: 'File:Twilight.jpg', page: 'https://commons.wikimedia.org/wiki/File:Twilight.jpg', author: 'Kgbo', licence: 'CC BY-SA 4.0', credit: 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons' },
+    'aph': { file: '/social/photos/aph.jpg', width: 1200, height: 900, description: 'Parliament House', source_title: 'File:APH.jpg', page: 'https://commons.wikimedia.org/wiki/File:APH.jpg', author: 'Kgbo', licence: 'CC BY-SA 4.0', credit: 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons' },
+    'senate': { file: '/social/photos/senate.jpg', width: 1200, height: 750, description: 'Senate', source_title: 'File:Senate.jpg', page: 'https://commons.wikimedia.org/wiki/File:Senate.jpg', author: 'JJ Harrison', licence: 'CC BY-SA 3.0', credit: 'Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons' },
+    'house': { file: '/social/photos/house.jpg', width: 1200, height: 714, description: 'House', source_title: 'File:House.jpg', page: 'https://commons.wikimedia.org/wiki/File:House.jpg', author: 'JJ Harrison', licence: 'CC BY-SA 3.0', credit: 'Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons' },
+    'unlicensed': { file: '/social/photos/unlicensed.jpg', width: 1200, height: 800, description: 'Not free', source_title: 'File:X.jpg', page: 'https://example.org', author: 'Someone', licence: 'All rights reserved', credit: 'Photo: Someone' },
+  },
+  subjects: { 'grant:GA34203': ['roof', 'twilight'], 'topic:housing': ['unlicensed'] },
+  kinds: { 'bill:senate': ['senate', 'house'], 'bill:representatives': ['house', 'senate'], bill: ['senate', 'house'], politician: ['aph'], topic: ['aph'], grant: [] },
+};
+const graph = {
+  recipients: [{ id: 'abn:97694995462', n: 'The Trustee for the Qantas Foundation Memorial Trust', t: 11729541, c: 3, sh: 23 }, { id: 'abn:18374210672', n: 'City of Greater Geelong', t: 4000000, c: 1, sh: 7 }],
+  programs: [{ id: 'GO3141', n: 'Community Development Grants', t: 1662088122, c: 569, cnc: 1621225888, y0: '2013-14', y1: '2022-23' }],
+  electorates: [
+    { n: 'Kennedy', st: 'qld', t: 1449579888, c: 104, r: 58, mps: [['Bob Katter', "Katter's Australian Party", '1993-03-13', null]], margin: { 2019: [13.33, 'KAP', 'safe'], 2022: [13.1, 'KAP', 'safe'] } },
+    { n: 'Grayndler', st: 'nsw', t: 250000000, c: 40, r: 30, mps: [['Anthony Albanese', 'Labor', '1996-03-02', null]], margin: { 2022: [19.5, 'ALP', 'safe'] } },
+  ],
+};
+const shard23 = { 'abn-97694995462': { n: 'The Trustee for the Qantas Foundation Memorial Trust', t: 11729541, c: 3, abr: { state: 'QLD' }, grants: [
+  { id: 'GA34203', v: 11300000, desc: 'Construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld', s: '2019-02-12', guid: 'c0341dc2-c04e-1177-4ab0-99b9ae0d1b26', ag: 'Department of Infrastructure, Transport, Regional Development, Communications and the Arts', pr: 'Community Development Grants', cat: 'Regional Development', fy: '2018-19', sel: 'Closed Non-Competitive', el: 'Kennedy' },
+  { id: 'GA567221', v: 351771, n: 'Updated Conservation Management Plan Qantas Hangar, Longreach Queensland', ag: 'Department of Climate Change, Energy, the Environment and Water', cat: 'Heritage', fy: '2025-26', s: '2026-06-25' },
+  { id: 'GA37479', v: 77770, n: 'Protecting National Historic Sites', ag: 'Department of Climate Change, Energy, the Environment and Water', fy: '2017-18', s: '2018-06-12' },
+] } };
+const passedBillFile = { originating_house: 'representatives',
+  summary: { sentences: ['It changes how the tax system treats eligible household payments.', 'The Commissioner would administer the change.', 'It would commence on Royal Assent.'], affected: 'The ATO and households receiving eligible payments.', attribution: 'Written by a model from the explanatory memorandum; not the record' },
+  key_dates: [{ stage: 'introduced', date: '2026-03-01', house: 'representatives' }, { stage: 'third_reading', date: '2026-05-12', house: 'representatives' }, { stage: 'introduced', date: '2026-06-17', house: 'senate' }, { stage: 'passed', date: '2026-08-20', house: 'senate' }, { stage: 'royal_assent', date: '2026-08-26', house: 'senate' }],
+  divisions: [{ key: 'federal-senate-1', date: '2026-08-20', house: 'senate', stage: 'Limitation of debate', ayes: 34, noes: 26, outcome: 'affirmative', party_splits: { Labor: { ayes: 24, noes: 0 }, Greens: { ayes: 9, noes: 0 }, Liberal: { ayes: 0, noes: 19 }, LNP: { ayes: 0, noes: 3 }, 'One Nation': { ayes: 0, noes: 3 }, Nationals: { ayes: 0, noes: 1 }, Independent: { ayes: 1, noes: 0 } } }],
+  speeches: [{ slug: 's1', speaker: 'Daniel Mulino', date: '2026-03-01' }, { slug: 's2', speaker: 'Tony Sheldon', date: '2026-03-02' }],
+  sources: [{ kind: 'em', licence: 'CC BY-NC-ND 4.0' }, { kind: 'billhome', licence: 'CC BY-NC-ND 4.0' }, { kind: 'frl_act', licence: 'CC BY 4.0' }] };
+function sources(recent = [], { photos = true, extras = true } = {}) {
   return {
     async asset(path) {
       if (path === '/parliamentarians.json') return roster;
       if (path === '/bills/index.json') return bills;
       if (path === '/reports/index.json') return reports;
+      if (path === '/social/photos.json') return photos ? catalogue : null;
+      if (path === '/photos/people.json') return { 'anthony albanese': '10001', 'penny wong': 'wd-Q1' };
+      if (path === '/photos/credits.json') return { 'wd-Q1': { artist: 'A Photographer', licence: 'CC BY 4.0' } };
+      if (path === '/graph/grants.federal.json') return extras ? graph : null;
+      if (path === '/grants/federal/shard-23.json') return extras ? shard23 : null;
+      if (path === '/bills/au-federal-r7400.json') return extras ? passedBillFile : billFiles['au-federal-r7400'];
       let m = path.match(/^\/bills\/(.+)\.json$/); if (m) return billFiles[decodeURIComponent(m[1])] ?? null;
       m = path.match(/^\/reports\/(.+)\.json$/); if (m) return reportFiles[decodeURIComponent(m[1])] ?? null;
       return null;
@@ -185,7 +227,6 @@ test('OAuth 1.0a signature matches the reference vector from the X docs', async 
 });
 
 test('an operator can name one award and it is composed from the source shard', async () => {
-  const { grantPostFor } = await import('../src/daily-post.ts');
   const assets = {
     '/graph/grants.federal.json': { recipients: [{ id: 'abn:97694995462', n: 'The Trustee for the Qantas Foundation Memorial Trust', t: 1, c: 1, sh: 23 }] },
     '/grants/federal/shard-23.json': { 'abn-97694995462': { grants: [
@@ -203,4 +244,142 @@ test('an operator can name one award and it is composed from the source shard', 
   assert.equal(await grantPostFor('2026-09-12', src, 'grant:GA1@abn:97694995462'), null, 'no GrantConnect record, no post');
   assert.equal(await grantPostFor('2026-09-12', src, 'grant:GA34203@abn:00000000000'), null, 'unknown recipient');
   assert.equal(await grantPostFor('2026-09-12', src, 'person:someone'), null, 'only the grant form exists');
+});
+
+const types = post => post.slides?.map(s => s.type) ?? null;
+
+test('every kind tells a valid story from the same records, and X stays exactly as it was', async () => {
+  for (const kind of ['politician', 'bill', 'grant', 'topic']) {
+    const src = kind === 'grant' ? grantSources() : sources([], {});
+    const bare = kind === 'grant' ? grantSources({ photos: false, extras: false }) : sources([], { photos: false, extras: false });
+    const post = await composeDailyPost('2026-09-14', src, kind);
+    const plain = await composeDailyPost('2026-09-14', bare, kind);
+    assert.equal(post.kind, kind);
+    assert.ok(validStory(post.slides), `${kind}: ${JSON.stringify(types(post))}`);
+    assert.equal(post.slides[0].type, 'cover');
+    assert.equal(post.slides.at(-1).type, 'source');
+    assert.ok(post.slides.every(s => s.alt && s.alt.length > 10), 'every slide has alt text');
+    assert.equal(post.text, plain.text, `${kind}: text is unchanged by the story`);
+    assert.ok(xLength(post.text) <= X_LIMIT);
+  }
+});
+
+function grantSources(opts = {}) {
+  const grant = { id: 'GA34203', recipientId: 'abn:97694995462', recipient: 'The Trustee for the Qantas Foundation Memorial Trust', amount: 11300000, start: '2026-08-27', purpose: 'Construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld', agency: 'Department of Infrastructure, Transport, Regional Development, Communications and the Arts', program: 'Community Development Grants', category: 'Regional Development', sourceUrl: 'https://www.grants.gov.au/Ga/Show/verified-guid' };
+  const base = sources([], opts);
+  return { ...base, async asset(path) { return path === '/social/grants.json' ? { grants: [grant] } : base.asset(path); } };
+}
+
+test('the grant story carries the selection, the same recipient and the electorate when the shard and graph do', async () => {
+  const post = await composeDailyPost('2026-09-14', grantSources(), 'grant');
+  assert.deepEqual(types(post), ['cover', 'number', 'picture', 'bars', 'ledger', 'number', 'source']);
+  const [cover, number, picture, bars, ledger, electorate, source] = post.slides;
+  assert.equal(cover.kicker, 'Grant award · Kennedy, QLD');
+  assert.equal(cover.title, '$11.3m for Qantas Foundation Memorial Trust');
+  assert.equal(cover.photo, 'roof');
+  assert.equal(number.value, '$11.3m');
+  assert.match(number.lines[1], /Agreement from 27 Aug 2026 · Award GA34203/);
+  assert.equal(picture.photo, 'twilight');
+  assert.match(picture.quote, /^“Construct an airpark roof/);
+  assert.equal(picture.lines[0], 'Category: Regional Development · Financial year 2018-19');
+  assert.equal(bars.title, 'Closed, non-competitive');
+  assert.deepEqual(bars.items, [{ label: 'Closed non-competitive', pct: 98 }, { label: 'Everything else', pct: 2 }]);
+  assert.match(bars.note, /569 awards from 2013-14 to 2022-23, \$1\.66bn in total/);
+  assert.equal(ledger.title, 'Three awards, two departments');
+  assert.equal(ledger.rows.length, 3);
+  assert.equal(ledger.rows[0].c1, '2017-18');
+  assert.equal(ledger.total.amount, '$11,729,541');
+  assert.equal(electorate.title, 'Kennedy');
+  assert.equal(electorate.value, '$1.45bn');
+  assert.match(electorate.lines[0], /Held by Bob Katter, Katter's Australian Party\. Safe seat, margin 13\.1 at the 2022 election\./);
+  assert.match(source.path, /ABN 97 694 995 462 → award GA34203/);
+  assert.match(post.caption, /\n\nPhotos: Kgbo, CC BY-SA 4\.0, via Wikimedia Commons\.\n\nhttps:\/\/opax\.com\.au\//, 'the credit sits before the URL');
+  const thin = await composeDailyPost('2026-09-14', grantSources({ extras: false }), 'grant');
+  assert.deepEqual(types(thin), ['cover', 'number', 'picture', 'source'], 'no shard, no selection, siblings or electorate');
+  assert.equal(thin.slides[0].kicker, 'Grant award');
+});
+
+test('the operator award is told from its shard too', async () => {
+  const post = await grantPostFor('2026-09-12', grantSources(), 'grant:GA34203@abn:97694995462');
+  assert.deepEqual(types(post), ['cover', 'number', 'picture', 'bars', 'ledger', 'number', 'source']);
+  assert.match(post.text, /^\$11,300,000 grant award: Construct an airpark roof/);
+});
+
+test('a bill with a division and dates gets a timeline and the division; one without has neither', async () => {
+  const passed = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7537', 'bill:au-federal-ed-draft-2026']), 'bill');
+  assert.equal(passed.subject, 'bill:au-federal-r7400');
+  assert.deepEqual(types(passed), ['cover', 'list', 'timeline', 'division', 'picture', 'source']);
+  const [cover, list, timeline, division, touches, source] = passed.slides;
+  assert.equal(cover.kicker, 'Bill · Treasury portfolio');
+  assert.equal(cover.title, 'Changes how the tax system treats eligible household payments');
+  assert.equal(cover.photo, 'senate', 'the division house chooses the chamber photo');
+  assert.equal(list.items.length, 3);
+  assert.equal(list.note, 'Written by a model from the explanatory memorandum; not the record.');
+  assert.equal(timeline.title, '178 days');
+  assert.equal(timeline.events.length, 5);
+  assert.deepEqual(timeline.events.map(e => e.date), ['1 Mar 2026', '12 May 2026', '17 Jun 2026', '20 Aug 2026', '26 Aug 2026']);
+  assert.equal(division.title, 'Limiting debate, 34 to 26');
+  assert.equal(division.kicker, 'The only recorded division');
+  assert.deepEqual(division.ayeParties, [['Labor', 24], ['Greens', 9], ['Independent', 1]]);
+  assert.deepEqual(division.noParties, [['Liberal', 19], ['LNP', 3], ['One Nation', 3], ['Nationals', 1]]);
+  assert.equal(division.line, 'Senate, 20 Aug 2026. Party split from They Vote For You.');
+  assert.equal(touches.photo, 'house');
+  assert.match(touches.lines[0], /Speeches in the record: 2, beginning with Daniel Mulino on 1 Mar 2026\./);
+  assert.deepEqual(source.rows, ['Explanatory memorandum on ParlInfo, CC BY-NC-ND 4.0', 'Bill home page on ParlInfo, CC BY-NC-ND 4.0', 'The Act on the Federal Register of Legislation, CC BY 4.0', 'Division record: theyvoteforyou.org.au']);
+  assert.match(passed.caption, /Photos: JJ Harrison, CC BY-SA 3\.0, via Wikimedia Commons\./);
+  const fresh = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
+  assert.equal(fresh.subject, 'bill:au-federal-r7537');
+  assert.deepEqual(types(fresh), ['cover', 'list', 'source'], 'no dates, divisions or affected parties: the story is the summary');
+  assert.equal(fresh.slides[0].kicker, 'Bill · Andrew Gee (Independent)');
+});
+
+test('a member gets the electorate slide and the portrait inset; a senator gets neither', async () => {
+  const member = await composeDailyPost('2026-09-10', sources(['person:Penny Wong']), 'politician');
+  assert.equal(member.title, 'Anthony Albanese');
+  assert.deepEqual(types(member), ['cover', 'number', 'bars', 'number', 'source']);
+  assert.equal(member.slides[0].kicker, 'Parliamentarian · Grayndler, NSW');
+  assert.equal(member.slides[0].inset, '10001');
+  assert.equal(member.slides[0].insetCredit, 'Portrait: Parliament of Australia via OpenAustralia');
+  assert.equal(member.slides[0].photo, 'aph');
+  assert.equal(member.slides[1].value, '5,408');
+  assert.deepEqual(member.slides[2].items, [{ label: 'Health', pct: 20 }, { label: 'Tax & budget', pct: 16 }, { label: 'Unions & workplace', pct: 15 }]);
+  assert.equal(member.slides[3].title, 'Grayndler');
+  assert.equal(member.slides[3].kicker, "The electorate's grants");
+  assert.equal(member.slides[4].path, 'Anthony Albanese');
+  const senator = await composeDailyPost('2026-09-10', sources(['person:Anthony Albanese']), 'politician');
+  assert.equal(senator.title, 'Penny Wong');
+  assert.deepEqual(types(senator), ['cover', 'number', 'bars', 'source']);
+  assert.equal(senator.slides[0].kicker, 'Parliamentarian · Senator for SA');
+  assert.equal(senator.slides[0].inset, 'wd-Q1');
+  assert.equal(senator.slides[0].insetCredit, 'Portrait: A Photographer, CC BY 4.0, via Wikimedia Commons');
+});
+
+test('without an approved photograph the cover has none and the caption carries no credit', async () => {
+  const post = await composeDailyPost('2026-09-10', sources([], { photos: false }), 'politician');
+  assert.ok(validStory(post.slides));
+  assert.equal(post.slides[0].photo, null);
+  assert.ok(!post.caption.includes('Wikimedia Commons'));
+  const withPhoto = await composeDailyPost('2026-09-10', sources([]), 'politician');
+  assert.match(withPhoto.caption, /\n\nPhoto: Kgbo, CC BY-SA 4\.0, via Wikimedia Commons\.\n\nhttps:\/\/opax\.com\.au\/subject\/person\//);
+  const topic = await composeDailyPost('2026-09-10', sources([]), 'topic');
+  assert.equal(topic.slides[0].photo, 'aph', 'an unlicensed subject photo is skipped for the kind default');
+  assert.deepEqual(types(topic), ['cover', 'number', 'bars', 'number', 'source']);
+  assert.equal(topic.slides[2].items[0].pct, 100);
+  assert.equal(topic.slides[3].value, '2,843');
+});
+
+test('short money, day words and the credit paragraph', () => {
+  assert.equal(shortMoney(11300000), '$11.3m');
+  assert.equal(shortMoney(1449579888), '$1.45bn');
+  assert.equal(shortMoney(4000000), '$4m');
+  assert.equal(shortMoney(77770), '$77,770');
+  assert.equal(dayWords(55), 'Fifty-five');
+  assert.equal(dayWords(3), 'Three');
+  assert.equal(dayWords(20), 'Twenty');
+  assert.equal(dayWords(178), '178');
+  const kgbo = { credit: 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons' };
+  assert.equal(creditParagraph([kgbo]), 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons.');
+  assert.equal(creditParagraph([kgbo, kgbo]), 'Photos: Kgbo, CC BY-SA 4.0, via Wikimedia Commons.');
+  assert.equal(creditParagraph([kgbo, { credit: 'Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons' }]), 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons. Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons.');
+  assert.equal(creditParagraph([]), '');
 });
