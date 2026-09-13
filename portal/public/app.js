@@ -10566,7 +10566,7 @@ async function runSearchAnswer(q, f, key) {
         const a = document.createElement("a");
         a.className = "search-summary-citation";
         a.href = s.href;
-        a.textContent = `[${s.number}]`;
+        a.textContent = String(s.number);
         a.setAttribute("aria-label", `Source ${s.number}: ${s.title}`);
         p.append(a, document.createTextNode(" "));
       }

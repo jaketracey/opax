@@ -43,45 +43,69 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
    const data=await response.json() as {entities:{id:string,name:string,kind:string,records:number}[]};const hits=data.entities.filter(e=>e.name.toLowerCase().includes(query.toLowerCase())).slice(0,20).map(e=>({...e,url:env.COMMUNITY_ORIGIN+'/connections?entity='+e.id}));return {content:[{type:'text' as const,text:JSON.stringify({connections:hits})}]}
   })
   server.registerTool('corpus_coverage',{description:'Read current searchable corpus coverage and source-enrichment statistics.',inputSchema:{},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async()=>{const r=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/corpus.json'));return {content:[{type:'text' as const,text:await r.text()}],isError:!r.ok}})
+  type ProgramEntry={id:string,n:string,key:string}
+  async function grantIndex(jurisdiction:string){
+   const response=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/graph/grants.'+jurisdiction+'.json'))
+   if(!response.ok)return null
+   try{return await response.json() as {recipients?:{id:string,sh:number}[],programs?:ProgramEntry[]}}catch{return null}
+  }
+  const programReference=(jurisdiction:string,p:ProgramEntry)=>({jurisdiction,id:p.id,name:p.n,opax_url:env.COMMUNITY_ORIGIN+'/money/grants?'+new URLSearchParams({jur:jurisdiction,program:p.id})})
+  const fieldGuide={currency:'AUD',n:'name or grant title',t:'total grant value, not necessarily money paid',c:'grant count',k:'recipient kind',jur:'jurisdiction',y0:'first financial year',y1:'last financial year',by:'financial year -> [value, source row count]; see coverage.value_basis',agencies:'top agencies: [name, grant value]',programs:'top recipient program labels: [label, grant value]; use program_lookup for catalog IDs',sel:'selection process -> value (recipient) or [value, count] (program)',el:'electorate (grant) or top [electorate, value] pairs (recipient)',grants:{v:'value; see coverage.value_basis',n:'title',ag:'agency',pr:'program label',cat:'category',fy:'financial year',s:'start date',a:'approval date',rid:'recipient ID for read_grant_recipient',rn:'recipient name',guid:'original Grants.gov.au record identifier',source_url:'source link; source_kind distinguishes an original record from a dataset'},more:'grants omitted from the recipient asset',recipients:'top program recipients: [id, name, kind, value, count, donor_match]; a donor match does not establish influence'}
+  function grantResult(file:Record<string,unknown>,opax_url:string,jurisdiction:string){
+   const all=Array.isArray(file.grants)?file.grants:[]
+   const qld=jurisdiction==='qld'
+   const dataset_source_url=qld?'https://www.data.qld.gov.au/dataset/queensland-government-investment-portal-expenditure':'https://www.grants.gov.au/'
+   const grants=all.map((g:Record<string,unknown>)=>typeof g.guid==='string'&&g.guid?{...g,source_url:'https://www.grants.gov.au/Ga/Show/'+encodeURIComponent(g.guid),source_kind:'original_record',original_source_status:'available'}:qld?{...g,source_url:dataset_source_url,source_kind:'dataset',original_source_status:'individual_record_url_unavailable'}:{...g,original_source_status:'individual_record_url_unavailable'})
+   const coverage={value_basis:qld?'Annual expenditure lines per funding agreement, including grants, service agreements and other assistance. A multi-year agreement appears once per financial year paid. Counts are expenditure rows, not distinct awards.':'Published award values; varied awards use their current value and aggregate awards may bundle recipients. Values are not evidence of payments received.',summaries:'Recipient agencies, programs and electorates and program top recipients may be partial summaries. Do not use their sums as complete totals.',program_lookup:'Only exported catalog programs can be opened. An empty candidate list means no matching catalog label, not that no program exists.',source_links:'Dataset links support dataset provenance, not an individual grant record. Source links are supplied when known; availability at the external site is not guaranteed.'}
+
+   const size=(text:string)=>new TextEncoder().encode(text).length
+   let listed=grants.length
+   const encode=()=>JSON.stringify({...file,grants:grants.slice(0,listed),grants_total:file.grants_total??file.c??grants.length,grants_listed:listed,...(file.truncated||Number(file.more)>0||listed<grants.length||Number(file.grants_total)>listed?{truncated:true}:{}),field_guide:{...fieldGuide,t:qld?'total expenditure value':'total published award value',c:qld?'expenditure row count, not distinct awards':'award record count'},coverage,dataset_source_url,opax_url})
+   let payload=encode()
+   if(size(payload)>180000){
+    listed=Math.min(200,grants.length);payload=encode()
+    while(size(payload)>180000&&listed>0){listed=Math.floor(listed/2);payload=encode()}
+   }
+   if(size(payload)>180000)return {content:[{type:'text' as const,text:JSON.stringify({error:'This response is too large. Open the record instead.',url:opax_url})}],isError:true}
+   return {content:[{type:'text' as const,text:payload}],isError:false}
+  }
   const fileKey=(id:string)=>{const i=id.indexOf(':'),kind=i<0?'x':id.slice(0,i),slug=(i<0?id:id.slice(i+1)).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'x';return kind+'-'+slug}
-  server.registerTool('read_grant_recipient',{description:'Open a public grant recipient by jurisdiction and id from a search_records grant result (its grant_recipient field). Returns totals, agencies, programs and individual grants, with grants.gov.au source links where available.',inputSchema:{jurisdiction:z.enum(['federal','qld']),id:z.string().regex(/^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person:[a-z0-9 .'-]{2,120})$/)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({jurisdiction,id})=>{
+  server.registerTool('read_grant_recipient',{description:'Open a public grant recipient by jurisdiction and id from a search_records grant result (its grant_recipient field). Returns totals, agencies, programs and individual grants, with grants.gov.au source links where available. program_lookup provides program IDs matched by label; candidates are not proof of grant membership. grants_total, grants_listed and truncated describe listing coverage; field_guide explains compact fields.',inputSchema:{jurisdiction:z.enum(['federal','qld']),id:z.string().regex(/^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person:[a-z0-9 .'-]{2,120})$/)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({jurisdiction,id})=>{
    const notFound={content:[{type:'text' as const,text:JSON.stringify({error:'not found'})}],isError:true}
    const opax_url=env.COMMUNITY_ORIGIN+'/money/grants?'+new URLSearchParams({jur:jurisdiction,open:id})
-   const indexResponse=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/graph/grants.'+jurisdiction+'.json'))
-   if(!indexResponse.ok)return notFound
-   const index=await indexResponse.json() as {recipients?:{id:string,sh:number}[]}
+   const index=await grantIndex(jurisdiction)
+   if(!index)return notFound
    const recipients=index.recipients
    const entry=Array.isArray(recipients)?recipients.find(r=>r.id===id):undefined
    if(!entry||!Number.isInteger(entry.sh))return notFound
    const shardResponse=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/grants/'+jurisdiction+'/shard-'+String(entry.sh).padStart(2,'0')+'.json'))
    if(!shardResponse.ok)return notFound
-   const shard=await shardResponse.json() as Record<string,Record<string,unknown>>
-   const detail=shard[fileKey(id)]
-   if(!detail)return notFound
-   const grants=Array.isArray(detail.grants)?detail.grants.map((g:Record<string,unknown>)=>typeof g.guid==='string'?{...g,source_url:'https://www.grants.gov.au/Ga/Show/'+g.guid}:g):detail.grants
-   const payload=JSON.stringify({...detail,grants,opax_url})
-   if(new TextEncoder().encode(payload).length>180000)return {content:[{type:'text' as const,text:JSON.stringify({error:'This response is too large. Open the record instead.',url:opax_url})}],isError:true}
-   return {content:[{type:'text' as const,text:payload}],isError:false}
+   let shard:Record<string,Record<string,unknown>>;try{shard=await shardResponse.json() as Record<string,Record<string,unknown>>}catch{return notFound}
+   const detail=shard?.[fileKey(id)]
+   if(!detail||detail.id!==id||typeof detail.n!=='string'||!Array.isArray(detail.grants))return notFound
+   const catalog=Array.isArray(index.programs)?index.programs:[]
+   const program_lookup=(Array.isArray(detail.programs)?detail.programs:[]).filter(Array.isArray).map((row:unknown[])=>({label:row[0],recipient_value:row[1],match:'catalog label only; verify membership against the program grants',candidates:catalog.filter(p=>p.n===row[0]||p.id===row[0]).map(p=>programReference(jurisdiction,p))}))
+   return grantResult({...detail,program_lookup},opax_url,jurisdiction)
   })
-  // Program file key: contract section 1 (lowercase, non-alphanumeric runs to '-', trimmed, at most 80 chars). The key alone is the file name, so no path can escape /grants/<jur>/programs/.
-  const programKey=(id:string)=>id.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80)
-  server.registerTool('read_grant_program',{description:'Open a public grant program by jurisdiction and id from a search_records grant result (its grant_program field) or from the programs list of a read_grant_recipient file. Returns totals, agencies, selection processes, seat and margin splits, election timing, top recipients, electorates and individual grants with grants.gov.au source links where available. Large files list only the first 200 grants and set truncated: true.',inputSchema:{jurisdiction:z.enum(['federal','qld']),id:z.string().trim().min(1).max(200)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({jurisdiction,id})=>{
+  server.registerTool('read_grant_program',{description:'Open a public grant program by jurisdiction and id from search_records.grant_program or read_grant_recipient.program_lookup candidates. Also accepts a catalog file key or unique exact program label. Returns totals, agencies, selection processes, seat and margin splits, election timing, top recipients, electorates and individual grants with source links where available. Large responses shorten the grant list to at most 200 rows and set truncated: true; field_guide explains compact fields.',inputSchema:{jurisdiction:z.enum(['federal','qld']),id:z.string().trim().min(1).max(200)},annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async({jurisdiction,id})=>{
    const notFound={content:[{type:'text' as const,text:JSON.stringify({error:'not found'})}],isError:true}
-   const key=programKey(id);if(!key)return notFound
-   const response=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/grants/'+jurisdiction+'/programs/'+key+'.json'))
+   const index=await grantIndex(jurisdiction),catalog=Array.isArray(index?.programs)?index.programs:[]
+   // The exporter assigns collision suffixes and trims truncated keys. Resolve its
+   // authoritative key instead of guessing a filename from a name or ID.
+   let matches=catalog.filter(p=>p.id===id)
+   if(!matches.length)matches=catalog.filter(p=>p.key===id)
+   if(!matches.length)matches=catalog.filter(p=>p.n===id)
+   if(!matches.length)return notFound
+   if(matches.length>1)return {content:[{type:'text' as const,text:JSON.stringify({error:'This program label matches several programs. Choose a candidate id.',candidates:matches.map(p=>programReference(jurisdiction,p))})}],isError:true}
+   const entry=matches[0]
+   if(!/^[a-z0-9][a-z0-9-]{0,100}$/.test(entry.key))return notFound
+   const response=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/grants/'+jurisdiction+'/programs/'+entry.key+'.json'))
    if(!response.ok)return notFound
    let file:Record<string,unknown>;try{file=await response.json() as Record<string,unknown>}catch{return notFound}
-   // A missing asset can come back as a 200 fallback page; only a real program file (id, name, grants[]) counts.
-   if(!file||typeof file!=='object'||typeof file.id!=='string'||typeof file.n!=='string'||!Array.isArray(file.grants))return notFound
-   const programId=typeof file.id==='string'&&file.id?file.id:id
-   const opax_url=env.COMMUNITY_ORIGIN+'/money/grants?'+new URLSearchParams({jur:jurisdiction,program:programId})
-   const grants=Array.isArray(file.grants)?file.grants.map((g:Record<string,unknown>)=>typeof g.guid==='string'?{...g,source_url:'https://www.grants.gov.au/Ga/Show/'+g.guid}:g):file.grants
-   const size=(text:string)=>new TextEncoder().encode(text).length
-   let payload=JSON.stringify({...file,grants,opax_url})
-   // Over the cap: keep the object whole and shorten grants[] to the first 200 rows instead of cutting JSON text.
-   if(size(payload)>180000&&Array.isArray(grants)&&grants.length>200){const listed=grants.slice(0,200);payload=JSON.stringify({...file,grants:listed,grants_listed:listed.length,truncated:true,opax_url})}
-   if(size(payload)>180000)return {content:[{type:'text' as const,text:JSON.stringify({error:'This response is too large. Open the record instead.',url:opax_url})}],isError:true}
-   return {content:[{type:'text' as const,text:payload}],isError:false}
+   // Missing assets may return a 200 fallback page; identity must match the catalog.
+   if(!file||typeof file!=='object'||file.id!==entry.id||typeof file.n!=='string'||!Array.isArray(file.grants))return notFound
+   const opax_url=env.COMMUNITY_ORIGIN+'/money/grants?'+new URLSearchParams({jur:jurisdiction,program:entry.id})
+   return grantResult(file,opax_url,jurisdiction)
   })
   const transport=new WebStandardStreamableHTTPServerTransport({sessionIdGenerator:undefined,enableJsonResponse:true})
   await server.connect(transport)

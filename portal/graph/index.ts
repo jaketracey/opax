@@ -470,9 +470,9 @@ const CSS = `
 .mm-action:disabled { color: #8a8578; cursor: progress; }
 .mm-action:disabled .mm-action-label { text-decoration: none; }
 .mm-action:not(:last-child)::after { content: '·'; margin-left: 9px; color: #b7b3a8; font-weight: 400; }
-.mm-action-chevron { display: inline-block; margin-left: 3px; font-size: 16px; line-height: 1; color: #a0761b;
-  transform: rotate(90deg); transition: transform 160ms ease; }
-.mm-action[aria-expanded='true'] .mm-action-chevron { transform: rotate(-90deg); }
+.mm-action-chevron { display: inline-flex; flex: none; width: 14px; height: 14px; margin-left: 7px;
+  color: currentColor; transition: transform 160ms ease; }
+.mm-action[aria-expanded='true'] .mm-action-chevron { transform: rotate(180deg); }
 @media (prefers-reduced-motion: reduce) { .mm-action-chevron { transition: none; } }
 /* The source-record excerpts the Sources disclosure opens under the row. */
 .mm-evidence { margin: 2px 0 0; padding-top: 8px; border-top: 1px solid #e4e1d8; font-size: 12px; }
@@ -1593,7 +1593,7 @@ export async function mountMoneyMap(
   const sourcesAction = (row: HTMLElement, card: HTMLElement, node: MoneyNode) => {
     const button = action(row, 'Sources', { name: 'Sources: mentions in the source records' }) as HTMLButtonElement
     const chevron = el('span', 'mm-action-chevron', button)
-    chevron.textContent = '›'
+    chevron.innerHTML = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" focusable="false"><path d="m4 6 4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     chevron.setAttribute('aria-hidden', 'true')
     const slot = el('section', 'mm-evidence', card)
     slot.id = `mm-evidence-${++evidenceSeq}`
