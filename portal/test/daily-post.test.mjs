@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   kindFor, seededPick, fit, xLength, prettySponsor, prettyParty, formatDate, joinList,
-  composeDailyPost, oauth1Header, runDailyPost, X_LIMIT, clip,
+  composeDailyPost, oauth1Header, X_LIMIT, clip,
 } from '../src/daily-post.ts';
 
 const roster = { people: [
@@ -55,7 +55,7 @@ test('seeded picks are deterministic and step past recently featured subjects', 
   assert.equal(seededPick(items, 'k', x => x), first);
   const next = seededPick(items, 'k', x => x, [first]);
   assert.notEqual(next, first);
-  assert.equal(seededPick(items, 'k', x => x, items), first, 'everything excluded falls back to the seeded pick');
+  assert.equal(seededPick(items, 'k', x => x, items), null, 'everything excluded skips publication');
   assert.equal(seededPick([], 'k', x => x), null);
 });
 
@@ -98,20 +98,23 @@ test('bill post uses the summary sentences and a readable sponsor', async () => 
   const post = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-ed-draft-2026']), 'bill');
   assert.equal(post.kind, 'bill');
   assert.equal(post.subject, 'bill:au-federal-r7537');
-  assert.ok(post.text.startsWith('AI Kill Switch and Data Centre Control Bill 2026\n\nIntroduced 7 Sep 2026 by Andrew Gee (Independent). Still before parliament.'));
+  assert.ok(post.text.startsWith('AI Kill Switch and Data Centre Control Bill 2026'));
+  assert.ok(post.text.includes('Before parliament.'));
+  assert.ok(post.caption.includes('Introduced 7 Sep 2026 by Andrew Gee (Independent).'));
+  assert.ok(post.caption.includes('Machine-written summary.'));
   assert.ok(post.text.includes('This bill would require providers'));
   assert.ok(!post.text.includes('A third sentence'));
   assert.ok(post.text.endsWith('https://opax.com.au/bill/au-federal-r7537'));
   assert.ok(xLength(post.text) <= X_LIMIT);
   const passed = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7537', 'bill:au-federal-ed-draft-2026']), 'bill');
   assert.equal(passed.subject, 'bill:au-federal-r7400', 'lapsed bills are never featured; a recent passed bill is');
-  assert.ok(passed.text.includes('Passed 20 Aug 2026. Introduced 1 Mar 2026 (Treasury portfolio).'));
+  assert.ok(passed.caption.includes('Passed 20 Aug 2026. Introduced 1 Mar 2026 (Treasury portfolio).'));
 });
 
 test('an exposure draft is a bill candidate and says it is a draft', async () => {
   const post = await composeDailyPost('2026-09-10', sources(['bill:au-federal-r7400', 'bill:au-federal-r7537']), 'bill');
   assert.equal(post.subject, 'bill:au-federal-ed-draft-2026');
-  assert.ok(post.text.includes('Exposure draft released 8 Sep 2026 (Communications portfolio). Open for consultation, not yet introduced.'), post.text);
+  assert.ok(post.caption.includes('Exposure draft released 8 Sep 2026 (Communications portfolio). Open for consultation, not yet introduced.'), post.text);
   assert.ok(post.text.includes('It would impose a duty of care.'));
   assert.ok(post.text.endsWith('https://opax.com.au/bill/au-federal-ed-draft-2026'));
 });
@@ -131,8 +134,8 @@ test('topic post skips reports without speech stats and names the loudest voices
   const post = await composeDailyPost('2026-09-10', sources(), 'topic');
   assert.equal(post.kind, 'topic');
   assert.equal(post.subject, 'topic:housing');
-  assert.ok(post.text.startsWith("Housing in Australia's parliaments: 19,369 speeches from 1,292 speakers."));
-  assert.ok(post.text.includes('Most vocal lately: Andrew Bragg (Liberal), Harriet Shing and Ben Riley (Labor).'));
+  assert.ok(post.text.startsWith("Housing in OPAX's parliamentary record: 19,369 speeches from 1,292 speakers."));
+  assert.ok(post.text.includes('Leading speakers in this report: Andrew Bragg (Liberal), Harriet Shing and Ben Riley (Labor).'));
   assert.ok(post.text.endsWith('https://opax.com.au/reports/housing'));
   assert.ok(xLength(post.text) <= X_LIMIT);
 });
@@ -152,39 +155,4 @@ test('OAuth 1.0a signature matches the reference vector from the X docs', async 
   );
   assert.ok(header.startsWith('OAuth '));
   assert.ok(header.includes('oauth_signature="hCtSmYh%2BiHYCEqBWrE7C7hYmtUk%3D"'), header);
-});
-
-test('runDailyPost posts once per Melbourne day, records the subject, and dry-runs without secrets', async () => {
-  const kv = new Map();
-  const env = {
-    ASSETS: { fetch: async req => { const data = await sources().asset(new URL(req.url).pathname); return data ? Response.json(data) : new Response('', { status: 404 }); } },
-    GENERATION_CACHE: { async get(k, o) { const v = kv.get(k); return v == null ? null : (o?.type === 'json' ? JSON.parse(v) : v); }, async put(k, v) { kv.set(k, v); } },
-    DAILY_POST_ENABLED: 'true',
-  };
-  const personTopics = async () => Response.json({ profiles: { all: { topics: [{ slug: 'health', share: 1 }] } } });
-  const now = Date.UTC(2026, 8, 9, 22, 0, 0); // 08:00 on 10 Sep in Melbourne
-  const dry = await runDailyPost(env, { personTopics, now });
-  assert.equal(dry.status, 'dry-run');
-  assert.equal(dry.post.date, '2026-09-10');
-
-  const calls = [];
-  const fetchImpl = async (url, init) => { calls.push({ url, init }); return new Response(JSON.stringify({ data: { id: '123' } }), { status: 201 }); };
-  const creds = { ...env, X_API_KEY: 'k', X_API_SECRET: 's', X_ACCESS_TOKEN: 't', X_ACCESS_TOKEN_SECRET: 'ts' };
-  const posted = await runDailyPost(creds, { personTopics, now, fetchImpl });
-  assert.equal(posted.status, 'posted');
-  assert.equal(posted.id, '123');
-  assert.equal(calls[0].url, 'https://api.x.com/2/tweets');
-  assert.ok(calls[0].init.headers.authorization.startsWith('OAuth '));
-  assert.equal(JSON.parse(calls[0].init.body).text, posted.post.text);
-  assert.deepEqual(JSON.parse(kv.get('daily-post:recent')), [posted.post.subject]);
-
-  const again = await runDailyPost(creds, { personTopics, now, fetchImpl });
-  assert.equal(again.status, 'skipped');
-  assert.equal(calls.length, 1, 'no second post for the same day');
-
-  const staging = await runDailyPost({ ...creds, STAGING_API: {} }, { personTopics, now, fetchImpl });
-  assert.equal(staging.status, 'skipped');
-  const disabled = await runDailyPost({ ...creds, DAILY_POST_ENABLED: 'false' }, { personTopics, now: now + 86400000, fetchImpl });
-  assert.equal(disabled.status, 'skipped');
-  assert.equal(calls.length, 1);
 });

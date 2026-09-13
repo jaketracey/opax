@@ -1,94 +1,89 @@
-# Daily X post
+# Opax social publication
 
-One post a day on the OPAX X account, rotating through a politician, a bill and a
-topic, built from the site's own static data. Nothing is generated at post time and
-no model is involved, so the account cannot hallucinate: every line comes from the
-roster, the bills registry or a report file, and every post links to the page the
-numbers came from.
+The production Worker prepares one source-based edition per Melbourne calendar day.
+X: https://x.com/OpaxAustralia (account ID 2099044188113485825).
+Facebook and Instagram require their own connected brand accounts before enabling.
+Preferred matching handle: OpaxAustralia; availability is not yet confirmed on Meta.
 
-Code: `portal/src/daily-post.ts`. Tests: `portal/test/daily-post.test.mjs`.
-Trigger: `triggers.crons` in `portal/wrangler.jsonc` (22:00 UTC, which is 08:00
-AEST / 09:00 AEDT). Handler: `scheduled()` in `portal/src/index.ts`.
+## Editorial approach
 
-## What it posts
+Rotate parliamentary members, bills and topic reports. Lead with a question or an
+explanation of what a bill changes. Count only the records collected by Opax and
+avoid describing an old report as current. Link to the exact source page. Bill
+captions identify machine-written summaries and invite readers to check official
+sources. No model runs at posting time; source data and summaries can still contain
+errors, so they are not a guarantee of factual accuracy.
 
-The kind rotates by calendar day (Melbourne time):
+X gets concise copy within 280 characters; Facebook gets a longer caption and a
+clickable link; Instagram gets the matching JPEG, a longer caption and a link-in-bio
+instruction. Set Instagram's profile link to https://opax.com.au. Share images use
+the same metadata and fonts as the page, including bill-specific cards. X/Facebook
+links include platform-specific UTM attribution. Do not tag unrelated people, send
+DMs, automate replies, or imply a funding relationship proves wrongdoing.
 
-| Kind | Source | Text |
-|---|---|---|
-| politician | `/parliamentarians.json`, current members with 200+ speeches, top topics from `/api/person-topics` | name, party, seat, speech count since first year, three most-discussed topics, link to the person page |
-| bill | `/bills/index.json`, bills before parliament or passed in the last year, with a summary | title, introduced date and sponsor (or portfolio), status, first one or two summary sentences, link to the bill page |
-| topic | `/reports/index.json`, reports with speech stats | title, speech and speaker counts, three loudest current voices, blurb, link to the report |
+The first schedule is 22:00 UTC (08:00 AEST / 09:00 AEDT). Checks at +5 and +10
+minutes finish an Instagram container that is still processing. They do not resend
+successful posts. A container still pending after the third check needs operator
+review; the following day is a new edition.
 
-The subject is chosen by a seeded hash of the date, so `preview` for a date shows
-exactly what that day will post. The last 90 featured subjects are kept in the
-`GENERATION_CACHE` KV under `daily-post:recent` and are skipped so nothing repeats
-within a season. If a kind has nothing to say (no bills before parliament, say) it
-falls through to the next kind.
+## Connection
 
-Posts are trimmed to X's 280 characters with URLs counted as 23; optional lines are
-dropped in order before anything is cut.
+X requires the four Worker secrets X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN and
+X_ACCESS_TOKEN_SECRET. The app needs Read and write permissions (no DMs or email).
+The configured X_ACCOUNT_ID and X_USERNAME must match GET /2/users/me before any
+write. API access uses prepaid credits; the old free-tier instructions are obsolete.
+At the published 13 September 2026 rates a URL post is US$0.20, plus identity reads:
+https://docs.x.com/x-api/getting-started/pricing. Verify the console rate and balance.
 
-## Preview
+Facebook requires FACEBOOK_PAGE_ID and a FACEBOOK_PAGE_TOKEN for that Page.
+The app needs pages_manage_posts, pages_read_engagement and pages_show_list, with
+CREATE_CONTENT access. The token's /me ID must match the configured Page.
+Instagram requires a professional account, INSTAGRAM_ACCOUNT_ID,
+INSTAGRAM_USERNAME and INSTAGRAM_ACCESS_TOKEN, with instagram_basic and
+instagram_content_publish via Facebook Login and appropriate access to the linked
+Page. Account/app roles and Meta review requirements must be satisfied. We use
+Graph API v25.0. Check token expiry and complete any Page publishing authorization.
 
-```
-https://opax.com.au/api/daily-post/preview                 # today
-https://opax.com.au/api/daily-post/preview?date=2026-09-12
-https://opax.com.au/api/daily-post/preview?date=2026-09-12&kind=bill
-```
+Install credentials using Wrangler's secure prompts or a mode-0600 JSON file with
+`npx wrangler secret bulk /secure/path/credentials.json --env=''`. Never put secret
+values on command lines, in logs, in Git, or in this document. Store only the listed
+social secrets; the operation must preserve other Worker secrets.
 
-Never posts. Returns the `DailyPost` JSON (kind, subject, title, text, url).
+Set FACEBOOK_POST_ENABLED / INSTAGRAM_POST_ENABLED to "true" only after identity,
+permissions and a live test are verified. Each defaults to false. X uses
+DAILY_POST_ENABLED. Staging always refuses publication. Configure brand account IDs
+and names in wrangler.jsonc; never connect a personal account as a substitute.
 
-## Turning it on
+## Delivery records and operation
 
-The cron is deployed and runs daily, but it only posts when all of these hold:
+Apply migrations before deploying: `npx wrangler d1 migrations apply COMMUNITY_DB
+--remote --env=''`. Migration 0005 adds social_editions and social_deliveries.
+The edition is frozen in D1 so every channel uses the same copy. A primary key on
+(date, channel) atomically claims each delivery. Successful channel receipts do not
+block unfinished channels. The previous X runner's KV sent keys are respected.
+Recently published subjects are excluded for 90 days; an exhausted category falls
+through to another, never silently repeats an excluded subject.
 
-1. `DAILY_POST_ENABLED` is `"true"` in `wrangler.jsonc` vars (it is; staging is `"false"`).
-2. The four X secrets exist on the Worker.
-3. The run is not on staging (`STAGING_API` binding absent).
-4. Nothing has been posted yet for that Melbourne date (`daily-post:sent:<date>` in KV).
+- Preview: `/api/daily-post/preview?date=YYYY-MM-DD` (no posting; returns frozen
+  copy when available and per-platform captions/image URLs).
+- Optional `&kind=bill`, `politician` or `topic` previews that category.
+- Status: `/api/daily-post/status` (configuration readiness and today's receipts;
+  no credentials or raw provider error bodies).
+- Logs: `npx wrangler tail --env=''`; look for `daily-post`.
+- Tests: `node --test test/daily-post.test.mjs test/social-publication.test.mjs
+  test/bill-social-card.test.mjs` from portal/.
 
-Otherwise the run logs `skipped` or `dry-run` with the composed post and exits.
+`posted` requires a provider post ID. A timeout or malformed success after a write
+becomes `review_required`; do not retry it without reading the platform's actual
+posts. `sending` after a crash also needs reconciliation. Preflight errors are
+`failed`, and are not automatically retried that day. Check the target account,
+repair the connection, then reconcile/reset only that channel's row if confirmed
+unsent. No public endpoint can trigger posting or reset these receipts.
 
-### X credentials
+Before publishing, the runner checks that the source page and matching JPEG return
+success. A generic fallback image or mismatched route prevents posting. PNG cards
+remain available for X/Facebook. `/og/<page>.jpg` returns actual JPEG bytes and an
+error rather than a misleading PNG fallback when no matching card exists.
 
-The post uses X API v2 `POST /2/tweets` with OAuth 1.0a user context. On the free
-tier that is plenty for one post a day.
-
-1. Sign in to https://developer.x.com with the OPAX account and create a project
-   and app (Free tier is enough).
-2. In the app's *User authentication settings*, set permissions to **Read and write**
-   and type to *Web App, Automated App or Bot* (callback and website URLs can be
-   `https://opax.com.au`).
-3. Under *Keys and tokens*, copy the **API Key and Secret** and generate an
-   **Access Token and Secret** for the account. If the access token was generated
-   before permissions were changed to read and write, regenerate it.
-4. From `portal/` on a machine with wrangler logged in:
-
-   ```
-   npx wrangler secret put X_API_KEY
-   npx wrangler secret put X_API_SECRET
-   npx wrangler secret put X_ACCESS_TOKEN
-   npx wrangler secret put X_ACCESS_TOKEN_SECRET
-   ```
-
-   Secrets take effect without a redeploy. The next 22:00 UTC run posts.
-
-Kill switch: set `DAILY_POST_ENABLED` to `"false"` and deploy, or delete any one of
-the secrets (`npx wrangler secret delete X_ACCESS_TOKEN`).
-
-## Testing the cron locally
-
-```
-cd portal
-npx wrangler dev --test-scheduled
-curl "http://localhost:8787/cdn-cgi/local/scheduled?cron=0+22+*+*+*"
-```
-
-Without the secrets in `.dev.vars` the run is a dry run and logs the composed post.
-
-## Checking a run
-
-Workers observability logs each run as one `daily-post` line with the status,
-reason, subject and (when posted) the post id. `wrangler tail --format pretty`
-shows it live.
+Brand exports: `node scripts/build_social_brand.mjs` renders the existing Opax
+favicon and brand fonts into public/social/opax-avatar.png and opax-header.png.

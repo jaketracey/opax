@@ -3,7 +3,7 @@ interface Env {
   STAGING_API?: Fetcher;
   ARAG_KB_ID: string
   ARAG_KB_TOKEN: string
-  /** Daily X post (docs/DAILY-POST.md). All optional: missing secrets mean the cron only logs. */
+  /** Social publication: each channel requires its own credentials and identity. */
   /** Comma-separated ASNs refused on /api and /og (network-block.ts). */
   BLOCKED_ASNS?: string
   DAILY_POST_ENABLED?: string
@@ -11,6 +11,17 @@ interface Env {
   X_API_SECRET?: string
   X_ACCESS_TOKEN?: string
   X_ACCESS_TOKEN_SECRET?: string
+  X_ACCOUNT_ID?: string
+  X_USERNAME?: string
+  FACEBOOK_POST_ENABLED?: string
+  FACEBOOK_PAGE_ID?: string
+  FACEBOOK_PAGE_TOKEN?: string
+  INSTAGRAM_POST_ENABLED?: string
+  INSTAGRAM_ACCOUNT_ID?: string
+  INSTAGRAM_USERNAME?: string
+  INSTAGRAM_ACCESS_TOKEN?: string
+  META_API_VERSION?: string
+
   /**
    * Per-pipeline generative model pins (wrangler vars, editable without a code
    * change). 'openai-compatible' is the KB's single OpenRouter slot: model_id
@@ -31,7 +42,7 @@ declare namespace Cloudflare {
   STAGING_API?: Fetcher;
   ARAG_KB_ID: string
     ARAG_KB_TOKEN: string
-    /** Daily X post (docs/DAILY-POST.md). All optional: missing secrets mean the cron only logs. */
+    /** Social publication: each channel requires its own credentials and identity. */
     /** Comma-separated ASNs refused on /api and /og (network-block.ts). */
     BLOCKED_ASNS?: string
     DAILY_POST_ENABLED?: string
@@ -39,6 +50,17 @@ declare namespace Cloudflare {
     X_API_SECRET?: string
     X_ACCESS_TOKEN?: string
     X_ACCESS_TOKEN_SECRET?: string
+    X_ACCOUNT_ID?: string
+    X_USERNAME?: string
+    FACEBOOK_POST_ENABLED?: string
+    FACEBOOK_PAGE_ID?: string
+    FACEBOOK_PAGE_TOKEN?: string
+    INSTAGRAM_POST_ENABLED?: string
+    INSTAGRAM_ACCOUNT_ID?: string
+    INSTAGRAM_USERNAME?: string
+    INSTAGRAM_ACCESS_TOKEN?: string
+    META_API_VERSION?: string
+
   /**
    * Per-pipeline generative model pins (wrangler vars, editable without a code
    * change). 'openai-compatible' is the KB's single OpenRouter slot: model_id

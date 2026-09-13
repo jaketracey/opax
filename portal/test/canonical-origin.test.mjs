@@ -40,7 +40,7 @@ test('static app entry points reach the Worker before assets can bypass canonica
 
 test('the actual Worker redirects before rendering and still serves canonical community pages',async()=>{
   const {build}=await import('esbuild');
-  const compiled=await build({entryPoints:[new URL('../src/index.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-unrelated-image-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'image-renderer',namespace:'signin-test'}));b.onLoad({filter:/.*/,namespace:'signin-test'},()=>({contents:'export async function renderOgPng(){throw Error("Image rendering is outside this test")}',loader:'js'}))}}]});
+  const compiled=await build({entryPoints:[new URL('../src/index.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],plugins:[{name:'omit-unrelated-image-renderer',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'image-renderer',namespace:'signin-test'}));b.onLoad({filter:/.*/,namespace:'signin-test'},()=>({contents:'export async function renderOgPng(){throw Error("Image rendering is outside this test")}; export const renderOgJpeg=renderOgPng;',loader:'js'}))}}]});
   const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
   const calls=[];
   const env={COMMUNITY_ORIGIN:origin,ASSETS:{async fetch(req){calls.push(req.url);return new Response('<h1>Sign in</h1>',{headers:{'content-type':'text/html'}})}}};
