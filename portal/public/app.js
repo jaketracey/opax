@@ -9398,6 +9398,15 @@ function renderChatThread({ landed = false, rise = false } = {}) {
       p.textContent = msg.text;
       wrap.appendChild(p);
       thread.appendChild(wrap);
+      // A follow-up the Worker rewrote before searching ("no he has been in
+      // tons of grants" → "What grants has Barnaby Joyce been involved in?")
+      // says so, so the reader can see what the record was asked.
+      if (typeof msg.askedAs === "string" && msg.askedAs.trim()) {
+        const note = document.createElement("p");
+        note.className = "chat-asked-as";
+        note.textContent = `Understood as: ${msg.askedAs.trim()}`;
+        thread.appendChild(note);
+      }
     } else {
       thread.appendChild(chatAnswerEl(msg));
     }
@@ -9580,8 +9589,11 @@ async function sendChat(question, carry) {
   const myAbort = new AbortController();
   chatAbort = myAbort;
   // Everything before this question travels as context for the retrieval.
+  // A user turn travels as the question the record was actually asked: the
+  // money path's resolved question, or the Worker's standalone rewrite of a
+  // follow-up, and only otherwise the words as typed.
   const context = chatThread
-    .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.role === "user" && typeof m.fundingQuestion === "string" ? m.fundingQuestion : m.text }))
+    .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.role === "user" && typeof m.fundingQuestion === "string" ? m.fundingQuestion : m.role === "user" && typeof m.askedAs === "string" ? m.askedAs : m.text }))
     .slice(-12);
   // A chip's question was proven against a passage retrieved for the PREVIOUS
   // answer; fresh retrieval on the chip's wording alone can miss that passage,
@@ -9728,6 +9740,7 @@ async function sendChat(question, carry) {
     live?.stop();
     if (chatAbort !== myAbort) return;
     if (data.money_ranking && typeof data.money_question === "string") userTurn.fundingQuestion = data.money_question;
+    if (typeof data.asked_as === "string" && data.asked_as.trim() && data.asked_as.trim() !== q) userTurn.askedAs = data.asked_as.trim();
     chatThread.push({
       role: "answer",
       text: (data.answer || "").trim() || "(no answer)",

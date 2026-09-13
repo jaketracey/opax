@@ -1061,6 +1061,23 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     const ranked = await rankedMoneyAnswer(rawInput, env.ASSETS)
     if (ranked) { mark('receipts'); return timed(json(ranked)) }
   } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
+  // A follow-up in a conversation rarely names its subject ("no he has been
+  // in tons of grants, look more"), and the record is searched on the words
+  // as typed: the prior turns reach generation as chat history but never the
+  // retrieval. So the latest message is first rewritten as a standalone
+  // question drawn from the conversation, and everything downstream - scope,
+  // retrieval, the prompt - works from that. The rewrite is a paid call, so a
+  // conversation turn takes its rate-limit token here (its answer is never
+  // cached, so the cache-first order below has nothing to offer it).
+  const conversation = Array.isArray(rawInput.context) && rawInput.context.length > 0
+  let askedAs: string | null = null
+  if (conversation) {
+    const limited = await rateLimited(env.ASK_LIMITER, request)
+    if (limited) return limited
+    askedAs = await standaloneQuestion(rawInput, env)
+    if (askedAs) rawInput.question = askedAs
+  }
+  mark('rewrite')
   let people: { name: string }[] = []
   if (needsAskPeople(rawInput)) {
     try { people = (await loadPeople(env)).people }
@@ -1087,7 +1104,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     if (hit) return wantStream ? replayCachedAsk(hit, ctx) : withCacheStatus(hit, 'HIT', false)
   }
   const status: CacheStatus = bypass ? 'BYPASS' : 'MISS'
-  const limited = await rateLimited(env.ASK_LIMITER, request)
+  const limited = conversation ? null : await rateLimited(env.ASK_LIMITER, request)
   if (limited) return limited
   mark('cache')
 
@@ -1105,15 +1122,15 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   if (isPositionBody(body)) {
     // Read and bound original speaking turns before generation. A cached answer
     // uses a position-specific version, so older unverified drafts cannot replay.
-    if (wantStream) return streamPositionAnswer(input, body, env, ctx, { onDone: store, cacheStatus: status })
+    if (wantStream) return streamPositionAnswer(input, body, env, ctx, { onDone: store, cacheStatus: status, askedAs })
     try {
-      const payload = await documentedPositionAnswer(input, body, env, ctx)
+      const payload = withAskedAs(await documentedPositionAnswer(input, body, env, ctx), askedAs)
       mark('position')
       store(payload)
       return timed(withCacheStatus(json(payload), status, false))
     } catch { return json({ error: 'The speech records are temporarily unavailable. Please try again.' }, 503) }
   }
-  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records, scope })
+  if (wantStream) return apiAskStream(body, env, ctx, { onDone: store, cacheStatus: status, records, scope, askedAs })
 
   const askOnce = async (b: Record<string, unknown>, timeoutMs: number): Promise<AskAnswer | Response> => {
     try {
@@ -1146,8 +1163,66 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   }
   if (hasUnsupportedQuotes(payload, answer) || (!isRefusal(answer) && !Object.keys(payload.citations).length)) payload = evidenceOnlyAnswer(payload, answer, String(body.query ?? ''))
   mark('verify')
+  payload = withAskedAs(payload, askedAs)
   store(payload)
   return timed(withCacheStatus(json(payload), status, false))
+}
+
+/** The payload with the question as it was understood, when a follow-up was rewritten. */
+function withAskedAs<T extends object>(payload: T, askedAs: string | null | undefined): T & { asked_as?: string } {
+  return askedAs ? { ...payload, asked_as: askedAs } : payload
+}
+
+/**
+ * The latest message of a conversation as one standalone question - the
+ * subject named, the reader's intent and specifics kept - so the record can
+ * be searched on it. One small generation-only call on the OpenRouter slot
+ * (the followups model), bounded to a few seconds; null means "search the
+ * words as typed", which is what happened before. A message that already
+ * stands alone comes back unchanged and is reported as null too.
+ */
+async function standaloneQuestion(input: AskInput, env: Env): Promise<string | null> {
+  const question = String(input.question ?? '').replace(/\s+/g, ' ').trim()
+  const turns = (input.context ?? [])
+    .filter((t) => typeof t?.text === 'string' && t.text.trim().length > 0)
+    .slice(-8)
+  if (!question || question.length > 2000 || !turns.some((t) => t.author !== 'answer')) return null
+  const transcript = turns
+    .map((t) => `${t.author === 'answer' ? 'Answer' : 'Reader'}: ${String(t.text).replace(/\s+/g, ' ').trim().slice(0, 1500)}`)
+    .join('\n')
+  const user = (
+    `Conversation so far:\n${transcript}\n\n` +
+    'Rewrite the reader\'s latest message, given below, as ONE standalone question about the Australian public record that names its subject explicitly - the person, organisation, program, place or topic the conversation is about - so the record can be searched on it alone. ' +
+    'Keep the reader\'s intent, and keep any names, dates, places, figures and other specifics they gave. Keep their own wording wherever it already stands alone; add nothing the conversation does not contain; do not answer, judge, soften or comment. ' +
+    'A message about the conversation itself (who or what are we talking about, say more, look again, is that all) becomes a question about the conversation\'s subject. ' +
+    'If the message already names its subject and stands on its own, return it exactly as written. Return only the question, on one line, with no quotation marks or preamble.\n\n' +
+    'Examples, where the conversation so far was about Barnaby Joyce and grants:\n' +
+    '"no he has been in tons of grants, look more" -> What grants has Barnaby Joyce been involved in?\n' +
+    '"who are we talking about?" -> Who is Barnaby Joyce?\n' +
+    '"and in 2019?" -> What grants was Barnaby Joyce involved in during 2019?\n' +
+    '"What did Pauline Hanson say about housing affordability?" -> What did Pauline Hanson say about housing affordability?\n\n' +
+    'Latest reader message: {question}'
+  ).replace(/[{}]/g, (brace) => brace === '{' ? '{{' : '}}').replace('{{question}}', '{question}')
+  try {
+    const res = await kbFetch(env, '/ask', {
+      body: {
+        query: question,
+        top_k: 1,
+        reranker: 'noop',
+        generative_model: env.FOLLOWUPS_MODEL || 'openai-compatible',
+        max_tokens: 200,
+        prompt: { system: 'You rewrite follow-up messages as standalone questions. You output only the rewritten question and nothing else.', user },
+      },
+      headers: { 'x-synchronous': 'true' },
+      signal: AbortSignal.timeout(9_000),
+    })
+    const text = (await summaryModelAnswer(res) ?? '').replace(/\s+/g, ' ').trim().replace(/^["“'‘]+|["”'’]+$/g, '').trim()
+    if (!text || text.length > 400 || text.length < 4) return null
+    if (text.toLowerCase() === question.toLowerCase()) return null
+    return text
+  } catch {
+    return null
+  }
 }
 
 /** Retrieve once, then generate only from original turns belonging to the index speaker. */
@@ -1664,7 +1739,7 @@ function apiAskStream(
   body: Record<string, unknown>,
   env: Env,
   ctx: ExecutionContext,
-  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; records: AskRecords; scope?: AskScope },
+  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; records: AskRecords; scope?: AskScope; askedAs?: string | null },
 ): Response {
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
   const writer = writable.getWriter()
@@ -1727,6 +1802,7 @@ function apiAskStream(
           }
         }
         if (hasUnsupportedQuotes(payload, result) || (!isRefusal(result) && !Object.keys(payload.citations).length)) payload = evidenceOnlyAnswer(payload, result, String(body.query ?? ''))
+        payload = withAskedAs(payload, opts.askedAs)
         await send('done', payload)
         // Cached from the `done` payload — the same bytes the reader got —
         // even when the reader left early (the answer was paid for).
@@ -1760,7 +1836,7 @@ function streamPositionAnswer(
   body: Record<string, unknown>,
   env: Env,
   ctx: ExecutionContext,
-  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus },
+  opts: { onDone?: (payload: AskPayload) => void; cacheStatus: CacheStatus; askedAs?: string | null },
 ): Response {
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>()
   const writer = writable.getWriter()
@@ -1778,7 +1854,7 @@ function streamPositionAnswer(
     (async () => {
       try {
         await send('status', { phase: 'searching' })
-        const payload = await documentedPositionAnswer(input, body, env, ctx, send)
+        const payload = withAskedAs(await documentedPositionAnswer(input, body, env, ctx, send), opts.askedAs)
         await send('done', payload)
         // Cached from the `done` payload even when the reader left early.
         opts.onDone?.(payload)

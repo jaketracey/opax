@@ -92,6 +92,17 @@ through `streamPositionAnswer`: `searching`, `retrieved`, `writing`, then
 there is sent as a `final` error: the synchronous fallback would only pay for
 the same failure again.
 
+Conversations (13 September 2026): a follow-up rarely names its subject, and
+retrieval searches the words as typed (prior turns reach generation as
+`chat_history`, never the search), so `apiAsk` first rewrites the latest
+message as a standalone question drawn from the conversation
+(`standaloneQuestion`: one generation-only `/ask` call on the OpenRouter slot,
+`top_k: 1`, ~3-6 s, null on timeout or when the message already stands
+alone). Scope, retrieval and the prompt then work from the rewrite, and the
+`done` payload carries it as `asked_as`; the chat shows it under the reader's
+turn as "Understood as: …" and sends it, not the typed words, as later
+context. A conversation turn takes its rate-limit token before the rewrite.
+
 Rules the Worker keeps:
 
 - `done` is `askPayload(result)`, byte-for-byte the shape the synchronous
