@@ -23,6 +23,17 @@ test('a leading timestamp is allowed but a following turn is excluded',()=>{
 test('ministerial replies and named interventions are not treated as the first person speaking',()=>{
  for(const boundary of ['\n\nI thank Senator Hanson for her question. ','\n\nSenator Example: ','\n\nThe PRESIDENT: ','\n\nSenator Hanson, I will remind you of your language. '])assert.equal(firstSpeechTurn(proposal+boundary+other),proposal);
 });
+test('a minister reply starting Thank you cannot become the questioner’s recorded position',()=>{
+ const question='My question is to the minister. Is the government aware of illegal advertisements from online casinos?';
+ for(const reply of ['Thank you,Senator Pocock.','Thank you, Senator Pocock.','Thank you, the member for Clark.']) {
+  const combined=question+'\n\n'+reply+' We propose a total gambling advertising ban.';
+  assert.equal(firstSpeechTurn(combined),question);
+  assert.doesNotMatch(positionEvidence(combined,'gambling advertising'),/We propose|total gambling/);
+ }
+ const sameTurn='Thank you, Senator Example. I support gambling advertising reform.\n\nThis reform concerns advertising.';
+ assert.equal(firstSpeechTurn(sameTurn),sameTurn,'initial address is not a later turn');
+ assert.equal(firstSpeechTurn(proposal+' I said thank you, Senator Example, for the meeting.'),proposal+' I said thank you, Senator Example, for the meeting.','inline address is not a boundary');
+});
 test('later topic matches cannot make an unrelated first turn look relevant',()=>{
  assert.equal(positionEvidence('I spoke about banking laws and audit standards.\n\n1:08 pm\n\n'+other,'housing affordability'),'');
  assert.equal(positionEvidence(proposal,'quantum zoning on Mars'),'');

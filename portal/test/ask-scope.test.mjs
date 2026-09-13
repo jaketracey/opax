@@ -177,3 +177,79 @@ test('switching between named people twice cannot turn their names into topics',
  const {input}=resolveAskScope({question:'And Pauline Hanson?',context},[{name:'Pauline Hanson'},{name:'David Pocock'}]);
  assert.equal(input.speaker,'Pauline Hanson');assert.equal(exports.askRetrievalQuery(input),'immigration');
 });
+
+test('plain stance questions resolve an exact person and enter original-turn evidence checks',()=>{
+ const people=[{name:'Pauline Hanson'},{name:'David Pocock'},{name:'Andrew Wilkie'}];
+ for(const [question,speaker,topic] of [
+  ['Does Pauline Hanson support nuclear power?','Pauline Hanson','nuclear power'],
+  ['Did Senator Pauline Hanson oppose nuclear power in 2025?','Pauline Hanson','nuclear power in 2025'],
+  ['What does Andrew Wilkie think about poker machines?','Andrew Wilkie','poker machines'],
+  ['What did Andrew Wilkie believe about poker machines?','Andrew Wilkie','poker machines'],
+  ['What is David Pocock’s position on gambling advertising?','David Pocock','gambling advertising'],
+  ["What were David Pocock's views on gambling advertising?",'David Pocock','gambling advertising'],
+  ['Where does David Pocock stand on gambling advertising?','David Pocock','gambling advertising'],
+  ['Would Pauline Hanson support nuclear power?','Pauline Hanson','nuclear power'],
+  ['Is Pauline Hanson in favour of nuclear power?','Pauline Hanson','nuclear power'],
+  ['Was Pauline Hanson against nuclear power?','Pauline Hanson','nuclear power'],
+  ['Does Pauline Hanson favour nuclear power?','Pauline Hanson','nuclear power'],
+  ['Has David Pocock called for gambling advertising reform?','David Pocock','gambling advertising reform'],
+ ]){
+  const raw={question,kind:'all'};assert.equal(exports.needsAskPeople(raw),true,question);
+  const {input}=resolveAskScope(raw,people);assert.equal(input.speaker,speaker,question);assert.equal(input.kind,'speech');
+  assert.equal(exports.isNamedPositionQuestion(input),true,question);assert.equal(exports.askRetrievalQuery(input),topic,question);
+ }
+});
+test('stance subjects cannot be inferred from comparisons, objects, unknown names or party labels',()=>{
+ const people=[{name:'Pauline Hanson'},{name:'David Pocock'},{name:'Andrew Wilkie'}];
+ for(const question of [
+  'Does Pauline Hanson and David Pocock support nuclear power?',
+  'Did Pauline Hanson support nuclear energy or did Andrew Wilkie?',
+  'Does Pauline Hanson support nuclear power more than David Pocock?',
+  'What does Pauline Hanson think about Andrew Wilkie on nuclear power?',
+  'What does parliament think about Pauline Hanson?',
+  'What do people think about Andrew Wilkie?',
+  'Does the Liberal Party support David Pocock?',
+  'Did the minister support Pauline Hanson on nuclear power?',
+  'Does Hanson support nuclear power?',
+  'Does Senator Zorblax Quuxington support nuclear power?',
+  'Did Pauline Hanson’s opponent support nuclear power?',
+  'What does David Pocock think Andrew Wilkie said about gambling?',
+ ])assert.equal(resolveAskScope({question,kind:'all'},people).input.speaker,undefined,question);
+ const named=resolveAskScope({question:'Does Pauline Hanson support Labor MPs on nuclear power?',kind:'all'},people).input;
+ assert.equal(named.speaker,'Pauline Hanson');assert.equal(named.party,undefined,'the named speaker is the subject, not the party object');
+});
+test('stance follow-ups retain the person but replace an explicitly named topic',()=>{
+ const people=[{name:'Pauline Hanson'},{name:'David Pocock'}];
+ const context=[{author:'user',text:'Does Pauline Hanson support nuclear power?'},{author:'answer',text:'David Pocock has an imaginary policy.'}];
+ for(const [question,topic] of [['Does she support it?','nuclear power'],['Did she oppose that policy?','nuclear power'],['What does she think about immigration?','immigration'],['Does she support immigration?','immigration'],['What is her position on housing?','housing'],['Where does she stand on gambling advertising?','gambling advertising']]){
+  const {input}=resolveAskScope({question,context,kind:'all'},people);assert.equal(input.speaker,'Pauline Hanson',question);assert.equal(exports.isNamedPositionQuestion(input),true,question);assert.equal(exports.askRetrievalQuery(input),topic,question);
+ }
+ const next=resolveAskScope({question:'Does David Pocock support it?',context,kind:'all'},people).input;
+ assert.equal(next.speaker,'David Pocock');assert.equal(exports.askRetrievalQuery(next),'nuclear power');
+ const unknown=resolveAskScope({question:'Does Senator Zorblax Quuxington support it?',context,kind:'all'},people).input;
+ assert.equal(unknown.speaker,undefined);
+ for(const question of ['Is she in favour of it?','Was she against that policy?','Has she called for it?']) {
+  const out=resolveAskScope({question,context,kind:'all'},people).input;
+  assert.equal(out.speaker,'Pauline Hanson');assert.equal(exports.askRetrievalQuery(out),'nuclear power');assert.equal(exports.isNamedPositionQuestion(out),true);
+ }
+ const dated=resolveAskScope({question:'Did she support that policy in 2025?',context,kind:'all'},people).input;
+ assert.equal(dated.speaker,'Pauline Hanson');assert.equal(dated.from,'2025');assert.equal(dated.to,'2025');assert.equal(exports.askRetrievalQuery(dated),'nuclear power');
+});
+test('a replacement date period does not search for an obsolete year from the prior question',()=>{
+ const people=[{name:'Pauline Hanson'}],context=[{author:'user',text:'Does Pauline Hanson support nuclear power in 2018?'}];
+ for(const question of ['And since 2020?','What about during 2025?','And between 2020 and 2025?','Did she support it in 2025?','And what is her position in 2025?']) {
+  const input=resolveAskScope({question,context,kind:'all'},people).input;
+  assert.equal(input.speaker,'Pauline Hanson');assert.equal(exports.askRetrievalQuery(input),'nuclear power');assert.ok(input.from);assert.notEqual(input.from,'2018');
+ }
+ const input=resolveAskScope({question:'And since 2020?',context,speaker:'Pauline Hanson',kind:'speech',from:'2022',to:'2024'},people).input;
+ assert.equal(input.from,'2022');assert.equal(input.to,'2024');assert.equal(exports.askRetrievalQuery(input),'nuclear power');
+});
+test('stance requests preserve explicit controls and do not broaden date scope',()=>{
+ const people=[{name:'Pauline Hanson'},{name:'David Pocock'}],question='Did Pauline Hanson support nuclear power in 2025?';
+ const natural=resolveAskScope({question,kind:'all'},people).input;assert.equal(natural.from,'2025');assert.equal(natural.to,'2025');
+ const explicit=resolveAskScope({question,kind:'speech',speaker:'David Pocock',from:'2020',to:'2024'},people).input;
+ assert.equal(explicit.speaker,'David Pocock');assert.equal(explicit.from,'2020');assert.equal(explicit.to,'2024');
+ const legal={question,kind:'legal'};assert.equal(resolveAskScope(legal,people).input,legal);assert.equal(exports.needsAskPeople(legal),false);
+ const party=resolveAskScope({question,kind:'all',party:'Labor'},people).input;assert.equal(party.speaker,undefined);assert.equal(party.party,'Labor');
+ assert.equal(resolveAskScope({question:'Does she support it?',context:[{author:'answer',text:question}],kind:'all'},people).input.speaker,undefined);
+});

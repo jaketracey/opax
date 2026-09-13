@@ -34,6 +34,28 @@ export interface AskScope {
 
 // Match a grammatical subject, not a name mentioned as the object of debate.
 const NAMED_SPEECH = /^(?:and\s+)?(?:what|how)\s+(?:has|have|did|does|would|might)\s+(?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.?\s+)?(?!he\b|she\b|they\b)(.{3,80}?)\s+(?:say|said|speak|spoken|describ(?:e|ed)|argu(?:e|ed)|propos(?:e|ed)|recommend(?:ed)?)\b/i
+// Ordinary stance wording must use the same original-speaking-turn checks as
+// "what did X say". These capture a grammatical subject; only an exact roster
+// match may turn that subject into a person filter.
+const STANCE_REQUESTS = [
+  /^(?:and\s+)?(?:did|does|has|have|would|might)\s+(?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.?\s+)?(.{2,80}?)\s+(?:support(?:ed)?|oppose(?:d)?|back(?:ed)?|reject(?:ed)?|favou?r(?:ed)?|call(?:ed)?\s+for)\s+(.+?)\s*[?]*$/i,
+  /^(?:and\s+)?(?:is|was)\s+(?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.?\s+)?(.{2,80}?)\s+(?:in\s+favou?r\s+of|against)\s+(.+?)\s*[?]*$/i,
+  /^(?:and\s+)?what\s+(?:does|did|would|might)\s+(?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.?\s+)?(.{2,80}?)\s+(?:think|believe)\s+(?:about|on|of)\s+(.+?)\s*[?]*$/i,
+  /^(?:and\s+)?what\s+(?:is|was|are|were)\s+(?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.?\s+)?(.{3,80}?)['’]s\s+(?:position|stance|views?)\s+(?:on|about)\s+(.+?)\s*[?]*$/i,
+  /^(?:and\s+)?where\s+(?:does|did|would|might)\s+(?:(?:Senator|MP|Mr|Mrs|Ms|Dr)\.?\s+)?(.{2,80}?)\s+stand\s+(?:on|about)\s+(.+?)\s*[?]*$/i,
+]
+function stanceRequest(question: string): {subject:string;topic:string} | undefined {
+  for (const pattern of STANCE_REQUESTS) {
+    const match = pattern.exec(question.trim())
+    if (match) return {subject:match[1],topic:match[2].replace(/\?+$/, '').trim()}
+  }
+}
+function namedPositionRequest(question: string): {subject:string;topic:string} | undefined {
+  const speech = NAMED_SPEECH.exec(question.trim())
+  if (speech) return {subject:speech[1],topic:question.trim().slice(speech[0].length).replace(/^\s*(?:about|on)\s+/i, '').replace(/\?+$/, '').trim()}
+  const stance = stanceRequest(question)
+  return stance && !/^(?:he|she|they|his|her|their)$/i.test(stance.subject) ? stance : undefined
+}
 export const POSITION_GROUNDING = 'When asked what a politician would or might say, explain their documented position in the third person. Do not roleplay them, write a fictional quote, or predict their response. Start with what their recorded statements support, with dates and citations. Distinguish their own statements from another speaker describing them. If the record does not establish their position on this topic, say so rather than inferring it from their party or another topic. For a named politician position question, give a short takeaway followed by up to three concrete policy positions or proposals, each with its own citation. Prefer specific proposals over rhetorical attacks. Keep it under 180 words. Do not spend space summarising ministerial replies; exclude them from the position summary. Attribute criticism and claimed effects to the politician. Do not repeat illustrative population counts, economic forecasts or attack statistics unless the user requests those figures. For an actual proposed policy retain its specified duration, limit or amount exactly. Never confuse arrivals with net migration or departures. Include a source date when provided, and never describe an old statement as a current promise. '
 
 const REFERENTIAL = /^(?:and\b|what about\b|how about\b)|^(?:what|how|why|when|did|does|has|would)\b.*\b(?:he|she|they|his|her|their|it|that)\b/i
@@ -50,7 +72,7 @@ const userQuestions = (input: RecordQuestion): string[] => Array.isArray(input.c
 const priorQuestion = (input: RecordQuestion) => userQuestions(input).at(-1)
 const partySubject = (question: string) => !!cohort(question) || PARTIES.some(p =>
   new RegExp(`^(?:and\\s+)?(?:(?:what|how)\\s+about\\s+)?${p.name}\\b`, 'i').test(question.trim()))
-const inheritsSubject = (question: string) => (REFERENTIAL.test(question.trim()) || ELIGIBILITY_FOLLOWUP.test(question.trim())) && !NAMED_SPEECH.test(question.trim()) && !partySubject(question)
+const inheritsSubject = (question: string) => (REFERENTIAL.test(question.trim()) || ELIGIBILITY_FOLLOWUP.test(question.trim()) || /^(?:he|she|they)$/i.test(stanceRequest(question)?.subject || '')) && !namedPositionRequest(question) && !partySubject(question)
 function namedFollowUp(question: string, people: readonly {name:string}[]): {speaker:string;topic?:string} | undefined {
   const rest = question.trim().replace(/^(?:and\s+)?(?:(?:what|how)\s+about\s+)/i, '').replace(/^and\s+/i, '')
   if (rest === question.trim()) return
@@ -64,16 +86,21 @@ function namedFollowUp(question: string, people: readonly {name:string}[]): {spe
 
 export function needsAskPeople(input: RecordQuestion): boolean {
   if (input.speaker || (input.kind && !['all', 'speech'].includes(input.kind))) return false
-  return NAMED_SPEECH.test((input.question || '').trim()) ||
+  return !!namedPositionRequest(input.question || '') || !!stanceRequest(input.question || '') ||
     REFERENTIAL.test((input.question || '').trim()) || ELIGIBILITY_FOLLOWUP.test((input.question || '').trim())
 }
 
 function naturalScope(question: string, people: readonly { name: string }[]): AskScope {
   const scope: AskScope = { ...cohort(question) }
-  const subject = NAMED_SPEECH.exec(question.trim())?.[1]
+  const subject = namedPositionRequest(question)?.subject
   if (subject) {
     const matches = [...new Set(people.filter(p => fold(p.name) === fold(subject)).map(p => p.name))]
-    if (matches.length === 1) { scope.speaker = matches[0]; scope.kind = 'speech' }
+    // A stance question can compare speakers after the first verb ("Did X
+    // support nuclear power or did Y?"). Keep such requests broad, including
+    // ambiguous named objects, rather than silently answering for only X.
+    const mentioned = stanceRequest(question) ? new Set(people.filter(p => p.name.includes(' ') &&
+      new RegExp(`(?:^|[^\\p{L}])${fold(p.name).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}(?=$|[^\\p{L}])`,'u').test(fold(question))).map(p=>fold(p.name))) : new Set()
+    if (matches.length === 1 && mentioned.size <= 1) { delete scope.party; scope.speaker = matches[0]; scope.kind = 'speech' }
   }
   const jurisdictions = [
     ['qld', 'Queensland'], ['nsw', '(?:New South Wales|NSW)'],
@@ -137,18 +164,28 @@ export function resolveAskScope<T extends RecordQuestion>(input: T, people: read
  * including ordinary "said" questions and referential follow-ups. */
 export function isNamedPositionQuestion(input: RecordQuestion): boolean {
   return !!input.speaker && input.kind === 'speech' &&
-    (NAMED_SPEECH.test((input.question || '').trim()) || inheritsSubject(input.question || ''))
+    (!!namedPositionRequest(input.question || '') || inheritsSubject(input.question || ''))
 }
 
 const DETAIL_WORDS = new Set('and what who which how why when did does has have would could should much long was were be for to do can about on he she they his her their it its that this say said propose proposed recommend recommended mean exactly please'.split(' '))
 function topicFromQuestion(question: string): string {
-  const named = NAMED_SPEECH.exec(question.trim())
-  return named ? question.trim().slice(named[0].length).replace(/^\s*(?:about|on)\s+/i, '').replace(/[?]+$/, '').trim() : question.trim()
+  return namedPositionRequest(question)?.topic ?? question.trim()
 }
 function nextTopic(question: string, previous: string): string {
+  // A replacement period belongs to the structured date filters. Do not keep
+  // searching for an obsolete year from the prior question as a topic term.
+  const withoutPriorPeriod = () => previous.replace(/\s+(?:(?:in|during|before|after|since)\s+(?:19|20)\d{2}|(?:between|from)\s+(?:19|20)\d{2}\s+(?:and|to|through|until|[–-])\s+(?:19|20)\d{2})\s*[?!.]*$/i, '').trim() || previous
+  if (/^(?:and\s+)?(?:(?:what|how)\s+about\s+|what\s+(?:is|was|are|were)\s+(?:his|her|their)\s+(?:position|stance|views?)\s+)?(?:(?:in|during|before|after|since)\s+(?:19|20)\d{2}|(?:between|from)\s+(?:19|20)\d{2}\s+(?:and|to|through|until|[–-])\s+(?:19|20)\d{2})\s*[?!.]*$/i.test(question.trim())) return withoutPriorPeriod()
   // Duration is a request about the existing proposal, not a new topic word
   // that its original speech must literally contain. Generation gets it apart.
   if (isPositionDurationQuestion(question) || ELIGIBILITY_FOLLOWUP.test(question.trim())) return previous
+  const stance = stanceRequest(question)
+  const stanceTopic = stance && /^(?:he|she|they)$/i.test(stance.subject) ? stance.topic :
+    /^(?:and\s+)?what\s+(?:is|was|are|were)\s+(?:his|her|their)\s+(?:position|stance|views?)\s+(?:on|about)\s+(.+?)\??$/i.exec(question.trim())?.[1]
+  if (stanceTopic) {
+    const reference = /^(?:it|that|this)(?:\s+(?:proposal|policy|plan|bill|measure))?(\s+(?:(?:in|during|before|after|since)\s+\d{4}|(?:between|from)\s+\d{4}\s+(?:and|to|through|until)\s+\d{4}))?\??$/i.exec(stanceTopic)
+    return reference ? (reference[1] ? withoutPriorPeriod() : previous) : stanceTopic.replace(/\?+$/, '').trim()
+  }
   const changed = (/^(?:and\s+)?(?:what|how)\s+about\s+(.+?)\??$/i.exec(question.trim())?.[1] ||
     /^(?:what|how)\s+(?:has|have|did|does|would|might)\s+(?:he|she|they)\s+(?:say|said|propos(?:e|ed)|recommend(?:ed)?)\s+(?:about|on)\s+(.+?)\??$/i.exec(question.trim())?.[1])?.replace(/\?$/, '').trim()
   // "What about immigration?" changes topic; "what about her cap?" needs
