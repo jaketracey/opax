@@ -12,7 +12,7 @@
  */
 
 /** Paths that cost money or CPU: the knowledge-base proxy and share images. */
-export const BLOCKED_PATHS = /^\/(?:api\/|og\/)/
+export const BLOCKED_PATHS = /^\/(?:api\/|og\/|bill-texts\/)/
 
 export const DEFAULT_BLOCKED_ASNS = '45102,24429,37963' // Alibaba Cloud (intl, CN, Hangzhou)
 

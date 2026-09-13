@@ -887,6 +887,7 @@ function focusEntry(id) {
 
 function showPanel(name) {
   if (name !== "ask") stopFrontMapImmersion();
+  if (name !== 'bill') { destroyBillText(); billView = null; }
   if (name !== "money-records") { moneyRecordsGeneration++; moneyRecordsHandle?.destroy(); moneyRecordsHandle = null; }
   for (const nav of document.querySelectorAll('[data-money-navigation]')) nav.innerHTML = OpaxNavigation.moneyNav(location.pathname, new URLSearchParams(location.search).get('jur'));
 
@@ -6945,6 +6946,31 @@ let billsTitleIndex = null;
 const billFiles = new Map();
 // "bill:<key>" or "index": what #bill-body is currently holding.
 let billView = null;
+let billTextHandle = null;
+let billTextGeneration = 0;
+function destroyBillText() {
+  billTextGeneration++;
+  billTextHandle?.destroy(); billTextHandle = null;
+}
+async function openBillText(bill) {
+  const generation = billTextGeneration;
+  const slot = $('bill-text-slot');
+  try {
+    const module = await import('/bill-text.js?v=full-bill-reader-20260913');
+    if (generation !== billTextGeneration || billView !== `bill:${bill.key}` || !slot?.isConnected) return;
+    billTextHandle = module.mountBillText(slot, { bill,
+      requestedVersion: new URLSearchParams(location.search).get('text-version'),
+      open: location.hash === '#bill-full-text',
+      onVersion(id) {
+        if (generation !== billTextGeneration) return;
+        const url = new URL(location.href); url.searchParams.set('text-version', id);
+        history.replaceState(null, '', url.pathname + url.search + url.hash); syncPathMeta();
+      },
+    });
+  } catch {
+    if (generation === billTextGeneration && slot?.isConnected) slot.innerHTML = '<p class="fineprint">The bill text reader could not load. Use the official sources above to read the original document.</p>';
+  }
+}
 
 function loadBillsIndex() {
   billsIndexPromise ??= fetch("/bills/index.json", { cache: "no-cache" })
@@ -7159,6 +7185,7 @@ async function openBillsIndex(params, manageFocus) {
     if (manageFocus) $("subject-title")?.focus();
     return;
   }
+  destroyBillText();
   billView = "index";
   const body = $("bill-body");
   body.innerHTML = `
@@ -7673,20 +7700,26 @@ function billRelatedHTML(bill) {
 /** /bill/<key> — one bill, whole. */
 async function openBill(key, manageFocus) {
   const view = `bill:${key}`;
-  if (billView === view) { if (manageFocus) $("bill-title")?.focus(); return; }
+  if (billView === view) {
+    const requestedVersion = new URLSearchParams(location.search).get('text-version');
+    billTextHandle?.selectVersion(requestedVersion, { open: Boolean(requestedVersion) || location.hash === '#bill-full-text' });
+    if (manageFocus) $("bill-title")?.focus(); return;
+  }
+  destroyBillText();
+  const generation = billTextGeneration;
   billView = view;
   activeDirectory = null;
   const body = $("bill-body");
   body.innerHTML = `
     <p class="kicker">Bill</p>
     <div class="subject-head">
-      <h2 id="bill-title" tabindex="-1">Opening the bill…</h2>
+      <h2 id="bill-title" tabindex="-1"><span class="visually-hidden">Opening the bill</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span></h2>
       <p class="subject-tag"><span id="bill-loader" class="subject-loader"></span></p>
-    </div>`;
+    </div>${skelHTML('section-skel', [100, 92, 78])}`;
   if (manageFocus) $("bill-title")?.focus();
   showPageLoader("bill-loader", "Opening the bill.");
   const bill = await loadBill(key);
-  if (billView !== view) return;
+  if (billView !== view || generation !== billTextGeneration) return;
   clearPageLoader("bill-loader");
   if (!bill) {
     body.innerHTML = `
@@ -7740,6 +7773,7 @@ async function openBill(key, manageFocus) {
       ${billhome ? actionBtn("external", billhome, "Official bill home", { external: true }) : ""}
       ${actionBtn("entry", "/bills", "All bills")}
     </p>
+    <div id="bill-text-slot"><div class="answer-skeleton bill-text-skeleton" aria-hidden="true"><i style="width:65%"></i><i style="width:95%"></i><i style="width:78%"></i></div><p class="visually-hidden" role="status">Checking published bill text</p></div>
     ${billTimelineHTML(bill)}
     ${billDivisionsHTML(bill)}
     ${billSpeechesHTML(bill)}
@@ -7750,6 +7784,7 @@ async function openBill(key, manageFocus) {
       ${actionBtn("entry", "/bills", "All bills")}
     </p>
     <p class="fineprint">${BILLS_FINEPRINT}</p>`;
+  openBillText(bill);
   if (manageFocus) $("bill-title")?.focus();
   const more = $("bill-divisions-more");
   if (more) {
@@ -9944,7 +9979,7 @@ const FILTER_KIND_LABELS = {
   press_release: "Government transcripts and releases", all: "All records",
   grant_invitation: "Grant invitations", grant_award: "Grant award records", election_baseline: "Election baselines", parliamentary_profile: "Recorded representation", research_report: "Research source notes",
   person: "Person", party: "Political party", donor: "Donor", receipt: "Political receipts",
-  agency: "Government agency", supplier: "Supplier", contract: "Government contract", grant: "Grant", bill: "Bill",
+  agency: "Government agency", supplier: "Supplier", contract: "Government contract", grant: "Grant", bill: "Bill", bill_text: "Bill text",
   interest: "Declared interest", expense: "Parliamentary expenses", access: "Meeting or lobbying register",
   campaigner: "Campaigner or associated entity", report: "Research report",
 };
@@ -9952,7 +9987,7 @@ const FILTER_KIND_LABELS = {
 // with it, so "Speeches" on a row is the same search, speeches only, rather
 // than an empty form. Dataset kinds go to their own hubs.
 function recordTypeHref(kind, q = "", f = {}) {
-  const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/discover', grant:'/money/grants', bill:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports' };
+  const roots = { person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/discover', grant:'/money/grants', bill:'/bills', bill_text:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports' };
   if (roots[kind]) return roots[kind];
   const p = new URLSearchParams();
   if (q) p.set("q", q);
@@ -10846,6 +10881,10 @@ mountExportMenu($("search-export-picker"), async (format) => {
 // --- document page ----------------------------------------------------------
 
 function citePanelHTML(doc) {
+  if ((doc.labels?.kind || doc.kind) === 'bill_text') {
+    const citation = [doc.title, doc.metadata?.stage, doc.metadata?.date, safeUrl(doc.url) || opaxUrl(doc.slug)].filter(Boolean).join('. ');
+    return `<h3>Source citation</h3><pre>${esc(citation)}</pre><p class="fineprint">Use the original bill document for authoritative wording and page or clause references.</p><button type="button" class="action-btn" data-doc-close="doc-cite">Close citations</button>`;
+  }
   const d = doc.metadata?.date || "";
   const year = d.slice(0, 4);
   const { family, given } = splitName(doc.speaker);
@@ -10896,8 +10935,10 @@ async function openDocPage(slug, manageFocus) {
     if (typeof doc.text === "string") doc.text = doc.text.replace(/[ \t]*View the PC OA website[ \t]*$/gm, "").trimEnd();
     if (currentDocSlug !== slug) return; // user navigated away while fetching
     currentDoc = doc;
+    const isBillText = (doc.labels?.kind || doc.kind) === 'bill_text';
+    if (isBillText) doc.speaker = null;
     const isGovernmentRelease = doc.labels?.kind === "press_release";
-    const isResearchRecord = ["grant_invitation", "grant_award", "election_baseline", "parliamentary_profile", "research_report"].includes(doc.labels?.kind);
+    const isResearchRecord = isBillText || ["grant_invitation", "grant_award", "election_baseline", "parliamentary_profile", "research_report"].includes(doc.labels?.kind);
     setStatus($("doc-status"), "");
     // The headline is the speaker; the title repeats what the byline says, so
     // it only stands in when no speaker is attached, and then as its subject.
@@ -10933,7 +10974,7 @@ async function openDocPage(slug, manageFocus) {
       : CHAMBER_NAMES[String(doc.labels?.chamber || "").toLowerCase()];
     const state = doc.labels?.state;
     const stateName = state ? (STATE_NAMES[state] || state) : null;
-    const house = isResearchRecord ? FILTER_KIND_LABELS[doc.labels.kind] : isGovernmentRelease
+    const house = isBillText ? 'Bill text' : isResearchRecord ? FILTER_KIND_LABELS[doc.labels.kind] : isGovernmentRelease
       ? (state === "federal" ? "Australian Government" : state ? `${stateName} Government` : "Government release")
       : chamber
       ? (state && state !== "federal" ? `${chamber}, ${stateName}` : chamber)
@@ -10982,7 +11023,12 @@ async function openDocPage(slug, manageFocus) {
       $("doc-brief-text").textContent = doc.summary;
       $("doc-brief").hidden = false;
     }
-    renderDocBillPanel(doc, slug);
+    document.querySelector('#doc-brief .doc-brief-note').textContent = isBillText ? 'Written from this document by a model, not part of the original bill text.' : 'Written from this speech by a model, not by a person, and not part of the record.';
+    if (isBillText && /^[a-z0-9][a-z0-9-]{1,160}$/.test(doc.metadata?.bill_key || '')) {
+      const version = typeof doc.metadata?.version_id === 'string' ? '?text-version=' + encodeURIComponent(doc.metadata.version_id) : '';
+      $('doc-bill').innerHTML = `<a class="action-btn" href="/bill/${encodeURIComponent(doc.metadata.bill_key)}${version}#bill-full-text">Bill page and text versions</a><p class="fineprint">${doc.metadata.complete === false ? 'Incomplete extracted bill text. Use the original document for the complete bill.' : 'Published bill text. Check the original document for authoritative wording and formatting.'}</p>`;
+      $('doc-bill').hidden = false;
+    } else renderDocBillPanel(doc, slug);
     renderDocText(doc);
     $("doc-ask").href = askHash(
       docAskQuestion(doc, topic, isGovernmentRelease || isResearchRecord),
@@ -10993,6 +11039,8 @@ async function openDocPage(slug, manageFocus) {
     $("doc-foot-actions").hidden = false;
     $("doc-profile").hidden = !doc.speaker;
     $("doc-more").hidden = !doc.speaker;
+    $('doc-similar').hidden = isBillText;
+    $('doc-similar-foot').hidden = isBillText;
     $("doc-cite-panel").innerHTML = citePanelHTML(doc);
     if (doc.labels?.source === "openaustralia") {
       $("doc-caveat").hidden = false;
@@ -11039,6 +11087,10 @@ function docAskQuestion(doc, debate, isRecord) {
 // Preserve the source verbatim, including whitespace. Only presentation changes.
 function renderDocText(doc) {
   let text = String(doc.text || "(no text)");
+  if ((doc.labels?.kind || doc.kind) === 'bill_text') {
+    const body = document.createElement('div'); body.className = 'bill-text-source'; body.textContent = text;
+    $('doc-text').replaceChildren(body); return;
+  }
   const nodes = [];
   const paragraph = (value, className = "") => {
     const p = document.createElement("p");

@@ -31,3 +31,10 @@ test('sorting precedes pagination and retains query scope and counts',async()=>{
  assert.equal(old.data.total,recent.data.total);
  assert.equal((await f.run({sort:'oldest',per:'1',page:'2'})).data.results[0].kind,'contract');
 });
+
+test('bill searches include original text retrieval alongside register matches',async()=>{
+ const f=fixture();await f.run({kind:'bill'});assert.deepEqual(f.calls,['catalog','/api/search?bill_text']);
+});
+test('bill-text-only searches query the corpus without unrelated register matches',async()=>{
+ const f=fixture();await f.run({kind:'bill_text'});assert.deepEqual(f.calls,['/api/search?bill_text']);
+});

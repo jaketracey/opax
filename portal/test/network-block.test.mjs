@@ -20,6 +20,7 @@ test('blocked network gets 403 on paid routes only', async () => {
   assert.equal(blocked.headers.get('cache-control'), 'no-store');
   assert.deepEqual(await blocked.json(), { error: 'forbidden', reason: 'network' });
   assert.equal(networkBlock(req('/og/money.png', 45102), {}, '/og/money.png')?.status, 403);
+  assert.equal(networkBlock(req('/bill-texts/au-federal-r7542/index.json', 45102), {}, '/bill-texts/au-federal-r7542/index.json')?.status, 403);
   assert.equal(networkBlock(req('/', 45102), {}, '/'), null, 'pages stay open');
   assert.equal(networkBlock(req('/bills/index.json', 45102), {}, '/bills/index.json'), null, 'static data stays open');
   assert.equal(networkBlock(req('/ingest/e/', 45102), {}, '/ingest/e/'), null);

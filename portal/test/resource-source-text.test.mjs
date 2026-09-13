@@ -5,7 +5,7 @@ import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
 
 const source=ts.createSourceFile('index.ts',readFileSync(new URL('../src/index.ts',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
-const slugDeclarations=source.statements.filter(n=>ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>/^(?:SLUG_RE|PRESS_SLUG_RE|RESEARCH_SLUG_RE|DIVISION_SLUG_RE|isPublicSlug)$/.test(d.name.getText(source)))).map(n=>n.getText(source)).join('\n');
+const slugDeclarations=source.statements.filter(n=>ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>/^(?:SLUG_RE|BILL_TEXT_SLUG_RE|PRESS_SLUG_RE|RESEARCH_SLUG_RE|DIVISION_SLUG_RE|isPublicSlug)$/.test(d.name.getText(source)))).map(n=>n.getText(source)).join('\n');
 const isPublicSlug=runInNewContext(ts.transpile(slugDeclarations)+'; isPublicSlug');
 const handler=source.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='apiResource').getText(source);
 async function readSource(texts,slug='research-cpi-mlci-2026') {
@@ -48,4 +48,13 @@ test('verified venue note sources are readable while unrelated slugs stay closed
   assert.equal(result.text,'Derived venue evidence, not an award or payment.');
  }
  for(const slug of ['grant-site-evidence-admin','grant-site-evidence-mlci-invitation-067/secret','grant-site-evidence-mlci-invitation-67','../members','grant-site-evidence-gaNaN'])assert.equal(isPublicSlug(slug),false);
+});
+
+
+test('full bill text resources are readable without including generated summaries',async()=>{
+ const slug='bill-text-au-federal-r7451-aspassed';
+ assert.equal(isPublicSlug(slug),true);
+ const result=await readSource({body:field('Section 1.\n\n'),'body-1':field('Schedule 1.\nFinal provision.'),'da-summary-t-body':field('Summary only.')},slug);
+ assert.equal(result.text,'Section 1.\n\nSchedule 1.\nFinal provision.');
+ for(const bad of ['bill-text-../secret','bill-text-au-federal-r7451/aspassed','bill-text-au-federal-'])assert.equal(isPublicSlug(bad),false);
 });
