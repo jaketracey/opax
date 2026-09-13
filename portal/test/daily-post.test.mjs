@@ -311,7 +311,8 @@ test('a bill with a division and dates gets a timeline and the division; one wit
   assert.deepEqual(types(passed), ['cover', 'list', 'timeline', 'division', 'picture', 'source']);
   const [cover, list, timeline, division, touches, source] = passed.slides;
   assert.equal(cover.kicker, 'Bill · Treasury portfolio');
-  assert.equal(cover.title, 'Changes how the tax system treats eligible household payments');
+  assert.equal(cover.title, 'Recently Passed', 'the cover headline is the bill\'s own name without its Bill 2026 tail')
+  assert.match(cover.line, /^It changes how the tax system treats eligible household payments\. Passed 20 Aug 2026\.$/);
   assert.equal(cover.photo, 'senate', 'the division house chooses the chamber photo');
   assert.equal(list.items.length, 3);
   assert.equal(list.note, 'Written by a model from the explanatory memorandum; not the record.');

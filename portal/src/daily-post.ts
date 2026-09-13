@@ -310,7 +310,10 @@ function siblingsSlide(recipient: ShardRecipient | null): StorySlide | null {
   if (awards.length < 2) return null
   const agencies = new Set(awards.map(g => g.ag).filter(Boolean))
   const rows = [...awards].sort((a, b) => (a.fy ?? a.s ?? '').localeCompare(b.fy ?? b.s ?? '') || b.v - a.v).slice(0, 5)
-    .map(g => ({ c1: g.fy ?? formatDate(g.s), c2: [clip(String(g.desc || g.n || '').replace(/\s+/g, ' ').trim(), 70), shortAgency(g.ag)].filter(Boolean).join(' · '), amount: formatMoney(g.v) }))
+    // The description column holds about two rows of forty characters on the
+    // slide, so the purpose and the agency are each cut here, on a word, rather
+    // than letting the renderer cut the pair mid-way.
+    .map(g => ({ c1: g.fy ?? formatDate(g.s), c2: [clip(String(g.desc || g.n || '').replace(/\s+/g, ' ').trim(), 46), clip(shortAgency(g.ag), 28)].filter(Boolean).join(' · '), amount: formatMoney(g.v) }))
   const total = awards.reduce((sum, g) => sum + g.v, 0)
   const title = `${dayWords(awards.length)} awards, ${agencies.size > 1 ? `${dayWords(agencies.size).toLowerCase()} departments` : 'one department'}`
   return { type: 'ledger', kicker: 'The same recipient', title, lines: [], rows,
@@ -493,9 +496,10 @@ async function billSlides(sources: DailyPostSources, bill: BillIndexItem, record
   const house = latest?.house ?? record?.originating_house ?? null
   const ids = photosFor(catalogue, `bill:${bill.key}`, 'bill', house)
   const kicker = words.sponsor ? `Bill · ${words.sponsor}${words.party ? ` (${words.party})` : ''}` : bill.portfolio ? `Bill · ${bill.portfolio} portfolio` : 'Bill'
-  const headline = sentenceCase(sentences[0].replace(/^(?:(?:the|this) bill|it)\s+(?:(?:would|will)\s+)?/i, '').replace(/\.$/, ''))
-  const shortTitle = clip(bill.short_title || bill.title, 90)
-  const cover: StorySlide = { type: 'cover', kicker, title: clip(headline, 84), line: `${shortTitle}${shortTitle.endsWith('…') ? '' : '.'} ${words.statusShort}`, photo: takePhoto(billPhotos, ids, 0),
+  // The headline is the bill's own name without its "Bill 2026" tail: always
+  // grammatical, where a clipped summary sentence is not. The sentence is the line.
+  const headline = (bill.short_title || bill.title).replace(/\s+Bill\s+(?:\(No\.?\s*\d+\)\s+)?\d{4}(?:\s+\[.*\])?$/i, '').replace(/\s+/g, ' ').trim() || bill.title
+  const cover: StorySlide = { type: 'cover', kicker, title: clip(headline, 84), line: `${clip(sentences[0], 150)} ${words.statusShort}`, photo: takePhoto(billPhotos, ids, 0),
     alt: `${bill.title}. ${sentences[0]} ${words.statusShort}` }
   const what: StorySlide = { type: 'list', kicker: 'What it does', title: `In ${dayWords(Math.min(3, sentences.length)).toLowerCase()} sentence${sentences.length > 1 ? 's' : ''}`,
     items: sentences.slice(0, 3), note: record?.summary?.attribution ? `${record.summary.attribution.replace(/\.?$/, '')}.` : 'Written by a model from the explanatory memorandum; not the record.',
