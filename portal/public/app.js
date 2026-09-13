@@ -6955,7 +6955,7 @@ async function openBillText(bill) {
   const generation = billTextGeneration;
   const slot = $('bill-text-slot');
   try {
-    const module = await import('/bill-text.js?v=full-bill-reader-20260913');
+    const module = await import('/bill-text.js?v=codex-enrichment-20260913');
     if (generation !== billTextGeneration || billView !== `bill:${bill.key}` || !slot?.isConnected) return;
     billTextHandle = module.mountBillText(slot, { bill,
       requestedVersion: new URLSearchParams(location.search).get('text-version'),

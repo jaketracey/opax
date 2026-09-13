@@ -25,6 +25,26 @@ const json = (body: unknown, status = 200) => Response.json(body, { status, head
 function sourceUrl(value: unknown): string | null {
   try { const url = new URL(string(value)); return url.protocol === 'https:' || url.protocol === 'http:' ? url.href : null } catch { return null }
 }
+/** Generated notes are optional and must match the verified original version. */
+function sourceEnrichment(value: unknown, key: string, id: string, sha: string, sections: { id: string; text: string }[]) {
+  if (!value || typeof value !== 'object') return null
+  const entry = value as Metadata
+  if (entry.bill_key !== key || entry.version_id !== id || entry.source_sha256 !== sha ||
+      entry.review_scope !== 'selected-provisions' || !['high', 'medium'].includes(string(entry.confidence)) ||
+      !string(entry.brief) || string(entry.brief).length > 1000 || !Array.isArray(entry.topics) || entry.topics.length > 4 ||
+      !entry.topics.every(topic => typeof topic === 'string' && /^[a-z]+(?:-[a-z]+)*$/.test(topic)) ||
+      !Array.isArray(entry.evidence) || !entry.evidence.length || entry.evidence.length > 12) return null
+  const evidence: { topic: string | null; quote: string; section_id: string }[] = []
+  for (const item of entry.evidence) {
+    if (!item || typeof item !== 'object') return null
+    const quote = string(item.quote), section = sections.find(section => section.id === item.section_id)
+    if (quote.length < 30 || quote.length > 220 || !section?.text.includes(quote) ||
+        (item.topic !== null && !entry.topics.includes(item.topic))) return null
+    evidence.push({ topic: item.topic, quote, section_id: section.id })
+  }
+  if (!entry.topics.every(topic => evidence.some(item => item.topic === topic))) return null
+  return { brief: string(entry.brief), topics: entry.topics as string[], evidence, model: string(entry.model), review_scope: entry.review_scope }
+}
 function versionMetadata(resource: Resource, key: string, requestedId?: string) {
   const meta = resource.extra?.metadata ?? {}
   const id = string(meta.version_id)
@@ -112,7 +132,8 @@ async function fullVersion(key: string, id: string, deps: BillTextDependencies) 
   if (!sections.length || sections.map(section => section.text).join('\n\n') !== text) {
     sections = [{ id: 'full-text', title: 'Bill text', text, source_url: version.source_url }]
   }
-  return { bill_key: key, title: string(meta.title), version, text, sections, complete: true }
+  return { bill_key: key, title: string(meta.title), version, text, sections, complete: true,
+    enrichment: sourceEnrichment(meta.codex_enrichment, key, id, sha, sections) }
 }
 
 /** Null lets the caller try a pre-exported static asset. Failures are never cached. */

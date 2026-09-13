@@ -4731,6 +4731,13 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .home-tasks span { color: var(--ink-soft); font-size: .85rem; }
 #front-map-root .rp-map3d-territory { font-size: 13px; letter-spacing: .015em; text-transform: none; }
 #front-map-root .rp-map3d-territory[data-hub] { font-size: 13px; letter-spacing: .015em; }
+.bill-text-overview { margin: 1.5rem 0; padding: 1.25rem 0; border-block: 1px solid var(--line); }
+.bill-text-overview h4 { margin: 0 0 .6rem; }
+.bill-text-overview p { max-width: 75ch; }
+.bill-text-topics { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin: .8rem 0; }
+.bill-text-topics a { color: var(--bronze-ink); text-transform: capitalize; }
+.bill-text-evidence summary { color: var(--bronze-ink); cursor: pointer; }
+.bill-text-evidence blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 2px solid var(--line); max-width: 75ch; }
 .home-map-stage { position: relative; margin: 1rem 0; }
 .home-map-stage #front-map-root { width: 100%; height: clamp(420px,38vw,540px); min-height: 420px; }
 .home-map-invite { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.3rem; align-items: center; padding: 1rem 0; border-top: 1px solid var(--line); }
