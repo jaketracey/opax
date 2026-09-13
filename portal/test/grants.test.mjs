@@ -3,10 +3,17 @@
 // government-of-the-day share and the CSV.
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import {
+  APPROVAL_BUCKETS, MARGIN_BUCKETS, SEAT_BLOCS, TIMING_BUCKETS, bucketRows,
   buildCSV, donorBlocs, donorSummary, filterElectorates, filterPrograms, filterRecipients, fmtMoney,
-  fileKey, formatABN, fyShort, fyStart, govBlocAt, govShare, latestMargin, sortRows, windowTotals, yearSpan,
+  fileKey, formatABN, fyShort, fyStart, govBlocAt, govShare, grantConnectUrl, grantDate, latestMargin,
+  programByName, programKey, programShares, shareOf, sortRows, viewColumns, windowTotals, yearSpan,
 } from '../public/grants.js'
+
+const fixture = (name) => JSON.parse(readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8'))
+const programFile = fixture('grants-program-go3141.json')   // contract section 1
+const programIndex = fixture('grants-index-programs.json')  // contract section 2: programs[] rows
 
 const agencies = ['Department of Health', 'Department of Infrastructure']
 const years = ['2018-19', '2019-20', '2020-21', '2021-22', '2022-23']
@@ -126,4 +133,133 @@ test('buildCSV: comment header, one row per recipient, money as integers', () =>
   assert.equal(lines.length, 3 + 3)
   assert.match(lines[3], /^Beta Shire Council,Local council,abn:2,900,3,2019-20,2019-20,Department of Infrastructure,0,,,,$/)
   assert.match(lines[4], /^Alpha Care Ltd,Company,abn:1,500,5,2018-19,2022-23,Department of Health,50,Alpha Care,30000,Labor,5000$/)
+})
+
+// ---- program files (contract 2026-09-13) ----------------------------------
+
+test('programKey mirrors the exporter: lowercase, non-alphanumerics to dashes, trimmed, at most 80', () => {
+  assert.equal(programKey('GO3141'), 'go3141')
+  assert.equal(programKey('activity:Some title'), 'activity-some-title')
+  assert.equal(programKey('  Regional Economic Futures Fund (2021) '), 'regional-economic-futures-fund-2021')
+  assert.equal(programKey(''), '')
+  const long = programKey('x'.repeat(70) + ' ' + 'y'.repeat(30))
+  assert.ok(long.length <= 80)
+  assert.ok(!long.endsWith('-'))
+  assert.equal(programKey(programFile.id), programFile.key)
+  for (const p of programIndex.programs.filter((r) => r.key)) assert.equal(programKey(p.id), p.key)
+})
+
+test('shareOf and programShares: null when the base is not recorded, gov null off the federal file', () => {
+  assert.equal(shareOf(1, 0), null)
+  assert.equal(shareOf(0, 0), null)
+  assert.equal(shareOf(null, 10), 0)
+  assert.equal(shareOf(3, 4), 0.75)
+  const [cdg, phn, activity, legacy] = programIndex.programs
+  const s = programShares(cdg)
+  assert.equal(Math.round(s.cnc * 1000), Math.round(5650000 / 8250000 * 1000))
+  assert.equal(Math.round(s.gov * 1000), Math.round(550000 / 8200000 * 1000))
+  assert.equal(programShares(phn).cnc, null)          // selk 0: the column shows a dash, never 0%
+  assert.equal(programShares(phn).gov, 0.25)
+  assert.equal(programShares(activity).gov, null)     // elk 0
+  assert.deepEqual(programShares(legacy), { cnc: null, gov: null })  // an index without the new fields
+  assert.deepEqual(programShares(programIndex.qldPrograms[0]), { cnc: 1, gov: null })
+})
+
+test('filterPrograms carries the two new shares and sortRows orders on them with unknowns last', () => {
+  const ctx = { agencies: programIndex.agencies }
+  const base = { q: '', agency: '', donors: false, yearFrom: null, yearTo: null, min: 0 }
+  const rows = filterPrograms(programIndex.programs, base, ctx)
+  assert.equal(rows.length, 4)
+  const cdg = rows.find((r) => r.id === 'GO3141')
+  assert.ok(cdg.cncS > 0.68 && cdg.cncS < 0.69)
+  assert.equal(rows.find((r) => r.id === 'GO2').cncS, null)
+  // the two without a recorded selection process tie and fall back to the name sort
+  assert.deepEqual(sortRows(rows, 'cnc', 'desc').map((r) => r.id), ['activity:Some Title', 'GO3141', 'GO9', 'GO2'])
+  assert.deepEqual(sortRows(rows, 'cnc', 'asc').map((r) => r.id), ['GO9', 'GO2', 'GO3141', 'activity:Some Title'])
+  assert.deepEqual(sortRows(rows, 'gov', 'desc').map((r) => r.id), ['GO2', 'GO3141', 'GO9', 'activity:Some Title'])
+  // the existing filters still apply to the new rows
+  assert.deepEqual(filterPrograms(programIndex.programs, { ...base, q: 'health' }, ctx).map((r) => r.id), ['GO2', 'activity:Some Title'])
+})
+
+test('viewColumns: the seat column is federal only', () => {
+  assert.deepEqual(viewColumns('programs', 'federal').map((c) => c.key), ['n', 'agency', 't', 'c', 'r', 'share', 'cnc', 'gov', 'adhoc'])
+  assert.deepEqual(viewColumns('programs', 'qld').map((c) => c.key), ['n', 'agency', 't', 'c', 'r', 'share', 'cnc', 'adhoc'])
+  assert.equal(viewColumns('recipients', 'qld').length, viewColumns('recipients', 'federal').length)
+})
+
+test('programByName links a recipient file\'s program names only to rows that have a file', () => {
+  const m = programByName(programIndex.programs)
+  assert.equal(m.get('Community Development Grants').id, 'GO3141')
+  assert.equal(m.get('Community Development Grants').key, 'go3141')
+  assert.equal(m.has('Legacy row without a key'), false)
+  assert.equal(programByName(null).size, 0)
+})
+
+test('bucketRows keeps the contract order, shares of the bucket total, and skips missing keys', () => {
+  const seats = bucketRows(programFile.seats, SEAT_BLOCS)
+  assert.deepEqual(seats.map((b) => b.key), ['gov', 'opp', 'cross', 'unknown'])
+  assert.deepEqual(seats.map((b) => b.d), [550000, 2200000, 5450000, 300000])
+  assert.equal(Math.round(seats.reduce((s, b) => s + b.share, 0) * 1000), 1000)
+  assert.equal(seats[0].label, 'Government-held seats')
+  const margins = bucketRows(programFile.margins, MARGIN_BUCKETS)
+  assert.deepEqual(margins.map((b) => [b.key, b.c]), [['marginal', 1], ['fairly_safe', 2], ['safe', 7], ['unknown', 2]])
+  const timing = bucketRows(programFile.timing.months_to_election, TIMING_BUCKETS)
+  assert.deepEqual(timing.map((b) => b.key), ['0_3', '3_6', '6_12', '12_24', 'over_24', 'unknown'])
+  assert.equal(timing[2].d, 0)                      // an empty bucket stays, so the reader sees the zero
+  assert.equal(timing[2].share, 0)
+  const approval = bucketRows(programFile.timing.approval_to_start_days, APPROVAL_BUCKETS)
+  assert.equal(approval.reduce((s, b) => s + b.d, 0), programFile.timing.approval_known[0])
+  assert.deepEqual(bucketRows({ safe: [10, 1] }, MARGIN_BUCKETS).map((b) => b.key), ['safe'])
+  assert.deepEqual(bucketRows(null, MARGIN_BUCKETS), [])   // QLD: seats/margins null, render nothing
+  const sel = bucketRows(programFile.sel, Object.keys(programFile.sel).map((k) => [k, k]))
+  assert.equal(sel[0].label, 'Closed Non-Competitive')
+  assert.equal(Math.round(sel[0].share * 100), Math.round(5650000 / 8250000 * 100))
+})
+
+test('the fixture honours the contract: totals reconcile and the pre-2019 grant has no margin', () => {
+  const sum = (o) => Object.values(o).reduce((s, x) => s + x[0], 0)
+  assert.equal(programFile.grants.reduce((s, g) => s + g.v, 0), programFile.t)
+  assert.equal(sum(programFile.by), programFile.t)
+  assert.equal(sum(programFile.seats), programFile.t)
+  assert.equal(sum(programFile.margins), programFile.t)
+  assert.equal(sum(programFile.timing.months_to_election), programFile.t)
+  assert.equal(sum(programFile.sel), programFile.sel_known[0])
+  assert.equal(programFile.electorates.reduce((s, e) => s + e.t, 0), programFile.el_known[0])
+  const pre2019 = programFile.grants.find((g) => g.id === 'GA1002')
+  assert.ok(grantDate(pre2019) < '2019-05-18')
+  assert.equal(pre2019.mt, null)
+  const unknown = programFile.grants.find((g) => g.el == null)
+  assert.equal(unknown.bloc, 'unknown')
+  assert.equal(unknown.holder, null)
+  assert.equal(grantDate({ s: null, a: '2023-01-01' }), '2023-01-01')
+  assert.equal(grantDate({}), '')
+  assert.equal(grantConnectUrl('d276a0ae-c1e7-cb68-3393-4be19b8777b0'), 'https://www.grants.gov.au/Ga/Show/d276a0ae-c1e7-cb68-3393-4be19b8777b0')
+  assert.equal(grantConnectUrl(null), null)
+})
+
+test('buildCSV program view: one row per grant with seat, holder, margin and the GrantConnect link', () => {
+  const csv = buildCSV('program', programFile.grants, { agencies: programIndex.agencies }, ['OPAX test'])
+  const lines = csv.trim().split('\r\n')
+  assert.equal(lines[0], '# OPAX test')
+  assert.equal(lines[1], 'Grant id,Title,Recipient,Recipient id,Recipient kind,Value (AUD),Financial year,Start date,Approval date,Selection process,Electorate,State,Seat holder,Holder party,Seat bloc,Seat margin,Ad hoc or one-off,GrantConnect')
+  assert.equal(lines.length, 2 + 12)
+  assert.equal(lines[2], 'GA1001,Kennedy showground upgrade,Kennedy Showground Trust,abn:11000000011,Trust,2000000,2019-20,2019-11-04,2019-10-01,Closed Non-Competitive,Kennedy,QLD,Bob Katter,Katter\'s Australian Party,cross,safe,0,https://www.grants.gov.au/Ga/Show/11111111-0000-0000-0000-000000001001')
+  // nulls stay empty, quoting survives, the ad hoc flag is 0/1
+  assert.match(lines[3], /^GA1002,.*,2019-02-01,Closed Non-Competitive,Lingiari,NT,Warren Snowdon,Labor,opp,,0,/)
+  assert.match(lines[8], /^GA1007,"Mareeba memorial hall, ""stage two""",/)
+  assert.match(lines[9], /^GA1008,.*,2023-10-01,,Closed Non-Competitive,Lingiari,NT,Marion Scrymgour,Labor,gov,fairly_safe,1,/)
+  assert.match(lines[11], /^GA1010,.*,Closed Non-Competitive,,,,,unknown,,0,/)
+  // a QLD-shaped row: no guid, no holder
+  const qld = buildCSV('program', [{ id: 'q1', v: 5000, n: 'Shed', rid: 'name:shed', rn: 'Shed Inc', k: 'company', fy: '2021-22', s: '2021-08-01', a: null, sel: 'Closed Non-Competitive', el: 'Kennedy', elst: 'qld', holder: null, bloc: 'unknown', mt: null, adhoc: 0, guid: null }], {}, [])
+  assert.equal(qld.trim().split('\r\n')[1], 'q1,Shed,Shed Inc,name:shed,Company,5000,2021-22,2021-08-01,,Closed Non-Competitive,Kennedy,QLD,,,unknown,,0,')
+})
+
+test('buildCSV programs view carries the new columns and blanks them on an index without them', () => {
+  const ctx = { agencies: programIndex.agencies }
+  const rows = filterPrograms(programIndex.programs, { q: '', agency: '', donors: false, yearFrom: null, yearTo: null, min: 0 }, ctx)
+  const lines = buildCSV('programs', sortRows(rows, 't', 'desc'), ctx, []).trim().split('\r\n')
+  assert.match(lines[0], /^Program,Program id,Agency,.*Closed non-competitive \(AUD\),Selection process recorded \(AUD\),Closed non-competitive share \(%\),To government-held seats \(AUD\),Electorate mapped \(AUD\),To government-held seats share \(%\),First year,Last year$/)
+  assert.equal(lines[1], 'Community Development Grants,GO3141,Department of Infrastructure, Transport, Regional Development, Communications and the Arts,8500000,12,9,900000,11,450000,5650000,8250000,68,550000,8200000,7,2018-19,2025-26'.replace('Department of Infrastructure, Transport, Regional Development, Communications and the Arts', '"Department of Infrastructure, Transport, Regional Development, Communications and the Arts"'))
+  assert.match(lines[2], /^Primary Health Networks,GO2,.*,0,0,0,0,,1000000,4000000,25,2020-21,2021-22$/)
+  assert.match(lines[4], /^Legacy row without a key,GO9,.*,0,,,,,,,2016-17,2016-17$/)
 })

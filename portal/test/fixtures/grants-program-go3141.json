@@ -1,0 +1,586 @@
+{
+ "id": "GO3141",
+ "key": "go3141",
+ "n": "Community Development Grants",
+ "jur": "federal",
+ "ag": "Department of Infrastructure, Transport, Regional Development, Communications and the Arts",
+ "agencies": [
+  [
+   "Department of Infrastructure, Transport, Regional Development, Communications and the Arts",
+   8500000
+  ]
+ ],
+ "t": 8500000,
+ "c": 12,
+ "r": 9,
+ "dt": 900000,
+ "dr": 2,
+ "adhoc": 450000,
+ "y0": "2018-19",
+ "y1": "2025-26",
+ "cats": [
+  [
+   "Regional Development",
+   6000000
+  ],
+  [
+   "Community Infrastructure",
+   2500000
+  ]
+ ],
+ "pbs": [
+  [
+   "ITRDCSA 18/19 3.1: Regional Development",
+   8500000
+  ]
+ ],
+ "sel": {
+  "Closed Non-Competitive": [
+   5650000,
+   6
+  ],
+  "Open Competitive": [
+   1400000,
+   2
+  ],
+  "Targeted or Restricted Competitive": [
+   700000,
+   1
+  ],
+  "Demand Driven": [
+   400000,
+   1
+  ],
+  "Open Non-competitive": [
+   100000,
+   1
+  ]
+ },
+ "sel_known": [
+  8250000,
+  11
+ ],
+ "by": {
+  "2018-19": [
+   1500000,
+   1
+  ],
+  "2019-20": [
+   2250000,
+   2
+  ],
+  "2020-21": [
+   1000000,
+   2
+  ],
+  "2021-22": [
+   1700000,
+   2
+  ],
+  "2022-23": [
+   600000,
+   1
+  ],
+  "2023-24": [
+   950000,
+   2
+  ],
+  "2024-25": [
+   400000,
+   1
+  ],
+  "2025-26": [
+   100000,
+   1
+  ]
+ },
+ "el_known": [
+  8200000,
+  11
+ ],
+ "seats": {
+  "gov": [
+   550000,
+   2
+  ],
+  "opp": [
+   2200000,
+   2
+  ],
+  "cross": [
+   5450000,
+   7
+  ],
+  "unknown": [
+   300000,
+   1
+  ]
+ },
+ "margins": {
+  "marginal": [
+   700000,
+   1
+  ],
+  "fairly_safe": [
+   550000,
+   2
+  ],
+  "safe": [
+   5450000,
+   7
+  ],
+  "unknown": [
+   1800000,
+   2
+  ]
+ },
+ "electorates": [
+  {
+   "n": "Kennedy",
+   "st": "qld",
+   "t": 3700000,
+   "c": 4,
+   "gov": 0,
+   "opp": 0,
+   "cross": 3700000,
+   "holders": [
+    [
+     "Bob Katter",
+     "Katter's Australian Party",
+     3700000
+    ]
+   ]
+  },
+  {
+   "n": "Lingiari",
+   "st": "nt",
+   "t": 2750000,
+   "c": 4,
+   "gov": 550000,
+   "opp": 2200000,
+   "cross": 0,
+   "holders": [
+    [
+     "Warren Snowdon",
+     "Labor",
+     2200000
+    ],
+    [
+     "Marion Scrymgour",
+     "Labor",
+     550000
+    ]
+   ]
+  },
+  {
+   "n": "Melbourne",
+   "st": "vic",
+   "t": 1750000,
+   "c": 3,
+   "gov": 0,
+   "opp": 0,
+   "cross": 1750000,
+   "holders": [
+    [
+     "Adam Bandt",
+     "Greens",
+     1750000
+    ]
+   ]
+  }
+ ],
+ "recipients": [
+  [
+   "abn:11000000011",
+   "Kennedy Showground Trust",
+   "trust",
+   2400000,
+   2,
+   false
+  ],
+  [
+   "abn:22000000022",
+   "Barkly Regional Council",
+   "council",
+   2300000,
+   3,
+   false
+  ],
+  [
+   "abn:33000000033",
+   "Arts Precinct Inc",
+   "association",
+   900000,
+   1,
+   false
+  ],
+  [
+   "abn:44000000044",
+   "Etheridge Shire Council",
+   "council",
+   800000,
+   1,
+   false
+  ],
+  [
+   "abn:55000000055",
+   "Youth Hub Ltd",
+   "company",
+   600000,
+   1,
+   true
+  ],
+  [
+   "abn:66000000066",
+   "Mareeba RSL Sub Branch",
+   "association",
+   500000,
+   1,
+   false
+  ],
+  [
+   "abn:77000000077",
+   "Lingiari School Council",
+   "association",
+   450000,
+   1,
+   false
+  ],
+  [
+   "abn:88000000088",
+   "National Body Ltd",
+   "company",
+   300000,
+   1,
+   true
+  ],
+  [
+   "abn:99000000099",
+   "City of Melbourne",
+   "council",
+   250000,
+   1,
+   false
+  ]
+ ],
+ "timing": {
+  "approval_known": [
+   8050000,
+   11
+  ],
+  "approval_to_start_days": {
+   "before_approval": [
+    0,
+    0
+   ],
+   "0_30": [
+    3850000,
+    8
+   ],
+   "31_90": [
+    4200000,
+    3
+   ],
+   "91_365": [
+    0,
+    0
+   ],
+   "over_365": [
+    0,
+    0
+   ]
+  },
+  "months_to_election": {
+   "0_3": [
+    2300000,
+    2
+   ],
+   "3_6": [
+    1300000,
+    2
+   ],
+   "6_12": [
+    0,
+    0
+   ],
+   "12_24": [
+    1950000,
+    4
+   ],
+   "over_24": [
+    2850000,
+    3
+   ],
+   "unknown": [
+    100000,
+    1
+   ]
+  }
+ },
+ "grants": [
+  {
+   "id": "GA1001",
+   "v": 2000000,
+   "n": "Kennedy showground upgrade",
+   "rid": "abn:11000000011",
+   "rn": "Kennedy Showground Trust",
+   "k": "trust",
+   "fy": "2019-20",
+   "s": "2019-11-04",
+   "a": "2019-10-01",
+   "sel": "Closed Non-Competitive",
+   "el": "Kennedy",
+   "elst": "qld",
+   "holder": [
+    "Bob Katter",
+    "Katter's Australian Party"
+   ],
+   "bloc": "cross",
+   "mt": "safe",
+   "adhoc": 0,
+   "guid": "11111111-0000-0000-0000-000000001001"
+  },
+  {
+   "id": "GA1002",
+   "v": 1500000,
+   "n": "Lingiari community hall",
+   "rid": "abn:22000000022",
+   "rn": "Barkly Regional Council",
+   "k": "council",
+   "fy": "2018-19",
+   "s": "2019-03-15",
+   "a": "2019-02-01",
+   "sel": "Closed Non-Competitive",
+   "el": "Lingiari",
+   "elst": "nt",
+   "holder": [
+    "Warren Snowdon",
+    "Labor"
+   ],
+   "bloc": "opp",
+   "mt": null,
+   "adhoc": 0,
+   "guid": "11111111-0000-0000-0000-000000001002"
+  },
+  {
+   "id": "GA1003",
+   "v": 900000,
+   "n": "Melbourne arts precinct",
+   "rid": "abn:33000000033",
+   "rn": "Arts Precinct Inc",
+   "k": "association",
+   "fy": "2021-22",
+   "s": "2022-02-10",
+   "a": "2022-01-20",
+   "sel": "Open Competitive",
+   "el": "Melbourne",
+   "elst": "vic",
+   "holder": [
+    "Adam Bandt",
+    "Greens"
+   ],
+   "bloc": "cross",
+   "mt": "safe",
+   "adhoc": 0,
+   "guid": "11111111-0000-0000-0000-000000001003"
+  },
+  {
+   "id": "GA1004",
+   "v": 800000,
+   "n": "Kennedy road safety",
+   "rid": "abn:44000000044",
+   "rn": "Etheridge Shire Council",
+   "k": "council",
+   "fy": "2021-22",
+   "s": "2022-03-01",
+   "a": "2022-02-15",
+   "sel": "Closed Non-Competitive",
+   "el": "Kennedy",
+   "elst": "qld",
+   "holder": [
+    "Bob Katter",
+    "Katter's Australian Party"
+   ],
+   "bloc": "cross",
+   "mt": "safe",
+   "adhoc": 0,
+   "guid": "11111111-0000-0000-0000-000000001004"
+  },
+  {
+   "id": "GA1005",
+   "v": 700000,
+   "n": "Lingiari water security",
+   "rid": "abn:22000000022",
+   "rn": "Barkly Regional Council",
+   "k": "council",
+   "fy": "2020-21",
+   "s": "2020-09-01",
+   "a": "2020-08-01",
+   "sel": "Targeted or Restricted Competitive",
+   "el": "Lingiari",
+   "elst": "nt",
+   "holder": [
+    "Warren Snowdon",
+    "Labor"
+   ],
+   "bloc": "opp",
+   "mt": "marginal",
+   "adhoc": 0,
+   "guid": "11111111-0000-0000-0000-000000001005"
+  },
+  {
+   "id": "GA1006",
+   "v": 600000,
+   "n": "Melbourne youth hub",
+   "rid": "abn:55000000055",
+   "rn": "Youth Hub Ltd",
+   "k": "company",
+   "fy": "2022-23",
+   "s": "2022-09-12",
+   "a": "2022-08-30",
+   "sel": "Closed Non-Competitive",
+   "el": "Melbourne",
+   "elst": "vic",
+   "holder": [
+    "Adam Bandt",
+    "Greens"
+   ],
+   "bloc": "cross",
+   "mt": "safe",
+   "adhoc": 0,
+   "guid": "11111111-0000-0000-0000-000000001006"
+  },
+  {
+   "id": "GA1007",
+   "v": 500000,
+   "n": "Mareeba memorial hall, \"stage two\"",
+   "rid": "abn:66000000066",
+   "rn": "Mareeba RSL Sub Branch",
+   "k": "association",
+   "fy": "2023-24",
+   "s": "2023-08-01",
+   "a": "2023-07-15",
+   "sel": "Open Competitive",
+   "el": "Kennedy",
+   "elst": "qld",
+   "holder": [
+    "Bob Katter",
+    "Katter's Australian Party"
+   ],
+   "bloc": "cross",
+   "mt": "safe",
+   "adhoc": 0,
+   "guid": "11111111-0000-0000-0000-000000001007"
+  },
+  {
+   "id": "GA1008",
+   "v": 450000,
+   "n": "Lingiari school grounds",
+   "rid": "abn:77000000077",
+   "rn": "Lingiari School Council",
+   "k": "association",
+   "fy": "2023-24",
+   "s": "2023-10-01",
+   "a": null,
+   "sel": "Closed Non-Competitive",
+   "el": "Lingiari",
+   "elst": "nt",
+   "holder": [
+    "Marion Scrymgour",
+    "Labor"
+   ],
+   "bloc": "gov",
+   "mt": "fairly_safe",
+   "adhoc": 1,
+   "guid": "11111111-0000-0000-0000-000000001008"
+  },
+  {
+   "id": "GA1009",
+   "v": 400000,
+   "n": "Kennedy sports lighting",
+   "rid": "abn:11000000011",
+   "rn": "Kennedy Showground Trust",
+   "k": "trust",
+   "fy": "2024-25",
+   "s": "2024-11-20",
+   "a": "2024-11-01",
+   "sel": "Demand Driven",
+   "el": "Kennedy",
+   "elst": "qld",
+   "holder": [
+    "Bob Katter",
+    "Katter's Australian Party"
+   ],
+   "bloc": "cross",
+   "mt": "safe",
+   "adhoc": 0,
+   "guid": "11111111-0000-0000-0000-000000001009"
+  },
+  {
+   "id": "GA1010",
+   "v": 300000,
+   "n": "National resilience toolkit",
+   "rid": "abn:88000000088",
+   "rn": "National Body Ltd",
+   "k": "company",
+   "fy": "2020-21",
+   "s": "2020-12-01",
+   "a": "2020-11-15",
+   "sel": "Closed Non-Competitive",
+   "el": null,
+   "elst": null,
+   "holder": null,
+   "bloc": "unknown",
+   "mt": null,
+   "adhoc": 0,
+   "guid": "11111111-0000-0000-0000-000000001010"
+  },
+  {
+   "id": "GA1011",
+   "v": 250000,
+   "n": "Melbourne pool refit",
+   "rid": "abn:99000000099",
+   "rn": "City of Melbourne",
+   "k": "council",
+   "fy": "2019-20",
+   "s": "2019-08-15",
+   "a": "2019-08-01",
+   "sel": null,
+   "el": "Melbourne",
+   "elst": "vic",
+   "holder": [
+    "Adam Bandt",
+    "Greens"
+   ],
+   "bloc": "cross",
+   "mt": "safe",
+   "adhoc": 0,
+   "guid": "11111111-0000-0000-0000-000000001011"
+  },
+  {
+   "id": "GA1012",
+   "v": 100000,
+   "n": "Lingiari festival",
+   "rid": "abn:22000000022",
+   "rn": "Barkly Regional Council",
+   "k": "council",
+   "fy": "2025-26",
+   "s": "2025-08-01",
+   "a": "2025-07-20",
+   "sel": "Open Non-competitive",
+   "el": "Lingiari",
+   "elst": "nt",
+   "holder": [
+    "Marion Scrymgour",
+    "Labor"
+   ],
+   "bloc": "gov",
+   "mt": "fairly_safe",
+   "adhoc": 0,
+   "guid": "11111111-0000-0000-0000-000000001012"
+  }
+ ],
+ "grants_total": 12,
+ "grants_listed": 12,
+ "generated": "2026-09-13T00:00:00Z"
+}

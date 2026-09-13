@@ -1251,19 +1251,25 @@ async function openMoneyRecords(kind, params) {
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=ia-ux-20260908-2' : '/ledger.js?v=shareable-receipts-20260913');
+    const mod = await import(grants ? '/grants.js?v=program-files-20260913' : '/ledger.js?v=shareable-receipts-20260913');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
-    moneyRecordsHandle = grants ? mod.mountGrants(body, { showHeading: false, displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, jurisdiction: params.get('jur') }) : mod.mountLedger(body, { jurisdiction: params.get('jur'), params,
-      onParamsChange(next, { replace = false } = {}) {
-        if (generation !== moneyRecordsGeneration || location.pathname !== '/money/receipts') return;
-        const to = '/money/receipts?' + next.toString();
-        if (to === location.pathname + location.search) return false;
-        history[replace ? 'replaceState' : 'pushState'](null, '', to);
-        return true;
-      }
-    });
-    if (grants && (params.get('open') || params.get('jur'))) moneyRecordsHandle.open?.(params.get('open'), params.get('jur') || undefined);
+    // Both modules report their shareable state (open file, filters) so the
+    // address bar carries it; a stale mount or a route change is ignored.
+    const onParamsChange = (path) => (next, { replace = false } = {}) => {
+      if (generation !== moneyRecordsGeneration || location.pathname !== path) return;
+      const query = next.toString();
+      const to = query ? `${path}?${query}` : path;
+      if (to === location.pathname + location.search) return false;
+      history[replace ? 'replaceState' : 'pushState'](null, '', to);
+      return true;
+    };
+    moneyRecordsHandle = grants
+      ? mod.mountGrants(body, { showHeading: false, displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, jurisdiction: params.get('jur'), program: params.get('program'), onParamsChange: onParamsChange('/money/grants') })
+      : mod.mountLedger(body, { jurisdiction: params.get('jur'), params, onParamsChange: onParamsChange('/money/receipts') });
+    // /money/grants?jur=federal&program=GO3141 opens a program file; &open=abn:... a recipient file.
+    if (grants && params.get('program')) moneyRecordsHandle.openProgram?.(params.get('program'), params.get('jur') || undefined);
+    else if (grants && (params.get('open') || params.get('jur'))) moneyRecordsHandle.open?.(params.get('open'), params.get('jur') || undefined);
   } catch { if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">These records could not load. <a href="'+(grants?'/money/grants':'/money/receipts')+'">Try again</a>.</p>'; }
 }
 let moneyMapGeneration = 0;
@@ -1719,7 +1725,8 @@ function route() {
   } else if (view === "explore") {
     showPanel("explore");
     // A link into one module, and for the grants explorer into one recipient's
-    // file: /explore?game=grants&jur=federal&open=abn:12345678901
+    // file (/explore?game=grants&jur=federal&open=abn:12345678901) or one
+    // program's file (&program=GO3141)
     const game = params.get("game");
     if (game && ["ledger", "grants"].includes(game)) { openGame(game, params); return; }
     if (game && GAMES[game]) openGame(game, params);
@@ -8005,7 +8012,7 @@ const GAMES = {
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=shareable-receipts-20260913", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=ia-ux-20260908-2", mount: "mountGrants" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=program-files-20260913", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js", mount: "mountThenVsNow" },
@@ -8033,8 +8040,10 @@ async function openGame(which, params = null) {
     // Every Explore dialog carries its hero into the sticky head once it
     // scrolls past: the Time Machine's big year, the others' own title.
     wireDialogHeadYear($(game.dialog), which === "tm" ? ".tm-year" : ".game-dialog-body h1, .game-dialog-body h2");
-    // The grants explorer can open straight onto one recipient's file.
-    if (which === "grants" && params?.get("open") && typeof explore.grants?.open === "function") {
+    // The grants explorer can open straight onto one program's or one recipient's file.
+    if (which === "grants" && params?.get("program") && typeof explore.grants?.openProgram === "function") {
+      explore.grants.openProgram(params.get("program"), params.get("jur") || undefined);
+    } else if (which === "grants" && params?.get("open") && typeof explore.grants?.open === "function") {
       explore.grants.open(params.get("open"), params.get("jur") || undefined);
     } else if (which === "grants" && params?.get("jur") && typeof explore.grants?.open === "function") {
       explore.grants.open(null, params.get("jur"));

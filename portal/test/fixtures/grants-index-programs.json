@@ -1,0 +1,97 @@
+{
+ "agencies": [
+  "Department of Infrastructure, Transport, Regional Development, Communications and the Arts",
+  "Department of Health and Aged Care",
+  "Department of State Development (Queensland)"
+ ],
+ "programs": [
+  {
+   "id": "GO3141",
+   "key": "go3141",
+   "n": "Community Development Grants",
+   "ag": 0,
+   "t": 8500000,
+   "c": 12,
+   "r": 9,
+   "dt": 900000,
+   "dr": 2,
+   "adhoc": 450000,
+   "y0": "2018-19",
+   "y1": "2025-26",
+   "cnc": 5650000,
+   "selk": 8250000,
+   "gov": 550000,
+   "elk": 8200000,
+   "marg": 700000
+  },
+  {
+   "id": "GO2",
+   "key": "go2",
+   "n": "Primary Health Networks",
+   "ag": 1,
+   "t": 4000000,
+   "c": 3,
+   "r": 3,
+   "dt": 0,
+   "dr": 0,
+   "adhoc": 0,
+   "y0": "2020-21",
+   "y1": "2021-22",
+   "cnc": 0,
+   "selk": 0,
+   "gov": 1000000,
+   "elk": 4000000,
+   "marg": 0
+  },
+  {
+   "id": "activity:Some Title",
+   "key": "activity-some-title",
+   "n": "Some Title",
+   "ag": 1,
+   "t": 1000000,
+   "c": 1,
+   "r": 1,
+   "dt": 0,
+   "dr": 0,
+   "adhoc": 0,
+   "y0": "2019-20",
+   "y1": "2019-20",
+   "cnc": 1000000,
+   "selk": 1000000,
+   "gov": 0,
+   "elk": 0,
+   "marg": 0
+  },
+  {
+   "id": "GO9",
+   "n": "Legacy row without a key",
+   "ag": 0,
+   "t": 500000,
+   "c": 1,
+   "r": 1,
+   "dt": 0,
+   "dr": 0,
+   "adhoc": 0,
+   "y0": "2016-17",
+   "y1": "2016-17"
+  }
+ ],
+ "qldPrograms": [
+  {
+   "id": "Regional Economic Futures Fund",
+   "key": "regional-economic-futures-fund",
+   "n": "Regional Economic Futures Fund",
+   "ag": 2,
+   "t": 3000000,
+   "c": 4,
+   "r": 2,
+   "dt": 0,
+   "dr": 0,
+   "adhoc": 0,
+   "y0": "2021-22",
+   "y1": "2022-23",
+   "cnc": 3000000,
+   "selk": 3000000
+  }
+ ]
+}

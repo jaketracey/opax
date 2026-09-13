@@ -13,19 +13,32 @@
  * Data (same-origin, static, written by scripts/export_grants.py):
  *   GET /graph/grants.federal.json     GrantConnect awards (Commonwealth)
  *   GET /graph/grants.qld.json         Queensland Government Investment Portal
- *   GET /grants/<jur>/<file-key>.json  one recipient: its grants, ABR record,
- *                                      donor-register entity and its donations
+ *   GET /grants/<jur>/shard-NN.json    recipient files, bundled by shard: each
+ *                                      one's grants, ABR record, donor-register
+ *                                      entity and its donations
+ *   GET /grants/<jur>/programs/<key>.json  one grant program: its grants with
+ *                                      the seat, holder, bloc and margin at the
+ *                                      grant date, selection processes, seat
+ *                                      split, election timing, top recipients
+ *   GET /grants/program-notes.json     optional: selection-process definitions,
+ *                                      per-program summaries and audit findings
  * Each index carries: meta (source, licence, caveats, counts, the government of
- * the day by date, party blocs), agencies[] and categories[] (referenced by
- * index), recipients[] (the largest by dollars plus every donor among them),
- * programs[], electorates[], years{}, kinds{}.
+ * the day by date, party blocs, election dates), agencies[] and categories[]
+ * (referenced by index), recipients[] (the largest by dollars plus every donor
+ * among them), programs[] (with key, cnc/selk and, federally, gov/elk/marg),
+ * electorates[], years{}, kinds{}.
  *
- * Three views over one filtered set:
+ * Four views over one filtered set:
  *   Recipients  — one row per recipient; a row opens the recipient's file in place
  *   Programs    — one row per grant program / opportunity, with the share of its
- *                 dollars that went to recipients found in the donor registers
+ *                 dollars that went to recipients found in the donor registers,
+ *                 the closed non-competitive share and the share to government-
+ *                 held seats; a row opens the program's file in place
+ *   Program     — the opened program file: tiles, seat split, by-year chart,
+ *                 margins, election timing, top recipients, electorates, grants
  *   Electorates — one row per federal division, with the members who held it and
  *                 the seat's margin, for the pork-barrel question
+ * Deep links: ?open=<recipient id> and ?program=<program id>, with ?jur=.
  *
  * Honesty rules: a recipient is "a donor" only when its ABN or a unique
  * organisation name matches the donor register (people are never matched by
@@ -112,6 +125,70 @@ export function formatABN (abn) {
   return d.length === 11 ? `${d.slice(0, 2)} ${d.slice(2, 5)} ${d.slice(5, 8)} ${d.slice(8)}` : d
 }
 
+/** Mirror of export_grants.py program key: 'GO3141' -> 'go3141', 'activity:Some title' -> 'activity-some-title'. */
+export function programKey (id) {
+  return String(id || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80).replace(/-+$/g, '')
+}
+
+/** num/den, or null when the denominator is nothing (so the UI can say "not recorded" rather than 0%). */
+export function shareOf (num, den) {
+  return den > 0 ? (num || 0) / den : null
+}
+
+/** The closed non-competitive share of recorded dollars and, federally, the share of mapped dollars in government-held seats. */
+export function programShares (row) {
+  return {
+    cnc: shareOf(row.cnc, row.selk),
+    gov: row.gov == null || row.elk == null ? null : shareOf(row.gov, row.elk),
+  }
+}
+
+/** Index programs[] rows by name, for the recipient file's program list; only rows with a file (a key) count. */
+export function programByName (programs) {
+  const out = new Map()
+  for (const p of programs || []) if (p.key && !out.has(p.n)) out.set(p.n, p)
+  return out
+}
+
+/** The grant date the program file's seat, holder and timing fields were computed on. */
+export function grantDate (g) {
+  return g.s || g.a || ''
+}
+
+export function grantConnectUrl (guid) {
+  return guid ? `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(guid)}` : null
+}
+
+// Fixed orderings for the program file's [dollars, count] buckets; the labels are the UI text.
+export const SEAT_BLOCS = [
+  ['gov', 'Government-held seats'], ['opp', 'Opposition-held seats'], ['cross', 'Crossbench seats'], ['unknown', 'Seat unknown'],
+]
+export const MARGIN_BUCKETS = [
+  ['marginal', 'Marginal (under 6%)'], ['fairly_safe', 'Fairly safe (6 to 10%)'], ['safe', 'Safe (over 10%)'], ['unknown', 'Margin unknown'],
+]
+export const TIMING_BUCKETS = [
+  ['0_3', 'Within 3 months of an election'], ['3_6', '3 to 6 months before'], ['6_12', '6 to 12 months before'],
+  ['12_24', '12 to 24 months before'], ['over_24', 'More than 2 years before'], ['unknown', 'No later election on record'],
+]
+export const APPROVAL_BUCKETS = [
+  ['before_approval', 'Started before approval'], ['0_30', 'Within 30 days of approval'], ['31_90', '31 to 90 days'],
+  ['91_365', '91 days to a year'], ['over_365', 'More than a year'],
+]
+
+/**
+ * A {key: [dollars, count]} map as ordered rows with shares of the map's own
+ * total. Buckets missing from the map are skipped; empty ones are kept so the
+ * reader sees the zero.
+ */
+export function bucketRows (map, order) {
+  if (!map) return []
+  const total = order.reduce((s, [k]) => s + ((map[k] || [0, 0])[0] || 0), 0)
+  return order.filter(([k]) => map[k]).map(([k, label]) => {
+    const [d, c] = map[k]
+    return { key: k, label, d: d || 0, c: c || 0, share: total > 0 ? (d || 0) / total : 0 }
+  })
+}
+
 // ---------------------------------------------------------------------------
 // Pure data layer (node-testable: nothing here touches the DOM)
 // ---------------------------------------------------------------------------
@@ -190,7 +267,10 @@ export function filterPrograms (rows, f, ctx) {
     if (!overlaps(r, f)) return false
     if (r.t < (f.min || 0)) return false
     return true
-  }).map((r) => ({ ...r, share: r.t > 0 ? r.dt / r.t : 0 }))
+  }).map((r) => {
+    const s = programShares(r)
+    return { ...r, share: r.t > 0 ? r.dt / r.t : 0, cncS: s.cnc, govS: s.gov }
+  })
 }
 
 export function filterElectorates (rows, f) {
@@ -221,6 +301,8 @@ export function sortRows (rows, key, dir) {
       case 'years': return fyStart(r.wy0 ?? r.y0) ?? -1
       case 'donor': return r.ds ? r.ds.aec + r.ds.state : -1
       case 'margin': return r.marginLatest ? r.marginLatest.pct : 999
+      case 'cnc': return r.cncS ?? -1   // a program with no selection process recorded sorts below 0%
+      case 'gov': return r.govS ?? -1
       case 't': return r.wt ?? r.t
       case 'c': return r.wc ?? r.c
       case 'k': return kindLabel(r.k)
@@ -296,11 +378,27 @@ export function buildCSV (view, rows, ctx, commentLines) {
         csvCell(r.ds ? r.ds.topParty : ''), r.ds ? Math.round(r.ds.state) : ''].join(','))
     }
   } else if (view === 'programs') {
-    lines.push(['Program', 'Agency', 'Awarded (AUD)', 'Grants', 'Recipients', 'To recipients in the donor registers (AUD)',
-      'Share (%)', 'Ad hoc or one-off (AUD)', 'First year', 'Last year'].join(','))
+    lines.push(['Program', 'Program id', 'Agency', 'Awarded (AUD)', 'Grants', 'Recipients', 'To recipients in the donor registers (AUD)',
+      'Share (%)', 'Ad hoc or one-off (AUD)', 'Closed non-competitive (AUD)', 'Selection process recorded (AUD)',
+      'Closed non-competitive share (%)', 'To government-held seats (AUD)', 'Electorate mapped (AUD)',
+      'To government-held seats share (%)', 'First year', 'Last year'].join(','))
     for (const r of rows) {
-      lines.push([csvCell(r.n), csvCell(ctx.agencies[r.ag] || ''), r.t, r.c, r.r, r.dt, Math.round(r.share * 100),
-        r.adhoc, csvCell(r.y0 || ''), csvCell(r.y1 || '')].join(','))
+      const s = programShares(r)
+      lines.push([csvCell(r.n), csvCell(r.id || ''), csvCell(ctx.agencies[r.ag] || ''), r.t, r.c, r.r, r.dt, Math.round(r.share * 100),
+        r.adhoc, r.cnc ?? '', r.selk ?? '', s.cnc == null ? '' : Math.round(s.cnc * 100),
+        r.gov ?? '', r.elk ?? '', s.gov == null ? '' : Math.round(s.gov * 100),
+        csvCell(r.y0 || ''), csvCell(r.y1 || '')].join(','))
+    }
+  } else if (view === 'program') {
+    // rows are the program file's grants[]
+    lines.push(['Grant id', 'Title', 'Recipient', 'Recipient id', 'Recipient kind', 'Value (AUD)', 'Financial year', 'Start date',
+      'Approval date', 'Selection process', 'Electorate', 'State', 'Seat holder', 'Holder party', 'Seat bloc', 'Seat margin',
+      'Ad hoc or one-off', 'GrantConnect'].join(','))
+    for (const g of rows) {
+      lines.push([csvCell(g.id), csvCell(g.n || ''), csvCell(g.rn || ''), csvCell(g.rid || ''), csvCell(kindLabel(g.k)), Math.round(g.v || 0),
+        csvCell(g.fy || ''), csvCell(g.s || ''), csvCell(g.a || ''), csvCell(g.sel || ''), csvCell(g.el || ''),
+        csvCell((g.elst || '').toUpperCase()), csvCell(g.holder ? g.holder[0] : ''), csvCell(g.holder ? g.holder[1] : ''),
+        csvCell(g.bloc || ''), csvCell(g.mt || ''), g.adhoc ? 1 : 0, csvCell(grantConnectUrl(g.guid) || '')].join(','))
     }
   } else {
     lines.push(['Division', 'State', 'Awarded (AUD)', 'Grants', 'Recipients', 'To recipients in the donor registers (AUD)',
@@ -336,6 +434,8 @@ const COLUMNS = {
     { key: 'c', label: 'Grants', numeric: true },
     { key: 'r', label: 'Recipients', numeric: true },
     { key: 'share', label: 'To donors', numeric: true },
+    { key: 'cnc', label: 'Closed non-competitive', numeric: true },
+    { key: 'gov', label: 'To govt seats', numeric: true, federal: true },
     { key: 'adhoc', label: 'Ad hoc', numeric: true },
   ],
   electorates: [
@@ -347,6 +447,11 @@ const COLUMNS = {
     { key: 'held', label: 'Held by', numeric: false },
     { key: 'margin', label: 'Margin', numeric: true },
   ],
+}
+
+/** The columns a view shows in a jurisdiction: seat columns are federal only (QLD money is mapped to federal divisions). */
+export function viewColumns (view, jur) {
+  return (COLUMNS[view] || []).filter((c) => !c.federal || jur === 'federal')
 }
 
 // ---------------------------------------------------------------------------
@@ -496,10 +601,60 @@ th[aria-sort] .gr-sort { color: var(--ink, #23271F); }
 .gr-fineprint a { color: var(--bronze-ink, #8A5A12); }
 .gr-visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 
+/* Program file: stacked hairline bars (bronze weights, never party colours), bucket lists, notes. */
+.gr-table-programs { min-width: 1040px; }
+.gr-detail-head .gr-id { font-size: 0.75rem; letter-spacing: 0.04em; color: var(--ink-faint, #6F7468); }
+.gr-split { display: flex; height: 12px; margin: 0.3rem 0 0.35rem; border: 1px solid var(--bronze, #A0761B); border-radius: 1px; overflow: hidden; background: var(--paper-raised, #FFFFFF); }
+.gr-split i { display: block; height: 100%; min-width: 0; }
+.gr-split i + i { border-left: 1px solid var(--paper-raised, #FFFFFF); }
+.gr-seg-0 { background: var(--bronze, #A0761B); }
+.gr-seg-1 { background: var(--bronze-wash, rgba(160, 118, 27, 0.16)); }
+.gr-seg-2 { background: repeating-linear-gradient(135deg, var(--bronze, #A0761B) 0 1px, transparent 1px 4px); }
+.gr-seg-3 { background: var(--line, #DFDCD2); }
+.gr-seg-4 { background: repeating-linear-gradient(45deg, var(--ink-faint, #6F7468) 0 1px, transparent 1px 5px); }
+.gr-seg-5 { background: var(--paper-sunken, #F1EFE8); }
+.gr-splitkey { list-style: none; margin: 0 0 0.6rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.15rem 0.9rem; font-size: 0.78rem; color: var(--ink-soft, #575C52); }
+.gr-splitkey li { display: inline-flex; align-items: center; gap: 0.35rem; }
+.gr-splitkey i { display: inline-block; width: 12px; height: 9px; border: 1px solid var(--bronze, #A0761B); }
+.gr-splitkey b { color: var(--ink, #23271F); font-variant-numeric: tabular-nums; }
+.gr-buckets { list-style: none; margin: 0.2rem 0 0.6rem; padding: 0; font-size: 0.8125rem; }
+.gr-buckets li { display: grid; grid-template-columns: minmax(0, 1fr) 6rem 5.5rem; gap: 0 0.6rem; align-items: center; padding: 0.15rem 0; border-bottom: 1px dotted var(--line, #DFDCD2); }
+.gr-buckets .gr-bar-cell { margin: 0; }
+.gr-buckets .gr-num { color: var(--ink-soft, #575C52); }
+.gr-caption { font-size: 0.75rem; color: var(--ink-faint, #6F7468); margin: 0.1rem 0 0.5rem; }
+.gr-toplist { list-style: none; margin: 0.2rem 0 0.6rem; padding: 0; font-size: 0.8125rem; }
+.gr-toplist li { display: flex; justify-content: space-between; gap: 0.6rem; align-items: baseline; padding: 0.18rem 0; border-bottom: 1px dotted var(--line, #DFDCD2); }
+.gr-toplist .gr-num { white-space: nowrap; }
+.gr-tag { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--bronze-ink, #8A5A12); }
+.gr-notes { margin: 0.5rem 0 0.4rem; font-size: 0.8125rem; line-height: 1.5; color: var(--ink-soft, #575C52); }
+.gr-notes summary { cursor: pointer; font-weight: 600; color: var(--ink, #23271F); }
+.gr-notes dl { margin: 0.4rem 0 0; }
+.gr-notes dt { font-weight: 700; color: var(--ink, #23271F); margin-top: 0.35rem; }
+.gr-notes dd { margin: 0.1rem 0 0; }
+.gr-notes a, .gr-audits a { color: var(--bronze-ink, #8A5A12); }
+.gr-summary-note { border-left: 3px solid var(--bronze, #A0761B); padding: 0.1rem 0 0.1rem 0.8rem; margin: 0.4rem 0 0.6rem; font-size: 0.875rem; line-height: 1.5; }
+.gr-summary-note p { margin: 0.3rem 0; }
+.gr-audits { list-style: none; margin: 0.2rem 0 0.4rem; padding: 0; font-size: 0.8125rem; line-height: 1.45; }
+.gr-audits li { padding: 0.25rem 0; border-bottom: 1px dotted var(--line, #DFDCD2); }
+.gr-audits b { color: var(--ink, #23271F); }
+.gr-grantswrap { overflow: auto; max-height: min(60vh, 720px); border: 1px solid var(--line, #DFDCD2); background: var(--paper-raised, #FFFFFF); margin: 0.2rem 0 0.4rem; }
+.gr-pgrants { border-collapse: collapse; width: 100%; min-width: 860px; font-size: 0.8rem; line-height: 1.35; }
+.gr-pgrants th { position: sticky; top: 0; background: var(--paper-sunken, #F1EFE8); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint, #6F7468); text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--line-strong, #8D897B); white-space: nowrap; }
+.gr-pgrants th.gr-num { text-align: right; }
+.gr-pgrants td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--line, #DFDCD2); vertical-align: top; }
+.gr-pgrants small { display: block; color: var(--ink-faint, #6F7468); }
+.gr-pgrants .party { text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 0.8rem; }
+.gr-scroll { overflow: auto; }
+.gr-electorates { border-collapse: collapse; width: 100%; font-size: 0.8125rem; }
+.gr-electorates td { padding: 0.3rem 0.5rem 0.3rem 0; border-bottom: 1px solid var(--line, #DFDCD2); vertical-align: top; }
+.gr-electorates td:last-child { padding-right: 0; }
+.gr-more-rows { margin: 0.4rem 0 0; }
+
 /* Tablet: the bar wraps to two lines, the popover hugs the button's edge. */
 @media (max-width: 1000px) {
   .gr-search { width: 11rem; }
   .gr-table { min-width: 760px; }
+  .gr-table-programs { min-width: 980px; }
 }
 /* Phone: each segmented control fills a line, the search and the popover go full width. */
 @media (max-width: 640px) {
@@ -518,7 +673,10 @@ th[aria-sort] .gr-sort { color: var(--ink, #23271F); }
   .gr-chart svg { max-height: 120px; }
   .gr-val, .gr-axis-odd { display: none; }
   .gr-table { min-width: 720px; font-size: 0.8rem; }
+  .gr-table-programs { min-width: 920px; }
   .gr-cols { grid-template-columns: 1fr; }
+  .gr-buckets li { grid-template-columns: minmax(0, 1fr) 4.5rem 4.5rem; }
+  .gr-grantswrap { max-height: none; }
 }
 `
 
@@ -539,6 +697,12 @@ function el (tag, className, text) {
   if (className) node.className = className
   if (text != null) node.textContent = text
   return node
+}
+
+/** The platform's CSS.escape (the module's own CSS constant shadows the global name). */
+function cssEscape (s) {
+  const g = globalThis.CSS
+  return g && typeof g.escape === 'function' ? g.escape(String(s)) : String(s).replace(/["\\]/g, '\\$&')
 }
 
 function partyChip (party, { full = true } = {}) {
@@ -579,7 +743,7 @@ export function mountGrants (container, opts = {}) {
 
   const state = {
     jur: JURISDICTIONS[opts.jurisdiction] ? opts.jurisdiction : 'federal',
-    view: 'recipients',
+    view: opts.program ? 'programs' : 'recipients',
     q: '', kind: '', agency: '', donors: false, yearFrom: null, yearTo: null, min: 0,
     sort: {
       recipients: { key: 't', dir: 'desc' },
@@ -587,14 +751,32 @@ export function mountGrants (container, opts = {}) {
       electorates: { key: 't', dir: 'desc' },
     },
     open: null,                    // recipient id whose file is open in the table
+    program: opts.program || null, // program id whose file is open in the Programs view
   }
 
   let data = null                  // the loaded index
   let currentRows = []
   let loadSeq = 0
   const cache = new Map()          // jurisdiction -> index
-  const detailCache = new Map()    // file key -> detail
+  const detailCache = new Map()    // shard -> bundle of recipient files
+  const programCache = new Map()   // jur/key -> program file
+  let notesPromise = null          // /grants/program-notes.json, fetched once, null when absent
   const aborter = new AbortController()
+
+  /**
+   * Tells the host (opts.onParamsChange) which file is open so the address bar
+   * can carry ?jur=&open= or ?jur=&program=. Only user actions publish; the
+   * open()/openProgram() entry points come from the URL already.
+   */
+  function publishParams (replace = false) {
+    if (typeof opts.onParamsChange !== 'function') return false
+    const params = new URLSearchParams()
+    params.set('jur', state.jur)
+    if (state.open) params.set('open', state.open)
+    if (state.program) params.set('program', state.program)
+    return opts.onParamsChange(params, { replace }) === true
+  }
+  const cols = () => viewColumns(state.view, state.jur)
 
   const root = el('section', 'gr-root')
   root.setAttribute('aria-label', 'Who gets the grants: grant recipients checked against the donor registers')
@@ -610,8 +792,8 @@ export function mountGrants (container, opts = {}) {
           `<button type="button" class="gr-seg gr-jur" data-jur="${k}" aria-pressed="${k === state.jur ? 'true' : 'false'}">${j.label}</button>`).join('')}
       </div>
       <div class="gr-views" role="group" aria-label="View">
-        <button type="button" class="gr-seg gr-view" data-view="recipients" aria-pressed="true">Recipients</button>
-        <button type="button" class="gr-seg gr-view" data-view="programs" aria-pressed="false">Programs</button>
+        <button type="button" class="gr-seg gr-view" data-view="recipients" aria-pressed="${state.view === 'recipients' ? 'true' : 'false'}">Recipients</button>
+        <button type="button" class="gr-seg gr-view" data-view="programs" aria-pressed="${state.view === 'programs' ? 'true' : 'false'}">Programs</button>
         <button type="button" class="gr-seg gr-view" data-view="electorates" aria-pressed="false">Electorates</button>
       </div>
       <div class="gr-views" role="group" aria-label="Donor filter">
@@ -724,7 +906,8 @@ export function mountGrants (container, opts = {}) {
 
   function renderHead () {
     headRow.textContent = ''
-    for (const col of COLUMNS[state.view]) {
+    tableEl.classList.toggle('gr-table-programs', state.view === 'programs')
+    for (const col of cols()) {
       const th = el('th', col.numeric ? 'gr-th-num' : null)
       th.scope = 'col'
       const btn = el('button', 'gr-sort')
@@ -789,54 +972,55 @@ export function mountGrants (container, opts = {}) {
     }
   }
 
-  function renderChart () {
-    chartEl.textContent = ''
-    // Awards published later can carry start dates years earlier (and agreements
-    // run years ahead), so the chart shows the years that carry the money:
-    // meta.chart_years, else any year with at least 1% of the biggest one.
-    const maxAll = Math.max(...data.meta.years.map((fy) => (data.years[fy] || {}).t || 0)) || 1
-    const years = (data.meta.chart_years || data.meta.years.filter((fy) => ((data.years[fy] || {}).t || 0) >= maxAll * 0.01))
-      .filter((fy) => data.years[fy])
-    if (!years.length) return
-    const W = Math.max(340, Math.min(720, chartEl.clientWidth || 720))
+  /**
+   * The by-year bars: one column per financial year, the whole bar in bronze
+   * wash, the donor share (when any) solid. `cell(fy)` -> { t, c, dt }.
+   * Interactive columns are buttons (the index chart filters the table);
+   * the program file's chart is a plain picture.
+   */
+  function yearChartSvg (years, cell, { width, interactive, label, noun }) {
+    const W = Math.max(340, Math.min(720, width || 720))
     const H = W < 480 ? 118 : 136
     const padL = 4
     const padB = 20
     const padT = 14
     const gap = 5
     const bw = (W - padL * 2 - gap * (years.length - 1)) / years.length
-    const max = Math.max(...years.map((fy) => data.years[fy].t)) || 1
+    const max = Math.max(...years.map((fy) => cell(fy).t)) || 1
     const svgNS = 'http://www.w3.org/2000/svg'
     const svg = document.createElementNS(svgNS, 'svg')
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`)
     svg.setAttribute('role', 'img')
-    svg.setAttribute('aria-label', 'Dollars awarded by financial year, with the share that went to recipients found in the donor registers')
+    svg.setAttribute('aria-label', label)
     years.forEach((fy, i) => {
-      const y = data.years[fy]
+      const y = cell(fy)
       const x = padL + i * (bw + gap)
       const h = (H - padB - padT) * (y.t / max)
       // One group per year, a button: click (or Enter) narrows the table to that
       // financial year, click again to clear. The whole column is the target.
       const g = document.createElementNS(svgNS, 'g')
       g.setAttribute('class', 'gr-year-col')
-      g.setAttribute('role', 'button')
-      g.setAttribute('tabindex', '0')
       g.dataset.fy = fy
-      g.setAttribute('aria-label', `${fy}: ${AUD_FULL.format(y.t)} in ${NUM.format(y.c)} grants; ${AUD_FULL.format(y.dt)} to recipients in the donor registers. Filter to this year`)
-      const hit = document.createElementNS(svgNS, 'rect')
-      hit.setAttribute('class', 'gr-hit')
-      hit.setAttribute('x', x - gap / 2); hit.setAttribute('y', 0)
-      hit.setAttribute('width', bw + gap); hit.setAttribute('height', H)
-      g.appendChild(hit)
+      const donorText = y.dt > 0 ? `; ${AUD_FULL.format(y.dt)} to recipients in the donor registers` : ''
+      if (interactive) {
+        g.setAttribute('role', 'button')
+        g.setAttribute('tabindex', '0')
+        g.setAttribute('aria-label', `${fy}: ${AUD_FULL.format(y.t)} in ${NUM.format(y.c)} ${noun}${donorText}. Filter to this year`)
+        const hit = document.createElementNS(svgNS, 'rect')
+        hit.setAttribute('class', 'gr-hit')
+        hit.setAttribute('x', x - gap / 2); hit.setAttribute('y', 0)
+        hit.setAttribute('width', bw + gap); hit.setAttribute('height', H)
+        g.appendChild(hit)
+      }
       const bar = document.createElementNS(svgNS, 'rect')
       bar.setAttribute('class', 'gr-bar')
       bar.setAttribute('x', x); bar.setAttribute('y', H - padB - h)
       bar.setAttribute('width', bw); bar.setAttribute('height', Math.max(h, 0.5))
       const t = document.createElementNS(svgNS, 'title')
-      t.textContent = `${fy}: ${AUD_FULL.format(y.t)} in ${NUM.format(y.c)} grants; ${AUD_FULL.format(y.dt)} to recipients in the donor registers. Click to filter to this year.`
+      t.textContent = `${fy}: ${AUD_FULL.format(y.t)} in ${NUM.format(y.c)} ${noun}${donorText}.${interactive ? ' Click to filter to this year.' : ''}`
       g.appendChild(t)
       g.appendChild(bar)
-      const dh = (H - padB - padT) * (y.dt / max)
+      const dh = (H - padB - padT) * ((y.dt || 0) / max)
       if (dh > 0) {
         const d = document.createElementNS(svgNS, 'rect')
         d.setAttribute('class', 'gr-bar-donor')
@@ -857,6 +1041,22 @@ export function mountGrants (container, opts = {}) {
       lab.setAttribute('text-anchor', 'middle')
       lab.textContent = fyShort(fy)
       g.appendChild(lab)
+    })
+    return svg
+  }
+
+  function renderChart () {
+    chartEl.textContent = ''
+    // Awards published later can carry start dates years earlier (and agreements
+    // run years ahead), so the chart shows the years that carry the money:
+    // meta.chart_years, else any year with at least 1% of the biggest one.
+    const maxAll = Math.max(...data.meta.years.map((fy) => (data.years[fy] || {}).t || 0)) || 1
+    const years = (data.meta.chart_years || data.meta.years.filter((fy) => ((data.years[fy] || {}).t || 0) >= maxAll * 0.01))
+      .filter((fy) => data.years[fy])
+    if (!years.length) return
+    const svg = yearChartSvg(years, (fy) => data.years[fy], {
+      width: chartEl.clientWidth, interactive: true, noun: 'grants',
+      label: 'Dollars awarded by financial year, with the share that went to recipients found in the donor registers',
     })
     const toggleYear = (fy) => {
       const y = fyStart(fy)
@@ -931,18 +1131,28 @@ export function mountGrants (container, opts = {}) {
     }
   }
 
+  /** A bar plus "$X NN%" for a share cell; an em dash when the base is not recorded. */
+  function shareCell (td, dollars, share) {
+    if (share == null) { td.appendChild(el('span', 'gr-muted', '—')); return }
+    const bar = el('span', 'gr-bar-cell')
+    bar.style.width = `${Math.max(2, Math.round(share * 60))}px`
+    td.append(bar, document.createTextNode(`${fmtMoney(dollars)} `), el('span', 'gr-share', `${Math.round(share * 100)}%`))
+  }
+
   function renderProgramRow (tr, r) {
-    tr.appendChild(el('td', null, r.n))
+    const nameTd = tr.appendChild(el('td'))
+    const btn = el('button', 'gr-open', r.n)
+    btn.type = 'button'
+    btn.dataset.program = r.id
+    btn.setAttribute('aria-expanded', state.program === r.id ? 'true' : 'false')
+    nameTd.appendChild(btn)
     tr.appendChild(el('td', null, agencyName(r.ag)))
     tr.appendChild(moneyCell(r.t))
     tr.appendChild(el('td', 'gr-num', NUM.format(r.c)))
     tr.appendChild(el('td', 'gr-num', NUM.format(r.r)))
-    const s = tr.appendChild(el('td', 'gr-num'))
-    if (r.dt > 0) {
-      const bar = el('span', 'gr-bar-cell')
-      bar.style.width = `${Math.max(2, Math.round(r.share * 60))}px`
-      s.append(bar, document.createTextNode(`${fmtMoney(r.dt)} `), el('span', 'gr-share', `${Math.round(r.share * 100)}%`))
-    } else s.appendChild(el('span', 'gr-muted', '—'))
+    shareCell(tr.appendChild(el('td', 'gr-num')), r.dt, r.dt > 0 ? r.share : null)
+    shareCell(tr.appendChild(el('td', 'gr-num')), r.cnc, r.cncS)
+    if (state.jur === 'federal') shareCell(tr.appendChild(el('td', 'gr-num')), r.gov, r.govS)
     tr.appendChild(moneyCell(r.adhoc))
   }
 
@@ -990,8 +1200,11 @@ export function mountGrants (container, opts = {}) {
       renderCells(tr, r)
       frag.appendChild(tr)
       if (state.view === 'recipients' && state.open === r.id) {
-        openRow = r
+        openRow = { kind: 'recipient', row: r }
         if (!phone) frag.appendChild(detailRow(r))
+      } else if (state.view === 'programs' && state.program === r.id) {
+        openRow = { kind: 'program', row: r }
+        if (!phone) frag.appendChild(programDetailRow(r))
       }
     }
     renderPanel(phone && openRow ? openRow : null)
@@ -1000,7 +1213,7 @@ export function mountGrants (container, opts = {}) {
       const td = el('td', 'gr-empty', state.view === 'electorates' && !data.electorates.length
         ? 'No electorates yet: the award records that carry a location are still being fetched.'
         : 'Nothing matches these filters.')
-      td.colSpan = COLUMNS[state.view].length
+      td.colSpan = cols().length
       tr.appendChild(td)
       frag.appendChild(tr)
     }
@@ -1027,33 +1240,43 @@ export function mountGrants (container, opts = {}) {
     syncChartSelection()
   }
 
-  // ---- recipient file: a panel above the table on phones ------------------
+  // ---- recipient / program file: a panel above the table on phones ---------
 
   const panelEl = el('section', 'gr-panel')
   panelEl.hidden = true
   panelEl.setAttribute('aria-label', 'Recipient file')
   $('.gr-tablewrap').before(panelEl)
   let panelFor = null
-  function renderPanel (r) {
-    if (!r) { panelEl.hidden = true; panelEl.textContent = ''; panelFor = null; return }
-    if (panelFor === r.id && !panelEl.hidden) return
-    panelFor = r.id
+  function renderPanel (opened) {
+    if (!opened) { panelEl.hidden = true; panelEl.textContent = ''; panelFor = null; return }
+    const { kind, row: r } = opened
+    const id = `${kind}:${r.id}`
+    if (panelFor === id && !panelEl.hidden) return
+    panelFor = id
     panelEl.hidden = false
+    panelEl.setAttribute('aria-label', kind === 'program' ? 'Program file' : 'Recipient file')
     panelEl.textContent = ''
     const close = el('button', 'gr-btn gr-panel-close', 'Close')
     close.type = 'button'
-    close.addEventListener('click', () => { state.open = null; render() })
+    close.addEventListener('click', () => {
+      if (kind === 'program') state.program = null
+      else state.open = null
+      publishParams()
+      render()
+    })
     panelEl.appendChild(close)
     const body = el('div')
     body.appendChild(el('div', 'gr-status', 'Opening the file…'))
     panelEl.appendChild(body)
-    loadDetail(r).then((d) => {
-      if (panelFor !== r.id) return
+    const loading = kind === 'program' ? loadProgram(r) : loadDetail(r)
+    loading.then((d) => {
+      if (panelFor !== id) return
       body.textContent = ''
-      renderDetail(body, r, d)
+      if (kind === 'program') renderProgramDetail(body, r, d)
+      else renderDetail(body, r, d)
       panelEl.scrollIntoView({ block: 'start', behavior: 'smooth' })
     }).catch(() => {
-      if (panelFor !== r.id) return
+      if (panelFor !== id) return
       body.textContent = ''
       body.appendChild(el('div', 'gr-status', 'The file could not be opened.'))
     })
@@ -1160,12 +1383,22 @@ export function mountGrants (container, opts = {}) {
     }
     table.appendChild(tb)
     left.appendChild(table)
-    if (d.programs && d.programs.length > 1) {
+    // Each program with a file of its own opens in the Programs view.
+    const byName = programByName(data.programs)
+    if (d.programs && (d.programs.length > 1 || (d.programs.length === 1 && byName.has(d.programs[0][0])))) {
       left.appendChild(el('p', 'gr-kicker', 'By program'))
       const ul = el('ul', 'gr-partylist')
       for (const [p, v] of d.programs.slice(0, 6)) {
         const li = el('li')
-        li.append(el('span', null, p), el('span', 'gr-num', fmtMoney(v)))
+        const hit = byName.get(p)
+        if (hit) {
+          const b = el('button', 'gr-open', p)
+          b.type = 'button'
+          b.dataset.program = hit.id
+          b.title = 'Open the program file'
+          li.appendChild(b)
+        } else li.appendChild(el('span', null, p))
+        li.appendChild(el('span', 'gr-num', fmtMoney(v)))
         ul.appendChild(li)
       }
       left.appendChild(ul)
@@ -1244,6 +1477,419 @@ export function mountGrants (container, opts = {}) {
     td.appendChild(cols)
   }
 
+  // ---- program file --------------------------------------------------------
+
+  function programDetailRow (r) {
+    const tr = el('tr', 'gr-detail')
+    const td = el('td')
+    td.colSpan = cols().length
+    td.appendChild(el('div', 'gr-status', 'Opening the program…'))
+    tr.appendChild(td)
+    loadProgram(r).then((p) => {
+      if (state.program !== r.id || !tr.isConnected) return
+      td.textContent = ''
+      renderProgramDetail(td, r, p)
+    }).catch(() => {
+      if (!tr.isConnected) return
+      td.textContent = ''
+      td.appendChild(el('div', 'gr-status', 'The program file could not be opened.'))
+    })
+    return tr
+  }
+
+  /** The program file plus the notes file (optional: a 404 there is not an error). */
+  async function loadProgram (r) {
+    const key = r.key || programKey(r.id)
+    const id = `${state.jur}/${key}`
+    let p = programCache.get(id)
+    if (!p) {
+      const res = await fetch(`${JURISDICTIONS[state.jur].dir}programs/${encodeURIComponent(key)}.json`, { signal: aborter.signal })
+      if (!res.ok) throw new Error(`${res.status}`)
+      p = await res.json()
+      programCache.set(id, p)
+    }
+    p.notes = await loadNotes()
+    return p
+  }
+
+  function loadNotes () {
+    if (!notesPromise) {
+      notesPromise = fetch('/grants/program-notes.json', { signal: aborter.signal })
+        .then((res) => (res.ok ? res.json() : null))
+        .catch(() => null)
+    }
+    return notesPromise
+  }
+
+  const tile = (big, small) => { const t = el('div', 'gr-tile'); t.append(el('b', null, big), el('span', null, small)); return t }
+  const pct = (share) => `${Math.round(share * 100)}%`
+
+  /** A stacked hairline bar with a text key: rows from bucketRows(), segment i in weight class i. */
+  function splitBar (rows, ariaLabel) {
+    const wrap = el('div')
+    const bar = el('div', 'gr-split')
+    bar.setAttribute('role', 'img')
+    bar.setAttribute('aria-label', `${ariaLabel}: ${rows.map((b) => `${b.label} ${pct(b.share)}`).join(', ')}`)
+    const key = el('ul', 'gr-splitkey')
+    rows.forEach((b, i) => {
+      if (b.share > 0) {
+        const seg = el('i', `gr-seg-${i % 6}`)
+        seg.style.width = `${b.share * 100}%`
+        bar.appendChild(seg)
+      }
+      const li = el('li')
+      const sw = el('i', `gr-seg-${i % 6}`)
+      sw.setAttribute('aria-hidden', 'true')
+      li.append(sw, document.createTextNode(`${b.label} `), el('b', null, `${pct(b.share)}`),
+        el('span', 'gr-share', ` ${fmtMoney(b.d)}, ${NUM.format(b.c)}`))
+      key.appendChild(li)
+    })
+    wrap.append(bar, key)
+    return wrap
+  }
+
+  /** One line per bucket: label, bar, dollars and count. */
+  function bucketList (rows) {
+    const ul = el('ul', 'gr-buckets')
+    for (const b of rows) {
+      const li = el('li')
+      const bar = el('span', 'gr-bar-cell')
+      bar.style.width = `${Math.max(b.d > 0 ? 2 : 0, Math.round(b.share * 90))}px`
+      const num = el('span', 'gr-num')
+      num.append(document.createTextNode(`${fmtMoney(b.d)} `), el('span', 'gr-share', pct(b.share)))
+      li.append(el('span', null, b.label), bar, num)
+      li.title = `${b.label}: ${AUD_FULL.format(b.d)} in ${NUM.format(b.c)} grants`
+      ul.appendChild(li)
+    }
+    return ul
+  }
+
+  /** A holder as a party dot plus the member's name, linked to their page. */
+  function holderChip (name, party) {
+    const chip = partyChip(party || 'Independent')
+    chip.textContent = ''
+    const dot = el('i'); dot.setAttribute('aria-hidden', 'true')
+    chip.append(dot, link(subjectHash('person', name), name))
+    if (party) chip.append(el('span', 'gr-share', ` ${party}`))
+    return chip
+  }
+
+  /** A recipient name: a button that opens its file when the index lists it, plain text otherwise. */
+  function recipientRef (rid, name) {
+    const listed = rid && recipientIndex().has(rid)
+    if (!listed) return el('span', null, name)
+    const b = el('button', 'gr-open', name)
+    b.type = 'button'
+    b.dataset.rid = rid
+    return b
+  }
+  let recipientIds = null
+  function recipientIndex () {
+    if (!recipientIds || recipientIds.jur !== state.jur) {
+      recipientIds = new Set(data.recipients.map((x) => x.id))
+      recipientIds.jur = state.jur
+    }
+    return recipientIds
+  }
+
+  function renderProgramDetail (td, r, p) {
+    const notes = p.notes || null
+    const progNotes = notes && notes.programs && notes.programs[state.jur] ? notes.programs[state.jur][p.id] : null
+    const qld = state.jur === 'qld'
+    const noun = qld ? 'funding lines' : 'grants'
+
+    const head = el('div', 'gr-detail-head')
+    const h3 = el('h3', null, p.n)
+    h3.tabIndex = -1
+    head.append(h3, el('span', 'gr-muted', p.ag || agencyName(r.ag)))
+    if (p.id && p.id !== p.n && !/^activity:/.test(p.id)) head.append(el('span', 'gr-id', p.id))
+    td.appendChild(head)
+
+    const meta = el('p', 'gr-detail-meta')
+    const bits = []
+    if (p.y0 || p.y1) bits.push(`financial years ${yearsText(p.y0, p.y1)}`)
+    if ((p.agencies || []).length > 1) bits.push(`also awarded through ${p.agencies.slice(1, 3).map((a) => a[0]).join('; ')}${p.agencies.length > 3 ? ` and ${p.agencies.length - 3} more` : ''}`)
+    if ((p.cats || []).length) bits.push(`categories: ${p.cats.slice(0, 3).map((c) => c[0]).join(', ')}`)
+    if ((p.pbs || []).length) bits.push(`budget line: ${p.pbs[0][0]}`)
+    meta.textContent = bits.join(' · ')
+    if (bits.length) td.appendChild(meta)
+
+    // tiles
+    const selKnown = p.sel_known ? p.sel_known[0] : 0
+    const cncD = p.sel && p.sel['Closed Non-Competitive'] ? p.sel['Closed Non-Competitive'][0] : 0
+    const cncShare = shareOf(cncD, selKnown)
+    const elKnown = p.el_known ? p.el_known[0] : 0
+    const govShareOfMapped = p.seats ? shareOf(p.seats.gov ? p.seats.gov[0] : 0, elKnown) : null
+    const tiles = el('div', 'gr-tiles')
+    tiles.append(
+      tile(fmtMoney(p.t), `awarded in ${NUM.format(p.c)} ${noun}`),
+      tile(NUM.format(p.r), 'recipients'),
+    )
+    if (p.dt > 0) tiles.append(tile(pct(shareOf(p.dt, p.t) || 0), `to recipients in the donor registers (${fmtMoney(p.dt)})`))
+    if (cncShare != null) tiles.append(tile(pct(cncShare), `closed non-competitive, of the ${pct(shareOf(selKnown, p.t) || 0)} with a selection process recorded`))
+    if (govShareOfMapped != null) tiles.append(tile(pct(govShareOfMapped), 'to seats held by the government of the day, of the dollars mapped to an electorate'))
+    if (p.t > 0) tiles.append(tile(pct(shareOf(elKnown, p.t) || 0), 'of the dollars are mapped to an electorate'))
+    td.appendChild(tiles)
+
+    // selection process definitions from the notes file, under the tiles
+    if (notes && notes.selection && p.sel) {
+      const present = Object.keys(p.sel).filter((k) => notes.selection[k])
+      if (present.length) {
+        const det = el('details', 'gr-notes')
+        det.appendChild(el('summary', null, 'How to read the selection process'))
+        const dl = el('dl')
+        for (const k of present) {
+          const s = notes.selection[k]
+          dl.appendChild(el('dt', null, k))
+          const dd = el('dd', null, `${s.short ? s.short + ' ' : ''}${s.long || ''} `)
+          if (s.source) { const a = link(s.source, 'Source'); a.target = '_blank'; a.rel = 'noopener'; dd.appendChild(a) }
+          dl.appendChild(dd)
+        }
+        det.appendChild(dl)
+        td.appendChild(det)
+      }
+    }
+
+    const grid = el('div', 'gr-cols')
+    const left = el('div')
+    const right = el('div')
+
+    // by year
+    const years = Object.keys(p.by || {}).filter((fy) => p.by[fy] && p.by[fy][0] > 0).sort((a, b) => (fyStart(a) ?? 0) - (fyStart(b) ?? 0))
+    if (years.length) {
+      left.appendChild(el('p', 'gr-kicker', 'Awarded by financial year'))
+      const chart = el('div', 'gr-chart')
+      chart.appendChild(yearChartSvg(years, (fy) => ({ t: p.by[fy][0], c: p.by[fy][1], dt: 0 }), {
+        width: Math.min(560, td.clientWidth || 560), interactive: false, noun,
+        label: `${p.n}: dollars awarded by financial year`,
+      }))
+      left.appendChild(chart)
+    }
+
+    // selection process split
+    if (p.sel && Object.keys(p.sel).length) {
+      left.appendChild(el('p', 'gr-kicker', 'Selection process, where recorded'))
+      const order = Object.entries(p.sel).sort((a, b) => b[1][0] - a[1][0]).map(([k]) => [k, k])
+      left.appendChild(splitBar(bucketRows(p.sel, order), 'Selection process'))
+      if (p.t > selKnown) left.appendChild(el('p', 'gr-caption', `${fmtMoney(p.t - selKnown)} of the ${noun} carry no selection process.`))
+    }
+
+    // seats and margins (federal only: QLD money is mapped to federal divisions, so the split would mislead)
+    if (p.seats) {
+      left.appendChild(el('p', 'gr-kicker', 'Who held the seat on the grant date'))
+      left.appendChild(splitBar(bucketRows(p.seats, SEAT_BLOCS), 'Seat held by'))
+      left.appendChild(el('p', 'gr-caption', 'Government, opposition and crossbench are read at the grant date, not today.'))
+    }
+    if (p.margins) {
+      left.appendChild(el('p', 'gr-kicker', 'Seat margin at the latest prior election'))
+      left.appendChild(splitBar(bucketRows(p.margins, MARGIN_BUCKETS), 'Seat margin'))
+      left.appendChild(el('p', 'gr-caption', '2019 and 2022 election results only; earlier grants unknown'))
+    }
+
+    // timing
+    const mte = p.timing && p.timing.months_to_election
+    if (mte) {
+      right.appendChild(el('p', 'gr-kicker', qld ? 'Time to the next Queensland election' : 'Time to the next federal election'))
+      right.appendChild(bucketList(bucketRows(mte, TIMING_BUCKETS)))
+    }
+    const a2s = p.timing && p.timing.approval_to_start_days
+    if (a2s) {
+      right.appendChild(el('p', 'gr-kicker', 'Approval to start'))
+      right.appendChild(bucketList(bucketRows(a2s, APPROVAL_BUCKETS)))
+      if (p.timing.approval_known && p.timing.approval_known[0] < p.t) {
+        right.appendChild(el('p', 'gr-caption', `${fmtMoney(p.t - p.timing.approval_known[0])} carry no approval date.`))
+      }
+    }
+
+    // top recipients
+    if ((p.recipients || []).length) {
+      right.appendChild(el('p', 'gr-kicker', p.recipients.length < p.r ? `Largest ${NUM.format(p.recipients.length)} of ${NUM.format(p.r)} recipients` : 'Recipients, largest first'))
+      const ul = el('ul', 'gr-toplist')
+      for (const [rid, name, kind, dollars, count, donor] of p.recipients.slice(0, 15)) {
+        const li = el('li')
+        const who = el('span')
+        who.append(recipientRef(rid, name), el('small', 'gr-muted', ` ${kindLabel(kind)}`))
+        if (donor) who.append(document.createTextNode(' '), el('span', 'gr-tag', 'in the donor registers'))
+        const num = el('span', 'gr-num')
+        num.append(document.createTextNode(`${fmtMoney(dollars)} `), el('span', 'gr-share', `${NUM.format(count)}`))
+        li.append(who, num)
+        ul.appendChild(li)
+      }
+      right.appendChild(ul)
+    }
+    grid.append(left, right)
+    td.appendChild(grid)
+
+    // notes: summary and audits
+    if (progNotes && (progNotes.summary || (progNotes.audits || []).length)) {
+      td.appendChild(el('p', 'gr-kicker', 'What the record says'))
+      const box = el('div', 'gr-summary-note')
+      if (progNotes.summary) box.appendChild(el('p', null, progNotes.summary))
+      if ((progNotes.audits || []).length) {
+        const ul = el('ul', 'gr-audits')
+        for (const a of progNotes.audits) {
+          const li = el('li')
+          const title = a.url ? link(a.url, a.title) : el('b', null, a.title)
+          if (a.url) { title.target = '_blank'; title.rel = 'noopener' }
+          li.append(el('b', null, a.year ? `${a.year}: ` : ''), title)
+          if (a.finding) li.append(document.createTextNode(` ${a.finding}`))
+          ul.appendChild(li)
+        }
+        box.appendChild(ul)
+      }
+      td.appendChild(box)
+    }
+
+    // electorates
+    if ((p.electorates || []).length) {
+      td.appendChild(el('p', 'gr-kicker', `Electorates (${NUM.format(p.electorates.length)})`))
+      const table = el('table', 'gr-electorates')
+      const tb = el('tbody')
+      const show = 24
+      const addElectorateRows = (from, to) => {
+        for (const e of p.electorates.slice(from, to)) {
+          const row = el('tr')
+          const n = el('td')
+          n.append(el('span', null, e.n), document.createTextNode(' '), el('span', 'gr-muted', (e.st || '').toUpperCase()))
+          row.appendChild(n)
+          const v = el('td', 'gr-num', fmtMoney(e.t))
+          v.title = AUD_FULL.format(e.t || 0)
+          row.appendChild(v)
+          row.appendChild(el('td', 'gr-num', NUM.format(e.c)))
+          const split = el('td', 'gr-num')
+          if (e.gov != null) {
+            const parts = []
+            if (e.gov > 0) parts.push(`govt ${fmtMoney(e.gov)}`)
+            if (e.opp > 0) parts.push(`opp ${fmtMoney(e.opp)}`)
+            if (e.cross > 0) parts.push(`cross ${fmtMoney(e.cross)}`)
+            split.appendChild(el('span', 'gr-share', parts.join(' · ')))
+          }
+          row.appendChild(split)
+          const held = el('td')
+          const mps = el('span', 'gr-mps')
+          for (const [name, party, dollars] of (e.holders || []).slice(0, 3)) {
+            const chip = holderChip(name, party)
+            if ((e.holders || []).length > 1) chip.append(el('span', 'gr-share', ` ${fmtMoney(dollars)}`))
+            mps.appendChild(chip)
+          }
+          if (!(e.holders || []).length) mps.appendChild(el('span', 'gr-muted', '—'))
+          held.appendChild(mps)
+          row.appendChild(held)
+          tb.appendChild(row)
+        }
+      }
+      addElectorateRows(0, show)
+      table.appendChild(tb)
+      const scroll = el('div', 'gr-scroll')
+      scroll.appendChild(table)
+      td.appendChild(scroll)
+      if (p.electorates.length > show) {
+        const more = el('button', 'gr-btn gr-more-rows', `Show all ${NUM.format(p.electorates.length)} electorates`)
+        more.type = 'button'
+        more.addEventListener('click', () => { addElectorateRows(show, p.electorates.length); more.remove() })
+        td.appendChild(more)
+      }
+    }
+
+    // grants table
+    const grants = p.grants || []
+    if (grants.length) {
+      td.appendChild(el('p', 'gr-kicker', p.grants_total > grants.length
+        ? `Largest ${NUM.format(grants.length)} of ${NUM.format(p.grants_total)} ${noun}`
+        : `${noun.charAt(0).toUpperCase() + noun.slice(1)}, largest first`))
+      const wrap = el('div', 'gr-grantswrap')
+      wrap.setAttribute('role', 'region')
+      wrap.tabIndex = 0
+      wrap.setAttribute('aria-label', `${p.n}: grants (scrollable)`)
+      const table = el('table', 'gr-pgrants')
+      const thead = el('thead')
+      const hr = el('tr')
+      const heads = [['Grant', false], ['Recipient', false], ['Value', true], ['Date', true], ['Selection', false], ['Electorate', false]]
+      if (!qld) heads.push(['Seat held by', false])
+      for (const [label, num] of heads) {
+        const th = el('th', num ? 'gr-num' : null, label)
+        th.scope = 'col'
+        hr.appendChild(th)
+      }
+      thead.appendChild(hr)
+      table.appendChild(thead)
+      const tb = el('tbody')
+      const page = 200
+      const addGrantRows = (from, to) => {
+        for (const g of grants.slice(from, to)) {
+          const row = el('tr')
+          const what = el('td')
+          const url = qld ? null : grantConnectUrl(g.guid)
+          const title = g.n || g.id
+          if (url) {
+            const a = link(url, title)
+            a.target = '_blank'
+            a.rel = 'noopener'
+            what.appendChild(a)
+          } else what.appendChild(el('span', null, title))
+          const sub = []
+          if (!qld && g.id) sub.push(g.id)
+          if (g.adhoc) sub.push('ad hoc / one-off')
+          if (g.desc) sub.push(g.desc)
+          if (sub.length) what.appendChild(el('small', null, sub.join(' · ')))
+          row.appendChild(what)
+          const who = el('td')
+          who.appendChild(recipientRef(g.rid, g.rn || g.rid || '—'))
+          if (g.k) who.appendChild(el('small', null, kindLabel(g.k)))
+          row.appendChild(who)
+          const v = el('td', 'gr-num', fmtMoney(g.v))
+          v.title = AUD_FULL.format(g.v || 0)
+          row.appendChild(v)
+          const when = el('td', 'gr-num', grantDate(g) || (g.fy ? fyShort(g.fy) : '—'))
+          if (g.a && g.s && g.a !== g.s) when.title = `approved ${g.a}, started ${g.s}`
+          row.appendChild(when)
+          row.appendChild(el('td', g.sel ? null : 'gr-muted', g.sel || '—'))
+          const where = el('td')
+          if (g.el) where.append(el('span', null, g.el), document.createTextNode(' '), el('span', 'gr-muted', (g.elst || '').toUpperCase()))
+          else where.appendChild(el('span', 'gr-muted', '—'))
+          row.appendChild(where)
+          if (!qld) {
+            const holder = el('td')
+            if (g.holder) {
+              holder.appendChild(holderChip(g.holder[0], g.holder[1]))
+              const flags = []
+              if (g.bloc && g.bloc !== 'unknown') flags.push(g.bloc === 'gov' ? 'government' : g.bloc === 'opp' ? 'opposition' : 'crossbench')
+              if (g.mt) flags.push(g.mt.replace(/_/g, ' '))
+              if (flags.length) holder.appendChild(el('small', null, flags.join(' · ')))
+            } else holder.appendChild(el('span', 'gr-muted', '—'))
+            row.appendChild(holder)
+          }
+          tb.appendChild(row)
+        }
+      }
+      addGrantRows(0, page)
+      table.appendChild(tb)
+      wrap.appendChild(table)
+      td.appendChild(wrap)
+      if (grants.length > page) {
+        const more = el('button', 'gr-btn gr-more-rows', `Show all ${NUM.format(grants.length)} ${noun}`)
+        more.type = 'button'
+        more.addEventListener('click', () => { addGrantRows(page, grants.length); more.remove() })
+        td.appendChild(more)
+      }
+    }
+
+    // links
+    const links = el('div', 'gr-links')
+    links.appendChild(link(searchHash(progNotes && progNotes.hansard ? progNotes.hansard : p.n, {}), 'Search Hansard', 'gr-primary'))
+    const csv = el('button', null, 'Download these grants (CSV)')
+    csv.type = 'button'
+    csv.addEventListener('click', () => exportProgramCSV(p))
+    links.appendChild(csv)
+    const src = link(data.meta.source_url, qld ? 'Source: data.qld.gov.au' : 'Source: GrantConnect')
+    src.target = '_blank'
+    src.rel = 'noopener'
+    links.appendChild(src)
+    links.appendChild(link(`${JURISDICTIONS[state.jur].dir}programs/${encodeURIComponent(r.key || programKey(r.id))}.json`, 'Raw file'))
+    td.appendChild(links)
+    if (p.generated) td.appendChild(el('p', 'gr-caption', `Program file generated ${String(p.generated).slice(0, 10)}.`))
+  }
+
   // ---- CSV -----------------------------------------------------------------
 
   function describeFilters () {
@@ -1268,11 +1914,30 @@ export function mountGrants (container, opts = {}) {
       `Licence: ${m.licence}`,
     ]
     const csv = buildCSV(state.view, currentRows, { agencies: data.agencies }, comments)
+    downloadCSV(csv, `opax-grants-${state.jur}-${state.view}-${new Date().toISOString().slice(0, 10)}.csv`)
+  }
+
+  /** The open program's grants, one row each, with the seat and timing fields the file computed. */
+  function exportProgramCSV (p) {
+    const m = data.meta
+    const comments = [
+      `OPAX, Who gets the grants: program ${p.id} (${p.n})`,
+      `Source: ${m.source} (${m.coverage}), via opax.com.au${JURISDICTIONS[state.jur].dir}programs/${p.key || programKey(p.id)}.json`,
+      `Exported ${new Date().toISOString().slice(0, 10)} · ${(p.grants || []).length} of ${p.grants_total ?? (p.grants || []).length} grants, largest first`,
+      'Seat holder, bloc and margin are read at the grant date (start date, else approval date); margins use the 2019 and 2022 election results only.',
+      ...m.caveats,
+      `Licence: ${m.licence}`,
+    ]
+    const csv = buildCSV('program', p.grants || [], { agencies: data.agencies }, comments)
+    downloadCSV(csv, `opax-grants-${state.jur}-program-${p.key || programKey(p.id)}-${new Date().toISOString().slice(0, 10)}.csv`)
+  }
+
+  function downloadCSV (csv, filename) {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `opax-grants-${state.jur}-${state.view}-${new Date().toISOString().slice(0, 10)}.csv`
+    a.download = filename
     document.body.appendChild(a)
     a.click()
     a.remove()
@@ -1321,19 +1986,62 @@ export function mountGrants (container, opts = {}) {
   document.addEventListener('click', onDocClick)
   moreEl.addEventListener('keydown', onKey)
   for (const btn of root.querySelectorAll('.gr-jur')) {
-    btn.addEventListener('click', () => { if (state.jur !== btn.dataset.jur) load(btn.dataset.jur) })
+    btn.addEventListener('click', () => {
+      if (state.jur === btn.dataset.jur) return
+      // program ids belong to one jurisdiction; a recipient may have a file in both
+      state.program = null
+      load(btn.dataset.jur).then(() => publishParams())
+    })
+  }
+  /** Switches the view's segmented control and the filters that only some views carry. */
+  function showView (view) {
+    state.view = view
+    for (const b of root.querySelectorAll('.gr-view')) b.setAttribute('aria-pressed', b.dataset.view === view ? 'true' : 'false')
+    // kind and agency filters only mean something on the views that carry them
+    root.querySelector('.gr-field-kind').hidden = view !== 'recipients'
+    root.querySelector('.gr-field-agency').hidden = view === 'electorates'
   }
   for (const btn of root.querySelectorAll('.gr-view')) {
     btn.addEventListener('click', () => {
       if (state.view === btn.dataset.view) return
-      state.view = btn.dataset.view
-      for (const b of root.querySelectorAll('.gr-view')) b.setAttribute('aria-pressed', b === btn ? 'true' : 'false')
-      // kind and agency filters only mean something on the views that carry them
-      root.querySelector('.gr-field-kind').hidden = state.view !== 'recipients'
-      root.querySelector('.gr-field-agency').hidden = state.view === 'electorates'
+      showView(btn.dataset.view)
       renderHead()
       render()
     })
+  }
+  /** Scrolls to and focuses the row button of an open file (the panel itself takes focus on phones). */
+  function focusOpened (selector) {
+    const btn = bodyEl.querySelector(selector)
+    if (btn) {
+      btn.scrollIntoView({ block: 'center' })
+      btn.focus({ preventScroll: true })
+    }
+  }
+  /** Opens a recipient's file in the Recipients view with the text filters cleared so its row is on the page. */
+  function openRecipient (rid) {
+    state.program = null
+    state.open = rid
+    state.q = ''
+    searchEl.value = ''
+    state.donors = false
+    for (const b of root.querySelectorAll('.gr-donors')) b.setAttribute('aria-pressed', b.dataset.donors === '0' ? 'true' : 'false')
+    if (state.view !== 'recipients') { showView('recipients'); renderHead() }
+    publishParams()
+    render()
+    focusOpened(`.gr-open[data-id="${cssEscape(rid)}"]`)
+  }
+  /** Opens a program's file in the Programs view, likewise. */
+  function openProgram (id) {
+    state.open = null
+    state.program = id
+    state.q = ''
+    searchEl.value = ''
+    state.donors = false
+    for (const b of root.querySelectorAll('.gr-donors')) b.setAttribute('aria-pressed', b.dataset.donors === '0' ? 'true' : 'false')
+    if (state.view !== 'programs') { showView('programs'); renderHead() }
+    publishParams()
+    render()
+    focusOpened(`.gr-open[data-program="${cssEscape(id)}"]`)
   }
   for (const btn of root.querySelectorAll('.gr-donors')) {
     btn.addEventListener('click', () => {
@@ -1346,22 +2054,36 @@ export function mountGrants (container, opts = {}) {
     const btn = e.target.closest('.gr-sort')
     if (!btn) return
     const sort = state.sort[state.view]
-    const col = COLUMNS[state.view].find((c) => c.key === btn.dataset.key)
+    const col = cols().find((c) => c.key === btn.dataset.key)
+    if (!col) return
     if (sort.key === col.key) sort.dir = sort.dir === 'asc' ? 'desc' : 'asc'
     else { sort.key = col.key; sort.dir = col.numeric ? 'desc' : 'asc' }
     syncSortMarkers()
     render()
   })
-  bodyEl.addEventListener('click', (e) => {
-    const btn = e.target.closest('.gr-open[data-id]')
-    if (!btn) return
+  // One listener for every in-place opener: a recipient row (data-id), a
+  // program row (data-program, also inside a recipient file's program list) and
+  // a recipient named inside a program file (data-rid). Files can sit in the
+  // table or in the phone panel, so the listener is on the root.
+  root.addEventListener('click', (e) => {
+    const btn = e.target.closest('.gr-open[data-id], .gr-open[data-program], .gr-open[data-rid]')
+    if (!btn || !data) return
+    if (btn.dataset.rid) { openRecipient(btn.dataset.rid); return }
+    if (btn.dataset.program) {
+      const id = btn.dataset.program
+      if (state.view === 'programs' && state.program === id) {
+        state.program = null
+        publishParams()
+        render()
+        bodyEl.querySelector(`.gr-open[data-program="${cssEscape(id)}"]`)?.focus()
+      } else openProgram(id)
+      return
+    }
     const id = btn.dataset.id
     state.open = state.open === id ? null : id
+    publishParams()
     render()
-    if (state.open) {
-      const opened = bodyEl.querySelector(`.gr-open[data-id="${CSS.escape(id)}"]`)
-      opened?.focus()
-    }
+    if (state.open) bodyEl.querySelector(`.gr-open[data-id="${cssEscape(id)}"]`)?.focus()
   })
 
   // ---- data ----------------------------------------------------------------
@@ -1401,14 +2123,17 @@ export function mountGrants (container, opts = {}) {
     fineEl.append(methods, ' · ', raw)
   }
 
-  async function fetchIndex (jur) {
+  /** The index, cached as a promise so a deep link that mounts and opens a file at once fetches it only once. */
+  function fetchIndex (jur) {
     if (cache.has(jur)) return cache.get(jur)
     const url = JURISDICTIONS[jur].file
-    const res = await fetch(url, { signal: aborter.signal })
-    if (!res.ok) throw new Error(`${url} → ${res.status}`)
-    const d = await res.json()
-    cache.set(jur, d)
-    return d
+    const p = fetch(url, { signal: aborter.signal }).then((res) => {
+      if (!res.ok) throw new Error(`${url} → ${res.status}`)
+      return res.json()
+    })
+    p.catch(() => cache.delete(jur))
+    cache.set(jur, p)
+    return p
   }
 
   async function load (jur = state.jur) {
@@ -1454,12 +2179,10 @@ export function mountGrants (container, opts = {}) {
      */
     async open (rid, jur) {
       if (destroyed) return
-      if (state.view !== 'recipients') {
-        state.view = 'recipients'
-        for (const b of root.querySelectorAll('.gr-view')) b.setAttribute('aria-pressed', b.dataset.view === 'recipients' ? 'true' : 'false')
-      }
+      if (state.view !== 'recipients') showView('recipients')
       if (rid) {
         state.open = rid
+        state.program = null
         state.q = ''
         searchEl.value = ''
         state.donors = false
@@ -1468,13 +2191,27 @@ export function mountGrants (container, opts = {}) {
       const target = JURISDICTIONS[jur] ? jur : state.jur
       if (target !== state.jur || !data) await load(target)
       else { renderHead(); render() }
-      if (rid) {
-        const btn = bodyEl.querySelector(`.gr-open[data-id="${CSS.escape(rid)}"]`)
-        if (btn) {
-          btn.scrollIntoView({ block: 'center' })
-          btn.focus({ preventScroll: true })
-        }
+      if (rid) focusOpened(`.gr-open[data-id="${cssEscape(rid)}"]`)
+    },
+    /**
+     * Open on a jurisdiction and one program's file in the Programs view
+     * (`/money/grants?jur=federal&program=GO3141`, the search catalog's link).
+     */
+    async openProgram (id, jur) {
+      if (destroyed) return
+      if (state.view !== 'programs') showView('programs')
+      if (id) {
+        state.program = id
+        state.open = null
+        state.q = ''
+        searchEl.value = ''
+        state.donors = false
+        for (const b of root.querySelectorAll('.gr-donors')) b.setAttribute('aria-pressed', b.dataset.donors === '0' ? 'true' : 'false')
       }
+      const target = JURISDICTIONS[jur] ? jur : state.jur
+      if (target !== state.jur || !data) await load(target)
+      else { renderHead(); render() }
+      if (id) focusOpened(`.gr-open[data-program="${cssEscape(id)}"]`)
     },
     destroy () {
       if (destroyed) return
