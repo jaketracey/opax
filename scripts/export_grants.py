@@ -709,7 +709,7 @@ else:
     src_meta = {
         "jurisdiction": "qld", "label": "Queensland", "sourceShort": "QLD Government Investment Portal",
         "source": "Queensland Government Investment Portal consolidated expenditure data (data.qld.gov.au), via parli.db government_grants",
-        "source_url": "https://www.data.qld.gov.au/dataset/queensland-government-investment-portal-expenditure",
+        "source_url": "https://www.data.qld.gov.au/dataset/b102c881-2c7f-484a-a8b6-b056fe318964",
         "licence": "CC BY 4.0 (Queensland Government, data.qld.gov.au)",
         "threshold": "Annual expenditure lines per funding agreement for grants, service agreements and other assistance; a multi-year agreement appears once per financial year it was paid. 'Multiple' recipients are shown as not disclosed.",
     }

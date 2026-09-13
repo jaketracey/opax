@@ -3,7 +3,7 @@ import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');
 const JURISDICTIONS = { federal: 'Commonwealth', qld: 'Queensland' };
-const SOURCES = { federal: 'https://www.grants.gov.au/', qld: 'https://www.data.qld.gov.au/dataset/queensland-government-investment-portal-expenditure' };
+const SOURCES = { federal: 'https://www.grants.gov.au/', qld: 'https://www.data.qld.gov.au/dataset/b102c881-2c7f-484a-a8b6-b056fe318964' };
 const REGISTERS = { qld: 'Queensland electoral returns', vic: 'Victorian electoral returns', tas: 'Tasmanian electoral returns' };
 const money = value => MONEY.format(Number(value) || 0);
 const node = (tag, text, className) => {

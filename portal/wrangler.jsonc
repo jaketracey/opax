@@ -63,8 +63,11 @@
     "DAILY_POST_ENABLED": "true",
     "X_ACCOUNT_ID": "2099044188113485825",
     "X_USERNAME": "OpaxAustralia",
-    "FACEBOOK_POST_ENABLED": "false",
-    "INSTAGRAM_POST_ENABLED": "false",
+    "FACEBOOK_POST_ENABLED": "true",
+    "FACEBOOK_PAGE_ID": "1322885877574835",
+    "INSTAGRAM_POST_ENABLED": "true",
+    "INSTAGRAM_ACCOUNT_ID": "17841433372413296",
+    "INSTAGRAM_USERNAME": "opaxaustralia",
     "META_API_VERSION": "v25.0",
     // Networks refused on /api and /og. 45102/24429/37963 = Alibaba Cloud: a
     // 650-address headless-Chrome fleet in Singapore was making ~100x the real
