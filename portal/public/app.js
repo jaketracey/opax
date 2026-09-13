@@ -9395,9 +9395,18 @@ function saveChatSession() {
   if (chatThread.some((m) => m.role === "answer")) chatSyncLater(chat.id);
 }
 
+// A question the reader left before its answer came (navigated away, closed
+// the tab) would sit at the end of the thread unanswered; it goes, so the
+// conversation reopens on its last answer and the question can be put again.
+function trimUnanswered(chat) {
+  if (chat.thread.length && chat.thread[chat.thread.length - 1].role === "user") chat.thread.pop();
+  return chat;
+}
+
 function loadChatSession() {
   const chat = activeChat(false);
   if (!chat) return;
+  trimUnanswered(chat);
   chatThread = chat.thread;
   chatKind = chat.kind === "speech" ? "speech" : "all";
 }
@@ -9409,6 +9418,7 @@ function openSavedChat(id) {
   chatAbort?.abort();
   chatFollowAbort?.abort();
   store.active = id;
+  trimUnanswered(chat);
   chatThread = chat.thread;
   chatKind = chat.kind === "speech" ? "speech" : "all";
   chatStoreWrite();
