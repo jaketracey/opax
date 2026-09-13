@@ -494,3 +494,45 @@ test('comparison continuations use all established financial-year label forms',a
  for(const period of ['FY2021-22','FY2021–2022','2021/22','2021‑22','financial year 2021–2022','FY ending 2022'])
   assert.deepEqual(await ask(`And during ${period}?`,{context}),expected,period);
 });
+
+test('Queensland Labor and LNP comparisons keep both recipient identities and exact year cells',async()=>{
+ for(const name of ['LNP','Liberal National Party']) {
+  const r=await ask(`Who gets more money, Labor or ${name} in Queensland in 2020–21?`);
+  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/Labor received \$185,243 more/);
+  assert.match(r.answer,/\| Labor \| \$2,183,276 \| 585 \|/);assert.match(r.answer,/\| LNP \| \$1,998,033 \| 421 \|/);
+  assert.equal(r.scope.state,'qld');assert.equal(r.scope.from,'2020');assert.equal(r.scope.to,'2020');
+  assert.deepEqual(r.sources.slice(1).map(s=>new URL(s.href,'https://opax.test').searchParams.get('party')).sort(),['party:LNP','party:Labor']);
+  for(const s of r.sources.slice(1)){const p=new URL(s.href,'https://opax.test').searchParams;assert.equal(p.get('jur'),'qld');assert.equal(p.get('from'),'2020');assert.equal(p.get('to'),'2020');}
+  assert.deepEqual(await ask(r.money_question),r);
+  const next=await ask('And in 2021–22?',{context:history(r.money_question)});
+  assert.match(next.answer,/Labor received \$1,590,579 more/);assert.match(next.answer,/\| LNP \| \$1,264,068 \| 196 \|/);
+  assert.deepEqual(next,await ask(`Who gets more money, Labor or ${name} in Queensland in 2021–22?`));
+ }
+});
+
+test('LNP comparisons retain industry or exact donor and single-party rankings remain specific',async()=>{
+ const r=await ask('Who gets more gambling money, ALP or LNP in Queensland in 2021?');
+ assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\$34,771 more/);
+ assert.match(r.answer,/\| Labor \| \$47,563 \| 8 \|/);assert.match(r.answer,/\| LNP \| \$12,792 \| 3 \|/);
+ assert.ok(r.sources.slice(1).every(s=>new URL(s.href,'https://opax.test').searchParams.get('industry')==='gambling'));
+ const donor=await ask('Who gets more money from Tabcorp Holdings, Labor or Liberal National Party in Queensland in 2021?');
+ assert.equal(donor.answer_status,'calculated');assert.match(donor.answer,/\$8,645 more/);
+ assert.ok(donor.sources.slice(1).every(s=>new URL(s.href,'https://opax.test').searchParams.get('focus')==='donor:tabcorp'));
+ const single=await ask('Who donates the most to Liberal National Party in Queensland in 2021?');
+ assert.equal(single.answer_status,'calculated');assert.match(single.answer,/NIOA Nominees.*\$100,500/s);
+ assert.ok(single.sources.slice(1).every(s=>new URL(s.href,'https://opax.test').searchParams.get('party')==='party:LNP'));
+});
+
+test('compound party names retain distinct federal identities and reject unsupported cohorts',async()=>{
+ const country=await ask('Who donates the most to Country Liberal Party?');
+ assert.equal(country.answer_status,'calculated');
+ assert.ok(country.sources.slice(1).every(s=>new URL(s.href,'https://opax.test').searchParams.get('party')==='party:Country Liberal Party'));
+ for(const q of ['Who gets more money, Liberal or LNP?','Who gets more money, Country Liberal Party or Liberal?']) {
+  const r=await ask(q);assert.equal(r.answer_status,'calculated');
+  assert.equal(new Set(r.sources.slice(1).map(s=>new URL(s.href,'https://opax.test').searchParams.get('party'))).size,2);
+ }
+ for(const q of ['Who gets more money, Labor or LNP or Greens in Queensland?','Who gets more money, Labor or LNP excluding coal in Queensland?'])assert.equal(await ask(q),null,q);
+ for(const q of ['Who gets more money, LNP or Unicorn Party in Queensland?','Who donates most to Country Liberal Party in Victoria?','Who donates most to Liberal National Party in Victoria?']) {
+  const r=await ask(q);assert.equal(r.answer_status,'needs_scope',q);assert.deepEqual(r.sources,[]);assert.doesNotMatch(r.answer,/\$[\d,]+/);
+ }
+});

@@ -84,3 +84,52 @@ test('overlapping aliases cannot combine separate organisations',()=>{
  const shared={...graph,nodes:[...graph.nodes,{id:'x',kind:'donor',label:'Example Trust',aliases:['Example Casino']}]};
  assert.equal(receiptAnswer(shared,'money from Example Casino','federal','https://opax.test').needs_scope,true);
 });
+
+test('complete party names mask only nested mentions, not another party in the question',()=>{
+ const parties={...graph,nodes:[...graph.nodes,{id:'nationals',kind:'party',label:'Nationals'},
+  {id:'clp',kind:'party',label:'Country Liberal Party'}],edges:[...graph.edges,{source:'a',target:'lnp',total:50,count:1},{source:'a',target:'clp',total:25,count:1}]};
+ const select=q=>receiptAnswer(parties,q,'federal','https://opax.test');
+ for(const name of ['LNP','Liberal National Party']) {
+  assert.deepEqual(select(`${name} and Labor donations`).selected_parties,['Labor','LNP']);
+  assert.equal(select(`${name} and Labor donations`).total_aud,650);
+  assert.deepEqual(select(`${name} donations`).selected_parties,['LNP']);
+  assert.deepEqual(select(`${name} versus Liberal donations`).selected_parties,['Liberal','LNP']);
+ }
+ assert.deepEqual(select('Country Liberal Party donations').selected_parties,['Country Liberal Party']);
+ assert.deepEqual(select('Country Liberal Party versus Liberal donations').selected_parties,['Liberal','Country Liberal Party']);
+ assert.deepEqual(select('Liberal versus Country Liberal Party donations').selected_parties,['Liberal','Country Liberal Party']);
+ assert.deepEqual(select('Liberal National Party and National Party donations').selected_parties,['LNP','Nationals']);
+ assert.deepEqual(select('ALP and LNP donations').selected_parties,['Labor','LNP']);
+ assert.deepEqual(select('LNP and LNP donations').selected_parties,['LNP']);
+});
+
+test('missing compound party identities never become shorter parties or all recipients',()=>{
+ const missing={...graph,nodes:graph.nodes.filter(n=>n.id!=='lnp')};
+ for(const name of ['LNP','Liberal National Party','Country Liberal Party']) {
+  for(const q of [`${name} donations`,`gambling money to ${name}`,`Labor or ${name} donations`]) {
+   const r=receiptAnswer(missing,q,'vic','https://opax.test');
+   assert.equal(r.needs_scope,true,q);assert.equal(r.total_aud,undefined);assert.deepEqual(r.sources,[]);
+  }
+ }
+ const controlled=receiptAnswer(missing,'LNP donations','vic','https://opax.test',{party:'Liberal'});
+ assert.deepEqual(controlled.selected_parties,['Liberal']);assert.equal(controlled.total_aud,250);
+});
+
+test('party aliases shared by distinct identities require a full name',()=>{
+ const shared={...graph,nodes:[...graph.nodes.map(n=>n.id==='labor'?{...n,aliases:['Example Party']}:n),{id:'new',kind:'party',label:'New Party',aliases:['Example Party']}]};
+ const r=receiptAnswer(shared,'Example Party donations','federal','https://opax.test');
+ assert.equal(r.needs_scope,true);assert.equal(r.total_aud,undefined);assert.deepEqual(r.sources,[]);
+ assert.deepEqual(receiptAnswer(shared,'New Party donations','federal','https://opax.test').selected_parties,['New Party']);
+});
+
+test('party words inside a resolved donor name are not recipient selections',()=>{
+ for(const label of ['LNP Holdings Pty Ltd','Country Liberal Party Services Ltd']) {
+  const named={meta:{},nodes:[{id:'company',kind:'donor',label},...graph.nodes.filter(n=>n.kind==='party'&&n.id!=='lnp')],edges:[
+   {source:'company',target:'labor',total:60,count:1},{source:'company',target:'liberal',total:40,count:1}]};
+  for(const query of [`money from ${label}`,`money from ${label.replace(/ Pty Ltd$| Ltd$/,'')}`]) {
+   const all=receiptAnswer(named,query,'vic','https://opax.test');assert.equal(all.total_aud,100);assert.deepEqual(all.selected_parties,[]);
+   const recipient=receiptAnswer(named,query+' to Liberal','vic','https://opax.test');assert.equal(recipient.total_aud,40);assert.deepEqual(recipient.selected_parties,['Liberal']);
+  }
+  const missing=receiptAnswer(named,`money from ${label} to LNP`,'vic','https://opax.test');assert.equal(missing.needs_scope,true);
+ }
+});
