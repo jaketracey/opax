@@ -31,6 +31,10 @@ Then, up to 16 times:
    - Read the output. `submitted N, failed 0` is success. If it names problems, fix those
      briefs and submit the same file again; the rest are already written.
    - If the box answers 429 or 502, wait 60 seconds and submit again.
+   - Give every `submit` a 10-minute timeout and run it in the foreground; the box can take
+     several minutes when many workers write at once. Never background a submit and wait on it.
+     If a submit ever times out anyway, run the same submit again: rids already written come
+     back as "not claimed by you", which is fine.
 
 Run every command in the foreground and read its output in the same step. Never background
 `submit` or wait on a monitor or notification for it: workers that did so sat idle for an hour

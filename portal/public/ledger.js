@@ -193,7 +193,7 @@ export function filterFlows (flows, f) {
 /** Parse a shareable receipts URL against the loaded graph using exact IDs. */
 export function parseLedgerParams (params, data) {
   const p = params instanceof URLSearchParams ? params : new URLSearchParams(params || '')
-  const supported = new Set(['jur', 'type', 'focus', 'party', 'industry', 'from', 'to', 'q', 'min'])
+  const supported = new Set(['jur', 'type', 'focus', 'party', 'industry', 'from', 'to', 'q', 'min', 'view', 'sort', 'dir'])
   for (const key of p.keys()) {
     if (!supported.has(key)) return { ok: false, error: 'This link uses an unsupported filter. Clear filters to choose a new selection.' }
     if (p.getAll(key).length > 1) return { ok: false, error: 'This link contains more than one selection for the same filter. Clear filters to choose a new selection.' }
@@ -202,6 +202,11 @@ export function parseLedgerParams (params, data) {
   if (!Object.hasOwn(JURISDICTIONS, jur)) return { ok: false, error: 'Unknown jurisdiction. Clear filters, then choose Federal, Queensland, Victoria or Tasmania.' }
   const type = p.get('type')
   if (type && type !== 'receipts') return { ok: false, error: 'This link requests an unsupported record type. This list shows political receipts. Clear filters to start again.' }
+  const view = p.get('view') || 'flows'
+  if (!Object.hasOwn(COLUMNS, view)) return { ok: false, error: 'This link uses an unsupported view. Clear filters to start again.' }
+  const sort = p.get('sort') || 'total', dir = p.get('dir') || 'desc'
+  if (!COLUMNS[view].some((c) => c.key === sort) || !['asc', 'desc'].includes(dir)) return { ok: false, error: 'This link uses unsupported sorting. Clear filters to start again.' }
+  const presentation = { view, sort: { key: sort, dir } }
   const readYear = (key) => {
     const raw = p.get(key)
     if (raw == null || raw === '') return null
@@ -215,7 +220,7 @@ export function parseLedgerParams (params, data) {
   const allowedMin = new Set([0, 100000, 1000000, 10000000])
   const min = minRaw == null || minRaw === '' ? 0 : Number(minRaw)
   if (!Number.isInteger(min) || !allowedMin.has(min)) return { ok: false, error: 'This minimum amount is not supported. Choose Any amount, $100K+, $1M+ or $10M+.' }
-  if (!data) return { ok: true, jurisdiction: jur, filters: { q: p.get('q') || '', yearFrom, yearTo, min, partyId: p.get('party') || '', industryId: p.get('industry') || '', focusDonorId: p.get('focus') || '' } }
+  if (!data) return { ok: true, jurisdiction: jur, ...presentation, filters: { q: p.get('q') || '', yearFrom, yearTo, min, partyId: p.get('party') || '', industryId: p.get('industry') || '', focusDonorId: p.get('focus') || '' } }
   const nodes = new Map((data.nodes || []).map((n) => [n.id, n]))
   const exact = (key, kind, label) => {
     const id = p.get(key)
@@ -230,7 +235,28 @@ export function parseLedgerParams (params, data) {
   if (focus.error) return { ok: false, error: focus.error }
   const industryId = p.get('industry') || ''
   if (industryId && !nodesExistsIndustry(data, industryId)) return { ok: false, error: 'This link names an unknown industry. Clear filters to choose a new selection.' }
-  return { ok: true, jurisdiction: jur, filters: { q: p.get('q') || '', industry: industryId, industryId, party: party.label, partyId: party.id, focusDonorId: focus.id, focusDonor: focus.label, yearFrom, yearTo, min } }
+  return { ok: true, jurisdiction: jur, ...presentation, filters: { q: p.get('q') || '', industry: industryId, industryId, party: party.label, partyId: party.id, focusDonorId: focus.id, focusDonor: focus.label, yearFrom, yearTo, min } }
+}
+
+/** Encode the same selection shown in the list, preserving exact graph IDs. */
+export function serializeLedgerParams (state, data) {
+  const p = new URLSearchParams({ jur: state.jur, type: 'receipts' })
+  if (state.focusDonorId) p.set('focus', state.focusDonorId)
+  if (state.party) {
+    const party = (data?.nodes || []).find((n) => n.kind === 'party' && n.label === state.party)
+    if (!party) return null
+    p.set('party', party.id)
+  }
+  if (state.industry) p.set('industry', state.industry)
+  if (state.q) p.set('q', state.q)
+  if (state.yearFrom != null) p.set('from', String(state.yearFrom))
+  if (state.yearTo != null) p.set('to', String(state.yearTo))
+  if (state.min) p.set('min', String(state.min))
+  if (state.view !== 'flows') p.set('view', state.view)
+  const sort = state.sort[state.view]
+  if (sort.key !== 'total') p.set('sort', sort.key)
+  if (sort.dir !== 'desc') p.set('dir', sort.dir)
+  return parseLedgerParams(p, data).ok ? p : null
 }
 
 function nodesExistsIndustry (data, industry) {
@@ -327,6 +353,16 @@ const CSS = `
 }
 .lg-root :focus-visible { outline: 2px solid var(--bronze-ink, #8A5A12); outline-offset: 2px; }
 
+.lg-selection { margin: 0 0 .4rem; font-size: .875rem; font-weight: 600; color: var(--navy, #142A43); overflow-wrap: anywhere; }
+.lg-filters { margin: .75rem 0; border: 1px solid var(--line, #DFDCD2); border-radius: 4px; background: var(--paper-raised, #FFFFFF); }
+.lg-filters > summary { padding: .65rem .85rem; min-height: 44px; cursor: pointer; font-size: .875rem; font-weight: 600; color: var(--navy, #142A43); }
+.lg-filters[open] > summary { border-bottom: 1px solid var(--line, #DFDCD2); }
+.lg-filters .lg-toolbar { padding: 1rem; margin: 0; }
+.lg-filters .lg-year-help { padding: 0 1rem 1rem; margin: 0; }
+.lg-results-tools { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: .5rem 1rem; margin: .75rem 0; }
+.lg-results-tools .lg-actions { flex-wrap: wrap; margin-left: 0; }
+.lg-copy-status { margin: .5rem 0; font-size: .8125rem; color: var(--ink-soft, #575C52); }
+.lg-copy-fallback { width: 100%; margin: .5rem 0; }
 .lg-toolbar {
   display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; align-items: flex-end;
   margin-bottom: 0.75rem;
@@ -454,7 +490,7 @@ th[aria-sort] .lg-sort { color: var(--ink, #23271F); }
   .lg-table { display: none; }
   .lg-tablewrap { overflow-x: hidden; }
   .lg-compact-sort {
-    display: flex; align-items: flex-end; gap: 0.5rem; margin: 0.75rem 0;
+    display: flex; align-items: flex-end; gap: 0.5rem; margin: 0; flex: 1 1 100%;
   }
   .lg-compact-sort .lg-field { flex: 1; }
   .lg-compact-sort .lg-select, .lg-compact-sort .lg-btn { min-height: 2.75rem; font-size: 1rem; }
@@ -556,6 +592,9 @@ export function mountLedger (container, opts = {}) {
   }
 
   let flows = []                   // joined edge rows, set once data lands
+  let loadedData = null
+  let editGroup = null
+  let pendingUserLoad = false
   let meta = {}                    // the loaded file's meta block (state files describe themselves)
   let currentRows = []             // what the table shows now (for export)
   let loading = true
@@ -570,6 +609,11 @@ export function mountLedger (container, opts = {}) {
   const root = el('section', 'lg-root')
   root.setAttribute('aria-label', 'Political receipts: disclosed records, payer by payer')
   root.innerHTML = `
+    <p class="lg-selection"></p>
+    <p class="lg-summary" aria-live="polite" aria-atomic="true"></p>
+    <div class="lg-scope-chip" id="lg-scope-chip" hidden></div>
+    <details class="lg-filters">
+    <summary>Change filters<span id="lg-filter-count"></span></summary>
     <div class="lg-toolbar" role="group" aria-label="Ledger filters">
       <div class="lg-field" role="group" aria-label="Jurisdiction">
         <span class="lg-label" aria-hidden="true">Jurisdiction</span>
@@ -617,16 +661,16 @@ export function mountLedger (container, opts = {}) {
           <option value="10000000">$10M+</option>
         </select>
       </div>
-      <div class="lg-actions">
-        <button type="button" class="lg-btn" id="lg-clear" hidden>Clear filters</button>
-        <button type="button" class="lg-btn lg-export" id="lg-export">Export CSV</button>
-      </div>
     </div>
 
     <p class="lg-year-help" id="lg-year-help">Use the first year of a financial year (2020 for 2020–21), or the polling year for election returns.</p>
-    <div class="lg-scope-chip" id="lg-scope-chip" hidden></div>
-    <p class="lg-summary" aria-live="polite" aria-atomic="true"></p>
-
+    </details>
+    <div class="lg-results-tools">
+    <div class="lg-actions">
+      <button type="button" class="lg-btn" id="lg-clear" hidden>Clear filters</button>
+      <button type="button" class="lg-btn" id="lg-copy" disabled>Copy link</button>
+      <button type="button" class="lg-btn lg-export" id="lg-export" disabled>Export CSV</button>
+    </div>
     <div class="lg-compact-sort">
       <div class="lg-field">
         <label class="lg-label" for="lg-compact-sort">Sort by</label>
@@ -634,6 +678,9 @@ export function mountLedger (container, opts = {}) {
       </div>
       <button type="button" class="lg-btn" id="lg-sort-direction" disabled>High to low</button>
     </div>
+    </div>
+    <p class="lg-copy-status" role="status" hidden></p>
+    <input class="lg-input lg-copy-fallback" aria-label="Link to these receipts" readonly hidden />
     <div class="lg-tablewrap" role="region" tabindex="0" aria-label="Political receipts (scrollable)">
       <div class="lg-status" role="status">Loading the ledger…</div>
       <ul class="lg-cards" hidden></ul>
@@ -648,6 +695,13 @@ export function mountLedger (container, opts = {}) {
   `
 
   const $ = (sel) => root.querySelector(sel)
+  const filtersEl = $('.lg-filters')
+  filtersEl.open = window.matchMedia('(min-width: 961px)').matches
+  const selectionEl = $('.lg-selection')
+  const filterCountEl = $('#lg-filter-count')
+  const copyBtn = $('#lg-copy')
+  const copyStatus = $('.lg-copy-status')
+  const copyFallback = $('.lg-copy-fallback')
   const fineEl = $('.lg-fineprint')
   const searchEl = $('#lg-q')
   const industryEl = $('#lg-industry')
@@ -779,8 +833,13 @@ export function mountLedger (container, opts = {}) {
   }
 
   function render () {
+    copyStatus.hidden = copyFallback.hidden = true
+    copyBtn.textContent = 'Copy link'
+    selectionEl.textContent = [JURISDICTIONS[state.jur].label, state.party ? `To ${state.party}` : 'All parties', state.industry ? industryLabel(state.industry) : '', state.q ? `Matching “${state.q}”` : '', state.min ? `${AUD.format(state.min)} or more` : ''].filter(Boolean).join(' · ')
+    const filterCount = [state.q.trim(), state.industry, state.party, state.focusDonorId, state.yearFrom != null || state.yearTo != null, state.min > 0].filter(Boolean).length
+    filterCountEl.textContent = filterCount ? ` (${filterCount})` : ''
     if (loading || loadError || paramError) {
-      exportBtn.disabled = true
+      copyBtn.disabled = exportBtn.disabled = true
       compactSortEl.disabled = directionBtn.disabled = true
       tableEl.hidden = true
       cardsEl.hidden = true
@@ -790,6 +849,8 @@ export function mountLedger (container, opts = {}) {
         statusEl.hidden = false
         statusEl.textContent = paramError
         clearBtn.hidden = false
+        filtersEl.open = true
+        selectionEl.textContent = 'Check the filters in this link'
       }
       return
     }
@@ -800,13 +861,14 @@ export function mountLedger (container, opts = {}) {
     yearToEl.setAttribute('aria-invalid', String(invalidTo || reversed))
     const error = invalidFrom || invalidTo ? `Enter a return year between ${YEAR_MIN} and ${YEAR_MAX}.`
       : reversed ? 'The start year must be the same as or earlier than the end year.' : ''
-    exportBtn.disabled = !!error
+    copyBtn.disabled = exportBtn.disabled = !!error
     statusEl.hidden = !error
     tableEl.hidden = !!error
     cardsEl.hidden = !!error
     compactSortEl.disabled = directionBtn.disabled = !!error
     if (error) {
       currentRows = []
+      filtersEl.open = true
       summaryEl.textContent = error
       statusEl.textContent = 'Update the years to see matching receipts.'
       clearBtn.hidden = false
@@ -867,7 +929,7 @@ export function mountLedger (container, opts = {}) {
       scopeEl.append(el('span', null, `Exact donor: ${state.focusDonor}`))
       const remove = el('button', 'lg-chip-remove', 'Remove')
       remove.type = 'button'; remove.setAttribute('aria-label', `Remove donor filter: ${state.focusDonor}`)
-      remove.addEventListener('click', () => { state.focusDonorId = ''; state.focusDonor = ''; paramError = ''; render(); searchEl.focus() })
+      remove.addEventListener('click', () => { state.focusDonorId = ''; state.focusDonor = ''; paramError = ''; changed(); filtersEl.open = true; searchEl.focus() })
       scopeEl.appendChild(remove)
     }
   }
@@ -923,18 +985,29 @@ export function mountLedger (container, opts = {}) {
 
   // ---- events -------------------------------------------------------------
 
-  searchEl.addEventListener('input', () => { state.q = searchEl.value; render() })
-  industryEl.addEventListener('change', () => { state.industry = industryEl.value; render() })
-  partyEl.addEventListener('change', () => { state.party = partyEl.value; render() })
-  minEl.addEventListener('change', () => { state.min = Number(minEl.value) || 0; render() })
+  function publishParams (replace = false) {
+    if (copyBtn.disabled || loading || loadError || paramError) return
+    const params = serializeLedgerParams(state, loadedData)
+    return params ? opts.onParamsChange?.(params, { replace }) === true : false
+  }
+  function changed (input = null) {
+    render()
+    const published = publishParams(input != null && editGroup === input)
+    if (published || input == null) editGroup = input
+  }
+  for (const input of [searchEl, yearFromEl, yearToEl]) input.addEventListener('blur', () => { editGroup = null })
+  searchEl.addEventListener('input', () => { state.q = searchEl.value; changed(searchEl) })
+  industryEl.addEventListener('change', () => { state.industry = industryEl.value; changed() })
+  partyEl.addEventListener('change', () => { state.party = partyEl.value; changed() })
+  minEl.addEventListener('change', () => { state.min = Number(minEl.value) || 0; changed() })
 
   const readYear = (input) => {
     if (!input.value.trim()) return null
     const n = Number(input.value)
     return Number.isFinite(n) ? n : null
   }
-  yearFromEl.addEventListener('input', () => { state.yearFrom = readYear(yearFromEl); render() })
-  yearToEl.addEventListener('input', () => { state.yearTo = readYear(yearToEl); render() })
+  yearFromEl.addEventListener('input', () => { state.yearFrom = readYear(yearFromEl); changed(yearFromEl) })
+  yearToEl.addEventListener('input', () => { state.yearTo = readYear(yearToEl); changed(yearToEl) })
 
   clearBtn.addEventListener('click', () => {
     state.q = ''; searchEl.value = ''
@@ -945,27 +1018,47 @@ export function mountLedger (container, opts = {}) {
     state.yearTo = null; yearToEl.value = ''
     state.min = 0; minEl.value = '0'
     paramError = ''
-    render()
+    changed()
+    filtersEl.open = true
     searchEl.focus()
   })
 
+  copyBtn.addEventListener('click', async () => {
+    const params = serializeLedgerParams(state, loadedData)
+    if (!params || copyBtn.disabled) return
+    const url = new URL('/money/receipts?' + params.toString(), location.origin).href
+    try {
+      await navigator.clipboard.writeText(url)
+      if (destroyed || copyBtn.disabled || serializeLedgerParams(state, loadedData)?.toString() !== params.toString()) return
+      copyBtn.textContent = 'Link copied'
+      copyStatus.textContent = 'Link copied with these filters, view and sort order.'
+      copyStatus.hidden = false
+    } catch {
+      if (destroyed || copyBtn.disabled || serializeLedgerParams(state, loadedData)?.toString() !== params.toString()) return
+      copyFallback.value = url; copyFallback.hidden = false
+      copyStatus.textContent = 'Copy this link to share these receipts.'; copyStatus.hidden = false
+      copyFallback.focus(); copyFallback.select()
+    }
+  })
   exportBtn.addEventListener('click', exportCSV)
   compactSortEl.addEventListener('change', () => {
     const col = COLUMNS[state.view].find((c) => c.key === compactSortEl.value)
     state.sort[state.view] = { key: col.key, dir: col.numeric ? 'desc' : 'asc' }
     syncSortMarkers()
-    render()
+    changed()
   })
   directionBtn.addEventListener('click', () => {
     const sort = state.sort[state.view]
     sort.dir = sort.dir === 'asc' ? 'desc' : 'asc'
     syncSortMarkers()
-    render()
+    changed()
   })
 
   for (const btn of root.querySelectorAll('.lg-jur')) {
     btn.addEventListener('click', () => {
       if (state.jur === btn.dataset.jur) return
+      pendingUserLoad = true
+      editGroup = null
       load(btn.dataset.jur)
     })
   }
@@ -978,7 +1071,7 @@ export function mountLedger (container, opts = {}) {
         b.setAttribute('aria-pressed', b === btn ? 'true' : 'false')
       }
       renderHead()
-      render()
+      changed()
     })
   }
 
@@ -994,7 +1087,7 @@ export function mountLedger (container, opts = {}) {
       sort.dir = col.numeric ? 'desc' : 'asc' // numbers biggest-first, text A–Z
     }
     syncSortMarkers()
-    render()
+    changed()
   })
 
   // ---- data ---------------------------------------------------------------
@@ -1073,7 +1166,9 @@ export function mountLedger (container, opts = {}) {
       initialParamsApplied = true
     }
     scopeEl.hidden = true
-    exportBtn.disabled = true
+    copyStatus.hidden = copyFallback.hidden = true
+    selectionEl.textContent = JURISDICTIONS[state.jur].label
+    copyBtn.disabled = exportBtn.disabled = true
     compactSortEl.disabled = directionBtn.disabled = true
     cardsEl.hidden = true
     cardsEl.replaceChildren()
@@ -1087,6 +1182,7 @@ export function mountLedger (container, opts = {}) {
       const data = await fetchData(state.jur)
       if (token !== loadSeq) return
       loading = false
+      loadedData = data
       meta = data.meta || {}
       flows = buildFlows(data)
       if (!initialParamsApplied && routeParams.toString()) {
@@ -1096,6 +1192,9 @@ export function mountLedger (container, opts = {}) {
           paramError = parsed.error
         } else {
           paramError = ''
+          state.view = parsed.view
+          state.sort[state.view] = parsed.sort
+          for (const btn of root.querySelectorAll('.lg-view')) btn.setAttribute('aria-pressed', String(btn.dataset.view === state.view))
           state.q = parsed.filters.q
           state.industry = parsed.filters.industry
           state.party = parsed.filters.party
@@ -1116,6 +1215,7 @@ export function mountLedger (container, opts = {}) {
       tableEl.hidden = false
       renderHead()
       render()
+      if (pendingUserLoad) { publishParams(); pendingUserLoad = false }
     } catch (err) {
       if (aborter.signal.aborted || token !== loadSeq) return
       loading = false
