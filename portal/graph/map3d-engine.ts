@@ -619,6 +619,7 @@ export class KnowledgeMapEngine {
     onSelect: (id: string | null) => void,
     onContextLost?: () => void,
     onContextRestored?: () => void,
+    private readonly pageScroll = false,
   ) {
     this.canvas = canvas
     this.labelLayer = labelLayer
@@ -2250,7 +2251,7 @@ export class KnowledgeMapEngine {
     canvas.addEventListener('pointerup', this.onPointerUp)
     canvas.addEventListener('pointercancel', this.onPointerUp)
     canvas.addEventListener('pointerleave', this.onPointerLeave)
-    canvas.addEventListener('wheel', this.onWheel, { passive: false })
+    if (!this.pageScroll) canvas.addEventListener('wheel', this.onWheel, { passive: false })
     canvas.addEventListener('contextmenu', this.onContextMenu)
     canvas.addEventListener('keydown', this.onKeyDown)
   }
@@ -2430,6 +2431,14 @@ export class KnowledgeMapEngine {
     // drag or stays a click - a reader who has reached for the map owns it.
     this.onViewClaimed?.()
     const point = this.localPoint(event)
+    if (this.pageScroll && event.pointerType === 'touch') {
+      // Keep taps selectable, but let the browser own scrolling and pinch zoom.
+      this.pointers.set(event.pointerId, point)
+      this.pick(point.x, point.y)
+      this.orbit = { mode: 'orbit', lastX: point.x, lastY: point.y, moved: 0, hub: this.pickedHub?.group ?? null }
+      if (this.pointers.size > 1) this.gestured = true
+      return
+    }
     this.pointers.set(event.pointerId, point)
     this.capturePointer(event.pointerId)
 
@@ -2499,6 +2508,14 @@ export class KnowledgeMapEngine {
 
   private onPointerMove = (event: PointerEvent) => {
     const point = this.localPoint(event)
+    if (this.pageScroll && event.pointerType === 'touch') {
+      if (this.orbit) {
+        this.orbit.moved += Math.abs(point.x - this.orbit.lastX) + Math.abs(point.y - this.orbit.lastY)
+        this.orbit.lastX = point.x
+        this.orbit.lastY = point.y
+      }
+      return
+    }
     if (this.pointers.has(event.pointerId)) this.pointers.set(event.pointerId, point)
 
     const pinch = this.pinch
@@ -2591,6 +2608,11 @@ export class KnowledgeMapEngine {
     this.pointers.delete(event.pointerId)
     this.releasePointer(event.pointerId)
 
+    if (this.pageScroll && event.type === 'pointercancel') {
+      this.orbit = null
+      this.gestured = false
+      return
+    }
     if (this.pinch) {
       if (this.pointers.size < 2) {
         this.pinch = null

@@ -1,5 +1,7 @@
 # Federal bill text: OpenRouter configuration verification
 
+> **Stopped at the user’s request on 13 September 2026:** paid OpenRouter bill enrichment is paused. The `opax-bill-text-topics` task configuration was removed, and `opax-bill-text-publish-20260913.service` was stopped and disabled. The source-only crawler may continue collecting text; it makes no LLM calls. Published text remains available. Do not recreate the OpenRouter bill labeller or re-enable automatic publishing under the current instruction. The user intends to use Codex agents for labelling instead. Any later publishing workflow must also account for the KB’s existing automatic summaries, which can incur OpenRouter charges. The verification below records the earlier configuration, not its current enabled state.
+
 Verified live on 13 September 2026 before the full-text ingestion run.
 
 The KB generative and automatic summary models already use `openai-compatible` with `user_keys.openai_compat.url=https://openrouter.ai/api/v1` and `model_id=@preset/opax-pro`. The slot contains our OpenRouter key. No global model configuration was changed. Native provider key slots are empty.

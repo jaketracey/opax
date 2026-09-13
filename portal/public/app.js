@@ -886,7 +886,6 @@ function focusEntry(id) {
 }
 
 function showPanel(name) {
-  if (name !== "ask") stopFrontMapImmersion();
   if (name !== 'bill') { destroyBillText(); billView = null; }
   if (name !== "money-records") { moneyRecordsGeneration++; moneyRecordsHandle?.destroy(); moneyRecordsHandle = null; }
   for (const nav of document.querySelectorAll('[data-money-navigation]')) nav.innerHTML = OpaxNavigation.moneyNav(location.pathname, new URLSearchParams(location.search).get('jur'));
@@ -1066,7 +1065,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=sources-chevron-20260913");
+    const { mountMoneyMap } = await import("/money-map.js?v=home-page-scroll-20260913");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json?v=suppliers-1", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1355,7 +1354,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="status" style="margin:0;padding:1rem 1.25rem">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=sources-chevron-20260913"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=home-page-scroll-20260913"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=remove-copy-link-1"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -4016,7 +4015,7 @@ async function mountSubjectMap(nodeId) {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=sources-chevron-20260913");
+    const { mountMoneyMap } = await import("/money-map.js?v=home-page-scroll-20260913");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
@@ -8670,77 +8669,6 @@ let stateMapHandle = null;
 let frontMapHandle = null;
 let frontMapLoading = false;
 let frontMapObserver = null;
-let frontMapImmersionCleanup = null;
-
-function stopFrontMapImmersion() {
-  frontMapImmersionCleanup?.();
-  frontMapImmersionCleanup = null;
-}
-
-/** Give the graph room as it comes into view; its caption and page stay put. */
-function mountFrontMapImmersion() {
-  stopFrontMapImmersion();
-  const stage = document.querySelector(".home-map-stage");
-  const root = $("front-map-root");
-  if (!stage || !root || !("IntersectionObserver" in window)) return;
-  const eligible = matchMedia("(min-width: 1200px) and (prefers-reduced-motion: no-preference)");
-  let frame = 0;
-  let listening = false;
-  let lastOutset = "";
-
-  const update = () => {
-    frame = 0;
-    if (!eligible.matches) return;
-    // Measure the unchanged stage, never the graph we are widening. Use the
-    // layout viewport (excluding its scrollbar) to retain real edge gutters.
-    const rect = stage.getBoundingClientRect();
-    if (!rect.width) return;
-    const viewportWidth = document.documentElement.clientWidth;
-    const gutter = Math.max(24, Math.min(64, viewportWidth * 0.025));
-    const room = Math.max(0, Math.min(rect.left - gutter, viewportWidth - rect.right - gutter));
-    const top = rect.top + window.scrollY;
-    const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 0;
-    const start = Math.max(0, top - window.innerHeight * 0.8);
-    const end = Math.max(start + 200, top - Math.max(header + 32, window.innerHeight * 0.2));
-    const progress = Math.max(0, Math.min(1, (window.scrollY - start) / (end - start)));
-    const outset = `${(room * progress * progress * (3 - 2 * progress)).toFixed(2)}px`;
-    if (outset === lastOutset) return;
-    lastOutset = outset;
-    root.style.setProperty("--home-map-outset", outset);
-  };
-  const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
-  const listen = (visible) => {
-    if (visible === listening) return;
-    listening = visible;
-    if (visible) window.addEventListener("scroll", schedule, { passive: true });
-    else window.removeEventListener("scroll", schedule);
-  };
-  const observer = new IntersectionObserver((entries) => {
-    listen(eligible.matches && entries[entries.length - 1].isIntersecting);
-    if (listening) schedule();
-  }, { rootMargin: "100px" });
-  const configure = () => {
-    observer.disconnect();
-    listen(false);
-    if (frame) cancelAnimationFrame(frame);
-    frame = 0;
-    lastOutset = "";
-    root.style.removeProperty("--home-map-outset");
-    if (eligible.matches) { observer.observe(stage); schedule(); }
-  };
-  eligible.addEventListener("change", configure);
-  window.addEventListener("resize", schedule, { passive: true });
-  configure();
-  frontMapImmersionCleanup = () => {
-    observer.disconnect();
-    listen(false);
-    eligible.removeEventListener("change", configure);
-    window.removeEventListener("resize", schedule);
-    if (frame) cancelAnimationFrame(frame);
-    root.style.removeProperty("--home-map-outset");
-  };
-}
-
 function mountFrontMaps() {
   mountStateMap();
   // The money map is a 167 KB bundle plus its data. The plate reserves its own
@@ -8780,12 +8708,13 @@ async function mountFrontMap() {
   if (!root || frontMapHandle || frontMapLoading) return;
   frontMapLoading = true;
   try {
-    const [mod, data] = await Promise.all([import("/money-map.js?v=sources-chevron-20260913"), loadMoneyData()]);
+    const [mod, data] = await Promise.all([import("/money-map.js?v=home-page-scroll-20260913"), loadMoneyData()]);
     if (!data) throw new Error("money data unavailable");
     root.textContent = "";
     const handle = await mod.mountMoneyMap(root, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
       overview: true,
+      pageScroll: true,
       askUrl: (industry) => askHash(`What has parliament said about ${industryLabel(industry)}?`),
 
     });
@@ -9295,8 +9224,6 @@ function setFrontPageHidden(hidden) {
     const el = $(id);
     if (el) el.hidden = hidden;
   }
-  if (hidden) stopFrontMapImmersion();
-  else mountFrontMapImmersion();
 }
 
 // --- chat (keep asking) -----------------------------------------------------
@@ -12357,7 +12284,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=sources-chevron-20260913");
+    const { mountMoneyMap } = await import("/money-map.js?v=home-page-scroll-20260913");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json?v=suppliers-1", {
       chrome: "mini",
