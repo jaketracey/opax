@@ -1,7 +1,7 @@
 import type { RecordQuestion } from './ask-records'
 import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQuestion, fundingUserTurns, samePeriodFundingComparison} from './ask-money-followup'
 import {financialYear, receiptPeriodQuery} from './receipt-period'
-import {isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptJurisdiction, unmatchedReceiptRankingScope, type ReceiptGraph} from './voice-money'
+import {isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptGraphForQuestion, unmatchedReceiptRankingScope, type ReceiptGraph} from './voice-money'
 
 const comparisonQuestion = (q:string) => /\b(?:more|less|higher|lower|compare|versus|vs)\b/i.test(q)
 const yearComparisonQuestion = (q:string) => /\b(?:change[sd]?|increase[sd]?|decrease[sd]?|grew|growth|rose|fell)\b/i.test(q)
@@ -140,13 +140,15 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
   if(!standalone && (input.kind&&!['all','receipt'].includes(input.kind) || input.speaker || input.chamber || input.topic || !fundingContinuation(input.question||''))) return null
   const previous=standalone?undefined:fundingUserTurns(input).reverse().find(question=>isMoneyRanking({question}))
   if(!standalone&&!previous)return null
-  const jurisdiction=input.state || receiptJurisdiction(standalone?input.question||'':previous!)
-  if(!jurisdiction || !['federal','qld','vic','tas'].includes(jurisdiction)) return null
-  const file='/graph/'+(jurisdiction==='federal'?'money.json':`money.${jurisdiction}.json`)
-  const response=await assets.fetch(new Request('https://opax.com.au'+file))
-  if(!response.ok) throw new Error('Receipt data unavailable')
-  const graph=await response.json() as Record<string,unknown>
-  if(!isReceiptGraph(graph)) throw new Error('Receipt data invalid')
+  const selection=await receiptGraphForQuestion(standalone?input.question||'':previous!,async file=>{
+    const response=await assets.fetch(new Request('https://opax.com.au'+file))
+    if(!response.ok) throw new Error('Receipt data unavailable')
+    const graph=await response.json() as Record<string,unknown>
+    if(!isReceiptGraph(graph)) throw new Error('Receipt data invalid')
+    return graph
+  },input.state)
+  if(!selection)return null
+  const {graph,file,jurisdiction}=selection
   if(!standalone) {
     const followUp=fundingFollowUp(input,graph,jurisdiction,isMoneyRanking)
     if(!followUp)return null
