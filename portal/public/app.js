@@ -2779,11 +2779,17 @@ function sourceItem(s, num, passage = false) {
   // A record titled only "Speaker — 2013-03-19" has no debate name to show:
   // the row leads with the speaker in words and the byline carries the rest,
   // rather than the name twice and an ISO date in the title.
+  const receiptCalculation = /^receipt-(?:ranking|comparison|years)-/.test(s.resource || "");
   const subject = titleSubject(s);
   const nameOnly = !subject && s.speaker;
   btn.textContent = subject || String(s.title || s.slug || "");
   if (nameOnly) li.classList.add("source-name-only");
   const target = new URL(searchResultHref(s), location.origin);
+  if (receiptCalculation && /^\/graph\/money(?:\.[a-z]+)?\.json$/.test(target.pathname)) {
+    target.pathname = "/methods";
+    target.search = "";
+    btn.textContent = "How these funding totals were calculated";
+  }
   if (target.protocol === "https:" || (target.protocol === "http:" && target.origin === location.origin)) btn.href = target.href;
   if (num) {
     const numEl = document.createElement("span");
@@ -2817,7 +2823,9 @@ function sourceItem(s, num, passage = false) {
       if (url && face) face.innerHTML = `<img src="${esc(url)}" alt="" width="40" height="40" loading="lazy">`;
     });
   } else {
-    const meta = s.resource?.startsWith("USER_CONTEXT_")
+    const meta = receiptCalculation
+      ? [s.source || "Published political disclosure records", "Calculated by Opax", s.date ? `Data updated ${fmtDate(s.date)}` : ""].filter(Boolean).map(esc).join(" · ")
+      : s.resource?.startsWith("USER_CONTEXT_")
       ? [s.source, s.dateLabel || (s.date ? fmtDate(s.date) : "")].filter(Boolean).map(esc).join(" · ")
       : metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage });
     if (meta) {
@@ -2832,7 +2840,10 @@ function sourceItem(s, num, passage = false) {
     const quote = document.createElement("p");
     quote.className = "ask-source-passage";
     // Retrieval marks elided text with runs of ellipses; one is enough.
-    quote.textContent = s.snippet.trim().replace(/\s+/g, " ").replace(/^(?:[…\.]{1,3}\s*){2,}/, "… ").replace(/(?:\s*…){2,}/g, " …");
+    const snippet = receiptCalculation
+      ? s.snippet.replace(/\*\*/g, "").replace(/Calculated from donor-to-party edges in \/graph\/money(?:\.[a-z]+)?\.json\.?/g, "Based on published political disclosure records in Opax’s selected map.")
+      : s.snippet;
+    quote.textContent = snippet.trim().replace(/\s+/g, " ").replace(/^(?:[…\.]{1,3}\s*){2,}/, "… ").replace(/(?:\s*…){2,}/g, " …");
     li.appendChild(quote);
   }
   if (nameOnly) {
@@ -9028,6 +9039,8 @@ async function runAsk(question) {
     $("ask-retrieved").hidden = !alsoList.length;
     $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null, true)));
     $("ask-sources-sum").textContent = `Sources (${sources.length})`;
+    $("ask-calculation-note").hidden = !data.money_ranking;
+    $("ask-retrieval-note").hidden = !!data.money_ranking;
     $("ask-sources").open = false; // each new answer starts folded
     $("ask-sources").hidden = !sources.length;
     // The finished answer replaces the streamed one: let that settle before a
@@ -9408,6 +9421,12 @@ function chatAnswerEl(msg) {
     const sum = document.createElement("summary");
     sum.textContent = `Sources (${sources.length})`;
     det.appendChild(sum);
+    if (msg.money_ranking || shown.some(s => /^receipt-(?:ranking|comparison|years)-/.test(s.resource || ""))) {
+      const note = document.createElement("p");
+      note.className = "fineprint";
+      note.textContent = "Opax calculated these totals from selected public disclosure records. Open a source to explore the supporting funding records. Receipts include more than gifts, and this selection does not cover every donor.";
+      det.appendChild(note);
+    }
     const ol = document.createElement("ol");
     ol.className = "source-list chat-source-list";
     shown.forEach((s, i) => ol.appendChild(sourceItem(s, i + 1, true)));

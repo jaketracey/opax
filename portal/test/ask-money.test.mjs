@@ -335,3 +335,19 @@ test('short-name suggestions never remove unsupported qualifiers or combined gro
   const result=await ask(`Who receives the most funding from ${name}?`);assert.equal(result.answer_status,'needs_scope',name);assert.deepEqual(choiceQuestions(result.answer),[],name);assert.deepEqual(result.sources,[]);assert.doesNotMatch(result.answer,/\$[\d,]+/);
  }
 });
+
+
+test('disclosure sources explain the calculation without file paths or markdown and retain filtered records',async()=>{
+ for(const question of ['Who receives the most money from gambling donors?','Did Labor or Liberal receive more gambling money in 2020?','How did gambling receipts to Labor change from 2020 to 2021?']) {
+  const r=await ask(question);assert.equal(r.answer_status,'calculated');
+  assert.ok(r.sources.length>1);
+  for(const source of r.sources){
+   assert.doesNotMatch(source.snippet,/money(?:\.[a-z]+)?\.json|donor-to-party edges|year key|\*\*/);
+   assert.doesNotMatch(source.href,/\/graph\//);
+   assert.equal(source.source,'AEC political disclosure records');
+   assert.equal(source.dateLabel,'Calculated by Opax');
+  }
+  assert.ok(r.sources.slice(1).every(s=>new URL(s.href,'https://opax.test').searchParams.get('industry')==='gambling'));
+  assert.match(r.answer,/Download the calculation data/);
+ }
+});
