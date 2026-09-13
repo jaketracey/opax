@@ -435,7 +435,7 @@ const CSS = `
 .mm-award-group + .mm-award-group { margin-top: 18px; }
 .mm-award-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .mm-card .mm-award-title { margin: 0; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 1.4; min-width: 0; }
-.mm-award-category { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0;
+.mm-award-category { display: inline-flex; align-items: center; gap: 6px; min-height: 0; padding: 6px 0; margin: -6px 0;
   border: 0; background: none; text-align: left; font: inherit; color: #142a43; cursor: pointer; }
 .mm-award-category:hover .mm-award-label { text-decoration: underline; text-underline-offset: 3px; }
 .mm-award-category:focus-visible { outline: 2px solid #8a5a12; outline-offset: 3px; }

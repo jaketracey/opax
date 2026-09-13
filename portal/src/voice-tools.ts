@@ -96,7 +96,16 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
   } else if (name === 'read_record') {
     const slug = text(args.slug, 1, 180, 'Record identifier')
     const catalog = /^catalog-(?:([a-f0-9]{16})-)?(\d{1,8})$/.exec(slug)
-    if (catalog) {
+    const program = /^grant-program-(federal|qld)-([a-z0-9-]{1,80})$/.exec(slug)
+    if (program) {
+      // Grant program rows carry a stable catalog slug; the file behind it is the program profile the grants page opens.
+      const res = await env.ASSETS.fetch(new Request(origin + '/grants/' + program[1] + '/programs/' + program[2] + '.json'))
+      const file = res.ok ? await boundedJson(res, 2_000_000, true) : null
+      if (!file || typeof file.id !== 'string' || typeof file.n !== 'string' || !Array.isArray(file.grants)) throw new CommunityError(404, 'This grant program is not available. Search again.')
+      url = origin + '/money/grants?' + new URLSearchParams({jur: program[1], program: file.id})
+      data = {...file, grants: file.grants.slice(0, 40), grants_listed: Math.min(40, file.grants.length), truncated: file.grants.length > 40, opax_url: url,
+        record_note: 'A grant program profile built from published award records. Seat holder and government are as at each grant date; margins use 2019 and 2022 election results only. Awards are not payments.'}
+    } else if (catalog) {
       const manifest = await asset('/search-catalog/manifest.json', 20_000)
       const size = Number(manifest.recordShardSize), count = Number(manifest.count), id = Number(catalog[2]), version = String(manifest.version)
       if (!/^[a-f0-9]{16}$/.test(version) || !Number.isSafeInteger(size) || size < 1 || size > 2000 || !Number.isSafeInteger(count) || id >= count) throw new CommunityError(404, 'This catalogue record is not available. Search again.')

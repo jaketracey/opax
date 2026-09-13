@@ -29,7 +29,7 @@ Writes (default --out-dir portal/public):
                                       margins at the latest prior election,
                                       election timing, top recipients and the
                                       grants themselves (largest first, at most
-                                      1500). See docs/DATA-GRANTS.md "Program
+                                      600). See docs/DATA-GRANTS.md "Program
                                       files" for the rules.
 
 The heavy lifting runs on the DB host: the REMOTE string below is streamed to
@@ -100,7 +100,7 @@ BY_ELECTIONS = {"federal": [
 PARTY_ALIASES = {"A.L.P.": "Labor", "ALP": "Labor", "LP": "Liberal", "NAT": "Nationals", "NP": "Nationals",
                  "CLP": "Country Liberal Party", "Queensland Greens": "Greens", "The Greens": "Greens",
                  "Australian Greens": "Greens", "KAP": "Katter's Australian Party"}
-PROGRAM_GRANTS_MAX = 1500
+PROGRAM_GRANTS_MAX = 600
 PROGRAM_RECIPIENTS_MAX = 60
 SEAT_BLOCS = ("gov", "opp", "cross", "unknown")
 MARGIN_TYPES = ("marginal", "fairly_safe", "safe", "unknown")
@@ -414,8 +414,6 @@ def build_program_file(pid, key, jur, gs, ctx):
         row = {"id": g["id"], "v": round(v), "n": g.get("n"), "rid": g.get("rid"), "rn": r[1], "k": r[2],
                "fy": g.get("fy"), "s": s, "a": a, "sel": g.get("sel"), "el": el, "elst": g.get("elst") if el else None,
                "holder": holder_out, "bloc": bloc, "mt": mt, "adhoc": 1 if g.get("adhoc") else 0, "guid": g.get("guid")}
-        if g.get("desc"):
-            row["desc"] = g["desc"]
         rows.append((v, row))
     rows.sort(key=lambda x: -x[0])
     total = sum(v for v, _ in rows)
@@ -881,7 +879,11 @@ if JUR == "federal":
     for g in grants:
         if g["go"] and g["pr"]:
             name_gos[" ".join(g["pr"].split()).lower()][g["go"]] += 1
-    go_by_name = {n: next(iter(c)) for n, c in name_gos.items() if len(c) == 1}
+    # A name maps to the GO id that holds nearly all of its awards: the harvest
+    # can tag a few awards of a sibling program with the same name (two GO6048
+    # awards say "Community Development Grants"), which must not orphan GA34203.
+    go_by_name = {n: c.most_common(1)[0][0] for n, c in name_gos.items()
+                  if c.most_common(1)[0][1] >= 0.9 * sum(c.values())}
 prog = defaultdict(lambda: {"t": 0.0, "c": 0, "r": set(), "dt": 0.0, "dr": set(), "adhoc": 0.0, "ag": Counter(), "names": Counter(), "fy": set(), "grants": []})
 for g in grants:
     if JUR == "federal":

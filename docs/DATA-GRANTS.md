@@ -162,7 +162,7 @@ each award's detail page), the selection mix, dollars by financial year, the sea
 (`seats`: gov / opp / cross / unknown), the margin split, every electorate with a grant
 and the members who held it on the grant dates, the 60 largest recipients (each flagged
 when it is in the donor registers), the timing buckets, and the grants themselves,
-largest first, at most 1,500 (`grants_total` / `grants_listed` say how many there are
+largest first, at most 600 (`grants_total` / `grants_listed` say how many there are
 and how many are listed). Every [d, c] pair is [dollars, count]. Federal-only fields are
 present in a QLD file with the value null.
 

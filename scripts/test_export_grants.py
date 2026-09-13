@@ -339,7 +339,8 @@ class ProgramFileTests(unittest.TestCase):
         self.assertNotIn("gov", pf["electorates"][0])
         self.assertEqual(pf["electorates"][1]["holders"], [])   # no date, no holder
         g0 = pf["grants"][0]
-        self.assertEqual((g0["a"], g0["bloc"], g0["mt"], g0["guid"], g0["desc"]), (None, None, None, None, "A short description"))
+        self.assertEqual((g0["a"], g0["bloc"], g0["mt"], g0["guid"]), (None, None, None, None))
+        self.assertNotIn("desc", g0, "program rows leave the QLD description to the recipient shard")
         self.assertEqual(g0["holder"], ["Bob Katter", "Katter's Australian Party"])
         self.assertIsNone(pf["grants"][1]["s"])
         self.assertEqual(eg.program_index_extras(pf, "qld"), {"key": "prog", "cnc": 0, "selk": 1000})
