@@ -18,6 +18,7 @@ export function isMoneyRanking(input: RecordQuestion): boolean {
 const aud=(n:number)=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(n)
 const plain=(s:string)=>s.replace(/[|\n\r\[\]*]/g,' ')
 const disclosureRegister=(jurisdiction:string)=>({federal:'AEC political disclosure records',qld:'Electoral Commission of Queensland disclosure records',vic:'Victorian Electoral Commission disclosure records',tas:'Tasmanian political disclosure records'}[jurisdiction]||'published political disclosure records')
+const recordCount=(n:number)=>`${n.toLocaleString('en-AU')} disclosed receipt ${n===1?'record':'records'}`
 const sourceCopy=(text:string)=>plain(text).replace(/\s+/g,' ').trim()
 type ReceiptTotals = Exclude<ReturnType<typeof receiptAnswer>, null | {needs_period:boolean} | {needs_scope:boolean}>
 
@@ -70,7 +71,7 @@ function comparedYearAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:stri
   for(const row of [earlier,later]) {
     answer+=`\n| ${fy(row.year)} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
     const url=new URL(row.sources[0].url)
-    cite(`${fy(row.year)}: ${aud(row.total_aud)}`,url.pathname+url.search,`${party}${from}: ${aud(row.total_aud)} across ${row.receipts} disclosed receipt records in ${fy(row.year)}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2)
+    cite(`${fy(row.year)}: ${aud(row.total_aud)}`,url.pathname+url.search,`${party}${from}: ${aud(row.total_aud)} across ${recordCount(row.receipts)} in ${fy(row.year)}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2)
   }
   answer+='\n\nCoverage: **Selected party receipts, not a gifts-only donation total or personal payments.** These totals include only donors in Opax’s published map. Undated receipts and other years are excluded. Election returns may use polling-year dates. An industry grouping does not establish lobbying or influence.'
   answer+=`\n\n[Download the calculation data](https://opax.com.au${file})`
@@ -115,7 +116,7 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
     const params=new URLSearchParams(new URL(result.sources[0].url).search)
     if(partyComparison)params.set('party',graph.nodes.find(n=>n.kind==='party'&&n.label===row.name)?.id||row.id)
     else params.set('industry',row.id)
-    cite(`${row.name}: ${aud(row.total_aud)}`,'/money?'+params,`${row.name}: ${aud(row.total_aud)} across ${row.receipts} disclosed receipt records. Period: ${result.period}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2)
+    cite(`${row.name}: ${aud(row.total_aud)}`,'/money?'+params,`${row.name}: ${aud(row.total_aud)} across ${recordCount(row.receipts)}. Period: ${result.period}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2)
   }
   answer+='\n\nCoverage: These are **party receipts, not personal payments or a gifts-only donation total**. Only donors in Opax’s published map are included, not every donor. Industry labels do not establish lobbying or influence. Both sides use the same year filters; undated records are excluded when filtering by year.'
   answer+=`\n\n[Download the calculation data](https://opax.com.au${file})`
@@ -185,7 +186,7 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
     citations[resource]=[[Array.from(answer).length-offset-1,Array.from(answer).length-offset]]
     sources.push({resource,title,href,url:href,kind:'receipt',snippet:sourceCopy(snippet),cited:true,source:disclosureRegister(result.jurisdiction),dateLabel:'Calculated by Opax',date:typeof graph.meta.generated==='string'?graph.meta.generated:undefined})
   }
-  cite('How these funding totals were calculated',result.sources[0].url,`${lead} ${result.scope} ${result.period_note}`)
+  cite('How these funding totals were calculated',result.sources[0].url,`Opax added the disclosed receipts matching this question, grouped by ${fromDonors?'donor':allFlows?'donor and recipient party':'recipient party'}. This selection covers ${result.by_donor.length.toLocaleString('en-AU')} donors during ${result.period}. It excludes government funding and records outside the published selection. Amounts are in Australian dollars and are not adjusted for inflation.`)
   const context=moneyContext(result)
   answer+=`\n\n${context}`
   if(rows.length){
@@ -195,7 +196,7 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
       const params=new URLSearchParams(new URL(result.sources[0].url).search)
       if(row.party)params.set('party',graph.nodes.find(n=>n.kind==='party'&&n.label===row.party)?.id||row.party)
       if(fromDonors||allFlows)params.set('focus',row.id)
-      cite(`${row.name}: ${aud(row.total_aud)}`, '/money?'+params,`${row.name}: ${aud(row.total_aud)}, ${row.receipts} disclosed receipt records. Period: ${result.period}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2)
+      cite(`${row.name}: ${aud(row.total_aud)}`, '/money?'+params,`${row.name}: ${aud(row.total_aud)}, ${recordCount(row.receipts)}. Period: ${result.period}. Based on ${disclosureRegister(result.jurisdiction)} in this published selection.`,2)
     }
   }
   answer+='\n\nThese are **party receipts, not personal payments to politicians**, and not all receipts are gifts. An industry grouping is not proof of coordinated lobbying or influence.'

@@ -342,7 +342,7 @@ test('disclosure sources explain the calculation without file paths or markdown 
   const r=await ask(question);assert.equal(r.answer_status,'calculated');
   assert.ok(r.sources.length>1);
   for(const source of r.sources){
-   assert.doesNotMatch(source.snippet,/money(?:\.[a-z]+)?\.json|donor-to-party edges|year key|\*\*/);
+   assert.doesNotMatch(source.snippet,/money(?:\.[a-z]+)?\.json|donor-to-party edges|year key|Do not present|\*\*/);
    assert.doesNotMatch(source.href,/\/graph\//);
    assert.equal(source.source,'AEC political disclosure records');
    assert.equal(source.dateLabel,'Calculated by Opax');

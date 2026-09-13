@@ -3023,7 +3023,7 @@ function quoteCardHTML(s, i, n) {
 }
 
 function setQuoteRail(sources) {
-  quoteRail.sources = (sources || []).filter(s => !s.resource?.startsWith("USER_CONTEXT_"));
+  quoteRail.sources = (sources || []).filter(s => !s.resource?.startsWith("USER_CONTEXT_") && !/^receipt-(?:ranking|comparison|years)-/.test(s.resource || ""));
   quoteRail.idx = -1;
   updateQuoteRail();
 }
