@@ -434,10 +434,10 @@ const CSS = `
 .mm-award-group { margin: 12px 0 0; padding: 0 0 0 12px; border-left: 3px solid var(--mm-award-colour, #29877e); }
 .mm-award-group + .mm-award-group { margin-top: 18px; }
 .mm-award-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.mm-card .mm-award-title { margin: 0; font-family: inherit; font-size: 12px; font-weight: 600; line-height: 1.4; min-width: 0; }
+.mm-card .mm-award-title { margin: 0; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 1.4; min-width: 0; }
 .mm-award-category { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0;
   border: 0; background: none; text-align: left; font: inherit; color: #142a43; cursor: pointer; }
-.mm-award-category:hover { text-decoration: underline; text-underline-offset: 3px; }
+.mm-award-category:hover .mm-award-label { text-decoration: underline; text-underline-offset: 3px; }
 .mm-award-category:focus-visible { outline: 2px solid #8a5a12; outline-offset: 3px; }
 .mm-award-arrow { color: #8a5a12; font-size: 18px; }
 .mm-award-total { flex: none; font-size: 16px; color: #26251f; font-variant-numeric: tabular-nums; }
@@ -1381,7 +1381,7 @@ export async function mountMoneyMap(
     if (onClick) {
       const button = el('button', 'mm-award-category', title)
       button.type = 'button'
-      button.textContent = label
+      el('span', 'mm-award-label', button).textContent = label
       button.title = `Explore ${label.toLowerCase()} on the map`
       button.addEventListener('click', onClick)
       const arrow = el('span', 'mm-award-arrow', button)
