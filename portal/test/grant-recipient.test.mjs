@@ -21,7 +21,7 @@ test('program references preserve ambiguous catalog labels and ignore unexported
 test('original award links and source dataset/search links remain distinct', () => {
   assert.equal(recipientSourceUrl('federal', {id:'GA1',guid:'guid-1'}), 'https://www.grants.gov.au/Ga/Show/guid-1');
   assert.equal(new URL(recipientSourceUrl('federal', {id:'GA1'})).searchParams.get('GaId'), 'GA1');
-  assert.equal(recipientSourceUrl('qld', {id:'qld-1',guid:'ignored'}), 'https://www.data.qld.gov.au/dataset/queensland-government-investment-portal-expenditure');
+  assert.equal(recipientSourceUrl('qld', {id:'qld-1',guid:'ignored'}), 'https://www.data.qld.gov.au/dataset/b102c881-2c7f-484a-a8b6-b056fe318964');
 });
 test('the requested Serendipity detail resolves from the published catalog and shard', () => {
   const index = JSON.parse(readFileSync(new URL('../public/graph/grants.federal.json', import.meta.url)));
