@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Point the opax KB's generation at OpenRouter (BYOK) — DeepSeek V4 Flash.
+"""Point the opax KB's generation at our OpenRouter account (BYOK).
 
 Switches `generative_model` and `summary_model` to the platform's
 `openai-compatible` provider, backed by our own OpenRouter key via
-`user_keys.openai_compat`. Generation then bills to the OpenRouter account at
-provider list price (deepseek/deepseek-v4-flash: ~$0.08/$0.16 per 1M tokens)
-instead of ARAG platform tokens. Schema facts verified against the live KB
+`user_keys.openai_compat`. Generation then bills to the OpenRouter account.
+Without a model argument, preserve the current verified OpenRouter model or
+use @preset/opax-pro for initial setup. Schema facts verified against the live KB
 2026-09-01: option value `openai-compatible` pairs with user_key group
 `openai_compat` (required fields: url, model_id).
 
@@ -16,10 +16,11 @@ KB configuration platform-side.
 Usage:
   python3 scripts/arag_byok_openrouter.py                 # switch + smoke test
   python3 scripts/arag_byok_openrouter.py <model-id>      # different OR model
-  python3 scripts/arag_byok_openrouter.py --rollback      # restore gemini + clear key
+  python3 scripts/arag_byok_openrouter.py @preset/opax-pro # select an OR preset
 
 The switch self-verifies with a live /ask; if that fails, the previous
-configuration is restored automatically.
+OpenRouter configuration is restored automatically. Native-provider rollback
+is refused: generation must continue to bill through our OpenRouter account.
 """
 import json
 import re
@@ -27,9 +28,11 @@ import sys
 import urllib.error
 import urllib.request
 
-MODEL = "deepseek/deepseek-v4-flash"
+MODEL = "@preset/opax-pro"
 OPENROUTER_URL = "https://openrouter.ai/api/v1"
-ROLLBACK_MODEL = "gemini-2.5-flash-lite"  # the pinned pre-BYOK models
+
+if "--rollback" in sys.argv:
+    sys.exit("Native-provider rollback is disabled. Select an OpenRouter model or preset explicitly.")
 
 env = open(".env").read()
 
@@ -59,7 +62,8 @@ def call(path, method="GET", body=None, timeout=90, headers=None):
             raw = r.read()
             return r.status, json.loads(raw) if raw.strip() else {}
     except urllib.error.HTTPError as e:
-        return e.code, e.read()[:400].decode(errors="replace")
+        # Provider errors can echo request configuration, including BYOK keys.
+        return e.code, "provider request failed (response body withheld)"
 
 
 def patch_config(body):
@@ -90,18 +94,17 @@ def smoke_ask():
     return True, answer[:120]
 
 
-if "--rollback" in sys.argv:
-    patch_config({"generative_model": ROLLBACK_MODEL,
-                  "summary_model": ROLLBACK_MODEL,
-                  "user_keys": None})
-    gen, summ, _ = models_now()
-    print(f"rolled back: generative={gen} summary={summ} user_keys cleared")
-    sys.exit(0)
-
 or_key = var("OPENROUTER_API_KEY")
-model = next((a for a in sys.argv[1:] if not a.startswith("-")), MODEL)
 
 prev_gen, prev_summary, prev_cfg = models_now()
+prev_compat = (prev_cfg.get("user_keys") or {}).get("openai_compat") or {}
+previous_is_openrouter = (
+    prev_gen == prev_summary == "openai-compatible"
+    and prev_compat.get("url", "").rstrip("/") == OPENROUTER_URL
+    and bool(prev_compat.get("key")) and bool(prev_compat.get("model_id"))
+)
+model = next((a for a in sys.argv[1:] if not a.startswith("-")),
+             prev_compat.get("model_id") if previous_is_openrouter else MODEL)
 print(f"current: generative={prev_gen} summary={prev_summary}")
 
 patch_config({
@@ -110,7 +113,7 @@ patch_config({
         "url": OPENROUTER_URL,
         "model_id": model,
         # Defaults are 800 out / 64k in - too small for cited answers over
-        # long passages; deepseek-v4-flash takes 1M in.
+        # long passages. The deployed Opax preset supports this budget.
         "generation_config": {
             "temperature": 0.0,
             "default_max_completion_tokens": 4096,
@@ -121,7 +124,7 @@ patch_config({
         # "Thinking mode does not support this tool_choice"). Declaring
         # effort NONE (5) with effort dispatch (2) makes ARAG send
         # reasoning_effort=none on every request - structured asks work and
-        # prose asks get faster and cheaper. vision off: 0731 is text-only.
+        # prose asks get faster and cheaper. Opax ingestion here is text-only.
         "model_features": {
             "tool_use": True,
             "vision": False,
@@ -144,8 +147,11 @@ if ok:
     print("Done. Generation now bills to the OpenRouter account.")
 else:
     print(f"smoke /ask FAILED: {note}", file=sys.stderr)
-    patch_config({"generative_model": prev_gen or ROLLBACK_MODEL,
-                  "summary_model": prev_summary or ROLLBACK_MODEL,
-                  "user_keys": prev_cfg.get("user_keys")})
-    print("rolled back to previous configuration.", file=sys.stderr)
+    if previous_is_openrouter:
+        patch_config({"generative_model": prev_gen,
+                      "summary_model": prev_summary,
+                      "user_keys": prev_cfg.get("user_keys")})
+        print("restored previous OpenRouter configuration.", file=sys.stderr)
+    else:
+        print("Retained OpenRouter routing; refusing native-provider fallback.", file=sys.stderr)
     sys.exit(1)

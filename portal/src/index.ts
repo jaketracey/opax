@@ -24,6 +24,7 @@ import { communityMcp } from './community-mcp'
 import { voiceRoute } from './voice'
 import { proxyPostHog } from './posthog'
 import { networkBlock } from './network-block'
+import { handleBillText } from './bill-text'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { runDailyPost, composeDailyPost, envSources, melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-post'
 import { CATALOG_KINDS, searchCatalog } from './catalog-search'
@@ -53,13 +54,14 @@ interface FindResource {
 }
 
 const SLUG_RE = /^(speech|legal|news)-(\d+)$/
+const BILL_TEXT_SLUG_RE = /^bill-text-au-federal-[a-z0-9-]{1,180}$/
 const PRESS_SLUG_RE = /^press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+$/
 const RESEARCH_SLUG_RE = /^(?:grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/
 // Division records (parli.ingest.votes_ingest) carry composite ids:
 // division-nsw-la-2025-12-22-3, division-federal-senate-10113. Public too.
 const DIVISION_SLUG_RE = /^division-[a-z0-9-]+$/
 const isPublicSlug = (slug: string): boolean =>
-  SLUG_RE.test(slug) || DIVISION_SLUG_RE.test(slug) || PRESS_SLUG_RE.test(slug) || RESEARCH_SLUG_RE.test(slug)
+  SLUG_RE.test(slug) || DIVISION_SLUG_RE.test(slug) || PRESS_SLUG_RE.test(slug) || RESEARCH_SLUG_RE.test(slug) || BILL_TEXT_SLUG_RE.test(slug)
 
 /**
  * Build a /find//ask filter_expression from the portal's filter vocabulary.
@@ -109,7 +111,9 @@ function filterExpression(f: {
 }): Record<string, unknown> | null {
   const clauses: Record<string, unknown>[] = [{ not: { prop: 'label', labelset: 'kind', label: 'news' } }]
   if (f.kind && f.kind !== 'all') {
-    clauses.push({ prop: 'label', labelset: 'kind', label: f.kind })
+    clauses.push(f.kind === 'bill'
+      ? { or: [{ prop: 'label', labelset: 'kind', label: 'bill' }, { prop: 'label', labelset: 'kind', label: 'bill_text' }] }
+      : { prop: 'label', labelset: 'kind', label: f.kind })
   }
   if (f.party) clauses.push({ prop: 'label', labelset: 'party', label: f.party })
   if (f.chamber) clauses.push({ prop: 'label', labelset: 'chamber', label: f.chamber })
@@ -335,6 +339,8 @@ interface SearchWindow {
 }
 
 interface SearchResult {
+  href?: string
+  source?: string
   kind: string
   id: number | null
   slug: string
@@ -457,10 +463,10 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   const limited = await rateLimited(env.SEARCH_LIMITER, request)
   if (limited) return limited
   const localWanted = selected === 'all' || CATALOG_KINDS.has(selected)
-  const documentsWanted = !CATALOG_KINDS.has(selected) && !extendedStates.has(url.searchParams.get('state') || '')
+  const documentsWanted = (selected === 'bill' || !CATALOG_KINDS.has(selected)) && !extendedStates.has(url.searchParams.get('state') || '')
   const docUrl = new URL(url)
   docUrl.pathname = '/api/search'
-  docUrl.searchParams.set('kind', selected)
+  docUrl.searchParams.set('kind', selected === 'bill' ? 'bill_text' : selected)
   docUrl.searchParams.set('sort', 'relevance')
   docUrl.searchParams.set('page', '1')
   docUrl.searchParams.set('per', '200')
@@ -583,14 +589,18 @@ async function searchWindow(
     const start = hitAt > 220 ? Math.max(0, lower_bound(bestText, hitAt - 200)) : 0
     const windowed = (start > 0 ? '…' : '') + bestText.slice(start, start + 600)
     const division = DIVISION_SLUG_RE.test(slug)
+    const billText = label(resource, 'kind') === 'bill_text'
+    const billHref = billText && typeof meta.bill_key === 'string' && /^au-federal-[a-z0-9-]+$/.test(meta.bill_key)
+      ? `/bill/${encodeURIComponent(meta.bill_key)}${typeof meta.version_id === 'string' ? '?text-version=' + encodeURIComponent(meta.version_id) : ''}#bill-full-text` : null
     return {
+      ...(billHref ? { href: billHref, source: 'Australian Parliament · Original bill text' } : {}),
       kind: label(resource, 'kind') ?? m?.[1] ?? (division ? 'division' : 'unknown'),
       id: m ? Number(m[2]) : null,
       slug,
       resource: rid,
       title: resource.title ?? slug,
       // A division's collaborators are its voters, not a speaker.
-      speaker: division ? null : (resource.origin?.collaborators?.[0] ?? null),
+      speaker: division || billText ? null : (resource.origin?.collaborators?.[0] ?? null),
       party: label(resource, 'party'),
       state: label(resource, 'state'),
       chamber: label(resource, 'chamber'),
@@ -836,7 +846,9 @@ function askPayload(answer: AskAnswer, records: AskRecords = { records: [], cove
         resource: rid,
         slug: r.slug ?? '',
         title: r.title ?? r.slug ?? rid,
-        href: (r.slug ?? '').startsWith('bill-') ? `/bill/${(r.slug ?? '').slice(5)}` : `/doc/${r.slug ?? ''}`,
+        href: label(r, 'kind') === 'bill_text' && typeof meta.bill_key === 'string' && /^au-federal-[a-z0-9-]+$/.test(meta.bill_key)
+          ? `/bill/${encodeURIComponent(meta.bill_key)}${typeof meta.version_id === 'string' ? '?text-version=' + encodeURIComponent(meta.version_id) : ''}#bill-full-text`
+          : (r.slug ?? '').startsWith('bill-') && !(r.slug ?? '').startsWith('bill-text-') ? `/bill/${(r.slug ?? '').slice(5)}` : `/doc/${r.slug ?? ''}`,
         kind: label(r, 'kind'),
         speaker: r.origin?.collaborators?.[0] ?? null,
         party: label(r, 'party'),
@@ -3916,6 +3928,12 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       jsonLd:{'@context':'https://schema.org','@type':'CreativeWork',name:r.title,description,url:canonical,publisher},
       card:{kicker:kind,title:r.title,lines:['Read the record and its source on OPAX.']} }
   }
+  if (r.labels.kind === 'bill_text') {
+    const description = clip(`${r.title}. Original federal bill text, with its source version and provenance, readable on OPAX.`)
+    return { ...generic, title: `${r.title} · OPAX`, description,
+      jsonLd: { '@context': 'https://schema.org', '@type': 'DigitalDocument', name: r.title, description, url: canonical, publisher },
+      card: { kicker: 'Original bill text', title: r.title, lines: ['Read the bill and its source version on OPAX.'] } }
+  }
   const speaker = r.speaker ?? 'Unknown speaker'
   // A committee transcript's speaker may be a witness, named as the transcript
   // names them (often surname only); their words are evidence, not a speech.
@@ -4265,7 +4283,7 @@ const MAX_PARTY_CHARS = 64
 const MIN_YEAR = 1900
 const MAX_YEAR = 2100
 
-const KINDS = new Set(['speech', 'legal', 'division', 'bill', 'press_release', 'grant_invitation', 'grant_award', 'election_baseline', 'parliamentary_profile', 'research_report', 'all'])
+const KINDS = new Set(['speech', 'legal', 'division', 'bill', 'bill_text', 'press_release', 'grant_invitation', 'grant_award', 'election_baseline', 'parliamentary_profile', 'research_report', 'all'])
 const STATES = new Set(['federal', 'nsw', 'vic', 'sa', 'qld'])
 const MODES = new Set(['hybrid', 'semantic', 'keyword'])
 // Party labels are the KB's own facet values (served by /api/parties) and grow
@@ -4382,6 +4400,16 @@ async function route(
   // held by this block, so the caching and SEO work landing on these same lines
   // merges line-by-line instead of conflicting on the whole hunk.
   {
+      if (url.pathname.startsWith('/bill-texts/')) {
+        if (request.method !== 'GET' && request.method !== 'HEAD') return json({ error: 'Method not allowed' }, 405)
+        const limited = await rateLimited(env.SEARCH_LIMITER, request)
+        if (limited) return limited
+        return await handleBillText(request, {
+          kbFetch: (path, init) => kbFetch(env, path, { ...init, signal: init?.signal ?? AbortSignal.timeout(20_000) }),
+          cacheEpoch: env.CACHE_EPOCH,
+          waitUntil: promise => ctx.waitUntil(promise),
+        }) ?? json({ error: 'This bill text is not available yet.' }, 404)
+      }
       if (url.pathname === '/api/search' && request.method === 'GET') {
         return validateSearchQuery(url) ?? (await apiSearch(request, url, env, ctx))
       }
@@ -4520,7 +4548,7 @@ export default {
     // It needs no copied KB credentials and every preview response is noindex.
     if (env.STAGING_API) {
       let response: Response
-      if (isApi || url.pathname.startsWith('/og/')) response = await env.STAGING_API.fetch(request)
+      if (isApi || url.pathname.startsWith('/og/') || url.pathname.startsWith('/bill-texts/')) response = await env.STAGING_API.fetch(request)
       else if (url.pathname === '/robots.txt') response = new Response('User-agent: *\nDisallow: /\n', { headers: { 'content-type': 'text/plain' } })
       else if (url.pathname.startsWith('/ingest/')) response = new Response(null, { status: 204 })
       else if (url.pathname === '/connections.html') response = legacyConnectionsRedirect(url)

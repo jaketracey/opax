@@ -144,3 +144,13 @@ test('filler-only remainders never pull a random slice of every register into th
  assert.equal(records.recordQuery({question:'What have MPs said over the years?'}),'');
  assert.equal((await records.retrieveAskRecords({question:'What have MPs said over the years?'},assets)).records.length,0);
 });
+
+test('original bill citations open the exact version on its bill page',()=>{
+ const resource={slug:'bill-text-au-federal-r7541-first-reps',title:'National Student Ombudsman Levy Bill 2026 — First reading',usermetadata:{classifications:[{labelset:'kind',label:'bill_text'}]},extra:{metadata:{bill_key:'au-federal-r7541',version_id:'r7541-first-reps'}},fields:{body:{paragraphs:{'rid/t/body/0-100':{text:'The levy is imposed.',score:0.8,score_type:'RERANKER'}}}}};
+ const payload=worker.askPayload({answer:'The bill proposes a levy.',retrieval_results:{resources:{rid:resource}}});
+ assert.equal(payload.sources[0].href,'/bill/au-federal-r7541?text-version=r7541-first-reps#bill-full-text');
+ const query=worker.buildAskBody({question:'What does the bill propose?',kind:'bill'});
+ const filter=JSON.stringify(query.filter_expression);
+ assert.match(filter,/"label":"bill"/);assert.match(filter,/"label":"bill_text"/);
+ assert.match(query.prompt.system,/specific version of a proposal/);
+});
