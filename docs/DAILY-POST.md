@@ -2,9 +2,11 @@
 
 The production Worker prepares one source-based edition per Melbourne calendar day.
 X: https://x.com/OpaxAustralia (account ID 2099044188113485825).
-Facebook: https://www.facebook.com/OpaxAustralia/ (Page created and branded).
-Facebook and Instagram still require verified API connections before enabling.
-Instagram: https://www.instagram.com/opaxaustralia/ (account created).
+Facebook: https://www.facebook.com/OpaxAustralia/ (Page ID 1322885877574835).
+Instagram: https://www.instagram.com/opaxaustralia/ (professional account ID
+17841433372413296, linked to the Opax Page).
+Facebook and Instagram API publishing was verified on 13 September 2026, and both
+channels are enabled. X still needs its four posting credentials installed.
 
 ## Editorial approach
 
@@ -44,6 +46,12 @@ INSTAGRAM_USERNAME and INSTAGRAM_ACCESS_TOKEN, with instagram_basic and
 instagram_content_publish via Facebook Login and appropriate access to the linked
 Page. Account/app roles and Meta review requirements must be satisfied. We use
 Graph API v25.0. Check token expiry and complete any Page publishing authorization.
+
+The installed Meta Page token was verified for this app, Page and Instagram account
+on 13 September 2026. It has no fixed token expiry; Meta reports data access expiry
+on 12 December 2026. Revalidate and renew authorization before that date, and after
+any account, password, app-role or Page-permission changes. Only the Opax Page and
+@opaxaustralia were selected in the publishing authorization. Inbox access is off.
 
 Install credentials using Wrangler's secure prompts or a mode-0600 JSON file with
 `npx wrangler secret bulk /secure/path/credentials.json --env=''`. Never put secret

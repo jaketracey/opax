@@ -4,7 +4,7 @@ X: [@OpaxAustralia](https://x.com/OpaxAustralia).
 Pinned introduction: https://x.com/OpaxAustralia/status/2099049113144992074
 
 Facebook: [@OpaxAustralia](https://www.facebook.com/OpaxAustralia/), Page name **Opax**. Introduction published and pinned on 13 September 2026.
-Instagram: [@opaxaustralia](https://www.instagram.com/opaxaustralia/), display name **Opax Australia**; account created by the user and logged-in identity verified.
+Instagram: [@opaxaustralia](https://www.instagram.com/opaxaustralia/), display name **Open Parliamentary Accountability eXchange**; professional account linked to the Opax Page and API identity verified.
 X display name: **Open Parliamentary Accountability eXchange**. Bio: Explore Australian parliament: speeches, bills and public money, with links to the official record. Independent civic research.
 Website: https://opax.com.au/ — use the existing star avatar and branded header from portal/public/social/.
 
@@ -217,7 +217,8 @@ Instagram ends with the source title, “opax.com.au — link in bio”, and #Au
 - X profile branding, bio, location and website: saved; introduction: published and pinned.
 - X developer app: approved Read and write settings saved. Consumer-key replacement is waiting for the user at X's regeneration confirmation; no posting credentials have been installed yet. No DM or email access requested.
 - X API balance verified after the user completed checkout: US$10. Auto-recharge is off.
-- Facebook Page: created, @OpaxAustralia saved, avatar and centred cover saved, website and Learn more action configured, introduction published and pinned. Public profile ID 61594384738499; Business Suite identifies Page asset 1322885877574835 (verify with the Page token before configuring the publisher).
-- Meta developer app: OPAX Publisher, app ID 2190142308569322, created by the user. Page publishing scopes prepared: pages_manage_posts, pages_read_engagement, pages_show_list. The OAuth window has closed; the returned token, granted assets and secure storage still need verification.
-- Instagram: @opaxaustralia created and logged-in identity verified. The user reports the Page connection is complete; professional status and API identity still need verification.
-- Publishing code merged in PR #169 and deployed as Worker version 3e5eb472-efaf-4db8-ab8b-e84e6021fc17. Automatic posting remains inactive until credentials, identity and an actual API delivery receipt are verified.
+- Facebook Page: @OpaxAustralia, avatar and centred cover saved, website and Learn more action configured, introduction published and pinned. Public profile ID 61594384738499; verified Graph Page ID 1322885877574835.
+- Meta developer app: OPAX Publisher, app ID 2190142308569322, created by the user. Granted pages_manage_posts, pages_read_engagement, pages_show_list, instagram_basic and instagram_content_publish for only the Opax Page and @opaxaustralia. The verified Page token is installed as FACEBOOK_PAGE_TOKEN and INSTAGRAM_ACCESS_TOKEN in the production Worker. Token expiry is unset; Meta data access expires 12 December 2026 and must be reviewed before then.
+- Instagram: professional Creator account 17841433372413296, @opaxaustralia, connected to Opax and verified through the Graph API. Bio, avatar and clickable www.opax.com.au profile link are saved and visible live. Page inbox access is off.
+- The production publisher code and production D1 journal delivered the 13 September Helen Haines edition to Facebook (1322885877574835_122097025647479491) and Instagram (18335389966261209). Instagram permalink: https://www.instagram.com/p/DdOQDArF98p/. The exact source page and matching JPEG passed preflight; both published images and captions were checked live. Successful Facebook delivery was skipped while Instagram completed. Repeating the publisher after both receipts returned zero provider writes.
+- Facebook and Instagram are enabled for 22:00 UTC daily, with processing checks at +5 and +10 minutes. The first delivery was commissioned using the actual publisher with production storage and native Node fetch; scheduled production execution is separately observable through /api/daily-post/status and Worker logs.
