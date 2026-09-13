@@ -9673,6 +9673,7 @@ const chatFollower = (() => {
       removeEventListener("scroll", onScroll);
     },
     nudge,
+    nearEnd,
   };
 })();
 
@@ -9838,8 +9839,9 @@ async function requestChatFollowups() {
     last.next = questions;
     saveChatSession();
     renderChatNext(questions);
-    // They arrive under the answer, above the sticky composer: bring them into view.
-    requestAnimationFrame(() => scrollChatToEnd());
+    // They arrive under the answer, above the sticky composer: bring them into
+    // view - unless the reader has scrolled up to read, in which case they wait.
+    requestAnimationFrame(() => { if (chatFollower.nearEnd()) scrollChatToEnd(); });
   } catch { /* follow-ups are an extra, never an error */ }
 }
 
