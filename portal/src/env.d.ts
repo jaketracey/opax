@@ -6,6 +6,8 @@ interface Env {
   /** Social publication: each channel requires its own credentials and identity. */
   /** Comma-separated ASNs refused on /api and /og (network-block.ts). */
   BLOCKED_ASNS?: string
+  /** Comma-separated ASNs refused only on the model-backed /api routes (network-block.ts). */
+  GENERATION_BLOCKED_ASNS?: string
   DAILY_POST_ENABLED?: string
   /** Bearer secret for POST /api/daily-post/run (an operator\'s chosen edition). */
   DAILY_POST_OPERATOR_SECRET?: string
@@ -49,6 +51,8 @@ declare namespace Cloudflare {
     /** Social publication: each channel requires its own credentials and identity. */
     /** Comma-separated ASNs refused on /api and /og (network-block.ts). */
     BLOCKED_ASNS?: string
+    /** Comma-separated ASNs refused only on the model-backed /api routes (network-block.ts). */
+    GENERATION_BLOCKED_ASNS?: string
     DAILY_POST_ENABLED?: string
     DAILY_POST_OPERATOR_SECRET?: string
     X_API_KEY?: string

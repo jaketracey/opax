@@ -75,6 +75,11 @@
     // 650-address headless-Chrome fleet in Singapore was making ~100x the real
     // readers' paid /api/ask calls from 4 Sep 2026. Edit here, no code change.
     "BLOCKED_ASNS": "45102,24429,37963",
+    // Networks refused only on the model-backed routes (/api/ask, search-summary,
+    // followups, journey-story), keeping /og open for link previews. 32934 = Meta:
+    // its Chrome-UA crawler rendered /search ~400x a day from 11 Sep 2026 and fired
+    // ~350 paid search summaries a day against ~7 from readers. Edit here, no code change.
+    "GENERATION_BLOCKED_ASNS": "32934",
     // Generative model per pipeline. Edit here, no code change. Values are
     // platform model names. "openai-compatible" is the KB's one OpenRouter
     // slot (model_id @preset/opax-pro = DeepSeek V4 Pro pinned to DeepSeek,
@@ -118,7 +123,7 @@
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-13-codex-bill-enrichment", "DAILY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963" },
+      "vars": { "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-13-codex-bill-enrichment", "DAILY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963", "GENERATION_BLOCKED_ASNS": "32934" },
       "ratelimits": [],
       // Never post from staging; triggers would otherwise be inherited.
       "triggers": { "crons": [] },
