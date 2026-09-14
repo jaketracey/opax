@@ -1,4 +1,4 @@
-import { runSocialPublication, socialStatus, publicationCopy, previewPublication } from './social-publication'
+import { runSocialPublication, socialStatus, publicationCopy, previewPublication, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
@@ -4801,7 +4801,7 @@ async function route(
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date + 'T12:00:00Z')) || new Date(date + 'T12:00:00Z').toISOString().slice(0, 10) !== date) return json({ error: 'bad date' }, 400)
         const kind = (DAILY_POST_KINDS as readonly string[]).includes(String(v.kind ?? '')) ? v.kind as DailyPostKind : undefined
         const subject = typeof v.subject === 'string' && v.subject.length <= 120 ? v.subject : undefined
-        const channels = Array.isArray(v.channels) ? v.channels.filter((c): c is 'x' | 'facebook' | 'instagram' => c === 'x' || c === 'facebook' || c === 'instagram') : undefined
+        const channels = Array.isArray(v.channels) ? v.channels.filter((c): c is Channel => (CHANNELS as readonly string[]).includes(String(c))) : undefined
         if (v.dry_run) {
           const post = await previewPublication(env, date, name => personTopicsFor(name, env), kind, subject)
           const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
