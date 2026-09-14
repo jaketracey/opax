@@ -40,7 +40,7 @@ import { OG_FONT_FILES, OG_VERSION, homeCard, ogFormat, type OgCard } from './og
 import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 // The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
 import * as storyRender from './og-render'
-import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
+import { photoFor, storyFrames, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
 interface FindParagraph {
   score: number
@@ -4382,7 +4382,10 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
       storyImage(env, insetId ? `/photos/jpg/${insetId}.jpg` : null),
       loadOgFonts(env),
     ])
-    const images = { photo: photoUri, credit: photoUri ? photo?.credit ?? null : null, inset: insetUri, insetCredit: insetUri && slide.type === 'cover' ? slide.insetCredit ?? null : null, index: n, total: post.slides.length }
+    // A story frame counts itself among the frames that post, not among every slide.
+    const frames = format === 'story' ? storyFrames(post.slides) : null
+    const images = { photo: photoUri, credit: photoUri ? photo?.credit ?? null : null, inset: insetUri, insetCredit: insetUri && slide.type === 'cover' ? slide.insetCredit ?? null : null,
+      index: frames ? (frames.includes(n) ? frames.indexOf(n) + 1 : null) : n, total: frames ? frames.length : post.slides.length }
     const jpeg = await storyRender.renderStoryJpeg(slide, images, fonts, format)
     const res = new Response(jpeg, {
       headers: {

@@ -633,7 +633,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
         ...storyLines([slide.line], false, 3),
         h('div', { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: 56 } }, h('img', { src: ENGRAVING_URI, width: 520, height: 474, style: { opacity: 0.9 } })),
       ]),
-      storyFooter(credit, true),
+      storyFooter(credit, g.padTop === 0), // a carousel is swiped; a story is tapped
     ])
   }
   // The photograph is masked, not framed: it feathers into the navy over its
@@ -656,7 +656,7 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
       storyHeadline(slide.title, 140, 2),
       ...storyLines([slide.line], false, 3),
     ),
-    storyFooter(credit, true),
+    storyFooter(credit, g.padTop === 0), // a carousel is swiped; a story is tapped
   ])
 }
 
