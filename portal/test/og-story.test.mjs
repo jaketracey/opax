@@ -75,7 +75,7 @@ test('the cover draws the photograph as a full-width band with the credit and a 
   const band = images(tree).find(n => n.props.src === photo);
   assert.ok(band, 'the photograph is drawn'); assert.equal(band.props.width, 1080); assert.equal(band.props.height, 960); assert.equal(band.props.style.objectFit, 'cover'); assert.match(String(band.props.style.maskImage), /^linear-gradient\(to bottom/, 'the photograph is feathered into the navy by a mask');
   assert.ok(walk(tree).some(n => typeof n.props?.style?.backgroundImage === 'string' && n.props.style.backgroundImage.startsWith('linear-gradient')), 'the wash runs into the navy');
-  assert.ok(texts(tree).includes(credit), 'the credit line is on the footer');
+  assert.ok(texts(tree).includes(credit.replace(/,?\s*via Wikimedia Commons/i, '')), 'the credit line is on the footer, author and licence only');
   assert.ok(texts(tree).some(t => t.includes('Swipe')), 'the swipe cue');
   assert.ok(!texts(tree).includes(slides.cover.alt), 'alt text is never drawn');
   const bare = storySlideTree(slides.coverBare, {});

@@ -5,6 +5,8 @@ import { readFileSync } from 'node:fs';
 import { build } from 'esbuild';
 const built = await build({ entryPoints: [new URL('../src/social-publication.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
 const { runSocialPublication, publicationCopy, readiness, socialStatus, previewPublication } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
+const storyBuilt = await build({ entryPoints: [new URL('../src/story.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
+const { STORY_VERSION } = await import('data:text/javascript;base64,' + Buffer.from(storyBuilt.outputFiles[0].text).toString('base64'));
 const post = { date: '2026-09-13', subject: 'person:Test Member', kind: 'politician', title: 'Test Member', text: 'Check the parliamentary record.\n\nhttps://opax.com.au/subject/person/Test%20Member', caption: 'The longer source-qualified caption.\n\nhttps://opax.com.au/subject/person/Test%20Member', url: 'https://opax.com.au/subject/person/Test%20Member' };
 const now = Date.UTC(2026,8,12,22);
 // A valid story (story.ts): a cover first, one fact a slide, the source last.
@@ -134,7 +136,7 @@ test('a landscape answer to the portrait request keeps Instagram closed without 
 test('a story gives Instagram and Facebook the slide images in order and X the single card',()=>{
  for(const channel of ['instagram','facebook']){
   const c=publicationCopy(story,channel);
-  assert.deepEqual(c.slides,[1,2,3].map(n=>`https://opax.com.au/og/story/2026-09-13/${n}.jpg?v=${new URL(c.image).searchParams.get('v')}.1`),channel);
+  assert.deepEqual(c.slides,[1,2,3].map(n=>`https://opax.com.au/og/story/2026-09-13/${n}.jpg?v=${new URL(c.image).searchParams.get('v')}.${STORY_VERSION}`),channel);
   assert.match(c.image,/\.jpg\?v=/);
  }
  assert.equal(publicationCopy(story,'x').slides,undefined);
