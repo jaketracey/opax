@@ -1242,7 +1242,7 @@ html[data-chat="page"] .chat-head {
 .fchip-v { font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fchip-x {
   display: inline-grid; place-items: center; flex: 0 0 auto;
-  width: 22px; height: 22px; padding: 0; margin-left: 0.1rem;
+  width: 24px; height: 24px; padding: 0; margin-left: 0.1rem;
   background: none; border: none; border-radius: 50%; cursor: pointer; color: var(--ink-faint);
 }
 .fchip-x svg { width: 11px; height: 11px; }
@@ -3363,6 +3363,14 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-search button, #panel-search select, #panel-search input:not([type="range"]),
 #panel-search .action-btn { min-height: 44px; }
 #panel-search .fchip-x { min-width: 44px; min-height: 44px; }
+/* A mouse does not need a 44px cross, and paying for one in every chip cost
+   the filter row 51px a line. On a fine pointer the chips fall back to their
+   own 30px - so more of them fit before the row wraps - while a coarse
+   pointer keeps the tap target. 24px still clears WCAG 2.2's target minimum,
+   and the chips sit far enough apart for its spacing exception besides. */
+@media (pointer: fine) {
+  #panel-search :is(.fchip-x, .fchip-clear) { min-width: 0; min-height: 0; }
+}
 #panel-search .fchip { max-width: 100%; }
 #panel-search .fchip-v { overflow-wrap: anywhere; }
 #panel-search #search-options-pop {
