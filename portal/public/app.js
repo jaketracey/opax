@@ -9695,7 +9695,7 @@ function chatViewport() {
 // pauses until they bring the view back to the end. Readers who ask for less
 // motion get the end brought into view without the easing.
 const chatFollower = (() => {
-  let active = false, paused = false, raf = 0, observer = null, lastTop = 0, view = null;
+  let active = false, paused = false, raf = 0, observer = null, lastTop = 0, lastEnd = 0, view = null, moved = false;
   const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
   const nearEnd = () => { const v = active && view ? view : chatViewport(); return v.end() - v.top() < 120; };
   const tick = () => {
@@ -9705,9 +9705,11 @@ const chatFollower = (() => {
     const y = view.top();
     const gap = target - y;
     if (gap <= 0.5) return;
-    if (reduce()) { lastTop = Math.round(target); view.to(target); return; }
+    moved = true;
+    if (reduce()) { lastTop = Math.round(target); lastEnd = target; view.to(target); return; }
     const next = gap < 1.5 ? target : y + Math.max(1, gap * 0.16);
     lastTop = Math.round(next);
+    lastEnd = target;
     view.to(next);
     raf = requestAnimationFrame(tick);
   };
@@ -9717,8 +9719,16 @@ const chatFollower = (() => {
   const onKey = (e) => { if (e.key === "ArrowUp" || e.key === "PageUp" || e.key === "Home") paused = true; };
   const onTouchStart = () => { paused = true; };
   const onScroll = () => {
+    if (!view) return;
+    // A viewport that grew (the docked panel opening to its full height as the
+    // first answer arrives) shortens what there is to scroll and the browser
+    // clamps the position for us. That is not the reader, so re-baseline
+    // rather than hand them the wheel.
+    const end = view.end();
+    if (end < lastEnd) { lastEnd = end; lastTop = Math.min(lastTop, end); resume(); return; }
+    lastEnd = end;
     // Our own frames land where we put them; a view that moved up is the reader's.
-    if (view && view.top() < lastTop - 2) paused = true;
+    if (view.top() < lastTop - 2) paused = true;
     resume();
   };
   return {
@@ -9727,7 +9737,9 @@ const chatFollower = (() => {
       view = chatViewport();
       active = true;
       paused = false;
+      moved = false;
       lastTop = Math.round(view.top());
+      lastEnd = view.end();
       observer = new ResizeObserver(nudge);
       observer.observe($("chat-thread"));
       view.target.addEventListener("wheel", onWheel, { passive: true });
@@ -9752,6 +9764,9 @@ const chatFollower = (() => {
     },
     nudge,
     nearEnd,
+    // Whether this run actually carried the view anywhere. An answer that came
+    // back in one frame (the generation cache) streams without ever moving it.
+    moved: () => moved,
   };
 })();
 
@@ -10280,12 +10295,17 @@ async function sendChat(question, carry) {
       chatFollower.stop();
     }
     if (chatAbort !== myAbort) return;
+    // A stream the reader watched arrive has already carried them to the end
+    // of it. One that came back in a single frame - the generation cache
+    // answering at once - never moved the view, and would leave them at the
+    // top of the whole conversation with the new answer somewhere below. That
+    // reads like a whole answer, so it lands like one.
+    const followed = chatFollower.moved();
     renderChatThread({ landed: true, rise: !streamed });
     announce("Answer ready.");
     requestChatFollowups();
-    if (!streamed) {
-      // A streamed answer was scrolled to on its first words; the reader may
-      // be partway down it by now.
+    if (!streamed || !followed) {
+      // The reader starts at the answer's top, not its end.
       const answers = $("chat-thread").querySelectorAll(".chat-turn-answer");
       answers[answers.length - 1]?.scrollIntoView({ block: "start" });
     }
@@ -10345,7 +10365,24 @@ function syncAssistant(name) {
   // A question still in flight keeps writing into a panel nobody can see:
   // it may finish there, but nothing should be scrolled on its behalf.
   if ($("panel-chat").hidden) { chatFollower.stop(); voiceAssistant?.close(); }
+  syncChatEdges();
 }
+
+/* Which edges of the docked thread have something behind them. The stylesheet
+   fades those, so what is running under the bar or behind the composer looks
+   like it continues, and a thread that has reached an end keeps a clean edge
+   there. */
+function syncChatEdges() {
+  const box = $("chat-scroll");
+  if (document.documentElement.dataset.chat !== "docked") { delete box.dataset.fade; return; }
+  const above = box.scrollTop > 6;
+  const below = box.scrollHeight - box.clientHeight - box.scrollTop > 6;
+  box.dataset.fade = above && below ? "both" : above ? "top" : below ? "bottom" : "none";
+}
+$("chat-scroll").addEventListener("scroll", syncChatEdges, { passive: true });
+// The thread grows as an answer streams and as its sources and follow-ups
+// land; each of those moves an edge.
+new ResizeObserver(syncChatEdges).observe($("chat-thread"));
 
 function openDock() {
   if (chatIsPage()) return;
