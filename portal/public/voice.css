@@ -1,6 +1,7 @@
-/* The voice surface shares Opax's public-record typography and palette. */
-body.opax-voice-ready { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
-@media (max-width:480px) { body.opax-voice-ready { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)); } }
+/* The voice surface shares Opax's public-record typography and palette. It has
+   no launcher of its own: the chat composer's mic button opens it, and it
+   mounts inside the conversation - filling the docked assistant, or sitting in
+   the corner as its own sheet on /chat. */
 /* Above the sticky masthead (50); native modal dialogs retain their top layer. */
 .opax-voice { position:fixed; z-index:70; right:max(20px, env(safe-area-inset-right, 0px)); bottom:max(18px, env(safe-area-inset-bottom, 0px)); color:var(--ink, #23271f); font:400 14px/1.55 var(--sans, "Public Sans", sans-serif); }
 .opax-voice *, .opax-voice *::before, .opax-voice *::after { box-sizing:border-box; }
@@ -10,9 +11,6 @@ body.opax-voice-ready { padding-bottom: calc(76px + env(safe-area-inset-bottom, 
 .opax-voice button:disabled { cursor:default; opacity:.65; }
 .opax-voice button:focus-visible, .opax-voice a:focus-visible, .opax-voice [tabindex]:focus-visible { outline:3px solid var(--bronze-ink, #8a5a12); outline-offset:3px; }
 .opax-voice svg { width:22px; height:22px; flex:none; }
-.opax-voice-launcher { display:flex; align-items:center; gap:10px; margin-left:auto; min-height:48px; padding:11px 19px 11px 16px; border:1px solid var(--navy, #142a43); border-radius:28px; color:#fff; background:var(--navy, #142a43); box-shadow:0 4px 18px #142a4329; font-size:14px; font-weight:600; }
-.opax-voice-launcher svg { color:var(--bronze-bright, #d9a84a); width:19px; height:21px; }
-.opax-voice-launcher:hover { background:var(--navy-raised, #1d3a5c); }
 .opax-voice-panel { position:absolute; bottom:60px; right:0; display:flex; flex-direction:column; width:384px; max-width:calc(100vw - 40px); max-height:calc(100dvh - 112px - env(safe-area-inset-bottom, 0px)); overflow:hidden; border:1px solid var(--line, #dfdcd2); border-top:3px solid var(--bronze, #a0761b); border-radius:12px; background:var(--paper, #faf9f6); box-shadow:0 16px 64px #142a4333, 0 3px 12px #142a431a; }
 .opax-voice-header { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; padding:21px 17px 14px 23px; flex:none; }
 .opax-voice-eyebrow { margin:0 0 8px; color:var(--bronze-ink, #8a5a12); font-size:9px; font-weight:700; letter-spacing:.09em; }
@@ -59,13 +57,8 @@ body.opax-voice-ready { padding-bottom: calc(76px + env(safe-area-inset-bottom, 
   @keyframes opax-voice-wave { to { transform:scaleY(.4); } }
   @keyframes opax-voice-spin { to { transform:rotate(360deg); } }
 }
-/* While a guided journey plays the map, the pill steps aside; an open conversation stays. */
-body.journey-playing .opax-voice:not(.is-open) { display:none; }
 @media (max-width:480px) {
   .opax-voice { right:max(12px, env(safe-area-inset-right, 0px)); bottom:max(12px, env(safe-area-inset-bottom, 0px)); max-width:calc(100vw - 24px); }
-  /* On a phone the pill is a round mic button; its name and the free allowance live on the control. */
-  .opax-voice-launcher { width:44px; height:44px; min-height:44px; padding:0; justify-content:center; border-radius:50%; font-size:13px; }
-  .opax-voice-launcher > span { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
   .opax-voice-panel { width:calc(100vw - 24px); max-width:calc(100vw - 24px); bottom:58px; max-height:calc(100dvh - 94px - env(safe-area-inset-bottom, 0px)); }
   .opax-voice-header { padding:17px 15px 12px 19px; }
   .opax-voice-body { padding-left:19px; padding-right:19px; }
@@ -79,6 +72,15 @@ body.journey-playing .opax-voice:not(.is-open) { display:none; }
   .opax-voice-footer { padding-top:8px; padding-bottom:10px; }
 }
 
-/* Keep the text composer's Ask button usable while the voice launcher is present. */
-body:has(#panel-chat:not([hidden])) .opax-voice { bottom:calc(max(12px, env(safe-area-inset-bottom, 0px)) + var(--chat-voice-clearance, 84px)); }
-body:has(#panel-chat:not([hidden])) .opax-voice-panel { max-height:calc(100dvh - 112px - var(--chat-voice-clearance, 84px)); }
+/* Docked, voice is a mode of the conversation rather than a sheet beside it:
+   the panel fills the assistant, under the dock's own bronze edge, and its
+   close control returns the reader to the thread. */
+html[data-chat="docked"] #panel-chat .opax-voice { position:absolute; inset:0; z-index:4; }
+html[data-chat="docked"] #panel-chat .opax-voice-panel { position:absolute; inset:0; width:auto; max-width:none; max-height:none; border:0; border-radius:0 0 11px 11px; box-shadow:none; }
+/* Filling the dock, the transcript takes the slack so the call controls and the
+   fine print sit at the foot rather than halfway up an empty sheet. */
+html[data-chat="docked"] #panel-chat .opax-voice-body { flex:1 1 auto; }
+/* On /chat the sheet keeps its corner, clear of the composer fixed at the foot. */
+@media (max-width:600px) {
+  html[data-chat="page"] .opax-voice-panel { bottom:78px; max-height:calc(100dvh - 160px - env(safe-area-inset-bottom, 0px)); }
+}

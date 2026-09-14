@@ -16,9 +16,10 @@
  * against immutable Cache-Control. Deploy with `npm run deploy`, never by hand.
  *
  * The modules app.js import()s at runtime (money-map.js, statemap.js, quiz.js,
- * ...) are fetched by bare path from inside app.js, so they cannot be stamped
- * from here; _headers gives them max-age=300 + a day of stale-while-revalidate
- * instead. Stamping them too would mean rewriting app.js at deploy time.
+ * voice.js, ...) are fetched by bare path from inside app.js, so they cannot be
+ * stamped from here; _headers gives them max-age=300 + a day of
+ * stale-while-revalidate instead. Stamping them too would mean rewriting app.js
+ * at deploy time.
  */
 import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs'
@@ -30,7 +31,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'voice.js', 'voice.css']
+const STAMPED = ['app.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'voice.css']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -133,7 +134,7 @@ function stamp({ check }) {
   }
   const communityPath = join(PUBLIC, 'community.html')
   const communityBefore = readFileSync(communityPath, 'utf8')
-  const communityAfter = communityBefore.replace(/\/(style\.css|community\.css|community\.js|voice\.css|voice\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  const communityAfter = communityBefore.replace(/\/(style\.css|community\.css|community\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && communityAfter !== communityBefore) writeFileSync(communityPath, communityAfter)
   if (check) {
     if (after !== before || communityAfter !== communityBefore) {
