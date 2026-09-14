@@ -5469,7 +5469,7 @@ body.journey-playing .chat-launcher { display: none; }
 .dock-bar { display: none; }
 html[data-chat="docked"] .dock-bar {
   display: flex; align-items: center; gap: 8px; flex: none;
-  padding: 9px 8px 9px 18px; border-bottom: 1px solid var(--line);
+  padding: 9px 8px 9px 18px;
 }
 .dock-mark {
   width: 7px; height: 7px; flex: none; transform: rotate(45deg);
@@ -5506,8 +5506,13 @@ html[data-chat="docked"] #panel-chat {
   border: 1px solid var(--line); border-top: 3px solid var(--bronze); border-radius: 12px;
   box-shadow: 0 16px 64px #142a4333, 0 3px 12px #142a431a;
 }
-/* Voice fills the dock, and a conversation of two lines is not room enough for
-   it: while the mic's panel is open the dock takes its full height. */
+/* The panel sizes to its opening, then holds still. A conversation under way
+   takes the full height from its first question: a panel that grew as the
+   answer arrived would shorten its own scrollable range mid-answer, and the
+   thread following that answer down reads the clamp that causes as the reader
+   taking over. Voice fills the dock for the same reason - two lines of
+   conversation is not room enough for it. */
+html[data-chat="docked"] #panel-chat:has(.chat-turn),
 html[data-chat="docked"] #panel-chat:has(#chat-mic[aria-expanded="true"]) { height: min(660px, calc(100dvh - 150px)); }
 /* A closed panel stays closed whatever the dock state says. */
 html[data-chat="docked"] #panel-chat[hidden] { display: none; }
@@ -5519,9 +5524,33 @@ html[data-chat="docked"] #panel-chat[hidden] { display: none; }
    own scroll, exactly as it did before the dock existed. */
 .chat-scroll { display: contents; }
 html[data-chat="docked"] .chat-scroll {
-  display: block; flex: 0 1 auto; min-height: 0;
+  /* Fills the panel rather than sizing to the thread: with a stable panel
+     height the box is scrollable from the first frame, so an answer arriving
+     is followed down as it is written instead of appearing whole with the
+     reader already at the top of it. */
+  display: block; flex: 1 1 auto; min-height: 0;
   overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
   padding: 14px 18px 2px;
+}
+/* What is passing out of frame says so: the thread fades under the bar and
+   behind the composer, and stops fading at whichever end it has reached, so
+   the edge is a reading cue rather than a permanent vignette. app.js keeps
+   data-fade in step with the scroll (syncChatEdges). */
+.chat-scroll {
+  --fade-in: #000 26px;
+  --fade-out: #000 calc(100% - 26px);
+}
+html[data-chat="docked"] .chat-scroll[data-fade="top"] {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, var(--fade-in));
+  mask-image: linear-gradient(to bottom, transparent, var(--fade-in));
+}
+html[data-chat="docked"] .chat-scroll[data-fade="bottom"] {
+  -webkit-mask-image: linear-gradient(to top, transparent, var(--fade-in));
+  mask-image: linear-gradient(to top, transparent, var(--fade-in));
+}
+html[data-chat="docked"] .chat-scroll[data-fade="both"] {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, var(--fade-in), var(--fade-out), transparent);
+  mask-image: linear-gradient(to bottom, transparent, var(--fade-in), var(--fade-out), transparent);
 }
 html[data-chat="docked"] .chat-thread,
 html[data-chat="docked"] .chat-history { max-width: none; }
@@ -5593,6 +5622,9 @@ html[data-chat="docked"] .chat-mic svg { width: 18px; height: 18px; }
     height: auto; max-height: min(86dvh, calc(100dvh - 16px));
     padding-bottom: 0;
   }
+  /* The sheet's stable height is the sheet, not the desktop panel's 660. */
+  html[data-chat="docked"] #panel-chat:has(.chat-turn),
+  html[data-chat="docked"] #panel-chat:has(#chat-mic[aria-expanded="true"]) { height: min(86dvh, calc(100dvh - 16px)); }
   html[data-chat="docked"] .chat-launcher { display: none; }
   html[data-chat="docked"] .chat-scroll { padding: 12px 16px 2px; }
   html[data-chat="docked"] #panel-chat .chat-composer { padding: 10px 16px max(12px, env(safe-area-inset-bottom)); }
