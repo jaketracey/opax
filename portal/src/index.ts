@@ -258,7 +258,7 @@ const FOLLOWUPS_CACHE_TTL = ASK_CACHE_TTL
 // themselves (not the wording of the question), so two ways of asking for the
 // same ranking share one paid call, and CACHE_EPOCH retires them together.
 const MONEY_OVERVIEW_CACHE_TTL = ASK_CACHE_TTL
-const MONEY_OVERVIEW_TIMEOUT_MS = 9000
+const MONEY_OVERVIEW_TIMEOUT_MS = 20000
 const STATS_CACHE_TTL = 300
 const RECENT_CACHE_TTL = 300
 
