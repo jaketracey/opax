@@ -477,6 +477,9 @@
       <div class="dock-bar">
         <span class="dock-mark" aria-hidden="true"></span>
         <span class="dock-title">Ask the record</span>
+        <button type="button" class="dock-icon" id="dock-new" title="Start a new conversation" aria-label="Start a new conversation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
         <button type="button" class="dock-icon" id="dock-expand" title="Open the full conversation" aria-label="Open the full conversation">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-8 8M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
         </button>
@@ -485,9 +488,14 @@
         </button>
       </div>
       <div class="chat-scroll" id="chat-scroll">
+        <!-- The head is the conversation's own chrome and stays in view while
+             the thread scrolls under it: the way out of the conversation, and
+             whose record it is held with when it is held with one person's
+             (written by renderChatScope). -->
         <div class="chat-head">
           <p class="kicker">Keep asking</p>
           <button type="button" class="action-btn" id="chat-new">Start a new conversation</button>
+          <p class="chat-scope" id="chat-scope" hidden></p>
         </div>
         <div id="chat-history" class="chat-history" hidden></div>
         <div id="chat-thread" class="chat-thread" aria-label="Conversation with the record"></div>

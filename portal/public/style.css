@@ -938,6 +938,38 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 /* A conversation's header: the kicker and the way out of it. */
 .chat-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem 1rem; margin-bottom: 0.4rem; }
 .chat-head .kicker { margin: 0; }
+/* On /chat the thread owns the document's scroll, so the way out of a
+   conversation would scroll away with it. The head rides under the masthead
+   instead, on its own paper so the turns pass behind it. */
+html[data-chat="page"] .chat-head {
+  position: sticky; top: var(--header-h); z-index: 2;
+  background: var(--paper); padding: 0.6rem 0 0.5rem; margin-bottom: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+/* ---- the conversation's speaker scope ------------------------------------ */
+/* A conversation held with one person's record, named above the thread. */
+.chat-scope {
+  flex: 1 0 100%; /* its own row under the head's kicker and button */
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem 0.7rem;
+  margin: 0.2rem 0 0.5rem; padding-left: 14px;
+  font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft);
+  background:
+    linear-gradient(to right, var(--bronze) 0 2px, transparent 2px 5px,
+                    var(--line) 5px 6px, transparent 6px)
+    no-repeat left / 6px 100%;
+}
+.chat-scope-face { width: 26px; height: 26px; flex: none; }
+.chat-scope-face img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover;
+  border: 1.5px solid var(--paper-raised); box-shadow: 0 0 0 1px var(--line); }
+.chat-scope-face:empty { display: none; }
+.chat-scope-label strong { color: var(--ink); font-weight: 600; }
+.chat-scope-clear {
+  margin-left: auto; min-height: 32px; padding: 0 2px;
+  border: 0; background: none; cursor: pointer;
+  font: 600 0.75rem/1.4 var(--sans); color: var(--ink-faint);
+}
+.chat-scope-clear:hover { color: var(--bronze-ink); text-decoration: underline; }
 /* Fixed next steps under a money answer (it has no generated follow-ups). */
 .answer-money-next { display: flex; flex-wrap: wrap; gap: 0.5rem 0.7rem; margin: 1.2rem 0 0.4rem; }
 .answer-money-next .action-btn { text-decoration: none; }
@@ -5529,12 +5561,25 @@ html[data-chat="docked"] .chat-history { max-width: none; }
    out of a conversation stays, as a quiet line above the thread. */
 html[data-chat="docked"] .chat-head { margin: 0 0 0.2rem; }
 html[data-chat="docked"] .chat-head .kicker { display: none; }
-html[data-chat="docked"] #chat-new {
-  margin-left: auto; min-height: 36px; padding: 0 2px;
-  border: 0; background: none; color: var(--ink-faint);
-  font: 600 0.75rem/1.4 var(--sans);
+/* The dock bar's "+" is the way to start again in the corner; the head would
+   say it a second time, one line below it. */
+html[data-chat="docked"] #chat-new { display: none; }
+/* Docked, the head holds only the scope, and it rides the panel's own scroll
+   so a reader ten turns in can still see whose record they are asking. */
+/* The band bleeds into the scroller's own padding, or a sliver of the turn
+   behind it shows above the paper as it passes. */
+html[data-chat="docked"] .chat-head {
+  /* -14px so the band's own top padding, not the gap above it, is what meets
+     the dock bar: sticky holds the MARGIN box, and that margin is negative. */
+  position: sticky; top: -14px; z-index: 2;
+  background: var(--paper); border-bottom: 1px solid var(--line);
+  margin: -14px -18px 0.6rem; padding: 14px 18px 0;
 }
-html[data-chat="docked"] #chat-new:hover { color: var(--bronze-ink); text-decoration: underline; }
+/* Nothing to pin when the conversation is with the whole record. */
+html[data-chat="docked"] .chat-head:not(:has(.chat-scope:not([hidden]))) {
+  border-bottom: 0; margin-bottom: 0;
+}
+html[data-chat="docked"] .chat-scope { margin: 0 0 0.5rem; }
 html[data-chat="docked"] .chat-history-list > summary,
 html[data-chat="docked"] .chat-history-open { font-size: 0.8125rem; }
 html[data-chat="docked"] .chat-history { margin-bottom: 0.6rem; }

@@ -5265,7 +5265,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   $("subject-ask-form").addEventListener("submit", (e) => {
     e.preventDefault();
     const topic = $("subject-ask-topic").value.trim();
-    if (topic) goRoute(askHash(`What did ${name} say about ${topic}?`));
+    if (!topic) return;
+    $("subject-ask-topic").value = "";
+    askSpeakerInConversation(name, `What did ${name} say about ${topic}?`);
   });
   // The structured record first; the speeches follow it.
   renderPersonTopics(name, sections).then(() => refreshPersonJumps(sections));
@@ -5339,7 +5341,9 @@ function renderCommitteeWitness(name, key, body, box, sections, speeches, dates)
   $("subject-ask-form").addEventListener("submit", (e) => {
     e.preventDefault();
     const topic = $("subject-ask-topic").value.trim();
-    if (topic) goRoute(askHash(`What did ${name} say about ${topic}?`));
+    if (!topic) return;
+    $("subject-ask-topic").value = "";
+    askSpeakerInConversation(name, `What did ${name} say about ${topic}?`);
   });
   renderPersonTopics(name, sections).then(() => refreshPersonJumps(sections));
   renderPersonSpeeches(name, speeches, [], sections, { evidence: true }).then(() => { refreshPersonJumps(sections); polishPersonSections(sections); });
@@ -9009,7 +9013,9 @@ async function runAsk(question) {
     const citedList = cited.length ? cited : sources;
     const alsoList = cited.length ? retrieved : [];
     $("ask-answer").askEvidence = citedList;
-    lastAsk = { question, answer: answerText, sources, kind: askKind(), answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context };
+    // The speaker this answer was actually filtered to (chosen in Options or
+    // read out of the question), so "Continue in a conversation" keeps it.
+    lastAsk = { question, answer: answerText, sources, kind: askKind(), speaker: askFilters().speaker || speakerFilter || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context };
     if (!data.money_ranking) prefetchAskFollowups(lastAsk);
 
     if (data.money_ranking) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
@@ -9311,6 +9317,13 @@ function prefetchAskFollowups(ask) {
 
 let chatThread = []; // {role: 'user'|'answer', text, sources?, next?, askedAs?}
 let chatKind = "all";
+// A conversation may be held with ONE speaker's record rather than the whole
+// corpus: a person page's "Ask about their speeches" opens one, and the name
+// then travels as an explicit filter on every turn, so a follow-up that never
+// names them again ("and on housing?") is still answered from their speeches.
+// The Worker lets an explicit speaker win over anything it would infer from
+// the wording (resolveAskScope), so the scope cannot drift mid-conversation.
+let chatSpeaker = "";
 let chatAbort = null;
 let chatFollowAbort = null;
 let chatTimer = null;
@@ -9334,9 +9347,9 @@ function chatTitleFor(thread) {
   return first.length > 90 ? `${first.slice(0, 89).trimEnd()}…` : first || "Conversation";
 }
 
-function newSavedChat(kind, thread) {
+function newSavedChat(kind, thread, speaker = "") {
   const t = Math.floor(Date.now() / 1000);
-  return { id: crypto.randomUUID(), title: chatTitleFor(thread), kind, created: t, updated: t, thread };
+  return { id: crypto.randomUUID(), title: chatTitleFor(thread), kind, speaker, created: t, updated: t, thread };
 }
 
 function chatStoreRead() {
@@ -9395,6 +9408,7 @@ function saveChatSession() {
   if (!chatThread.length) return;
   const chat = activeChat(true);
   chat.kind = chatKind;
+  chat.speaker = chatSpeaker;
   chat.thread = chatThread;
   chat.title = chatTitleFor(chatThread);
   chat.updated = Math.floor(Date.now() / 1000);
@@ -9418,6 +9432,12 @@ function loadChatSession() {
   trimUnanswered(chat);
   chatThread = chat.thread;
   chatKind = chat.kind === "speech" ? "speech" : "all";
+  chatSpeaker = savedSpeaker(chat);
+}
+
+/** A saved conversation's speaker scope, however old the record is. */
+function savedSpeaker(chat) {
+  return typeof chat?.speaker === "string" ? chat.speaker.trim() : "";
 }
 
 function openSavedChat(id) {
@@ -9430,6 +9450,7 @@ function openSavedChat(id) {
   trimUnanswered(chat);
   chatThread = chat.thread;
   chatKind = chat.kind === "speech" ? "speech" : "all";
+  chatSpeaker = savedSpeaker(chat);
   chatStoreWrite();
   renderChatThread();
   renderChatHistory();
@@ -9526,7 +9547,7 @@ async function chatSyncPush() {
     api(`/api/community/chats/${encodeURIComponent(id)}`, {
       method: "PUT",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ title: chat.title, kind: chat.kind, updated: chat.updated, thread: chat.thread.map(trimTurn) }),
+      body: JSON.stringify({ title: chat.title, kind: chat.kind, speaker: chat.speaker || "", updated: chat.updated, thread: chat.thread.map(trimTurn) }),
     }).catch(() => { /* the browser has it; the next save tries again */ });
   }
 }
@@ -9547,7 +9568,7 @@ async function chatSyncPull() {
       const { chat } = await api(`/api/community/chats/${encodeURIComponent(r.id)}`);
       const thread = Array.isArray(chat?.data?.thread) ? chat.data.thread : null;
       if (!thread || !isSavedChat({ id: chat.id, thread })) continue;
-      const next = { id: chat.id, title: chat.title || chatTitleFor(thread), kind: chat.kind === "speech" ? "speech" : "all", created: chat.created_at, updated: chat.updated_at, thread };
+      const next = { id: chat.id, title: chat.title || chatTitleFor(thread), kind: chat.kind === "speech" ? "speech" : "all", speaker: savedSpeaker(chat.data), created: chat.created_at, updated: chat.updated_at, thread };
       if (local) Object.assign(local, next); else store.chats.push(next);
       changed = true;
     } catch { /* that one stays as it was */ }
@@ -9559,7 +9580,7 @@ async function chatSyncPull() {
   if (changed) {
     chatStoreWrite();
     const active = activeChat(false);
-    if (active && active.thread !== chatThread && !chatBusy) { chatThread = active.thread; chatKind = active.kind; renderChatThread(); requestChatFollowups(); }
+    if (active && active.thread !== chatThread && !chatBusy) { chatThread = active.thread; chatKind = active.kind; chatSpeaker = savedSpeaker(active); renderChatThread(); requestChatFollowups(); }
   }
   renderChatHistory();
 }
@@ -9569,13 +9590,14 @@ async function chatSyncPull() {
 // underneath is what the reader was doing, and taking them off it to start a
 // conversation would be taking away the thing the dock exists to avoid. On
 // /chat the empty Ask box IS the fresh start, so that view still goes there.
-$("chat-new")?.addEventListener("click", () => {
+function startNewConversation() {
   chatAbort?.abort();
   chatFollowAbort?.abort();
   const store = chatStoreRead();
   store.active = null;
   chatStoreWrite();
   chatThread = [];
+  chatSpeaker = ""; // a new conversation is with the whole record again
   try { sessionStorage.removeItem("opax-chat-seed"); } catch { /* nothing stored to forget */ }
   if (dockOpen) {
     chatFollower.stop();
@@ -9586,7 +9608,11 @@ $("chat-new")?.addEventListener("click", () => {
   }
   resetAsk();
   goRoute("/ask");
-});
+}
+// Two ways in, one behaviour: the line above the thread, and the dock bar's
+// own "+", which stays put while the conversation scrolls past it.
+$("chat-new")?.addEventListener("click", startNewConversation);
+$("dock-new")?.addEventListener("click", startNewConversation);
 
 function initChat(manageFocus) {
   if (!chatThread.length) loadChatSession();
@@ -9608,6 +9634,7 @@ function initChat(manageFocus) {
           store.active = same.id;
           chatThread = same.thread;
           chatKind = same.kind === "speech" ? "speech" : "all";
+          chatSpeaker = savedSpeaker(same);
           chatStoreWrite();
         } else {
           store.active = null;
@@ -9616,6 +9643,10 @@ function initChat(manageFocus) {
             { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
+          // An ask that was filtered to one speaker hands that filter on: the
+          // conversation it opens is held with the same person, not the record
+          // at large.
+          chatSpeaker = typeof seed.speaker === "string" ? seed.speaker.trim() : "";
           saveChatSession();
         }
       }
@@ -9732,12 +9763,78 @@ function scrollChatToEnd() {
 // sources, a carried-passage note) fades up after it in reading order. With
 // `rise` the answer itself rises into the place the waiting state left, which
 // a streamed answer already did as its first words came.
+/**
+ * Open a conversation about ONE person's record and ask the first question.
+ * The name is canonicalised against the speaker directory first, because the
+ * filter matches the corpus's own collaborator values exactly; a name the
+ * corpus does not carry opens an ordinary unscoped conversation rather than a
+ * scope that would silently retrieve nothing. Docked, the reader keeps the
+ * page they are on - which on a person page is the person they are asking
+ * about; on /chat the panel is already the page.
+ */
+async function askSpeakerInConversation(name, question) {
+  if (chatBusy) return;
+  chatAbort?.abort();
+  chatFollowAbort?.abort();
+  const store = chatStoreRead();
+  store.active = null;
+  chatStoreWrite();
+  chatThread = [];
+  chatSpeaker = "";
+  chatKind = "speech";
+  if (!chatIsPage()) openDock(); else renderChatThread();
+  chatSpeaker = (await resolveSpeaker(name)) || "";
+  chatKind = chatSpeaker ? "speech" : "all";
+  renderChatScope();
+  sendChat(question);
+}
+
+/* A conversation held with one speaker says so, above the thread and for as
+   long as it lasts: the reader can see what every answer is drawn from, and
+   leave the scope in one click without losing the conversation. */
+function renderChatScope() {
+  const line = $("chat-scope");
+  if (!line) return;
+  line.hidden = !chatSpeaker;
+  if (!chatSpeaker) { line.replaceChildren(); return; }
+  const who = chatSpeaker;
+  line.replaceChildren();
+  const face = document.createElement("span");
+  face.className = "chat-scope-face";
+  const label = document.createElement("span");
+  label.className = "chat-scope-label";
+  label.append(`Asking `, Object.assign(document.createElement("strong"), { textContent: who }), `'s speeches`);
+  const clear = document.createElement("button");
+  clear.type = "button";
+  clear.className = "chat-scope-clear";
+  clear.textContent = "Whole record";
+  clear.title = "Ask the whole record instead";
+  clear.setAttribute("aria-label", `Stop asking only ${who}'s speeches and ask the whole record`);
+  clear.addEventListener("click", () => {
+    chatSpeaker = "";
+    // "Whole record" means the whole record: the speech-only kind the scope
+    // forced goes with it, or the next answer would still be speeches alone.
+    chatKind = "all";
+    saveChatSession();
+    renderChatScope();
+    $("chat-input").focus({ preventScroll: true });
+  });
+  line.append(face, label, clear);
+  loadPhotoMap().then(() => {
+    const url = photoUrlFor(who);
+    if (url && chatSpeaker === who) face.innerHTML = `<img src="${esc(url)}" alt="" width="26" height="26">`;
+  });
+}
+
 function renderChatThread({ landed = false, rise = false } = {}) {
   syncAskChatViewport();
+  renderChatScope();
   const thread = $("chat-thread");
   thread.replaceChildren();
-  $("chat-input").placeholder = chatThread.length ? "Ask a follow-up question…" : "Ask about politics, money or the record…";
+  $("chat-input").placeholder = chatThread.length ? "Ask a follow-up question…"
+    : chatSpeaker ? `Ask about ${chatSpeaker}'s speeches…` : "Ask about politics, money or the record…";
   $("chat-new").hidden = !chatThread.length; // nothing to start anew from
+  if ($("dock-new")) $("dock-new").hidden = !chatThread.length;
   if (!chatThread.length) {
     renderChatOpening(thread);
     return;
@@ -10071,7 +10168,16 @@ async function sendChat(question, carry) {
   }, 5000);
   let live = null;
   try {
-    const chatBody = JSON.stringify({ question: q, kind: chatKind, context, prior_resources: priorResources.slice(0, 6) });
+    // A scoped conversation sends its speaker on EVERY turn, not only the
+    // first: the Worker gives an explicit filter precedence over anything it
+    // would read out of the wording, so "and on housing?" stays with them.
+    const chatBody = JSON.stringify({
+      question: q,
+      kind: chatSpeaker ? "speech" : chatKind,
+      ...(chatSpeaker ? { speaker: chatSpeaker } : {}),
+      context,
+      prior_resources: priorResources.slice(0, 6),
+    });
     // The answer streams into a provisional turn beneath the waiting state;
     // the finished thread re-renders from chatThread as before.
     let liveWrap = null;

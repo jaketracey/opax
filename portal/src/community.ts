@@ -51,14 +51,16 @@ async function route(req:Request,env:Env):Promise<Response>{
  throw new CommunityError(404,'This action is unavailable.')
 }
 
-/** A saved conversation's body: a title, its kind, the reader's clock and up to eighty turns. */
+/** A saved conversation's body: a title, its kind, the one speaker it is held
+ * with (if any), the reader's clock and up to eighty turns. */
 const CHAT_BYTES=600000
 function chatRecord(d:Record<string,unknown>){
  const title=text(d.title??'Conversation',1,160,'Title')
  const kind=d.kind==='speech'?'speech':'all'
+ const speaker=typeof d.speaker==='string'&&d.speaker.trim()?text(d.speaker,1,120,'Speaker'):''
  const thread=Array.isArray(d.thread)?d.thread as Record<string,unknown>[]:null
  if(!thread||thread.length===0||thread.length>80||!thread.every(m=>m&&typeof m==='object'&&(m.role==='user'||m.role==='answer')&&typeof m.text==='string'))throw new CommunityError(400,'A conversation needs its turns.')
  const t=now()
  const updated=typeof d.updated==='number'&&Number.isFinite(d.updated)&&d.updated>0&&d.updated<=t+60?Math.floor(d.updated):t
- return {title,kind,turns:thread.filter(m=>m.role==='user').length,updated,data:JSON.stringify({thread})}
+ return {title,kind,turns:thread.filter(m=>m.role==='user').length,updated,data:JSON.stringify(speaker?{thread,speaker}:{thread})}
 }
