@@ -2034,8 +2034,7 @@ for (const id of ["ask-input", "search-input"]) {
 // link and the filters key on it), so the next question used to land on the
 // end of it and the site answered the concatenation. Now: focusing the box
 // while it still holds the answered question selects the lot, so typing
-// replaces it; the cross empties it; phones get a short placeholder in place
-// of the example question, which the narrow box could not show whole.
+// replaces it; the cross empties it. The box carries no placeholder.
 {
   const field = $("ask-input");
   let holdSelection = false;
@@ -2051,11 +2050,6 @@ for (const id of ["ask-input", "search-input"]) {
     setQueryValue("ask-input", "");
     field.focus();
   });
-  const example = field.placeholder;
-  const compact = matchMedia("(max-width: 1100px), (pointer: coarse)");
-  const syncPlaceholder = () => { field.placeholder = compact.matches ? "Ask a question of the record…" : example; };
-  compact.addEventListener("change", syncPlaceholder);
-  syncPlaceholder();
 }
 attachQuickSearch($("mast-q"), $("mast-sugg"), { idPrefix: "ms" });
 attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: () => closeNavDrawer() });
