@@ -4985,8 +4985,11 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .connection-choice {display:block;width:100%;text-align:left;padding:1rem;border:0;border-bottom:1px solid #dedbd2;background:transparent;color:inherit;cursor:pointer}
 .connection-choice:hover,.connection-choice:focus-visible {background:#f0eee7}
 .connection-choice span {display:block;margin-top:.4rem;font-size:.875rem}
-#connection-detail {min-width:0;scroll-margin-top:1rem}
-@media(max-width:700px){.connections-layout{grid-template-columns:minmax(0,1fr)}#connection-list{max-height:20rem;overflow:auto}.connections-page h1{font-size:2rem}}
+/* The selected connection reads as a panel lifted off the page, the same
+   raised card the contracts detail uses on /discover. */
+#connection-detail {min-width:0;scroll-margin-top:1rem;background:var(--paper-raised);border:1px solid var(--line);border-radius:6px;padding:var(--space-5)}
+#connection-detail > h2 {margin:0 0 var(--space-4)}
+@media(max-width:700px){.connections-layout{grid-template-columns:minmax(0,1fr)}#connection-list{max-height:20rem;overflow:auto}.connections-page h1{font-size:2rem}#connection-detail{padding:var(--space-4)}}
 .evidence-years meter::-webkit-meter-optimum-value {background:#52768c}
 .evidence-years meter::-moz-meter-bar {background:#52768c}
 .evidence-fields {display:grid;gap:.8rem;margin:1.25rem 0}
