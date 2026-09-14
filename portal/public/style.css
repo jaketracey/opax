@@ -128,6 +128,18 @@ body {
 .wrap { max-width: 1440px; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 4.5rem); width: 100%; }
 
 :focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 2px; }
+/* A heading, section or panel carries tabindex="-1" only so the router can put
+   the reader at it after a route change; it is not something you can tab to,
+   and the ring the browser draws there reads as a stray box around a heading
+   (it was drawn around "Topics A-Z" until this rule). Real controls are
+   excluded by tag, which covers the roving-tabindex menu items - every one of
+   them is a <button>. :where() holds the whole selector at (0,1,1): above the
+   rule overhead, below any plain class, so an element the design DOES ring on
+   focus says so with its own selector (.report-part-title:focus-visible,
+   .report-source-row:focus-visible, .source-list li:focus) and still wins. */
+:where([tabindex="-1"]):not(a, button, input, select, textarea, summary):focus-visible {
+  outline: none;
+}
 
 .visually-hidden {
   position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -361,7 +373,6 @@ header :focus-visible { outline-color: var(--bronze-bright); }
   padding: max(1rem, env(safe-area-inset-top)) 1.25rem max(1.5rem, env(safe-area-inset-bottom)); overflow-y: auto; overscroll-behavior: contain;
 }
 .nav-drawer::backdrop { background: rgba(20, 42, 67, 0.55); }
-.nav-drawer:focus { outline: none; }
 /* The panel slides in from the right while the backdrop fades; closing runs
    the same in reverse (the script holds the dialog open until it finishes). */
 @media (prefers-reduced-motion: no-preference) {
@@ -491,7 +502,6 @@ main { flex: 1; padding: 0 0 3rem; }
   .ask-row > :is(input, .grow-field, .ask-field) { flex-basis: 100%; }
   .ask-row button.primary { flex: 1 1 auto; }
 }
-main:focus { outline: none; }
 
 .hero-intro h1 {
   margin: 1.6rem 0 2rem;
@@ -748,7 +758,6 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
   font: 400 1.0625rem/1.78 var(--serif); color: var(--ink);
   max-width: 72ch; margin: 0;
 }
-.answer:focus { outline: none; }
 .answer > * { margin: 0 0 1.3rem; }
 .answer > *:last-child { margin-bottom: 0; }
 .answer h3 { font: 600 1.1875rem/1.35 var(--serif); margin-top: 1.8rem; }
@@ -1781,7 +1790,6 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 /* The step's copy takes focus when a step changes so readers of assistive
    tech land on it; the browser's default ring around a whole paragraph is
    noise, and the step buttons keep their own visible focus. */
-#dialog-explain .explain-step-copy:focus { outline: none; }
 #dialog-explain .game-dialog-head .game-close:active { transform: translate(-0.6rem, 0.6rem) scale(0.94); }
 @media (max-width: 700px) {
   #dialog-explain .explain-stage { top: 0; }
@@ -3134,7 +3142,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 .subject-person .person-topic-legend[hidden] { display: none; }
 
 .subject-person #subject-sections :is(a, button, summary, input):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
-.subject-person #subject-sections :is(section, h3, #subject-votes):focus { outline: none; }
 .subject-person #subject-sections :is(section, h3, #subject-votes):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 4px; }
 .subject-person #subject-sections .fineprint, .subject-person .person-topic-legend { font-size: .875rem; line-height: 1.6; }
 .subject-person .votes-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; }
