@@ -5595,20 +5595,15 @@ html[data-chat="docked"] .chat-head .kicker { display: none; }
 html[data-chat="docked"] #chat-new { display: none; }
 /* Docked, the head holds only the scope, and it rides the panel's own scroll
    so a reader ten turns in can still see whose record they are asking. */
-/* The band bleeds into the scroller's own padding, or a sliver of the turn
-   behind it shows above the paper as it passes. */
+/* Chrome, not thread: a band under the bar that the turns pass beneath.
+   With the kicker and the head's own button both hidden here, the band IS the
+   scope - so an unscoped conversation has no head to draw at all. */
 html[data-chat="docked"] .chat-head {
-  /* -14px so the band's own top padding, not the gap above it, is what meets
-     the dock bar: sticky holds the MARGIN box, and that margin is negative. */
-  position: sticky; top: -14px; z-index: 2;
-  background: var(--paper); border-bottom: 1px solid var(--line);
-  margin: -14px -18px 0.6rem; padding: 14px 18px 0;
+  flex: none; margin: 0; padding: 0 18px;
+  border-bottom: 1px solid var(--line);
 }
-/* Nothing to pin when the conversation is with the whole record. */
-html[data-chat="docked"] .chat-head:not(:has(.chat-scope:not([hidden]))) {
-  border-bottom: 0; margin-bottom: 0;
-}
-html[data-chat="docked"] .chat-scope { margin: 0 0 0.5rem; }
+html[data-chat="docked"] .chat-head:not(:has(.chat-scope:not([hidden]))) { display: none; }
+html[data-chat="docked"] .chat-scope { margin: 0.55rem 0; }
 html[data-chat="docked"] .chat-history-list > summary,
 html[data-chat="docked"] .chat-history-open { font-size: 0.8125rem; }
 html[data-chat="docked"] .chat-history { margin-bottom: 0.6rem; }

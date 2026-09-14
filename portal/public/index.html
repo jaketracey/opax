@@ -487,16 +487,18 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
         </button>
       </div>
+      <!-- The conversation's own chrome, outside the scroller: the way out of
+           it, and whose record it is held with when it is held with one
+           person's (written by renderChatScope). Docked it sits under the bar,
+           so the thread fades under it rather than taking it with them; on
+           /chat the scroller is display:contents and this is the page's own
+           head, pinned under the masthead. -->
+      <div class="chat-head">
+        <p class="kicker">Keep asking</p>
+        <button type="button" class="action-btn" id="chat-new">Start a new conversation</button>
+        <p class="chat-scope" id="chat-scope" hidden></p>
+      </div>
       <div class="chat-scroll" id="chat-scroll">
-        <!-- The head is the conversation's own chrome and stays in view while
-             the thread scrolls under it: the way out of the conversation, and
-             whose record it is held with when it is held with one person's
-             (written by renderChatScope). -->
-        <div class="chat-head">
-          <p class="kicker">Keep asking</p>
-          <button type="button" class="action-btn" id="chat-new">Start a new conversation</button>
-          <p class="chat-scope" id="chat-scope" hidden></p>
-        </div>
         <div id="chat-history" class="chat-history" hidden></div>
         <div id="chat-thread" class="chat-thread" aria-label="Conversation with the record"></div>
         <div id="chat-status" class="status" role="status"></div>
