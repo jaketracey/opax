@@ -118,6 +118,18 @@ function ellipseAngles(n: number, sx: number, sy: number): number[] {
   return angles
 }
 
+/**
+ * Personal space, on top of a node's own radius, in the collide force.
+ * d3-force's scheme (and the 2D map) uses 5 - enough to keep marks from
+ * touching, but a mark also carries a NAME, and in the largest clusters the
+ * names were the thing that collided: 64 individuals settled with their
+ * nearest neighbours a bare 18 units apart, and the label pass could place
+ * only a handful of them. 20 lifts every gap in the map to 40 - room for a
+ * name - and costs the clusters almost nothing in size (the individuals blob
+ * grows 215 -> 222 units, and no two blobs come closer than they do at 5).
+ */
+const COLLIDE_PADDING = 20
+
 /** Empirical blob radius a category settles into - identical formula to the 2D map. */
 function blobR(count: number): number {
   return 30 * Math.sqrt(Math.max(1, count)) + 34
@@ -550,14 +562,14 @@ export class ForceSim3D {
     }
   }
 
-  /** d3-force's exact collide scheme (1 iteration): radius + 5, strength 0.9, rj^2/(ri^2+rj^2) weighting. */
+  /** d3-force's collide scheme (1 iteration): radius + padding, strength 0.9, rj^2/(ri^2+rj^2) weighting. */
   private applyCollide(): void {
     const nodes = this.nodes
     const strength = 0.9
     for (let i = 0; i < nodes.length; i++) {
       const a = nodes[i]
       if (!a) continue
-      const ri = a.radius + 5
+      const ri = a.radius + COLLIDE_PADDING
       const ri2 = ri * ri
       const xi = a.x + a.vx
       const yi = a.y + a.vy
@@ -565,7 +577,7 @@ export class ForceSim3D {
       for (let j = i + 1; j < nodes.length; j++) {
         const b = nodes[j]
         if (!b) continue
-        const rj = b.radius + 5
+        const rj = b.radius + COLLIDE_PADDING
         const r = ri + rj
         let dx = xi - (b.x + b.vx)
         let dy = yi - (b.y + b.vy)
