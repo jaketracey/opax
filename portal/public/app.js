@@ -9553,8 +9553,10 @@ async function chatSyncPull() {
 }
 
 // "Start a new conversation": the open one stays in the list; the next
-// question begins another. The ask page is cleared and the reader lands on
-// an empty Ask box.
+// question begins another. Docked, the assistant empties in place - the page
+// underneath is what the reader was doing, and taking them off it to start a
+// conversation would be taking away the thing the dock exists to avoid. On
+// /chat the empty Ask box IS the fresh start, so that view still goes there.
 $("chat-new")?.addEventListener("click", () => {
   chatAbort?.abort();
   chatFollowAbort?.abort();
@@ -9563,6 +9565,13 @@ $("chat-new")?.addEventListener("click", () => {
   chatStoreWrite();
   chatThread = [];
   try { sessionStorage.removeItem("opax-chat-seed"); } catch { /* nothing stored to forget */ }
+  if (dockOpen) {
+    chatFollower.stop();
+    renderChatThread(); // the opening lede and its questions, back in the panel
+    renderChatHistory(); // nothing is the open conversation now
+    if (matchMedia("(hover: hover) and (pointer: fine)").matches) $("chat-input").focus({ preventScroll: true });
+    return;
+  }
   resetAsk();
   goRoute("/ask");
 });
