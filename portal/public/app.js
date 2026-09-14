@@ -3071,10 +3071,12 @@ function setQuoteRail(sources) {
 // scroll trades them for the quotes in the same slot, once and for good, so
 // the rail never flickers between two panels on the way back up.
 
-const peopleRail = { list: [], scrolled: false, base: 0, settleUntil: 0 };
+const peopleRail = { list: [], scrolled: false, base: 0, settleUntil: 0, fade: 0 };
 const PEOPLE_MAX = 6;
 /** Below this the page has not really moved: a trackpad twitch, not a read. */
 const PEOPLE_SCROLL_PX = 24;
+/* The card's out transition (see .people-card), plus a frame. */
+const PEOPLE_FADE_MS = 280;
 
 /**
  * The page also scrolls itself (the answer reveal, the hero folding away).
@@ -3140,6 +3142,7 @@ function setPeopleRail(sources) {
 function resetPeopleRail() {
   peopleRail.list = [];
   peopleRail.scrolled = false;
+  clearTimeout(peopleRail.fade);
   $("people-card").classList.remove("shown");
   $("people-card").replaceChildren();
   // Long enough to cover the hero folding away 900ms in and its transition.
@@ -3198,14 +3201,23 @@ function updateQuoteRail() {
   // on short answers before any scrolling happens.
   const visible = room && !people && n > 0 &&
     rect.top < innerHeight * 0.3 + 8 && rect.bottom > innerHeight * 0.28 && clearOfSources;
-  rail.hidden = !(visible || people);
+  const peopleCard = $("people-card");
+  // The people do not blink out. When the reader's first scroll takes the slot
+  // from them the card keeps its place and fades; the rail is hidden only once
+  // the fade has run, so hiding it cannot cut the transition short.
+  const peopleLeaving = !people && peopleCard.classList.contains("shown");
+  if (peopleLeaving) {
+    clearTimeout(peopleRail.fade);
+    peopleRail.fade = setTimeout(updateQuoteRail, PEOPLE_FADE_MS);
+  }
+  rail.hidden = !(visible || people || peopleLeaving);
   // Both states ride the answer's right edge, so the left is set for whichever
   // one is up, not only for the quotes.
   if (visible || people) rail.style.left = `${Math.round(rect.right + Math.min(48, space - 316))}px`;
   // Only the people state moves; the quotes keep the stylesheet's 30vh so they
-  // stay aligned with the answer as it scrolls past.
-  rail.style.top = people ? `${Math.round(peopleTop)}px` : "";
-  const peopleCard = $("people-card");
+  // stay aligned with the answer as it scrolls past. A card on its way out
+  // holds the people's top, or it would jump up as it faded.
+  rail.style.top = !visible && (people || peopleLeaving) ? `${Math.round(peopleTop)}px` : "";
   // The rail was display:none a statement ago; give the browser its zero state
   // to leave from, or the faces would land at full strength with no fade.
   if (people && !peopleCard.classList.contains("shown")) void peopleCard.offsetWidth;

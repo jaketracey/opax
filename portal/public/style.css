@@ -1039,6 +1039,10 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
   position: absolute; top: 0; left: 0; width: 100%;
   /* Room above the kicker so the card does not sit on the rail's top edge. */
   padding: 1.35rem 0 0.15rem 14px;
+  /* ...and the bronze rule starts level with the kicker rather than running up
+     through that gap, where a bare bar hung off the ask field's bottom edge. */
+  background-position: left bottom;
+  background-size: 6px calc(100% - 1.35rem);
   opacity: 0; transform: translateY(10px); pointer-events: none;
 }
 .people-card.shown { opacity: 1; transform: none; pointer-events: auto; }
