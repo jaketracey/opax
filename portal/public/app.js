@@ -12008,7 +12008,10 @@ async function loadReportsList(manageFocus) {
       return card;
     }),
   );
-  if (manageFocus) list.querySelector(".report-card")?.focus();
+  // Not the first card: focusing it painted a 250px focus ring around one
+  // report on arrival, as if the reader had chosen it. Nothing takes focus
+  // here, so route()'s fallback puts them on <main>, the same landing every
+  // other list route gets.
 }
 
 // Charts: single-hue bronze marks (CSS-owned); sr-only data table carries the values.
