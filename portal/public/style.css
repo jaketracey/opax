@@ -478,15 +478,13 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 
 /* ---- hero --------------------------------------------------------------- */
 
-main { flex: 1; padding: 2.75rem 0 3rem; }
-main.compact { padding-top: var(--space-6); }
+/* The top space belongs to the page, not to a band of padding under the
+   breadcrumb rule: an inner page starts at its own kicker or heading, and the
+   home page's air is the headline's own margin (see .hero-intro). */
+main { flex: 1; padding: 0 0 3rem; }
 /* The page already supplies its top space; a heading label adds no second gap. */
 .doc-head > .kicker, .subject-head > .kicker { margin-top: 0; }
 @media (max-width: 860px) {
-  main { padding-top: 0; }
-  /* Inner pages: air between the breadcrumb strip and the page's own kicker
-     (the home page's headline carries its own margin). */
-  main.compact { padding-top: var(--space-5); }
   /* Narrow screens: the ask question takes its own line; the submit and the
      options icon share the next one. (The search row stays on one line — see
      the mobile block at the end of the file.) */
@@ -503,14 +501,17 @@ main:focus { outline: none; }
 main.compact .hero-intro { display: none; }
 /* Once an ask is under way the masthead line has done its work: it fades and
    folds, and the question rises into its place. */
-.hero-intro { overflow: hidden; margin-bottom: 0; }
+.hero-intro { overflow: hidden; margin-top: 2.75rem; margin-bottom: 0; }
 /* Folded, it leaves the same breath above the question as the answer kicker
    leaves below it (--space-5), so the composer is not pressed against the
    breadcrumb rule. */
-.hero-intro.hero-folded { opacity: 0; max-height: 0; margin-bottom: var(--space-5); }
+.hero-intro.hero-folded { opacity: 0; max-height: 0; margin-top: 0; margin-bottom: var(--space-5); }
+/* The headline sits straight under the masthead on a phone, as it always did. */
+@media (max-width: 860px) { .hero-intro { margin-top: 0; } }
 @media (prefers-reduced-motion: no-preference) {
   .hero-intro {
     transition: opacity 320ms ease, max-height 520ms cubic-bezier(0.22, 0.7, 0.3, 1),
+      margin-top 520ms cubic-bezier(0.22, 0.7, 0.3, 1),
       margin-bottom 520ms cubic-bezier(0.22, 0.7, 0.3, 1);
     max-height: 14rem;
   }
