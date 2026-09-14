@@ -1847,6 +1847,7 @@ function resetAsk() {
   $("ask-result").hidden = true;
   $("ask-money").hidden = true;
   $("quote-rail").hidden = true;
+  renderAnswerOverview($("ask-overview"), "");
   lastAsk = { question: "", sources: [] };
   renderChips();
 }
@@ -2637,6 +2638,30 @@ function renderEvidenceAnswer(container, text, response) {
     retry.addEventListener("click", response.onRetry);
     container.appendChild(retry);
   }
+}
+
+/**
+ * The written opening above a calculated money answer's figures.
+ *
+ * The figures are added up from the disclosed receipts; this paragraph is
+ * written from those same figures by a model, which may use no number that is
+ * not among them (the Worker checks every one before it leaves). It is drawn
+ * in the panel this site uses wherever a model wrote something - sunken, with
+ * a bronze edge - so the reader can tell at a glance which part is the record
+ * and which part is prose about it.
+ */
+function renderAnswerOverview(box, text) {
+  if (!box) return;
+  const overview = typeof text === "string" ? text.trim() : "";
+  box.replaceChildren();
+  box.hidden = !overview;
+  if (!overview) return;
+  const label = document.createElement("p");
+  label.className = "answer-overview-label";
+  label.textContent = "Written from the figures below";
+  const body = document.createElement("p");
+  body.textContent = overview;
+  box.append(label, body);
 }
 
 function renderAnswer(container, text, response = {}) {
@@ -8918,6 +8943,7 @@ async function runAsk(question) {
   $("ask-followups").hidden = true;
   $("ask-followups").replaceChildren();
   $("ask-again").hidden = true;
+  renderAnswerOverview($("ask-overview"), "");
   $("ask-answer").askEvidence = [];
   const btn = $("ask-submit");
   $("ask-money").hidden = true;
@@ -9015,7 +9041,7 @@ async function runAsk(question) {
     $("ask-answer").askEvidence = citedList;
     // The speaker this answer was actually filtered to (chosen in Options or
     // read out of the question), so "Continue in a conversation" keeps it.
-    lastAsk = { question, answer: answerText, sources, kind: askKind(), speaker: askFilters().speaker || speakerFilter || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context };
+    lastAsk = { question, answer: answerText, sources, kind: askKind(), speaker: askFilters().speaker || speakerFilter || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview };
     if (!data.money_ranking) prefetchAskFollowups(lastAsk);
 
     if (data.money_ranking) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
@@ -9026,6 +9052,7 @@ async function runAsk(question) {
     $("ask-result").querySelector(".action-row").hidden = needsClarification;
     $("ask-stamp").hidden = needsClarification;
     $("ask-result").querySelector(".kicker").textContent = needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? "From disclosed receipts" : data.answer_status === "evidence_only" ? "From the record" : "Answer";
+    renderAnswerOverview($("ask-overview"), data.money_overview);
     if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
       renderAnswer($("ask-answer"), answerText, { ...data, onRetry: () => runAsk(question) });
@@ -9640,7 +9667,7 @@ function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -9942,6 +9969,12 @@ function syncAskChatViewport() {
 function chatAnswerEl(msg) {
   const wrap = document.createElement("div");
   wrap.className = "chat-turn chat-turn-answer";
+  if (msg.money_overview) {
+    const overview = document.createElement("div");
+    overview.className = "answer-overview";
+    renderAnswerOverview(overview, msg.money_overview);
+    wrap.appendChild(overview);
+  }
   const body = document.createElement("div");
   body.className = "answer";
   const citedSources = (msg.sources || []).filter((s) => s.cited);
@@ -10269,6 +10302,7 @@ async function sendChat(question, carry) {
       answer_status: data.answer_status,
       money_ranking: data.money_ranking,
       money_context: data.money_context,
+      money_overview: data.money_overview,
       evidence_excerpts: data.evidence_excerpts,
       sources: (data.sources || []).map((source) => ({
         ...source,
