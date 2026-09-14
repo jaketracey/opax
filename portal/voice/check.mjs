@@ -21,7 +21,14 @@ const server = createServer(async (req, res) => {
       res.setHeader('Content-Type', 'text/html');
       res.setHeader('Permissions-Policy', 'camera=(), microphone=(self)');
       res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; worker-src 'self'; connect-src 'self'; object-src 'none'");
-      res.end('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/voice.css"></head><body><header style="height:200px"><strong>Opax sticky masthead</strong></header><main style="padding:24px;min-height:1200px"><h1>The public record, in daylight.</h1><a href="/money">Explore the record</a></main><script type="module" src="/voice.js"></script></body></html>');
+      res.end('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/voice.css"></head><body><header style="height:200px"><strong>Opax sticky masthead</strong></header><main style="padding:24px;min-height:1200px"><h1>The public record, in daylight.</h1><a href="/money">Explore the record</a></main><button type="button" id="mic">Talk to Opax</button><script type="module" src="/mount.js"></script></body></html>');
+      return;
+    }
+    // What app.js does: import the module on demand and mount the panel with
+    // the composer's mic button as its trigger.
+    if (pathname === '/mount.js') {
+      res.setHeader('Content-Type', 'application/javascript');
+      res.end("import {createVoiceAssistant} from '/voice.js';const trigger=document.getElementById('mic');const voice=createVoiceAssistant({trigger});trigger.addEventListener('click',()=>voice.toggle());");
       return;
     }
     const allowed = pathname.startsWith('/chunks/') || pathname.startsWith('/voice-assets/') || ['/style.css', '/voice.css', '/voice.js'].includes(pathname);
@@ -141,7 +148,7 @@ try {
       await p.keyboard.press('Escape');
       await p.locator('#opax-voice-panel').waitFor({ state: 'hidden' });
       await p.waitForFunction(() => window.voiceSdkEnds > 0);
-      assert.equal(await p.evaluate(() => document.activeElement.classList.contains('opax-voice-launcher')), true);
+      assert.equal(await p.evaluate(() => document.activeElement.id === 'mic'), true);
       assert.ok(f.requests.includes('/api/voice/finish'));
       assert.deepEqual(f.errors, []);
       assertions += 15;

@@ -59,9 +59,8 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=2f79b79c82">
-<link rel="stylesheet" href="/voice.css?v=f2b2f1f9bf">
-<script type="module" src="/voice.js?v=dd2db25f8c"></script>
+<link rel="stylesheet" href="/style.css?v=6ab1133d6b">
+<link rel="stylesheet" href="/voice.css?v=a09a39c243">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -475,16 +474,31 @@
 
     <!-- ============================= SEARCH ============================ -->
     <section id="panel-chat" class="panel" hidden aria-label="Keep asking">
-      <div class="chat-head">
-        <p class="kicker">Keep asking</p>
-        <button type="button" class="action-btn" id="chat-new">Start a new conversation</button>
+      <div class="dock-bar">
+        <span class="dock-mark" aria-hidden="true"></span>
+        <span class="dock-title">Ask the record</span>
+        <button type="button" class="dock-icon" id="dock-expand" title="Open the full conversation" aria-label="Open the full conversation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-8 8M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+        </button>
+        <button type="button" class="dock-icon" id="dock-close" aria-label="Close the assistant">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
       </div>
-      <div id="chat-history" class="chat-history" hidden></div>
-      <div id="chat-thread" class="chat-thread" aria-label="Conversation with the record"></div>
-      <div id="chat-status" class="status" role="status"></div>
+      <div class="chat-scroll" id="chat-scroll">
+        <div class="chat-head">
+          <p class="kicker">Keep asking</p>
+          <button type="button" class="action-btn" id="chat-new">Start a new conversation</button>
+        </div>
+        <div id="chat-history" class="chat-history" hidden></div>
+        <div id="chat-thread" class="chat-thread" aria-label="Conversation with the record"></div>
+        <div id="chat-status" class="status" role="status"></div>
+      </div>
       <form id="chat-form" class="chat-composer">
         <input type="text" id="chat-input" autocomplete="off" placeholder="Ask a follow-up question…"
                aria-label="Ask a follow-up question">
+        <button type="button" class="chat-mic" id="chat-mic" title="Talk to OPAX · 10 minutes free" aria-label="Talk to OPAX, 10 minutes free">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5a3 3 0 0 1 6 0v7a3 3 0 0 1-6 0V5ZM5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg>
+        </button>
         <button type="submit" class="primary" id="chat-send">Ask</button>
       </form>
     </section>
@@ -1419,6 +1433,14 @@
   <div id="explain-body" class="game-dialog-body explain-dialog-body"></div>
 </dialog>
 
+<!-- The assistant's launcher. app.js shows it on every route but /chat, where
+     the conversation IS the page. -->
+<button type="button" id="chat-launcher" class="chat-launcher" hidden
+        aria-haspopup="dialog" aria-expanded="false" aria-controls="panel-chat">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2Z"/><path d="M8.5 9.5h7M8.5 12.5h4"/></svg>
+  <span>Ask OPAX</span>
+</button>
+
 <footer>
   <div class="wrap footer-lines">
     <p>OPAX is independent and open source (AGPL-3.0). It is not affiliated with any parliament,
@@ -1436,6 +1458,6 @@
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
 <script src="/navigation.js?v=71e8315e89" defer></script>
-<script src="/app.js?v=80dfcd10cc" defer></script>
+<script src="/app.js?v=960434b326" defer></script>
 </body>
 </html>

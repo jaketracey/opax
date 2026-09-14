@@ -2,8 +2,20 @@
 
 `node voice/build.mjs` (from `portal/`) builds the small `/voice.js` module,
 lazy ElevenLabs SDK chunks, and content-addressed self-hosted audio worklets.
-The page needs `/voice.css` and `<script type="module" src="/voice.js">`, with
-the normal Opax asset stamping. The module mounts itself once.
+
+Voice is a feature of the chat, not a surface of its own. The module exports
+`createVoiceAssistant({ mount, trigger })` and mounts nothing by itself:
+`app.js` `import()`s it by bare path the first time the chat composer's mic
+button (`#chat-mic`) is pressed, and passes that button as the `trigger` — the
+element that owns `aria-haspopup`/`aria-expanded` and takes focus back when the
+panel closes. The handle is `{ open, close, toggle, destroy }`. The page needs
+`/voice.css`; because the module is imported by bare path it carries no `?v=`
+stamp and takes the generic `/*.js` cache policy from `public/_headers`.
+
+The panel mounts inside `#panel-chat`: docked it fills the assistant in the
+corner, and on `/chat` it is its own sheet. Placement and visibility belong to
+the dock (the docked-assistant block in `public/style.css`); the client owns
+only the conversation.
 
 Opening the panel only fetches `/api/voice/status`. Only **Start talking** loads
 the SDK, primes playback, creates a reservation and requests the microphone.
@@ -44,6 +56,7 @@ After a build, run `node voice/check.mjs`. Set `OPAX_PLAYWRIGHT_MODULE` to an
 installed Playwright module if it is not on the normal import path. The check
 starts and stops its own local static server and uses synthetic API responses,
 microphone streams and sockets. It never calls a paid provider or real account.
+Its harness page mounts the client the way `app.js` does, from a trigger button.
 
 It covers Chromium and WebKit at 320, 390, 768 and 1440 pixels (667-pixel mobile
 height), opening focus and Escape, lazy loading, signed-out/disabled/exhausted

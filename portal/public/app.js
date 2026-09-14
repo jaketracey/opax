@@ -920,6 +920,9 @@ function showPanel(name) {
   }
   for (const p of PANELS) $(`panel-${p}`).hidden = p !== name;
   document.documentElement.dataset.panel = name; // lets the stylesheet know the page (the chat drops the footer)
+  // The conversation is a panel like any other, but it is also the docked
+  // assistant: the loop above just hid it, so the dock puts it back.
+  syncAssistant(name);
   document.querySelector("main").classList.toggle("compact", name !== "ask");
   const statsLink = document.querySelector(".masthead-link");
   if (statsLink) {
@@ -9562,8 +9565,10 @@ async function chatSyncPull() {
 }
 
 // "Start a new conversation": the open one stays in the list; the next
-// question begins another. The ask page is cleared and the reader lands on
-// an empty Ask box.
+// question begins another. Docked, the assistant empties in place - the page
+// underneath is what the reader was doing, and taking them off it to start a
+// conversation would be taking away the thing the dock exists to avoid. On
+// /chat the empty Ask box IS the fresh start, so that view still goes there.
 $("chat-new")?.addEventListener("click", () => {
   chatAbort?.abort();
   chatFollowAbort?.abort();
@@ -9572,6 +9577,13 @@ $("chat-new")?.addEventListener("click", () => {
   chatStoreWrite();
   chatThread = [];
   try { sessionStorage.removeItem("opax-chat-seed"); } catch { /* nothing stored to forget */ }
+  if (dockOpen) {
+    chatFollower.stop();
+    renderChatThread(); // the opening lede and its questions, back in the panel
+    renderChatHistory(); // nothing is the open conversation now
+    if (matchMedia("(hover: hover) and (pointer: fine)").matches) $("chat-input").focus({ preventScroll: true });
+    return;
+  }
   resetAsk();
   goRoute("/ask");
 });
@@ -9624,6 +9636,25 @@ function initChat(manageFocus) {
   }));
 }
 
+// The same thread renders in two places, and they scroll differently: on
+// /chat the window carries it, docked it is the panel's own body. Everything
+// that follows an answer down asks here which one is underneath it.
+function chatViewport() {
+  const box = document.documentElement.dataset.chat === "docked" ? $("chat-scroll") : null;
+  if (box) return {
+    target: box,
+    top: () => box.scrollTop,
+    end: () => Math.max(0, box.scrollHeight - box.clientHeight),
+    to: (y, smooth) => box.scrollTo({ top: y, behavior: smooth ? "smooth" : "auto" }),
+  };
+  return {
+    target: window,
+    top: () => window.scrollY,
+    end: () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight),
+    to: (y, smooth) => window.scrollTo({ top: y, behavior: smooth ? "smooth" : "auto" }),
+  };
+}
+
 // --- following the answer down the page ---------------------------------------
 // While a question is in flight the page keeps pace with what arrives - the
 // steps, the passages being read, a word on a long wait, then the words of
@@ -9633,21 +9664,20 @@ function initChat(manageFocus) {
 // pauses until they bring the view back to the end. Readers who ask for less
 // motion get the end brought into view without the easing.
 const chatFollower = (() => {
-  let active = false, paused = false, raf = 0, observer = null, lastTop = 0;
+  let active = false, paused = false, raf = 0, observer = null, lastTop = 0, view = null;
   const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const end = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-  const nearEnd = () => end() - window.scrollY < 120;
+  const nearEnd = () => { const v = active && view ? view : chatViewport(); return v.end() - v.top() < 120; };
   const tick = () => {
     raf = 0;
-    if (!active || paused) return;
-    const target = end();
-    const y = window.scrollY;
+    if (!active || paused || !view) return;
+    const target = view.end();
+    const y = view.top();
     const gap = target - y;
     if (gap <= 0.5) return;
-    if (reduce()) { lastTop = Math.round(target); window.scrollTo(0, target); return; }
+    if (reduce()) { lastTop = Math.round(target); view.to(target); return; }
     const next = gap < 1.5 ? target : y + Math.max(1, gap * 0.16);
     lastTop = Math.round(next);
-    window.scrollTo(0, next);
+    view.to(next);
     raf = requestAnimationFrame(tick);
   };
   const nudge = () => { if (active && !paused && !raf) raf = requestAnimationFrame(tick); };
@@ -9657,22 +9687,23 @@ const chatFollower = (() => {
   const onTouchStart = () => { paused = true; };
   const onScroll = () => {
     // Our own frames land where we put them; a view that moved up is the reader's.
-    if (window.scrollY < lastTop - 2) paused = true;
+    if (view && view.top() < lastTop - 2) paused = true;
     resume();
   };
   return {
     start() {
       if (active) return;
+      view = chatViewport();
       active = true;
       paused = false;
-      lastTop = Math.round(window.scrollY);
+      lastTop = Math.round(view.top());
       observer = new ResizeObserver(nudge);
       observer.observe($("chat-thread"));
-      addEventListener("wheel", onWheel, { passive: true });
-      addEventListener("touchstart", onTouchStart, { passive: true });
-      addEventListener("touchend", resume, { passive: true });
+      view.target.addEventListener("wheel", onWheel, { passive: true });
+      view.target.addEventListener("touchstart", onTouchStart, { passive: true });
+      view.target.addEventListener("touchend", resume, { passive: true });
+      view.target.addEventListener("scroll", onScroll, { passive: true });
       addEventListener("keydown", onKey);
-      addEventListener("scroll", onScroll, { passive: true });
       nudge();
     },
     stop() {
@@ -9682,11 +9713,11 @@ const chatFollower = (() => {
       observer = null;
       if (raf) cancelAnimationFrame(raf);
       raf = 0;
-      removeEventListener("wheel", onWheel);
-      removeEventListener("touchstart", onTouchStart);
-      removeEventListener("touchend", resume);
+      view.target.removeEventListener("wheel", onWheel);
+      view.target.removeEventListener("touchstart", onTouchStart);
+      view.target.removeEventListener("touchend", resume);
+      view.target.removeEventListener("scroll", onScroll);
       removeEventListener("keydown", onKey);
-      removeEventListener("scroll", onScroll);
     },
     nudge,
     nearEnd,
@@ -9694,10 +9725,8 @@ const chatFollower = (() => {
 })();
 
 function scrollChatToEnd() {
-  window.scrollTo({
-    top: document.documentElement.scrollHeight,
-    behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
-  });
+  const view = chatViewport();
+  view.to(view.end(), matchMedia("(prefers-reduced-motion: no-preference)").matches);
 }
 // `landed`: the last answer has just arrived, so what sits under it (its
 // sources, a carried-passage note) fades up after it in reading order. With
@@ -9707,14 +9736,10 @@ function renderChatThread({ landed = false, rise = false } = {}) {
   syncAskChatViewport();
   const thread = $("chat-thread");
   thread.replaceChildren();
+  $("chat-input").placeholder = chatThread.length ? "Ask a follow-up question…" : "Ask about politics, money or the record…";
+  $("chat-new").hidden = !chatThread.length; // nothing to start anew from
   if (!chatThread.length) {
-    const p = document.createElement("p");
-    p.className = "chat-hint";
-    const link = document.createElement("a");
-    link.href = "/ask";
-    link.textContent = "ask one on the Ask page";
-    p.append("Ask the record a question below, or ", link, " and choose “Continue in a conversation” to continue it here.");
-    thread.appendChild(p);
+    renderChatOpening(thread);
     return;
   }
   for (const msg of chatThread) {
@@ -9756,6 +9781,37 @@ function renderChatThread({ landed = false, rise = false } = {}) {
   thread.appendChild(next);
 }
 
+/* An empty conversation is not a blank box. It says what this is and offers
+   reviewed questions that start one, in the same card idiom the follow-ups
+   under an answer use, so the first move and every later one read alike. */
+function renderChatOpening(thread) {
+  const hint = document.createElement("p");
+  hint.className = "chat-hint";
+  hint.textContent = "Ask about Australian politics, spending and the public record. Every answer is cited to the documents it was drawn from.";
+  thread.appendChild(hint);
+  const picks = suggestedQuestions("", 3);
+  if (!picks.length) return;
+  const row = document.createElement("div");
+  row.className = "chat-next-btns chat-openers";
+  row.setAttribute("role", "group");
+  row.setAttribute("aria-label", "Questions to start with");
+  for (const question of picks) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chat-next-btn";
+    const text = document.createElement("span");
+    text.textContent = question;
+    const arrow = document.createElement("span");
+    arrow.className = "next-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "→";
+    b.append(text, arrow);
+    b.addEventListener("click", () => sendChat(question));
+    row.appendChild(b);
+  }
+  thread.appendChild(row);
+}
+
 function syncAskChatViewport() {
   const form = $("chat-form");
   const viewport = window.visualViewport;
@@ -9764,7 +9820,6 @@ function syncAskChatViewport() {
   const update = () => {
     const covered = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
     form.style.setProperty("--ask-keyboard-bottom", `${covered}px`);
-    document.documentElement.style.setProperty("--chat-voice-clearance", `${Math.ceil(form.getBoundingClientRect().height) + covered}px`);
   };
   viewport.addEventListener("resize", update);
   viewport.addEventListener("scroll", update);
@@ -10155,6 +10210,101 @@ $("chat-form").addEventListener("submit", (e) => {
   const q = $("chat-input").value.trim();
   if (q) sendChat(q);
 });
+
+// --- the docked assistant -----------------------------------------------------
+// There is one conversation, and it renders in one place: #panel-chat. On
+// /chat that panel IS the page. Everywhere else html[data-chat="docked"] lifts
+// the same element into a panel in the corner, opened by the launcher. Nothing
+// about the thread, the saved conversations, the streaming or the follow-ups
+// differs between the two - the dock is a frame around the surface that was
+// already there, not a second chat with its own state to drift.
+
+let dockOpen = false;
+let voiceAssistant = null;
+let voiceLoading = false;
+
+const chatIsPage = () => document.documentElement.dataset.panel === "chat";
+
+/** Called by showPanel on every route: the dock decides what the corner holds. */
+function syncAssistant(name) {
+  const onChatPage = name === "chat";
+  if (onChatPage) dockOpen = false;
+  else if (dockOpen) $("panel-chat").hidden = false;
+  document.documentElement.dataset.chat = onChatPage ? "page" : dockOpen ? "docked" : "";
+  const launcher = $("chat-launcher");
+  launcher.hidden = onChatPage;
+  launcher.setAttribute("aria-expanded", String(dockOpen));
+  // The launcher floats over the page's last lines; the body leaves it room.
+  document.body.classList.toggle("assistant-ready", !onChatPage);
+  // A question still in flight keeps writing into a panel nobody can see:
+  // it may finish there, but nothing should be scrolled on its behalf.
+  if ($("panel-chat").hidden) { chatFollower.stop(); voiceAssistant?.close(); }
+}
+
+function openDock() {
+  if (chatIsPage()) return;
+  dockOpen = true;
+  document.documentElement.dataset.chat = "docked";
+  $("panel-chat").hidden = false;
+  $("chat-launcher").setAttribute("aria-expanded", "true");
+  // The same opening the /chat route runs: the saved thread, the conversations
+  // list, the account pull and the end of the thread in view. The caret only
+  // where a keyboard will not cover what just opened.
+  initChat(matchMedia("(hover: hover) and (pointer: fine)").matches);
+}
+
+function closeDock({ restoreFocus = true } = {}) {
+  if (!dockOpen) return;
+  dockOpen = false;
+  document.documentElement.dataset.chat = "";
+  if (!chatIsPage()) $("panel-chat").hidden = true;
+  $("chat-launcher").setAttribute("aria-expanded", "false");
+  chatFollower.stop();
+  voiceAssistant?.close();
+  if (restoreFocus) $("chat-launcher").focus({ preventScroll: true });
+}
+
+$("chat-launcher").addEventListener("click", () => (dockOpen ? closeDock() : openDock()));
+$("dock-close").addEventListener("click", () => closeDock());
+// The corner is for a question and its answer; a long answer, its sources and
+// the conversation behind it want the page. Same thread, more room.
+$("dock-expand").addEventListener("click", () => {
+  closeDock({ restoreFocus: false });
+  goRoute("/chat");
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape" || !dockOpen) return;
+  // An open voice panel takes Escape first: its own handler closes it and
+  // leaves the conversation standing.
+  if (document.getElementById("opax-voice-panel")?.hidden === false) return;
+  e.preventDefault();
+  closeDock();
+});
+
+// Voice is a feature of the composer, not a surface of its own: the module is
+// fetched the first time the mic is used and mounted inside the conversation,
+// with the mic button as its trigger (so that button owns aria-expanded and
+// takes focus back when the panel closes). Docked, the panel fills the corner;
+// on /chat it is its own sheet.
+$("chat-mic").addEventListener("click", () => { void openVoice(); });
+
+async function openVoice() {
+  if (voiceAssistant) { voiceAssistant.toggle(); return; }
+  if (voiceLoading) return;
+  voiceLoading = true;
+  const mic = $("chat-mic");
+  mic.classList.add("is-loading");
+  try {
+    const { createVoiceAssistant } = await import("/voice.js");
+    voiceAssistant = createVoiceAssistant({ mount: $("panel-chat"), trigger: mic });
+    voiceAssistant?.open();
+  } catch {
+    setStatus($("chat-status"), "Voice could not load. You can still ask in writing.");
+  } finally {
+    voiceLoading = false;
+    mic.classList.remove("is-loading");
+  }
+}
 
 // --- corpus meter -----------------------------------------------------------
 
@@ -13312,6 +13462,7 @@ fetch("/suggestions.json").then((r) => r.json()).then((s) => {
   suggestions = s.questions || [];
   featuredSuggestions = Array.isArray(s.featured) ? s.featured.filter(q => suggestions.includes(q)) : [];
   renderChips();
+  if (!chatThread.length) renderChatThread(); // the assistant's opening waits on these
 }).catch(() => {});
 
 // The endpoint is cached five minutes at the edge and in the browser, so a

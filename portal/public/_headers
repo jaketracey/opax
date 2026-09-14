@@ -92,9 +92,8 @@
   ! Referrer-Policy
   Referrer-Policy: no-referrer
 
-/voice.js
-  ! Cache-Control
-  Cache-Control: public, max-age=31536000, immutable
+# /voice.js is import()ed by bare path from app.js the first time the chat's
+# mic button is used, so it carries no stamp and keeps the generic /*.js policy.
 /voice.css
   Cache-Control: public, max-age=31536000, immutable
 /voice-assets/*

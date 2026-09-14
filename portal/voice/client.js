@@ -16,7 +16,7 @@ const button = (className, text) => {
   node.type = 'button';
   return node;
 };
-const icon = (name) => {
+const closeIcon = () => {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
   svg.setAttribute('fill', 'none');
@@ -26,7 +26,7 @@ const icon = (name) => {
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
   const path = document.createElementNS(svg.namespaceURI, 'path');
-  path.setAttribute('d', name === 'close' ? 'm6 6 12 12M18 6 6 18' : name === 'stop' ? 'M7 7h10v10H7z' : 'M9 5a3 3 0 0 1 6 0v7a3 3 0 0 1-6 0V5ZM5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8');
+  path.setAttribute('d', 'm6 6 12 12M18 6 6 18');
   svg.append(path);
   return svg;
 };
@@ -64,7 +64,7 @@ function safeTranscript(node, text, addSource) {
   node.append(document.createTextNode(text.slice(offset)));
 }
 
-export function createVoiceAssistant({ mount = document.body, fetcher = window.fetch.bind(window), loadSdk = () => import('./sdk.js'), now = () => Date.now() } = {}) {
+export function createVoiceAssistant({ mount = document.body, trigger = null, fetcher = window.fetch.bind(window), loadSdk = () => import('./sdk.js'), now = () => Date.now() } = {}) {
   if (document.getElementById('opax-voice')) return null;
   let status = null;
   let loading = false;
@@ -83,15 +83,11 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
   root.setAttribute('aria-label', 'Opax voice assistant');
   // Defence in depth if analytics configuration ever enables DOM capture.
   root.classList.add('ph-no-capture', 'ph-sensitive');
-  const launcher = button('opax-voice-launcher', '');
-  launcher.append(icon('mic'), element('span', '', 'Talk to Opax'));
-  // The pill never said it was a limited feature; the tooltip and the name a
-  // phone's icon-only button carries both do.
-  launcher.title = 'Talk to Opax · 10 minutes free';
-  launcher.setAttribute('aria-label', 'Talk to Opax, 10 minutes free');
-  launcher.setAttribute('aria-haspopup', 'dialog');
-  launcher.setAttribute('aria-expanded', 'false');
-  launcher.setAttribute('aria-controls', 'opax-voice-panel');
+  if (trigger) {
+    trigger.setAttribute('aria-haspopup', 'dialog');
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.setAttribute('aria-controls', 'opax-voice-panel');
+  }
   const panel = element('section', 'opax-voice-panel');
   panel.id = 'opax-voice-panel';
   panel.hidden = true;
@@ -104,7 +100,7 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
   title.id = 'opax-voice-title';
   heading.append(title);
   const close = button('opax-voice-close', '');
-  close.append(icon('close'));
+  close.append(closeIcon());
   close.setAttribute('aria-label', 'Close voice assistant');
   header.append(heading, close);
   const body = element('div', 'opax-voice-body');
@@ -163,18 +159,8 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
   privacyLine.append(privacy);
   footer.append(privacyLine);
   panel.append(header, body, controls, footer);
-  root.append(panel, launcher);
+  root.append(panel);
   mount.append(root);
-  // Pages with nothing for a conversation to draw on (the community, the
-  // about and methods pages) keep the pill out of the way.
-  const quietRoute = () => /^\/(?:community|about|methods)(?:\/|$)/.test(location.pathname);
-  const applyRoute = () => {
-    const quiet = quietRoute();
-    root.hidden = quiet;
-    document.body.classList.toggle('opax-voice-ready', !quiet);
-    if (quiet && isOpen) closePanel({ restoreFocus: false });
-  };
-  applyRoute();
 
   const listen = (target, event, handler, options) => {
     target.addEventListener(event, handler, options);
@@ -393,20 +379,19 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
     isOpen = false;
     panel.hidden = true;
     root.classList.remove('is-open');
-    launcher.setAttribute('aria-expanded', 'false');
+    trigger?.setAttribute('aria-expanded', 'false');
     void stop();
-    if (restoreFocus && !destroyed) launcher.focus({ preventScroll: true });
+    if (restoreFocus && !destroyed) trigger?.focus({ preventScroll: true });
   }
   function openPanel() {
     if (destroyed) return;
     isOpen = true;
     panel.hidden = false;
     root.classList.add('is-open');
-    launcher.setAttribute('aria-expanded', 'true');
+    trigger?.setAttribute('aria-expanded', 'true');
     close.focus({ preventScroll: true });
     void refreshStatus();
   }
-  listen(launcher, 'click', () => isOpen ? closePanel() : openPanel());
   listen(close, 'click', () => closePanel());
   listen(start, 'click', () => { void begin(); });
   listen(end, 'click', () => { void stop(); });
@@ -422,8 +407,13 @@ export function createVoiceAssistant({ mount = document.body, fetcher = window.f
   listen(window, 'beforeunload', teardown);
   listen(window, 'offline', () => { if (attempt) void stop('You are offline. Your microphone is off. Reconnect to try again.'); });
   listen(document, 'visibilitychange', () => { if (document.visibilityState === 'hidden' && attempt) void stop('Conversation ended when you left this tab. Your microphone is off. Start again when you are ready.'); });
-  listen(window, 'opax:route', () => { const next = location.pathname + location.search; if (next !== lastRoute) teardown(); lastRoute = next; applyRoute(); });
-  listen(window, 'popstate', () => { teardown(); applyRoute(); });
+  listen(window, 'opax:route', () => { const next = location.pathname + location.search; if (next !== lastRoute) teardown(); lastRoute = next; });
+  listen(window, 'popstate', () => { teardown(); });
   render();
-  return { open: openPanel, close: closePanel, destroy: async () => { destroyed = true; ++statusGeneration; await stop(); cleanups.forEach(cleanup => cleanup()); root.remove(); document.body.classList.remove('opax-voice-ready'); } };
+  return {
+    open: openPanel,
+    close: closePanel,
+    toggle: () => { if (isOpen) closePanel(); else openPanel(); },
+    destroy: async () => { destroyed = true; ++statusGeneration; await stop(); cleanups.forEach(cleanup => cleanup()); root.remove(); },
+  };
 }
