@@ -3,12 +3,19 @@
  */
 import { composeDailyPost, envSources, melbourneDate, oauth1Header, postToX, xCredentials, type DailyPost, type DailyPostKind } from './daily-post'
 import { OG_VERSION } from './og'
-import { STORY_VERSION, validStory } from './story'
+import { STORY_VERSION, storyFrames, validStory } from './story'
 
-export const CHANNELS = ['x', 'facebook', 'instagram'] as const
+/** Stories come last: the tray mirrors the day's feed post. */
+export const CHANNELS = ['x', 'facebook', 'instagram', 'instagram_story', 'facebook_story'] as const
 export type Channel = typeof CHANNELS[number]
-type SocialEnv = Pick<Env, 'ASSETS' | 'GENERATION_CACHE' | 'COMMUNITY_DB' | 'STAGING_API' | 'DAILY_POST_ENABLED' | 'X_API_KEY' | 'X_API_SECRET' | 'X_ACCESS_TOKEN' | 'X_ACCESS_TOKEN_SECRET' | 'X_ACCOUNT_ID' | 'X_USERNAME' | 'FACEBOOK_POST_ENABLED' | 'FACEBOOK_PAGE_ID' | 'FACEBOOK_PAGE_TOKEN' | 'INSTAGRAM_POST_ENABLED' | 'INSTAGRAM_ACCOUNT_ID' | 'INSTAGRAM_USERNAME' | 'INSTAGRAM_ACCESS_TOKEN' | 'META_API_VERSION'>
-interface Receipt { channel: Channel; status: string; post_id: string | null; container_id: string | null; detail: string | null; updated_at: string }
+type SocialEnv = Pick<Env, 'ASSETS' | 'GENERATION_CACHE' | 'COMMUNITY_DB' | 'STAGING_API' | 'DAILY_POST_ENABLED' | 'X_API_KEY' | 'X_API_SECRET' | 'X_ACCESS_TOKEN' | 'X_ACCESS_TOKEN_SECRET' | 'X_ACCOUNT_ID' | 'X_USERNAME' | 'FACEBOOK_POST_ENABLED' | 'FACEBOOK_PAGE_ID' | 'FACEBOOK_PAGE_TOKEN' | 'INSTAGRAM_POST_ENABLED' | 'INSTAGRAM_STORY_ENABLED' | 'FACEBOOK_STORY_ENABLED' | 'INSTAGRAM_ACCOUNT_ID' | 'INSTAGRAM_USERNAME' | 'INSTAGRAM_ACCESS_TOKEN' | 'META_API_VERSION'>
+interface Receipt { channel: Channel; status: string; post_id: string | null; container_id: string | null; detail: string | null; progress?: string | null; updated_at: string }
+/** A delivery made of several frames: the ids published so far, and the frame in flight with its container or photo. */
+interface Progress { done: string[]; at: number | null; container: string | null }
+const parseProgress = (raw: string | null | undefined): Progress => {
+  try { const p = raw ? JSON.parse(raw) as Partial<Progress> : null; return { done: Array.isArray(p?.done) ? p!.done.filter((d): d is string => typeof d === 'string') : [], at: typeof p?.at === 'number' ? p.at : null, container: typeof p?.container === 'string' ? p.container : null } } catch { return { done: [], at: null, container: null } }
+}
+const isStoryChannel = (channel: Channel): boolean => channel === 'instagram_story' || channel === 'facebook_story'
 const metaVersionReady = (env: SocialEnv) => /^v\d+\.0$/.test(env.META_API_VERSION ?? '')
 const numericId = (value?: string): boolean => /^\d+$/.test(value ?? '')
 
@@ -18,10 +25,12 @@ export function readiness(env: SocialEnv): Record<Channel, { enabled: boolean; r
     facebook: !!(metaVersionReady(env) && env.FACEBOOK_PAGE_TOKEN && numericId(env.FACEBOOK_PAGE_ID)),
     instagram: !!(metaVersionReady(env) && env.INSTAGRAM_ACCESS_TOKEN && numericId(env.INSTAGRAM_ACCOUNT_ID) && env.INSTAGRAM_USERNAME),
   }
-  const enabled = { x: env.DAILY_POST_ENABLED === 'true', facebook: env.FACEBOOK_POST_ENABLED === 'true', instagram: env.INSTAGRAM_POST_ENABLED === 'true' }
+  const stories = { instagram_story: configured.instagram, facebook_story: configured.facebook }
+  const enabled = { x: env.DAILY_POST_ENABLED === 'true', facebook: env.FACEBOOK_POST_ENABLED === 'true', instagram: env.INSTAGRAM_POST_ENABLED === 'true', instagram_story: env.INSTAGRAM_STORY_ENABLED === 'true', facebook_story: env.FACEBOOK_STORY_ENABLED === 'true' }
   return Object.fromEntries(CHANNELS.map(channel => {
     const on = enabled[channel] && !env.STAGING_API
-    return [channel, { enabled: on, ready: on && configured[channel], reason: env.STAGING_API ? 'staging' : !on ? 'disabled' : !configured[channel] ? 'account connection required' : 'configured; verified before publishing' }]
+    const set = channel === 'instagram_story' || channel === 'facebook_story' ? stories[channel] : configured[channel]
+    return [channel, { enabled: on, ready: on && set, reason: env.STAGING_API ? 'staging' : !on ? 'disabled' : !set ? 'account connection required' : 'configured; verified before publishing' }]
   })) as ReturnType<typeof readiness>
 }
 
@@ -31,7 +40,7 @@ export function readiness(env: SocialEnv): Record<Channel, { enabled: boolean; r
  * images in order, each drawn by /og/story/<date>/<n>.jpg from the frozen
  * edition. X keeps the single card; so does any edition stored before stories.
  */
-export function publicationCopy(post: DailyPost, channel: Channel): { text: string; link: string; image: string; slides?: string[] } {
+export function publicationCopy(post: DailyPost, channel: Channel): { text: string; link: string; image: string; slides?: string[]; frames?: number[] } {
   const link = new URL(post.url)
   if (link.origin !== 'https://opax.com.au') throw new Error('Publication requires an Opax source page')
   link.searchParams.set('utm_source', channel)
@@ -48,10 +57,15 @@ export function publicationCopy(post: DailyPost, channel: Channel): { text: stri
   const text = channel === 'x' ? post.text.replace(post.url, link.toString())
     : channel === 'facebook' ? full.slice(0, 5000)
     : `${full.slice(0, 1850)}\n\nExplore ${post.title} at opax.com.au — link in bio.\n\n#AustralianParliament #PublicRecords #Opax`
-  const slides = channel !== 'x' && validStory(post.slides)
+  // A story channel posts a few of the slides as 9:16 frames (story.ts chooses which); the feed channels post them all at 4:5.
+  const frames = isStoryChannel(channel) ? storyFrames(post.slides) : undefined
+  const slides = frames
+    ? frames.map(n => `https://opax.com.au/og/story/${post.date}/${n}.jpg?v=${OG_VERSION}.${STORY_VERSION}&format=story`)
+    : channel !== 'x' && validStory(post.slides)
     ? post.slides.map((_, i) => `https://opax.com.au/og/story/${post.date}/${i + 1}.jpg?v=${OG_VERSION}.${STORY_VERSION}`)
     : undefined
-  return { text, link: link.toString(), image: image.toString(), ...(slides ? { slides } : {}) }
+  if (frames && !frames.length) return { text, link: link.toString(), image: image.toString() }
+  return { text, link: link.toString(), image: image.toString(), ...(slides ? { slides } : {}), ...(frames ? { frames } : {}) }
 }
 
 /** Only controlled error codes go to logs/receipts. Never persist a provider body or token. */
@@ -93,7 +107,7 @@ async function verifyAccount(channel: Channel, env: SocialEnv, fetchImpl: typeof
     if (!res.ok) throw new Error(`X identity HTTP ${res.status}`)
     const body = await res.json() as { data?: { id?: string; username?: string } }
     if (body.data?.id !== env.X_ACCOUNT_ID || body.data?.username?.toLowerCase() !== env.X_USERNAME?.toLowerCase()) throw new Error('X account mismatch')
-  } else if (channel === 'facebook') {
+  } else if (channel === 'facebook' || channel === 'facebook_story') {
     const me = await api(`${graphOrigin(env)}/me?fields=id`, env.FACEBOOK_PAGE_TOKEN!, fetchImpl)
     if (me.id !== env.FACEBOOK_PAGE_ID) throw new Error('Facebook Page token mismatch')
   } else {
@@ -159,16 +173,19 @@ export async function runSocialPublication(env: SocialEnv, options: {
     let claimed = false
     let writeStarted = false
     try {
+      if (isStoryChannel(channel) && !copy.frames?.length) { results[channel] = 'nothing to post'; continue }
       await verifyAccount(channel, env, fetchImpl)
       if (!receipt) {
         // Preflight the actual linked page and image, or every slide of a story, before any social write.
         const slides = copy.slides ?? []
         for (const target of [post.url, ...(slides.length ? slides : [copy.image])]) {
           const res = options.sourceResponse ? await options.sourceResponse(target) : await fetchImpl(target, { method: 'HEAD', signal: AbortSignal.timeout(20000), redirect: 'manual' })
-          const n = slides.indexOf(target) + 1
-          if (n > 0) {
-            // A slide must be the frozen edition's own drawing, portrait, and the one the URL names.
-            if (!res.ok || !res.headers.get('content-type')?.startsWith('image/jpeg') || res.headers.get('x-opax-story') !== `${post.date}/${n}` || res.headers.get('x-opax-format') !== 'portrait') throw new Error('Story slide unavailable')
+          const k = slides.indexOf(target)
+          if (k >= 0) {
+            // A slide must be the frozen edition's own drawing, in the right frame, and the one the URL names.
+            const n = copy.frames ? copy.frames[k] : k + 1
+            const wantFormat = copy.frames ? 'story' : 'portrait'
+            if (!res.ok || !res.headers.get('content-type')?.startsWith('image/jpeg') || res.headers.get('x-opax-story') !== `${post.date}/${n}` || res.headers.get('x-opax-format') !== wantFormat) throw new Error('Story slide unavailable')
             continue
           }
           if (!res.ok || (target === copy.image && (!res.headers.get('content-type')?.startsWith('image/jpeg') || res.headers.get('x-opax-og') !== new URL(post.url).pathname))) throw new Error('Source page or matching image unavailable')
@@ -186,7 +203,51 @@ export async function runSocialPublication(env: SocialEnv, options: {
         claimed = true
       }
       let id: string
-      if (channel === 'x') {
+      if (isStoryChannel(channel)) {
+        // Each frame is its own story: a container (or an unpublished photo) that is
+        // recorded before it is published, so a resumed run picks up the frame in
+        // flight and never repeats one already in the tray.
+        const urls = copy.slides ?? []
+        let progress = parseProgress(receipt?.progress)
+        const saveProgress = async (p: Progress) => { await db.prepare('UPDATE social_deliveries SET progress=?,updated_at=? WHERE edition_date=? AND channel=?').bind(JSON.stringify(p), at, date, channel).run() }
+        let waiting = false
+        for (let k = progress.done.length; k < urls.length; k++) {
+          const image_url = urls[k]
+          let handle = progress.at === k ? progress.container : null
+          if (channel === 'instagram_story') {
+            if (!handle) {
+              handle = returnedId(await api(`${graphOrigin(env)}/${env.INSTAGRAM_ACCOUNT_ID}/media`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl, { media_type: 'STORIES', image_url }))
+              progress = { ...progress, at: k, container: handle }
+              await saveProgress(progress)
+            }
+            const state = await api(`${graphOrigin(env)}/${handle}?fields=status_code`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl)
+            if (state.status_code === 'IN_PROGRESS') { waiting = true; break }
+            if (state.status_code !== 'FINISHED') throw new Error('Instagram container not publishable')
+            writeStarted = true
+            const published = returnedId(await api(`${graphOrigin(env)}/${env.INSTAGRAM_ACCOUNT_ID}/media_publish`, env.INSTAGRAM_ACCESS_TOKEN!, fetchImpl, { creation_id: handle }))
+            progress = { done: [...progress.done, published], at: null, container: null }
+            await saveProgress(progress)
+            writeStarted = false
+          } else {
+            if (!handle) {
+              handle = returnedId(await api(`${graphOrigin(env)}/${env.FACEBOOK_PAGE_ID}/photos`, env.FACEBOOK_PAGE_TOKEN!, fetchImpl, { url: image_url, published: false }))
+              progress = { ...progress, at: k, container: handle }
+              await saveProgress(progress)
+            }
+            writeStarted = true
+            const story = await api(`${graphOrigin(env)}/${env.FACEBOOK_PAGE_ID}/photo_stories`, env.FACEBOOK_PAGE_TOKEN!, fetchImpl, { photo_id: handle })
+            const published = typeof story.post_id === 'string' && /^[\d_]+$/.test(story.post_id) ? story.post_id : returnedId(story)
+            progress = { done: [...progress.done, published], at: null, container: null }
+            await saveProgress(progress)
+            writeStarted = false
+          }
+        }
+        if (waiting) {
+          await db.prepare("UPDATE social_deliveries SET status='preparing',updated_at=? WHERE edition_date=? AND channel=?").bind(at, date, channel).run()
+          results[channel] = 'preparing'; continue
+        }
+        id = progress.done.join(',')
+      } else if (channel === 'x') {
         writeStarted = true
         id = (await postToX(copy.text, xCredentials(env)!, fetchImpl)).id
       } else if (channel === 'facebook') {

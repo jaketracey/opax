@@ -19,6 +19,8 @@ interface Env {
   FACEBOOK_PAGE_ID?: string
   FACEBOOK_PAGE_TOKEN?: string
   INSTAGRAM_POST_ENABLED?: string
+  INSTAGRAM_STORY_ENABLED?: string
+  FACEBOOK_STORY_ENABLED?: string
   INSTAGRAM_ACCOUNT_ID?: string
   INSTAGRAM_USERNAME?: string
   INSTAGRAM_ACCESS_TOKEN?: string
@@ -59,6 +61,8 @@ declare namespace Cloudflare {
     FACEBOOK_PAGE_ID?: string
     FACEBOOK_PAGE_TOKEN?: string
     INSTAGRAM_POST_ENABLED?: string
+  INSTAGRAM_STORY_ENABLED?: string
+  FACEBOOK_STORY_ENABLED?: string
     INSTAGRAM_ACCOUNT_ID?: string
     INSTAGRAM_USERNAME?: string
     INSTAGRAM_ACCESS_TOKEN?: string

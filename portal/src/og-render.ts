@@ -11,7 +11,7 @@ import yogaWasm from 'yoga-wasm-web/dist/yoga.wasm'
 import { initWasm, Resvg } from '@resvg/resvg-wasm'
 import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm'
 import { ogLayout, storySlideTree, PORTRAIT_WIDTH, PORTRAIT_HEIGHT, type OgCard, type OgFormat, type StoryImages } from './og'
-import type { StorySlide } from './story'
+import { STORY_SIZES, type StoryFormat, type StorySlide } from './story'
 
 export interface OgFont {
   name: string
@@ -56,11 +56,12 @@ export async function renderOgJpeg(card: OgCard, fonts: OgFont[], format: OgForm
   } finally { rendered.free(); resvg.free() }
 }
 
-/** One slide of a story (src/story.ts) as the JPEG Instagram fetches, 1080x1350. */
-export async function renderStoryJpeg(slide: StorySlide, images: StoryImages, fonts: OgFont[]): Promise<Uint8Array> {
+/** One slide of a story (src/story.ts) as the JPEG Instagram fetches: 1080x1350 for the feed, 1080x1920 as a story frame. */
+export async function renderStoryJpeg(slide: StorySlide, images: StoryImages, fonts: OgFont[], format: StoryFormat = 'feed'): Promise<Uint8Array> {
   await ensureEngines()
-  const svg = await satori(storySlideTree(slide, images) as never, { width: PORTRAIT_WIDTH, height: PORTRAIT_HEIGHT, fonts })
-  const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: PORTRAIT_WIDTH } })
+  const size = STORY_SIZES[format]
+  const svg = await satori(storySlideTree(slide, images, format) as never, { width: size.width, height: size.height, fonts })
+  const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: size.width } })
   const rendered = resvg.render()
   try {
     return new Uint8Array(encode({ data: rendered.pixels, width: rendered.width, height: rendered.height }, 90).data)

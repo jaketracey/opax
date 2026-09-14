@@ -123,11 +123,11 @@ test('the Worker serves /og/story/<date>/<n>.jpg from the stored edition, keyed 
   globalThis.__storyRenders = renders;
   const compiled = await build({ entryPoints: [new URL('src/index.ts', portal).pathname], bundle: true, platform: 'browser', format: 'esm', write: false, external: ['node:*'], plugins: [{ name: 'record-image-renderer', setup(b) {
     b.onResolve({ filter: /^\.\/og-render$/ }, () => ({ path: 'image-renderer', namespace: 'og-story-test' }));
-    b.onLoad({ filter: /.*/, namespace: 'og-story-test' }, () => ({ contents: 'export async function renderOgPng(){return new Uint8Array([137,80,78,71])}; export async function renderOgJpeg(){return new Uint8Array([255,216,255,224])}; export async function renderStoryJpeg(slide,images,fonts){globalThis.__storyRenders.push({slide,images});return new Uint8Array([255,216,255,224,0,1])}', loader: 'js' }));
+    b.onLoad({ filter: /.*/, namespace: 'og-story-test' }, () => ({ contents: 'export async function renderOgPng(){return new Uint8Array([137,80,78,71])}; export async function renderOgJpeg(){return new Uint8Array([255,216,255,224])}; export async function renderStoryJpeg(slide,images,fonts,format){globalThis.__storyRenders.push({format,slide,images});return new Uint8Array([255,216,255,224,0,1])}', loader: 'js' }));
   } }] });
   const { default: worker } = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64'));
   const sqlite = new DatabaseSync(':memory:');
-  sqlite.exec(readFileSync(new URL('migrations/0005_social_publication.sql', portal), 'utf8'));
+  sqlite.exec(readFileSync(new URL('migrations/0005_social_publication.sql', portal), 'utf8')); sqlite.exec(readFileSync(new URL('migrations/0007_social_stories.sql', portal), 'utf8'));
   const post = { date: '2026-09-15', kind: 'bill', subject: 'bill:au-federal-r7513', title: 'Cash Distribution Framework Bill 2026', url: 'https://opax.com.au/bill/au-federal-r7513', text: 'x', slides: [slides.cover, slides.list, slides.source] };
   sqlite.prepare('INSERT INTO social_editions VALUES(?,?,?,?)').run(post.date, post.subject, JSON.stringify(post), '2026-09-14T22:00:00Z');
   const db = { prepare(sql) { let args = []; return { bind(...a) { args = a; return this; }, async first() { return sqlite.prepare(sql).get(...args) ?? null; }, async all() { return { results: sqlite.prepare(sql).all(...args) }; }, async run() { return { meta: { changes: 0 } }; } }; } };
@@ -154,7 +154,11 @@ test('the Worker serves /og/story/<date>/<n>.jpg from the stored edition, keyed 
   assert.equal(await head.text(), '', 'HEAD carries no body');
   assert.equal(renders.length, 1, 'a HIT does not draw again');
   const key = [...store.keys()][0];
-  assert.match(key, new RegExp(`/story/test-epoch/\\d+/${STORY_VERSION}/2026-09-15/1/[0-9a-f]{8}$`), key);
+  assert.match(key, new RegExp(`/story/test-epoch/\\d+/${STORY_VERSION}/feed/2026-09-15/1/[0-9a-f]{8}$`), key);
+  assert.equal(renders[0].format, 'feed');
+  const frame = await get('https://opax.com.au/og/story/2026-09-15/1.jpg?format=story');
+  assert.equal(frame.status, 200); assert.equal(frame.headers.get('x-opax-format'), 'story', 'a story frame says so'); assert.equal(frame.headers.get('x-opax-story'), '2026-09-15/1');
+  assert.equal(renders.at(-1).format, 'story', 'drawn at 9:16'); assert.equal(renders.length, 2, 'the frame is cached apart from the feed slide');
 
   const three = await get('https://opax.com.au/og/story/2026-09-15/3.jpg');
   assert.equal(three.status, 200); assert.equal(renders.at(-1).slide.type, 'source'); assert.equal(renders.at(-1).images.photo, null, 'a type slide reads no photograph');
@@ -163,4 +167,22 @@ test('the Worker serves /og/story/<date>/<n>.jpg from the stored edition, keyed 
     assert.ok(res.status === 404 || res.status === 503, `${bad}: ${res.status}`);
     assert.notEqual(res.headers.get('content-type'), 'image/jpeg', bad);
   }
+});
+
+test('a story frame is the same slide drawn at 1080x1920 with Instagram\'s bands left clear', async () => {
+  const tree = storySlideTree(slides.cover, { photo, credit }, 'story');
+  assert.equal(tree.props.style.height, 1920); assert.equal(tree.props.style.paddingTop, 250); assert.equal(tree.props.style.paddingBottom, 250);
+  const band = images(tree).find(n => n.props.width === 1080);
+  assert.equal(band.props.height, 1210, 'the photograph runs out under the top band');
+  const draw = async (slide, format) => {
+    const size = format === 'story' ? { width: 1080, height: 1920 } : { width: 1080, height: 1350 };
+    const svg = await satori(storySlideTree(slide, {}, format), { ...size, fonts });
+    const r = new Resvg(svg, { fitTo: { mode: 'width', value: 1080 } });
+    const rendered = r.render();
+    try { return new Uint8Array(encode({ data: rendered.pixels, width: rendered.width, height: rendered.height }, 90).data); } finally { rendered.free(); r.free(); }
+  };
+  const frame = decode(await draw(slides.number, 'story'), { useTArray: true, tolerantDecoding: true, maxMemoryUsageInMB: 512 });
+  assert.deepEqual([frame.width, frame.height], [1080, 1920]);
+  const feed = decode(await draw(slides.number, 'feed'), { useTArray: true, tolerantDecoding: true, maxMemoryUsageInMB: 512 });
+  assert.deepEqual([feed.width, feed.height], [1080, 1350], 'the feed is unchanged');
 });

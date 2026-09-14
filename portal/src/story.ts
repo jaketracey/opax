@@ -40,6 +40,38 @@ export const STORY_MAX_SLIDES = 10
 /** Bump when a slide's drawing changes so cached renders are not reused. */
 export const STORY_VERSION = 2
 
+/** Where a slide is drawn: the feed carousel at 4:5, or a story frame at 9:16. */
+export type StoryFormat = 'feed' | 'story'
+export const STORY_SIZES: Record<StoryFormat, { width: number; height: number }> = {
+  feed: { width: 1080, height: 1350 },
+  story: { width: 1080, height: 1920 },
+}
+/** Instagram's own controls cover about this much of a story's top and bottom; nothing that matters is drawn there. */
+export const STORY_SAFE = 250
+/** A story posts fewer frames than the carousel has slides: the tray is not the feed. */
+export const STORY_FRAMES_MAX = 5
+
+/**
+ * The slides a story posts as story frames, as 1-based slide numbers: the
+ * cover and the source always, and between them, kept in the run's own order,
+ * the first number, the picture and the cross-reference (a ledger, or a second
+ * number), then whatever else fits under `max`.
+ */
+export function storyFrames(slides: unknown, max = STORY_FRAMES_MAX): number[] {
+  if (!validStory(slides)) return []
+  const last = slides.length - 1
+  const room = Math.max(0, Math.min(max, slides.length) - 2)
+  const middle = slides.slice(1, last).map((slide, i) => ({ slide, n: i + 2 }))
+  const picked: number[] = []
+  const take = (type: StorySlideType) => {
+    if (picked.length >= room) return
+    const next = middle.find(m => m.slide.type === type && !picked.includes(m.n))
+    if (next) picked.push(next.n)
+  }
+  for (const type of ['number', 'picture', 'ledger', 'number', 'division', 'bars', 'timeline', 'list'] as StorySlideType[]) take(type)
+  return [1, ...picked.sort((a, b) => a - b), last + 1]
+}
+
 export interface StoryPhoto {
   /** Path under the static asset store, e.g. /social/photos/senate-chamber.jpg. */
   file: string

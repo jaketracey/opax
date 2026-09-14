@@ -18,7 +18,7 @@ export const OG_HEIGHT = 630
  *  social crawlers (which cache by URL, some for weeks) fetch the new card. */
 export const OG_VERSION = '4'
 
-import type { StorySlide } from './story'
+import { STORY_SAFE, STORY_SIZES, type StoryFormat, type StorySlide } from './story'
 
 /** The faces the card sets, as served from /fonts/og/ (static instances of the
  *  same two OFL families the site self-hosts; satori cannot read a variable
@@ -498,6 +498,18 @@ const S_BRONZE_RULE = 'rgba(217,168,74,0.6)'
 const S_BRONZE_RING = 'rgba(217,168,74,0.75)'
 /** The cover's photograph runs this deep before its mask has feathered it into the navy. */
 const S_PHOTO_BAND = 960
+
+/**
+ * The frame a slide is drawn in. The feed carousel is 1080 x 1350; a story
+ * frame is 1080 x 1920 with Instagram's own controls over its top and bottom,
+ * so the same drawing sits inside a band of safe room and only the cover's
+ * photograph runs out under the controls.
+ */
+interface StoryGeometry { height: number; padTop: number; padBottom: number; band: number }
+const STORY_GEOMETRY: Record<StoryFormat, StoryGeometry> = {
+  feed: { height: STORY_SIZES.feed.height, padTop: 0, padBottom: 0, band: S_PHOTO_BAND },
+  story: { height: STORY_SIZES.story.height, padTop: STORY_SAFE, padBottom: STORY_SAFE, band: S_PHOTO_BAND + STORY_SAFE },
+}
 const S_KICKER = 32
 const S_LINE = 40
 const S_NOTE = 30
@@ -580,8 +592,8 @@ function storyNote(text: string | null | undefined, centred = false): El | null 
 }
 
 /** The engraving as a watermark in the lower right, behind the type. */
-const storyEngraving = (width: number, opacity: number): El =>
-  h('img', { src: ENGRAVING_URI, width, height: Math.round(width * 164 / 180), style: { position: 'absolute', right: P_PAD, bottom: 112, opacity } })
+const storyEngraving = (width: number, opacity: number, g: StoryGeometry): El =>
+  h('img', { src: ENGRAVING_URI, width, height: Math.round(width * 164 / 180), style: { position: 'absolute', right: P_PAD, bottom: 112 + g.padBottom, opacity } })
 
 /** The body: the room between the rules, centred, clipped there rather than into the footer. */
 function storyBody(children: (El | null)[], opts: { centred?: boolean; end?: boolean } = {}): El {
@@ -592,8 +604,8 @@ function storyBody(children: (El | null)[], opts: { centred?: boolean; end?: boo
   )
 }
 
-function storyFrame(children: (El | null)[]): El {
-  return h('div', { style: { display: 'flex', flexDirection: 'column', width: PORTRAIT_WIDTH, height: PORTRAIT_HEIGHT, background: NAVY, color: WHITE, fontFamily: SANS } }, ...children)
+function storyFrame(g: StoryGeometry, children: (El | null)[]): El {
+  return h('div', { style: { display: 'flex', flexDirection: 'column', width: PORTRAIT_WIDTH, height: g.height, paddingTop: g.padTop, paddingBottom: g.padBottom, background: NAVY, color: WHITE, fontFamily: SANS } }, ...children)
 }
 
 /** A portrait as a medallion: a circle inside a bronze hairline ring. */
@@ -605,13 +617,13 @@ function storyMedallion(src: string, size = 300): El {
   )
 }
 
-function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: StoryImages): El {
+function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: StoryImages, g: StoryGeometry): El {
   const photo = images.photo ?? null
   const inset = images.inset ? storyMedallion(images.inset) : null
   const credit = [images.photo ? images.credit : null, images.inset ? images.insetCredit : null].filter(Boolean).join(' · ')
   if (!photo) {
     // No approved photograph: the engraving card, as the portrait card draws it.
-    return storyFrame([
+    return storyFrame(g, [
       storyMasthead(images),
       storyRule(),
       storyBody([
@@ -628,11 +640,11 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
   // lower third, and a wash keeps the mark legible over its top and tints the
   // whole toward the palette so any picture reads as one of ours.
   const band = h('img', {
-    src: photo, width: PORTRAIT_WIDTH, height: S_PHOTO_BAND,
+    src: photo, width: PORTRAIT_WIDTH, height: g.band,
     style: { position: 'absolute', left: 0, top: 0, objectFit: 'cover', maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 56%, rgba(0,0,0,0) 100%)' },
   })
-  const wash = h('div', { style: { position: 'absolute', left: 0, top: 0, width: PORTRAIT_WIDTH, height: S_PHOTO_BAND, backgroundImage: 'linear-gradient(to bottom, rgba(20,42,67,0.6) 0%, rgba(20,42,67,0.14) 24%, rgba(20,42,67,0.14) 58%, rgba(20,42,67,0.7) 100%)' } })
-  return storyFrame([
+  const wash = h('div', { style: { position: 'absolute', left: 0, top: 0, width: PORTRAIT_WIDTH, height: g.band, backgroundImage: 'linear-gradient(to bottom, rgba(20,42,67,0.6) 0%, rgba(20,42,67,0.14) 24%, rgba(20,42,67,0.14) 58%, rgba(20,42,67,0.7) 100%)' } })
+  return storyFrame(g, [
     band,
     wash,
     storyMasthead(images),
@@ -648,13 +660,13 @@ function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: Story
   ])
 }
 
-function numberSlide(slide: Extract<StorySlide, { type: 'number' }>, images: StoryImages): El {
+function numberSlide(slide: Extract<StorySlide, { type: 'number' }>, images: StoryImages, g: StoryGeometry): El {
   const value = storyText(slide.value)
   const valueSize = value.length > 12 ? 104 : value.length > 8 ? 132 : 176
-  return storyFrame([
+  return storyFrame(g, [
     storyMasthead(images),
     storyRule(),
-    storyEngraving(340, 0.28),
+    storyEngraving(340, 0.28, g),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 104, 3),
@@ -671,7 +683,7 @@ function numberSlide(slide: Extract<StorySlide, { type: 'number' }>, images: Sto
   ])
 }
 
-function pictureSlide(slide: Extract<StorySlide, { type: 'picture' }>, images: StoryImages): El {
+function pictureSlide(slide: Extract<StorySlide, { type: 'picture' }>, images: StoryImages, g: StoryGeometry): El {
   // The picture is an arch: a bronze hairline around a photograph whose top is a
   // half circle, the frame the engraving register would draw around a plate.
   const W = P_TEXT_WIDTH, H = 500, R = W / 2
@@ -686,7 +698,7 @@ function pictureSlide(slide: Extract<StorySlide, { type: 'picture' }>, images: S
     ? h('div', { style: { fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: SOFT, opacity: 0.85, marginTop: 14, marginBottom: 40, width: W, textAlign: 'center' } }, clipToLines(slideCredit(storyText(images.credit)), W, 22, SANS_EM, 1))
     : h('div', { style: { height: images.photo ? 40 : 0 } })
   const quote = slide.quote ? storyText(slide.quote) : ''
-  return storyFrame([
+  return storyFrame(g, [
     storyMasthead(images),
     storyRule(),
     storyBody([
@@ -701,7 +713,7 @@ function pictureSlide(slide: Extract<StorySlide, { type: 'picture' }>, images: S
   ])
 }
 
-function barsSlide(slide: Extract<StorySlide, { type: 'bars' }>, images: StoryImages): El {
+function barsSlide(slide: Extract<StorySlide, { type: 'bars' }>, images: StoryImages, g: StoryGeometry): El {
   const items = slide.items.slice(0, 5).map((it) => {
     const pct = Math.max(0, Math.min(100, Math.round(Number(it.pct) || 0)))
     return h(
@@ -720,7 +732,7 @@ function barsSlide(slide: Extract<StorySlide, { type: 'bars' }>, images: StoryIm
       ),
     )
   })
-  return storyFrame([
+  return storyFrame(g, [
     storyMasthead(images),
     storyRule(),
     storyBody([
@@ -734,7 +746,7 @@ function barsSlide(slide: Extract<StorySlide, { type: 'bars' }>, images: StoryIm
   ])
 }
 
-function ledgerSlide(slide: Extract<StorySlide, { type: 'ledger' }>, images: StoryImages): El {
+function ledgerSlide(slide: Extract<StorySlide, { type: 'ledger' }>, images: StoryImages, g: StoryGeometry): El {
   const C1 = 170, AMT = 260, GAP = 24, SIZE = 34
   const c2Width = P_TEXT_WIDTH - C1 - AMT - GAP * 2
   const rows = slide.rows.slice(0, 5).map((r) =>
@@ -754,7 +766,7 @@ function ledgerSlide(slide: Extract<StorySlide, { type: 'ledger' }>, images: Sto
         h('div', { style: { fontSize: 44, color: BRONZE_BRIGHT, fontWeight: 700, textAlign: 'right' } }, storyText(slide.total.amount)),
       )
     : null
-  return storyFrame([
+  return storyFrame(g, [
     storyMasthead(images),
     storyRule(),
     storyBody([
@@ -768,7 +780,7 @@ function ledgerSlide(slide: Extract<StorySlide, { type: 'ledger' }>, images: Sto
   ])
 }
 
-function timelineSlide(slide: Extract<StorySlide, { type: 'timeline' }>, images: StoryImages): El {
+function timelineSlide(slide: Extract<StorySlide, { type: 'timeline' }>, images: StoryImages, g: StoryGeometry): El {
   const events = slide.events.slice(0, 6).map((e) =>
     h(
       'div',
@@ -778,7 +790,7 @@ function timelineSlide(slide: Extract<StorySlide, { type: 'timeline' }>, images:
       h('div', { style: { fontFamily: SANS, fontSize: 38, lineHeight: 1.3, color: WHITE, marginTop: 6, width: P_TEXT_WIDTH - 64 } }, clipToLines(storyText(e.text), P_TEXT_WIDTH - 64, 38, SANS_EM, 2)),
     ),
   )
-  return storyFrame([
+  return storyFrame(g, [
     storyMasthead(images),
     storyRule(),
     storyBody([
@@ -791,7 +803,7 @@ function timelineSlide(slide: Extract<StorySlide, { type: 'timeline' }>, images:
   ])
 }
 
-function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>, images: StoryImages): El {
+function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>, images: StoryImages, g: StoryGeometry): El {
   const ayes = Math.max(0, Math.round(Number(slide.ayes) || 0))
   const noes = Math.max(0, Math.round(Number(slide.noes) || 0))
   const total = ayes + noes || 1
@@ -811,7 +823,7 @@ function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>, images:
       ),
     )
   const ayeWidth = Math.round((P_TEXT_WIDTH - 4) * ayes / total)
-  return storyFrame([
+  return storyFrame(g, [
     storyMasthead(images),
     storyRule(),
     storyBody([
@@ -830,7 +842,7 @@ function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>, images:
   ])
 }
 
-function listSlide(slide: Extract<StorySlide, { type: 'list' }>, images: StoryImages): El {
+function listSlide(slide: Extract<StorySlide, { type: 'list' }>, images: StoryImages, g: StoryGeometry): El {
   const NUM = 96
   const items = slide.items.slice(0, 4).map((text, i) =>
     h(
@@ -840,7 +852,7 @@ function listSlide(slide: Extract<StorySlide, { type: 'list' }>, images: StoryIm
       h('div', { style: { display: 'flex', width: P_TEXT_WIDTH - NUM, fontFamily: SANS, fontSize: 36, lineHeight: 1.3, color: WHITE } }, clipToLines(storyText(text), P_TEXT_WIDTH - NUM, 36, SANS_EM, 5)),
     ),
   )
-  return storyFrame([
+  return storyFrame(g, [
     storyMasthead(images),
     storyRule(),
     storyBody([
@@ -853,7 +865,7 @@ function listSlide(slide: Extract<StorySlide, { type: 'list' }>, images: StoryIm
   ])
 }
 
-function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>, images: StoryImages): El {
+function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>, images: StoryImages, g: StoryGeometry): El {
   // The address is the largest type on the slide and must never break mid-path:
   // sized to one line on a bold-width estimate (0.6em a character), 40px at least.
   const url = storyText(slide.url)
@@ -861,10 +873,10 @@ function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>, images: Sto
   const rows = slide.rows.slice(0, 4).map((r) =>
     h('div', { style: { display: 'flex', width: P_TEXT_WIDTH, fontFamily: SANS, fontSize: 34, lineHeight: 1.35, color: WHITE, paddingTop: 18, paddingBottom: 18, borderTop: `1px solid ${S_SOFT_RULE}` } }, clipToLines(storyText(r), P_TEXT_WIDTH, 34, SANS_EM, 2)),
   )
-  return storyFrame([
+  return storyFrame(g, [
     storyMasthead(images),
     storyRule(),
-    storyEngraving(240, 0.38),
+    storyEngraving(240, 0.38, g),
     storyBody([
       storyKicker(slide.kicker),
       storyHeadline(slide.title, 92, 3),
@@ -882,18 +894,19 @@ function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>, images: Sto
   ])
 }
 
-/** The element tree for one slide of a story, at 1080x1350. Alt text is never drawn. */
-export function storySlideTree(slide: StorySlide, images: StoryImages = {}): El {
+/** The element tree for one slide of a story: 1080x1350 for the feed, 1080x1920 as a story frame. Alt text is never drawn. */
+export function storySlideTree(slide: StorySlide, images: StoryImages = {}, format: StoryFormat = 'feed'): El {
+  const g = STORY_GEOMETRY[format]
   switch (slide.type) {
-    case 'cover': return coverSlide(slide, images)
-    case 'number': return numberSlide(slide, images)
-    case 'picture': return pictureSlide(slide, images)
-    case 'bars': return barsSlide(slide, images)
-    case 'ledger': return ledgerSlide(slide, images)
-    case 'timeline': return timelineSlide(slide, images)
-    case 'division': return divisionSlide(slide, images)
-    case 'list': return listSlide(slide, images)
-    case 'source': return sourceSlide(slide, images)
+    case 'cover': return coverSlide(slide, images, g)
+    case 'number': return numberSlide(slide, images, g)
+    case 'picture': return pictureSlide(slide, images, g)
+    case 'bars': return barsSlide(slide, images, g)
+    case 'ledger': return ledgerSlide(slide, images, g)
+    case 'timeline': return timelineSlide(slide, images, g)
+    case 'division': return divisionSlide(slide, images, g)
+    case 'list': return listSlide(slide, images, g)
+    case 'source': return sourceSlide(slide, images, g)
   }
 }
 

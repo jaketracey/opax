@@ -6,7 +6,7 @@ import { build } from 'esbuild';
 const built = await build({ entryPoints: [new URL('../src/social-publication.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
 const { runSocialPublication, publicationCopy, readiness, socialStatus, previewPublication } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
 const storyBuilt = await build({ entryPoints: [new URL('../src/story.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
-const { STORY_VERSION } = await import('data:text/javascript;base64,' + Buffer.from(storyBuilt.outputFiles[0].text).toString('base64'));
+const { STORY_VERSION, storyFrames } = await import('data:text/javascript;base64,' + Buffer.from(storyBuilt.outputFiles[0].text).toString('base64'));
 const post = { date: '2026-09-13', subject: 'person:Test Member', kind: 'politician', title: 'Test Member', text: 'Check the parliamentary record.\n\nhttps://opax.com.au/subject/person/Test%20Member', caption: 'The longer source-qualified caption.\n\nhttps://opax.com.au/subject/person/Test%20Member', url: 'https://opax.com.au/subject/person/Test%20Member' };
 const now = Date.UTC(2026,8,12,22);
 // A valid story (story.ts): a cover first, one fact a slide, the source last.
@@ -17,7 +17,7 @@ const slides = [
 ];
 const story = { ...post, slides };
 function harness(overrides = {}, handler) {
- const sqlite = new DatabaseSync(':memory:'); sqlite.exec(readFileSync(new URL('../migrations/0005_social_publication.sql',import.meta.url),'utf8'));
+ const sqlite = new DatabaseSync(':memory:'); sqlite.exec(readFileSync(new URL('../migrations/0005_social_publication.sql',import.meta.url),'utf8')); sqlite.exec(readFileSync(new URL('../migrations/0007_social_stories.sql',import.meta.url),'utf8'));
  const db = {
   prepare(sql) {
    let args=[];
@@ -31,11 +31,11 @@ function harness(overrides = {}, handler) {
  };
  sqlite.prepare('INSERT INTO social_editions VALUES(?,?,?,?)').run(post.date,post.subject,JSON.stringify(post),new Date(now).toISOString());
  const env = { COMMUNITY_DB:db, GENERATION_CACHE:{async get(){return null}}, ASSETS:{async fetch(){throw Error('frozen edition must be reused')}}, DAILY_POST_ENABLED:'true', X_API_KEY:'key', X_API_SECRET:'secret', X_ACCESS_TOKEN:'token', X_ACCESS_TOKEN_SECRET:'token-secret', X_ACCOUNT_ID:'123', X_USERNAME:'OpaxAustralia', FACEBOOK_POST_ENABLED:'true', FACEBOOK_PAGE_ID:'456', FACEBOOK_PAGE_TOKEN:'page-token', INSTAGRAM_POST_ENABLED:'true', INSTAGRAM_ACCOUNT_ID:'789', INSTAGRAM_USERNAME:'opaxaustralia', INSTAGRAM_ACCESS_TOKEN:'ig-token', META_API_VERSION:'v25.0', ...overrides };
- const calls=[];let children=0,photos=0;
+ const calls=[];let children=0,photos=0,stories=0;
  const fetchImpl=async(url,init={})=>{
   calls.push({url,init,body:init.body?JSON.parse(init.body):null}); const changed=await handler?.(url,init); if(changed)return changed;
   const slide=/\/og\/story\/(\d{4}-\d{2}-\d{2})\/(\d+)\.jpg/.exec(url);
-  if(init.method==='HEAD'&&slide)return new Response(null,{headers:{'content-type':'image/jpeg','x-opax-story':slide[1]+'/'+slide[2],'x-opax-format':'portrait','x-opax-subject':post.subject}});
+  if(init.method==='HEAD'&&slide)return new Response(null,{headers:{'content-type':'image/jpeg','x-opax-story':slide[1]+'/'+slide[2],'x-opax-format':new URL(url).searchParams.get('format')==='story'?'story':'portrait','x-opax-subject':post.subject}});
   if(init.method==='HEAD')return new Response(null,{headers:{'content-type':'image/jpeg','x-opax-og':new URL(post.url).pathname,...(new URL(url).searchParams.get('format')==='portrait'?{'x-opax-format':'portrait'}:{})}});
   if(url.endsWith('/2/users/me'))return Response.json({data:{id:'123',username:'OpaxAustralia'}});
   if(url.endsWith('/me?fields=id'))return Response.json({id:'456'});
@@ -44,8 +44,9 @@ function harness(overrides = {}, handler) {
   if(url.endsWith('/2/tweets'))return Response.json({data:{id:'1001'}});
   if(url.endsWith('/456/feed'))return Response.json({id:'456_1002'});
   if(url.endsWith('/456/photos'))return Response.json({id:String(700+ ++photos)});
-  if(url.endsWith('/789/media'))return Response.json({id:JSON.parse(init.body).is_carousel_item?String(900+ ++children):'999'});
-  if(url.endsWith('/789/media_publish'))return Response.json({id:'1003'});
+  if(url.endsWith('/789/media')){const b=JSON.parse(init.body);return Response.json({id:b.is_carousel_item?String(900+ ++children):b.media_type==='STORIES'?String(800+ ++stories):'999'});}
+  if(url.endsWith('/456/photo_stories'))return Response.json({success:true,post_id:'456_'+JSON.parse(init.body).photo_id});
+  if(url.endsWith('/789/media_publish'))return Response.json({id:JSON.parse(init.body).creation_id==='999'||JSON.parse(init.body).creation_id.startsWith('9')?'1003':'1'+JSON.parse(init.body).creation_id});
   throw Error('Unexpected request '+url);
  };
  const run=()=>runSocialPublication(env,{now,personTopics:async()=>Response.json({}),fetchImpl});
@@ -193,4 +194,71 @@ test('a slide that is not the frozen edition\'s own drawing keeps the story off 
  h2.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify(story));await h2.run();
  assert.equal(h2.sqlite.prepare("SELECT detail FROM social_deliveries WHERE channel='instagram'").get().detail,'Story slide unavailable');
  assert.equal(h2.calls.filter(c=>c.init.method==='POST'&&!c.url.includes('x.com')).length,0);
+});
+
+// A seven-slide story, the shape the grant edition takes.
+const seven = [slides[0],
+ slides[1],
+ { type:'picture', kicker:'The purpose', title:'What it was for', photo:'qantas-founders-twilight', quote:'A quote.', lines:[], alt:'Picture.' },
+ { type:'bars', kicker:'How it was chosen', title:'Closed', lines:[], items:[{label:'Closed',pct:98}], alt:'Bars.' },
+ { type:'ledger', kicker:'The same trust', title:'Three awards', lines:[], rows:[{c1:'2018-19',c2:'Roof',amount:'$11,300,000'}], alt:'Ledger.' },
+ { type:'number', kicker:'The electorate', title:'Kennedy', lines:[], value:'$1.45bn', label:'in awards', alt:'Electorate.' },
+ slides[2]];
+const storyEnv = { INSTAGRAM_STORY_ENABLED:'true', FACEBOOK_STORY_ENABLED:'true' };
+test('story frames are the cover, the number, the picture, the cross-reference and the source, five at most',()=>{
+ assert.deepEqual(storyFrames(seven),[1,2,3,5,7]);
+ assert.deepEqual(storyFrames(slides),[1,2,3]);
+ assert.deepEqual(storyFrames(seven,3),[1,2,7]);
+ assert.deepEqual(storyFrames(slides.slice(1)),[],'not a story');
+ const c=publicationCopy({...story,slides:seven},'instagram_story');
+ assert.deepEqual(c.frames,[1,2,3,5,7]);
+ assert.deepEqual(c.slides,[1,2,3,5,7].map(n=>`https://opax.com.au/og/story/2026-09-13/${n}.jpg?v=${new URL(c.image).searchParams.get('v')}.${STORY_VERSION}&format=story`));
+ assert.equal(publicationCopy({...story,slides:seven},'instagram').frames,undefined,'the feed carousel posts every slide');
+ assert.equal(publicationCopy(post,'instagram_story').frames,undefined,'no frames without a story');
+});
+test('a story posts its frames one by one as Instagram and Page stories, in order, recording progress',async()=>{
+ const h=harness({...storyEnv});h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify({...story,slides:seven}));
+ const r=await h.run();
+ assert.equal(r.channels.instagram_story,'posted'); assert.equal(r.channels.facebook_story,'posted');
+ const ig=h.calls.filter(c=>c.url.endsWith('/789/media')&&c.body?.media_type==='STORIES');
+ assert.equal(ig.length,5,'five story containers');
+ assert.deepEqual(ig.map(c=>new URL(c.body.image_url).pathname),[1,2,3,5,7].map(n=>`/og/story/2026-09-13/${n}.jpg`));
+ assert.ok(ig.every(c=>new URL(c.body.image_url).searchParams.get('format')==='story'),'frames are drawn at 9:16');
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media_publish')&&c.body.creation_id.startsWith('8')).length,5,'five story publishes');
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/456/photo_stories')).length,5,'five Page stories');
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/456/photos')&&c.body.published===false).length,5+7,'unpublished photos for the story frames and the feed post');
+ const heads=h.calls.filter(c=>c.init.method==='HEAD'&&new URL(c.url).searchParams.get('format')==='story');
+ assert.equal(heads.length,10,'every frame is preflighted for each story channel');
+ const rows=h.sqlite.prepare("SELECT channel,status,post_id,progress FROM social_deliveries WHERE channel LIKE '%_story' ORDER BY channel").all();
+ assert.equal(rows.length,2);
+ for(const row of rows){assert.equal(row.status,'posted');assert.equal(row.post_id.split(',').length,5,row.channel);const p=JSON.parse(row.progress);assert.equal(p.done.length,5);assert.equal(p.at,null);assert.equal(p.container,null);}
+ const again=await h.run();
+ assert.equal(again.channels.instagram_story,'posted');assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media')&&c.body?.media_type==='STORIES').length,5,'a second run repeats no frame');
+});
+test('a story frame still processing is resumed from that frame, without repeating the frames already in the tray',async()=>{
+ let polls=0;
+ const h=harness({...storyEnv,FACEBOOK_STORY_ENABLED:'false'},async(url)=>{ if(url.endsWith('/803?fields=status_code')&&polls++===0)return Response.json({status_code:'IN_PROGRESS'}); return null; });
+ h.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify({...story,slides:seven}));
+ const first=await h.run();
+ assert.equal(first.channels.instagram_story,'preparing');
+ const mid=h.sqlite.prepare("SELECT status,progress FROM social_deliveries WHERE channel='instagram_story'").get();
+ assert.equal(mid.status,'preparing');const p=JSON.parse(mid.progress);assert.equal(p.done.length,2);assert.equal(p.at,2);assert.equal(p.container,'803');
+ const second=await h.run();
+ assert.equal(second.channels.instagram_story,'posted');
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media')&&c.body?.media_type==='STORIES').length,5,'the third frame keeps its container; the last two are new');
+ assert.equal(h.calls.filter(c=>c.url.endsWith('/789/media_publish')&&c.body.creation_id.startsWith('8')).length,5);
+ const done=h.sqlite.prepare("SELECT status,post_id FROM social_deliveries WHERE channel='instagram_story'").get();
+ assert.equal(done.status,'posted');assert.equal(done.post_id.split(',').length,5);
+});
+test('story channels post nothing for an edition without a story, and a frame in the wrong shape keeps only that channel closed',async()=>{
+ const h=harness({...storyEnv});
+ const r=await h.run();
+ assert.equal(r.channels.instagram_story,'nothing to post');assert.equal(r.channels.facebook_story,'nothing to post');assert.equal(r.channels.x,'posted');
+ assert.equal(h.sqlite.prepare("SELECT count(*) AS n FROM social_deliveries WHERE channel LIKE '%_story'").get().n,0,'no receipt for nothing');
+ const h2=harness({...storyEnv},async(url,init)=>init.method==='HEAD'&&new URL(url).searchParams.get('format')==='story'?new Response(null,{headers:{'content-type':'image/jpeg','x-opax-story':/\/(\d{4}-\d{2}-\d{2}\/\d+)\.jpg/.exec(url)[1],'x-opax-format':'portrait'}}):null);
+ h2.sqlite.prepare('UPDATE social_editions SET post_json=?').run(JSON.stringify({...story,slides:seven}));
+ const r2=await h2.run();
+ assert.equal(r2.channels.instagram_story,'failed');assert.equal(r2.channels.facebook_story,'failed');assert.equal(r2.channels.instagram,'posted');assert.equal(r2.channels.facebook,'posted');
+ assert.equal(h2.sqlite.prepare("SELECT detail FROM social_deliveries WHERE channel='instagram_story'").get().detail,'Story slide unavailable');
+ assert.equal(h2.calls.filter(c=>c.body?.media_type==='STORIES').length,0,'no story container is created');
 });

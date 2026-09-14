@@ -66,6 +66,21 @@ search "<query>"` lists what Wikimedia Commons has for a subject with its licenc
 at 1200px into `public/social/photos/` and writes the catalogue entry. The Worker
 never posts a photograph that is not in the file.
 
+The same edition also goes out as stories. `instagram_story` and `facebook_story`
+are channels of their own (flags `INSTAGRAM_STORY_ENABLED`, `FACEBOOK_STORY_ENABLED`),
+run after the feed posts so the tray mirrors the day's carousel. A story is at most
+five frames (`STORY_FRAMES_MAX`): the cover and the source always, and between them the
+first number, the picture and the cross-reference, chosen by `storyFrames()` in
+story.ts. Frames are the same slides drawn at 1080 x 1920 (`?format=story`, answering
+`x-opax-format: story`) inside a 250px band top and bottom that Instagram's own
+controls cover. Stories carry no caption and the API cannot add link or poll
+stickers, so the source slide's address is the only pointer. Each frame is its own
+container (Instagram) or unpublished photo then Page story (Facebook), and the
+receipt's `progress` column records the ids published so far and the frame in
+flight, so a run that finds a frame still processing (`preparing`) resumes at that
+frame and never repeats one. `post_id` holds every frame's id, comma-separated.
+Migration 0007 rebuilds `social_deliveries` for the two channels and the column.
+
 Slides are served at `/og/story/<date>/<n>.jpg` from the frozen edition (or, for a
 date with no stored edition, from the same composition the preview shows), each
 answering `x-opax-story: <date>/<n>` and `x-opax-format: portrait`. The publisher

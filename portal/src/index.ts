@@ -40,7 +40,7 @@ import { OG_FONT_FILES, OG_VERSION, homeCard, ogFormat, type OgCard } from './og
 import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 // The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
 import * as storyRender from './og-render'
-import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue } from './story'
+import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
 interface FindParagraph {
   score: number
@@ -4363,7 +4363,9 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
   }
   if (!post || !validStory(post.slides) || !post.slides[n - 1]) return new Response('Not found', { status: 404 })
   const slide = post.slides[n - 1]
-  const cacheKey = cacheRequest('og', `story/${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${STORY_SLIDES_VERSION}/${date}/${n}/${shortHash(JSON.stringify(slide))}`)
+  // The same slide is drawn at 4:5 for the feed and, with ?format=story, at 9:16 for a story frame.
+  const format: StoryFormat = url.searchParams.get('format') === 'story' ? 'story' : 'feed'
+  const cacheKey = cacheRequest('og', `story/${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${STORY_SLIDES_VERSION}/${format}/${date}/${n}/${shortHash(JSON.stringify(slide))}`)
   if (!cacheBypass(request, url)) {
     const hit = await caches.default.match(cacheKey)
     if (hit) return withCacheStatus(request.method === 'HEAD' ? new Response(null, hit) : hit, 'HIT')
@@ -4381,13 +4383,13 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
       loadOgFonts(env),
     ])
     const images = { photo: photoUri, credit: photoUri ? photo?.credit ?? null : null, inset: insetUri, insetCredit: insetUri && slide.type === 'cover' ? slide.insetCredit ?? null : null, index: n, total: post.slides.length }
-    const jpeg = await storyRender.renderStoryJpeg(slide, images, fonts)
+    const jpeg = await storyRender.renderStoryJpeg(slide, images, fonts, format)
     const res = new Response(jpeg, {
       headers: {
         'content-type': 'image/jpeg',
         'content-length': String(jpeg.byteLength),
         'x-opax-story': `${date}/${n}`,
-        'x-opax-format': 'portrait',
+        'x-opax-format': format === 'story' ? 'story' : 'portrait',
         'x-opax-subject': post.subject,
       },
     })
