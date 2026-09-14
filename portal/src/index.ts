@@ -4380,7 +4380,7 @@ async function serveStorySlide(url: URL, request: Request, env: Env, ctx: Execut
       storyImage(env, insetId ? `/photos/jpg/${insetId}.jpg` : null),
       loadOgFonts(env),
     ])
-    const images = { photo: photoUri, credit: photoUri ? photo?.credit ?? null : null, inset: insetUri, insetCredit: insetUri && slide.type === 'cover' ? slide.insetCredit ?? null : null }
+    const images = { photo: photoUri, credit: photoUri ? photo?.credit ?? null : null, inset: insetUri, insetCredit: insetUri && slide.type === 'cover' ? slide.insetCredit ?? null : null, index: n, total: post.slides.length }
     const jpeg = await storyRender.renderStoryJpeg(slide, images, fonts)
     const res = new Response(jpeg, {
       headers: {

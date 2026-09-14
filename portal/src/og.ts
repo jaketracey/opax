@@ -487,14 +487,22 @@ export interface StoryImages {
   credit?: string | null
   inset?: string | null
   insetCredit?: string | null
+  /** This slide's place in the run, drawn opposite the mark as "2 / 7". */
+  index?: number | null
+  total?: number | null
 }
 
-const S_TITLE_SIZES = [116, 104, 92, 84, 76, 68, 60, 54]
+const S_TITLE_SIZES = [140, 128, 116, 104, 92, 84, 76, 68, 60]
 const S_SOFT_RULE = 'rgba(183,198,217,0.18)'
 const S_BRONZE_RULE = 'rgba(217,168,74,0.6)'
-const S_PHOTO_BAND = 880
-/** The source slide's call to action stops 260px short of the right edge, where the engraving sits. */
-const S_CTA_WIDTH = P_TEXT_WIDTH - 260
+const S_BRONZE_RING = 'rgba(217,168,74,0.75)'
+/** The cover's photograph runs this deep before its mask has feathered it into the navy. */
+const S_PHOTO_BAND = 960
+const S_KICKER = 32
+const S_LINE = 40
+const S_NOTE = 30
+/** The source slide's call to action stops short of the right edge, where the engraving sits. */
+const S_CTA_WIDTH = P_TEXT_WIDTH - 250
 
 /** House style, plus: the faces carry no arrow glyphs, so a path's arrows become middle dots. */
 const storyText = (s: string): string => plain(String(s ?? '')).replace(/\s*(?:→|←|->|=>)\s*/g, ' · ')
@@ -512,63 +520,68 @@ function fitStoryTitle(text: string, maxSize: number, maxLines: number): { size:
 /** A small chevron for the cover's "Swipe" cue: the sans has no arrow glyph. */
 const ARROW_URI = svgUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M3 12h16M13 6l6 6-6 6" fill="none" stroke="${SOFT}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`)
 
-function storyMasthead(): El {
+/** The mark alone on the left (on a story the name is the account, not the masthead) and the slide's place in the run on the right. */
+function storyMasthead(images: StoryImages = {}): El {
+  const counter = images.index && images.total && images.total > 1
+    ? h('div', { style: { fontFamily: SERIF, fontSize: 44, lineHeight: 1, letterSpacing: '0.06em', color: SOFT, opacity: 0.85 } }, `${images.index} / ${images.total}`)
+    : null
   return h(
     'div',
-    { style: { display: 'flex', alignItems: 'center', padding: `56px ${P_PAD}px 0 ${P_PAD}px` } },
-    h('img', { src: MARK_URI, width: 88, height: 80 }),
-    h('div', { style: { marginLeft: 26, fontFamily: SANS, fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', color: SOFT } }, 'Open Parliamentary Accountability eXchange'),
+    { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `52px ${P_PAD}px 0 ${P_PAD}px` } },
+    h('img', { src: MARK_URI, width: 110, height: 100 }),
+    counter,
   )
 }
 
-const storyRule = (): El => h('div', { style: { height: 1, margin: `28px ${P_PAD}px 0 ${P_PAD}px`, background: P_RULE } })
+/** A credit as the slide draws it: author and licence; the caption carries the "via Wikimedia Commons". */
+const slideCredit = (credit: string): string => credit.replace(/,?\s*via Wikimedia Commons/gi, '')
+
+const storyRule = (): El => h('div', { style: { height: 1, margin: `26px ${P_PAD}px 0 ${P_PAD}px`, background: P_RULE } })
 
 function storyFooter(credit?: string | null, swipe = false): El {
   const right = credit || swipe
     ? h(
         'div',
-        { style: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', maxWidth: 620 } },
-        credit ? h('div', { style: { fontFamily: SANS, fontSize: 20, lineHeight: 1.3, color: SOFT, opacity: 0.85, textAlign: 'right' } }, clipToLines(storyText(credit), 620, 20, SANS_EM, 2)) : null,
-        swipe ? h('div', { style: { fontFamily: SANS, fontSize: 20, color: SOFT, opacity: 0.85, marginLeft: credit ? 18 : 0 } }, credit ? '· Swipe' : 'Swipe') : null,
-        swipe ? h('img', { src: ARROW_URI, width: 22, height: 22, style: { marginLeft: 8, opacity: 0.85 } }) : null,
+        { style: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', maxWidth: 600 } },
+        credit ? h('div', { style: { fontFamily: SANS, fontSize: 22, lineHeight: 1.3, color: SOFT, opacity: 0.85, textAlign: 'right' } }, clipToLines(slideCredit(storyText(credit)), 600, 22, SANS_EM, 2)) : null,
+        swipe ? h('div', { style: { fontFamily: SANS, fontSize: 24, fontWeight: 600, color: SOFT, opacity: 0.9, marginLeft: credit ? 18 : 0 } }, credit ? '· Swipe' : 'Swipe') : null,
+        swipe ? h('img', { src: ARROW_URI, width: 26, height: 26, style: { marginLeft: 8, opacity: 0.9 } }) : null,
       )
     : null
   return h(
     'div',
-    { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: `24px ${P_PAD}px 44px ${P_PAD}px` } },
-    h('div', { style: { fontFamily: SANS, fontSize: 28, fontWeight: 700, letterSpacing: '0.16em', color: BRONZE_BRIGHT } }, 'OPAX.COM.AU'),
+    { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: `24px ${P_PAD}px 52px ${P_PAD}px` } },
+    h('div', { style: { fontFamily: SANS, fontSize: 34, fontWeight: 700, letterSpacing: '0.18em', color: BRONZE_BRIGHT } }, 'OPAX.COM.AU'),
     right,
   )
 }
 
-const storyBar = (): El => h('div', { style: { height: 8, background: BRONZE } })
-
 function storyKicker(text: string, centred = false): El | null {
   const t = storyText(text)
-  return t ? h('div', { style: { fontFamily: SANS, fontSize: 26, fontWeight: 700, letterSpacing: '0.14em', color: BRONZE_BRIGHT, textTransform: 'uppercase', marginBottom: 18, textAlign: centred ? 'center' : 'left' } }, clipToLines(t, P_TEXT_WIDTH, 26, SANS_EM * 1.25, 1)) : null
+  return t ? h('div', { style: { fontFamily: SANS, fontSize: S_KICKER, fontWeight: 700, letterSpacing: '0.14em', color: BRONZE_BRIGHT, textTransform: 'uppercase', marginBottom: 22, textAlign: centred ? 'center' : 'left' } }, clipToLines(t, P_TEXT_WIDTH, S_KICKER, SANS_EM * 1.25, 1)) : null
 }
 
 function storyHeadline(text: string, maxSize: number, maxLines: number, centred = false, italic = false): El {
   const title = fitStoryTitle(storyText(text), maxSize, maxLines)
-  return h('div', { style: { fontFamily: SERIF, fontSize: title.size, fontStyle: italic ? 'italic' : 'normal', fontWeight: 400, lineHeight: 1.12, letterSpacing: '-0.005em', color: WHITE, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } }, title.text)
+  return h('div', { style: { fontFamily: SERIF, fontSize: title.size, fontStyle: italic ? 'italic' : 'normal', fontWeight: 400, lineHeight: 1.08, letterSpacing: '-0.008em', color: WHITE, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } }, title.text)
 }
 
-/** Public Sans lines under a headline, each held to `rows` lines; the first stands 28px clear of the headline. */
-function storyLines(lines: string[], centred = false, rows = 3, first = 28): El[] {
+/** Public Sans lines under a headline, each held to `rows` lines; the first stands `first` px clear of the headline. */
+function storyLines(lines: string[], centred = false, rows = 3, first = 30, size = S_LINE): El[] {
   return lines.map(plain).filter(Boolean).slice(0, 3).map((l, i) =>
-    h('div', { style: { display: 'flex', justifyContent: centred ? 'center' : 'flex-start', fontFamily: SANS, fontSize: P_LINE_SIZE, lineHeight: 1.4, color: SOFT, marginTop: i === 0 ? first : 8, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } },
-      clipToLines(l, P_TEXT_WIDTH, P_LINE_SIZE, SANS_EM, rows)),
+    h('div', { style: { display: 'flex', justifyContent: centred ? 'center' : 'flex-start', fontFamily: SANS, fontSize: size, lineHeight: 1.35, color: SOFT, marginTop: i === 0 ? first : 10, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } },
+      clipToLines(l, P_TEXT_WIDTH, size, SANS_EM, rows)),
   )
 }
 
 function storyNote(text: string | null | undefined, centred = false): El | null {
   const t = text ? storyText(text) : ''
-  return t ? h('div', { style: { fontFamily: SANS, fontSize: 24, lineHeight: 1.4, color: SOFT, opacity: 0.85, marginTop: 36, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } }, clipToLines(t, P_TEXT_WIDTH, 24, SANS_EM, 3)) : null
+  return t ? h('div', { style: { fontFamily: SANS, fontSize: S_NOTE, lineHeight: 1.4, color: SOFT, opacity: 0.85, marginTop: 40, width: P_TEXT_WIDTH, textAlign: centred ? 'center' : 'left' } }, clipToLines(t, P_TEXT_WIDTH, S_NOTE, SANS_EM, 3)) : null
 }
 
 /** The engraving as a watermark in the lower right, behind the type. */
 const storyEngraving = (width: number, opacity: number): El =>
-  h('img', { src: ENGRAVING_URI, width, height: Math.round(width * 164 / 180), style: { position: 'absolute', right: P_PAD, bottom: 104, opacity } })
+  h('img', { src: ENGRAVING_URI, width, height: Math.round(width * 164 / 180), style: { position: 'absolute', right: P_PAD, bottom: 112, opacity } })
 
 /** The body: the room between the rules, centred, clipped there rather than into the footer. */
 function storyBody(children: (El | null)[], opts: { centred?: boolean; end?: boolean } = {}): El {
@@ -583,146 +596,153 @@ function storyFrame(children: (El | null)[]): El {
   return h('div', { style: { display: 'flex', flexDirection: 'column', width: PORTRAIT_WIDTH, height: PORTRAIT_HEIGHT, background: NAVY, color: WHITE, fontFamily: SANS } }, ...children)
 }
 
+/** A portrait as a medallion: a circle inside a bronze hairline ring. */
+function storyMedallion(src: string, size = 300): El {
+  return h(
+    'div',
+    { style: { display: 'flex', padding: 10, border: `1px solid ${S_BRONZE_RING}`, borderRadius: size, background: 'rgba(20,42,67,0.55)', marginBottom: 40 } },
+    h('img', { src, width: size, height: size, style: { borderRadius: size / 2, objectFit: 'cover' } }),
+  )
+}
+
 function coverSlide(slide: Extract<StorySlide, { type: 'cover' }>, images: StoryImages): El {
   const photo = images.photo ?? null
-  const inset = images.inset
-    ? h(
-        'div',
-        { style: { display: 'flex', padding: 8, border: `1px solid rgba(217,168,74,0.7)`, borderRadius: 6, background: NAVY, marginBottom: 40 } },
-        h('img', { src: images.inset, width: 300, height: 300, style: { borderRadius: 3, objectFit: 'cover' } }),
-      )
-    : null
+  const inset = images.inset ? storyMedallion(images.inset) : null
   const credit = [images.photo ? images.credit : null, images.inset ? images.insetCredit : null].filter(Boolean).join(' · ')
   if (!photo) {
     // No approved photograph: the engraving card, as the portrait card draws it.
     return storyFrame([
-      storyMasthead(),
+      storyMasthead(images),
       storyRule(),
       storyBody([
         inset,
         storyKicker(slide.kicker),
-        storyHeadline(slide.title, 116, 2),
+        storyHeadline(slide.title, 128, 2),
         ...storyLines([slide.line], false, 3),
-        h('div', { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: 56 } }, h('img', { src: ENGRAVING_URI, width: 340, height: 310, style: { opacity: 0.9 } })),
+        h('div', { style: { display: 'flex', justifyContent: 'flex-end', width: P_TEXT_WIDTH, marginTop: 56 } }, h('img', { src: ENGRAVING_URI, width: 520, height: 474, style: { opacity: 0.9 } })),
       ]),
       storyFooter(credit, true),
-      storyBar(),
     ])
   }
-  const band = h('img', { src: photo, width: PORTRAIT_WIDTH, height: S_PHOTO_BAND, style: { position: 'absolute', left: 0, top: 0, objectFit: 'cover' } })
-  const wash = h('div', { style: { position: 'absolute', left: 0, top: 0, width: PORTRAIT_WIDTH, height: S_PHOTO_BAND, backgroundImage: 'linear-gradient(180deg, rgba(20,42,67,0.66) 0%, rgba(20,42,67,0.10) 26%, rgba(20,42,67,0) 53%, rgba(20,42,67,0.55) 80%, rgba(20,42,67,1) 100%)' } })
+  // The photograph is masked, not framed: it feathers into the navy over its
+  // lower third, and a wash keeps the mark legible over its top and tints the
+  // whole toward the palette so any picture reads as one of ours.
+  const band = h('img', {
+    src: photo, width: PORTRAIT_WIDTH, height: S_PHOTO_BAND,
+    style: { position: 'absolute', left: 0, top: 0, objectFit: 'cover', maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 56%, rgba(0,0,0,0) 100%)' },
+  })
+  const wash = h('div', { style: { position: 'absolute', left: 0, top: 0, width: PORTRAIT_WIDTH, height: S_PHOTO_BAND, backgroundImage: 'linear-gradient(to bottom, rgba(20,42,67,0.6) 0%, rgba(20,42,67,0.14) 24%, rgba(20,42,67,0.14) 58%, rgba(20,42,67,0.7) 100%)' } })
   return storyFrame([
     band,
     wash,
-    storyMasthead(),
+    storyMasthead(images),
     h(
       'div',
-      { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-start', justifyContent: 'flex-end', padding: `0 ${P_PAD}px 28px ${P_PAD}px`, overflow: 'hidden' } },
+      { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-start', justifyContent: 'flex-end', padding: `0 ${P_PAD}px 24px ${P_PAD}px`, overflow: 'hidden' } },
       inset,
       storyKicker(slide.kicker),
-      storyHeadline(slide.title, 104, 2),
+      storyHeadline(slide.title, 140, 2),
       ...storyLines([slide.line], false, 3),
     ),
     storyFooter(credit, true),
-    storyBar(),
   ])
 }
 
-function numberSlide(slide: Extract<StorySlide, { type: 'number' }>): El {
+function numberSlide(slide: Extract<StorySlide, { type: 'number' }>, images: StoryImages): El {
   const value = storyText(slide.value)
-  const valueSize = value.length > 12 ? 84 : value.length > 8 ? 108 : 132
+  const valueSize = value.length > 12 ? 104 : value.length > 8 ? 132 : 176
   return storyFrame([
-    storyMasthead(),
+    storyMasthead(images),
     storyRule(),
-    storyEngraving(300, 0.3),
+    storyEngraving(340, 0.28),
     storyBody([
       storyKicker(slide.kicker),
-      storyHeadline(slide.title, 92, 3),
+      storyHeadline(slide.title, 104, 3),
       ...storyLines(slide.lines, false, 3),
       h(
         'div',
-        { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: P_TEXT_WIDTH, marginTop: 48 } },
-        h('div', { style: { width: 96, height: 1, background: P_RULE, marginBottom: 32 } }),
-        h('div', { style: { fontFamily: SANS, fontSize: valueSize, fontWeight: 700, color: BRONZE_BRIGHT, lineHeight: 1.05 } }, value),
-        h('div', { style: { fontFamily: SANS, fontSize: 30, color: SOFT, marginTop: 10, lineHeight: 1.35, width: P_TEXT_WIDTH } }, clipToLines(storyText(slide.label), P_TEXT_WIDTH, 30, SANS_EM, 2)),
+        { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: P_TEXT_WIDTH, marginTop: 52 } },
+        h('div', { style: { width: 120, height: 1, background: P_RULE, marginBottom: 34 } }),
+        h('div', { style: { fontFamily: SANS, fontSize: valueSize, fontWeight: 700, color: BRONZE_BRIGHT, lineHeight: 1.02, letterSpacing: '-0.01em' } }, value),
+        h('div', { style: { fontFamily: SANS, fontSize: 36, color: SOFT, marginTop: 14, lineHeight: 1.35, width: P_TEXT_WIDTH - 330 } }, clipToLines(storyText(slide.label), P_TEXT_WIDTH - 330, 36, SANS_EM, 2)),
       ),
     ]),
     storyFooter(),
-    storyBar(),
   ])
 }
 
 function pictureSlide(slide: Extract<StorySlide, { type: 'picture' }>, images: StoryImages): El {
+  // The picture is an arch: a bronze hairline around a photograph whose top is a
+  // half circle, the frame the engraving register would draw around a plate.
+  const W = P_TEXT_WIDTH, H = 500, R = W / 2
   const frame = images.photo
     ? h(
         'div',
-        { style: { display: 'flex', padding: 8, border: `1px solid rgba(217,168,74,0.7)`, borderRadius: 6 } },
-        h('img', { src: images.photo, width: 920, height: 540, style: { borderRadius: 3, objectFit: 'cover' } }),
+        { style: { display: 'flex', padding: 10, border: `1px solid ${S_BRONZE_RING}`, borderTopLeftRadius: R, borderTopRightRadius: R, borderBottomLeftRadius: 16, borderBottomRightRadius: 16 } },
+        h('img', { src: images.photo, width: W - 20, height: H - 20, style: { objectFit: 'cover', borderTopLeftRadius: R - 10, borderTopRightRadius: R - 10, borderBottomLeftRadius: 8, borderBottomRightRadius: 8 } }),
       )
     : null
   const credit = images.photo && images.credit
-    ? h('div', { style: { fontFamily: SANS, fontSize: 18, lineHeight: 1.35, color: SOFT, opacity: 0.85, marginTop: 12, marginBottom: 40, width: 920, textAlign: 'center' } }, clipToLines(storyText(images.credit), 920, 18, SANS_EM, 1))
+    ? h('div', { style: { fontFamily: SANS, fontSize: 22, lineHeight: 1.35, color: SOFT, opacity: 0.85, marginTop: 14, marginBottom: 40, width: W, textAlign: 'center' } }, clipToLines(slideCredit(storyText(images.credit)), W, 22, SANS_EM, 1))
     : h('div', { style: { height: images.photo ? 40 : 0 } })
   const quote = slide.quote ? storyText(slide.quote) : ''
   return storyFrame([
-    storyMasthead(),
+    storyMasthead(images),
     storyRule(),
     storyBody([
       frame,
       credit,
       storyKicker(slide.kicker, true),
-      storyHeadline(slide.title, 64, 2, true),
-      quote ? h('div', { style: { fontFamily: SERIF, fontStyle: 'italic', fontSize: 46, lineHeight: 1.3, color: WHITE, marginTop: 26, width: P_TEXT_WIDTH, textAlign: 'center' } }, clipToLines(quote, P_TEXT_WIDTH, 46, SERIF_EM, 4)) : null,
-      ...storyLines(slide.lines, true, 2, 28),
+      storyHeadline(slide.title, 76, 2, true),
+      quote ? h('div', { style: { fontFamily: SERIF, fontStyle: 'italic', fontSize: 46, lineHeight: 1.3, color: WHITE, marginTop: 26, width: P_TEXT_WIDTH, textAlign: 'center' } }, clipToLines(quote, P_TEXT_WIDTH, 46, SERIF_EM, 3)) : null,
+      ...storyLines(slide.lines, true, 2, 26, 36),
     ], { centred: true }),
     storyFooter(),
-    storyBar(),
   ])
 }
 
-function barsSlide(slide: Extract<StorySlide, { type: 'bars' }>): El {
+function barsSlide(slide: Extract<StorySlide, { type: 'bars' }>, images: StoryImages): El {
   const items = slide.items.slice(0, 5).map((it) => {
     const pct = Math.max(0, Math.min(100, Math.round(Number(it.pct) || 0)))
     return h(
       'div',
-      { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 30 } },
+      { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 34 } },
       h(
         'div',
-        { style: { display: 'flex', justifyContent: 'space-between', fontFamily: SANS, fontSize: 32, lineHeight: 1.2, color: WHITE } },
-        h('div', { style: { display: 'flex' } }, clipToLines(storyText(it.label), 760, 32, SANS_EM, 1)),
-        h('div', { style: { color: BRONZE_BRIGHT, fontWeight: 700 } }, `${pct}%`),
+        { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontFamily: SANS, fontSize: 38, lineHeight: 1.2, color: WHITE } },
+        h('div', { style: { display: 'flex', fontSize: 40 } }, clipToLines(storyText(it.label), 720, 40, SANS_EM, 1)),
+        h('div', { style: { color: BRONZE_BRIGHT, fontWeight: 700, fontSize: 52 } }, `${pct}%`),
       ),
       h(
         'div',
-        { style: { display: 'flex', height: 14, background: S_SOFT_RULE, marginTop: 14, width: P_TEXT_WIDTH } },
-        h('div', { style: { height: 14, width: Math.round(P_TEXT_WIDTH * pct / 100), background: BRONZE_BRIGHT } }),
+        { style: { display: 'flex', height: 22, background: S_SOFT_RULE, marginTop: 16, width: P_TEXT_WIDTH } },
+        h('div', { style: { height: 22, width: Math.round(P_TEXT_WIDTH * pct / 100), background: BRONZE_BRIGHT } }),
       ),
     )
   })
   return storyFrame([
-    storyMasthead(),
+    storyMasthead(images),
     storyRule(),
     storyBody([
       storyKicker(slide.kicker),
-      storyHeadline(slide.title, 84, 3),
+      storyHeadline(slide.title, 92, 3),
       ...storyLines(slide.lines, false, 3),
-      h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 14 } }, ...items),
+      h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 16 } }, ...items),
       storyNote(slide.note),
     ]),
     storyFooter(),
-    storyBar(),
   ])
 }
 
-function ledgerSlide(slide: Extract<StorySlide, { type: 'ledger' }>): El {
-  const C1 = 150, AMT = 230, GAP = 24
+function ledgerSlide(slide: Extract<StorySlide, { type: 'ledger' }>, images: StoryImages): El {
+  const C1 = 170, AMT = 260, GAP = 24, SIZE = 34
   const c2Width = P_TEXT_WIDTH - C1 - AMT - GAP * 2
   const rows = slide.rows.slice(0, 5).map((r) =>
     h(
       'div',
-      { style: { display: 'flex', alignItems: 'flex-start', width: P_TEXT_WIDTH, paddingTop: 22, paddingBottom: 22, borderTop: `1px solid ${S_SOFT_RULE}`, fontFamily: SANS, fontSize: 29, lineHeight: 1.3 } },
-      h('div', { style: { width: C1, color: BRONZE_BRIGHT, fontWeight: 700, letterSpacing: '0.04em', flexShrink: 0 } }, clipToLines(storyText(r.c1), C1, 29, SANS_EM * 1.1, 1)),
-      h('div', { style: { display: 'flex', width: c2Width, marginLeft: GAP, color: WHITE } }, clipToLines(storyText(r.c2), c2Width, 29, SANS_EM, 2)),
+      { style: { display: 'flex', alignItems: 'flex-start', width: P_TEXT_WIDTH, paddingTop: 20, paddingBottom: 20, borderTop: `1px solid ${S_SOFT_RULE}`, fontFamily: SANS, fontSize: SIZE, lineHeight: 1.3 } },
+      h('div', { style: { width: C1, color: BRONZE_BRIGHT, fontWeight: 700, letterSpacing: '0.04em', flexShrink: 0 } }, clipToLines(storyText(r.c1), C1, SIZE, SANS_EM * 1.1, 1)),
+      h('div', { style: { display: 'flex', width: c2Width, marginLeft: GAP, color: WHITE } }, clipToLines(storyText(r.c2), c2Width, SIZE, SANS_EM, 2)),
       h('div', { style: { width: AMT, marginLeft: GAP, color: WHITE, fontWeight: 700, textAlign: 'right', flexShrink: 0 } }, storyText(r.amount)),
     ),
   )
@@ -730,50 +750,48 @@ function ledgerSlide(slide: Extract<StorySlide, { type: 'ledger' }>): El {
     ? h(
         'div',
         { style: { display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', width: P_TEXT_WIDTH, paddingTop: 22, paddingBottom: 22, borderTop: `1px solid ${S_BRONZE_RULE}`, borderBottom: `1px solid ${S_BRONZE_RULE}`, fontFamily: SANS } },
-        h('div', { style: { fontSize: 29, color: SOFT } }, clipToLines(storyText(slide.total.label), P_TEXT_WIDTH - AMT - GAP, 29, SANS_EM, 1)),
-        h('div', { style: { fontSize: 36, color: BRONZE_BRIGHT, fontWeight: 700, textAlign: 'right' } }, storyText(slide.total.amount)),
+        h('div', { style: { fontSize: SIZE, color: SOFT } }, clipToLines(storyText(slide.total.label), P_TEXT_WIDTH - AMT - GAP, SIZE, SANS_EM, 1)),
+        h('div', { style: { fontSize: 44, color: BRONZE_BRIGHT, fontWeight: 700, textAlign: 'right' } }, storyText(slide.total.amount)),
       )
     : null
   return storyFrame([
-    storyMasthead(),
+    storyMasthead(images),
     storyRule(),
     storyBody([
       storyKicker(slide.kicker),
-      storyHeadline(slide.title, 84, 3),
+      storyHeadline(slide.title, 92, 3),
       ...storyLines(slide.lines, false, 3),
-      h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 44 } }, ...rows, total),
+      h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 40 } }, ...rows, total),
       storyNote(slide.note),
     ]),
     storyFooter(),
-    storyBar(),
   ])
 }
 
-function timelineSlide(slide: Extract<StorySlide, { type: 'timeline' }>): El {
+function timelineSlide(slide: Extract<StorySlide, { type: 'timeline' }>, images: StoryImages): El {
   const events = slide.events.slice(0, 6).map((e) =>
     h(
       'div',
-      { style: { display: 'flex', flexDirection: 'column', paddingTop: 16, paddingBottom: 18, position: 'relative' } },
-      h('div', { style: { position: 'absolute', left: -54, top: 30, width: 18, height: 18, borderRadius: 9, background: BRONZE_BRIGHT } }),
-      h('div', { style: { fontFamily: SANS, fontSize: 24, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: BRONZE_BRIGHT, lineHeight: 1.2 } }, storyText(e.date)),
-      h('div', { style: { fontFamily: SANS, fontSize: 32, lineHeight: 1.3, color: WHITE, marginTop: 6, width: P_TEXT_WIDTH - 60 } }, clipToLines(storyText(e.text), P_TEXT_WIDTH - 60, 32, SANS_EM, 2)),
+      { style: { display: 'flex', flexDirection: 'column', paddingTop: 16, paddingBottom: 20, position: 'relative' } },
+      h('div', { style: { position: 'absolute', left: -58, top: 30, width: 22, height: 22, borderRadius: 11, background: BRONZE_BRIGHT } }),
+      h('div', { style: { fontFamily: SANS, fontSize: 28, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: BRONZE_BRIGHT, lineHeight: 1.2 } }, storyText(e.date)),
+      h('div', { style: { fontFamily: SANS, fontSize: 38, lineHeight: 1.3, color: WHITE, marginTop: 6, width: P_TEXT_WIDTH - 64 } }, clipToLines(storyText(e.text), P_TEXT_WIDTH - 64, 38, SANS_EM, 2)),
     ),
   )
   return storyFrame([
-    storyMasthead(),
+    storyMasthead(images),
     storyRule(),
     storyBody([
       storyKicker(slide.kicker),
-      storyHeadline(slide.title, 84, 3),
+      storyHeadline(slide.title, 104, 3),
       ...storyLines(slide.lines, false, 3),
-      h('div', { style: { display: 'flex', flexDirection: 'column', marginTop: 44, marginLeft: 14, borderLeft: '2px solid rgba(217,168,74,0.5)', paddingLeft: 44 } }, ...events),
+      h('div', { style: { display: 'flex', flexDirection: 'column', marginTop: 44, marginLeft: 16, borderLeft: '2px solid rgba(217,168,74,0.5)', paddingLeft: 46 } }, ...events),
     ]),
     storyFooter(),
-    storyBar(),
   ])
 }
 
-function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>): El {
+function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>, images: StoryImages): El {
   const ayes = Math.max(0, Math.round(Number(slide.ayes) || 0))
   const noes = Math.max(0, Math.round(Number(slide.noes) || 0))
   const total = ayes + noes || 1
@@ -781,89 +799,86 @@ function divisionSlide(slide: Extract<StorySlide, { type: 'division' }>): El {
     h(
       'div',
       { style: { display: 'flex', flexDirection: 'column', width: (P_TEXT_WIDTH - 60) / 2 } },
-      h('div', { style: { fontFamily: SANS, fontSize: 116, fontWeight: 700, lineHeight: 1, color: colour } }, String(n)),
-      h('div', { style: { fontFamily: SANS, fontSize: 24, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: SOFT, marginTop: 10, marginBottom: 22 } }, label),
+      h('div', { style: { fontFamily: SANS, fontSize: 150, fontWeight: 700, lineHeight: 1, letterSpacing: '-0.01em', color: colour } }, String(n)),
+      h('div', { style: { fontFamily: SANS, fontSize: 28, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: SOFT, marginTop: 12, marginBottom: 24 } }, label),
       ...parties.slice(0, 5).map(([party, count]) =>
         h(
           'div',
-          { style: { display: 'flex', justifyContent: 'space-between', fontFamily: SANS, fontSize: 30, lineHeight: 1.3, color: WHITE, paddingTop: 10, paddingBottom: 10, borderTop: `1px solid ${S_SOFT_RULE}` } },
-          h('div', { style: { display: 'flex' } }, clipToLines(storyText(party), 300, 30, SANS_EM, 1)),
+          { style: { display: 'flex', justifyContent: 'space-between', fontFamily: SANS, fontSize: 36, lineHeight: 1.3, color: WHITE, paddingTop: 10, paddingBottom: 10, borderTop: `1px solid ${S_SOFT_RULE}` } },
+          h('div', { style: { display: 'flex' } }, clipToLines(storyText(party), 300, 36, SANS_EM, 1)),
           h('div', { style: { color: SOFT } }, String(count)),
         ),
       ),
     )
   const ayeWidth = Math.round((P_TEXT_WIDTH - 4) * ayes / total)
   return storyFrame([
-    storyMasthead(),
+    storyMasthead(images),
     storyRule(),
     storyBody([
       storyKicker(slide.kicker),
-      storyHeadline(slide.title, 84, 3),
+      storyHeadline(slide.title, 92, 3),
       h('div', { style: { display: 'flex', justifyContent: 'space-between', width: P_TEXT_WIDTH, marginTop: 44 } }, side(ayes, 'Ayes', slide.ayeParties, BRONZE_BRIGHT), side(noes, 'Noes', slide.noParties, SOFT)),
       h(
         'div',
-        { style: { display: 'flex', height: 16, width: P_TEXT_WIDTH, marginTop: 40 } },
-        h('div', { style: { width: ayeWidth, height: 16, background: BRONZE_BRIGHT } }),
-        h('div', { style: { width: P_TEXT_WIDTH - 4 - ayeWidth, height: 16, marginLeft: 4, background: 'rgba(183,198,217,0.45)' } }),
+        { style: { display: 'flex', height: 18, width: P_TEXT_WIDTH, marginTop: 40 } },
+        h('div', { style: { width: ayeWidth, height: 18, background: BRONZE_BRIGHT } }),
+        h('div', { style: { width: P_TEXT_WIDTH - 4 - ayeWidth, height: 18, marginLeft: 4, background: 'rgba(183,198,217,0.45)' } }),
       ),
-      ...storyLines([slide.line], false, 2, 28),
+      ...storyLines([slide.line], false, 2, 30, 36),
     ]),
     storyFooter(),
-    storyBar(),
   ])
 }
 
-function listSlide(slide: Extract<StorySlide, { type: 'list' }>): El {
-  const NUM = 84
+function listSlide(slide: Extract<StorySlide, { type: 'list' }>, images: StoryImages): El {
+  const NUM = 96
   const items = slide.items.slice(0, 4).map((text, i) =>
     h(
       'div',
       { style: { display: 'flex', alignItems: 'flex-start', width: P_TEXT_WIDTH, paddingBottom: 30 } },
-      h('div', { style: { width: NUM, flexShrink: 0, fontFamily: SERIF, fontSize: 52, lineHeight: 1.2, color: BRONZE_BRIGHT, marginTop: -8 } }, String(i + 1)),
-      h('div', { style: { display: 'flex', width: P_TEXT_WIDTH - NUM, fontFamily: SANS, fontSize: 33, lineHeight: 1.4, color: WHITE } }, clipToLines(storyText(text), P_TEXT_WIDTH - NUM, 33, SANS_EM, 4)),
+      h('div', { style: { width: NUM, flexShrink: 0, fontFamily: SERIF, fontSize: 64, lineHeight: 1.1, color: BRONZE_BRIGHT, marginTop: -6 } }, String(i + 1)),
+      h('div', { style: { display: 'flex', width: P_TEXT_WIDTH - NUM, fontFamily: SANS, fontSize: 36, lineHeight: 1.3, color: WHITE } }, clipToLines(storyText(text), P_TEXT_WIDTH - NUM, 36, SANS_EM, 5)),
     ),
   )
   return storyFrame([
-    storyMasthead(),
+    storyMasthead(images),
     storyRule(),
     storyBody([
       storyKicker(slide.kicker),
-      storyHeadline(slide.title, 84, 3),
+      storyHeadline(slide.title, 92, 3),
       h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 40 } }, ...items),
       storyNote(slide.note),
     ]),
     storyFooter(),
-    storyBar(),
   ])
 }
 
-function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>): El {
+function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>, images: StoryImages): El {
   // The address is the largest type on the slide and must never break mid-path:
-  // sized to one line on a bold-width estimate (0.6em a character), 36px at least.
+  // sized to one line on a bold-width estimate (0.6em a character), 40px at least.
   const url = storyText(slide.url)
-  const urlSize = Math.max(36, Math.min(52, Math.floor(S_CTA_WIDTH / (Math.max(1, url.length) * 0.6))))
+  const urlSize = Math.max(40, Math.min(64, Math.floor(S_CTA_WIDTH / (Math.max(1, url.length) * 0.6))))
   const rows = slide.rows.slice(0, 4).map((r) =>
-    h('div', { style: { display: 'flex', width: P_TEXT_WIDTH, fontFamily: SANS, fontSize: 30, lineHeight: 1.4, color: WHITE, paddingTop: 18, paddingBottom: 18, borderTop: `1px solid ${S_SOFT_RULE}` } }, clipToLines(storyText(r), P_TEXT_WIDTH, 30, SANS_EM, 2)),
+    h('div', { style: { display: 'flex', width: P_TEXT_WIDTH, fontFamily: SANS, fontSize: 34, lineHeight: 1.35, color: WHITE, paddingTop: 18, paddingBottom: 18, borderTop: `1px solid ${S_SOFT_RULE}` } }, clipToLines(storyText(r), P_TEXT_WIDTH, 34, SANS_EM, 2)),
   )
   return storyFrame([
-    storyMasthead(),
+    storyMasthead(images),
     storyRule(),
     storyEngraving(240, 0.38),
     storyBody([
       storyKicker(slide.kicker),
-      storyHeadline(slide.title, 84, 3),
+      storyHeadline(slide.title, 92, 3),
       h('div', { style: { display: 'flex', flexDirection: 'column', width: P_TEXT_WIDTH, marginTop: 40 } }, ...rows),
       // The call to action stops short of the engraving's column, so the two never share a line.
       h(
         'div',
-        { style: { display: 'flex', flexDirection: 'column', width: S_CTA_WIDTH, marginTop: 56 } },
-        h('div', { style: { width: 96, height: 1, background: P_RULE, marginBottom: 30 } }),
+        { style: { display: 'flex', flexDirection: 'column', width: S_CTA_WIDTH, marginTop: 52 } },
+        h('div', { style: { width: 120, height: 1, background: P_RULE, marginBottom: 30 } }),
         h('div', { style: { fontFamily: SANS, fontSize: urlSize, fontWeight: 700, lineHeight: 1.1, letterSpacing: '0.01em', color: BRONZE_BRIGHT, width: S_CTA_WIDTH } }, url),
-        h('div', { style: { fontFamily: SANS, fontSize: 30, lineHeight: 1.4, color: SOFT, marginTop: 12, width: S_CTA_WIDTH } }, clipToLines(storyText(slide.path), S_CTA_WIDTH, 30, SANS_EM, 2)),
+        h('div', { style: { fontFamily: SANS, fontSize: 34, lineHeight: 1.35, color: SOFT, marginTop: 14, width: S_CTA_WIDTH } }, clipToLines(storyText(slide.path), S_CTA_WIDTH, 34, SANS_EM, 2)),
       ),
     ]),
     storyFooter(),
-    storyBar(),
   ])
 }
 
@@ -871,14 +886,14 @@ function sourceSlide(slide: Extract<StorySlide, { type: 'source' }>): El {
 export function storySlideTree(slide: StorySlide, images: StoryImages = {}): El {
   switch (slide.type) {
     case 'cover': return coverSlide(slide, images)
-    case 'number': return numberSlide(slide)
+    case 'number': return numberSlide(slide, images)
     case 'picture': return pictureSlide(slide, images)
-    case 'bars': return barsSlide(slide)
-    case 'ledger': return ledgerSlide(slide)
-    case 'timeline': return timelineSlide(slide)
-    case 'division': return divisionSlide(slide)
-    case 'list': return listSlide(slide)
-    case 'source': return sourceSlide(slide)
+    case 'bars': return barsSlide(slide, images)
+    case 'ledger': return ledgerSlide(slide, images)
+    case 'timeline': return timelineSlide(slide, images)
+    case 'division': return divisionSlide(slide, images)
+    case 'list': return listSlide(slide, images)
+    case 'source': return sourceSlide(slide, images)
   }
 }
 

@@ -38,7 +38,7 @@ export type StorySlideType = StorySlide['type']
 export const STORY_MIN_SLIDES = 3
 export const STORY_MAX_SLIDES = 10
 /** Bump when a slide's drawing changes so cached renders are not reused. */
-export const STORY_VERSION = 1
+export const STORY_VERSION = 2
 
 export interface StoryPhoto {
   /** Path under the static asset store, e.g. /social/photos/senate-chamber.jpg. */

@@ -73,14 +73,14 @@ test('every slide type renders as a 1080x1350 JPEG', async () => {
 test('the cover draws the photograph as a full-width band with the credit and a swipe cue; without one it is the engraving card', () => {
   const tree = storySlideTree(slides.cover, { photo, credit });
   const band = images(tree).find(n => n.props.src === photo);
-  assert.ok(band, 'the photograph is drawn'); assert.equal(band.props.width, 1080); assert.equal(band.props.height, 880); assert.equal(band.props.style.objectFit, 'cover');
+  assert.ok(band, 'the photograph is drawn'); assert.equal(band.props.width, 1080); assert.equal(band.props.height, 960); assert.equal(band.props.style.objectFit, 'cover'); assert.match(String(band.props.style.maskImage), /^linear-gradient\(to bottom/, 'the photograph is feathered into the navy by a mask');
   assert.ok(walk(tree).some(n => typeof n.props?.style?.backgroundImage === 'string' && n.props.style.backgroundImage.startsWith('linear-gradient')), 'the wash runs into the navy');
   assert.ok(texts(tree).includes(credit), 'the credit line is on the footer');
   assert.ok(texts(tree).some(t => t.includes('Swipe')), 'the swipe cue');
   assert.ok(!texts(tree).includes(slides.cover.alt), 'alt text is never drawn');
   const bare = storySlideTree(slides.coverBare, {});
   assert.equal(images(bare).find(n => n.props.width === 1080), undefined, 'no band without a photograph');
-  assert.ok(images(bare).some(n => n.props.width === 340), 'the engraving stands in');
+  assert.ok(images(bare).some(n => n.props.width === 520), 'the engraving stands in');
   assert.ok(!texts(bare).some(t => t.startsWith('Photo:')), 'no credit for no photograph');
   const withInset = storySlideTree(slides.coverInset, { photo, credit, inset, insetCredit: slides.coverInset.insetCredit });
   const face = images(withInset).find(n => n.props.src === inset);
@@ -91,7 +91,7 @@ test('the cover draws the photograph as a full-width band with the credit and a 
 test('the number slide sets the figure at the card statistic size; the ledger and source clip long text on a word', () => {
   const number = storySlideTree(slides.number);
   const value = walk(number).find(n => n.props?.children === '$11.3m');
-  assert.equal(value.props.style.fontSize, 132); assert.equal(value.props.style.color, '#D9A84A');
+  assert.equal(value.props.style.fontSize, 176); assert.equal(value.props.style.color, '#D9A84A');
   const ledger = storySlideTree(slides.ledger);
   const c2 = texts(ledger).find(t => t.startsWith('Protecting National'));
   assert.ok(c2.endsWith('…'), 'a long description is clipped to two lines');
