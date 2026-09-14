@@ -1,4 +1,5 @@
 import type { RecordQuestion } from './ask-records'
+import type { MoneyFacts } from './ask-money-overview'
 import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQuestion, fundingUserTurns, samePeriodFundingComparison} from './ask-money-followup'
 import {financialYear, receiptPeriodQuery} from './receipt-period'
 import {isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptGraphForQuestion, unmatchedReceiptRankingScope, type ReceiptGraph} from './voice-money'
@@ -29,6 +30,28 @@ const disclosureRegister=(jurisdiction:string)=>({federal:'AEC political disclos
 const recordCount=(n:number)=>`${n.toLocaleString('en-AU')} disclosed receipt ${n===1?'record':'records'}`
 const sourceCopy=(text:string)=>plain(text).replace(/\s+/g,' ').trim()
 type ReceiptTotals = Exclude<ReturnType<typeof receiptAnswer>, null | {needs_period:boolean} | {needs_scope:boolean}>
+
+const LIMITS=['These are party receipts, not personal payments to politicians.','Not every receipt is a gift.','Only donors in Opax\u2019s published selection are counted, not every donor.','An industry grouping is not proof of coordinated lobbying or influence.','Amounts are not adjusted for inflation.']
+
+/**
+ * What a written opening is allowed to draw on. Every figure a model could
+ * want is spelled out here as a string to copy - the lead over the next row,
+ * what the rest come to, the leader's share - so the paragraph above the table
+ * never has to do arithmetic of its own. See ask-money-overview.ts.
+ */
+function moneyFacts(question:string|undefined, ranked_by:string, selection:string, rows:{name:string;total_aud:number;receipts:number}[]):MoneyFacts|undefined {
+  if(rows.length<1)return undefined
+  const listed=rows.reduce((sum,row)=>sum+row.total_aud,0)
+  const derived:string[]=[]
+  if(rows.length>1){
+    const gap=Math.round((rows[0].total_aud-rows[1].total_aud)*100)/100
+    derived.push(gap?`Gap between ${plain(rows[0].name)} and ${plain(rows[1].name)}: ${aud(gap)}`:`${plain(rows[0].name)} and ${plain(rows[1].name)}: the same total`)
+    derived.push(`Everything below ${plain(rows[0].name)}, added together: ${aud(listed-rows[0].total_aud)}`)
+    if(listed>0)derived.push(`${plain(rows[0].name)}'s share of the shown total (${aud(listed)}): ${Math.round((rows[0].total_aud/listed)*100)}%`)
+  }
+  return {...(question?.trim()?{question:question.trim()}:{}),ranked_by,selection:sourceCopy(selection.replace(/\*\*/g,'')),
+    rows:rows.map(row=>({name:plain(row.name).trim(),amount:aud(row.total_aud),records:recordCount(row.receipts)})),derived,limits:LIMITS}
+}
 
 function moneyContext(result:ReceiptTotals, years?:number[]) {
   const bounds=result.requested_years
@@ -83,7 +106,8 @@ function comparedYearAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:stri
   }
   answer+='\n\nCoverage: **Selected party receipts, not a gifts-only donation total or personal payments.** These totals include only donors in Opax’s published map. Undated receipts and other years are excluded. Election returns may use polling-year dates. An industry grouping does not establish lobbying or influence.'
   answer+=`\n\n[Download the calculation data](https://opax.com.au${file})`
-  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,money_context:context,scope:{state:result.jurisdiction,party:result.selected_parties[0]}}
+  const money_facts=moneyFacts(undefined,'financial year',context,[earlier,later].map(row=>({name:fy(row.year),total_aud:row.total_aud,receipts:row.receipts})))
+  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,money_context:context,money_facts,scope:{state:result.jurisdiction,party:result.selected_parties[0]}}
 }
 
 /** Compare one dimension at a time, over exactly the same dated receipt selection. */
@@ -131,7 +155,8 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
   }
   answer+='\n\nCoverage: These are **party receipts, not personal payments or a gifts-only donation total**. Only donors in Opax’s published map are included, not every donor. Industry labels do not establish lobbying or influence. Both sides use the same year filters; undated records are excluded when filtering by year.'
   answer+=`\n\n[Download the calculation data](https://opax.com.au${file})`
-  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,money_context:context,money_question,scope:{state:result.jurisdiction,...(bounds.from!==null?{from:String(bounds.from)}:{}),...(bounds.to!==null?{to:String(bounds.to)}:{})}}
+  const money_facts=moneyFacts(money_question,partyComparison?'recipient party':'donor industry',context,rows)
+  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,money_context:context,money_question,money_facts,scope:{state:result.jurisdiction,...(bounds.from!==null?{from:String(bounds.from)}:{}),...(bounds.to!==null?{to:String(bounds.to)}:{})}}
 }
 
 export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) {
@@ -220,5 +245,6 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
   const money_question=fundingScopeQuestion({party:result.selected_parties[0],industry:result.selected_industries[0],
     donor:result.selected_industries.length?undefined:result.selected_donors.length===1?result.selected_donors[0]:undefined,
     ...result.requested_years,mode:fromDonors?'donors':allFlows?'connections':'parties'},jurisdiction)
-  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,money_context:context,money_question,scope:{state:jurisdiction,...(input.party?{party:input.party}:{})}}
+  const money_facts=moneyFacts(money_question,allFlows?'donor and recipient party':fromDonors?'donor':'recipient party',context,rows)
+  return {answer,citations,sources,answer_status:'calculated',money_ranking:true,money_context:context,money_question,money_facts,scope:{state:jurisdiction,...(input.party?{party:input.party}:{})}}
 }

@@ -40,6 +40,7 @@ interface Env {
   SEARCH_SUMMARY_MODEL?: string
   JOURNEY_STORY_MODEL?: string
   FOLLOWUPS_MODEL?: string
+  MONEY_OVERVIEW_MODEL?: string
 }
 
 declare namespace Cloudflare {
@@ -84,5 +85,6 @@ declare namespace Cloudflare {
   SEARCH_SUMMARY_MODEL?: string
   JOURNEY_STORY_MODEL?: string
   FOLLOWUPS_MODEL?: string
+  MONEY_OVERVIEW_MODEL?: string
   }
 }

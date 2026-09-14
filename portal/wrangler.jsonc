@@ -92,7 +92,8 @@
     "POSITION_RECOVERY_MODEL": "openai-compatible",
     "SEARCH_SUMMARY_MODEL": "openai-compatible",
     "JOURNEY_STORY_MODEL": "openai-compatible",
-    "FOLLOWUPS_MODEL": "openai-compatible"
+    "FOLLOWUPS_MODEL": "openai-compatible",
+    "MONEY_OVERVIEW_MODEL": "openai-compatible"
   },
 
   // Workers Rate Limiting bindings (wrangler >= 4.36 top-level `ratelimits`;

@@ -1,6 +1,7 @@
 import { runSocialPublication, socialStatus, publicationCopy, previewPublication, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
+import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
 /**
  * OPAX portal Worker — thin proxy over the Progress Agentic RAG knowledge box.
@@ -252,6 +253,12 @@ const RESOURCE_CACHE_TTL = 3600
 // moves. Held for a day against the answer's seven, a cached ask replayed on
 // day two paid for a fresh model call every time. They expire together now.
 const FOLLOWUPS_CACHE_TTL = ASK_CACHE_TTL
+// A written opening belongs to the figures it introduces, and those come from
+// a published export that only moves with the corpus. Keyed on the facts
+// themselves (not the wording of the question), so two ways of asking for the
+// same ranking share one paid call, and CACHE_EPOCH retires them together.
+const MONEY_OVERVIEW_CACHE_TTL = ASK_CACHE_TTL
+const MONEY_OVERVIEW_TIMEOUT_MS = 20000
 const STATS_CACHE_TTL = 300
 const RECENT_CACHE_TTL = 300
 
@@ -1076,6 +1083,38 @@ function replayCachedAsk(hit: Response, ctx: ExecutionContext): Response {
   })
 }
 
+/**
+ * The paragraph above a calculated money answer's figures.
+ *
+ * The figures are the answer; this only introduces them. The model is handed
+ * the rows and the comparisons already worked out (ask-money.ts builds the
+ * sheet) and may use no number that is not on it - verifiedOverview drops a
+ * paragraph that strays rather than repairing it, so a reader who gets no
+ * opening still gets the same calculated answer. A slow or unavailable model
+ * costs the answer nothing but the timeout.
+ */
+async function moneyOverview(facts: MoneyFacts, env: Env, ctx: ExecutionContext): Promise<{ overview: string; why: string }> {
+  const model = env.MONEY_OVERVIEW_MODEL || env.ASK_MODEL || 'openai-compatible'
+  const key = cacheRequest('money-overview', await sha256Hex(JSON.stringify({ epoch: env.CACHE_EPOCH, model, facts })))
+  const hit = await caches.default.match(key)
+  if (hit) return { overview: (await hit.json<{ overview?: string }>()).overview || '', why: 'hit' }
+  try {
+    const res = await kbFetch(env, '/ask', {
+      body: { query: moneyOverviewPrompt(facts), top_k: 5, max_tokens: 4096, generative_model: model },
+      headers: { 'x-synchronous': 'true' },
+      signal: AbortSignal.timeout(MONEY_OVERVIEW_TIMEOUT_MS),
+    })
+    if (!res.ok) return { overview: '', why: `upstream-${res.status}` }
+    const written = ((await res.json()) as { answer?: string }).answer ?? ''
+    const overview = verifiedOverview(written, facts)
+    // A paragraph that failed its checks may be a model stumble; never pin one.
+    if (overview) cacheStore(ctx, key, json({ overview }), MONEY_OVERVIEW_CACHE_TTL)
+    return { overview, why: overview ? 'written' : written.trim() ? 'rejected' : 'empty' }
+  } catch (err) {
+    return { overview: '', why: `error-${err instanceof Error ? err.name : 'unknown'}` }
+  }
+}
+
 async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const rawInput = ((await request.json().catch(() => ({}))) ?? {}) as AskInput
   // Phase durations go out as a Server-Timing header on synchronous answers,
@@ -1092,7 +1131,22 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
   // apply calendar-year or parliamentarian filters. No model call is needed.
   try {
     const ranked = await rankedMoneyAnswer(rawInput, env.ASSETS)
-    if (ranked) { mark('receipts'); return timed(json(ranked)) }
+    if (ranked) {
+      mark('receipts')
+      // The sheet is for writing the opening, never for the reader: it leaves
+      // with the answer only as the paragraph it produced.
+      const { money_facts, ...payload } = ranked as typeof ranked & { money_facts?: MoneyFacts }
+      if (!money_facts) return timed(json(payload))
+      const { overview, why } = await moneyOverview(money_facts, env, ctx)
+      mark('overview')
+      // Why an answer has no opening is worth being able to see from outside
+      // (a rejected paragraph and an unavailable model read the same to a
+      // reader); the paragraph itself, and nothing about the reader, is all
+      // that goes in the body.
+      const res = timed(json(overview ? { ...payload, money_overview: overview } : payload))
+      res.headers.set('x-opax-overview', why)
+      return res
+    }
   } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
   // A follow-up in a conversation rarely names its subject ("no he has been
   // in tons of grants, look more"), and the record is searched on the words
