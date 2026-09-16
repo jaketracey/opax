@@ -48,6 +48,22 @@ feed-post metrics"). The route is bearer-guarded and returns 401 without the
 operator secret; the result is cached in `GENERATION_CACHE` under
 `daily-post:engagement` for 600 s.
 
+## Reading a platform refusal
+
+Refusals carry the HTTP status and Meta's numeric error code, never a message
+or a token. Seen so far:
+
+- `facebook:<date>=Provider HTTP 400 code 10`: the Page token lacks
+  `pages_read_engagement` (reactions, shares) or `pages_read_user_content`
+  (comments). Posting only needs `pages_manage_posts`, which is all the current
+  token carries. Fix: regenerate the Page token in the Meta app with both read
+  permissions added, then `npx wrangler secret put FACEBOOK_PAGE_TOKEN`.
+- `instagram:<date>=Provider HTTP 400 code 100/33`: the receipt's media id no
+  longer resolves (the 13 Sep edition was commissioned from Node and its id is
+  not a feed media id). Nothing to fix; later editions read fine.
+- X reads (`GET /2/tweets`, `GET /2/users/me`) work on the pay-per-use app and
+  cost a fraction of a cent per call.
+
 ## What is not covered
 
 - Reddit: the launch post (r/SideProject, `1wcclsf`) has no public JSON any
