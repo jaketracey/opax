@@ -268,8 +268,9 @@ test('engagement reads account and feed-post metrics, skips stories, reports a r
   if(url.includes('/2/users/me?user.fields=public_metrics'))return Response.json({data:{id:'123',username:'OpaxAustralia',public_metrics:{followers_count:3,following_count:84,tweet_count:6}}});
   if(url.startsWith('https://api.x.com/2/tweets?ids=1001'))return Response.json({data:[{id:'1001',public_metrics:{like_count:2,reply_count:1,retweet_count:1,quote_count:0,impression_count:40,bookmark_count:0}}]});
   if(url.endsWith('/456?fields=followers_count,fan_count'))return Response.json({followers_count:12,fan_count:11});
-  if(url.includes('/456_1002?fields='))return Response.json({reactions:{summary:{total_count:5}},comments:{summary:{total_count:2}},shares:{count:1}});
-  if(url.endsWith('/789?fields=followers_count,media_count'))return new Response('nope',{status:403});
+  if(url.endsWith('/456_1002?fields=reactions.summary(total_count).limit(0),shares'))return Response.json({reactions:{summary:{total_count:5}},shares:{count:1}});
+  if(url.endsWith('/456_1002?fields=comments.summary(total_count).limit(0)'))return Response.json({comments:{summary:{total_count:2}}});
+  if(url.endsWith('/789?fields=followers_count,media_count'))return Response.json({error:{message:'secret',code:10,error_subcode:2069030}},{status:403});
   if(url.endsWith('/1003?fields=like_count,comments_count'))return Response.json({like_count:7,comments_count:0});
  });
  const at=new Date(now).toISOString();
@@ -279,7 +280,7 @@ test('engagement reads account and feed-post metrics, skips stories, reports a r
  const e=await socialEngagement(h.env,{fetchImpl:h.fetchImpl,now});
  assert.deepEqual(e.accounts.x,{followers:3,following:84,posts:6});
  assert.deepEqual(e.accounts.facebook,{followers:12,likes:11});
- assert.equal(e.accounts.instagram,undefined);assert.equal(e.errors.instagram,'Provider HTTP 403');
+ assert.equal(e.accounts.instagram,undefined);assert.equal(e.errors.instagram,'Provider HTTP 403 code 10/2069030');
  assert.deepEqual(e.posts.map(p=>p.channel).sort(),['facebook','instagram','x']);
  assert.deepEqual(e.posts.find(p=>p.channel==='x'),{date:post.date,channel:'x',post_id:'1001',likes:2,comments:1,shares:1,views:40,bookmarks:0});
  assert.deepEqual(e.posts.find(p=>p.channel==='facebook'),{date:post.date,channel:'facebook',post_id:'456_1002',likes:5,comments:2,shares:1});

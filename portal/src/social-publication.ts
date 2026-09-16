@@ -84,7 +84,12 @@ async function api(url: string, token: string, fetchImpl: typeof fetch, body?: R
     if (error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')) throw new Error('Provider timeout')
     throw error
   }
-  if (!res.ok) throw new Error(`Provider HTTP ${res.status}`)
+  if (!res.ok) {
+    // Meta's numeric error code (never its message) tells a missing permission from a bad id.
+    let code = ''
+    try { const c = (await res.json() as { error?: { code?: unknown; error_subcode?: unknown } }).error; if (typeof c?.code === 'number') code = ` code ${c.code}${typeof c.error_subcode === 'number' ? `/${c.error_subcode}` : ''}` } catch {}
+    throw new Error(`Provider HTTP ${res.status}${code}`)
+  }
   return await res.json() as Record<string, unknown>
 }
 const META_READ_TIMEOUT = 20000
@@ -361,10 +366,17 @@ export async function socialEngagement(env: SocialEnv, options: { fetchImpl?: ty
       result.accounts.facebook = { followers: num(page.followers_count), likes: num(page.fan_count) }
     } catch (error) { fail('facebook', error) }
     for (const d of deliveries.filter(d => d.channel === 'facebook')) {
+      // Reactions and shares need pages_read_engagement; comments also need
+      // pages_read_user_content. Two reads, so one refusal costs one field.
+      const target = byId.get(`facebook:${d.post_id}`)!
       try {
-        const post = await api(`${graphOrigin(env)}/${d.post_id}?fields=reactions.summary(total_count).limit(0),comments.summary(total_count).limit(0),shares`, token, fetchImpl) as { reactions?: { summary?: { total_count?: number } }; comments?: { summary?: { total_count?: number } }; shares?: { count?: number } }
-        Object.assign(byId.get(`facebook:${d.post_id}`)!, { likes: num(post.reactions?.summary?.total_count), comments: num(post.comments?.summary?.total_count), shares: num(post.shares?.count) })
+        const post = await api(`${graphOrigin(env)}/${d.post_id}?fields=reactions.summary(total_count).limit(0),shares`, token, fetchImpl) as { reactions?: { summary?: { total_count?: number } }; shares?: { count?: number } }
+        Object.assign(target, { likes: num(post.reactions?.summary?.total_count), shares: num(post.shares?.count) })
       } catch (error) { fail(`facebook:${d.edition_date}`, error) }
+      try {
+        const post = await api(`${graphOrigin(env)}/${d.post_id}?fields=comments.summary(total_count).limit(0)`, token, fetchImpl) as { comments?: { summary?: { total_count?: number } } }
+        target.comments = num(post.comments?.summary?.total_count)
+      } catch (error) { fail(`facebook:${d.edition_date}:comments`, error) }
     }
   }
   if (ready.instagram.ready) {
