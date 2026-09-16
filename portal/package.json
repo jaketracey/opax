@@ -19,7 +19,8 @@
     "build:grants-map": "node grants-map/build.mjs",
     "build:voice": "node voice/build.mjs",
     "test": "node --test test/*.test.mjs",
-    "build:social": "node ../scripts/build_social_catalog.mjs"
+    "build:social": "node ../scripts/build_social_catalog.mjs",
+    "insights": "node ../scripts/insights.mjs"
   },
   "devDependencies": {
     "@types/three": "^0.185.4",

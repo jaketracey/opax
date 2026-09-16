@@ -304,3 +304,82 @@ export async function runSocialPublication(env: SocialEnv, options: {
   }
   return { date, subject: post.subject, channels: results }
 }
+
+// ---------------------------------------------------------------- engagement
+
+interface PostMetrics { date: string; channel: Channel; post_id: string; likes?: number; comments?: number; shares?: number; views?: number; bookmarks?: number }
+interface Engagement { at: string; accounts: Record<string, Record<string, number>>; posts: PostMetrics[]; errors: Record<string, string> }
+const num = (value: unknown): number => (typeof value === 'number' && Number.isFinite(value) ? value : 0)
+
+async function xGet(url: URL, env: SocialEnv, fetchImpl: typeof fetch): Promise<Record<string, unknown>> {
+  const authorization = await oauth1Header('GET', url.toString(), xCredentials(env)!)
+  const res = await fetchImpl(url.toString(), { headers: { authorization }, signal: AbortSignal.timeout(20000), redirect: 'manual' })
+  if (!res.ok) throw new Error(`X HTTP ${res.status}`)
+  return await res.json() as Record<string, unknown>
+}
+
+/**
+ * What the platforms report for the account and the latest feed posts (X,
+ * Facebook, Instagram; stories expire and are skipped). An operator's read:
+ * every call is metered, so index.ts caches the result. A platform that
+ * refuses is reported under `errors` with a controlled code, never a body.
+ */
+export async function socialEngagement(env: SocialEnv, options: { fetchImpl?: typeof fetch; limit?: number; now?: number } = {}): Promise<Engagement> {
+  const fetchImpl = options.fetchImpl ?? fetch
+  const limit = Math.min(Math.max(Math.trunc(options.limit ?? 10), 1), 30)
+  const rows = await env.COMMUNITY_DB.prepare("SELECT edition_date, channel, post_id FROM social_deliveries WHERE status='posted' AND post_id IS NOT NULL AND channel IN ('x','facebook','instagram') ORDER BY edition_date DESC, channel LIMIT ?").bind(limit * 3).all<{ edition_date: string; channel: Channel; post_id: string }>()
+  const deliveries = rows.results.filter(r => /^[\d_]+$/.test(r.post_id))
+  const ready = readiness(env)
+  const result: Engagement = { at: new Date(options.now ?? Date.now()).toISOString(), accounts: {}, posts: [], errors: {} }
+  const fail = (key: string, error: unknown) => { result.errors[key] = error instanceof Error ? error.message : 'error' }
+  const byId = new Map<string, PostMetrics>()
+  for (const d of deliveries) byId.set(`${d.channel}:${d.post_id}`, { date: d.edition_date, channel: d.channel, post_id: d.post_id })
+
+  if (ready.x.ready) {
+    try {
+      const me = new URL('https://api.x.com/2/users/me'); me.searchParams.set('user.fields', 'public_metrics')
+      const body = await xGet(me, env, fetchImpl) as { data?: { public_metrics?: Record<string, unknown> } }
+      const m = body.data?.public_metrics ?? {}
+      result.accounts.x = { followers: num(m.followers_count), following: num(m.following_count), posts: num(m.tweet_count) }
+    } catch (error) { fail('x', error) }
+    const ids = deliveries.filter(d => d.channel === 'x').map(d => d.post_id)
+    if (ids.length) {
+      try {
+        const url = new URL('https://api.x.com/2/tweets'); url.searchParams.set('ids', ids.join(',')); url.searchParams.set('tweet.fields', 'public_metrics')
+        const body = await xGet(url, env, fetchImpl) as { data?: { id: string; public_metrics?: Record<string, unknown> }[] }
+        for (const t of body.data ?? []) {
+          const p = byId.get(`x:${t.id}`); const m = t.public_metrics ?? {}
+          if (p) Object.assign(p, { likes: num(m.like_count), comments: num(m.reply_count), shares: num(m.retweet_count) + num(m.quote_count), views: num(m.impression_count), bookmarks: num(m.bookmark_count) })
+        }
+      } catch (error) { fail('x_posts', error) }
+    }
+  }
+  if (ready.facebook.ready) {
+    const token = env.FACEBOOK_PAGE_TOKEN!
+    try {
+      const page = await api(`${graphOrigin(env)}/${env.FACEBOOK_PAGE_ID}?fields=followers_count,fan_count`, token, fetchImpl)
+      result.accounts.facebook = { followers: num(page.followers_count), likes: num(page.fan_count) }
+    } catch (error) { fail('facebook', error) }
+    for (const d of deliveries.filter(d => d.channel === 'facebook')) {
+      try {
+        const post = await api(`${graphOrigin(env)}/${d.post_id}?fields=reactions.summary(total_count).limit(0),comments.summary(total_count).limit(0),shares`, token, fetchImpl) as { reactions?: { summary?: { total_count?: number } }; comments?: { summary?: { total_count?: number } }; shares?: { count?: number } }
+        Object.assign(byId.get(`facebook:${d.post_id}`)!, { likes: num(post.reactions?.summary?.total_count), comments: num(post.comments?.summary?.total_count), shares: num(post.shares?.count) })
+      } catch (error) { fail(`facebook:${d.edition_date}`, error) }
+    }
+  }
+  if (ready.instagram.ready) {
+    const token = env.INSTAGRAM_ACCESS_TOKEN!
+    try {
+      const account = await api(`${graphOrigin(env)}/${env.INSTAGRAM_ACCOUNT_ID}?fields=followers_count,media_count`, token, fetchImpl)
+      result.accounts.instagram = { followers: num(account.followers_count), posts: num(account.media_count) }
+    } catch (error) { fail('instagram', error) }
+    for (const d of deliveries.filter(d => d.channel === 'instagram')) {
+      try {
+        const media = await api(`${graphOrigin(env)}/${d.post_id}?fields=like_count,comments_count`, token, fetchImpl)
+        Object.assign(byId.get(`instagram:${d.post_id}`)!, { likes: num(media.like_count), comments: num(media.comments_count) })
+      } catch (error) { fail(`instagram:${d.edition_date}`, error) }
+    }
+  }
+  result.posts = [...byId.values()]
+  return result
+}

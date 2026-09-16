@@ -4,7 +4,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
 import { build } from 'esbuild';
 const built = await build({ entryPoints: [new URL('../src/social-publication.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
-const { runSocialPublication, publicationCopy, readiness, socialStatus, previewPublication } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
+const { runSocialPublication, publicationCopy, readiness, socialStatus, previewPublication, socialEngagement } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
 const storyBuilt = await build({ entryPoints: [new URL('../src/story.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
 const { STORY_VERSION, storyFrames } = await import('data:text/javascript;base64,' + Buffer.from(storyBuilt.outputFiles[0].text).toString('base64'));
 const post = { date: '2026-09-13', subject: 'person:Test Member', kind: 'politician', title: 'Test Member', text: 'Check the parliamentary record.\n\nhttps://opax.com.au/subject/person/Test%20Member', caption: 'The longer source-qualified caption.\n\nhttps://opax.com.au/subject/person/Test%20Member', url: 'https://opax.com.au/subject/person/Test%20Member' };
@@ -50,7 +50,7 @@ function harness(overrides = {}, handler) {
   throw Error('Unexpected request '+url);
  };
  const run=()=>runSocialPublication(env,{now,personTopics:async()=>Response.json({}),fetchImpl});
- return {env,db,sqlite,calls,run};
+ return {env,db,sqlite,calls,run,fetchImpl};
 }
 test('platform copy uses attribution, real JPEG, a portrait card and a bio CTA for Instagram',()=>{
  for(const channel of ['x','facebook','instagram']) {
@@ -261,4 +261,27 @@ test('story channels post nothing for an edition without a story, and a frame in
  assert.equal(r2.channels.instagram_story,'failed');assert.equal(r2.channels.facebook_story,'failed');assert.equal(r2.channels.instagram,'posted');assert.equal(r2.channels.facebook,'posted');
  assert.equal(h2.sqlite.prepare("SELECT detail FROM social_deliveries WHERE channel='instagram_story'").get().detail,'Story slide unavailable');
  assert.equal(h2.calls.filter(c=>c.body?.media_type==='STORIES').length,0,'no story container is created');
+});
+
+test('engagement reads account and feed-post metrics, skips stories, reports a refusal as a code',async()=>{
+ const h=harness({},async(url)=>{
+  if(url.includes('/2/users/me?user.fields=public_metrics'))return Response.json({data:{id:'123',username:'OpaxAustralia',public_metrics:{followers_count:3,following_count:84,tweet_count:6}}});
+  if(url.startsWith('https://api.x.com/2/tweets?ids=1001'))return Response.json({data:[{id:'1001',public_metrics:{like_count:2,reply_count:1,retweet_count:1,quote_count:0,impression_count:40,bookmark_count:0}}]});
+  if(url.endsWith('/456?fields=followers_count,fan_count'))return Response.json({followers_count:12,fan_count:11});
+  if(url.includes('/456_1002?fields='))return Response.json({reactions:{summary:{total_count:5}},comments:{summary:{total_count:2}},shares:{count:1}});
+  if(url.endsWith('/789?fields=followers_count,media_count'))return new Response('nope',{status:403});
+  if(url.endsWith('/1003?fields=like_count,comments_count'))return Response.json({like_count:7,comments_count:0});
+ });
+ const at=new Date(now).toISOString();
+ for(const [c,id] of [['x','1001'],['facebook','456_1002'],['instagram','1003'],['instagram_story','800,801']]) h.sqlite.prepare('INSERT INTO social_deliveries(edition_date,channel,status,post_id,updated_at) VALUES(?,?,?,?,?)').run(post.date,c,'posted',id,at);
+ h.sqlite.prepare('INSERT INTO social_editions VALUES(?,?,?,?)').run('2026-09-12','person:Other',JSON.stringify({...post,date:'2026-09-12'}),at);
+ h.sqlite.prepare('INSERT INTO social_deliveries(edition_date,channel,status,post_id,updated_at) VALUES(?,?,?,?,?)').run('2026-09-12','x','failed',null,at);
+ const e=await socialEngagement(h.env,{fetchImpl:h.fetchImpl,now});
+ assert.deepEqual(e.accounts.x,{followers:3,following:84,posts:6});
+ assert.deepEqual(e.accounts.facebook,{followers:12,likes:11});
+ assert.equal(e.accounts.instagram,undefined);assert.equal(e.errors.instagram,'Provider HTTP 403');
+ assert.deepEqual(e.posts.map(p=>p.channel).sort(),['facebook','instagram','x']);
+ assert.deepEqual(e.posts.find(p=>p.channel==='x'),{date:post.date,channel:'x',post_id:'1001',likes:2,comments:1,shares:1,views:40,bookmarks:0});
+ assert.deepEqual(e.posts.find(p=>p.channel==='facebook'),{date:post.date,channel:'facebook',post_id:'456_1002',likes:5,comments:2,shares:1});
+ assert.deepEqual(e.posts.find(p=>p.channel==='instagram'),{date:post.date,channel:'instagram',post_id:'1003',likes:7,comments:0});
 });

@@ -1,4 +1,4 @@
-import { runSocialPublication, socialStatus, publicationCopy, previewPublication, CHANNELS, type Channel } from './social-publication'
+import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
@@ -4838,6 +4838,20 @@ async function route(
       }
       if (url.pathname === '/api/daily-post/status' && request.method === 'GET') {
         const response = json(await socialStatus(env))
+        response.headers.set('cache-control', 'no-store')
+        return response
+      }
+      if (url.pathname === '/api/daily-post/engagement' && request.method === 'GET') {
+        // An operator's read of what the platforms report for the account and
+        // the latest editions (docs/INSIGHTS.md). Bearer-guarded like the run
+        // route; cached ten minutes because every platform read is metered.
+        const secret = env.DAILY_POST_OPERATOR_SECRET
+        if (!secret || request.headers.get('authorization') !== `Bearer ${secret}`) return json({ error: 'operator secret required' }, 401)
+        const key = 'daily-post:engagement'
+        const cached = url.searchParams.has('fresh') ? null : await env.GENERATION_CACHE.get(key)
+        const result = cached ? JSON.parse(cached) as unknown : await socialEngagement(env)
+        if (!cached) await env.GENERATION_CACHE.put(key, JSON.stringify(result), { expirationTtl: 600 })
+        const response = json(result)
         response.headers.set('cache-control', 'no-store')
         return response
       }
