@@ -4872,15 +4872,15 @@ async function route(
         const channels = Array.isArray(v.channels) ? v.channels.filter((c): c is Channel => (CHANNELS as readonly string[]).includes(String(c))) : undefined
         if (v.dry_run) {
           const post = await previewPublication(env, date, name => personTopicsFor(name, env), kind, subject)
-          const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
+          const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), bluesky: publicationCopy(post, 'bluesky'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
           response.headers.set('cache-control', 'no-store')
           return response
         }
         const result = await runSocialPublication(env, {
           personTopics: name => personTopicsFor(name, env), date, kind, subject, channels,
-          sourceResponse: async target => {
+          sourceResponse: async (target, method = 'HEAD') => {
             const u = new URL(target)
-            const head = new Request(target, { method: 'HEAD' })
+            const head = new Request(target, { method })
             if (u.pathname.startsWith('/og/')) return serveOgImage(u, head, env, ctx)
             const route = matchSeoRoute(u)
             if (!route) return new Response(null, { status: 404 })
@@ -4900,7 +4900,7 @@ async function route(
         const kindParam = url.searchParams.get('kind')
         const kind = (DAILY_POST_KINDS as readonly string[]).includes(kindParam ?? '') ? kindParam as DailyPostKind : undefined
         const post = await previewPublication(env, date, name => personTopicsFor(name, env), kind)
-        const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
+        const response = json(post ? { ...post, publication: { x: publicationCopy(post, 'x'), bluesky: publicationCopy(post, 'bluesky'), facebook: publicationCopy(post, 'facebook'), instagram: publicationCopy(post, 'instagram') } } : { error: 'nothing to post' }, post ? 200 : 404)
         response.headers.set('cache-control', 'no-store')
         return response
       }
@@ -5026,9 +5026,9 @@ export default {
   async scheduled(controller: ScheduledController, env: Env, _ctx: ExecutionContext): Promise<void> {
     const result = await runSocialPublication(env, {
       now: controller.scheduledTime, personTopics: name => personTopicsFor(name, env),
-      sourceResponse: async target => {
+      sourceResponse: async (target, method = 'HEAD') => {
         const url = new URL(target)
-        const request = new Request(target, { method: 'HEAD' })
+        const request = new Request(target, { method })
         if (url.pathname.startsWith('/og/')) return serveOgImage(url, request, env, _ctx)
         const route = matchSeoRoute(url)
         if (!route) return new Response(null, { status: 404 })

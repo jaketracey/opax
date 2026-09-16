@@ -1,14 +1,14 @@
 /** One frozen edition per Melbourne day, independent delivery receipts per channel.
  * Claims are atomic in D1. An uncertain write is held for review, never blindly retried.
  */
-import { composeDailyPost, envSources, melbourneDate, oauth1Header, postToX, xCredentials, type DailyPost, type DailyPostKind } from './daily-post'
+import { clip, composeDailyPost, envSources, melbourneDate, oauth1Header, postToX, xCredentials, type DailyPost, type DailyPostKind } from './daily-post'
 import { OG_VERSION } from './og'
 import { STORY_VERSION, storyFrames, validStory } from './story'
 
 /** Stories come last: the tray mirrors the day's feed post. */
-export const CHANNELS = ['x', 'facebook', 'instagram', 'instagram_story', 'facebook_story'] as const
+export const CHANNELS = ['x', 'bluesky', 'facebook', 'instagram', 'instagram_story', 'facebook_story'] as const
 export type Channel = typeof CHANNELS[number]
-type SocialEnv = Pick<Env, 'ASSETS' | 'GENERATION_CACHE' | 'COMMUNITY_DB' | 'STAGING_API' | 'DAILY_POST_ENABLED' | 'X_API_KEY' | 'X_API_SECRET' | 'X_ACCESS_TOKEN' | 'X_ACCESS_TOKEN_SECRET' | 'X_ACCOUNT_ID' | 'X_USERNAME' | 'FACEBOOK_POST_ENABLED' | 'FACEBOOK_PAGE_ID' | 'FACEBOOK_PAGE_TOKEN' | 'INSTAGRAM_POST_ENABLED' | 'INSTAGRAM_STORY_ENABLED' | 'FACEBOOK_STORY_ENABLED' | 'INSTAGRAM_ACCOUNT_ID' | 'INSTAGRAM_USERNAME' | 'INSTAGRAM_ACCESS_TOKEN' | 'META_API_VERSION'>
+type SocialEnv = Pick<Env, 'ASSETS' | 'GENERATION_CACHE' | 'COMMUNITY_DB' | 'STAGING_API' | 'DAILY_POST_ENABLED' | 'X_API_KEY' | 'X_API_SECRET' | 'X_ACCESS_TOKEN' | 'X_ACCESS_TOKEN_SECRET' | 'X_ACCOUNT_ID' | 'X_USERNAME' | 'FACEBOOK_POST_ENABLED' | 'FACEBOOK_PAGE_ID' | 'FACEBOOK_PAGE_TOKEN' | 'INSTAGRAM_POST_ENABLED' | 'INSTAGRAM_STORY_ENABLED' | 'FACEBOOK_STORY_ENABLED' | 'INSTAGRAM_ACCOUNT_ID' | 'INSTAGRAM_USERNAME' | 'INSTAGRAM_ACCESS_TOKEN' | 'META_API_VERSION' | 'BLUESKY_POST_ENABLED' | 'BSKY_HANDLE' | 'BSKY_APP_PASSWORD' | 'BSKY_SERVICE'>
 interface Receipt { channel: Channel; status: string; post_id: string | null; container_id: string | null; detail: string | null; progress?: string | null; updated_at: string }
 /** A delivery made of several frames: the ids published so far, and the frame in flight with its container or photo. */
 interface Progress { done: string[]; at: number | null; container: string | null }
@@ -24,9 +24,10 @@ export function readiness(env: SocialEnv): Record<Channel, { enabled: boolean; r
     x: !!(xCredentials(env) && numericId(env.X_ACCOUNT_ID) && /^[A-Za-z0-9_]{1,15}$/.test(env.X_USERNAME ?? '')),
     facebook: !!(metaVersionReady(env) && env.FACEBOOK_PAGE_TOKEN && numericId(env.FACEBOOK_PAGE_ID)),
     instagram: !!(metaVersionReady(env) && env.INSTAGRAM_ACCESS_TOKEN && numericId(env.INSTAGRAM_ACCOUNT_ID) && env.INSTAGRAM_USERNAME),
+    bluesky: !!(env.BSKY_APP_PASSWORD && /^[a-z0-9][a-z0-9.-]{2,}$/i.test(env.BSKY_HANDLE ?? '')),
   }
   const stories = { instagram_story: configured.instagram, facebook_story: configured.facebook }
-  const enabled = { x: env.DAILY_POST_ENABLED === 'true', facebook: env.FACEBOOK_POST_ENABLED === 'true', instagram: env.INSTAGRAM_POST_ENABLED === 'true', instagram_story: env.INSTAGRAM_STORY_ENABLED === 'true', facebook_story: env.FACEBOOK_STORY_ENABLED === 'true' }
+  const enabled = { x: env.DAILY_POST_ENABLED === 'true', bluesky: env.BLUESKY_POST_ENABLED === 'true', facebook: env.FACEBOOK_POST_ENABLED === 'true', instagram: env.INSTAGRAM_POST_ENABLED === 'true', instagram_story: env.INSTAGRAM_STORY_ENABLED === 'true', facebook_story: env.FACEBOOK_STORY_ENABLED === 'true' }
   return Object.fromEntries(CHANNELS.map(channel => {
     const on = enabled[channel] && !env.STAGING_API
     const set = channel === 'instagram_story' || channel === 'facebook_story' ? stories[channel] : configured[channel]
@@ -54,14 +55,16 @@ export function publicationCopy(post: DailyPost, channel: Channel): { text: stri
   // Instagram's feed and grid are portrait; the landscape card is cropped there.
   if (channel === 'instagram') image.searchParams.set('format', 'portrait')
   const full = (post.caption || post.text).replace(post.url, '').trim()
+  // Bluesky allows 300 graphemes and the link rides in the card, so the text drops the URL.
   const text = channel === 'x' ? post.text.replace(post.url, link.toString())
+    : channel === 'bluesky' ? clip(post.text.replace(post.url, '').replace(/\n{3,}/g, '\n\n').trim(), 300)
     : channel === 'facebook' ? full.slice(0, 5000)
     : `${full.slice(0, 1850)}\n\nExplore ${post.title} at opax.com.au — link in bio.\n\n#AustralianParliament #PublicRecords #Opax`
   // A story channel posts a few of the slides as 9:16 frames (story.ts chooses which); the feed channels post them all at 4:5.
   const frames = isStoryChannel(channel) ? storyFrames(post.slides) : undefined
   const slides = frames
     ? frames.map(n => `https://opax.com.au/og/story/${post.date}/${n}.jpg?v=${OG_VERSION}.${STORY_VERSION}&format=story`)
-    : channel !== 'x' && validStory(post.slides)
+    : channel !== 'x' && channel !== 'bluesky' && validStory(post.slides)
     ? post.slides.map((_, i) => `https://opax.com.au/og/story/${post.date}/${i + 1}.jpg?v=${OG_VERSION}.${STORY_VERSION}`)
     : undefined
   if (frames && !frames.length) return { text, link: link.toString(), image: image.toString() }
@@ -112,6 +115,8 @@ async function verifyAccount(channel: Channel, env: SocialEnv, fetchImpl: typeof
     if (!res.ok) throw new Error(`X identity HTTP ${res.status}`)
     const body = await res.json() as { data?: { id?: string; username?: string } }
     if (body.data?.id !== env.X_ACCOUNT_ID || body.data?.username?.toLowerCase() !== env.X_USERNAME?.toLowerCase()) throw new Error('X account mismatch')
+  } else if (channel === 'bluesky') {
+    await bskyLogin(env, fetchImpl)
   } else if (channel === 'facebook' || channel === 'facebook_story') {
     const me = await api(`${graphOrigin(env)}/me?fields=id`, env.FACEBOOK_PAGE_TOKEN!, fetchImpl)
     if (me.id !== env.FACEBOOK_PAGE_ID) throw new Error('Facebook Page token mismatch')
@@ -141,7 +146,7 @@ export async function previewPublication(env: SocialEnv, date: string, personTop
 export async function runSocialPublication(env: SocialEnv, options: {
   now?: number; personTopics: (name: string) => Promise<Response>; fetchImpl?: typeof fetch
   /** Production resolves its own routes in-process, avoiding a recursive Worker fetch. */
-  sourceResponse?: (url: string) => Promise<Response>
+  sourceResponse?: (url: string, method?: 'HEAD' | 'GET') => Promise<Response>
   /**
    * An operator's run: the journal date to post under (the cron uses today's),
    * a kind or a named subject to compose instead of the rotation, and the
@@ -255,6 +260,13 @@ export async function runSocialPublication(env: SocialEnv, options: {
       } else if (channel === 'x') {
         writeStarted = true
         id = (await postToX(copy.text, xCredentials(env)!, fetchImpl)).id
+      } else if (channel === 'bluesky') {
+        // A link card with the share image as its thumb; the image is the same one the preflight checked.
+        const session = await bskyLogin(env, fetchImpl)
+        const res = options.sourceResponse ? await options.sourceResponse(copy.image, 'GET') : await fetchImpl(copy.image, { signal: AbortSignal.timeout(30000), redirect: 'manual' })
+        const image = res.ok && res.headers.get('content-type')?.startsWith('image/jpeg') ? await res.arrayBuffer() : null
+        writeStarted = true
+        id = await postToBluesky(env, session, { text: copy.text, link: copy.link, title: post.title, description: `Explore ${post.title} on Opax: speeches, votes and public money, cited to the source.`, image }, fetchImpl, now)
       } else if (channel === 'facebook') {
         if (copy.slides) {
           // A story is a multi-photo post: unpublished uploads, then one feed post that attaches them.
@@ -299,7 +311,7 @@ export async function runSocialPublication(env: SocialEnv, options: {
     } catch (error) {
       // The journal keeps a bounded reason; the log keeps the message (never a token).
       console.error('daily-post', JSON.stringify({ channel, date, error: error instanceof Error ? `${error.name}: ${error.message}`.slice(0, 300) : String(error).slice(0, 300) }))
-      const known = error instanceof Error && /^(Provider HTTP \d+|Provider timeout|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable)|Source page or matching image unavailable|Grant award image mismatch|Portrait image unavailable|Story slide unavailable|Meta API version not configured)$/.test(error.message) ? error.message : 'Publication request failed'
+      const known = error instanceof Error && /^(Provider HTTP \d+|Provider timeout|Provider omitted post id|X (?:identity HTTP \d+|API HTTP \d+|account mismatch|did not return a post id)|Facebook Page token mismatch|Instagram (?:account mismatch|container not publishable)|Source page or matching image unavailable|Grant award image mismatch|Portrait image unavailable|Story slide unavailable|Meta API version not configured|Bluesky (?:session HTTP \d+|API HTTP \d+|account mismatch|did not return a post uri))$/.test(error.message) ? error.message : 'Publication request failed'
       if (claimed) await db.prepare('UPDATE social_deliveries SET status=?,detail=?,updated_at=? WHERE edition_date=? AND channel=?').bind(writeStarted ? 'review_required' : 'failed', known, at, date, channel).run()
       // Preflight errors are recorded as well, so an operator can see the problem.
       else if (receipt) await db.prepare("UPDATE social_deliveries SET status='failed',detail=?,updated_at=? WHERE edition_date=? AND channel=? AND status='preparing'").bind(known, at, date, channel).run()
@@ -308,6 +320,46 @@ export async function runSocialPublication(env: SocialEnv, options: {
     }
   }
   return { date, subject: post.subject, channels: results }
+}
+
+// ---------------------------------------------------------------- bluesky
+
+interface BskySession { accessJwt: string; did: string; handle: string }
+const bskyService = (env: SocialEnv): string => (env.BSKY_SERVICE || 'https://bsky.social').replace(/\/$/, '')
+
+/** An app-password session; the handle it answers with must be the configured account. */
+async function bskyLogin(env: SocialEnv, fetchImpl: typeof fetch): Promise<BskySession> {
+  const res = await fetchImpl(`${bskyService(env)}/xrpc/com.atproto.server.createSession`, {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ identifier: env.BSKY_HANDLE, password: env.BSKY_APP_PASSWORD }),
+    signal: AbortSignal.timeout(20000), redirect: 'manual',
+  })
+  if (!res.ok) throw new Error(`Bluesky session HTTP ${res.status}`)
+  const body = await res.json() as Partial<BskySession>
+  const { accessJwt, did, handle } = body
+  if (typeof accessJwt !== 'string' || typeof did !== 'string' || typeof handle !== 'string' || handle.toLowerCase() !== env.BSKY_HANDLE?.toLowerCase()) throw new Error('Bluesky account mismatch')
+  return { accessJwt, did, handle }
+}
+
+/** One post: text plus an external link card, with the share image uploaded as its thumb when it fits Bluesky's blob limit. */
+export async function postToBluesky(env: SocialEnv, session: BskySession, post: { text: string; link: string; title: string; description: string; image: ArrayBuffer | null }, fetchImpl: typeof fetch, now = Date.now()): Promise<string> {
+  const service = bskyService(env)
+  const authorization = `Bearer ${session.accessJwt}`
+  let thumb: unknown
+  if (post.image && post.image.byteLength > 0 && post.image.byteLength <= 950_000) {
+    const up = await fetchImpl(`${service}/xrpc/com.atproto.repo.uploadBlob`, { method: 'POST', headers: { authorization, 'content-type': 'image/jpeg' }, body: post.image, signal: AbortSignal.timeout(30000), redirect: 'manual' })
+    if (!up.ok) throw new Error(`Bluesky API HTTP ${up.status}`)
+    thumb = (await up.json() as { blob?: unknown }).blob
+  }
+  const record = {
+    $type: 'app.bsky.feed.post', text: post.text, createdAt: new Date(now).toISOString(), langs: ['en'],
+    embed: { $type: 'app.bsky.embed.external', external: { uri: post.link, title: post.title, description: post.description, ...(thumb ? { thumb } : {}) } },
+  }
+  const res = await fetchImpl(`${service}/xrpc/com.atproto.repo.createRecord`, { method: 'POST', headers: { authorization, 'content-type': 'application/json' }, body: JSON.stringify({ repo: session.did, collection: 'app.bsky.feed.post', record }), signal: AbortSignal.timeout(20000), redirect: 'manual' })
+  if (!res.ok) throw new Error(`Bluesky API HTTP ${res.status}`)
+  const body = await res.json() as { uri?: unknown }
+  if (typeof body.uri !== 'string' || !/^at:\/\/[^\s/]+\/app\.bsky\.feed\.post\/[A-Za-z0-9]+$/.test(body.uri)) throw new Error('Bluesky did not return a post uri')
+  return body.uri
 }
 
 // ---------------------------------------------------------------- engagement
@@ -332,8 +384,8 @@ async function xGet(url: URL, env: SocialEnv, fetchImpl: typeof fetch): Promise<
 export async function socialEngagement(env: SocialEnv, options: { fetchImpl?: typeof fetch; limit?: number; now?: number } = {}): Promise<Engagement> {
   const fetchImpl = options.fetchImpl ?? fetch
   const limit = Math.min(Math.max(Math.trunc(options.limit ?? 10), 1), 30)
-  const rows = await env.COMMUNITY_DB.prepare("SELECT edition_date, channel, post_id FROM social_deliveries WHERE status='posted' AND post_id IS NOT NULL AND channel IN ('x','facebook','instagram') ORDER BY edition_date DESC, channel LIMIT ?").bind(limit * 3).all<{ edition_date: string; channel: Channel; post_id: string }>()
-  const deliveries = rows.results.filter(r => /^[\d_]+$/.test(r.post_id))
+  const rows = await env.COMMUNITY_DB.prepare("SELECT edition_date, channel, post_id FROM social_deliveries WHERE status='posted' AND post_id IS NOT NULL AND channel IN ('x','bluesky','facebook','instagram') ORDER BY edition_date DESC, channel LIMIT ?").bind(limit * 3).all<{ edition_date: string; channel: Channel; post_id: string }>()
+  const deliveries = rows.results.filter(r => (r.channel === 'bluesky' ? /^at:\/\/[^\s/]+\/app\.bsky\.feed\.post\/[A-Za-z0-9]+$/ : /^[\d_]+$/).test(r.post_id))
   const ready = readiness(env)
   const result: Engagement = { at: new Date(options.now ?? Date.now()).toISOString(), accounts: {}, posts: [], errors: {} }
   const fail = (key: string, error: unknown) => { result.errors[key] = error instanceof Error ? error.message : 'error' }
@@ -357,6 +409,28 @@ export async function socialEngagement(env: SocialEnv, options: { fetchImpl?: ty
           if (p) Object.assign(p, { likes: num(m.like_count), comments: num(m.reply_count), shares: num(m.retweet_count) + num(m.quote_count), views: num(m.impression_count), bookmarks: num(m.bookmark_count) })
         }
       } catch (error) { fail('x_posts', error) }
+    }
+  }
+  if (env.BSKY_HANDLE) {
+    // Bluesky's public AppView needs no credentials.
+    const pub = async (path: string) => {
+      const res = await fetchImpl(`https://public.api.bsky.app/xrpc/${path}`, { signal: AbortSignal.timeout(20000), redirect: 'manual' })
+      if (!res.ok) throw new Error(`Bluesky API HTTP ${res.status}`)
+      return await res.json() as Record<string, unknown>
+    }
+    try {
+      const profile = await pub(`app.bsky.actor.getProfile?actor=${encodeURIComponent(env.BSKY_HANDLE)}`)
+      result.accounts.bluesky = { followers: num(profile.followersCount), following: num(profile.followsCount), posts: num(profile.postsCount) }
+    } catch (error) { fail('bluesky', error) }
+    const uris = deliveries.filter(d => d.channel === 'bluesky').map(d => d.post_id)
+    if (uris.length) {
+      try {
+        const body = await pub(`app.bsky.feed.getPosts?${uris.map(u => `uris=${encodeURIComponent(u)}`).join('&')}`) as { posts?: { uri: string; likeCount?: number; repostCount?: number; replyCount?: number; quoteCount?: number }[] }
+        for (const t of body.posts ?? []) {
+          const p = byId.get(`bluesky:${t.uri}`)
+          if (p) Object.assign(p, { likes: num(t.likeCount), comments: num(t.replyCount), shares: num(t.repostCount) + num(t.quoteCount) })
+        }
+      } catch (error) { fail('bluesky_posts', error) }
     }
   }
   if (ready.facebook.ready) {

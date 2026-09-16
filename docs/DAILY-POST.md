@@ -194,3 +194,32 @@ Brand exports: `node scripts/build_social_brand.mjs` renders the existing Opax
 favicon to public/social/opax-avatar.png and updates the editable SVG covers.
 The approved opax-header.png and opax-facebook-cover.png are preserved by default;
 `--render-covers` explicitly replaces them with new SVG raster exports.
+
+## Bluesky
+
+Bluesky is the second text channel (`bluesky` in `CHANNELS`, added 2026-09-17).
+It posts through the AT Protocol with an app password, never the account
+password:
+
+- Vars: `BLUESKY_POST_ENABLED`, `BSKY_HANDLE` (the account's handle, e.g.
+  `opax.bsky.social`, or `opax.com.au` once the domain handle is verified),
+  optional `BSKY_SERVICE` (default `https://bsky.social`).
+- Secret: `BSKY_APP_PASSWORD`, made at Settings → Privacy and security → App
+  passwords in the Bluesky app, installed with `npx wrangler secret put
+  BSKY_APP_PASSWORD` from `portal/`. Readiness fails closed without it.
+- Each run opens a session (`com.atproto.server.createSession`) and refuses to
+  post unless the session's handle is `BSKY_HANDLE` ("Bluesky account mismatch").
+- The post is the X text without its URL (Bluesky allows 300 graphemes; `clip`
+  guards it) plus an `app.bsky.embed.external` link card whose thumb is the
+  share image, uploaded with `com.atproto.repo.uploadBlob` when it is under
+  950 kB (the OG cards are ~90 kB). The card link carries `utm_source=bluesky`.
+- The journal stores the record's `at://` URI as `post_id`. Engagement reads
+  come from the public AppView (`public.api.bsky.app`, no credentials).
+- Migration `0008_social_bluesky.sql` widens the journal's channel CHECK; apply
+  it with `npx wrangler d1 migrations apply opax-community --remote` (and
+  `--env staging`) before the first run.
+
+To use the domain as the handle: in Bluesky, Settings → Account → Handle → "I
+have my own domain" → `opax.com.au`, then add the DNS TXT record it shows
+(`_atproto.opax.com.au` → `did=did:plc:…`) in Cloudflare, verify, and change
+`BSKY_HANDLE` to `opax.com.au`.

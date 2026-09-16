@@ -17,7 +17,7 @@ const slides = [
 ];
 const story = { ...post, slides };
 function harness(overrides = {}, handler) {
- const sqlite = new DatabaseSync(':memory:'); sqlite.exec(readFileSync(new URL('../migrations/0005_social_publication.sql',import.meta.url),'utf8')); sqlite.exec(readFileSync(new URL('../migrations/0007_social_stories.sql',import.meta.url),'utf8'));
+ const sqlite = new DatabaseSync(':memory:'); sqlite.exec(readFileSync(new URL('../migrations/0005_social_publication.sql',import.meta.url),'utf8')); sqlite.exec(readFileSync(new URL('../migrations/0007_social_stories.sql',import.meta.url),'utf8')); sqlite.exec(readFileSync(new URL('../migrations/0008_social_bluesky.sql',import.meta.url),'utf8'));
  const db = {
   prepare(sql) {
    let args=[];
@@ -33,10 +33,14 @@ function harness(overrides = {}, handler) {
  const env = { COMMUNITY_DB:db, GENERATION_CACHE:{async get(){return null}}, ASSETS:{async fetch(){throw Error('frozen edition must be reused')}}, DAILY_POST_ENABLED:'true', X_API_KEY:'key', X_API_SECRET:'secret', X_ACCESS_TOKEN:'token', X_ACCESS_TOKEN_SECRET:'token-secret', X_ACCOUNT_ID:'123', X_USERNAME:'OpaxAustralia', FACEBOOK_POST_ENABLED:'true', FACEBOOK_PAGE_ID:'456', FACEBOOK_PAGE_TOKEN:'page-token', INSTAGRAM_POST_ENABLED:'true', INSTAGRAM_ACCOUNT_ID:'789', INSTAGRAM_USERNAME:'opaxaustralia', INSTAGRAM_ACCESS_TOKEN:'ig-token', META_API_VERSION:'v25.0', ...overrides };
  const calls=[];let children=0,photos=0,stories=0;
  const fetchImpl=async(url,init={})=>{
-  calls.push({url,init,body:init.body?JSON.parse(init.body):null}); const changed=await handler?.(url,init); if(changed)return changed;
+  calls.push({url,init,body:typeof init.body==='string'?JSON.parse(init.body):null}); const changed=await handler?.(url,init); if(changed)return changed;
   const slide=/\/og\/story\/(\d{4}-\d{2}-\d{2})\/(\d+)\.jpg/.exec(url);
   if(init.method==='HEAD'&&slide)return new Response(null,{headers:{'content-type':'image/jpeg','x-opax-story':slide[1]+'/'+slide[2],'x-opax-format':new URL(url).searchParams.get('format')==='story'?'story':'portrait','x-opax-subject':post.subject}});
   if(init.method==='HEAD')return new Response(null,{headers:{'content-type':'image/jpeg','x-opax-og':new URL(post.url).pathname,...(new URL(url).searchParams.get('format')==='portrait'?{'x-opax-format':'portrait'}:{})}});
+  if(!init.method&&/\/og\/.*\.jpg/.test(url))return new Response(new Uint8Array(1500),{headers:{'content-type':'image/jpeg'}});
+  if(url.endsWith('/xrpc/com.atproto.server.createSession'))return Response.json({accessJwt:'jwt',did:'did:plc:test',handle:'opax.bsky.social'});
+  if(url.endsWith('/xrpc/com.atproto.repo.uploadBlob'))return Response.json({blob:{$type:'blob',ref:{$link:'bafyblob'},mimeType:'image/jpeg',size:1500}});
+  if(url.endsWith('/xrpc/com.atproto.repo.createRecord'))return Response.json({uri:'at://did:plc:test/app.bsky.feed.post/3kabc',cid:'bafycid'});
   if(url.endsWith('/2/users/me'))return Response.json({data:{id:'123',username:'OpaxAustralia'}});
   if(url.endsWith('/me?fields=id'))return Response.json({id:'456'});
   if(url.endsWith('/789?fields=id,username'))return Response.json({id:'789',username:'opaxaustralia'});
@@ -285,4 +289,38 @@ test('engagement reads account and feed-post metrics, skips stories, reports a r
  assert.deepEqual(e.posts.find(p=>p.channel==='x'),{date:post.date,channel:'x',post_id:'1001',likes:2,comments:1,shares:1,views:40,bookmarks:0});
  assert.deepEqual(e.posts.find(p=>p.channel==='facebook'),{date:post.date,channel:'facebook',post_id:'456_1002',likes:5,comments:2,shares:1});
  assert.deepEqual(e.posts.find(p=>p.channel==='instagram'),{date:post.date,channel:'instagram',post_id:'1003',likes:7,comments:0});
+});
+
+test('bluesky posts a link card with the share image as thumb and journals the at-uri',async()=>{
+ const only={X_ACCOUNT_ID:undefined,FACEBOOK_POST_ENABLED:'false',INSTAGRAM_POST_ENABLED:'false',INSTAGRAM_STORY_ENABLED:'false',FACEBOOK_STORY_ENABLED:'false',BLUESKY_POST_ENABLED:'true',BSKY_HANDLE:'opax.bsky.social',BSKY_APP_PASSWORD:'app-pass'};
+ const off=harness({...only,BSKY_APP_PASSWORD:undefined});assert.equal(readiness(off.env).bluesky.ready,false);await off.run();assert.equal(off.calls.length,0);
+ const h=harness(only);assert.equal(readiness(h.env).bluesky.ready,true);
+ assert.equal(publicationCopy(post,'bluesky').text,'Check the parliamentary record.');
+ const long={...post,text:'x'.repeat(350)+'\n\n'+post.url};assert.ok([...publicationCopy(long,'bluesky').text].length<=300);
+ const r=await h.run();assert.deepEqual(r.channels,{bluesky:'posted'});
+ const login=h.calls.filter(c=>c.url.endsWith('/xrpc/com.atproto.server.createSession'));assert.equal(login.length,2);assert.equal(login[0].body.identifier,'opax.bsky.social');
+ const upload=h.calls.find(c=>c.url.endsWith('/xrpc/com.atproto.repo.uploadBlob'));assert.equal(upload.init.headers.authorization,'Bearer jwt');assert.equal(upload.init.headers['content-type'],'image/jpeg');
+ const create=h.calls.find(c=>c.url.endsWith('/xrpc/com.atproto.repo.createRecord'));assert.equal(create.body.repo,'did:plc:test');assert.equal(create.body.collection,'app.bsky.feed.post');
+ const rec=create.body.record;assert.equal(rec.text,'Check the parliamentary record.');assert.doesNotMatch(rec.text,/https:/);
+ assert.equal(rec.embed.$type,'app.bsky.embed.external');assert.equal(new URL(rec.embed.external.uri).searchParams.get('utm_source'),'bluesky');assert.equal(rec.embed.external.title,'Test Member');assert.equal(rec.embed.external.thumb.ref.$link,'bafyblob');
+ const row=h.sqlite.prepare("SELECT status,post_id FROM social_deliveries WHERE channel='bluesky'").get();assert.deepEqual({...row},{status:'posted',post_id:'at://did:plc:test/app.bsky.feed.post/3kabc'});
+ // A wrong account answers the session: nothing is written and the journal says why.
+ const wrong=harness(only,async(url)=>{if(url.endsWith('/xrpc/com.atproto.server.createSession'))return Response.json({accessJwt:'jwt',did:'did:plc:other',handle:'someone.bsky.social'});});
+ assert.deepEqual((await wrong.run()).channels,{bluesky:'failed'});assert.equal(wrong.calls.some(c=>c.url.endsWith('createRecord')),false);
+ assert.equal(wrong.sqlite.prepare("SELECT detail FROM social_deliveries WHERE channel='bluesky'").get().detail,'Bluesky account mismatch');
+});
+test('engagement reads bluesky from the public AppView without credentials',async()=>{
+ const h=harness({BSKY_HANDLE:'opax.bsky.social'},async(url)=>{
+  if(url.includes('public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=opax.bsky.social'))return Response.json({followersCount:9,followsCount:40,postsCount:3});
+  if(url.includes('public.api.bsky.app/xrpc/app.bsky.feed.getPosts?uris=at%3A%2F%2Fdid%3Aplc%3Atest%2Fapp.bsky.feed.post%2F3kabc'))return Response.json({posts:[{uri:'at://did:plc:test/app.bsky.feed.post/3kabc',likeCount:4,repostCount:1,replyCount:2,quoteCount:1}]});
+  if(url.includes('/2/users/me?user.fields'))return Response.json({data:{public_metrics:{followers_count:3,following_count:84,tweet_count:6}}});
+  if(url.endsWith('/456?fields=followers_count,fan_count'))return Response.json({followers_count:4,fan_count:4});
+  if(url.endsWith('/789?fields=followers_count,media_count'))return Response.json({followers_count:6,media_count:4});
+ });
+ const at=new Date(now).toISOString();
+ h.sqlite.prepare('INSERT INTO social_deliveries(edition_date,channel,status,post_id,updated_at) VALUES(?,?,?,?,?)').run(post.date,'bluesky','posted','at://did:plc:test/app.bsky.feed.post/3kabc',at);
+ const e=await socialEngagement(h.env,{fetchImpl:h.fetchImpl,now});
+ assert.deepEqual(e.accounts.bluesky,{followers:9,following:40,posts:3});
+ assert.deepEqual(e.posts,[{date:post.date,channel:'bluesky',post_id:'at://did:plc:test/app.bsky.feed.post/3kabc',likes:4,comments:2,shares:2}]);
+ assert.equal(h.calls.some(c=>c.url.includes('createSession')),false);
 });

@@ -27,6 +27,11 @@ interface Env {
   INSTAGRAM_USERNAME?: string
   INSTAGRAM_ACCESS_TOKEN?: string
   META_API_VERSION?: string
+  /** Bluesky (AT Protocol): the account handle, an app password (secret), the PDS (default https://bsky.social). */
+  BLUESKY_POST_ENABLED?: string
+  BSKY_HANDLE?: string
+  BSKY_APP_PASSWORD?: string
+  BSKY_SERVICE?: string
 
   /**
    * Per-pipeline generative model pins (wrangler vars, editable without a code
@@ -72,6 +77,10 @@ declare namespace Cloudflare {
     INSTAGRAM_USERNAME?: string
     INSTAGRAM_ACCESS_TOKEN?: string
     META_API_VERSION?: string
+    BLUESKY_POST_ENABLED?: string
+    BSKY_HANDLE?: string
+    BSKY_APP_PASSWORD?: string
+    BSKY_SERVICE?: string
 
   /**
    * Per-pipeline generative model pins (wrangler vars, editable without a code

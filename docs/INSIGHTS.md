@@ -42,6 +42,8 @@ metrics:
   `reactions.summary(total_count)`, `comments.summary(total_count)`, `shares`.
 - Instagram: `/{account}?fields=followers_count,media_count` and, per media,
   `like_count,comments_count`.
+- Bluesky: the public AppView, `app.bsky.actor.getProfile` and
+  `app.bsky.feed.getPosts` on `public.api.bsky.app`, no credentials needed.
 
 Tests: `portal/test/social-publication.test.mjs` ("engagement reads account and
 feed-post metrics"). The route is bearer-guarded and returns 401 without the
