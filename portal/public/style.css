@@ -490,12 +490,19 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 /* ---- hero --------------------------------------------------------------- */
 
 /* The top space belongs to the page, not to a band of padding under the
-   breadcrumb rule: an inner page starts at its own kicker or heading, and the
-   home page's air is the headline's own margin (see .hero-intro). */
+   breadcrumb rule: the home page's air is the headline's own margin (see
+   .hero-intro), so /ask keeps nothing spare above the composer once the hero
+   folds. An inner page's first line brings none of its own — a doc or subject
+   head starts flush — so it takes a slim breath here instead: enough to lift
+   the heading off the breadcrumb rule, well short of the band every route
+   used to wear. */
 main { flex: 1; padding: 0 0 3rem; }
+main.compact { padding-top: var(--space-5); }
 /* The page already supplies its top space; a heading label adds no second gap. */
 .doc-head > .kicker, .subject-head > .kicker { margin-top: 0; }
 @media (max-width: 860px) {
+  /* Less of it on a phone, where the breadcrumb strip is already close work. */
+  main.compact { padding-top: var(--space-4); }
   /* Narrow screens: the ask question takes its own line; the submit and the
      options icon share the next one. (The search row stays on one line — see
      the mobile block at the end of the file.) */
