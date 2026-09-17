@@ -37,7 +37,7 @@ test('a named person is answered from their own spells',async()=>{
  const r=await ask(`How much does ${top.name} earn?`);
  assert.ok(r.answer.startsWith(`**${top.name} is paid ${aud(top.salary)} a year** as Prime Minister`));
  assert.match(r.answer,/about \$\d+\.\d million in salary entitlements/);
- assert.match(r.answer,/\| From \| To \| Post \| Loading \| Salary a year \|/);
+ assert.match(r.answer,/\| Period \| Post \| Loading \| Salary a year \|/);assert.match(r.answer,/\| \d+\u00a0[A-Z][a-z]{2}\u00a0\d{4} – now \| Prime Minister \| 160% \| \$[\d,]+ \|/);
  const former=Object.values(pay.people).find(p=>!p.sitting&&p.peak.post==='Prime Minister');
  const past=await ask(`How much was ${former.name} paid?`);
  assert.match(past.answer,new RegExp(`^\\*\\*${former.name} was last paid \\$[\\d,]+ a year\\*\\* as a (?:member of parliament|senator), on leaving parliament`));

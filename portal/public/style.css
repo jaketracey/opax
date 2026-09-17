@@ -2669,6 +2669,10 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .about-table th, .about-table td { text-align: left; padding: 0.45rem 0.9rem 0.45rem 0; border-bottom: 1px solid var(--line); }
 .about-table th { color: var(--ink-soft); font-weight: 600; }
 .about-table td:nth-child(2) { font-variant-numeric: tabular-nums; }
+/* A lone token in a cell (a figure, a date) widens its column rather than breaking; figures sit right. */
+.about-table .cell-token { white-space: nowrap; }
+.table-scroll.table-fits { overflow-x: clip; }
+.about-table .cell-num { text-align: right; font-variant-numeric: tabular-nums; }
 #panel-methods code { background: var(--paper-sunken); border-radius: 4px; padding: 0.1em 0.35em; font-size: 0.875em; }
 
 /* ---- footer ------------------------------------------------------------- */

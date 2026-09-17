@@ -2670,6 +2670,14 @@ function renderAnswerOverview(box, text) {
   box.append(label, body);
 }
 
+// A collapsed table is laid out in fractions of a pixel and can come out a
+// hair wider than its column; the scroll wrapper would then grow a scrollbar
+// to move it one pixel. Clip when the table fits within a couple of pixels;
+// scroll when it is genuinely wider (five columns on a phone).
+const tableFit = new ResizeObserver((entries) => {
+  for (const { target } of entries) target.classList.toggle("table-fits", target.scrollWidth - target.clientWidth <= 2);
+});
+
 function renderAnswer(container, text, response = {}) {
   container.classList.toggle("answer-evidence", response.answer_status === "evidence_only");
   if (response.answer_status === "evidence_only" && Array.isArray(response.evidence_excerpts)) {
@@ -2739,13 +2747,24 @@ function renderAnswer(container, text, response = {}) {
         for (const cell of row) {
           const td = document.createElement("td");
           appendInline(td, cell);
+          // A lone token ($248,800, 75%, a date) never breaks mid-word to fit a
+          // narrow column; a figure sits right, in tabular digits.
+          const text = cell.trim();
+          if (text && !/\s/.test(text)) td.classList.add("cell-token");
+          if (/^[$€£]?[\d.,]+%?$/.test(text) || text === "none") td.classList.add("cell-num");
           tr.appendChild(td);
         }
         tbody.appendChild(tr);
       }
+      // A header sits with its figures: right, when every cell beneath it is one.
+      headRow.querySelectorAll("th").forEach((th, i) => {
+        const cells = [...tbody.rows].map((r) => r.cells[i]).filter(Boolean);
+        if (cells.length && cells.every((c) => c.classList.contains("cell-num"))) th.classList.add("cell-num");
+      });
       table.append(thead, tbody);
       scroll.appendChild(table);
       container.appendChild(scroll);
+      tableFit.observe(scroll);
     } else if ((response.money_ranking || response.pay_answer) && response.money_context && block.text.startsWith("Coverage: ")) {
       const details = document.createElement("details");
       details.className = "answer-money-method";

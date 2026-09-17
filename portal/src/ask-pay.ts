@@ -76,6 +76,9 @@ const POSTS: { pattern: RegExp; office: string | null; label: string }[] = [
 
 const aud = (n: number) => new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(n)
 const plain = (s: string) => s.replace(/[|\n\r\[\]*]/g, ' ').replace(/\s+/g, ' ').trim()
+/** A date for a table cell: short, and never broken across lines. */
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const dayShort = (iso: string) => { const [y, m, d] = iso.split('-'); return `${Number(d)}\u00a0${MONTHS[Number(m) - 1]}\u00a0${y}` }
 const day = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
 /** A post as it reads after "as": the backbench labels are common nouns. */
 const asPost = (post: string) => post === 'Senator' ? 'a senator' : post === 'Member of Parliament' ? 'a member of parliament' : plain(post)
@@ -235,13 +238,17 @@ function personAnswer(person: PayPerson, data: PayData) {
   const partial = person.from <= data.meta.from
   b.add(`\n\n**${financialYear(years[0][0])} to ${financialYear(years[years.length - 1][0])}: ${about(person.total)} in salary entitlements**${partial ? `, counting only from ${day(data.meta.from)}, where this data starts` : ''}. Day by day, the base salary then in force plus the loading of the post then held; not adjusted for inflation.`)
   b.instrument('handbook', `${person.name}: the posts held and their dates.`)
-  b.add('\n\n| From | To | Post | Loading | Salary a year |\n| --- | --- | --- | ---: | ---: |')
+  b.add('\n\n| Period | Post | Loading | Salary a year |\n| --- | --- | ---: | ---: |')
   const recent = person.spells.slice(-8)
   for (const [from, to, post, pct, salary, assumed] of recent) {
-    b.add(`\n| ${day(from)} | ${to ? day(to) : 'now'} | ${plain(post)}${assumed ? ' (if named in the notice)' : ''} | ${loading(pct)} | ${aud(salary)} |`)
+    b.add(`\n| ${dayShort(from)} – ${to ? dayShort(to) : 'now'} | ${plain(post)}${assumed ? ' †' : ''} | ${loading(pct)} | ${aud(salary)} |`)
   }
-  if (person.spells.length > recent.length) b.add(`\n\nThe ${recent.length} most recent of ${person.spells.length} spells; a new row starts whenever the post or its loading changed. The salary shown is the rate at the end of each spell.`)
-  else b.add('\n\nA new row starts whenever the post or its loading changed. The salary shown is the rate at the end of each spell.')
+  const notes = [
+    person.spells.length > recent.length ? `The ${recent.length} most recent of ${person.spells.length} spells.` : '',
+    'A new row starts whenever the post or its loading changed; the salary shown is the rate at the end of each spell.',
+    recent.some(spell => spell[5]) ? '† Paid only if named in the Opposition Leader’s notice to the Clerks.' : '',
+  ].filter(Boolean)
+  b.add(`\n\n${notes.join(' ')}`)
   return finish(b, data, [
     { label: `${person.name}’s pay, year by year`, href: personHref(person.name) },
     { label: 'Who is the highest paid politician?', href: '/ask?q=' + encodeURIComponent('Who is the highest paid politician?') },
