@@ -360,7 +360,6 @@
              donations, grants or contracts) points at the registers that can. -->
         <p class="ask-register-note" id="ask-register-note" hidden></p>
         <div class="action-row">
-          <button type="button" class="action-btn" id="ask-continue"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 4.5h13v9h-7l-3.5 3v-3h-2.5z"/><path d="M7 8h6"/><path d="M7 10.8h4"/></svg><span>Continue in a conversation</span></button>
           <button type="button" class="action-btn" id="ask-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link</span></button>
           <!-- The format is a menu (the search page's sort-menu idiom), not a
                browser prompt: usable on a phone keyboard and by keyboard. -->
@@ -373,6 +372,18 @@
             </div>
           </div>
         </div>
+        <!-- The conversation, inline: the follow-ups the Worker wrote from this
+             answer's passages as buttons, and a field for the reader's own. Either
+             carries the question and answer into a thread (openConversationFrom)
+             and asks there; there is no button to go and find the thread first. -->
+        <section id="ask-keep" class="ask-keep" aria-label="Keep asking" hidden>
+          <section id="ask-followups" class="chat-next" aria-label="Suggested follow-up questions" hidden></section>
+          <form id="ask-keep-form" class="ask-keep-form">
+            <label for="ask-keep-input" class="visually-hidden">Ask a follow-up question</label>
+            <input id="ask-keep-input" type="text" autocomplete="off" enterkeyhint="send" placeholder="Ask a follow-up…">
+            <button type="submit" class="primary">Ask</button>
+          </form>
+        </section>
 <details id="ask-sources" class="chat-sources" hidden>
           <summary id="ask-sources-sum">Sources</summary>
           <p id="ask-calculation-note" class="fineprint" hidden>Opax calculated these totals from selected public disclosure records. Open a source to explore the supporting funding records. Receipts include more than gifts, and this selection does not cover every donor.</p>
@@ -387,7 +398,6 @@
           Answers may be cached. Cite the sources, not this text.
           <a href="/methods">How answers work</a></p>
         </details>
-        <section id="ask-followups" class="chat-next" aria-label="Suggested follow-up questions" hidden></section>
         <!-- The example questions come back under the answer, so a reader who
              has one answer has somewhere to go besides the follow-ups. -->
         <section id="ask-again" class="chat-next ask-again" aria-label="Ask something else" hidden>

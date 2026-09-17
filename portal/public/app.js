@@ -9182,6 +9182,7 @@ async function runAsk(question) {
   foldHero(true);
   $("ask-followups").hidden = true;
   $("ask-followups").replaceChildren();
+  $("ask-keep").hidden = true;
   $("ask-again").hidden = true;
   renderAnswerOverview($("ask-overview"), "");
   $("ask-answer").askEvidence = [];
@@ -9332,6 +9333,9 @@ async function runAsk(question) {
     $("ask-retrieved").hidden = !alsoList.length;
     $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null, true)));
     $("ask-sources-sum").textContent = `Sources (${sources.length})`;
+    // The field to keep asking is there as soon as there is an answer to
+    // follow; the suggested questions join it when the Worker has written them.
+    $("ask-keep").hidden = needsClarification;
     $("ask-calculation-note").hidden = !calculated;
     $("ask-calculation-note").textContent = data.pay_answer ? PAY_CALCULATION_NOTE : MONEY_CALCULATION_NOTE;
     $("ask-retrieval-note").hidden = calculated;
@@ -9549,10 +9553,21 @@ mountExportMenu($("ask-export-picker"), (format) => {
     "opax-ask-sources");
 });
 
-$("ask-continue").addEventListener("click", () => {
-  if (!lastAsk.question || !lastAsk.answer) return;
-  try { sessionStorage.setItem("opax-chat-seed", JSON.stringify(lastAsk)); } catch { /* still usable unseeded */ }
+/** The answer on the page becomes the first exchange of a conversation, and
+ *  the reader's next question is asked there. What the "Continue in a
+ *  conversation" button did, now what any follow-up on the page does. */
+function openConversationFrom(ask) {
+  if (!ask?.question || !ask?.answer) return false;
+  try { sessionStorage.setItem("opax-chat-seed", JSON.stringify(ask)); } catch { /* still usable unseeded */ }
   goRoute("/chat");
+  return true;
+}
+$("ask-keep-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const q = $("ask-keep-input").value.trim();
+  if (!q) return;
+  $("ask-keep-input").value = "";
+  if (openConversationFrom(lastAsk)) sendChat(q);
 });
 
 /** A suggested question, chosen: into the box, into the URL, and asked. */
@@ -9736,9 +9751,8 @@ function prefetchAskFollowups(ask) {
     if (questions.length && lastAsk === ask) {
       ask.next = questions;
       renderFollowups(questions, $("ask-followups"), (item) => {
-        $("ask-continue").click();
-        sendChat(item.question, item);
-      }, "Suggested follow-ups · opens a conversation");
+        if (openConversationFrom(ask)) sendChat(item.question, item);
+      });
     }
     return questions;
   }).catch(() => []);
