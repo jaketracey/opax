@@ -65,15 +65,34 @@ test('normalisation never repairs fabricated words, numbers, IDs or inner syntax
 const source=await readFile(new URL('../src/index.ts',import.meta.url),'utf8');
 const start=source.indexOf('async function documentedPositionAnswer('),end=source.indexOf('/** A failed summary',start);
 const code=ts.transpileModule(source.slice(start,end),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
-function harness({rows,texts={},recover=true,unavailable=false}={}){
- let query,generated,generationBody,reads=0;
- const fn=runInNewContext(code+';documentedPositionAnswer',{...helpers,URL,Request,canonicalSpeaker:s=>s,EVIDENCE_GAP_ANSWER:'This selection does not establish their position on that topic.',
+function harness({rows,texts={},recover=true,unavailable=false,reasoned}={}){
+ let query,generated,generationBody,reads=0,reasonedOptions,reasonedBody;
+ // The reasoned fallback's dependencies are only present when a test supplies
+ // `reasoned` (what the ordinary prompt would answer); without them the
+ // fallback fails closed and the excerpts follow, as every older test expects.
+ const reasoning=reasoned?{AbortSignal,ASK_SYNC_TIMEOUT_MS:1000,isRefusal:a=>/does not discuss it/.test(a.answer||''),hasUnsupportedQuotes:()=>false,
+  buildAskBody:(input,records,options)=>{reasonedOptions=options;return {query:input.question,prompt:{system:'ordinary'}};},
+  kbFetch:async(env,path,{body})=>{reasonedBody=body;return Response.json(reasoned);},
+  askPayload:(answer,records,scope)=>({answer:answer.answer,citations:answer.citations||{},sources:[],scope})}:{};
+ const fn=runInNewContext(code+';documentedPositionAnswer',{...helpers,...reasoning,URL,Request,canonicalSpeaker:s=>s,EVIDENCE_GAP_ANSWER:'This selection does not establish their position on that topic.',
   searchWindow:async(e,args)=>{query=args;return rows===null?null:{results:rows||[{slug:'speech-1',speaker:'Example MP',title:'Example MP — 2025-02-11',date:'2025-02-11',kind:'speech',resource:'rid'}]};},
   apiResource:async(r,u,slug)=>{reads++;return unavailable?Response.json({error:'down'},{status:503}):Response.json(texts[slug]||{speaker:'Example MP',text:proposal+'\n\n1:08 pm\n\n'+other});},
   quotedPositionAnswer:()=>null, positionExcerptsAnswer:(payload)=>({...payload,answer_status:'evidence_only'}), recoverPositionAnswer:async(payload,body)=>{generated=payload;generationBody=body;return recover?{...payload,answer:'Verified proposal',answer_status:undefined}:null;},
  });
- return {run:(question='What rent limit did he propose?')=>fn({question,speaker:'Example MP',kind:'speech',from:'2025',to:'2026',chamber:'senate',topic:'housing'},{query:'housing affordability'},{},{}),get query(){return query},get generated(){return generated},get generationBody(){return generationBody},get reads(){return reads}};
+ return {run:(question='What rent limit did he propose?')=>fn({question,speaker:'Example MP',kind:'speech',from:'2025',to:'2026',chamber:'senate',topic:'housing'},{query:'housing affordability'},{},{}),get query(){return query},get generated(){return generated},get generationBody(){return generationBody},get reads(){return reads},get reasonedOptions(){return reasonedOptions},get reasonedBody(){return reasonedBody}};
 }
+test('a failed summary gets one reasoned answer before excerpts, and only a cited one',async()=>{
+ // The strict path could not verify a summary: the ordinary prompt answers, cited, and that stands.
+ const h=harness({recover:false,reasoned:{answer:'Taken together, the record suggests a cap.',citations:{'rid/t/transcript/0-10':[[0,1]]}}});
+ const out=await h.run('surely you could cast him as anti-renter?');
+ assert.equal(out.answer_status,'reasoned');assert.equal(out.answer,'Taken together, the record suggests a cap.');assert.equal(out.scope.speaker,'Example MP');
+ assert.equal(h.reasonedOptions?.reasoned,true);assert.equal(h.reasonedBody.prompt.system,'ordinary');assert.equal(h.reasonedBody.generative_model,'openai-compatible');
+ // Uncited, or a refusal: the excerpts, as before.
+ assert.equal((await harness({recover:false,reasoned:{answer:'Unsupported claims.',citations:{}}}).run()).answer_status,'evidence_only');
+ assert.equal((await harness({recover:false,reasoned:{answer:'The record retrieved for this question does not discuss it.',citations:{'rid':[[0,1]]}}}).run()).answer_status,'evidence_only');
+ // A verified summary never reaches the fallback.
+ const verified=harness({recover:true,reasoned:{answer:'Never used.',citations:{'rid':[[0,1]]}}});assert.equal((await verified.run()).answer,'Verified proposal');assert.equal(verified.reasonedBody,undefined);
+});
 test('position retrieval honors filters and passes only original first-turn text to generation',async()=>{
  const h=harness();await h.run();assert.equal(h.query.topK,20);assert.equal(h.query.url.searchParams.get('speaker'),'Example MP');assert.equal(h.query.url.searchParams.get('from'),'2025');assert.equal(h.query.url.searchParams.get('chamber'),'senate');assert.equal(h.query.url.searchParams.get('topic'),'housing');
  assert.equal(h.generated.sources[0].snippet,proposal);assert.equal(h.generated.sources[0].href,'/doc/speech-1');assert.equal(h.generated.scope.speaker,'Example MP');assert.equal(h.generationBody.position_question,'What rent limit did he propose?');
