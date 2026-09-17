@@ -2418,6 +2418,24 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .balance-right { display: flex; flex-direction: column; justify-content: center; gap: 2px; padding-left: 2px; min-height: 18px; }
 .balance-right > span { display: flex; align-items: center; gap: 0.35rem; width: 100%; }
 .balance-label { color: var(--ink); font-size: 0.6875rem; white-space: nowrap; }
+/* Pay for the posts held (person page): dated rows, newest first. */
+#person-pay { margin-top: var(--space-5); max-width: 920px; }
+.pay-lead { margin: 0.2rem 0 0.6rem; }
+.pay-rows { list-style: none; margin: var(--space-4) 0 var(--space-3); padding: 0; border-top: 1px solid var(--line); }
+.pay-row {
+  display: grid; grid-template-columns: minmax(11rem, 26%) minmax(0, 1fr) auto; gap: 0.2rem 0.9rem;
+  align-items: baseline; padding: 0.5rem 0; border-bottom: 1px solid var(--line); font-size: 0.8125rem;
+}
+.pay-when { color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+.pay-post { color: var(--ink); font-weight: 500; min-width: 0; }
+.pay-post small { color: var(--ink-faint); font-weight: 400; margin-left: 0.3rem; }
+.pay-rate { text-align: right; color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pay-rate b { color: var(--ink); }
+.pay-rate small { display: block; color: var(--ink-faint); font-size: 0.75rem; }
+@media (max-width: 600px) {
+  .pay-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .pay-when { grid-column: 1 / -1; }
+}
 .expense-comparison { margin-top: var(--space-5); max-width: 920px; }
 .expense-comparison .subject-section-title { margin: 0 0 var(--space-3); }
 .expense-rows { display: flex; flex-direction: column; gap: 0.55rem; }

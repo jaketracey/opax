@@ -1,0 +1,158 @@
+{
+ "sources": [
+  {
+   "id": "base-history",
+   "publisher": "Parliamentary Library",
+   "title": "The base salary for senators and members (Background Note, 17 August 2012)",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+  },
+  {
+   "id": "frl",
+   "publisher": "Federal Register of Legislation",
+   "title": "Remuneration Tribunal determinations, as made",
+   "url": "https://www.legislation.gov.au/"
+  }
+ ],
+ "steps": [
+  {
+   "from": "1999-12-07",
+   "amount": 85500,
+   "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+  },
+  {
+   "from": "2000-07-01",
+   "amount": 92000,
+   "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary",
+   "note": "The Library's Research Paper 30 of 1999-2000, written before the date, gives $90,000; its 2012 note, written after, gives $92,000."
+  },
+  {
+   "from": "2001-07-01",
+   "amount": 95600,
+   "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+  },
+  {
+   "from": "2002-07-01",
+   "amount": 98800,
+   "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+  },
+  {
+   "from": "2003-07-01",
+   "amount": 102760,
+   "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+  },
+  {
+   "from": "2004-07-01",
+   "amount": 106770,
+   "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+  },
+  {
+   "from": "2005-07-01",
+   "amount": 111150,
+   "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+  },
+  {
+   "from": "2006-07-01",
+   "amount": 118950,
+   "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+  },
+  {
+   "from": "2007-07-01",
+   "amount": 127060,
+   "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+  },
+  {
+   "from": "2009-10-01",
+   "amount": 131040,
+   "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+  },
+  {
+   "from": "2010-08-01",
+   "amount": 136040,
+   "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+  },
+  {
+   "from": "2011-07-01",
+   "amount": 140910,
+   "source": "Parliamentary Library, The base salary for senators and members (Background Note, 17 August 2012), Table 1",
+   "url": "https://www.aph.gov.au/About_Parliament/Parliamentary_Departments/Parliamentary_Library/pubs/BN/2012-2013/BaseSalary"
+  },
+  {
+   "from": "2012-03-15",
+   "amount": 185000,
+   "source": "Remuneration Tribunal Determination 2012/02, clause 2.1",
+   "url": "https://www.legislation.gov.au/F2012L00567/asmade/text"
+  },
+  {
+   "from": "2012-07-01",
+   "amount": 190550,
+   "source": "Remuneration Tribunal Determination 2012/15, clause 1.2",
+   "url": "https://www.legislation.gov.au/F2012L01302/asmade/text"
+  },
+  {
+   "from": "2013-07-01",
+   "amount": 195130,
+   "source": "Remuneration Tribunal Determination 2013/13, clause 2.1",
+   "url": "https://www.legislation.gov.au/F2013L01090/asmade/text"
+  },
+  {
+   "from": "2016-01-01",
+   "amount": 199040,
+   "source": "Remuneration Tribunal Determination 2015/22, clause 2.1",
+   "url": "https://www.legislation.gov.au/F2015L01973/asmade/text"
+  },
+  {
+   "from": "2017-07-01",
+   "amount": 203030,
+   "source": "Remuneration Tribunal Determination 2017/12, clause 2.1",
+   "url": "https://www.legislation.gov.au/F2017L00810/asmade/text"
+  },
+  {
+   "from": "2018-07-01",
+   "amount": 207100,
+   "source": "Remuneration Tribunal Determination 2018/06, clause 1.2",
+   "url": "https://www.legislation.gov.au/F2018L00879/asmade/text"
+  },
+  {
+   "from": "2019-07-01",
+   "amount": 211250,
+   "source": "Remuneration Tribunal (Members of Parliament) Determination 2019, clause 2.1",
+   "url": "https://www.legislation.gov.au/F2019L00859/asmade/text"
+  },
+  {
+   "from": "2022-07-01",
+   "amount": 217060,
+   "source": "Remuneration Tribunal (Members of Parliament) Determination 2022, clause 2.1",
+   "url": "https://www.legislation.gov.au/F2022L00769/asmade/text"
+  },
+  {
+   "from": "2023-09-01",
+   "amount": 225750,
+   "source": "Remuneration Tribunal (Members of Parliament) Amendment Determination (No. 1) 2023, Schedule 1 Part 2",
+   "url": "https://www.legislation.gov.au/F2023L01119/asmade/text"
+  },
+  {
+   "from": "2024-07-01",
+   "amount": 233660,
+   "source": "Remuneration Tribunal (Members of Parliament) Determination 2024, clause 2.1",
+   "url": "https://www.legislation.gov.au/F2024L00799/asmade/text"
+  },
+  {
+   "from": "2025-07-01",
+   "amount": 239270,
+   "source": "Remuneration Tribunal (Members of Parliament) Amendment Determination (No. 2) 2025, Schedule 1 item 1",
+   "url": "https://www.legislation.gov.au/F2025L00713/asmade/text",
+   "note": "The Tribunal made no adjustment for 1 July 2026; the 2026 Determination (section 7) restates $239,270."
+  }
+ ]
+}

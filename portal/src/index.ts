@@ -1,6 +1,8 @@
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
+import { paidAnswer } from './ask-pay'
+import { slugIndex } from './person-slug'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
 /**
@@ -1148,6 +1150,11 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
       return res
     }
   } catch { return json({ error: 'The receipt records are temporarily unavailable. Please try again.' }, 503) }
+  // What a parliamentarian is paid is set by instrument, not said in a speech:
+  // answered from /pay.json, again with no model call. A failure here is not
+  // the reader's problem; the question falls through to the record.
+  const paid = await paidAnswer(rawInput, env.ASSETS).catch(() => null)
+  if (paid) { mark('pay'); return timed(json(paid)) }
   // A follow-up in a conversation rarely names its subject ("no he has been
   // in tons of grants, look more"), and the record is searched on the words
   // as typed: the prior turns reach generation as chat history but never the
@@ -1162,7 +1169,12 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     const limited = await rateLimited(env.ASK_LIMITER, request)
     if (limited) return limited
     askedAs = await standaloneQuestion(rawInput, env)
-    if (askedAs) rawInput.question = askedAs
+    if (askedAs) {
+      rawInput.question = askedAs
+      // "And the Liberals?" after a pay answer only reads as one once rewritten.
+      const paidFollowUp = await paidAnswer({ ...rawInput, context: undefined }, env.ASSETS).catch(() => null)
+      if (paidFollowUp) { mark('pay'); return timed(json(withAskedAs(paidFollowUp, askedAs))) }
+    }
   }
   mark('rewrite')
   let people: { name: string }[] = []
@@ -2900,8 +2912,8 @@ const OG_IMAGE = `${SITE_ORIGIN}/og-default.png`
 const OG_IMAGE_ALT = 'OPAX: ask what your politicians actually said'
 /**
  * The share image for a page is its canonical URL under /og with .png on the
- * end, so /subject/person/Anthony%20Albanese shares
- * /og/subject/person/Anthony%20Albanese.png?v=2, and /ask?q=... keeps its
+ * end, so /subject/person/anthony-albanese shares
+ * /og/subject/person/anthony-albanese.png?v=2, and /ask?q=... keeps its
  * question. The version is the drawing's (src/og.ts), not the data's: a
  * crawler caches by URL, so a redesign has to move.
  */
@@ -3115,7 +3127,7 @@ interface Person {
   representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[]
   rosterOnly?: { asOf?: string; seats: string[] }
 }
-interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person> }
+interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string> }
 
 interface MoneyNode {
   id: string
@@ -3237,7 +3249,7 @@ function loadPeople(env: Env): Promise<PeopleData> {
         const prev = byFold.get(f)
         if (!prev || p.speeches > prev.speeches) byFold.set(f, p) // curly/straight twins: keep the fuller entry
       }
-      return { generated: raw.meta?.generated ?? '', people: raw.people, byName, byFold }
+      return { generated: raw.meta?.generated ?? '', people: raw.people, byName, byFold, ...slugIndex(raw.people) }
     })
     .catch((err) => {
       peopleMemo = null
@@ -3799,15 +3811,39 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
   }
 }
 
+/** The person a /subject/person/<segment> names: by slug, by name, by folded name. */
+function personAt(people: PeopleData, segment: string): Person | null {
+  return people.byName.get(segment) ?? people.bySlug.get(segment) ?? people.byFold.get(foldName(segment)) ?? null
+}
+/** A person's path: their slug where the roster gives one, else their name (see person-slug.ts). */
+function personPath(people: PeopleData | null, name: string): string {
+  return `/subject/person/${people?.slugOf.get(name) ?? encodeURIComponent(name)}`
+}
+/** An address written with the name forwards to the slug, so one page has one URL. */
+async function personSlugRedirect(segment: string, url: URL, env: Env): Promise<Response | null> {
+  const people = await loadPeople(env).catch(() => null)
+  const p = people && personAt(people, segment)
+  const slug = p && people.slugOf.get(p.name)
+  if (!slug || slug === segment) return null
+  return new Response(null, { status: 301, headers: { location: `/subject/person/${slug}${url.search}`, 'cache-control': 'public, max-age=86400' } })
+}
+/** slug -> name for every person with a slug: how app.js writes and reads the addresses. */
+async function apiPersonSlugs(env: Env): Promise<Response> {
+  const people = await loadPeople(env)
+  const res = json({ generated: people.generated, slugs: Object.fromEntries([...people.bySlug].map(([slug, p]) => [slug, p.name])) })
+  res.headers.set('cache-control', 'public, max-age=3600')
+  return res
+}
+
 async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const [people, photos, moneyData] = await Promise.all([
     loadPeople(env).catch(() => null),
     loadPhotos(env).catch(() => null),
     loadMoney(env).catch(() => null),
   ])
-  const p = people?.byName.get(name) ?? people?.byFold.get(foldName(name)) ?? null
+  const p = (people ? personAt(people, name) : null)
   const display = p?.name ?? name
-  const canonical = `${SITE_ORIGIN}/subject/person/${encodeURIComponent(display)}`
+  const canonical = `${SITE_ORIGIN}${personPath(people, display)}`
   const title = `${display} · OPAX`
   const portraitId = photoIdFor(photos, display)
   const credit = await creditLine(env, portraitId)
@@ -4553,7 +4589,8 @@ async function sitemapXml(env: Env): Promise<Response> {
     for (const n of moneyData.parties.values()) partyLabels.set(foldName(n.label), n.label)
     for (const p of people.people) if (p.party) partyLabels.set(foldName(p.party), partyLabels.get(foldName(p.party)) ?? p.party)
     for (const label of [...partyLabels.values()].sort()) add(`/subject/party/${encodeURIComponent(label)}`, moneyData.generated || people.generated)
-    for (const p of people.people) add(`/subject/person/${encodeURIComponent(p.name)}`, people.generated)
+    // One row per page: a spelling that lost its slug to a fuller twin still has its own.
+    for (const p of people.people) add(personPath(people, p.name), people.generated)
     for (const n of moneyData.donors.values()) add(`/subject/donor/${encodeURIComponent(n.label)}`, n.generated || moneyData.generated)
     // byFold, not the raw list: two spellings of one name resolve to one page,
     // and the length bound is the one matchSeoRoute enforces, so nothing listed
@@ -4827,6 +4864,7 @@ async function route(
       if (resourceMatch && request.method === 'GET') {
         return await apiResource(request, url, resourceMatch[1], env, ctx)
       }
+      if (url.pathname === '/api/person-slugs' && request.method === 'GET') return await apiPersonSlugs(env)
       if (url.pathname === '/api/stats' && request.method === 'GET') {
         return await apiStats(env)
       }
@@ -4939,6 +4977,10 @@ async function route(
         // (linked from evidence panels and corpus.json) forwards to the route.
         if (url.pathname === '/connections.html') return legacyConnectionsRedirect(url)
         const seoRoute = matchSeoRoute(url)
+        if (seoRoute?.kind === 'subject' && seoRoute.dir === 'person') {
+          const forward = await personSlugRedirect(seoRoute.name, url, env)
+          if (forward) return forward
+        }
         if (seoRoute) return await serveSeoPage(seoRoute, url, request, env, ctx)
       }
       return await env.ASSETS.fetch(request)

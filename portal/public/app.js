@@ -2122,8 +2122,13 @@ document.addEventListener("click", (e) => {
   else return;
   if (!isRoute(to)) return;
   e.preventDefault();
+  // A route never keeps a hash, so a link to a section of another page
+  // (/subject/person/x#person-pay) hands the section over for that page to
+  // scroll to once it has drawn it.
+  pendingAnchor = a.hash.length > 1 && !a.hash.startsWith("#/") ? a.hash.slice(1) : "";
   goRoute(to);
 });
+let pendingAnchor = "";
 
 // Back and forward now move between real paths, so popstate does the routing.
 // hashchange stays for anything still assigning location.hash (older code, and
@@ -2740,7 +2745,7 @@ function renderAnswer(container, text, response = {}) {
       table.append(thead, tbody);
       scroll.appendChild(table);
       container.appendChild(scroll);
-    } else if (response.money_ranking && response.money_context && block.text.startsWith("Coverage: ")) {
+    } else if ((response.money_ranking || response.pay_answer) && response.money_context && block.text.startsWith("Coverage: ")) {
       const details = document.createElement("details");
       details.className = "answer-money-method";
       const summary = document.createElement("summary");
@@ -2751,7 +2756,7 @@ function renderAnswer(container, text, response = {}) {
       container.appendChild(details);
     } else {
       const p = document.createElement("p");
-      if (response.money_ranking && block.text === response.money_context) p.className = "answer-money-context";
+      if ((response.money_ranking || response.pay_answer) && block.text === response.money_context) p.className = "answer-money-context";
       appendInline(p, block.text);
       container.appendChild(p);
     }
@@ -2890,7 +2895,7 @@ function sourceItem(s, num, passage = false) {
   } else {
     const meta = receiptCalculation
       ? [s.source || "Published political disclosure records", "Calculated by Opax", s.date ? `Data updated ${fmtDate(s.date)}` : ""].filter(Boolean).map(esc).join(" · ")
-      : s.resource?.startsWith("USER_CONTEXT_")
+      : s.resource?.startsWith("USER_CONTEXT_") || /^pay-\d+$/.test(s.resource || "")
       ? [s.source, s.dateLabel || (s.date ? fmtDate(s.date) : "")].filter(Boolean).map(esc).join(" · ")
       : metaHTML(s, { linkSpeaker: true, linkParty: true, portrait: !passage });
     if (meta) {
@@ -3088,7 +3093,7 @@ function quoteCardHTML(s, i, n) {
 }
 
 function setQuoteRail(sources) {
-  quoteRail.sources = (sources || []).filter(s => !s.resource?.startsWith("USER_CONTEXT_") && !/^receipt-(?:ranking|comparison|years)-/.test(s.resource || ""));
+  quoteRail.sources = (sources || []).filter(s => !s.resource?.startsWith("USER_CONTEXT_") && !/^receipt-(?:ranking|comparison|years)-/.test(s.resource || "") && !/^pay-\d+$/.test(s.resource || ""));
   quoteRail.idx = -1;
   updateQuoteRail();
 }
@@ -3610,7 +3615,45 @@ function votesFor(name) {
 }
 
 function subjectHash(kind, label) {
-  return `/subject/${kind}/${encodeURIComponent(label)}`;
+  // A person in the roster is addressed by slug (/subject/person/tony-abbott);
+  // anyone else, and every link written before the slugs arrive, by name. The
+  // name form still opens the page and is rewritten to the slug on arrival.
+  const slug = kind === "person" ? personSlugs.byName.get(String(label)) : null;
+  return `/subject/${kind}/${slug || encodeURIComponent(label)}`;
+}
+
+/* --- person slugs -------------------------------------------------------------
+   /api/person-slugs is the Worker's slug -> name map (src/person-slug.ts): the
+   roster's people, one slug each. It is fetched once at boot; until it lands,
+   links are written with names, which the Worker and openSubject() both forward
+   to the slug, so nothing waits on it. personSlug() must match the Worker's:
+   test/person-slug.test.mjs holds the two together. */
+const personSlugs = { byName: new Map(), bySlug: new Map(), ready: null };
+function personSlug(name) {
+  return String(name ?? "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    .replace(/['’‘ʼ`.]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+function loadPersonSlugs() {
+  personSlugs.ready ??= fetch("/api/person-slugs").then((r) => (r.ok ? r.json() : null)).then((data) => {
+    for (const [slug, name] of Object.entries(data?.slugs || {})) {
+      personSlugs.bySlug.set(slug, name);
+      personSlugs.byName.set(name, slug);
+    }
+    upgradePersonLinks(document);
+  }).catch(() => { /* names still work as addresses */ });
+  return personSlugs.ready;
+}
+/** Links written before the slugs arrived (and by modules with their own URL builders). */
+function upgradePersonLinks(root) {
+  for (const a of root.querySelectorAll('a[href^="/subject/person/"]')) {
+    const href = a.getAttribute("href");
+    const cut = href.search(/[?#]/);
+    const path = cut < 0 ? href : href.slice(0, cut);
+    let name;
+    try { name = decodeURIComponent(path.slice("/subject/person/".length)); } catch { continue; }
+    const slug = personSlugs.byName.get(name);
+    if (slug && slug !== name) a.setAttribute("href", `/subject/person/${slug}${cut < 0 ? "" : href.slice(cut)}`);
+  }
 }
 
 const DECLARED_BUCKET_LABELS = {
@@ -4298,6 +4341,75 @@ async function renderPersonExpenses(name, personId, sections) {
     ${benchmark ? `<p class="fineprint">Bronze is this member's average year; the ink tick is the median year of ${benchmark.count.toLocaleString()} parliamentarians claiming in ${benchmark.latestYear} who have claimed since ${benchmark.fromCutoff} or earlier. Office costs follow electorate size and travel follows portfolio, so a bar past its tick is a fact, not a finding. Per-year figures divide each total by the ${years} calendar ${years === 1 ? "year" : "years"} claimed; the first and last are partial. Source: ${src ? `<a href="${esc(src)}" rel="noopener" target="_blank">IPEA quarterly expenditure reports, CC BY 4.0, to ${esc(benchmark.latestQuarter)} ↗︎</a>` : "IPEA quarterly expenditure reports, CC BY 4.0"}. IPEA corrects prior quarters, so treat totals as indicative. <a href="/expenses">What the categories mean</a>.</p>` : `<p class="fineprint">${esc(IPEA_NOTE)} <a href="/expenses">What the categories mean</a>${src ? ` · <a href="${esc(src)}" rel="noopener" target="_blank">Latest quarter on data.gov.au ↗︎</a>` : ""}</p>`}`);
   $("subject-infobox")?.querySelector("dl")?.insertAdjacentHTML("beforeend",
     `<dt>Claimed expenses</dt><dd><b>${esc(fmtMoney(e.total))}</b></dd>`);
+}
+
+// --- pay for the posts held ----------------------------------------------------
+// /pay.json (scripts/build_pay.py) joins the Remuneration Tribunal's base salary
+// and office loadings to the Parliamentary Handbook's record of who held which
+// post, federal parliament only, from 7 December 1999. Entitlements by
+// instrument, never payslips; the section says so. Fetched when a person page
+// opens; silent for anyone the file does not know (state members, pre-1999).
+let payPromise = null;
+function loadPay() {
+  payPromise ??= fetch("/pay.json").then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return payPromise;
+}
+/** Folded exactly as build_pay.py folds the keys of pay.json's `names`. */
+function payNameKey(name) {
+  return String(name || "").normalize("NFKD").replace(/[^\x00-\x7f]/g, "").toLowerCase()
+    .replace(/[^a-z' -]/g, " ").replace(/\s+/g, " ").trim();
+}
+/** A salary to the dollar: fmtMoney's "$507K" suits a chart label, not a rate of pay. */
+const payMoney = (n) => `$${Math.round(Number(n) || 0).toLocaleString("en-AU")}`;
+const payYear = (start) => `${start}–${String(start + 1).slice(2)}`;
+const payAsPost = (post) => post === "Senator" ? "a senator" : post === "Member of Parliament" ? "a member of parliament" : post;
+
+async function renderPersonPay(name, sections) {
+  const key = currentSubjectKey;
+  const slot = document.createElement("section");
+  slot.id = "person-pay";
+  sections.appendChild(slot);
+  const data = await loadPay();
+  if (currentSubjectKey !== key) return;
+  const person = data?.people?.[data.names?.[payNameKey(name)]];
+  if (!person?.spells?.length) { slot.remove(); return; }
+  const base = data.base[data.base.length - 1];
+  const last = person.spells[person.spells.length - 1];
+  const notice = (assumed) => assumed ? " if named in the Opposition Leader’s notice" : "";
+  const lead = person.now
+    ? `<b>${esc(payMoney(person.now.salary))}</b> a year as ${esc(payAsPost(person.now.post))}${notice(person.now.assumed)}: the ${esc(payMoney(base.amount))} base salary${person.now.pct ? ` plus a ${esc(String(person.now.pct))}% loading` : ", with no loading"}, since ${esc(fmtDate(person.now.since))}.`
+    : `Left parliament${person.to ? ` in ${esc(fmtDate(person.to).replace(/^\d+\s/, ""))}` : ""} on <b>${esc(payMoney(last[4]))}</b> a year as ${esc(payAsPost(last[2]))}.`;
+  const peak = person.peak.salary > (person.now?.salary || last[4])
+    ? ` The highest rate was <b>${esc(payMoney(person.peak.salary))}</b> a year as ${esc(payAsPost(person.peak.post))}, in ${esc(payYear(person.peak.year))}.` : "";
+  const total = person.total >= 1e6 ? `$${(person.total / 1e6).toFixed(1)} million` : payMoney(Math.round(person.total / 1000) * 1000);
+  const years = person.by_year;
+  const fromStart = person.from <= data.meta.from;
+  const sources = Object.fromEntries((data.meta.sources || []).map((src) => [src.id, src]));
+  const link = (id, label) => sources[id] && safeUrl(sources[id].url)
+    ? `<a href="${esc(safeUrl(sources[id].url))}" rel="noopener" target="_blank">${esc(label)} ↗︎</a>` : esc(label);
+  const rows = [...person.spells].reverse().map(([from, to, post, pct, salary, assumed]) => `
+    <li class="pay-row">
+      <span class="pay-when">${esc(fmtDate(from))} to ${to ? esc(fmtDate(to)) : "now"}</span>
+      <span class="pay-post">${esc(post)}${assumed ? ` <small>if named in the notice</small>` : ""}</span>
+      <span class="pay-rate"><b>${esc(payMoney(salary))}</b> a year<small>${pct ? `base plus ${esc(String(pct))}%` : "base salary"}</small></span>
+    </li>`).join("");
+  const notes = (data.meta.not_covered || []).filter((note) => note.id !== "shadow-notice" || person.spells.some((spell) => spell[5]))
+    .map((note) => esc(note.text)).join(" ");
+  const allowance = data.meta.electorate_allowance;
+  slot.innerHTML = `
+    <h3 class="subject-section-title">Pay for the posts held</h3>
+    <p class="pay-lead">${lead}${peak}</p>
+    <p class="pay-lead">About <b>${esc(total)}</b> in salary entitlements, ${esc(payYear(years[0][0]))} to ${esc(payYear(years[years.length - 1][0]))}${fromStart ? `, counted from ${esc(fmtDate(data.meta.from))}, where this record starts` : ""}.</p>
+    ${years.length > 1 ? columnChart(years.map(([year, amount]) => [payYear(year), amount]), {
+      fmt: fmtMoney, heading: "Salary entitlement by financial year",
+      note: "Each day at the base salary then in force plus the loading of the post then held. The first and last years are part years; nothing is adjusted for inflation.",
+    }) : ""}
+    <ol class="pay-rows" aria-label="Posts held and their salary">${rows}</ol>
+    <p class="fineprint">The rate on each row is the one in force when the spell ended; a new row starts whenever the post or its loading changed. These are entitlements set by instrument, not payslips: they leave out the electorate allowance${allowance ? ` (${esc(payMoney(allowance.min))} to ${esc(payMoney(allowance.max))} a year)` : ""}, expenses, superannuation and outside income. ${notes} Sources: ${link("mp-determination", "Remuneration Tribunal determinations")} and ${link("ministerial-report", "its report on ministerial salaries")} for what each post pays; the ${link("handbook", "Parliamentary Handbook")} for who held it and when. As at ${esc(fmtDate(data.meta.as_of))}.</p>`;
+  if (location.hash === "#person-pay" || pendingAnchor === "person-pay") {
+    pendingAnchor = "";
+    slot.scrollIntoView({ behavior: "instant", block: "start" });
+  }
 }
 
 // --- expense categories: definitions, popover and glossary page --------------
@@ -4993,6 +5105,34 @@ async function renderPersonTopics(name, sections) {
 }
 
 async function openSubject(kind, name, manageFocus, params = new URLSearchParams()) {
+  if (kind === "person") {
+    // The address may be a slug or a name; the page works from the name, and
+    // the address bar settles on the slug (keeping any ?query and #anchor).
+    const segment = String(name);
+    // Still the page being asked for? The waits below outlive a quick reader.
+    const stillHere = () => {
+      try { return decodeURIComponent(hereRoute().split(/[?#]/)[0].split("/")[3] || "") === segment; } catch { return false; }
+    };
+    // Never wait long on the map: a name opens without it.
+    await Promise.race([loadPersonSlugs(), new Promise((done) => setTimeout(done, 2500))]);
+    if (!stillHere()) return;
+    name = personSlugs.bySlug.get(segment) ?? segment;
+    if (name === segment && /^[a-z0-9]+(?:-[a-z0-9]+)+$/.test(segment)) {
+      // A slug the map could not read (the request failed, or is still out):
+      // the static roster answers the same question, only heavier.
+      const roster = await loadParliamentarians();
+      if (!stillHere()) return;
+      name = (roster?.people || []).filter((p) => personSlug(p.name) === segment)
+        .sort((a, b) => (b.speeches || 0) - (a.speeches || 0))[0]?.name ?? segment;
+    }
+    const slug = personSlugs.byName.get(name);
+    if (slug && slug !== segment) {
+      const anchor = rawFragment() && !rawFragment().startsWith("/") ? `#${rawFragment()}` : "";
+      replaceRoute(`${subjectHash("person", name)}${location.search}${anchor}`);
+      syncPathMeta(); // canonical and og:url follow the address bar
+    }
+    if (name !== segment) setCrumbs([{ label: DIRECTORY_KINDS.person, href: "/subject/person" }, { label: name }]);
+  }
   // A bare surname with one holder in the speaker index ("Albanese"; a state
   // stub the roster has since named, so "Picton" is Chris Picton): open the
   // full name, so an old link or a typed surname lands on the person.
@@ -5309,6 +5449,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const heading = news.querySelector(".kicker");
     if (heading) heading.outerHTML = `<h3 class="subject-section-title">In the news</h3>`;
   }
+  await renderPersonPay(name, sections);
+  if (currentSubjectKey !== key) return;
+  refreshPersonJumps(sections);
   await renderPersonExpenses(name, photoMap?.[name.trim().toLowerCase()], sections);
   if (currentSubjectKey !== key) return;
   const mentions = document.createElement("section");
@@ -5435,7 +5578,7 @@ function refreshPersonJumps(sections) {
   if (!sections.isConnected) return;
   const nav = sections.querySelector(".person-jumps");
   if (!nav) return;
-  const entries = [["person-topics", "Topics"], ["subject-votes", "Votes"], ["person-ties", "Ties"], ["person-register", "Interests"], ["person-speeches", "Speeches"]];
+  const entries = [["person-topics", "Topics"], ["subject-votes", "Votes"], ["person-ties", "Ties"], ["person-register", "Interests"], ["person-speeches", "Speeches"], ["person-pay", "Pay"]];
   const markup = entries.filter(([id]) => sections.querySelector(`#${id}`)?.textContent.trim())
     .map(([id, label]) => `<a href="#${id}" data-person-jump="${id}">${label}</a>`).join("");
   if (nav.dataset.markup === markup) return;
@@ -9041,17 +9184,19 @@ async function runAsk(question) {
     $("ask-answer").askEvidence = citedList;
     // The speaker this answer was actually filtered to (chosen in Options or
     // read out of the question), so "Continue in a conversation" keeps it.
-    lastAsk = { question, answer: answerText, sources, kind: askKind(), speaker: askFilters().speaker || speakerFilter || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview };
-    if (!data.money_ranking) prefetchAskFollowups(lastAsk);
+    lastAsk = { question, answer: answerText, sources, kind: askKind(), speaker: askFilters().speaker || speakerFilter || "", answer_status: data.answer_status, evidence_excerpts: data.evidence_excerpts, money_question: data.money_question, money_ranking: data.money_ranking, money_context: data.money_context, money_overview: data.money_overview, pay_answer: data.pay_answer, pay_next: data.pay_next };
+    // A calculated answer carries its own fixed next steps, not generated ones.
+    const calculated = !!(data.money_ranking || data.pay_answer);
+    if (!calculated) prefetchAskFollowups(lastAsk);
 
-    if (data.money_ranking) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
+    if (calculated) { $("ask-money").hidden = true; $("ask-register-note").hidden = true; }
     hideWombat();
     setStatus($("ask-status"), needsClarification ? "Please clarify the question before I calculate the answer." : data.answer_status === "evidence_only" ? "Source passages ready. A summary could not be verified." : `Answer ready: ${sources.length} sources.`);
     $("ask-status").classList.add("visually-hidden"); // announced, not displayed
     revealAskResult();
     $("ask-result").querySelector(".action-row").hidden = needsClarification;
     $("ask-stamp").hidden = needsClarification;
-    $("ask-result").querySelector(".kicker").textContent = needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? "From disclosed receipts" : data.answer_status === "evidence_only" ? "From the record" : "Answer";
+    $("ask-result").querySelector(".kicker").textContent = needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : "Answer";
     renderAnswerOverview($("ask-overview"), data.money_overview);
     if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
@@ -9059,6 +9204,7 @@ async function runAsk(question) {
       // A calculated money answer gets no generated follow-ups, so it carries
       // two fixed next steps instead of dead-ending under its table.
       if (data.money_ranking && data.answer_status === "calculated") renderMoneyNextSteps($("ask-answer"), answerText);
+      if (data.pay_answer) renderPayNextSteps($("ask-answer"), data.pay_next);
     } else {
       // Both attempts came back blank (it happens under model load). Own it
       // plainly and hand the reader a retry, rather than a bare sources list.
@@ -9088,8 +9234,9 @@ async function runAsk(question) {
     $("ask-retrieved").hidden = !alsoList.length;
     $("ask-retrieved-list").replaceChildren(...alsoList.map((s) => sourceItem(s, null, true)));
     $("ask-sources-sum").textContent = `Sources (${sources.length})`;
-    $("ask-calculation-note").hidden = !data.money_ranking;
-    $("ask-retrieval-note").hidden = !!data.money_ranking;
+    $("ask-calculation-note").hidden = !calculated;
+    $("ask-calculation-note").textContent = data.pay_answer ? PAY_CALCULATION_NOTE : MONEY_CALCULATION_NOTE;
+    $("ask-retrieval-note").hidden = calculated;
     $("ask-sources").open = false; // each new answer starts folded
     $("ask-sources").hidden = !sources.length;
     // The finished answer replaces the streamed one: let that settle before a
@@ -9249,6 +9396,26 @@ function moneyNextSteps(answer) {
     }
   }
   return { map, receipts, donor };
+}
+
+const MONEY_CALCULATION_NOTE = "Opax calculated these totals from selected public disclosure records. Open a source to explore the supporting funding records. Receipts include more than gifts, and this selection does not cover every donor.";
+const PAY_CALCULATION_NOTE = "Opax worked these salaries out from the Remuneration Tribunal’s determinations and the Parliamentary Handbook’s record of who held each post. They are entitlements, not payslips, and leave out allowances, expenses and superannuation.";
+
+/** The fixed next steps under a pay answer: links the Worker chose (src/ask-pay.ts). */
+function renderPayNextSteps(container, steps) {
+  const links = (Array.isArray(steps) ? steps : []).filter((step) => typeof step?.href === "string" && step.href.startsWith("/") && step.label);
+  if (!links.length) return;
+  const nav = document.createElement("nav");
+  nav.className = "answer-money-next";
+  nav.setAttribute("aria-label", "Next steps");
+  for (const step of links.slice(0, 3)) {
+    const a = document.createElement("a");
+    a.className = "action-btn";
+    a.href = step.href;
+    a.textContent = step.label;
+    nav.appendChild(a);
+  }
+  container.appendChild(nav);
 }
 
 function renderMoneyNextSteps(container, answer) {
@@ -9667,7 +9834,7 @@ function initChat(manageFocus) {
           store.active = null;
           chatThread = [
             { role: "user", text: seed.question, fundingQuestion: seed.money_question },
-            { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview },
+            { role: "answer", text: seed.answer, sources: seed.sources || [], next: seed.next || undefined, answer_status: seed.answer_status, evidence_excerpts: seed.evidence_excerpts, money_ranking: seed.money_ranking, money_context: seed.money_context, money_overview: seed.money_overview, pay_answer: seed.pay_answer, pay_next: seed.pay_next },
           ];
           chatKind = seed.kind === "speech" ? "speech" : "all";
           // An ask that was filtered to one speaker hands that filter on: the
@@ -9980,6 +10147,7 @@ function chatAnswerEl(msg) {
   const citedSources = (msg.sources || []).filter((s) => s.cited);
   body.askEvidence = citedSources.length ? citedSources : (msg.sources || []);
   renderAnswer(body, msg.text || "(no answer)", msg);
+  if (msg.pay_answer) renderPayNextSteps(body, msg.pay_next);
   wrap.appendChild(body);
   const sources = msg.sources || [];
   if (sources.length) {
@@ -9993,10 +10161,10 @@ function chatAnswerEl(msg) {
     const sum = document.createElement("summary");
     sum.textContent = `Sources (${sources.length})`;
     det.appendChild(sum);
-    if (msg.money_ranking || shown.some(s => /^receipt-(?:ranking|comparison|years)-/.test(s.resource || ""))) {
+    if (msg.pay_answer || msg.money_ranking || shown.some(s => /^receipt-(?:ranking|comparison|years)-/.test(s.resource || ""))) {
       const note = document.createElement("p");
       note.className = "fineprint";
-      note.textContent = "Opax calculated these totals from selected public disclosure records. Open a source to explore the supporting funding records. Receipts include more than gifts, and this selection does not cover every donor.";
+      note.textContent = msg.pay_answer ? PAY_CALCULATION_NOTE : MONEY_CALCULATION_NOTE;
       det.appendChild(note);
     }
     const ol = document.createElement("ol");
@@ -10303,6 +10471,8 @@ async function sendChat(question, carry) {
       money_ranking: data.money_ranking,
       money_context: data.money_context,
       money_overview: data.money_overview,
+      pay_answer: data.pay_answer,
+      pay_next: data.pay_next,
       evidence_excerpts: data.evidence_excerpts,
       sources: (data.sources || []).map((source) => ({
         ...source,
@@ -13746,4 +13916,6 @@ function syncPathMeta() {
   }
 }
 
+// Person links are written as slugs once this lands; nothing waits on it.
+loadPersonSlugs();
 route();

@@ -1,0 +1,104 @@
+{
+  "series_from": "1999-12-07",
+  "series_note": "Salaries of office became percentages of the base salary on 7 December 1999 (Tribunal Report 99/01, Determination 1999/16). Before that they were fixed dollar amounts, which this series does not carry.",
+  "sources": [
+    {
+      "id": "mp-determination",
+      "publisher": "Remuneration Tribunal",
+      "title": "Remuneration Tribunal (Members of Parliament) Determination 2026",
+      "url": "https://www.remtribunal.gov.au/document-library-search/remuneration-tribunal-members-parliament-determination-2026"
+    },
+    {
+      "id": "ministerial-report",
+      "publisher": "Remuneration Tribunal",
+      "title": "Report on Ministerial Salaries: Salary Additional to the Parliamentary Base Salary, July 2026",
+      "url": "https://www.remtribunal.gov.au/document-library-search/report-ministerial-salaries-salary-additional-parliamentary-base-salary-july-2026"
+    },
+    {
+      "id": "handbook",
+      "publisher": "Parliament of Australia",
+      "title": "Parliamentary Handbook: service, ministries, shadow ministries and parliamentary positions",
+      "url": "https://handbook.aph.gov.au/"
+    },
+    {
+      "id": "frl",
+      "publisher": "Federal Register of Legislation",
+      "title": "Remuneration Tribunal determinations, as made",
+      "url": "https://www.legislation.gov.au/"
+    },
+    {
+      "id": "third-party-reasons",
+      "publisher": "Remuneration Tribunal",
+      "title": "Members of Parliament Amendment Determination (No.1) 2026: reasons for determination",
+      "url": "https://www.remtribunal.gov.au/sites/default/files/2026-07/RT%20MP%20Amendment%20Determination%20No.1%202026%20-%20Reasons%20for%20Decisions.pdf"
+    }
+  ],
+  "licences": {
+    "remuneration_tribunal": "CC BY 3.0 AU",
+    "federal_register_of_legislation": "CC BY 4.0: based on content from the Federal Register of Legislation at 17 September 2026. For the latest information on Australian Government legislation please go to https://www.legislation.gov.au.",
+    "parliamentary_handbook": "CC BY-NC-ND 4.0 (Parliament of Australia website). Facts of office and dates only; served on Opax pages, never loaded into the knowledge box."
+  },
+  "method": "For each day a person sat in the federal parliament: the parliamentary base salary then in force, plus the additional salary of the post they then held, as a percentage of that base. A Minister is paid the one ministerial rate that applies. Other office holders are paid the sum of the percentages of their offices, rounded up to the next $10; a shadow minister is paid a flat rate instead. Yearly figures add those days across a financial year. Nothing is adjusted for inflation.",
+  "not_covered": [
+    {
+      "id": "chairs",
+      "text": "Committee chairs and deputy chairs are paid a further 3% to 16% that is not counted, because the Parliamentary Handbook gives no dates for who chaired what."
+    },
+    {
+      "id": "shadow-notice",
+      "text": "A shadow minister is paid a loading only if named in the Opposition Leader’s notice to the Clerks, which is capped and not published; Opax assumes every listed shadow minister is named."
+    }
+  ],
+  "electorate_allowance": {
+    "min": 39700,
+    "max": 57100,
+    "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 8: $39,700 for a senator or an electorate under 2,000 km2, $47,200 under 5,000 km2, $57,100 above."
+  },
+  "assistant_minister_is_a_parliamentary_secretary_from": "2015-09-21",
+  "cabinet_rank_missing_in_handbook": [
+    {"phid": "83T", "name": "Kevin Rudd", "from": "2010-09-14", "to": "2012-02-26", "note": "Minister for Foreign Affairs in the second Gillard ministry, a Cabinet post; the Handbook lists the portfolio without its Cabinet Minister row. Found by checking every senior portfolio since 1999 for a missing rank: the only one."}
+  ],
+  "offices": [
+    {"id": "pm", "label": "Prime Minister", "kind": "ministerial", "periods": [{"from": "1999-12-07", "pct": 160}], "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."},
+    {"id": "dpm", "label": "Deputy Prime Minister", "kind": "ministerial", "periods": [{"from": "1999-12-07", "pct": 105}], "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."},
+    {"id": "treasurer", "label": "Treasurer", "kind": "ministerial", "periods": [{"from": "1999-12-07", "pct": 87.5}], "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."},
+    {"id": "lgs", "label": "Leader of the Government in the Senate", "kind": "ministerial", "periods": [{"from": "1999-12-07", "pct": 87.5}], "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."},
+    {"id": "loh", "label": "Leader of the House", "kind": "ministerial", "periods": [{"from": "1999-12-07", "pct": 75}], "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."},
+    {"id": "mgbs", "label": "Manager of Government Business in the Senate", "kind": "ministerial", "periods": [{"from": "1999-12-07", "pct": 0}], "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed.", "note": "A marker only: the rate is one of the three rows below, by the holder's rank."},
+    {"id": "mgbs_cabinet", "label": "Cabinet Minister and Manager of Government Business in the Senate", "kind": "ministerial", "periods": [{"from": "2005-10-18", "pct": 75}], "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed.", "note": "First sighted in Report 1 of 2005 (18 October 2005); absent from Report 1 of 2004."},
+    {"id": "mgbs_minister", "label": "Minister and Manager of Government Business in the Senate", "kind": "ministerial", "periods": [{"from": "2004-03-25", "pct": 67.5}], "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed.", "note": "First sighted in Report 1 of 2004 (25 March 2004); the row appeared some time after June 2000."},
+    {"id": "mgbs_parlsec", "label": "Parliamentary Secretary and Manager of Government Business in the Senate", "kind": "ministerial", "periods": [{"from": "2004-03-25", "pct": 35}], "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed.", "note": "First sighted in Report 1 of 2004 (25 March 2004)."},
+    {"id": "cabinet", "label": "Cabinet Minister", "kind": "ministerial", "periods": [{"from": "1999-12-07", "pct": 72.5}], "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."},
+    {"id": "minister", "label": "Minister outside Cabinet", "kind": "ministerial", "periods": [{"from": "1999-12-07", "pct": 57.5}], "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed."},
+    {"id": "parlsec", "label": "Assistant Minister (Parliamentary Secretary)", "kind": "ministerial", "periods": [{"from": "2000-03-10", "pct": 25}], "source": "Remuneration Tribunal, Report on Ministerial Salaries (July 2026); the percentages date from the Tribunal's Report 99/01 of 7 December 1999 and have not changed.", "note": "Parliamentary Secretaries were first paid a salary from 10 March 2000."},
+    {"id": "loto", "label": "Leader of the Opposition", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 85}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "president", "label": "President of the Senate", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 75}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "speaker", "label": "Speaker of the House of Representatives", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 75}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "deputy_loto", "label": "Deputy Leader of the Opposition", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 57.5}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "loto_senate", "label": "Leader of the Opposition in the Senate", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 57.5}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "third_party_leader", "label": "Leader of the third largest party in the House of Representatives", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 45, "to": "2018-01-01"}, {"from": "2022-05-21", "pct": 45}], "source": "Determination 2005/02 (\"Leader of the Third Party in the House\", 45%); Remuneration Tribunal (Members of Parliament) Amendment Determination (No.1) 2026, F2026L00909.", "note": "Dropped by accident in the move to the 2018 framework and restored in 2026, read back to 21 May 2022. Nil for a Minister, which is what the Nationals leader was in between."},
+    {"id": "minor_leader_large", "label": "Leader of a minority party with more than 10 members", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 42.5, "to": "2008-11-01"}, {"from": "2008-11-01", "pct": 45}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999.", "note": "Before Determination 2008/19 (1 November 2008) every recognised party of five or more paid its leader 42.5%."},
+    {"id": "minor_leader_small", "label": "Leader of a minority party with five to 10 members", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 42.5}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "mob_house", "label": "Manager of Opposition Business in the House of Representatives", "kind": "office", "periods": [{"from": "2012-03-15", "pct": 27.5}], "source": "Remuneration Tribunal Determination 2012/03, F2012L00568: a new office from 15 March 2012."},
+    {"id": "chief_govt_whip_house", "label": "Chief Government Whip in the House of Representatives", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 26}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "mob_senate", "label": "Manager of Opposition Business in the Senate", "kind": "office", "periods": [{"from": "2018-09-17", "pct": 25}], "source": "Remuneration Tribunal (2018/09 Members of Parliament) Amendment Determination 2018, F2018L01338: applies from 17 September 2018."},
+    {"id": "chief_opp_whip_house", "label": "Chief Opposition Whip in the House of Representatives", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 23}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "deputy_president", "label": "Deputy President and Chair of Committees in the Senate", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 20}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "deputy_speaker", "label": "Deputy Speaker of the House of Representatives", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 20}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "deputy_loto_senate", "label": "Deputy Leader of the Opposition in the Senate", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 20}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "chief_govt_whip_senate", "label": "Chief Government Whip in the Senate", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 20}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "chief_opp_whip_senate", "label": "Chief Opposition Whip in the Senate", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 18}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "second_deputy_speaker", "label": "Second Deputy Speaker of the House of Representatives", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 13}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "govt_whip_house", "label": "Government Whip in the House of Representatives", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 13}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "opp_whip_house", "label": "Opposition Whip in the House of Representatives", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 12}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "party_senate_head", "label": "Leader in the Senate of a party whose leader sits in the House", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 11, "to": "2018-01-01"}], "source": "Determination 2005/02 to 2017/12 (\"Head of a recognised party ... sitting in the House other than that in which the Leader sits\", 11%); dropped by Determination 2017/23 from 1 January 2018."},
+    {"id": "govt_deputy_whip_senate", "label": "Government Deputy Whip in the Senate", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 5}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "opp_deputy_whip_senate", "label": "Opposition Deputy Whip in the Senate", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 5}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "govt_deputy_whip_house", "label": "Government Deputy Whip in the House of Representatives", "kind": "office", "periods": [{"from": "2008-11-01", "pct": 3}], "source": "First listed in Determination 2008/19, F2008L03890, from 1 November 2008."},
+    {"id": "opp_deputy_whip_house", "label": "Opposition Deputy Whip in the House of Representatives", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 3}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "speakers_panel", "label": "Member of the Speaker’s Panel", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 3}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "temp_chair", "label": "Temporary Chair of Committees in the Senate", "kind": "office", "periods": [{"from": "1999-12-07", "pct": 3}], "source": "Remuneration Tribunal (Members of Parliament) Determination 2026, section 11; unchanged since Determination 1999/16 of 7 December 1999."},
+    {"id": "shadow_cabinet", "label": "Shadow Cabinet Minister", "kind": "shadow", "periods": [{"from": "2012-03-15", "pct": 25}], "source": "Remuneration Tribunal Determination 2012/03, F2012L00568, clause 2.4: shadow ministers were first paid from 15 March 2012."},
+    {"id": "shadow_minister", "label": "Shadow Minister outside Shadow Cabinet", "kind": "shadow", "periods": [{"from": "2012-03-15", "pct": 20}], "source": "Remuneration Tribunal Determination 2012/03, F2012L00568, clause 2.4."}
+  ]
+}

@@ -46,7 +46,7 @@ title and description come from.
 | `/reports` | `Reports` | static | `STATIC_PAGES` | `WebPage` |
 | `/reports/<slug>`, `/reports/<slug>/s/<n>` | report title | `title: blurb` | `reports/index.json` | `Article` (+ `dateModified`) |
 | `/subject/person` `/subject/party` `/subject/donor` | `Parliamentarians` / `Parties` / `Donors` | static, people count live | `DIRECTORY_KINDS`, `parliamentarians.json` | `CollectionPage` |
-| `/subject/person/<name>` | `<name> · OPAX` | party, chamber, speech count, years | `parliamentarians.json` | `Person` (+ `memberOf`, APH `sameAs`) |
+| `/subject/person/<slug>` (`tony-abbott`; a name outside the roster keeps `/<name>`) | `<name> · OPAX` | party, chamber, speech count, years | `parliamentarians.json` | `Person` (+ `memberOf`, APH `sameAs`) |
 | `/subject/party/<name>` | `<name> · OPAX` | members, speeches, disclosed receipts | `parliamentarians.json` + `graph/money*.json` | `Organization` |
 | `/subject/donor/<name>` | `<name> · OPAX` | industry, total, receipts, years, source | `graph/money*.json` | `Organization`, or `Person` for an individual |
 | `/subject/topic` | `Topics A-Z` | static | `TOPIC_NAMES` | `CollectionPage` |
@@ -72,9 +72,20 @@ Rules the table obeys:
   usually finds something. A slug that cannot exist (an unknown report,
   an unknown topic, a document the KB does not have) serves 404 plus
   `<meta name="robots" content="noindex">` and `x-robots-tag: noindex`.
+- **People have slugs.** A person in the roster lives at `/subject/person/tony-abbott`
+  (`src/person-slug.ts`: lowercase, accents and apostrophes dropped, anything else a
+  hyphen). The slug is a function of the name, so writing a link needs no lookup;
+  reading one does, and the roster is that lookup (`loadPeople().bySlug`, served to
+  app.js as `/api/person-slugs`). The older `/subject/person/Tony%20Abbott` still
+  resolves and **301s to the slug**, query kept, so one page has one URL: canonical,
+  `og:url`, the sitemap and the share image all use the slug. Someone outside the
+  roster (under its five-speech floor, a witness) has no slug and keeps their name as
+  their address. Two spellings that fold to one slug: the entry with more speeches
+  takes it and the other keeps its name. app.js carries a copy of `personSlug()`;
+  `test/person-slug.test.mjs` holds the two together over the whole roster.
 - **Names fold.** `foldName()` normalises curly apostrophes, doubled spaces and
   case, so `/subject/person/brendan o'connor` finds Brendan O'Connor and
-  canonicalises to his stored spelling.
+  forwards to his slug.
 - **Jurisdictions never sum.** The money loader prefers the federal file's node
   for a label and lets a state file stand in only when the AEC has none, the
   same rule the money map follows (`docs/DATA-MONEY.md`).
@@ -129,8 +140,8 @@ view's own title takes over.
 
 Every page the route table names has its own Open Graph picture, drawn on
 request by the Worker. The URL is the page's canonical path under `/og` with
-`.png` on the end, so `/subject/person/Anthony%20Albanese` shares
-`/og/subject/person/Anthony%20Albanese.png?v=2`, `/reports/gambling` shares
+`.png` on the end, so `/subject/person/anthony-albanese` shares
+`/og/subject/person/anthony-albanese.png?v=2` (the name form still draws), `/reports/gambling` shares
 `/og/reports/gambling.png?v=2`, and `/ask?q=...` keeps its question. The head
 rewrite sets `og:image`, `og:image:alt` and `twitter:image` to it; a 404 page,
 and anything that cannot be drawn, shares the static home card
