@@ -1649,6 +1649,7 @@ function route() {
   firstRoute = false;
   destroySupplierPage();
   destroyConnectionsPage();
+  settleOn.stop?.(); // a landing still settling belongs to the page being left
   grantsResearchGeneration++;
   grantsResearchHandle?.destroy(); grantsResearchHandle = null;
 
@@ -4408,7 +4409,7 @@ async function renderPersonPay(name, sections) {
     <p class="fineprint">The rate on each row is the one in force when the spell ended; a new row starts whenever the post or its loading changed. These are entitlements set by instrument, not payslips: they leave out the electorate allowance${allowance ? ` (${esc(payMoney(allowance.min))} to ${esc(payMoney(allowance.max))} a year)` : ""}, expenses, superannuation and outside income. ${notes} Sources: ${link("mp-determination", "Remuneration Tribunal determinations")} and ${link("ministerial-report", "its report on ministerial salaries")} for what each post pays; the ${link("handbook", "Parliamentary Handbook")} for who held it and when. As at ${esc(fmtDate(data.meta.as_of))}.</p>`;
   if (location.hash === "#person-pay" || pendingAnchor === "person-pay") {
     pendingAnchor = "";
-    slot.scrollIntoView({ behavior: "instant", block: "start" });
+    settleOn(slot);
   }
 }
 
@@ -5574,6 +5575,38 @@ function polishPersonSections(sections) {
   }
 }
 
+/** Land on a section of a person page and stay there while the page settles.
+ *  The sections above (speeches, votes, mentions) arrive from the record after
+ *  this one is drawn, and each arrival would push it out from under the reader,
+ *  so the landing is re-made whenever the column changes height, until the
+ *  reader scrolls for themselves or the page has had time to finish. A jump
+ *  the reader asked for glides there; an arrival from another page does not. */
+function settleOn(target, { smooth = false, ms = 10000 } = {}) {
+  settleOn.stop?.();
+  const column = $("subject-sections");
+  if (!target?.isConnected || !column) return;
+  let gliding = smooth && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const land = () => { if (target.isConnected) target.scrollIntoView({ behavior: "instant", block: "start" }); };
+  const arrived = () => { if (gliding) { gliding = false; land(); } };
+  target.scrollIntoView({ behavior: gliding ? "smooth" : "instant", block: "start" });
+  const watch = new ResizeObserver(() => { if (!gliding) land(); });
+  watch.observe(column);
+  const intents = ["wheel", "touchmove", "keydown", "pointerdown"];
+  const stop = () => {
+    watch.disconnect();
+    clearTimeout(cap); clearTimeout(glide);
+    document.removeEventListener("scrollend", arrived);
+    for (const type of intents) removeEventListener(type, stop, true);
+    if (settleOn.stop === stop) settleOn.stop = null;
+  };
+  // scrollend is not everywhere yet; a glide this long is over in a second.
+  document.addEventListener("scrollend", arrived, { once: true });
+  const glide = setTimeout(arrived, 1200);
+  const cap = setTimeout(stop, ms);
+  for (const type of intents) addEventListener(type, stop, { capture: true, passive: true });
+  settleOn.stop = stop;
+}
+
 function refreshPersonJumps(sections) {
   if (!sections.isConnected) return;
   const nav = sections.querySelector(".person-jumps");
@@ -5590,8 +5623,7 @@ function refreshPersonJumps(sections) {
   nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", (event) => {
     event.preventDefault();
     const target = sections.querySelector(`#${link.dataset.personJump}`);
-    target?.scrollIntoView({ behavior: "instant", block: "start" });
-    if (target) { target.tabIndex = -1; target.focus({ preventScroll: true }); }
+    if (target) { target.tabIndex = -1; target.focus({ preventScroll: true }); settleOn(target, { smooth: true, ms: 4000 }); }
   }));
 }
 
