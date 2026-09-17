@@ -2662,12 +2662,11 @@ function renderAnswerOverview(box, text) {
   box.replaceChildren();
   box.hidden = !overview;
   if (!overview) return;
-  const label = document.createElement("p");
-  label.className = "answer-overview-label";
-  label.textContent = "Written from the figures below";
+  // No eyebrow of its own: the answer's kicker sits just above, and the
+  // sunken panel with the bronze edge is the site's mark for a written passage.
   const body = document.createElement("p");
   body.textContent = overview;
-  box.append(label, body);
+  box.append(body);
 }
 
 // A collapsed table is laid out in fractions of a pixel and can come out a
