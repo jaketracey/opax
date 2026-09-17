@@ -8,7 +8,7 @@ const transpile = s => ts.transpileModule(s, { compilerOptions: { target: ts.Scr
 const helpers = {};
 runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts', import.meta.url), 'utf8')), { exports: helpers });
 const parsed = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
-const names = new Set(['apiAsk', 'apiAskStream', 'askPayload', 'hasUnsupportedQuotes', 'evidenceOnlyAnswer', 'isRefusal', 'withAskedAs']);
+const names = new Set(['apiAsk', 'apiAskStream', 'askPayload', 'hasUnsupportedQuotes', 'unsupportedQuotesIn', 'unquoteUnsupported', 'looseAnswer', 'evidenceOnlyAnswer', 'isRefusal', 'withAskedAs']);
 const code = parsed.statements.filter(n => ts.isFunctionDeclaration(n) ? names.has(n.name?.text) : ts.isVariableStatement(n) && n.declarationList.declarations.some(d => names.has(d.name.getText(parsed)))).map(n => n.getText(parsed)).join('\n');
 const id = 'original/t/body/0-200';
 const passage = 'Negative gearing lets property investors offset rental losses against other income.';
@@ -67,23 +67,26 @@ for (const stream of [false, true]) {
     assert.equal(result.answer_status, undefined);
     assert.ok(result.citations[id]);
   });
-  test(`${path}: repeated failure or failed recovery returns original excerpts`, async () => {
+  test(`${path}: a misquote that survives recovery is delivered as a paraphrase, not replaced by excerpts`, async () => {
+    // The 2026-09-17 loosening: the reader keeps the answer; only the quotation marks go.
     for (const second of [bad(), new Error('provider unavailable')]) {
       const h = harness([bad(), second]);
       const result = await h.run(stream);
       assert.equal(h.calls.length, 2);
-      assert.equal(result.answer_status, 'evidence_only');
-      assert.equal(result.evidence_excerpts[0].text, passage);
-      assert.ok(result.citations[id]);
-      assert.doesNotMatch(result.answer, /richest people/);
+      assert.equal(result.answer, 'It says Negative gearing only benefits the richest people in Australia.');
+      assert.equal(result.answer_status, undefined);
+      assert.equal(result.evidence_excerpts, undefined);
+      // The citation still lands on the answer's last character after the two marks went.
+      assert.deepEqual(result.citations[id], [[0, Array.from(result.answer).length]]);
     }
   });
-  test(`${path}: missing citations cannot pass as a verified answer after recovery`, async () => {
+  test(`${path}: an answer still uncited after one retry is delivered, and says so`, async () => {
     const h = harness([draft('A summary without citations.', false), draft('Another uncited summary.', false)]);
     const result = await h.run(stream);
     assert.equal(h.calls[1].citations, 'default');
-    assert.equal(result.answer_status, 'evidence_only');
-    assert.equal(result.evidence_excerpts[0].text, passage);
+    assert.equal(result.answer, 'Another uncited summary.');
+    assert.equal(result.answer_status, 'uncited');
+    assert.equal(result.evidence_excerpts, undefined);
   });
   test(`${path}: a grounded answer does not make a second model call`, async () => {
     const h = harness([good()]);

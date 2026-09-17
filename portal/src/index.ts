@@ -800,6 +800,7 @@ function buildAskBody(input: AskInput, records: AskRecords = { records: [], cove
       // opened with "the record does not establish a single reason" and then
       // listed competing claims without drawing them together.
       'When the question asks why something happened or did not happen, what explains a decision, or how two things connect, connect the dots: draw the passages together into the most plausible explanation the record supports, and open with that explanation. Say whose account each part rests on (a minister argued, Labor speakers attribute, a Coalition-indexed passage claims) and mark your own reading as a reading, with words such as "taken together" or "the record suggests", not as established fact. Competing claims are the answer, not a reason to withhold one: when the passages disagree, open with the disagreement itself as the explanation (who blames what, in one sentence), then set the accounts side by side and say which the passages support better. Never begin with "The record does not establish" or "does not establish a single reason". Reasoned inference from the passages, labelled as inference, is welcome; the one line not to cross is inferring a personal favour or personal payment from a donation and a speech. ' +
+      'When the passages do not answer the question asked, say so plainly in one sentence, in your own words, then say what the record does hold on the subject that comes closest, cited, in a sentence or two; a reader talking to the record should always be told something. ' +
       'Begin with the answer itself. Never open with a preamble such as "Based on the provided context", "According to the passages" or "The context shows": the reader knows the answer comes from the record. Do not open with what the record does not establish either; when the passages bear on the question in part, answer that part first and name the gap in one sentence at the end. ' +
       FOOTNOTE_INSTRUCTIONS +
       'Quotation marks mean verbatim source wording. Never put a paraphrase, changed verb or compressed sentence in quotation marks; use an unquoted paraphrase instead. Attach each citation to the exact passage supporting that claim, not another passage on the same topic. ' +
@@ -924,6 +925,10 @@ type AskPayload = ReturnType<typeof askPayload> & { evidence_kind?: 'original_po
 
 /** Verify quotes against original cited resources, not model metadata. */
 function hasUnsupportedQuotes(payload: AskPayload, raw: AskAnswer): boolean {
+  return unsupportedQuotesIn(payload, raw).length > 0
+}
+/** The quoted spans of the answer that no cited passage contains. */
+function unsupportedQuotesIn(payload: AskPayload, raw: AskAnswer): string[] {
   const cited = new Set(Object.keys(payload.citations).map(id => id.split('/')[0]))
   const text = new Map<string, string[]>()
   const add = (id: string, value: string) => {
@@ -944,10 +949,48 @@ function hasUnsupportedQuotes(payload: AskPayload, raw: AskAnswer): boolean {
   for (const source of payload.sources as { resource: string; snippet?: string }[]) {
     if (source.resource.startsWith('USER_CONTEXT_') && source.snippet) add(source.resource, source.snippet)
   }
-  return unsupportedQuotes(payload.answer, [...text.values()].map(parts => parts.join('\n'))).length > 0
+  return unsupportedQuotes(payload.answer, [...text.values()].map(parts => parts.join('\n')))
 }
 
-/** If recovery fails, select original passages independently of the failed draft. */
+/**
+ * A quotation the passages do not contain loses its quotation marks and
+ * stands as the paraphrase it was; the answer around it stays. Citation
+ * ranges are code-point offsets into the answer (askPayload), so each
+ * removed mark shifts every range after it by one.
+ */
+function unquoteUnsupported(payload: AskPayload, raw: AskAnswer): AskPayload {
+  const unsupported = new Set(unsupportedQuotesIn(payload, raw))
+  if (!unsupported.size) return payload
+  const answer = payload.answer
+  const removed: number[] = []
+  for (const match of answer.matchAll(/["“]([^"”\n]*)["”]/g)) {
+    if (!unsupported.has(match[1])) continue
+    const open = Array.from(answer.slice(0, match.index)).length
+    removed.push(open, open + Array.from(match[1]).length + 1)
+  }
+  if (!removed.length) return payload
+  const gone = new Set(removed)
+  const text = Array.from(answer).filter((_, i) => !gone.has(i)).join('')
+  const shift = (at: number) => at - removed.filter(r => r < at).length
+  const citations = Object.fromEntries(Object.entries(payload.citations).map(([id, ranges]) =>
+    [id, (ranges as number[][]).map(([start, end]) => [shift(start), shift(end)])]))
+  return { ...payload, answer: text, citations }
+}
+
+/**
+ * The loosened contract (2026-09-17): the reader gets the model's answer.
+ * A misquote becomes a paraphrase; an answer with no citations is still an
+ * answer, marked `uncited` so the page can say so. The excerpts-only
+ * fallback (evidenceOnlyAnswer) no longer stands in for either.
+ */
+function looseAnswer(payload: AskPayload, raw: AskAnswer): AskPayload {
+  const out = unquoteUnsupported(payload, raw)
+  return !isRefusal(raw) && !Object.keys(out.citations).length ? { ...out, answer_status: 'uncited' } : out
+}
+
+/** Original passages selected independently of a failed draft. Off the
+ * general path since the 2026-09-17 loosening (looseAnswer); kept for the
+ * tests that pin its selection rules. */
 function evidenceOnlyAnswer(payload: AskPayload, raw: AskAnswer, question: string): AskPayload {
   type Source = { resource: string; snippet?: string; cited?: boolean }
   const sources = payload.sources as Source[]
@@ -1219,7 +1262,11 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
 
   let records: AskRecords
   try { records = await retrieveAskRecords(input, env.ASSETS) }
-  catch { return json({ error: 'Public-record search is temporarily unavailable. Please try again.' }, 503) }
+  catch (err) {
+    // Swallowed silently, this was undiagnosable from outside (2026-09-17).
+    console.error('ask records', err instanceof Error ? err.stack || err.message : String(err))
+    return json({ error: 'Public-record search is temporarily unavailable. Please try again.' }, 503)
+  }
   mark('records')
   const body = buildAskBody(input, records)
   // Pinned per pipeline through wrangler vars (see env.d.ts). Every pipeline
@@ -1270,7 +1317,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext): Promis
     const fallback = await askOnce(hasUnsupportedQuotes(payload, answer) ? quoteRecoveryAsk(retryBody) : retryBody, ASK_SYNC_TIMEOUT_MS)
     if (!(fallback instanceof Response) && !isRefusal(fallback)) { answer = fallback; payload = askPayload(fallback, records, scope) }
   }
-  if (hasUnsupportedQuotes(payload, answer) || (!isRefusal(answer) && !Object.keys(payload.citations).length)) payload = evidenceOnlyAnswer(payload, answer, String(body.query ?? ''))
+  payload = looseAnswer(payload, answer)
   mark('verify')
   payload = withAskedAs(payload, askedAs)
   store(payload)
@@ -1964,7 +2011,7 @@ function apiAskStream(
             // The final quotation check below falls back to evidence if recovery fails.
           }
         }
-        if (hasUnsupportedQuotes(payload, result) || (!isRefusal(result) && !Object.keys(payload.citations).length)) payload = evidenceOnlyAnswer(payload, result, String(body.query ?? ''))
+        payload = looseAnswer(payload, result)
         payload = withAskedAs(payload, opts.askedAs)
         await send('done', payload)
         // Cached from the `done` payload — the same bytes the reader got —

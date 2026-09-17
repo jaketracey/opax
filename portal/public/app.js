@@ -9246,7 +9246,7 @@ async function runAsk(question) {
     revealAskResult();
     $("ask-result").querySelector(".action-row").hidden = needsClarification;
     $("ask-stamp").hidden = needsClarification;
-    $("ask-result").querySelector(".kicker").textContent = needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : "Answer";
+    $("ask-result").querySelector(".kicker").textContent = needsClarification ? "Choose the scope" : data.answer_status === "calculated" ? (data.pay_answer ? "From the pay determinations" : "From disclosed receipts") : data.answer_status === "evidence_only" ? "From the record" : data.answer_status === "uncited" ? "Answer, without citations" : "Answer";
     renderAnswerOverview($("ask-overview"), data.money_overview);
     if (answerText) {
       // Final rendering uses the complete citation ranges, including cache hits.
