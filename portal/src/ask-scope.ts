@@ -59,6 +59,10 @@ function namedPositionRequest(question: string): {subject:string;topic:string} |
 export const POSITION_GROUNDING = 'When asked what a politician would or might say, explain their documented position in the third person. Do not roleplay them, write a fictional quote, or predict their response. Start with what their recorded statements support, with dates and citations. Distinguish their own statements from another speaker describing them. If the record does not establish their position on this topic, say so rather than inferring it from their party or another topic. For a named politician position question, give a short takeaway followed by up to three concrete policy positions or proposals, each with its own citation. Prefer specific proposals over rhetorical attacks. Keep it under 180 words. Do not spend space summarising ministerial replies; exclude them from the position summary. Attribute criticism and claimed effects to the politician. Do not repeat illustrative population counts, economic forecasts or attack statistics unless the user requests those figures. For an actual proposed policy retain its specified duration, limit or amount exactly. Never confuse arrivals with net migration or departures. Include a source date when provided, and never describe an old statement as a current promise. '
 
 const REFERENTIAL = /^(?:and\b|what about\b|how about\b)|^(?:what|how|why|when|did|does|has|would)\b.*\b(?:he|she|they|his|her|their|it|that)\b/i
+// "Is that all?" names nothing: its subject is the previous question's. The
+// paid rewrite (standaloneQuestion) usually says so first; this is the
+// retrieval's own fallback when it does not.
+const MORE = /^(?:is that (?:all|it|everything)|(?:is there |what else|anything else|what more|any more|more|go on|tell me more|keep going|continue)\b)/i
 // Only a whole follow-up can clear inferred dates. A topic such as "all years
 // of schooling" must stay a topic, and explicit request controls still win.
 const ALL_YEARS_FOLLOWUP = /^(?:and\s+)?(?:(?:what|how)\s+about\s+)?(?:across\s+|over\s+)?all\s+(?:years|time)\s*[?!.]*$/i
@@ -75,7 +79,7 @@ const userQuestions = (input: RecordQuestion): string[] => Array.isArray(input.c
 const priorQuestion = (input: RecordQuestion) => userQuestions(input).at(-1)
 const partySubject = (question: string) => !!cohort(question) || PARTIES.some(p =>
   new RegExp(`^(?:and\\s+)?(?:(?:what|how)\\s+about\\s+)?${p.name}\\b`, 'i').test(question.trim()))
-const inheritsSubject = (question: string) => (REFERENTIAL.test(question.trim()) || ALL_YEARS_FOLLOWUP.test(question.trim()) || ELIGIBILITY_FOLLOWUP.test(question.trim()) || /^(?:he|she|they)$/i.test(stanceRequest(question)?.subject || '')) && !namedPositionRequest(question) && !partySubject(question)
+const inheritsSubject = (question: string) => (REFERENTIAL.test(question.trim()) || ALL_YEARS_FOLLOWUP.test(question.trim()) || ELIGIBILITY_FOLLOWUP.test(question.trim()) || MORE.test(question.trim()) || /^(?:he|she|they)$/i.test(stanceRequest(question)?.subject || '')) && !namedPositionRequest(question) && !partySubject(question)
 function namedFollowUp(question: string, people: readonly {name:string}[]): {speaker:string;topic?:string} | undefined {
   const rest = question.trim().replace(/^(?:and\s+)?(?:(?:what|how)\s+about\s+)/i, '').replace(/^and\s+/i, '')
   if (rest === question.trim()) return
@@ -186,6 +190,8 @@ function nextTopic(question: string, previous: string): string {
   // question may put it before the topic. Remove that clause, not bare years
   // in event names such as "the 2011 Fukushima disaster".
   const withoutPriorPeriod = () => withoutTopicPeriod(previous)
+  // "Is that all?" asks for more of the same topic, not a topic of its own.
+  if (MORE.test(question.trim())) return previous
   if (ALL_YEARS_FOLLOWUP.test(question.trim())) return withoutPriorPeriod()
   if (/^(?:and\s+)?(?:(?:what|how)\s+about\s+|what\s+(?:is|was|are|were)\s+(?:his|her|their)\s+(?:position|stance|views?)\s+)?(?:(?:in|during|before|after|since)\s+(?:19|20)\d{2}|(?:between|from)\s+(?:19|20)\d{2}\s+(?:and|to|through|until|[–-])\s+(?:19|20)\d{2})\s*[?!.]*$/i.test(question.trim())) return withoutPriorPeriod()
   // Duration is a request about the existing proposal, not a new topic word
@@ -223,6 +229,6 @@ export function askRetrievalQuery(input: RecordQuestion): string {
   }
   const previous = priorQuestion(input)
   if (previous && isMoneyRanking({question:previous})) return question
-  if (previous && REFERENTIAL.test(question.trim())) return `${previous}\nFollow-up question: ${question}`
+  if (previous && (REFERENTIAL.test(question.trim()) || MORE.test(question.trim()))) return `${previous}\nFollow-up question: ${question}`
   return question.replace(/^(what|how)\s+(?:would|might)\s+(.{3,80}?)\s+say\b/i, 'What has $2 said')
 }
