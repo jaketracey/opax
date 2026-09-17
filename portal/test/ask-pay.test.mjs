@@ -84,3 +84,31 @@ test('pay words about somebody else, or about what was said, go to the record',a
  assert.equal(await ask('Who is the highest paid politician?',{state:'nsw'}),null);
  assert.equal(isPayQuestion({question:'Who is the highest paid politician?'}),true);
 });
+
+test('a loosely written pay question still hands the model the right person’s record',async()=>{
+ const {payEvidence,mentionsPay}=await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'));
+ const evidence=(question,filters={})=>payEvidence({question,...filters},assets);
+ // The screenshot that started this: a misspelt Prime Minister.
+ const typo=await evidence('anthony alabesen pay over time');
+ assert.equal(typo[0].kind,'pay');assert.equal(typo[0].title,`${top.name} — pay for the posts held`);
+ assert.match(typo[0].snippet,/^Paid \$[\d,]+ a year as Prime Minister/);assert.ok(typo[0].href.endsWith('#person-pay'));
+ assert.ok(typo.some(r=>r.slug==='pay-base-salary'),'"over time" brings the base salary steps');
+ // A former member, surname mistyped, wins over sitting members who share the first name.
+ const former=Object.values(pay.people).find(p=>!p.sitting&&p.peak.post==='Prime Minister'&&p.name==='Tony Abbott');
+ if(former){const abott=await evidence('tony abott salary');assert.equal(abott[0].title,'Tony Abbott — pay for the posts held')}
+ // A surname alone, in lowercase, is enough when one person owns it.
+ const surname=await evidence(`${top.name.split(' ').at(-1).toLowerCase()} salary`);
+ assert.equal(surname[0].title,`${top.name} — pay for the posts held`);
+ // A surname that is an ordinary word is not a person without a first name or a capital.
+ assert.equal((await evidence('pay day loans')).filter(r=>!r.slug.startsWith('pay-')||/^pay-(?!base|posts|ranking)/.test(r.slug)).length,0);
+ // No name at all: the scheme's own rows, and nothing else.
+ const general=await evidence('how much do politicians get paid');
+ assert.deepEqual(general.map(r=>r.slug),['pay-base-salary','pay-posts','pay-ranking']);
+ // Somebody else's pay, or nothing about pay: no evidence at all.
+ for(const q of ['How much do nurses get paid?','What did Labor say about wages?','Who donated to Labor?'])assert.deepEqual(await evidence(q),[],q);
+ assert.equal(mentionsPay('albanese salary'),true);assert.equal(mentionsPay('teacher salary'),false);
+ // An explicit speaker filter names the person outright.
+ const filtered=await evidence('how much is he paid',{speaker:top.name});
+ assert.equal(filtered[0].title,`${top.name} — pay for the posts held`);
+ for(const r of [...typo,...general])assert.ok(r.snippet.length<=1800,r.slug);
+});

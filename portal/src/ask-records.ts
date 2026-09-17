@@ -1,5 +1,6 @@
 import { searchCatalog, type CatalogRecord } from './catalog-search'
 import { tokens } from './catalog-query.mjs'
+import { payEvidence } from './ask-pay'
 
 export interface RecordQuestion {
   question?: string; kind?: string; speaker?: string; party?: string
@@ -47,8 +48,12 @@ export interface AskRecords { records: CatalogRecord[]; coverage: string; total:
 export async function retrieveAskRecords(input: RecordQuestion, assets: Fetcher): Promise<AskRecords> {
   const empty = { records: [], coverage: '', total: 0 }
   if ((input.kind && input.kind !== 'all') || input.chamber) return empty
+  // A pay question carries its pay records whatever the word search finds: the
+  // closest people by typo distance, then the scheme. They lead, and a row the
+  // search finds again is not repeated.
+  const pay = await payEvidence(input, assets).catch(() => [])
   const q = recordQuery(input)
-  if (!q) return empty
+  if (!q) return pay.length ? { records: pay, coverage: '', total: pay.length } : empty
   const params = new URLSearchParams({ q, kind: 'all' })
   for (const key of ['speaker', 'party', 'state', 'topic', 'from', 'to'] as const) {
     if (input[key]) params.set(key, input[key]!)
@@ -64,16 +69,18 @@ export async function retrieveAskRecords(input: RecordQuestion, assets: Fetcher)
     if (strong.length !== tokens(q).length) url.searchParams.set('q', strong.join(' '))
     found = await searchCatalog(url, assets, { anyTerms: true, perKind: 16 })
   }
-  const records: CatalogRecord[] = []
-  const counts = new Map<string, number>()
+  const records: CatalogRecord[] = [...pay]
+  const counts = new Map<string, number>(pay.length ? [['pay', pay.length]] : [])
+  const seen = new Set(pay.map(r => r.slug))
   for (const r of found.results) {
+    if (seen.has(r.slug)) continue
     if (integrityQuestion(input.question || '') && !/\b(?:corruption|integrity|NACC)\b/i.test(r.title + ' ' + r.snippet)) continue
     // Overlapping date filters do not recalculate profile/connection totals.
     // Do not hand the model an out-of-window aggregate to mistake for a subtotal.
     const span = r.dateLabel?.match(/^(\d{4})(?:[–-](\d{4}))?$/)
     if (span && ((input.from && Number(span[1]) < Number(input.from)) ||
       (input.to && Number(span[2] || span[1]) > Number(input.to)))) continue
-    const cap = r.kind === 'receipt' ? 16 : 6
+    const cap = r.kind === 'receipt' ? 16 : r.kind === 'pay' ? 8 : 6
     if ((counts.get(r.kind) || 0) >= cap) continue
     counts.set(r.kind, (counts.get(r.kind) || 0) + 1)
     records.push(r)
@@ -109,6 +116,7 @@ export const RECORD_GROUNDING =
   'A donor-to-party receipt is money disclosed to that party, NOT proof that any individual politician personally received money. Party membership alone never establishes a personal donation. ' +
   'Only identify a politician as a recipient if a disclosure explicitly names that individual as the recipient. Say when the retrieved records establish party funding only. ' +
   'Call political receipts disclosed receipts or funding: they are not all gifts. Contract awards are not payments or donations, and grants are a different flow. ' +
+  'A pay record (kind pay) is a salary entitlement worked out by Opax from the Remuneration Tribunal\'s determinations and the Parliamentary Handbook: the parliamentary base salary plus the loading of the post held. It is not a payslip, and leaves out the electorate allowance, expenses, superannuation and outside income; committee chair loadings are not counted. Use its figures as given, with their dates; do not add, average or extrapolate them. Parliamentary expenses (kind expense) are costs claimed, not income, and never a measure of pay. When the name in the question is misspelt and one pay record is plainly the person meant, answer for that person and say which name you read it as. ' +
   'Never infer influence, favours, motive or causation from a funding relationship and a speech. Attribute speech allegations as the speaker\'s claims, not verified disclosure facts. ' +
   'This is a ranked selection across the published record, not an exhaustive financial audit. Do not infer no relationship from a missing result. ' +
   'Do not sum overlapping profiles, connections and individual notices, or combine state and federal disclosure totals. ' +

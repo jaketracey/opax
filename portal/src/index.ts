@@ -1,7 +1,7 @@
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
-import { paidAnswer } from './ask-pay'
+import { paidAnswer, mentionsPay } from './ask-pay'
 import { slugIndex } from './person-slug'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
 import {readGenerationCache, storeGenerationCache} from './generation-cache'
@@ -1000,7 +1000,9 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
   const topic = str(input.topic)
   return JSON.stringify({
     epoch,
-    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v7' + (input.from || input.to ? ':dated-topic-v1' : '') : ''),
+    pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v7' + (input.from || input.to ? ':dated-topic-v1' : '') : '')
+      // Pay evidence arrived on 2026-09-17: answers written without it retire, and only those.
+      + (mentionsPay(input.question) ? ':pay-v1' : ''),
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',

@@ -10919,7 +10919,7 @@ const FILTER_KIND_LABELS = {
   grant_invitation: "Grant invitations", grant_award: "Grant award records", election_baseline: "Election baselines", parliamentary_profile: "Recorded representation", research_report: "Research source notes",
   person: "Person", party: "Political party", donor: "Donor", receipt: "Political receipts",
   agency: "Government agency", supplier: "Supplier", contract: "Government contract", grant: "Grant", bill: "Bill", bill_text: "Bill text",
-  interest: "Declared interest", expense: "Parliamentary expenses", access: "Meeting or lobbying register",
+  interest: "Declared interest", expense: "Parliamentary expenses", pay: "Parliamentary pay", access: "Meeting or lobbying register",
   campaigner: "Campaigner or associated entity", report: "Research report",
 };
 // A document kind narrows the search in hand: the query and filters travel

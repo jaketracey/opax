@@ -8,6 +8,15 @@ post, and three things read it:
 * **Ask and chat** (`portal/src/ask-pay.ts`): a calculated answer with no model call, the way
   `ask-money.ts` answers from receipt edges. Rankings (all, by party, by chamber, "top 10",
   lowest), a named person, two people compared, the price of a post, the base salary.
+* **The model, for everything looser** (`payEvidence()` in the same file, called from
+  `retrieveAskRecords`): a misspelt name, a vague or compound question. The catalogue's word
+  search cannot reach "alabesen" from "albanese", so the closest people are found by typo
+  distance over the names in `pay.json` and their pay records lead the structured evidence,
+  followed by the scheme's own rows (base salary steps, what each post pays, the ranking) when
+  the question is about pay in general. `RECORD_GROUNDING` tells the model what a pay record
+  is and to say which name it read a misspelling as. The same record text
+  (`portal/src/pay-records.mjs`) goes into the public search catalogue as kind `pay`, 703
+  rows, so "Find records" and the MCP see it too.
 * **Person pages** (`renderPersonPay` in `portal/public/app.js`): "Pay for the posts held",
   with the rate now, an estimate per financial year and every spell.
 * Anything else that wants it: the file is static and self-describing.
@@ -87,9 +96,13 @@ loading; one Cabinet rank is missing (Kevin Rudd as Foreign Minister, 2010–12)
     python3 -m unittest scripts/test_build_pay.py
     cd portal && node --test test/ask-pay.test.mjs
 
+`npm run deploy` rebuilds the search catalogue, so the pay rows follow a rebuilt `pay.json`.
+Answers to questions that mention pay carry `:pay-v1` in their cache key; bump it if the
+evidence or grounding changes so cached answers written without it retire.
+
 Rerun after a reshuffle, a leadership change, an election, a by-election or a defection, and
 every July and September for the Tribunal's decisions (add the step to `base_salary.json`; add or
 close a period in `loadings.json` if an office changed). The Handbook refuses clients that
 identify as scripts and caps pages at 100 rows; the snapshot is cached under
 `~/.cache/autoresearch/pay/`. `pay.json` is a static asset, so a rebuild ships with the next
-`npm run deploy`; ask answers are not cached, so nothing needs an epoch bump.
+`npm run deploy`; calculated answers are never cached, so a new file is live at once.

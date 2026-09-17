@@ -1,4 +1,6 @@
 import type { RecordQuestion } from './ask-records'
+import type { CatalogRecord } from './catalog-search'
+import { payPersonRecord, payGeneralRecords } from './pay-records.mjs'
 
 /**
  * "Who is the highest paid politician?" has an answer, and it is not in any
@@ -82,6 +84,12 @@ const financialYear = (start: number) => `${start}–${String(start + 1).slice(2
 /** Must fold exactly as scripts/build_pay.py does: pay.json's names are keyed by it. */
 const fold = (s: string) => s.normalize('NFKD').replace(/[^\x00-\x7f]/g, '').toLowerCase().replace(/[^a-z' -]/g, ' ').replace(/\s+/g, ' ').trim()
 const personHref = (name: string) => `/subject/person/${encodeURIComponent(name)}#person-pay`
+
+/** Pay is in the question, and it is a parliamentarian's: what the record search
+ *  should carry pay evidence for, whether or not a calculated answer follows. */
+export function mentionsPay(question: string | undefined): boolean {
+  return PAY_WORDS.test(question || '') && !NOT_THEIR_PAY.test(question || '')
+}
 
 /** A cheap gate on the words alone; the data decides the rest. */
 export function isPayQuestion(input: RecordQuestion): boolean {
@@ -291,6 +299,107 @@ function postAnswer(question: string, data: PayData) {
     { label: 'Who is the highest paid politician?', href: '/ask?q=' + encodeURIComponent('Who is the highest paid politician?') },
     { label: 'Between Labor and Liberal, who is paid the most?', href: '/ask?q=' + encodeURIComponent('Between Labor and Liberal, who is the highest paid politician?') },
   ])
+}
+
+// --- evidence for the model ---------------------------------------------------
+// A pay question the calculated answer cannot take (a misspelt name, a vague or
+// compound question) still deserves the figures. The catalog's word search
+// cannot reach "alabesen" from "albanese", so the closest people are found
+// here, by typo distance over the names in pay.json, and their records go to
+// the model first; the scheme's own rows follow when the question is about
+// posts or pay in general rather than one person.
+
+/** Optimal string alignment distance: edits plus swapped neighbours, which is what a typo is. */
+function typoDistance(a: string, b: string, max: number): number {
+  if (Math.abs(a.length - b.length) > max) return max + 1
+  const rows: number[][] = Array.from({ length: a.length + 1 }, (_, i) => [i, ...new Array<number>(b.length).fill(0)])
+  for (let j = 1; j <= b.length; j++) rows[0][j] = j
+  for (let i = 1; i <= a.length; i++) {
+    let best = max + 1
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1
+      let d = Math.min(rows[i - 1][j] + 1, rows[i][j - 1] + 1, rows[i - 1][j - 1] + cost)
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d = Math.min(d, rows[i - 2][j - 2] + 1)
+      rows[i][j] = d
+      best = Math.min(best, d)
+    }
+    if (best > max) return max + 1
+  }
+  return rows[a.length][b.length]
+}
+/** How well a typed word stands for a name: 1 exact, then by typo distance for the length. */
+function nameMatch(typed: string, name: string): number {
+  if (typed === name) return 1
+  if (typed.length < 4 || typed[0] !== name[0]) return 0
+  const d = typoDistance(typed, name, 3)
+  if (d === 1) return 0.8
+  if (d === 2 && typed.length >= 6) return 0.6
+  if (d === 3 && typed.length >= 8) return 0.4
+  return 0
+}
+// Words a pay question is made of, which are not anybody's name.
+const NOT_A_NAME = new Set(('how much what who which whom whose does do did is was are were has have had the a an of for in on over time history pay paid salary salaries ' +
+  'earn earns earned earning earnings get gets got make makes made remuneration wage wages income per year annual annually now current currently total and or vs versus ' +
+  'than more less most least highest lowest top best paid who mp mps senator senators minister ministers politician politicians parliamentarian parliamentarians member members ' +
+  'hon mr ms mrs dr been to from his her their its packet packets by with as at it this that these those about between compared compare labor liberal liberals nationals greens ' +
+  'coalition independent one nation party since when why where federal parliament prime deputy leader opposition treasurer cabinet shadow speaker president whip backbencher').split(' '))
+// Surnames that are also ordinary words: "pay day loans" is not about Bob Day.
+// Such a surname counts only beside a matching first name, or capitalised.
+const WORD_SURNAMES = new Set('back baker bell berry bird bishop broad brown bullock butler cash champion chandler cherry cook crane crook day draper drum farmer fisher fletcher flint french garland gash gee gray green hale hall hart hawker hill hockey hull hunt kemp king kirk lamb lees may mason nettle organ palmer parry pike porter price quick ray rice short shorten slipper small soon stoker stone swan tanner tink truss vale walker ware washer watt webber west white witty wood worth wright young'.split(' '))
+
+interface NameIndex { id: string; first: string[]; last: string }
+let nameMemo: { data: PayData; index: NameIndex[] } | null = null
+function nameIndex(data: PayData): NameIndex[] {
+  if (nameMemo?.data === data) return nameMemo.index
+  const byId = new Map<string, NameIndex>()
+  for (const [name, id] of Object.entries(data.names)) {
+    const words = name.split(' ')
+    if (words.length < 2) continue
+    const entry = byId.get(id) ?? { id, first: [], last: fold(data.people[id]?.name || name).split(' ').at(-1)! }
+    for (const word of words.slice(0, -1)) if (!entry.first.includes(word)) entry.first.push(word)
+    byId.set(id, entry)
+  }
+  nameMemo = { data, index: [...byId.values()] }
+  return nameMemo.index
+}
+
+/** The people a loosely written pay question most likely means, best first. */
+function closestPeople(question: string, data: PayData): string[] {
+  const typed = fold(question.replace(/['’]s\b/g, '')).split(' ').filter(word => word.length >= 3 && !NOT_A_NAME.has(word))
+  if (!typed.length) return []
+  const capitalised = new Set((question.match(/(?<=\S\s)[A-Z][\p{L}'’-]{2,}/gu) || []).map(fold))
+  const scored: { id: string; person: PayPerson; score: number }[] = []
+  for (const entry of nameIndex(data)) {
+    let surname = 0, given = 0
+    for (const word of typed) {
+      surname = Math.max(surname, nameMatch(word, entry.last))
+      for (const first of entry.first) given = Math.max(given, nameMatch(word, first))
+    }
+    if (!surname) continue
+    if (WORD_SURNAMES.has(entry.last) && !given && !capitalised.has(entry.last)) continue
+    const person = data.people[entry.id]
+    if (person) scored.push({ id: entry.id, person, score: surname + given })
+  }
+  scored.sort((x, y) => y.score - x.score || Number(y.person.sitting) - Number(x.person.sitting) || (y.person.now?.salary ?? y.person.total) - (x.person.now?.salary ?? x.person.total))
+  const best = scored[0]?.score ?? 0
+  return scored.filter(row => row.score >= best - 0.5).slice(0, 3).map(row => row.id)
+}
+
+const asRecord = (row: ReturnType<typeof payGeneralRecords>[number]): CatalogRecord => ({
+  kind: row.kind, title: row.title, href: row.href, snippet: row.snippet, slug: row.extra.slug, resource: '',
+  dateLabel: row.extra.dateLabel, source: row.extra.source, url: row.extra.url, record_id: row.extra.record_id,
+})
+
+/** Pay records for the model to read: the closest people, then the scheme itself. */
+export async function payEvidence(input: RecordQuestion, assets: Fetcher): Promise<CatalogRecord[]> {
+  const question = input.question || ''
+  if (!mentionsPay(question) || (input.kind && input.kind !== 'all') || (input.state && input.state !== 'federal')) return []
+  const data = await loadPay(assets)
+  const named = input.speaker ? data.names[fold(input.speaker)] : undefined
+  const people = named ? [named] : input.speaker ? [] : closestPeople(question, data)
+  const rows = people.map(id => payPersonRecord(data, id)).filter((row): row is NonNullable<typeof row> => !!row)
+  const general = !people.length || WHO.test(question) || RANKING.test(question) || /\b(?:base\s+salary|pay\s+rise|over\s+time|history)\b/i.test(question) ? payGeneralRecords(data) : []
+  return [...rows, ...general].map(asRecord)
 }
 
 let memo: Promise<PayData> | null = null

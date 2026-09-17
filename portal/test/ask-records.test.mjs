@@ -15,7 +15,9 @@ const evidenceBundle=await build({entryPoints:[new URL('../src/ask-evidence.ts',
 const evidenceHelpers=await import('data:text/javascript;base64,'+Buffer.from(evidenceBundle.outputFiles[0].text).toString('base64'));
 const scopeBundle=await build({entryPoints:[new URL('../src/ask-scope.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const scopeHelpers=await import('data:text/javascript;base64,'+Buffer.from(scopeBundle.outputFiles[0].text).toString('base64'));
-const worker={...records,...evidenceHelpers,...scopeHelpers};
+const payBundle=await build({entryPoints:[new URL('../src/ask-pay.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
+const payHelpers=await import('data:text/javascript;base64,'+Buffer.from(payBundle.outputFiles[0].text).toString('base64'));
+const worker={...records,...evidenceHelpers,...scopeHelpers,mentionsPay:payHelpers.mentionsPay};
 runInNewContext(ts.transpile(code),worker);
 const plain=value=>JSON.parse(JSON.stringify(value));
 

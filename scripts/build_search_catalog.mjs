@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { normalize, tokens, bucket } from '../portal/src/catalog-query.mjs';
 import { moneyFlowType } from '../portal/public/money-records.js';
 import { recordsWithLocations } from '../portal/public/grants-research.js';
+import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url));
 const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
 const files = async p => (await readdir(join(root,p))).filter(n=>n.endsWith('.json')).sort();
@@ -21,7 +22,7 @@ function add(key, kind, title, href, text, extra={}) {
   const { aliases='', from=year(extra.date), to=year(extra.date), state='', parties=[], speakers=[], topics=[], slug='', ...rest }=extra;
   const record={kind,title,href,snippet:String(text || ''),...rest};
   record.slug=slug||'catalog-'+docs.length; record.resource='';
-  docs.push({record, meta:[kind,from||0,to||from||0,(Array.isArray(state)?state:[state]).join('|'),parties.map(party).filter(Boolean).join('|'),speakers.map(normalize).filter(Boolean).join('|'),topics.join('|')],titleTokens:tokens(title+' '+aliases),bodyTokens:tokens(text+' '+kind+' '+({receipt:'donations political funding',donor:'donations political funding',contract:'procurement contracts',grant:'grants funding'}[kind]||'')+' '+(rest.source||''))});
+  docs.push({record, meta:[kind,from||0,to||from||0,(Array.isArray(state)?state:[state]).join('|'),parties.map(party).filter(Boolean).join('|'),speakers.map(normalize).filter(Boolean).join('|'),topics.join('|')],titleTokens:tokens(title+' '+aliases),bodyTokens:tokens(text+' '+kind+' '+({receipt:'donations political funding',donor:'donations political funding',contract:'procurement contracts',grant:'grants funding',pay:'salary salaries paid earn earns earnings remuneration wage income'}[kind]||'')+' '+(rest.source||''))});
   counts[kind]=(counts[kind]||0)+1;
 }
 // Grant program rows (contract 2026-09-13, section 3): one record per listed program, kind grant.
@@ -86,6 +87,11 @@ async function main() {
  }
  const recent=await read('interests/recent.json');
  for(const x of recent.items) add('alteration:'+x.id,'interest',`${x.name} — ${x.kind}`, '/declared?'+new URLSearchParams({person:x.name}),x.description,{date:x.date,state:x.jurisdiction,speakers:[x.name],source:'Register alteration',url:x.url});
+ // What each parliamentarian is paid for the posts held (docs/DATA-PAY.md). The
+ // rows are written by src/pay-records.mjs, which also hands the closest ones to
+ // the model when a pay question is too loose for the calculated answer.
+ const pay=await read('pay.json');
+ for(const row of [...payPersonOrder(pay).map(id=>payPersonRecord(pay,id)).filter(Boolean),...payGeneralRecords(pay)]) add(row.key,row.kind,row.title,row.href,row.snippet,row.extra);
  const expenses=await read('expenses.json');
  for(const [id,p] of Object.entries(expenses.people)) add('expenses:'+id,'expense',`${p.name} — parliamentary expenses`,personHref(p.name),`${cash(p.total)} reported expenditure. ${(p.by_category||[]).map(([n,v])=>`${n}: ${cash(v)}`).join('; ')}.`,{speakers:[p.name],state:'federal',from:p.from,to:p.to,source:'Independent Parliamentary Expenses Authority',url:expenses.meta.source_url,dateLabel:period(p.from,p.to)});
  const campaigners=await read('graph/campaigners.json');
