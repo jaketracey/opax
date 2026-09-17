@@ -256,6 +256,23 @@
     <!-- ============================== ASK ============================== -->
     <section id="panel-ask" class="panel" aria-label="Ask the record">
       <nav class="entry-modes" aria-label="Research mode"><a href="/ask" aria-current="page">Ask a question</a><a href="/search" data-entry-mode="search">Find records</a></nav>
+      <!-- A question, assembled: a shape to choose, slots to fill from the
+           record's own names. It writes the question the free box would take,
+           so everything after it (the address, the cache, the answer) is the
+           same. app.js renders the sentence per shape (ASK_SHAPES). -->
+      <section id="ask-builder" class="ask-builder" aria-labelledby="ask-builder-head">
+        <div class="ask-builder-shapes chip-row" role="group" aria-label="Ask about">
+          <span class="chip-label" id="ask-builder-head">Ask about</span>
+          <!-- shape chips injected -->
+        </div>
+        <form id="ask-builder-form" class="ask-builder-form">
+          <p class="ask-builder-sentence" id="ask-builder-sentence"></p>
+          <button type="submit" class="primary" id="ask-builder-submit">Ask this</button>
+        </form>
+        <p class="ask-builder-or"><span>or type your own question</span></p>
+        <datalist id="ask-topics-list"></datalist>
+        <datalist id="ask-bills-list"></datalist>
+      </section>
       <form id="ask-form" class="ask-row">
         <label for="ask-input" class="visually-hidden">Ask a question of the parliamentary record</label>
         <!-- The box and its clear cross share one wrapper so the cross can sit

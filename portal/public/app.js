@@ -9195,6 +9195,7 @@ async function runAsk(question) {
   $("ask-date-ruler").hidden = true;
   $("ask-date-ruler").replaceChildren();
   $("ask-chips").hidden = true;
+  setAskBuilderHidden(true);
   setFrontPageHidden(true);
   setQuoteRail([]);
   resetPeopleRail();
@@ -9362,6 +9363,7 @@ async function runAsk(question) {
       // (A stream that broke after its first words leaves them standing.)
       if ($("ask-result").hidden) {
         if (suggestions.length) $("ask-chips").hidden = false;
+        setAskBuilderHidden(false);
         setFrontPageHidden(false);
       }
     }
@@ -9383,6 +9385,155 @@ $("ask-form").addEventListener("submit", (e) => {
   setCrumbs([{ label: "Ask" }]); // replaceState fires no hashchange, so the router will not
   runAsk(q);
 });
+
+// --- the question builder ---------------------------------------------------
+// Five shapes a reader can ask in, each a sentence with blanks. A blank is a
+// text slot with a datalist (a person from speakers.json, a topic from
+// TOPICS, a bill from the two latest parliaments) or a select (a party, a
+// donor industry). Submitting writes the sentence the free box would take and
+// asks it the same way, so the address, the cache and the answer are shared.
+const ASK_PARTIES = ["Labor", "Liberal", "Nationals", "Greens", "One Nation", "Independent"];
+const ASK_SHAPES = {
+  person: { label: "a person", variants: [
+    ["What did ", { slot: "person" }, " say about ", { slot: "topic" }, "?"],
+    ["What would ", { slot: "person" }, " say about ", { slot: "topic" }, "?"],
+  ] },
+  party: { label: "a party", variants: [
+    ["What have ", { slot: "party" }, " MPs said about ", { slot: "topic" }, "?"],
+    ["Who funds ", { slot: "party" }, "?"],
+  ] },
+  money: { label: "money", variants: [
+    ["Who takes the most money from ", { slot: "industry" }, " donors?"],
+    ["Who are the biggest donors to ", { slot: "party" }, "?"],
+    ["Who gets more money from ", { slot: "industry" }, " donors, Labor or Liberal?"],
+  ] },
+  pay: { label: "pay", variants: [
+    ["How much is ", { slot: "person" }, " paid?"],
+    ["Who is the highest paid ", { slot: "party" }, " politician?"],
+    ["Who is the highest paid politician?"],
+  ] },
+  bill: { label: "a bill", variants: [
+    ["What does the ", { slot: "bill", size: "wide" }, " change?"],
+    ["Who spoke for and against the ", { slot: "bill", size: "wide" }, "?"],
+  ] },
+};
+const askBuilder = { shape: "person", variant: 0, values: {} };
+
+function askSlotEl(slot, size) {
+  let el;
+  if (slot === "party" || slot === "industry") {
+    el = document.createElement("select");
+    const options = slot === "party" ? ASK_PARTIES.map((p) => [p, p])
+      : Object.keys(INDUSTRY_ALIASES).map((ind) => [industryLabel(ind), industryLabel(ind)]);
+    for (const [value, label] of options) el.appendChild(Object.assign(document.createElement("option"), { value, textContent: label }));
+    el.setAttribute("aria-label", slot === "party" ? "Party" : "Donor industry");
+  } else {
+    el = document.createElement("input");
+    el.type = "text"; el.autocomplete = "off"; el.required = true; el.spellcheck = false;
+    el.placeholder = { person: "a politician", topic: "a topic", bill: "a bill" }[slot];
+    el.setAttribute("aria-label", el.placeholder);
+    el.setAttribute("list", { person: "speakers-list", topic: "ask-topics-list", bill: "ask-bills-list" }[slot]);
+    if (slot === "person") el.addEventListener("focus", ensureSpeakersDatalist, { once: true });
+    if (slot === "bill") el.addEventListener("focus", ensureBillsDatalist, { once: true });
+  }
+  el.className = "ask-slot"; el.dataset.slot = slot;
+  if (size) el.dataset.size = size;
+  if (askBuilder.values[slot]) el.value = askBuilder.values[slot];
+  el.addEventListener("input", () => { askBuilder.values[slot] = el.value; });
+  return el;
+}
+
+/** The sentence for the current shape and variant, its blanks live. */
+function renderAskBuilder() {
+  const shapeRow = document.querySelector("#ask-builder .ask-builder-shapes");
+  const sentence = $("ask-builder-sentence");
+  if (!shapeRow || !sentence) return;
+  for (const el of shapeRow.querySelectorAll(".chip")) el.remove();
+  for (const [key, shape] of Object.entries(ASK_SHAPES)) {
+    const chip = document.createElement("button");
+    chip.type = "button"; chip.className = "chip"; chip.textContent = shape.label;
+    chip.setAttribute("aria-pressed", String(key === askBuilder.shape));
+    chip.addEventListener("click", () => { askBuilder.shape = key; askBuilder.variant = 0; rememberAskShape(); renderAskBuilder(); sentence.querySelector(".ask-slot")?.focus(); });
+    shapeRow.appendChild(chip);
+  }
+  const shape = ASK_SHAPES[askBuilder.shape];
+  const parts = shape.variants[askBuilder.variant] || shape.variants[0];
+  sentence.replaceChildren();
+  // A shape with several ways in leads with a select of their opening words.
+  if (shape.variants.length > 1) {
+    const pick = document.createElement("select");
+    pick.className = "ask-slot ask-slot-variant"; pick.setAttribute("aria-label", "Question");
+    shape.variants.forEach((variant, i) => pick.appendChild(Object.assign(document.createElement("option"), { value: String(i), textContent: String(variant[0]).trim() })));
+    pick.value = String(askBuilder.variant);
+    pick.addEventListener("change", () => { askBuilder.variant = Number(pick.value); renderAskBuilder(); });
+    sentence.append(pick, " ");
+    parts.slice(1).forEach((part) => sentence.append(askSentencePart(part)));
+  } else {
+    parts.forEach((part) => sentence.append(askSentencePart(part)));
+  }
+}
+/** A run of words, or a blank; bare punctuation ("?") is marked so it can stay with its blank. */
+function askSentencePart(part) {
+  if (typeof part !== "string") return askSlotEl(part.slot, part.size);
+  if (!/^[\s?.!,]+$/.test(part)) return document.createTextNode(part);
+  const tail = document.createElement("span");
+  tail.className = "ask-tail"; tail.textContent = part;
+  return tail;
+}
+
+/** The question the sentence reads as, or null while a blank is empty. */
+function askBuilderQuestion() {
+  const sentence = $("ask-builder-sentence");
+  let text = "";
+  for (const node of sentence.childNodes) {
+    if (node.nodeType === 3) { text += node.textContent; continue; }
+    if (node.classList?.contains("ask-slot-variant")) { text += node.options[node.selectedIndex].textContent; continue; }
+    const value = node.value.trim();
+    if (!value) { node.focus(); return null; }
+    text += value;
+  }
+  return text.replace(/\s+/g, " ").trim();
+}
+
+function rememberAskShape() {
+  try { localStorage.setItem("opax-ask-shape", askBuilder.shape); } catch { /* per-viewer convenience only */ }
+}
+
+let billsDatalistStarted = false;
+/** Bills of the two latest parliaments, by short title, fetched only when the bill shape is chosen. */
+function ensureBillsDatalist() {
+  if (billsDatalistStarted) return;
+  billsDatalistStarted = true;
+  fetch("/bills/index.json").then((r) => (r.ok ? r.json() : null)).then((data) => {
+    const rows = (data?.bills || []).filter((b) => b.jurisdiction === "federal" && Number(b.parliament) >= 47);
+    const dl = $("ask-bills-list");
+    if (!dl) return;
+    for (const b of rows) dl.appendChild(Object.assign(document.createElement("option"), { value: b.short_title || b.title }));
+  }).catch(() => { /* the slot still takes a typed title */ });
+}
+
+function setAskBuilderHidden(hidden) {
+  const box = $("ask-builder");
+  if (box) box.hidden = hidden;
+}
+
+function initAskBuilder() {
+  if (!$("ask-builder")) return;
+  try { const saved = localStorage.getItem("opax-ask-shape"); if (saved && ASK_SHAPES[saved]) askBuilder.shape = saved; } catch { /* default shape */ }
+  const topics = $("ask-topics-list");
+  for (const name of Object.values(TOPICS)) topics.appendChild(Object.assign(document.createElement("option"), { value: name }));
+  renderAskBuilder();
+  $("ask-builder-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const q = askBuilderQuestion();
+    if (!q) return;
+    $("ask-input").value = q;
+    $("ask-input").dispatchEvent(new Event("input", { bubbles: true }));
+    replaceRoute(askHash(q, askKind()));
+    setCrumbs([{ label: "Ask" }]);
+    runAsk(q);
+  });
+}
 
 $("ask-copylink").addEventListener("click", (e) => {
   const q = lastAsk.question || $("ask-input").value.trim();
@@ -9447,6 +9598,7 @@ function renderChips() {
   const picks = suggestedQuestions();
   for (const q of picks) row.appendChild(suggestionChip(q));
   $("ask-chips").hidden = false;
+  setAskBuilderHidden(false);
 }
 
 /** "Ask something else" under an answer: four examples, never the one just answered. */
@@ -14015,4 +14167,5 @@ function syncPathMeta() {
 
 // Person links are written as slugs once this lands; nothing waits on it.
 loadPersonSlugs();
+initAskBuilder();
 route();

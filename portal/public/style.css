@@ -560,6 +560,45 @@ button.secondary {
 button.secondary:hover { border-color: var(--ink); }
 button.secondary:disabled { opacity: 0.55; cursor: wait; }
 
+/* The question builder: a sentence with blanks, the blanks underlined in
+   bronze the way a form on paper is, above the free box it writes into. */
+.ask-builder { margin: 0 0 1.1rem; }
+.ask-builder[hidden] { display: none; }
+/* The shape chips are a small fixed set: they wrap, and stay chips on a phone
+   (the suggestion rows stack full width there; these are a control, not a list). */
+.ask-builder .chip-row { margin-top: 0; flex-wrap: wrap; overflow: visible; mask-image: none; animation: none; }
+.ask-builder .chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
+@media (max-width: 700px) {
+  .ask-builder .chip-row { flex-direction: row; align-items: center; }
+  .ask-builder .chip-row .chip { width: auto; white-space: nowrap; border-radius: 999px; padding: 0.55rem 0.9rem; min-height: 40px; }
+  .ask-builder .chip-label { display: inline; }
+}
+.ask-builder-form { display: flex; align-items: flex-end; gap: 0.6rem 1.2rem; flex-wrap: wrap; margin-top: 0.9rem; }
+.ask-builder-sentence {
+  flex: 1 1 420px; margin: 0; font: 400 1.375rem/2 var(--serif); color: var(--ink);
+}
+/* Outranks the site's boxed input[type="text"] and select rules: a blank is a
+   bronze underline, nothing more. */
+.ask-builder input.ask-slot, .ask-builder select.ask-slot {
+  display: inline-block; vertical-align: baseline; margin: 0 0.15em; height: auto; min-height: 0;
+  padding: 0 0.35em 0.1em; border: 0; border-bottom: 1.5px solid var(--bronze); border-radius: 0; box-shadow: none;
+  background: transparent; color: var(--navy); font: inherit; font-weight: 600; line-height: 1.4;
+  width: 12ch; max-width: 100%;
+}
+.ask-builder .ask-slot:focus { outline: none; border-bottom-color: var(--navy); background: var(--bronze-wash); }
+.ask-builder .ask-slot::placeholder { color: var(--ink-faint); font-weight: 400; }
+.ask-builder .ask-slot[data-size="wide"] { width: 22ch; }
+.ask-builder select.ask-slot { padding-right: 1.3em; cursor: pointer; width: auto; }
+.ask-builder .ask-tail { white-space: nowrap; }
+.ask-builder-form .primary { min-height: 48px; }
+.ask-builder-or { display: flex; align-items: center; gap: 0.8rem; margin: 1rem 0 0; color: var(--ink-faint); font-size: 0.8125rem; }
+.ask-builder-or::before, .ask-builder-or::after { content: ""; flex: 1 1 auto; border-top: 1px solid var(--line); }
+@media (max-width: 600px) {
+  .ask-builder-sentence { font-size: 1.1875rem; line-height: 1.9; }
+  .ask-builder input.ask-slot, .ask-builder select.ask-slot, .ask-builder .ask-slot[data-size="wide"] { width: 100%; margin: 0.15em 0; }
+  .ask-builder .ask-tail:last-child { display: none; } /* a lone "?" after a full-width blank */
+  .ask-builder-form .primary { width: 100%; }
+}
 .ask-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 .ask-row > :is(input, .grow-field, .ask-field) { flex: 1 1 320px; min-height: 56px; font-size: 1.0625rem; }
 /* The question box and its clear cross: the wrapper takes the row's flex
