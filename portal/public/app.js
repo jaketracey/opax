@@ -5982,11 +5982,13 @@ async function openTopicPage(slug, manageFocus) {
   if (manageFocus) $("subject-title")?.focus();
   showPageLoader("subject-loader", "Counting the labelled record.");
   const sections = $("subject-sections");
-  const box = $("subject-infobox");
-  box.hidden = true; // topic actions live immediately below the counts
+  const box = $("subject-infobox"); // who speaks on it, at the reader's right hand
   const phrase = topicPhrase(slug);
   const searchTopic = searchHash(phrase, { topic: slug });
   const tidePromise = api("/api/tide").catch(() => null);
+  // The money beside the words opens the column, so its data loads alongside the counts.
+  const moneyInd = detectMoneyIndustry(`who donates money to ${phrase}`);
+  const moneyPromise = moneyInd ? loadMoneyData() : Promise.resolve(null);
 
   let data = null;
   try {
@@ -6024,40 +6026,46 @@ async function openTopicPage(slug, manageFocus) {
     // The topic page's label rides along as the ask's topic filter.
     if (question) goRoute(`${askHash(question)}&topic=${encodeURIComponent(slug)}`);
   });
-  box.hidden = true;
+
+  // Who speaks on it sits in the card at the right hand: parties, then parliaments.
+  const asideBlocks = [];
+  if (data?.parties?.length) {
+    asideBlocks.push(`<section class="topic-aside-block">${barList(data.parties.slice(0, 8), {
+      heading: "Who speaks on it, by party",
+      fmt: (v) => Number(v).toLocaleString(),
+      linkTo: (nm) => searchHash(phrase, { topic: slug, party: nm }),
+      partyDots: true,
+    })}<p class="fineprint">Labelled so far. A party name opens its speeches on this topic.
+       Some speeches carry no party label, so the bars can sum below the total.</p></section>`);
+  }
+  if (data?.states?.length) {
+    const rows = data.states
+      .filter(([state]) => PARLIAMENT_NAMES[state])
+      .map(([state, stateCount, stateShare]) => [PARLIAMENT_NAMES[state], stateShare, stateCount, state]);
+    const coverage = topicParliamentCoverage();
+    const order = ["federal", "nsw", "vic", "sa", "qld"];
+    const years = order.filter((state) => coverage[state])
+      .map((state) => `${PARLIAMENT_NAMES[state]} ${coverage[state]}`).join(" · ");
+    asideBlocks.push(`<section class="topic-aside-block">${barList(rows, {
+      heading: "Which parliament argues it",
+      fmt: (value) => `${(Number(value) * 100).toFixed(2)}%`,
+      detail: (_name, _value, row) => Number(row[2]).toLocaleString(),
+      linkTo: (_name, _value, row) => searchHash(phrase, { topic: slug, state: row[3] }),
+      maxValue: Math.max(...rows.map(([, value]) => value), Number.EPSILON),
+      className: "topic-parliaments",
+    })}<p class="fineprint">Share of that parliament's labelled record, then the count.${years
+        ? ` Years held: ${esc(years)}.` : ""} Each row opens the speeches behind it.</p></section>`);
+  }
+  if (asideBlocks.length) { box.hidden = false; box.innerHTML = asideBlocks.join(""); }
+  else box.hidden = true;
+
+  // The money beside the words leads the column, ahead of the tide and the debate.
+  await moneyPromise;
+  if (currentSubjectKey !== key) return;
+  const moneyHTML = moneyInd ? topicMoneyHTML(moneyInd) : "";
+  if (moneyHTML) sections.insertAdjacentHTML("beforeend", `<section class="topic-money">${moneyHTML}</section>`);
 
   if (data) {
-    if (data.parties?.length) {
-      sections.insertAdjacentHTML("beforeend", barList(data.parties.slice(0, 8), {
-        heading: "Who speaks on it, by party (labelled so far)",
-        fmt: (v) => Number(v).toLocaleString(),
-        linkTo: (nm) => searchHash(phrase, { topic: slug, party: nm }),
-        partyDots: true,
-      }));
-      sections.insertAdjacentHTML("beforeend",
-        `<p class="fineprint">Party names open that party's labelled speeches on this topic.
-         Some speeches carry no party label, so the bars can sum below the total.</p>`);
-    }
-    if (data.states?.length) {
-      const rows = data.states
-        .filter(([state]) => PARLIAMENT_NAMES[state])
-        .map(([state, stateCount, stateShare]) => [PARLIAMENT_NAMES[state], stateShare, stateCount, state]);
-      sections.insertAdjacentHTML("beforeend", barList(rows, {
-        heading: "Which parliament argues it (labelled so far)",
-        fmt: (value) => `${(Number(value) * 100).toFixed(2)}%`,
-        detail: (_name, _value, row) => Number(row[2]).toLocaleString(),
-        linkTo: (_name, _value, row) => searchHash(phrase, { topic: slug, state: row[3] }),
-        maxValue: Math.max(...rows.map(([, value]) => value), Number.EPSILON),
-        className: "topic-parliaments",
-      }));
-      const coverage = topicParliamentCoverage();
-      const order = ["federal", "nsw", "vic", "sa", "qld"];
-      const years = order.filter((state) => coverage[state])
-        .map((state) => `${PARLIAMENT_NAMES[state]} ${coverage[state]}`).join(" · ");
-      sections.insertAdjacentHTML("beforeend",
-        `<p class="fineprint">Share of that parliament's labelled record, then the count.${years
-          ? ` Years held: ${esc(years)}.` : ""} Each row opens the speeches behind it.</p>`);
-    }
     if (count === 0) {
       sections.insertAdjacentHTML("beforeend",
         `<p class="status">The labelling pass has not reached this debate yet.
@@ -6091,20 +6099,7 @@ async function openTopicPage(slug, manageFocus) {
     body.querySelector('.topic-reader-links').appendChild(button);
   };
   addJump('Jump to the debate', arc);
-  const arcPromise = renderTopicArc(slug, phrase, key, arc);
-
-  const moneyInd = detectMoneyIndustry(`who donates money to ${phrase}`);
-  if (moneyInd) {
-    await loadMoneyData();
-    if (currentSubjectKey !== key) return;
-    const html = topicMoneyHTML(moneyInd);
-    if (html) {
-      sections.insertAdjacentHTML("beforeend", `<section class="topic-money">${html}</section>`);
-      addJump('The money beside it', sections.querySelector('.topic-money'));
-    }
-  }
-
-  await arcPromise;
+  await renderTopicArc(slug, phrase, key, arc);
 }
 
 async function openTopicsIndex(manageFocus) {
@@ -6116,7 +6111,11 @@ async function openTopicsIndex(manageFocus) {
   body.classList.remove("subject-person");
   body.innerHTML = `
     <div class="subject-head topic-index-head">
-      <h2 id="subject-title" tabindex="-1">Topics A-Z</h2>
+      <div class="topic-index-title">
+        <h2 id="subject-title" tabindex="-1">Topics A–Z</h2>
+        <p class="topic-index-lede">Every debate in the record, by subject. Each topic opens its own page:
+          who speaks on it, the money beside the words, and the debate itself.</p>
+      </div>
       <p class="subject-tag"><span id="subject-loader" class="subject-loader"></span></p>
     </div>
     <div id="subject-sections"></div>`;
@@ -6133,25 +6132,73 @@ async function openTopicsIndex(manageFocus) {
     return;
   }
   const labelled = Math.max(0, Math.round(Number(data.labelled) || 0));
-  tag.innerHTML = `<span class="topic-index-total"><span class="visually-hidden">${labelled.toLocaleString()} speeches labelled so far</span><span aria-hidden="true"><b id="topic-labelled-total">${Math.max(0, labelled - 32).toLocaleString()}</b> speeches labelled</span></span>`;
-  countUp($("topic-labelled-total"), labelled, { duration: 700 });
   const known = data.topics.filter((t) => TOPICS[t.slug])
     .sort((a, b) => TOPICS[a.slug].localeCompare(TOPICS[b.slug]));
-  const li = (t) => `<li><a href="${esc(subjectHash("topic", t.slug))}" class="topic-index-row">
-    <span class="topic-index-name">${esc(TOPICS[t.slug])}</span>
-    <span class="topic-index-count">${esc(Number(t.count || 0).toLocaleString())}<span class="visually-hidden"> labelled speeches</span></span>
-    <span class="topic-index-description" title="${esc(topicIndexDescription(t.slug))}">${esc(topicIndexDescription(t.slug))}</span>
+  tag.innerHTML = `
+    <span class="topic-index-stat"><span class="visually-hidden">${labelled.toLocaleString()} speeches labelled so far</span><span aria-hidden="true"><b id="topic-labelled-total">${Math.max(0, labelled - 32).toLocaleString()}</b><span>speeches labelled so far</span></span></span>
+    <span class="topic-index-stat"><b>${known.length}</b><span>topics</span></span>`;
+  countUp($("topic-labelled-total"), labelled, { duration: 700 });
+
+  const maxCount = Math.max(...known.map((t) => Number(t.count) || 0), 1);
+  // A share reads to the precision that tells topics apart: 14%, 6.1%, 0.7%.
+  const fmtShare = (n) => {
+    const pct = labelled > 0 ? (n / labelled) * 100 : 0;
+    return `${pct >= 10 ? pct.toFixed(0) : pct.toFixed(1)}%`;
+  };
+  const li = (t) => {
+    const count = Number(t.count) || 0;
+    const description = topicIndexDescription(t.slug);
+    return `<li data-count="${count}" data-name="${esc(TOPICS[t.slug])}"><a href="${esc(subjectHash("topic", t.slug))}" class="topic-index-row">
+    <span class="topic-index-cell">
+      <span class="topic-index-name">${esc(TOPICS[t.slug])}</span>
+      ${description ? `<span class="topic-index-description">${esc(description)}</span>` : ""}
+    </span>
+    <span class="topic-index-count"><b>${esc(count.toLocaleString())}</b><span class="topic-index-unit"> speeches</span><span class="visually-hidden"> labelled so far, </span></span>
+    <span class="topic-index-share"><i style="--share:${((count / maxCount) * 100).toFixed(2)}%" aria-hidden="true"></i><small>${esc(fmtShare(count))} of the labelled record</small></span>
     <span class="topic-index-spark" data-topic-spark="${esc(t.slug)}" aria-hidden="true"></span>
+    <span class="visually-hidden topic-index-trend" data-topic-trend="${esc(t.slug)}"></span>
   </a></li>`;
+  };
   $("subject-sections").innerHTML = `
+    <div class="topic-index-tools">
+      <div class="quiet-toggle topic-index-sort" role="group" aria-label="Order the topics">
+        <button type="button" data-sort="name" aria-pressed="true">A–Z</button>
+        <button type="button" data-sort="count" aria-pressed="false">Most discussed</button>
+      </div>
+      <p class="topic-index-note">Counts are speeches labelled so far. The small bars are each topic’s share of federal speeches by decade, 1993 to 2026, scaled within the topic.</p>
+    </div>
+    <div class="topic-index-cols" aria-hidden="true">
+      <span>Topic</span><span>Speeches</span><span>Share of the labelled record</span><span>By decade</span>
+    </div>
     <ul class="topic-index-list" role="list">${known.map(li).join("")}</ul>
-    <details class="topic-index-coverage"><summary>About these numbers</summary><p>Counts cover speeches labelled so far. The small bars show each topic’s share of federal speeches over time, scaled within that topic.</p></details>`;
+    <details class="topic-index-coverage"><summary>About these numbers</summary><p>A speech can carry more than one topic label, so the shares do not sum to one hundred. The decade bars use federal speeches only, the longest comparable run; each is that topic’s share of the decade’s labelled speeches, scaled to the topic’s own peak. The labelling pass is still running.</p></details>`;
+
+  const list = body.querySelector(".topic-index-list");
+  body.querySelector(".topic-index-sort").addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-sort]");
+    if (!button) return;
+    for (const b of button.parentElement.querySelectorAll("button")) b.setAttribute("aria-pressed", String(b === button));
+    const items = [...list.children];
+    items.sort(button.dataset.sort === "count"
+      ? (a, b) => Number(b.dataset.count) - Number(a.dataset.count)
+      : (a, b) => a.dataset.name.localeCompare(b.dataset.name));
+    list.append(...items);
+  });
+
   const tide = await tidePromise;
   if (currentSubjectKey !== key || !tide) return;
-  for (const spark of body.querySelectorAll('[data-topic-spark]')) {
+  const decades = new Map((tide.decades || []).map((decade) => [decade.slug, decade]));
+  for (const spark of body.querySelectorAll("[data-topic-spark]")) {
     const series = tide.topics?.[spark.dataset.topicSpark] || [];
     const max = Math.max(...series.map((point) => Number(point.share) || 0), Number.EPSILON);
-    spark.innerHTML = series.map((point) => `<i style="height:${Math.max(2, (Number(point.share) || 0) / max * 16)}px"></i>`).join('');
+    spark.innerHTML = series.map((point) => {
+      const label = decades.get(point.decade)?.label || point.decade;
+      const pct = `${((Number(point.share) || 0) * 100).toFixed(1)}%`;
+      return `<i style="height:${Math.max(2, (Number(point.share) || 0) / max * 100).toFixed(1)}%" title="${esc(`${label}: ${pct}`)}"></i>`;
+    }).join("");
+    const trend = spark.parentElement.querySelector("[data-topic-trend]");
+    if (trend) trend.textContent = `Share of federal speeches by decade: ${series.map((point) =>
+      `${decades.get(point.decade)?.label || point.decade} ${((Number(point.share) || 0) * 100).toFixed(1)}%`).join(", ")}.`;
   }
 }
 
