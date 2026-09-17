@@ -9486,8 +9486,9 @@ function askBuilderQuestion() {
   const sentence = $("ask-builder-sentence");
   let text = "";
   for (const node of sentence.childNodes) {
-    if (node.nodeType === 3) { text += node.textContent; continue; }
-    if (node.classList?.contains("ask-slot-variant")) { text += node.options[node.selectedIndex].textContent; continue; }
+    // Words, and the marked punctuation (the "?" span), read as they are.
+    if (node.nodeType === 3 || !("value" in node)) { text += node.textContent; continue; }
+    if (node.classList.contains("ask-slot-variant")) { text += node.options[node.selectedIndex].textContent; continue; }
     const value = node.value.trim();
     if (!value) { node.focus(); return null; }
     text += value;
