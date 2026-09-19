@@ -1,6 +1,6 @@
 # OPAX component language
 
-This is the implemented UI reference as of 19 September 2026. Use it with [control recipes](UI_CONTROLS.md). [UI_COMPONENT_AUDIT.md](UI_COMPONENT_AUDIT.md) is the remaining consolidation backlog, not a claim that every component has migrated.
+This is the implemented UI reference as of 20 September 2026. Use it with [control recipes](UI_CONTROLS.md). [UI_COMPONENT_AUDIT.md](UI_COMPONENT_AUDIT.md) is the remaining consolidation backlog, not a claim that every component has migrated.
 
 ## Visual foundations
 
@@ -12,7 +12,9 @@ The visual foundation is paper, dark ink, institutional navy and bronze. Reuse t
 | Primary / secondary text | `--ink` #23271F / `--ink-soft` #575C52 |
 | Structure and primary actions | `--navy` #142A43; white foreground |
 | Record links and highlights | `--bronze-ink` #8A5A12; `--bronze` #A0761B for rules |
-| Rules | `--line` #DFDCD2; `--line-strong` #8D897B |
+| Default dividers | `--divider-default` #B8B4A8; 1px major content boundaries |
+| Subtle dividers | `--divider-subtle` #DFDCD2 (aliases `--line`); 1px rows, subheading rules and column separators |
+| Surface / control borders | `--line` #DFDCD2 / `--line-strong` #8D897B; do not use the control border for section division |
 | Display and section headings | Merriweather, via `--serif` and heading tokens |
 | Body, metadata and controls | Public Sans, via `--sans` |
 | Party identity | Coloured dot plus readable party label; never colour alone |
@@ -20,6 +22,14 @@ The visual foundation is paper, dark ink, institutional navy and bronze. Reuse t
 Page content, header and footer use `.wrap`: 1440px maximum width and `clamp(1.25rem, 4vw, 4.5rem)` horizontal padding. Feature content may have readable-width constraints inside this container. Do not add a separate homepage outer gutter.
 
 The common spacing scale is `--space-1` through `--space-7` (4, 6, 10, 16, 26, 42 and 67px approximately). Hairline rules separate content groups. Avoid using a card or filled box merely to create a section boundary.
+
+## Dividers
+
+There are two divider colours: **default** and **subtle**. Choose by role. Major sections use `--divider-default`, a medium warm grey softer than control outlines. Within a section, rows, subheading underlines and column separators use `--divider-subtle`. Card outlines continue to use `--line`; form controls retain `--line-strong`. Bronze rules remain reserved for intentional accent treatments, such as the masthead, metric figures and the sentence-style selector.
+
+Use a border on the section container when the heading already expresses the structure. For a standalone thematic break, use `<hr class="ui-divider">` for default or add `data-variant="subtle"` for subtle. Both are 1px and add no automatic spacing. The containing layout owns the spacing so rules do not double up with section borders. The local workbench includes both divider roles and a control-border comparison.
+
+Desktop homepage sections use 48px vertical padding on either side of the shared boundary. The opening retains 68px above and gains 12px below, for 80px bottom padding. Mobile section spacing stays at its existing values.
 
 ## Choosing a control
 
@@ -36,7 +46,7 @@ The common spacing scale is `--space-1` through `--space-7` (4, 6, 10, 16, 26, 4
 | Ordinary navigation or sample question | Text link with a real destination |
 | Change between Ask and Search views | Underlined research mode navigation, not a row of pills |
 
-Buttons, fields and complete segmented controls share compact/default/large sizes: 40/48/56px. Compact grows to at least 44px on touch layouts. The default segmented control's **entire outside height** is 48px, including padding and borders. Use minimum heights so text can wrap at zoom. Standard control radius is 4px. Do not reintroduce capsule-shaped chips or oversized close icons.
+Buttons, fields and complete segmented controls share compact/default/large sizes: 40/48/56px. Compact grows to at least 44px on touch layouts. The default segmented control's **entire outside height** is 48px, including padding and borders. Use minimum heights so text can wrap at zoom. Standard control radius is 4px. Do not reintroduce capsule-shaped chips or oversized close icons. There is no gold or bronze button variant: the former gold call to action and the bronze document **Ask the record** button were retired for the navy primary on 19 September 2026. Bronze belongs to tags and record links.
 
 The sentence-style question builder is a deliberate exception: serif sentence text and underlined inline fields, with its original submit treatment. Its subject selection uses the shared segmented control and retains the labels **a person**, **a party**, **money**, **pay**, **a bill**. On small screens the subject choice becomes a labelled select.
 
@@ -52,7 +62,7 @@ The homepage is `/`. Research is `/ask`; Search is `/ask?view=search`. Search `m
 
 On mobile (600px and below), Ask and Search inputs sit above their full-width submit buttons. Browse the record stays visible at every viewport size, with a heading rather than an accordion.
 
-The purpose statement and research entry share the opening. On desktop the heading is 40px, the section has 68px vertical padding, and the Ask/Search column has **28px top padding**. At smaller widths these stack using the existing responsive rules.
+The purpose statement and research entry share the opening. On desktop the heading is 40px, the section has 68px top and 80px bottom padding, and the Ask/Search column has **28px top padding**. At smaller widths these stack using the existing responsive rules.
 
 Use the exact name **Open Parliamentary Accountability Exchange**. The purpose paragraph begins “The Open Parliamentary Accountability Exchange brings together”. Do not style the X separately. Headings have no full stops; avoid em dashes and redundant instructions.
 
@@ -60,7 +70,7 @@ The opening shows a free-text field, four compact sample-question links and a cl
 
 The money map comes before recent records. Topic and report collections have short descriptions without “All X, A–Z” suffixes. Recent declarations use linked names only. **From the record** accepts different entity/record types, with optional portrait, party, amount, facts, voting history and source link; no topic speech-count blurbs or parliamentarian-only directory action. **Collection & coverage** shows all four numeric summaries. Its secondary links are headed **Other ways to explore**.
 
-Do not add editorial spotlights or manually ranked stories. Recent streams are date-ordered. Record previews use a reproducible daily selection from available source exports, with clear distinctions between political receipts, grant award values and program totals.
+The reader-controlled Spotlight section uses the published Gambling, Housing and Climate report data, with an underlined topic selector. Its questions and heading link update with the selection. Do not add manually selected stories or editorial rankings. Recent streams are date-ordered. Record previews use a reproducible daily selection from available source exports, with clear distinctions between political receipts, grant award values and program totals.
 
 ## Ownership and release
 

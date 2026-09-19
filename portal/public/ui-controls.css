@@ -149,3 +149,7 @@ button.ui-map-filter[aria-pressed="true"] { background: var(--navy); border-colo
   .ui-choice > input[role="switch"]::before { display: none; }
   button.ui-button[aria-busy="true"]::after { border-color: ButtonText; border-right-color: transparent; }
 }
+
+/* Content dividers: colour encodes hierarchy; the composition owns spacing. */
+.ui-divider { display: block; width: 100%; height: 0; margin: 0; border: 0; border-top: 1px solid var(--divider-default); }
+.ui-divider[data-variant="subtle"] { border-top-color: var(--divider-subtle); }

@@ -10,7 +10,7 @@ The sentence-style question builder is intentionally exempt: its inline underlin
 
 `portal/public/ui-controls.css` owns control appearance and states. Load it after `style.css`. Components use native HTML with opt-in classes; no framework or JavaScript is required for basic controls. The workbench's script only implements its demonstrations. Feature modules keep their existing event handlers, URL state and lifecycle.
 
-Do not combine `.ui-button` with legacy `.primary`, `.secondary`, `.action-btn` or `.supplier-button`. Remove the legacy class/rules when migrating a control. Feature styles may position a control but should not redefine its font, padding, radius or height.
+The legacy `.action-btn`, `button.secondary` and `.supplier-button` classes and their rules have been removed. `button.primary` survives only for the exempt question builder’s **Ask this** action; do not use it elsewhere. The `actionBtn` and `explainBtn` helpers in `app.js` render shared buttons, so page actions should go through them or use the recipes below. Feature styles may position a control (width, alignment, flex basis, margin) but should not redefine its font, padding, radius, colour or height. There is no gold or bronze button: the single primary treatment is navy, and bronze belongs to tags and record links.
 
 ## Recipes
 
@@ -49,7 +49,7 @@ Use a fieldset/legend to name related choices. `.ui-segmented` wraps `.ui-button
 
 ## Sizes and surfaces
 
-Set `data-ui-size="compact|default|large"` on a control or containing group. Defaults are 40/48/56px minimum heights, paired across buttons and fields. Compact grows to 44px for coarse pointers. Controls can grow for wrapped labels and zoom rather than clipping into a fixed height.
+Set `data-ui-size="compact|default|large"` on a control or containing group. Defaults are 40/48/56px minimum heights, paired across buttons and fields. Compact grows to 44px for coarse pointers. Dense groups already set compact on the group: the document toolbar, quick-facts actions, the encyclopedia slider arrows, map research controls and the grants map overlay. Controls can grow for wrapped labels and zoom rather than clipping into a fixed height.
 
 For `.ui-segmented`, the size describes the **entire control**, including padding and borders: compact 40px, default 48px, large 56px. Set the size on the group (or inherit it from its container), not on individual segments. Inner buttons subtract the group's 10px vertical inset. Compact follows the existing 44px mobile/touch adjustment.
 
@@ -72,3 +72,7 @@ Search and Ask use the shared filter chips; search-result topic links use shared
 `.ui-map-filters` is a wrapping row of `.ui-filter-chip.ui-map-filter` controls. They share the applied-filter fill, border, radius, padding and 40px/44px sizing. Counts are plain text, without a separate badge. Use `.ui-map-filter__dot` for the decorative legend colour (`aria-hidden="true"`), a text label, and `.ui-map-filter__count` for its count. Labels carry category meaning independently of colour.
 
 The new homepage filters its embedded map in place with native buttons and `aria-pressed`. The legacy app helper also supports anchors to `/money?industry=…`. For filtering a map in place, use native buttons with `aria-pressed` and update the map and state together. The workbench demonstrates both forms, including selected and disabled states; its counts are illustrative.
+
+## Dividers
+
+There are two divider colours. `.ui-divider` renders a default 1px rule with `--divider-default` between major sections. Add `data-variant="subtle"` for the lighter `--divider-subtle` colour within sections. Use native `hr` for a thematic break; prefer a container border when sections already have headings. Layouts own the spacing. Do not use `--line-strong` for content dividers: it is the control-boundary colour. See the local workbench’s Dividers section for the hierarchy and border comparison.

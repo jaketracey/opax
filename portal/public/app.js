@@ -3493,16 +3493,16 @@ function iconSvg(name) {
     stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ""}</svg>`;
 }
 
-/** An infobox/action button: icon + label; primary = navy fill. */
+/** An action link on the shared button: icon + label; primary = navy fill. */
 function actionBtn(icon, href, label, { external = false, primary = false } = {}) {
   const ext = external ? ` rel="noopener" target="_blank"` : "";
-  return `<a class="action-btn${primary ? " action-primary" : ""}" href="${esc(href)}"${ext}>` +
+  return `<a class="ui-button"${primary ? ' data-variant="primary"' : ""} href="${esc(href)}"${ext}>` +
     `${iconSvg(icon)}<span>${esc(label)}${external ? " ↗︎" : ""}</span></a>`;
 }
 
 /** One inert-looking page action, routed through the single delegated explain handler. */
 function explainBtn(detail, label, { primary = false } = {}) {
-  return `<button type="button" class="action-btn${primary ? " action-primary" : ""}" ` +
+  return `<button type="button" class="ui-button"${primary ? ' data-variant="primary"' : ""} ` +
     `data-explain="${esc(JSON.stringify(detail))}">${iconSvg("map")}<span>${esc(label)}</span></button>`;
 }
 
@@ -3750,9 +3750,9 @@ async function renderDeclaredPage(params, manageFocus) {
     return `/declared${next.size ? `?${next}` : ""}`;
   };
   const pager = (label) => `<nav class="declared-pagination" aria-label="${label}">
-    ${result.page > 1 ? `<a class="action-btn" href="${esc(pageHref(result.page - 1))}">Previous</a>` : `<button class="action-btn" disabled>Previous</button>`}
+    ${result.page > 1 ? `<a class="ui-button" href="${esc(pageHref(result.page - 1))}">Previous</a>` : `<button type="button" class="ui-button" disabled>Previous</button>`}
     <span aria-live="polite">Page ${result.page} of ${result.pages}</span>
-    ${result.page < result.pages ? `<a class="action-btn" href="${esc(pageHref(result.page + 1))}">Next</a>` : `<button class="action-btn" disabled>Next</button>`}
+    ${result.page < result.pages ? `<a class="ui-button" href="${esc(pageHref(result.page + 1))}">Next</a>` : `<button type="button" class="ui-button" disabled>Next</button>`}
   </nav>`;
   $("declared-pagination").innerHTML = result.items.length ? pager("Declarations pages") : "";
   root.innerHTML = result.items.length ? declaredLedgerHTML(result.items, partyByName) + pager("Declarations pages, bottom") : `<p class="status" role="status">No alterations match these filters.</p>`;
@@ -4033,7 +4033,7 @@ function infoboxHTML(rows, funfact, actions) {
   return `<p class="kicker" style="margin-top:0">Quick facts</p>
     <dl>${rows.filter(Boolean).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join("")}</dl>
     ${funfact ? `<div class="funfact">${funfact}</div>` : ""}
-    <div class="actions">${actions.join("")}</div>`;
+    <div class="actions" data-ui-size="compact">${actions.join("")}</div>`;
 }
 
 /** Hold (or release) the entry-page map's height before it has anything to show. */
@@ -4763,7 +4763,7 @@ function partyReceiptsHTML(rows, registerURL) {
       <div class="tile"><b>${srcFigure(fmtMoney(latest.donations), `${latest.year} itemised donations ${fmtMoney(latest.donations)}, AEC source`)}</b><span>itemised as donations</span></div>
       <div class="tile"><b>${srcFigure(`${pct(latest.notItemised, latest.receipts)}%`, `${latest.year}, ${pct(latest.notItemised, latest.receipts)} percent not itemised, AEC source`)}</b><span>of receipts not itemised</span></div>
     </div>
-    ${series.length > 10 ? `<button type="button" class="secondary party-years-toggle" aria-expanded="false" aria-controls="party-receipts-rows" data-years="${series.length}">Show all ${series.length} years</button>` : ""}
+    ${series.length > 10 ? `<button type="button" class="ui-button party-years-toggle" aria-expanded="false" aria-controls="party-receipts-rows" data-years="${series.length}">Show all ${series.length} years</button>` : ""}
     <div class="receipts-rows" id="party-receipts-rows">${rowHTML}</div>
     ${table}
     <p class="fineprint">Bars share one scale across all ${series.length} years, including older years. “Not itemised” is receipts minus the sums itemised as donations and as other receipts on the same return; the AEC does not require receipts under the disclosure threshold to be itemised. Public election funding is left where the return puts it.${clamped ? ` ${clamped} historic ${clamped === 1 ? "row reports" : "rows report"} itemised components above the headline receipts total; ${clamped === 1 ? "its bar is" : "their bars are"} clamped to that total.` : ""} Source: <a href="${esc(source)}" rel="noopener" target="_blank">AEC annual returns ↗︎</a> · CC BY 4.0.</p>
@@ -5368,15 +5368,15 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   renderPortraitCredit(name, key);
   // One row on wide screens: the jump links at the left, the money map button at the right.
   sections.insertAdjacentHTML("beforeend", `<div class="person-jumps-row"><nav class="person-jumps" aria-label="On this page"></nav><div class="person-money-link">
-    <a class="action-btn" href="${partyOnMap ? esc(subjectHash("party", party)) : '/money'}" aria-describedby="person-money-note"><span class="btn-glyph" aria-hidden="true">$</span><span>${partyOnMap ? `Explore ${esc(party)} party receipts` : 'Explore party receipts'}</span></a>
+    <a class="ui-button" href="${partyOnMap ? esc(subjectHash("party", party)) : '/money'}" aria-describedby="person-money-note"><span class="btn-glyph" aria-hidden="true">$</span><span>${partyOnMap ? `Explore ${esc(party)} party receipts` : 'Explore party receipts'}</span></a>
     <p class="fineprint person-money-note" id="person-money-note">Party disclosures, not this person’s finances.</p>
   </div></div>`);
   sections.insertAdjacentHTML("beforeend", `
     <form class="query-line subject-ask-form" id="subject-ask-form">
       <label for="subject-ask-topic">Ask about their speeches</label>
-      <input id="subject-ask-topic" type="text" autocomplete="off"
+      <input id="subject-ask-topic" class="ui-input" type="text" autocomplete="off"
              placeholder="Enter a topic…">
-      <button type="submit" class="primary">Ask</button>
+      <button type="submit" class="ui-button" data-variant="primary">Ask</button>
     </form>`);
   $("subject-ask-form").addEventListener("submit", (e) => {
     e.preventDefault();
@@ -5454,8 +5454,8 @@ function renderCommitteeWitness(name, key, body, box, sections, speeches, dates)
   sections.insertAdjacentHTML("beforeend", `
     <form class="query-line subject-ask-form" id="subject-ask-form">
       <label for="subject-ask-topic">Ask about their evidence</label>
-      <input id="subject-ask-topic" type="text" autocomplete="off" placeholder="Enter a topic…">
-      <button type="submit" class="primary">Ask</button>
+      <input id="subject-ask-topic" class="ui-input" type="text" autocomplete="off" placeholder="Enter a topic…">
+      <button type="submit" class="ui-button" data-variant="primary">Ask</button>
     </form>`);
   $("subject-ask-form").addEventListener("submit", (e) => {
     e.preventDefault();
@@ -5748,7 +5748,7 @@ function topicArcItemHTML(item, brief, showYear) {
       </div>
       ${heading ? `<a class="topic-arc-source" href="/doc/${encodeURIComponent(item.slug)}">${esc(heading)}</a>` : ""}
       ${brief
-        ? `<p class="topic-arc-brief"><span class="topic-arc-tag">Machine brief</span>${esc(brief)}</p><a class="topic-arc-open action-btn" href="/doc/${encodeURIComponent(item.slug)}">Read the speech</a>`
+        ? `<p class="topic-arc-brief"><span class="topic-arc-tag">Machine brief</span>${esc(brief)}</p><a class="topic-arc-open ui-button" data-ui-size="compact" href="/doc/${encodeURIComponent(item.slug)}">Read the speech</a>`
         : `<a class="topic-arc-passage" href="/doc/${encodeURIComponent(item.slug)}">${esc(passage || "Open the speech to read the passage.")}</a>`}
     </div>
   </li>`;
@@ -5822,7 +5822,8 @@ async function renderTopicArc(slug, phrase, key, mount) {
               p.innerHTML = `<span class="topic-arc-tag">Machine brief</span>`;
               p.appendChild(document.createTextNode(brief));
               const open = document.createElement("a");
-              open.className = "topic-arc-open action-btn";
+              open.className = "topic-arc-open ui-button";
+              open.dataset.uiSize = "compact";
               open.href = passage.getAttribute("href");
               open.textContent = "Read the speech";
               passage.replaceWith(p, open);
@@ -7805,7 +7806,7 @@ function billDivisionsHTML(bill) {
   return `<section class="bill-section">
     <h3 class="subject-section-title">Divisions</h3>
     <ol class="bill-division-list" role="list" id="bill-divisions">${head.map((d) => billDivisionHTML(d, bill)).join("")}</ol>
-    ${rest.length ? `<p class="dir-more-row"><button type="button" class="secondary" id="bill-divisions-more"
+    ${rest.length ? `<p class="dir-more-row"><button type="button" class="ui-button" id="bill-divisions-more"
       data-rest="${esc(String(rest.length))}">Show more (${rest.length} more)</button></p>` : ""}
     <p class="fineprint">Ayes and noes are the division's own totals. Party is each member's recorded
       affiliation, not a reconstruction of who they sat with on the day, and a member the record does not
@@ -8057,7 +8058,7 @@ async function decoratePersonVoteBills(slot) {
 
 async function fillBillPeek(details, entry) {
   const box = details.querySelector(".bill-peek-body");
-  const foot = `<p class="bill-peek-link"><a class="action-btn" href="${esc(billHash(entry.key))}">${
+  const foot = `<p class="bill-peek-link"><a class="ui-button" href="${esc(billHash(entry.key))}">${
     iconSvg("entry")}<span>Bill page</span></a></p>`;
   // No summary written: the dated status is the honest thing to show instead.
   if (!entry.has_summary) {
@@ -8167,7 +8168,7 @@ async function renderPartyBillDivisions(label, sections, key) {
   slot.innerHTML = `
     <h3 class="subject-section-title">Bills they divided on</h3>
     <ul class="subject-list party-bill-list" role="list" id="party-bill-list">${head.map(rowHTML).join("")}</ul>
-    ${rest.length ? `<p class="dir-more-row"><button type="button" class="secondary" id="party-bills-more">Show more (${rest.length} more)</button></p>` : ""}
+    ${rest.length ? `<p class="dir-more-row"><button type="button" class="ui-button" id="party-bills-more">Show more (${rest.length} more)</button></p>` : ""}
     <p class="fineprint">This party's own ayes and noes, newest first, read from the ${files.length}
       most recently decided bills the register could open — not the party's whole voting history, and not
       every bill it divided on. Party is each member's recorded affiliation, not a reconstruction of who
@@ -8748,10 +8749,10 @@ async function renderFrontEncy(dayIdx, todayReport, don) {
   holder.innerHTML = `
     <div class="ency-slider">
       <div class="ency-track">${cards.join("")}</div>
-      ${cards.length > 1 ? `<div class="ency-nav">
-        <button type="button" class="action-btn ency-prev" aria-label="Previous entry">${iconSvg("prev")}</button>
+      ${cards.length > 1 ? `<div class="ency-nav" data-ui-size="compact">
+        <button type="button" class="ui-button ui-icon-button ency-prev" aria-label="Previous entry">${iconSvg("prev")}</button>
         <span class="ency-count" aria-live="polite"></span>
-        <button type="button" class="action-btn ency-next" aria-label="Next entry">${iconSvg("next")}</button>
+        <button type="button" class="ui-button ui-icon-button ency-next" aria-label="Next entry">${iconSvg("next")}</button>
       </div>` : ""}
     </div>`;
   // Unhide before measuring: a display:none track reports zero widths.
@@ -9290,7 +9291,8 @@ async function runAsk(question) {
       // The way back is a button, not a sentence.
       const retry = document.createElement("button");
       retry.type = "button";
-      retry.className = "action-btn ask-retry";
+      retry.className = "ui-button ask-retry";
+      retry.dataset.uiSize = "compact";
       retry.textContent = "Try again";
       retry.addEventListener("click", () => runAsk(question));
       $("ask-status").append(" ", retry);
@@ -9618,7 +9620,7 @@ function renderPayNextSteps(container, steps) {
   nav.setAttribute("aria-label", "Next steps");
   for (const step of links.slice(0, 3)) {
     const a = document.createElement("a");
-    a.className = "action-btn";
+    a.className = "ui-button";
     a.href = step.href;
     a.textContent = step.label;
     nav.appendChild(a);
@@ -9634,21 +9636,21 @@ function renderMoneyNextSteps(container, answer) {
   nav.setAttribute("aria-label", "Next steps");
   if (receipts) {
     const a = document.createElement("a");
-    a.className = "action-btn";
+    a.className = "ui-button";
     a.href = receipts;
     a.textContent = "See matching receipts";
     nav.appendChild(a);
   }
   if (map) {
     const a = document.createElement("a");
-    a.className = "action-btn";
+    a.className = "ui-button";
     a.href = map;
     a.textContent = "Explore this funding on the money map";
     nav.appendChild(a);
   }
   if (donor) {
     const a = document.createElement("a");
-    a.className = "action-btn";
+    a.className = "ui-button";
     a.href = askHash(`What has parliament said about ${donor}?`);
     a.textContent = `Ask what parliament said about ${donor}`;
     nav.appendChild(a);
@@ -11999,7 +12001,7 @@ mountExportMenu($("search-export-picker"), async (format) => {
 function citePanelHTML(doc) {
   if ((doc.labels?.kind || doc.kind) === 'bill_text') {
     const citation = [doc.title, doc.metadata?.stage, doc.metadata?.date, safeUrl(doc.url) || opaxUrl(doc.slug)].filter(Boolean).join('. ');
-    return `<h3>Source citation</h3><pre>${esc(citation)}</pre><p class="fineprint">Use the original bill document for authoritative wording and page or clause references.</p><button type="button" class="action-btn" data-doc-close="doc-cite">Close citations</button>`;
+    return `<h3>Source citation</h3><pre>${esc(citation)}</pre><p class="fineprint">Use the original bill document for authoritative wording and page or clause references.</p><button type="button" class="ui-button" data-doc-close="doc-cite">Close citations</button>`;
   }
   const d = doc.metadata?.date || "";
   const year = d.slice(0, 4);
@@ -12017,7 +12019,7 @@ function citePanelHTML(doc) {
     <h3>APA 7</h3><pre>${esc(apa)}</pre>
     <h3>BibTeX</h3><pre>${esc(bibtexFor(src))}</pre>
     <h3>RIS</h3><pre>${esc(risFor(src))}</pre>
-    <button type="button" class="action-btn" data-doc-close="doc-cite">Close citations</button>`;
+    <button type="button" class="ui-button" data-doc-close="doc-cite">Close citations</button>`;
 }
 
 async function openDocPage(slug, manageFocus) {
@@ -12142,7 +12144,7 @@ async function openDocPage(slug, manageFocus) {
     document.querySelector('#doc-brief .doc-brief-note').textContent = isBillText ? 'Written from this document by a model, not part of the original bill text.' : 'Written from this speech by a model, not by a person, and not part of the record.';
     if (isBillText && /^[a-z0-9][a-z0-9-]{1,160}$/.test(doc.metadata?.bill_key || '')) {
       const version = typeof doc.metadata?.version_id === 'string' ? '?text-version=' + encodeURIComponent(doc.metadata.version_id) : '';
-      $('doc-bill').innerHTML = `<a class="action-btn" href="/bill/${encodeURIComponent(doc.metadata.bill_key)}${version}#bill-full-text">Bill page and text versions</a><p class="fineprint">${doc.metadata.complete === false ? 'Incomplete extracted bill text. Use the original document for the complete bill.' : 'Published bill text. Check the original document for authoritative wording and formatting.'}</p>`;
+      $('doc-bill').innerHTML = `<a class="ui-button" href="/bill/${encodeURIComponent(doc.metadata.bill_key)}${version}#bill-full-text">Bill page and text versions</a><p class="fineprint">${doc.metadata.complete === false ? 'Incomplete extracted bill text. Use the original document for the complete bill.' : 'Published bill text. Check the original document for authoritative wording and formatting.'}</p>`;
       $('doc-bill').hidden = false;
     } else renderDocBillPanel(doc, slug);
     renderDocText(doc);
@@ -12289,10 +12291,10 @@ async function renderDocSimilar(doc) {
           <p class="doc-related-meta">${brief ? "Machine summary · not part of the record" : "Passage from the record"}</p></li>`;
       }).join("")}</ul>` : '<p>No related speeches found for this subject.</p>') +
       `<div class="doc-related-actions"><a class="doc-search-all" href="${esc(searchHash(query, {}))}">Search this subject →</a>
-        <button type="button" class="action-btn" data-doc-close="doc-similar">Close similar</button></div>`;
+        <button type="button" class="ui-button" data-doc-close="doc-similar">Close similar</button></div>`;
   } catch {
     if (currentDoc !== doc) return;
-    panel.innerHTML = '<h3 class="subject-section-title">Similar speeches</h3><p role="status">Related speeches could not be loaded.</p><button type="button" class="action-btn">Try again</button>';
+    panel.innerHTML = '<h3 class="subject-section-title">Similar speeches</h3><p role="status">Related speeches could not be loaded.</p><button type="button" class="ui-button">Try again</button>';
     panel.querySelector("button").addEventListener("click", () => renderDocSimilar(doc));
   } finally {
     if (currentDoc === doc) panel.removeAttribute("aria-busy");
@@ -13803,7 +13805,7 @@ async function openReport(slug, sectionNum, manageFocus) {
     }
   }
   $("report-download").innerHTML =
-    `<a class="action-btn report-download-btn" href="/reports/${esc(slug)}.json">${iconSvg("download")}<span>Download the data behind this report</span></a>`;
+    `<a class="ui-button report-download-btn" href="/reports/${esc(slug)}.json">${iconSvg("download")}<span>Download the data behind this report</span></a>`;
 
   const sectionsEl = $("report-sections");
   if (v2) {
@@ -13839,13 +13841,13 @@ async function openReport(slug, sectionNum, manageFocus) {
         tools.className = "section-tools action-row";
         const linkBtn = document.createElement("button");
         linkBtn.type = "button";
-        linkBtn.className = "action-btn";
+        linkBtn.className = "ui-button";
         linkBtn.innerHTML = `${iconSvg("link")}<span>Copy link to this section</span>`;
         linkBtn.addEventListener("click", (e) =>
           copyText(siteUrl(`/reports/${slug}/s/${i + 1}`), e.currentTarget.querySelector("span")));
         const askBtn = document.createElement("button");
         askBtn.type = "button";
-        askBtn.className = "action-btn";
+        askBtn.className = "ui-button";
         askBtn.innerHTML = `${iconSvg("ask")}<span>Ask the record about this</span>`;
         askBtn.addEventListener("click", () => {
           goRoute(askHash(s.question));

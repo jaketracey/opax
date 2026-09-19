@@ -14,13 +14,13 @@
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" />
     <script src="/analytics.js?v=08b4f04730" defer></script>
-    <script src="/events.js?v=ebed3477bd" defer></script>
+    <script src="/events.js?v=bb0804f98a" defer></script>
     <script src="/gtm.js?v=0764911f84" defer></script>
-    <link rel="stylesheet" href="/style.css?v=7328584eee" />
-    <link rel="stylesheet" href="/ui-controls.css?v=c7a64d47e3" />
-    <link rel="stylesheet" href="/home.css?v=7feefd82aa" />
+    <link rel="stylesheet" href="/style.css?v=4f67a373e3" />
+    <link rel="stylesheet" href="/ui-controls.css?v=db6b9cac33" />
+    <link rel="stylesheet" href="/home.css?v=c47ab41256" />
     <script src="/quick-search.js?v=206914f32d" defer></script>
-    <script type="module" src="/home.js?v=fc277ea683"></script>
+    <script type="module" src="/home.js?v=ceaddf2341"></script>
   </head>
   <body class="hp-page">
     <a class="hp-skip" href="#hp-main">Skip to content</a>
@@ -255,6 +255,14 @@
             <p role="status">Loading the money map…</p>
           </div>
         </div>
+        <p class="hp-map-note">
+            Lines connect donors and recipients. This map covers a subset of AEC
+            disclosures from 1998–99 to 2025–26.
+            <a href="/methods">Sources &amp; coverage</a> ·
+            <a id="hp-map-records" href="/money/receipts"
+              >Browse funding records →</a
+            >
+        </p>
         <div class="hp-filter-heading">
           <h3>Filter by industry</h3>
           <span>Numbers show donors in this map</span
@@ -490,14 +498,6 @@
           All industries
         </p>
         <div class="hp-map-context">
-          <p>
-            Lines connect donors and recipients. This map covers a subset of AEC
-            disclosures from 1998–99 to 2025–26.
-            <a href="/methods">Sources &amp; coverage</a> ·
-            <a id="hp-map-records" href="/money/receipts"
-              >Browse funding records →</a
-            >
-          </p>
           <details>
             <summary>Start with a guided exploration</summary>
             <nav aria-label="Guided map explorations">
@@ -717,6 +717,22 @@
             </div>
           </section>
 
+        </div>
+      </section>
+      <section class="hp-section hp-spotlight" aria-labelledby="hp-gambling-title">
+        <div class="hp-section-head">
+          <h2 id="hp-gambling-title" class="hp-spotlight-title"><span>Spotlight on:</span>
+            <select id="hp-spotlight-topic" aria-label="Spotlight topic" aria-controls="hp-gambling-content">
+              <option value="gambling">Gambling</option>
+              <option value="housing">Housing</option>
+              <option value="climate">Climate</option>
+            </select>
+          </h2>
+          <a id="hp-spotlight-more" href="/subject/topic/gambling">Learn more about gambling →</a>
+        </div>
+        <p id="hp-spotlight-status" class="visually-hidden" role="status"></p>
+        <div id="hp-gambling-content">
+          <p class="status">Loading the gambling record…</p>
         </div>
       </section>
       <section class="hp-section" aria-labelledby="hp-activity-title">

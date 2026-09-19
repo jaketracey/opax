@@ -90,7 +90,7 @@ import { cleanEvent, safePath } from './privacy.mjs';
     const a = t.closest("a");
     if (!a) return;
     const href = a.getAttribute("href") || "";
-    if (a.classList.contains("action-btn") && /download|\.json|\.csv/i.test(href + a.textContent)) {
+    if (a.classList.contains("ui-button") && /download|\.json|\.csv/i.test(href + a.textContent)) {
       return push("opax_download", { format: /\.csv(?:[?#]|$)/i.test(href) ? "csv" : /\.json(?:[?#]|$)/i.test(href) ? "json" : "other" });
     }
     let url;

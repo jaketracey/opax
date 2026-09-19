@@ -30,3 +30,10 @@
   .wb-intro { padding-top: 2rem; }
   .wb-header span { max-width: 14ch; text-align: right; }
 }
+
+.wb-divider-demo { margin-top: 24px; }
+.wb-divider-demo h3 { margin: 0 0 16px; }
+.wb-divider-demo > p { color: var(--ink-soft); }
+.wb-section-divider-demo { position: relative; margin-block: 48px; }
+.wb-section-divider-demo .wb-caption { position: absolute; bottom: 8px; margin: 0; }
+@media (max-width: 800px) { .wb-section-divider-demo { margin-block: 28px; } }

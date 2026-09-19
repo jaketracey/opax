@@ -19,7 +19,9 @@
 
   /* rules */
   --line:        #DFDCD2;
-  --line-strong: #8D897B;
+  --line-strong: #8D897B;  /* control boundaries, not section dividers */
+  --divider-subtle: var(--line);  /* rows, subheadings and internal groups */
+  --divider-default: #B8B4A8;     /* major content boundaries */
 
   /* accent — Hansard bronze: only where something touches the record */
   --bronze-ink:  #8A5A12;
@@ -179,7 +181,6 @@ a.visually-hidden:focus-visible {
    same width and puts its two ways out on a row of their own. */
 #money-fineprint { max-width: none; }
 .money-note-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.9rem; }
-.money-note-actions .action-btn { display: inline-flex; }
 
 a, button.link {
   color: var(--ink); text-decoration: underline;
@@ -529,13 +530,6 @@ button.primary:hover { background: var(--navy-raised); }
 button.primary:disabled { opacity: 0.55; cursor: wait; }
 /* While asking, keep the button legible so the spinner reads. */
 button.primary.btn-loading:disabled { opacity: 0.9; }
-button.secondary {
-  background: transparent; color: var(--ink); border: 1px solid var(--line-strong);
-  cursor: pointer; font: 600 0.9375rem/1 var(--sans); border-radius: 4px;
-  padding: 0 1.1rem; min-height: 48px;
-}
-button.secondary:hover { border-color: var(--ink); }
-button.secondary:disabled { opacity: 0.55; cursor: wait; }
 
 /* The question builder: a sentence with blanks, the blanks underlined in
    bronze the way a form on paper is, above the free box it writes into. */
@@ -1004,7 +998,6 @@ html[data-chat="page"] .chat-head {
 .chat-scope-clear:hover { color: var(--bronze-ink); text-decoration: underline; }
 /* Fixed next steps under a money answer (it has no generated follow-ups). */
 .answer-money-next { display: flex; flex-wrap: wrap; gap: 0.5rem 0.7rem; margin: 1.2rem 0 0.4rem; }
-.answer-money-next .action-btn { text-decoration: none; }
 /* Follow-ups stack as full-width cards (the suggest-card idiom): long
    questions wrap instead of overflowing, and each reads as a way on. */
 .chat-next-btns { display: flex; flex-direction: column; gap: 0.5rem; max-width: 34rem; }
@@ -1194,8 +1187,6 @@ html[data-chat="page"] .chat-head {
   .results-bar { flex-direction: column; align-items: stretch; gap: 0.7rem; }
   .results-actions { display: flex; flex-wrap: nowrap; gap: 0.5rem; }
   .results-actions select { flex: 1 1 auto; min-width: 0; }
-  .results-actions .action-btn { flex: 0 0 auto; padding-inline: 0.7rem; }
-  .results-actions .action-btn span { white-space: nowrap; }
   .results-actions .btn-detail { display: none; }
 }
 #results-count { font-variant-numeric: tabular-nums; }
@@ -1446,7 +1437,6 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .empty-lede { margin: 0 auto; max-width: 54ch; color: var(--ink-soft); font-size: 0.9375rem; line-height: 1.55; }
 .empty-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin-top: 1.5rem; }
 .empty-actions:empty { display: none; }
-.empty-actions .action-btn { display: inline-flex; }
 .rail-empty { padding: 0.35rem 0 0.25rem; }
 .rail-empty-line { margin: 0 0 0.5rem; font: italic 400 1.0625rem/1.4 var(--serif); color: var(--ink-soft); }
 .rail-empty .fineprint { margin: 0; }
@@ -1572,9 +1562,8 @@ a.barrow-name:hover { color: var(--bronze-ink); }
   #report-figures .tiles { flex-direction: column; }
   #report-figures .tile { max-width: none; }
 }
-button.action-btn { background: none; cursor: pointer; font: 600 0.875rem/1.3 var(--sans); }
-button.action-btn[data-explain] { width:100%; min-height:44px; justify-content:flex-start; text-align:left; }
-a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top: 1.6rem; }
+button.ui-button[data-explain] { width: 100%; justify-content: flex-start; text-align: left; }
+.report-download-btn { margin-top: 1.6rem; }
 .tile .tile-source { display: block; margin-top: 0.35rem; font-size: 0.8125rem; line-height: 1.45; color: var(--ink-faint); }
 .tile .tile-source a { color: var(--ink-faint); }
 .position-list { list-style: none; margin: 0; padding: 0; }
@@ -1608,8 +1597,6 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 #report-view button.link.source-title { display: inline-flex; align-items: center; min-height: 44px; }
 #report-view button.link.source-title { text-align: left; }
 #report-view .barrow { min-height: 44px; }
-#report-view .section-tools .action-btn,
-#report-view .report-download-btn { min-height: 44px; }
 
 /* A report's body sections are headed by a serif h3, which already reads as
    a break, so they take the middle step rather than the full section gap. */
@@ -1628,8 +1615,8 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
   .report-speech-brief { font-size: 1.075rem; line-height: 1.7; }
   .position-text { font-size: 1rem; }
   .section-tools { display: grid; grid-template-columns: 1fr; }
-  .section-tools .action-btn,
-  #report-download .report-download-btn { width: 100%; justify-content: center; }
+  .section-tools .ui-button,
+  #report-download .report-download-btn { width: 100%; }
   #report-stats .barrow { grid-template-columns: minmax(0, 1fr) auto; gap: 0 var(--space-3); margin: var(--space-2) 0 var(--space-4); }
   #report-stats .barrow-name { grid-column: 1; white-space: normal; overflow: visible; text-overflow: clip; }
   #report-stats .barrow-value { grid-column: 2; }
@@ -1869,63 +1856,12 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 .tide-view > .coverage-rule { margin-top: var(--space-5); }
 .tide-view > .fineprint { margin-top: var(--space-3); }
 
-.action-btn {
-  display: flex; align-items: center; gap: 0.55rem;
-  border: 1px solid var(--line-strong); border-radius: 4px;
-  padding: 0.55rem 0.8rem; text-decoration: none;
-  font: 600 0.875rem/1.3 var(--sans); color: var(--ink);
-}
-.action-btn:hover { border-color: var(--ink); color: var(--ink); }
-.action-btn .btn-icon { width: 17px; height: 17px; flex: 0 0 auto; color: var(--bronze-ink); }
-.action-btn.action-primary {
-  background: var(--navy); border-color: var(--navy); color: var(--on-navy);
-}
-.action-btn.action-primary:hover { background: var(--navy-raised); }
-.action-btn.action-primary .btn-icon { color: var(--bronze-bright); }
-/* The gold call to action: reserved for the one thing on a page worth
-   opening next. Bronze fill, ink on top so it stays legible. */
-/* White on the gold, label and icon together. Dark ink on the lighter bronze
-   only reached 3.69 to 1; white on this half step toward bronze-ink reaches
-   4.71, so the button reads as gold and still passes AA at its weight. */
-/* Struck metal rather than flat paint: the gradient runs dark at the edges and
-   bright through the middle, and a narrow highlight crosses it now and then.
-   Both ends of the gradient hold white above 4.5 to 1 (7.39 at the edges,
-   4.71 at the peak), so the label passes wherever it happens to sit. */
-.action-btn.action-gold {
-  position: relative; overflow: hidden; isolation: isolate;
-  border-color: #7A4B0E; color: #FFF; font-weight: 700;
-  background: linear-gradient(100deg, #7A4B0E 0%, #966C17 42%, #966C17 58%, #7A4B0E 100%);
-}
-.action-btn.action-gold:hover {
-  border-color: var(--bronze-ink);
-  background: linear-gradient(100deg, #6E430C 0%, #7A4B0E 42%, #7A4B0E 58%, #6E430C 100%);
-}
-.action-btn.action-gold .btn-glyph {
-  font: 800 1.0625rem/1 var(--sans); flex: 0 0 auto;
-}
-@media (prefers-reduced-motion: no-preference) {
-  /* Mostly off screen: a glint every few seconds, not a strobe. */
-  .action-btn.action-gold::after {
-    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-    background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,0.26) 50%, transparent 58%);
-    transform: translateX(-130%);
-    animation: goldSweep 4.2s ease-in-out infinite;
-  }
-  @keyframes goldSweep {
-    0% { transform: translateX(-130%); }
-    38%, 100% { transform: translateX(130%); }
-  }
-  .action-btn.action-gold:hover::after { animation-duration: 1.6s; }
-}
-/* A compact button for inline rows such as the news pivots. */
-.action-btn.action-small { padding: 0.3rem 0.65rem; font-size: 0.8125rem; min-height: 0; }
 /* The map's caption and its way in sit on one line, the button to the right. */
 .front-map-foot { display: flex; align-items: flex-start; gap: 1.4rem; margin-top: var(--space-3); }
 .front-map-foot .fineprint { margin: 0; flex: 1 1 auto; }
-.front-map-foot .action-btn { flex: 0 0 auto; }
+.front-map-foot .ui-button { flex: 0 0 auto; }
 @media (max-width: 700px) {
   .front-map-foot { flex-direction: column; align-items: stretch; gap: 0.9rem; }
-  .front-map-foot .action-btn { justify-content: center; }
 }
 .party-dot-only { margin-right: 0.45rem; }
 .subject-active {
@@ -2081,14 +2017,12 @@ a.ency-name:hover, a.ency-name:focus-visible {
   -webkit-box-orient: vertical; overflow: hidden;
 }
 .ency-year { color: var(--ink-faint); font-variant-numeric: tabular-nums; flex: 0 0 auto; }
-.ency-card .action-btn { display: inline-flex; align-self: flex-start; margin-top: auto; }
+.ency-card .ui-button { align-self: flex-start; margin-top: auto; }
 .ency-facts { display: grid; gap: 0.3rem; margin: 0; border-top: 1px solid var(--line); padding-top: 0.65rem; font-size: 0.8125rem; line-height: 1.35; }
 .ency-facts div { display: flex; justify-content: space-between; gap: 0.7rem; }
 .ency-facts dt { color: var(--ink-faint); }
 .ency-facts dd { margin: 0; color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
 .ency-nav { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.7rem; }
-.ency-nav .action-btn { width: 44px; height: 44px; padding: 0; justify-content: center; }
-.ency-nav .action-btn:disabled { opacity: 0.4; cursor: default; border-color: var(--line); }
 .ency-count { min-width: 5ch; text-align: center; color: var(--ink-faint); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
 /* Keep next/previous available on touch screens as an alternative to swiping. */
 
@@ -2153,6 +2087,7 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .infobox dt { color: var(--ink-faint); font-size: 0.8125rem; }
 .infobox dd { margin: 0; font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
 .infobox .actions { margin-top: 0.9rem; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.875rem; }
+.infobox .actions .ui-button { justify-content: flex-start; }
 /* A long list of spellings is reference material, not a headline figure:
    it sets smaller than the facts above it and opens on request. */
 .alias-list { font-size: 0.8125rem; line-height: 1.45; color: var(--ink-soft); }
@@ -2593,7 +2528,6 @@ a.ency-name:hover, a.ency-name:focus-visible {
 /* The person page's way to the party's money: the home page's money-map button
    pared back to an outlined action with the bronze dollar glyph. */
 .person-money-link { margin: var(--section-gap) 0 0; }
-.person-money-link .action-btn { display: inline-flex; min-height: 44px; }
 .person-money-link .btn-glyph {
   display: inline-grid; place-items: center; width: 1.35rem; height: 1.35rem; border-radius: 50%;
   color: var(--bronze-ink); box-shadow: inset 0 0 0 1.5px var(--bronze-ink);
@@ -2985,7 +2919,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-ask .answer h4, #panel-chat .answer h4 { font: 700 1.125rem/1.4 var(--serif); margin: 1.4em 0 0.6em; }
 #panel-ask .answer-stamp { font-size: 0.8125rem; line-height: 1.6; font-variant-numeric: tabular-nums; }
 #ask-result .action-row { gap: 8px; margin: 16px 0; }
-#ask-result .action-btn { min-height: 44px; justify-content: center; }
 #panel-ask .chat-sources > summary, #panel-chat .chat-sources > summary {
   min-height: 44px; font: 600 1rem/1.4 var(--sans); text-transform: none; letter-spacing: normal;
 }
@@ -3001,7 +2934,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 @media (max-width: 600px) {
   #ask-result .action-row { display: grid; grid-template-columns: 1fr 1fr; }
   #ask-continue { grid-column: 1 / -1; }
-  #ask-result .action-btn { margin: 0; padding: 10px 8px; font-size: 0.8125rem; }
   #panel-chat { padding-bottom: 100px; }
   #panel-chat .chat-composer { position: fixed; bottom: 0; left: 0; right: 0; max-width: none; margin: 0; padding: 12px 20px max(16px, env(safe-area-inset-bottom)); }
 }
@@ -3085,12 +3017,12 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 /* ==== page-doc: The document page (/doc/<slug>) ==== */
 #panel-doc .doc-toolbar { display: block; margin-top: 1rem; }
 #panel-doc .doc-toolbar-btns { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
-#panel-doc .doc-toolbar-btns .action-btn { min-height: 44px; min-width: 0; padding: 7px 3px; justify-content: center; font-size: 0.8125rem; gap: 4px; }
-#panel-doc #doc-ask { grid-column: 1 / -1; background: var(--bronze-ink); border-color: var(--bronze-ink); color: var(--paper); font-size: 0.9375rem; }
+#panel-doc .doc-toolbar-btns .ui-button { min-width: 0; }
+#panel-doc #doc-ask { grid-column: 1 / -1; }
 #panel-doc .doc-toolbar-btns button { flex-direction: column; }
 #panel-doc .doc-toolbar-foot { margin-top: var(--space-5); padding-top: var(--space-3); border-top: 1px solid var(--line); }
 #panel-doc .doc-toolbar-foot .doc-toolbar-btns { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-#panel-doc #doc-ask-foot { grid-column: 1 / -1; background: var(--bronze-ink); border-color: var(--bronze-ink); color: var(--paper); font-size: 0.9375rem; }
+#panel-doc #doc-ask-foot { grid-column: 1 / -1; }
 #panel-doc .doc-speaker-links { display: flex; align-items: center; flex-wrap: wrap; gap: 0 5px; margin-top: 4px; font-size: 0.8125rem; }
 #panel-doc .doc-speaker-links a { display: inline-flex; align-items: center; min-height: 44px; }
 #panel-doc .doc-text { max-width: 62ch; font: 400 1.0625rem/1.8 var(--serif); white-space: normal; overflow-wrap: anywhere; }
@@ -3099,7 +3031,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-doc .doc-rule { margin: var(--space-3) 0 var(--space-5); }
 @media (min-width: 700px) {
   #panel-doc .doc-toolbar-btns { display: flex; }
-  #panel-doc .doc-toolbar-btns .action-btn { padding: 9px 13px; }
   #panel-doc .doc-toolbar-btns button { flex-direction: row; }
   #panel-doc .doc-text { font-size: 1.125rem; }
 }
@@ -3132,7 +3063,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-doc .doc-record-head { margin: 1.5rem 0 0.75rem; font: 600 1.125rem/1.4 var(--serif); }
 #panel-doc .doc-related-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 1rem; margin-top: 0.5rem; }
 #panel-doc .doc-related-actions .doc-search-all { margin-top: 0; }
-#panel-doc .action-btn { min-height: 44px; }
 #panel-doc .doc-meta a { display: inline-flex; align-items: center; min-height: 44px; }
 #panel-doc :is(a, button):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
 #panel-doc :is(.doc-meta, .doc-text, .doc-brief, .doc-similar-list, .cite-panel) { font-variant-numeric: tabular-nums; }
@@ -3149,9 +3079,9 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 }
 @media (max-width: 699px) {
   #panel-doc .doc-toolbar-btns { display: flex; flex-wrap: wrap; }
-  #panel-doc .doc-toolbar-btns .action-btn { flex: 1 0 calc(20% - 6px); min-width: max(44px, 4em); }
+  #panel-doc .doc-toolbar-btns .ui-button { flex: 1 0 calc(20% - 6px); min-width: max(44px, 4em); }
   #panel-doc .doc-toolbar-btns #doc-ask, #panel-doc .doc-toolbar-btns #doc-ask-foot { flex-basis: 100%; }
-  #panel-doc .doc-toolbar-foot .doc-toolbar-btns .action-btn { flex-basis: calc(33.3% - 6px); }
+  #panel-doc .doc-toolbar-foot .doc-toolbar-btns .ui-button { flex-basis: calc(33.3% - 6px); }
 }
 /* ==== page-person: Person entry pages (/subject/person/<name>) ==== */
 .subject-person #subject-sections { min-width: 0; }
@@ -3256,7 +3186,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-subject .party-receipts .receipts-pct { grid-column: 2; grid-row: 2; font-size: 0.8125rem; font-weight: 400; }
 #panel-subject .party-receipts .receipts-row a { display: inline-flex; align-items: center; min-height: 44px; }
 #panel-subject .party-receipts .receipts-bar { gap: 0; }
-#panel-subject .party-years-toggle { display: none; min-height: 44px; margin-top: 0.75rem; }
+#panel-subject .party-years-toggle { display: none; margin-top: 0.75rem; }
 #subject-party-debts .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem 1rem; }
 #subject-party-debts .tile { min-width: 0; max-width: none; border-top-width: 1px; }
 #subject-party-debts .tile b { font-size: 1.55rem; }
@@ -3367,7 +3297,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #front-map .subject-section-title { margin: 0 0 1rem; font-size: 1.4rem; line-height: 1.35; }
 #front-map .fineprint, #front-page .fineprint { font-size: 0.875rem; line-height: 1.6; }
 #front-map .front-state-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
-#front-map .front-map-foot .action-btn { min-height: 48px; }
 #front-map-root { height: 380px; max-height: none; }
 #front-statemap .sm-federal { min-height: 44px; }
 #front-statemap .sm-tip-actions a { min-height: 44px; display: flex; align-items: center; }
@@ -3376,7 +3305,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   #front-statemap { height: 290px; }
   #front-map-root { height: 320px; }
   #front-map .front-map-foot { gap: 1rem; }
-  #front-map .front-map-foot .action-btn { align-self: flex-start; padding-inline: 1rem; }
+  #front-map .front-map-foot .ui-button { align-self: flex-start; }
 }
 #front-map-root .mm-card-close { width: 44px; height: 44px; top: 4px; right: 4px; }
 #front-map-root .mm-card h2 { margin-right: 40px; font-family: var(--serif); line-height: 1.4; }
@@ -3412,7 +3341,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #front-page :is(a, button, summary), #front-map :is(a, button) { scroll-margin-block: 90px 20px; }
 #front-page :is(a, button, summary):focus-visible,
 #front-map :is(a, button):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
-#front-page .action-btn, #front-page button:not(.ui-button), #front-page .mw-chips .chip:not(.ui-button) { min-height: 44px; }
+#front-page button:not(.ui-button), #front-page .mw-chips .chip:not(.ui-button) { min-height: 44px; }
 #front-page .front-declared-notes { border-top: 1px solid var(--line); margin-top: 0.75rem; }
 #front-page .front-declared-notes > summary { padding-block: 0.75rem; min-height: 44px; font: 500 0.875rem/1.5 var(--sans); cursor: pointer; }
 #front-declared .declared-match a, #mod-declared > .fineprint a { display: inline-flex; align-items: center; min-height: 44px; }
@@ -3433,8 +3362,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #front-reports .report-card:focus-visible { outline-offset: -3px; }
 /* ==== page-search: The search page (/search) ==== */
 #panel-search { min-width: 0; }
-#panel-search button:not(.ui-button):not(.ui-filter-chip), #panel-search select:not(.ui-input), #panel-search input:not([type="range"]):not(.ui-input),
-#panel-search .action-btn { min-height: 44px; }
+#panel-search button:not(.ui-button):not(.ui-filter-chip), #panel-search select:not(.ui-input), #panel-search input:not([type="range"]):not(.ui-input) { min-height: 44px; }
 #panel-search #search-options-pop {
   position: fixed; inset: auto 0 0; margin: 0; width: 100%; max-width: none;
   min-width: 0; max-height: min(90dvh, 820px); padding: 0;
@@ -3490,7 +3418,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
   #panel-search #search-sort-picker { grid-column: 1 / -1; }
   #panel-search .results-actions > *, #panel-search .results-actions .ui-button { min-width: 0; }
   #panel-search .results-actions .ui-button { width: 100%; }
-  #panel-search .results-actions .action-btn { padding-inline: 8px; min-width: 44px; }
   #panel-search #search-readbar { grid-column: 1 / -1; }
   #panel-search #search-readbar .ui-segmented { display: flex; width: 100%; }
   #panel-search .results-actions select { width: 100%; padding-inline: 8px 24px; }
@@ -3730,8 +3657,7 @@ html[data-panel="chat"] footer { display: none; }
     color: var(--navy); font-weight: 600; text-decoration: none; border-radius: 2px;
   }
   .subject-person .person-jumps-row .person-jumps a:hover { background: var(--paper-raised); }
-  .person-jumps-row .person-money-link .action-btn { width: 100%; min-height: 52px; padding: .75rem 1rem; }
-  .person-jumps-row .person-money-link .action-btn > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+  .person-jumps-row .person-money-link .ui-button { width: 100%; }
 }
 @media (max-width: 360px) {
   .subject-person .person-jumps-row .person-jumps:not([hidden]) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -4251,7 +4177,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .bill-peek-line { margin: 0; font: 400 0.9375rem/1.5 var(--sans); color: var(--ink); }
 .bill-peek-status { margin: 0; }
 .bill-peek-link { margin: var(--space-3) 0 0; }
-.bill-peek-link .action-btn { display: inline-flex; }
 
 /* ---- bills on a party page ---------------------------------------------- */
 
@@ -4327,9 +4252,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   grid-column: 1 / -1; margin-top: 0.15rem;
   font: 400 0.8125rem/1.5 var(--sans); color: var(--ink-soft); overflow-wrap: anywhere;
 }
-/* The register's floor is 44px, and these are the page's primary actions.
-   Scoped to this panel: the shared button elsewhere is not this work's to move. */
-#panel-bill .action-btn { min-height: 44px; }
 /* At 360 three filter labels were cut off inside their boxes ("All parliam").
    On a phone each control takes the row it needs. */
 @media (max-width: 430px) {
@@ -4389,11 +4311,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
    line opened on a separator. Normal flow wraps where the words do, and the
    separators are tied to the word in front of them. */
 .bill-row-meta, .bill-division .result-meta { display: block; }
-
-/* The register's 44px floor reaches the button this work puts inside a
-   person's disclosure. It is the same shared class the loop 1 fix named, and
-   scoping that fix to #panel-bill left this one at 37.8px. */
-.bill-peek .action-btn { min-height: 44px; }
 
 /* ---- one bill, one entry on a party page -------------------------------- */
 /* A party divides on the same bill more than once, and loop 2 gave those rows
@@ -4906,14 +4823,12 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .research-controls { display: grid; grid-template-columns: 1.5fr repeat(4,1fr) auto; gap: .8rem; align-items: end; margin: .8rem 0; }
 .research-controls label { display: flex; flex-direction: column; gap: .35rem; font-size: .8rem; min-width: 0; color: var(--ink-soft); }
 .research-controls input, .research-controls select { min-height: 42px; width: 100%; border: 1px solid var(--line-strong); border-radius: 4px; padding: .5rem; background: white; color: var(--ink); font: inherit; }
-.research-controls .action-btn { min-height: 42px; }
 .research-summary { display: flex; gap: .7rem 1.5rem; flex-wrap: wrap; font-size: .85rem; margin: 1rem 0; align-items: baseline; }
 .research-summary > span { color: var(--ink-soft); }
 .research-summary b { color: var(--ink); font-variant-numeric: tabular-nums; margin-left: .4rem; }
 .research-summary .research-period { margin-left: auto; font-size: .75rem; }
 .research-summary p { flex-basis: 100%; }
 .research-actions { display: flex; gap: .65rem; flex-wrap: wrap; align-items: center; margin: .8rem 0 1.5rem; }
-.research-actions .action-btn { font-size: .8rem; }
 .research-records { margin: 1.2rem 0 2rem; }
 .research-records table { width: 100%; text-align: left; border-collapse: collapse; font-size: .85rem; }
 .research-records td, .research-records th { padding: .8rem; border-bottom: 1px solid var(--line); }
@@ -4944,7 +4859,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 /* The map leads. Research controls are opened only when needed. */
 .money-workspace-toolbar { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin: .5rem 0 1rem; z-index: 12; }
 #money-research { display: contents; }
-.money-workspace-toolbar select, .money-workspace-toolbar > details > summary, .research-filters > summary, .money-workspace-toolbar .action-btn, .money-workspace-toolbar [data-records] { font: 600 .85rem/1.3 var(--sans); min-height: 42px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--navy); padding: .65rem .85rem; }
+.money-workspace-toolbar select, .money-workspace-toolbar > details > summary, .research-filters > summary { font: 600 .85rem/1.3 var(--sans); min-height: 42px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--navy); padding: .65rem .85rem; }
 .money-workspace-toolbar select { padding-right: 2rem; }
 .money-workspace-toolbar #money-jur select {appearance:none;padding-right:2rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center}
 /* The disclosure summaries sit beside the jurisdiction select and must read as
@@ -4982,7 +4897,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 #panel-money .journey-story { padding: 1rem; }
 @media(max-width:640px) {
   .money-workspace-toolbar { gap: .45rem; }
-  .money-workspace-toolbar select, .money-workspace-toolbar > details > summary, .research-filters > summary, .money-workspace-toolbar > .action-btn { font-size: .75rem; padding: .6rem .7rem; }
+  .money-workspace-toolbar select, .money-workspace-toolbar > details > summary, .research-filters > summary { font-size: .75rem; padding: .6rem .7rem; }
   .research-filter-panel { max-height: 65vh; overflow-y: auto; }
   .research-filter-panel .research-controls { grid-template-columns: 1fr 1fr; }
 }
@@ -5040,8 +4955,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 #panel-search .result-meta a.search-record-kind { color:var(--navy); text-decoration:underline; text-decoration-color:var(--line-strong); text-underline-offset:.2em; }
 #panel-search .result-meta a.search-record-kind:hover { color:var(--bronze-ink); text-decoration-color:currentColor; }
 
-#panel-subject .topic-arc-open.action-btn { display:inline-flex; width:fit-content; min-height:44px; margin-top:.75rem; text-decoration:none; font:600 .8125rem/1.3 var(--sans); color:var(--navy); background:var(--paper); }
-#panel-subject .topic-arc-open.action-btn:hover { border-color:var(--navy); background:var(--bronze-wash); }
+#panel-subject .topic-arc-open { margin-top: .75rem; }
 
 .dir-main .result-meta .dir-party-link { display:inline-flex; align-items:center; white-space:nowrap; text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:.2em; }
 .dir-main .result-meta .dir-party-link:hover { text-decoration-color:currentColor; }
@@ -5053,8 +4967,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 #declared-filters .declared-search input { width: 100%; flex: none; }
 .declared-pagination { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-top: 1.25rem; }
 .declared-pagination > span { color: var(--ink-soft); font-size: .875rem; }
-.declared-pagination .action-btn { min-height: 44px; }
-.declared-pagination button:disabled { opacity: .45; cursor: default; }
 
 .agency-directory-page .supplier-directory-row strong { font-size: 1.0625rem; line-height: 1.45; }
 
@@ -5180,7 +5092,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .allocation-map-frame { position:relative; height:510px; flex:1; min-height:360px; isolation:isolate; background:#e6ebe7; }
 #allocation-map { position:absolute; inset:0; z-index:0; font-family:var(--sans); }
 .allocation-map-actions { position:absolute; top:14px; left:14px; right:14px; display:flex; gap:8px; z-index:1; pointer-events:none; }
-.allocation-map-actions button { pointer-events:auto; padding:.6rem .75rem; font:600 .8rem/1.3 var(--sans); min-height:44px; background:white; border-color:var(--line); box-shadow:0 2px 6px #142a4312; }
+.allocation-map-actions button { pointer-events:auto; box-shadow:0 2px 6px #142a4312; }
 #allocation-move { display:none; }
 .allocation-map-empty { position:absolute; inset:0; background:var(--paper-sunken); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem; text-align:center; z-index:2; }
 .allocation-map-empty h3 { color:var(--navy); font:700 1.4rem/1.4 var(--serif); margin:0 0 1rem; }
@@ -5219,7 +5131,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .allocation-location-label { display:flex; gap:.35rem; align-items:center; font:400 .75rem/1.4 var(--sans); color:var(--ink-soft); margin-top:.7rem; }
 .allocation-location-label svg { width:15px; height:15px; color:var(--bronze-ink); }
 .allocation-list-actions { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:var(--space-4); margin-top:var(--space-4); font-size:.85rem; }
-.allocation-list-actions .secondary { min-height:44px; }
 .allocation-comparison,.allocation-method { margin-top:var(--space-6); border-top:1px solid var(--line); line-height:1.7; }
 .allocation-comparison > summary,.allocation-method > summary,.allocation-seat-fold > summary { cursor:pointer; color:var(--navy); font-size:1.05rem; font-weight:600; padding-block:var(--space-4); min-height:44px; }
 .allocation-comparison summary > span { display:block; margin-left:1.15rem; font-weight:400; color:var(--ink-soft); font-size:.85rem; }
@@ -5331,7 +5242,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .el-asof { margin-top:1.5rem; font-size:.85rem; }
 .el-asof label { display:block; margin-bottom:.5rem; }
 .el-asof > div { display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; }
-.el-asof input { padding:.5rem; color:inherit; background:transparent; border:1px solid currentColor; border-radius:3px; font:inherit; }
 .el-outline { margin:0; }
 .el-outline svg { width:100%; max-height:220px; }
 .el-outline path { fill:color-mix(in srgb, currentColor 12%, transparent); stroke:currentColor; stroke-width:1; }

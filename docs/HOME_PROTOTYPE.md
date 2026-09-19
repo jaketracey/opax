@@ -8,15 +8,17 @@ The opening explains what OPAX stands for and what it connects. Headings have no
 
 This deliberately replaces the rejected sequence of heading, introduction, mode switch, helper text, subject switch, sentence form, separator, second question form and examples all displayed together. The earlier attempt to restore the original stacked header was also rejected for preserving its complexity.
 
+Major homepage boundaries use `--divider-default` (#B8B4A8); subheading rules, row separators and column rules use `--divider-subtle`. Desktop sections have 48px vertical padding, while the opening retains 68px top padding and has 80px below. Mobile spacing is unchanged. The shared divider roles and standalone rule are demonstrated in the local UI workbench.
+
 Below the opening:
 
 1. The working money map occupies the main column. The adjacent browse directory describes parliamentarian, electorate and party profiles, then groups parliamentary records, funding records and jurisdiction routes. On narrow screens the directory remains fully visible immediately before the map, without an accordion.
 2. All 21 topics and all seven reports form a complete subject-browsing section. Both collections are alphabetical. Reports retain descriptions explaining their scope. Topic filtering has a count and empty-state recovery.
-3. Recent bills and register declarations are parallel, date-ordered streams. Newly indexed records follow separately, labelled by indexing date rather than event date.
+3. Recent bills and register declarations are parallel, date-ordered streams. Newly indexed records follow separately, labelled by indexing date rather than event date. Horizontal entries use spacing without individual top rules, and the subsection heading has no extra divider; subtle separators appear only between stacked entries on mobile.
 4. From the record uses a mixed card shell for parliamentarians, donors, grants and programs. Speech-topic count blurbs and the parliamentarian-only directory link are removed. The row loads eight parliamentarian previews, a donor and a source-backed grant/program pair through a deterministic daily shuffle. The row has native scrolling and previous/next controls.
 5. Collection coverage restores documents, searchable passages, collected speeches and classified donations. Source information accompanies direct access to the Time machine, The tide and record quiz.
 
-There is no selected topic spotlight or editorial ranking. The restored encyclopedia previews use the existing automatic daily selection rather than hand-picked profiles. Guided money-map explorations remain available. The map is above recent records, while research remains the primary opening task.
+The homepage restores the previous Money & words content immediately after Explore by subject as **Spotlight on: Gambling**, at the user’s request. It includes the speech/speaker and donation totals, both yearly charts and their notes, the original top-three speaker and donor rankings, all three suggested questions, and a topic-page link in the heading. `home-spotlight.js` defaults to Gambling and uses an inline, underlined serif heading select to switch among Gambling, Housing and Climate. Each selection loads its report export and updates figures, charts, rankings, questions and destination links together. Reports without donation data show only their parliamentary content and a short coverage note. Questions use compact text links beneath “Ask about [subject]”. A right-aligned “Learn more about [subject]” link in the heading opens the selected subject’s topic page; the bottom report/topic link row is removed. The old daily-rotation caption is omitted because readers choose the topic. There is no editorial ranking of the other homepage collections. The restored encyclopedia previews use the existing automatic daily selection rather than hand-picked profiles. Guided money-map explorations remain available. The map is above recent records, while research remains the primary opening task.
 
 ## Comparator synthesis
 
@@ -32,7 +34,7 @@ The criteria are task clarity, predictable destinations, proximity of related co
 - Navigation uses the application's `OpaxNavigation.sections`, with native disclosure menus.
 - `home.js` is a standalone adapter. Its five question shapes, variants, parties and industry vocabulary mirror `app.js`; person and bill suggestions use existing datasets. Production adoption should extract a shared builder rather than maintain copies.
 - Question and record-search forms open `/ask?q=...` and `/ask?view=search&q=...`. This prototype does not implement the full application's advanced query options.
-- The map reuses `money-map.js` with mini chrome, overview and page-scroll behaviour and `graph/money.json`. All 15 native industry-filter buttons update the embedded map. Reset restores the overview; the full-map URL preserves filters, focus and year window. Failure provides retry and record browsing.
+- The map coverage note sits immediately below the map, above Filter by industry. Guided exploration remains below the filters without an extra divider. The map reuses `money-map.js` with mini chrome, overview and page-scroll behaviour and `graph/money.json`. All 15 native industry-filter buttons update the embedded map. Reset restores the overview; the full-map URL preserves filters, focus and year window. Failure provides retry and record browsing.
 - Controls use `ui-controls.css`. The sentence builder remains the expressly requested exception.
 
 ## Content sources and limits

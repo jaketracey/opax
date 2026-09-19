@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Controls workbench — OPAX</title>
-  <link rel="stylesheet" href="/style.css?v=7328584eee">
-  <link rel="stylesheet" href="/ui-controls.css?v=c7a64d47e3">
-  <link rel="stylesheet" href="/ui-workbench.css?v=96485c02aa">
+  <link rel="stylesheet" href="/style.css?v=4f67a373e3">
+  <link rel="stylesheet" href="/ui-controls.css?v=db6b9cac33">
+  <link rel="stylesheet" href="/ui-workbench.css?v=676cae1896">
   <script type="module" src="/ui-workbench.js?v=34131fdd46"></script>
 </head>
 <body>
@@ -17,10 +17,10 @@
     <div class="wb-intro">
       <p class="kicker">Shared components / 01</p>
       <h1>A common set of controls</h1>
-      <p>Buttons, fields and choices that belong together. Try the states below, then see the same controls on the home page, in search and across the directories.</p>
+      <p>Buttons, fields, choices and dividers that belong together. Try the states below, then see the same controls on the home page, in search and across the directories.</p>
     </div>
     <p><a href="/home-prototype">Review the home-page prototype →</a></p>
-    <nav class="wb-nav" aria-label="Workbench sections"><a href="#buttons">Buttons</a><a href="#sizes">Sizes</a><a href="#fields">Inputs &amp; fields</a><a href="#choices">Choices</a><a href="#filters-tags">Filter chips &amp; tags</a><a href="#map-filters">Map filters</a><a href="#together">In context</a></nav>
+    <nav class="wb-nav" aria-label="Workbench sections"><a href="#buttons">Buttons</a><a href="#sizes">Sizes</a><a href="#fields">Inputs &amp; fields</a><a href="#choices">Choices</a><a href="#filters-tags">Filter chips &amp; tags</a><a href="#map-filters">Map filters</a><a href="#together">In context</a><a href="#dividers">Dividers</a></nav>
 
     <section class="wb-section" id="buttons" aria-labelledby="buttons-title">
       <p class="kicker">01 / Actions</p><h2 id="buttons-title">One hierarchy, wherever you are</h2>
@@ -142,7 +142,24 @@
       </form>
       <div class="ui-actions"><a class="ui-button" href="/subject/supplier">Supplier directory</a><a class="ui-button" href="/subject/agency">Agency directory</a></div>
     </section>
-    <footer class="wb-foot">First pass: controls only. Use Tab to inspect focus, and resize the window to compare layouts.</footer>
+    <section class="wb-section" id="dividers" aria-labelledby="dividers-title">
+      <p class="kicker">08 / Structure</p><h2 id="dividers-title">Dividers follow the content hierarchy</h2>
+      <p>Major sections use a medium rule. Rows and headings within a section use a subtle rule. Control outlines retain their darker boundary colour.</p>
+      <div class="wb-divider-demo">
+        <h3>Explore by subject</h3>
+        <p class="wb-caption">Subtle divider · <code>--divider-subtle</code> · #DFDCD2</p>
+        <hr class="ui-divider" data-variant="subtle">
+        <p>Topics and reports within this section</p>
+        <div class="wb-section-divider-demo">
+          <span class="wb-caption">Default divider · <code>--divider-default</code> · #B8B4A8</span>
+          <hr class="ui-divider">
+        </div>
+        <h3>Spotlight on: Gambling</h3>
+        <p>On desktop, homepage sections have 48px of space on each side of their dividing rule.</p>
+      </div>
+      <div class="wb-panel"><label class="ui-field"><span>Control boundary · <code>--line-strong</code> · #8D897B</span><input class="ui-input" type="search" placeholder="Search records"></label></div>
+    </section>
+    <footer class="wb-foot">Shared controls and dividers. Use Tab to inspect focus, and resize the window to compare layouts.</footer>
   </main>
 </body>
 </html>

@@ -610,3 +610,8 @@ const recordObserver = new IntersectionObserver(entries => {
   }
 }, {rootMargin:'400px'});
 recordObserver.observe(encyclopediaTrack);
+
+// Topic spotlight on the homepage; the older review copy has no mount.
+if (document.getElementById('hp-gambling-content')) {
+  import('./home-spotlight.js').then(({mountSpotlight}) => mountSpotlight());
+}

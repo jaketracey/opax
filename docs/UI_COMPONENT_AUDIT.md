@@ -48,6 +48,8 @@ Different sizes can be intentional. The problem is that size, purpose and state 
 | 11 | Loading, empty, error and fallback states | Inline/block/panel presentation with a truthful reason, recovery action and accessible status announcement | Directory empty results, supplier fetch failures, profile skeletons, grants map status and graph 2D fallback |
 | 12 | Dialogs, drawers and popovers | Shared surface, heading/actions, close affordance, spacing, focus return and dismissal behaviour | Mobile drawer, expense explanations, citation panels, tool dialogs and assistant surfaces |
 
+**Status, 19 September 2026.** Families 1 to 3 have a shared contract in `ui-controls.css`, documented in `UI_CONTROLS.md` and shown in the workbench. Family 1 is complete: `actionBtn` and `explainBtn` render `.ui-button`, and `.action-btn`, `.action-gold`, `.action-small` and `button.secondary` no longer exist. `button.primary` remains only for the exempt question builder. Family 4 is the next migration.
+
 These are families with a few deliberate variants, not twelve universal widgets with dozens of switches. In particular, the filter toolbar should compose controls while each feature keeps its filtering/data logic. Record lists should share anatomy without forcing a speech excerpt, a contract and an election result into identical markup.
 
 ## Useful existing starting points
