@@ -190,10 +190,6 @@ document.addEventListener('click', (event) => {
     if (!open.contains(event.target)) open.open = false;
   }
 });
-const narrowBrowse = matchMedia('(max-width: 800px)');
-function sizeBrowse() { $('hp-browse-directory').open = !narrowBrowse.matches; }
-narrowBrowse.addEventListener('change', sizeBrowse);
-sizeBrowse();
 
 // Both research panels stay mounted, preserving their drafts when modes change.
 for (const button of document.querySelectorAll("[data-mode]")) {

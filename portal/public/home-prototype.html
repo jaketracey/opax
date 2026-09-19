@@ -8,9 +8,9 @@
     <link rel="icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/style.css?v=7328584eee" />
     <link rel="stylesheet" href="/ui-controls.css?v=c7a64d47e3" />
-    <link rel="stylesheet" href="/home.css?v=b4d718e99c" />
+    <link rel="stylesheet" href="/home.css?v=7feefd82aa" />
     <script src="/quick-search.js?v=206914f32d" defer></script>
-    <script type="module" src="/home.js?v=0b5f6ce39b"></script>
+    <script type="module" src="/home.js?v=fc277ea683"></script>
   </head>
   <body class="hp-page">
     <a class="hp-skip" href="#hp-main">Skip to content</a>
@@ -509,9 +509,8 @@
         </div>
       </section>
 
-      <aside class="hp-browse">
-        <details id="hp-browse-directory" open>
-          <summary id="hp-browse-title">Browse the record</summary>
+      <aside class="hp-browse" aria-labelledby="hp-browse-title">
+          <h2 id="hp-browse-title">Browse the record</h2>
           <div class="hp-browse-body">
             <nav class="hp-profile-links" aria-label="People and representation">
               <a href="/subject/person"><strong>Parliamentarians →</strong><span>Speeches, votes, expenses and declared interests.</span></a>
@@ -528,7 +527,6 @@
               <nav aria-label="Browse parliamentary records by jurisdiction"><a href="/search?state=federal">Federal</a><a href="/search?state=nsw">New South Wales</a><a href="/search?state=qld">Queensland</a><a href="/search?state=sa">South Australia</a><a href="/search?state=vic">Victoria</a></nav>
             </div>
           </div>
-        </details>
       </aside>
       </div>
       <section class="hp-section hp-collection-section" aria-labelledby="hp-collections-title">

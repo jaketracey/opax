@@ -50,6 +50,8 @@ The homepage is `/`. Research is `/ask`; Search is `/ask?view=search`. Search `m
 
 ## Homepage compositions and copy
 
+On mobile (600px and below), Ask and Search inputs sit above their full-width submit buttons. Browse the record stays visible at every viewport size, with a heading rather than an accordion.
+
 The purpose statement and research entry share the opening. On desktop the heading is 40px, the section has 68px vertical padding, and the Ask/Search column has **28px top padding**. At smaller widths these stack using the existing responsive rules.
 
 Use the exact name **Open Parliamentary Accountability Exchange**. The purpose paragraph begins “The Open Parliamentary Accountability Exchange brings together”. Do not style the X separately. Headings have no full stops; avoid em dashes and redundant instructions.

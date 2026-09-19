@@ -169,8 +169,7 @@
 .hp-investigate .hp-section-head h2 { margin-bottom: 8px; }
 .hp-investigate .hp-section-head p { font-size: 14px; }
 .hp-browse { border-left: 1px solid var(--line); padding-left: 28px; }
-.hp-browse summary { font: 600 21px/1.4 var(--serif); color: var(--ink); list-style: none; margin-bottom: 14px; cursor: pointer; }
-.hp-browse summary::-webkit-details-marker { display: none; }
+.hp-browse > h2 { font: 600 21px/1.4 var(--serif); color: var(--ink); margin: 0 0 14px; }
 .hp-profile-links { display: grid; }
 .hp-profile-links > a { display: block; padding: 13px 0; text-decoration: none; border-bottom: 1px solid var(--line); }
 .hp-profile-links > a:first-child { padding-top: 0; }
@@ -467,9 +466,7 @@
 @media (max-width: 800px) {
   .hp-investigate { display: flex; flex-direction: column; gap: 24px; padding-top: 0; }
   .hp-browse { order: -1; padding: 0; border: 0; border-bottom: 1px solid var(--line); }
-  .hp-browse summary { margin: 0; padding: 16px 0; font: 600 16px/1.5 var(--sans); display: flex; justify-content: space-between; }
-  .hp-browse summary::after { content: '+'; }
-  .hp-browse details[open] summary::after { content: '−'; }
+  .hp-browse > h2 { margin: 0; padding: 16px 0; }
   .hp-browse-body { padding-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .hp-profile-links { grid-row: span 3; }
   .hp-browse-group { margin: 0; }
@@ -494,8 +491,8 @@
   .hp-research-main h1 { font-size: 25px; line-height: 1.4; margin-bottom: 12px; }
   .hp-page h2 { font-size: 24px; }
   .hp-page .ask-builder-form { gap: 10px; }
-  .hp-query-row { flex-wrap: wrap; }
-  .hp-query-row > .ui-input { flex-basis: 100%; }
+  .hp-query-row { flex-direction: column; }
+  .hp-query-row > .ui-input { flex: auto; width: 100%; }
   .hp-query-row > .ui-button { width: 100%; }
   .hp-examples { gap: 0; }
   .hp-examples > span { width: 100%; margin-top: 3px; }
@@ -564,9 +561,6 @@
 }
 @media (max-width: 600px) {
   .hp-purpose h1 { font-size: 26px; }
-  .hp-query-row { flex-wrap: nowrap; }
-  .hp-query-row > .ui-input { flex: 1 1 0; }
-  .hp-query-row > .ui-button { width: auto; }
   .hp-guided .ask-builder-sentence { font-size: 19px; }
 }
 

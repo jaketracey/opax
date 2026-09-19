@@ -10,7 +10,7 @@ This deliberately replaces the rejected sequence of heading, introduction, mode 
 
 Below the opening:
 
-1. The working money map occupies the main column. The adjacent browse directory describes parliamentarian, electorate and party profiles, then groups parliamentary records, funding records and jurisdiction routes. On narrow screens that directory becomes an expandable entry immediately before the map.
+1. The working money map occupies the main column. The adjacent browse directory describes parliamentarian, electorate and party profiles, then groups parliamentary records, funding records and jurisdiction routes. On narrow screens the directory remains fully visible immediately before the map, without an accordion.
 2. All 21 topics and all seven reports form a complete subject-browsing section. Both collections are alphabetical. Reports retain descriptions explaining their scope. Topic filtering has a count and empty-state recovery.
 3. Recent bills and register declarations are parallel, date-ordered streams. Newly indexed records follow separately, labelled by indexing date rather than event date.
 4. From the record uses a mixed card shell for parliamentarians, donors, grants and programs. Speech-topic count blurbs and the parliamentarian-only directory link are removed. The row loads eight parliamentarian previews, a donor and a source-backed grant/program pair through a deterministic daily shuffle. The row has native scrolling and previous/next controls.
