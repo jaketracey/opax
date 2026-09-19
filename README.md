@@ -71,6 +71,10 @@ npx esbuild graph/index.ts --bundle --minify --format=esm --target=es2022 --outf
 node graph/smoke-test.mjs
 ```
 
+## UI reference
+
+[Component language](docs/UI_DESIGN_LANGUAGE.md), [control recipes](docs/UI_CONTROLS.md), [homepage structure](docs/HOME_PROTOTYPE.md) and [remaining consolidation work](docs/UI_COMPONENT_AUDIT.md). The homepage uses `/`; Ask and Search share `/ask` with `view=search` selecting Search. Workbench and prototype review assets are local-only and excluded from deployment.
+
 ## Data pipeline
 
 The corpus lives in `~/.cache/autoresearch/parli.db` on the data box. Python tooling is managed with `uv`:

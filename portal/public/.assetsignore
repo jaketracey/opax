@@ -1,0 +1,5 @@
+# Local design references are committed for contributors, never uploaded.
+/ui-workbench
+/ui-workbench.*
+/home-prototype
+/home-prototype.html

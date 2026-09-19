@@ -24,6 +24,7 @@ import { ASK_PIPELINE_VERSION, EVIDENCE_GAP_ANSWER, isEvidenceGap, isPositionBod
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQuestion, POSITION_GROUNDING, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
 import { canonicalPageRedirect } from './canonical-origin'
+import { pageEntry } from './page-entry'
 import { communityMcp } from './community-mcp'
 import { voiceRoute } from './voice'
 import { proxyPostHog } from './posthog'
@@ -3047,7 +3048,7 @@ const isDirectoryKind = (s: string): s is DirectoryKind => s in DIRECTORY_KINDS
 
 // Static pages: title as app.js TITLES sets it, blurb from the masthead menus.
 const STATIC_PAGES: Record<string, { title: string; description: string; query?: boolean }> = {
-  ask: { title: SITE_TITLE, description: SITE_DESCRIPTION, query: true },
+  ask: { title: 'Ask & search the record · OPAX', description: 'Ask questions with answers linked to supporting records, or search Australian parliamentary speeches, votes, funding and disclosures.', query: true },
   bills: {
     title: 'Bills · OPAX',
     description: 'Every bill before the federal parliament since 2013: what it changes, who sponsored it, how the parties divided, and the speeches that argued it, with machine-written summaries marked as such.',
@@ -3638,10 +3639,11 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       // to the standalone recipient profile as the canonical record.
       const jurisdiction = url.searchParams.get('jur'), recipientId = url.searchParams.get('open')
       if (route.page === 'money/grants' && !url.searchParams.has('program') && (jurisdiction === 'federal' || jurisdiction === 'qld') && recipientId && GRANT_RECIPIENT_ID_RE.test(recipientId)) return grantRecipientMeta(jurisdiction, recipientId, url, env)
-      const page = STATIC_PAGES[route.page]
+      const researchSearch = route.page === 'ask' && url.searchParams.get('view') === 'search'
+      const page = STATIC_PAGES[researchSearch ? 'search' : route.page]
       const q = url.searchParams.get('q')?.trim()
       const canonical = canonicalFor(url, Boolean(page.query))
-      if (route.page === 'ask' && q) {
+      if (route.page === 'ask' && !researchSearch && q) {
         return base({
           title: clip(`${q} · OPAX`, 90),
           description: clip(`"${q}": an answer from the Australian parliamentary record, cited to the speeches it draws on, with the money behind the speakers.`),
@@ -3649,7 +3651,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           card: { kicker: 'Ask', italic: true, title: `“${clip(q, 160)}”`, lines: ['An answer from the parliamentary record, cited to the speeches it draws on, with the money behind the speakers.'] },
         })
       }
-      if (route.page === 'search' && q) {
+      if ((route.page === 'search' || researchSearch) && q) {
         return base({
           title: clip(`Search: ${q} · OPAX`, 90),
           description: clip(`Speeches matching "${q}" in the Australian parliamentary record, with speaker, party, date and a link to the official source for each.`),
@@ -3662,8 +3664,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         description: page.description,
         canonical,
         jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: page.title, description: page.description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
-        // /ask without a question is the front door; it shares the home card.
-        card: route.page === 'ask' ? homeCard() : { kicker: 'OPAX', title: page.title.replace(/ · OPAX$/, ''), lines: [page.description] },
+        // Ask and Search share the research workspace, separate from the homepage.
+        card: route.page === 'ask' && !researchSearch ? homeCard() : { kicker: 'OPAX', title: page.title.replace(/ · OPAX$/, ''), lines: [page.description] },
       })
     }
 
@@ -5091,6 +5093,8 @@ export default {
     if (blocked) return withSecurityHeaders(blocked, url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
+    const entry = await pageEntry(request, env.ASSETS)
+    if (entry) return communityResponse(entry)
     if (url.pathname.startsWith('/api/community/')) return communityResponse(await communityRoute(request, env))
     if (url.pathname.startsWith('/api/voice/')) return communityResponse(await voiceRoute(request, env, ctx, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)

@@ -31,7 +31,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'voice.css']
+const STAMPED = ['app.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'ui-controls.css']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -134,10 +134,22 @@ function stamp({ check }) {
   }
   const communityPath = join(PUBLIC, 'community.html')
   const communityBefore = readFileSync(communityPath, 'utf8')
-  const communityAfter = communityBefore.replace(/\/(style\.css|community\.css|community\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  const communityAfter = communityBefore.replace(/\/(style\.css|community\.css|community\.js|ui-controls\.css)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && communityAfter !== communityBefore) writeFileSync(communityPath, communityAfter)
+  const workbenchPath = join(PUBLIC, 'ui-workbench.html')
+  const workbenchBefore = readFileSync(workbenchPath, 'utf8')
+  const workbenchAfter = workbenchBefore.replace(/\/(style\.css|ui-controls\.css|ui-workbench\.css|ui-workbench\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  if (!check && workbenchAfter !== workbenchBefore) writeFileSync(workbenchPath, workbenchAfter)
+  const prototypePath = join(PUBLIC, 'home-prototype.html')
+  const prototypeBefore = readFileSync(prototypePath, 'utf8')
+  const prototypeAfter = prototypeBefore.replace(/\/(style\.css|ui-controls\.css|home\.css|home\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  if (!check && prototypeAfter !== prototypeBefore) writeFileSync(prototypePath, prototypeAfter)
+  const homePath = join(PUBLIC, 'home.html')
+  const homeBefore = readFileSync(homePath, 'utf8')
+  const homeAfter = homeBefore.replace(/\/(style\.css|ui-controls\.css|home\.css|home\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  if (!check && homeAfter !== homeBefore) writeFileSync(homePath, homeAfter)
   if (check) {
-    if (after !== before || communityAfter !== communityBefore) {
+    if (homeAfter !== homeBefore || after !== before || communityAfter !== communityBefore || workbenchAfter !== workbenchBefore || prototypeAfter !== prototypeBefore) {
       console.error('stamp_assets: index.html stamps are stale — run `node scripts/stamp_assets.mjs`.')
       process.exit(1)
     }

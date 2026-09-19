@@ -59,25 +59,26 @@
 <!-- fonts:end -->
 <!-- ?v= is content-hash stamped by scripts/stamp_assets.mjs (npm run deploy),
      which is what lets _headers serve these two immutable. -->
-<link rel="stylesheet" href="/style.css?v=4ffbc52055">
+<link rel="stylesheet" href="/style.css?v=7328584eee">
+<link rel="stylesheet" href="/ui-controls.css?v=c7a64d47e3">
 <link rel="stylesheet" href="/voice.css?v=a09a39c243">
 </head>
-<body>
+<body class="research-app">
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PNDM87LW"
   height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
 <a class="visually-hidden" href="#main">Skip to content</a>
 
-<header>
+<header class="site-header">
   <div class="wrap masthead">
     <div class="masthead-id">
       <a class="logo" href="/" aria-label="OPAX home">
         <svg class="logo-mark" viewBox="0 0 176 160" role="img" aria-hidden="true"><g transform="translate(0 14)"><path class="logo-land" d="M108.6 23.0L113.3 31.2L116.6 37.9L124.0 48.0L132.9 58.7L134.0 66.4L128.5 80.9L125.7 90.4L117.5 95.3L111.9 93.6L104.1 92.4L97.8 84.9L93.3 83.6L82.3 74.2L65.5 80.3L52.6 83.9L46.2 81.8L47.8 75.4L45.3 67.0L42.0 60.5L44.2 49.4L52.6 45.8L62.1 40.2L64.4 36.4L69.0 32.0L73.3 30.1L78.7 32.8L81.8 27.0L84.6 24.4L89.9 26.1L95.8 26.5L94.9 29.1L92.6 32.6L96.2 35.4L100.6 36.6L104.7 39.2L106.6 33.1L106.9 27.4Z"/><path class="logo-land" d="M113.8 100.1L121.3 100.4L121.9 104.3L119.0 109.0L115.3 105.8Z"/></g><path class="logo-star" d="M 88.0 1.0 L 90.9 7.1 L 97.0 10.0 L 90.9 12.9 L 88.0 19.0 L 85.1 12.9 L 79.0 10.0 L 85.1 7.1 Z"/><path class="logo-star" d="M 142.7 29.9 L 144.8 34.2 L 149.2 36.4 L 144.8 38.5 L 142.7 42.9 L 140.6 38.5 L 136.2 36.4 L 140.6 34.2 Z"/><path class="logo-star" d="M 156.2 87.6 L 158.8 93.0 L 164.2 95.6 L 158.8 98.2 L 156.2 103.6 L 153.6 98.2 L 148.2 95.6 L 153.6 93.0 Z"/><path class="logo-star" d="M 118.4 137.1 L 120.3 141.1 L 124.4 143.1 L 120.3 145.0 L 118.4 149.1 L 116.4 145.0 L 112.4 143.1 L 116.4 141.1 Z"/><path class="logo-star" d="M 57.6 135.1 L 60.2 140.5 L 65.6 143.1 L 60.2 145.7 L 57.6 151.1 L 55.0 145.7 L 49.6 143.1 L 55.0 140.5 Z"/><path class="logo-star" d="M 19.8 89.1 L 21.9 93.5 L 26.3 95.6 L 21.9 97.7 L 19.8 102.1 L 17.6 97.7 L 13.3 95.6 L 17.6 93.5 Z"/><path class="logo-star" d="M 33.3 27.4 L 36.2 33.4 L 42.3 36.4 L 36.2 39.3 L 33.3 45.4 L 30.3 39.3 L 24.3 36.4 L 30.3 33.4 Z"/></svg>
+        <span class="site-wordmark">OPAX</span>
       </a>
     </div>
 
     <nav class="masthead-nav" id="primary-nav" aria-label="Primary">
-      <p class="masthead-name">Open Parliamentary Accountability eXchange</p>
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-link" data-panel="ask" href="/">Ask</a></li>
         <li class="nav-item"><a class="nav-link" data-panel="search" href="/search">Search</a></li>
@@ -144,14 +145,17 @@
       </ul>
     </nav>
 
-    <div class="mast-search">
+<button type="button" class="header-search-toggle" id="header-search-open" aria-label="Search OPAX" aria-expanded="false" aria-controls="header-search-panel"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg></button>
+<div class="header-search-panel" id="header-search-panel" hidden>
+    <div class="mast-search ui-input-wrap" data-ui-size="compact">
       <label for="mast-q" class="visually-hidden">Quick search: speakers, topics, donors, reports</label>
-      <svg class="mast-search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
-      <input id="mast-q" type="text" autocomplete="off" placeholder="Quick search&#8230;"
+      <svg class="mast-search-icon ui-control-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
+      <input class="ui-input" id="mast-q" type="text" autocomplete="off" placeholder="Quick search&#8230;"
              role="combobox" aria-expanded="false" aria-controls="mast-sugg" aria-autocomplete="list">
       <div class="mast-sugg" id="mast-sugg" hidden role="listbox" aria-label="Suggestions"></div>
     </div>
 
+</div>
     <button type="button" class="mast-search-toggle" id="nav-search-open" aria-expanded="false" aria-controls="nav-drawer">
       <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
       <span>Search</span>
@@ -176,10 +180,10 @@
       <svg class="drawer-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><line class="x1" x1="5" y1="5" x2="19" y2="19"/><line class="x2" x1="19" y1="5" x2="5" y2="19"/></svg>
     </button>
   </div>
-  <form class="drawer-search" id="drawer-search" role="search">
+  <form class="drawer-search ui-input-wrap" id="drawer-search" role="search">
     <label for="drawer-q" class="visually-hidden">Search the record</label>
-    <svg class="drawer-search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
-    <input id="drawer-q" type="search" autocomplete="off" placeholder="Search the record…" enterkeyhint="search"
+    <svg class="drawer-search-icon ui-control-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
+    <input class="ui-input" id="drawer-q" type="search" autocomplete="off" placeholder="Search the record…" enterkeyhint="search"
            role="combobox" aria-expanded="false" aria-controls="drawer-sugg" aria-autocomplete="list">
     <div class="drawer-sugg" id="drawer-sugg" hidden role="listbox" aria-label="Suggestions"></div>
   </form>
@@ -250,20 +254,21 @@
   <div class="wrap">
 
     <section class="hero-intro" id="hero-intro">
-      <h1>Explore the evidence behind Australian politics.</h1>
+      <h1>Ask &amp; search the record</h1>
     </section>
 
     <!-- ============================== ASK ============================== -->
     <section id="panel-ask" class="panel" aria-label="Ask the record">
-      <nav class="entry-modes" aria-label="Research mode"><a href="/ask" aria-current="page">Ask a question</a><a href="/search" data-entry-mode="search">Find records</a></nav>
+      <nav class="entry-modes" aria-label="Research mode"><a href="/ask" aria-current="page">Ask a question</a><a href="/ask?view=search" data-entry-mode="search">Find records</a></nav>
       <!-- A question, assembled: a shape to choose, slots to fill from the
            record's own names. It writes the question the free box would take,
            so everything after it (the address, the cache, the answer) is the
            same. app.js renders the sentence per shape (ASK_SHAPES). -->
       <section id="ask-builder" class="ask-builder" aria-labelledby="ask-builder-head">
-        <div class="ask-builder-shapes chip-row" role="group" aria-label="Ask about">
-          <span class="chip-label" id="ask-builder-head">Ask about</span>
-          <!-- shape chips injected -->
+        <div class="ask-builder-modes" data-ui-size="default">
+          <label id="ask-builder-head" for="ask-builder-mode">Ask about</label>
+          <div class="ask-builder-shapes ui-segmented" role="group" aria-labelledby="ask-builder-head"></div>
+          <select id="ask-builder-mode" class="ui-input"></select>
         </div>
         <form id="ask-builder-form" class="ask-builder-form">
           <p class="ask-builder-sentence" id="ask-builder-sentence"></p>
@@ -273,57 +278,57 @@
         <datalist id="ask-topics-list"></datalist>
         <datalist id="ask-bills-list"></datalist>
       </section>
-      <form id="ask-form" class="ask-row">
+      <form id="ask-form" class="ask-row" data-ui-size="large">
         <label for="ask-input" class="visually-hidden">Ask a question of the parliamentary record</label>
         <!-- The box and its clear cross share one wrapper so the cross can sit
              inside the field at any width; the wrapper takes the row rules the
              bare textarea used to. -->
-        <div class="ask-field">
-          <textarea id="ask-input" class="grow-field" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
-          <button type="button" class="field-clear" id="ask-clear" aria-label="Clear the question"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
+        <div class="ask-field ui-input-wrap">
+          <textarea id="ask-input" class="grow-field ui-input" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false"></textarea>
+          <button type="button" class="field-clear ui-button ui-icon-button" id="ask-clear" aria-label="Clear the question" data-variant="quiet"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
         </div>
-        <button type="submit" class="primary" id="ask-submit">Ask the record</button>
+        <button type="submit" class="ui-button" id="ask-submit" data-variant="primary">Ask the record</button>
         <div class="ask-options-wrap">
-        <button type="button" class="action-btn" id="ask-options-btn" aria-expanded="false" aria-controls="ask-options-pop">
+        <button type="button" class="ui-button" id="ask-options-btn" aria-expanded="false" aria-controls="ask-options-pop">
           <span class="options-word">Options</span><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
         </button>
-      <div class="ask-options-pop" id="ask-options-pop" hidden>
+      <div class="ask-options-pop" data-ui-size="default" id="ask-options-pop" hidden>
         <div class="filter-rail ask-pop-rail">
-          <span class="filter-item filter-item-wide">
+          <span class="filter-item filter-item-wide ui-field">
             <label for="a-from">Years <b id="a-years-label">1993–2026</b></label>
             <span class="range-row"><span class="range-cap" aria-hidden="true">From</span><input id="a-from" type="range" min="1993" max="2026" value="1993" aria-label="From year"></span>
             <span class="range-row"><span class="range-cap" aria-hidden="true">To</span><input id="a-to" type="range" min="1993" max="2026" value="2026" aria-label="To year"></span>
           </span>
-          <span class="filter-item">
+          <span class="filter-item ui-field">
             <label for="a-speaker">Speaker</label>
-            <input id="a-speaker" type="text" autocomplete="off" placeholder="any" list="speakers-list">
+            <input id="a-speaker" type="text" autocomplete="off" placeholder="any" list="speakers-list" class="ui-input">
           </span>
-          <span class="filter-item">
+          <span class="filter-item ui-field">
             <label for="a-party">Party</label>
-            <select id="a-party">
+            <select id="a-party" class="ui-input">
               <option value="">any</option>
               <option>Labor</option><option>Liberal</option><option>Nationals</option>
               <option>LNP</option><option>Greens</option><option>Independent</option>
               <option>One Nation</option>
             </select>
           </span>
-          <span class="filter-item">
+          <span class="filter-item ui-field">
             <label for="a-state">Parliament</label>
-            <select id="a-state">
+            <select id="a-state" class="ui-input">
               <option value="">any</option>
               <option value="federal">Federal</option><option value="nsw">NSW</option>
               <option value="vic">VIC</option><option value="sa">SA</option>
               <option value="qld">QLD</option>
             </select>
           </span>
-          <span class="filter-item">
+          <span class="filter-item ui-field">
             <label for="a-topic">Topic</label>
-            <select id="a-topic">
+            <select id="a-topic" class="ui-input">
               <option value="">any</option>
               <!-- topics injected from TOPICS in app.js -->
             </select>
           </span>
-          <label class="ask-scope"><input type="checkbox" id="ask-wide" checked>
+          <label class="ask-scope ui-choice"><input type="checkbox" id="ask-wide" checked>
             Search all records, including political funding, contracts and grants</label>
         </div>
       </div>
@@ -360,11 +365,11 @@
              donations, grants or contracts) points at the registers that can. -->
         <p class="ask-register-note" id="ask-register-note" hidden></p>
         <div class="action-row">
-          <button type="button" class="action-btn" id="ask-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link</span></button>
+          <button type="button" class="ui-button" id="ask-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link</span></button>
           <!-- The format is a menu (the search page's sort-menu idiom), not a
                browser prompt: usable on a phone keyboard and by keyboard. -->
           <div class="search-sort-picker export-picker" id="ask-export-picker">
-            <button type="button" class="action-btn search-sort-trigger" id="ask-export" aria-haspopup="menu" aria-expanded="false" aria-controls="ask-export-menu"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Download sources</span><svg class="search-sort-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg></button>
+            <button type="button" class="search-sort-trigger ui-button" id="ask-export" aria-haspopup="menu" aria-expanded="false" aria-controls="ask-export-menu"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Download sources</span><svg class="search-sort-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg></button>
             <div id="ask-export-menu" class="search-sort-menu" role="menu" aria-label="Download format" hidden>
               <button type="button" role="menuitem" data-format="csv" tabindex="-1"><span><strong>CSV</strong><small>A spreadsheet of the sources</small></span></button>
               <button type="button" role="menuitem" data-format="bibtex" tabindex="-1"><span><strong>BibTeX</strong><small>For LaTeX and reference managers</small></span></button>
@@ -380,8 +385,8 @@
           <section id="ask-followups" class="chat-next" aria-label="Suggested follow-up questions" hidden></section>
           <form id="ask-keep-form" class="ask-keep-form">
             <label for="ask-keep-input" class="visually-hidden">Ask a follow-up question</label>
-            <input id="ask-keep-input" type="text" autocomplete="off" enterkeyhint="send" placeholder="Ask a follow-up…">
-            <button type="submit" class="primary">Ask</button>
+            <input id="ask-keep-input" type="text" autocomplete="off" enterkeyhint="send" placeholder="Ask a follow-up…" class="ui-input">
+            <button type="submit" class="ui-button" data-variant="primary">Ask</button>
           </form>
         </section>
 <details id="ask-sources" class="chat-sources" hidden>
@@ -418,8 +423,8 @@
         <a href="/bills"><strong>Understand a bill</strong><span>What changes and where it stands.</span></a>
       </nav>
       <section class="front-map" id="front-map" aria-label="Explore the money map">
-        <div class="home-map-stage"><div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div><div class="home-map-invite"><div class="home-map-journeys"><span>Start a guided journey</span><a href="/money?journey=public-money">Contracts &amp; grants</a><a href="/money?journey=multiple-parties">More than one party</a><a href="/money?journey=industry">Explore an industry</a><a href="/money?journey=over-time">Turn back the clock</a></div><a class="action-btn action-gold home-map-open" href="/money">Open the research map</a></div></div>
-        <nav class="map-chips home-map-industries" id="front-map-chips" aria-label="Industries on the money map"></nav>
+        <div class="home-map-stage"><div id="front-map-root" class="front-map-root"><p class="status">Loading the money map…</p></div><div class="home-map-invite"><div class="home-map-journeys"><span>Start a guided journey</span><a href="/money?journey=public-money">Contracts &amp; grants</a><a href="/money?journey=multiple-parties">More than one party</a><a href="/money?journey=industry">Explore an industry</a><a href="/money?journey=over-time">Turn back the clock</a></div><a class="home-map-open ui-button" href="/money" data-variant="primary">Open the research map</a></div></div>
+        <nav class="ui-map-filters home-map-industries" data-ui-size="compact" id="front-map-chips" aria-label="Industries on the money map"></nav>
       </section>
       <div class="front-grid" id="front-page">
         <div class="front-main">
@@ -438,7 +443,7 @@
           <div class="split-list" id="front-added"></div>
           <p class="fineprint">The newest documents to enter the index. The corpus updates as
           parliaments publish.</p>
-          <p style="margin:0.6rem 0 0"><a class="action-btn search-everything" href="/search"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg><span>Search everything</span></a></p>
+          <p style="margin:0.6rem 0 0"><a class="search-everything ui-button" href="/search"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg><span>Search everything</span></a></p>
         </section>
 <section class="front-mod" aria-labelledby="h-declared" id="mod-declared" hidden>
           <h2 class="subject-section-title" id="h-declared">Just declared</h2>
@@ -505,13 +510,13 @@
       <div class="dock-bar">
         <span class="dock-mark" aria-hidden="true"></span>
         <span class="dock-title">Ask the record</span>
-        <button type="button" class="dock-icon" id="dock-new" title="Start a new conversation" aria-label="Start a new conversation">
+        <button type="button" class="dock-icon ui-button ui-icon-button" id="dock-new" title="Start a new conversation" aria-label="Start a new conversation" data-variant="quiet">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
         </button>
-        <button type="button" class="dock-icon" id="dock-expand" title="Open the full conversation" aria-label="Open the full conversation">
+        <button type="button" class="dock-icon ui-button ui-icon-button" id="dock-expand" title="Open the full conversation" aria-label="Open the full conversation" data-variant="quiet">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-8 8M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
         </button>
-        <button type="button" class="dock-icon" id="dock-close" aria-label="Close the assistant">
+        <button type="button" class="dock-icon ui-button ui-icon-button" id="dock-close" aria-label="Close the assistant" data-variant="quiet">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
         </button>
       </div>
@@ -523,7 +528,7 @@
            head, pinned under the masthead. -->
       <div class="chat-head">
         <p class="kicker">Keep asking</p>
-        <button type="button" class="action-btn" id="chat-new">Start a new conversation</button>
+        <button type="button" class="ui-button" id="chat-new">Start a new conversation</button>
         <p class="chat-scope" id="chat-scope" hidden></p>
       </div>
       <div class="chat-scroll" id="chat-scroll">
@@ -533,40 +538,40 @@
       </div>
       <form id="chat-form" class="chat-composer">
         <input type="text" id="chat-input" autocomplete="off" placeholder="Ask a follow-up question…"
-               aria-label="Ask a follow-up question">
-        <button type="button" class="chat-mic" id="chat-mic" title="Talk to OPAX · 10 minutes free" aria-label="Talk to OPAX, 10 minutes free">
+               aria-label="Ask a follow-up question" class="ui-input">
+        <button type="button" class="chat-mic ui-button ui-icon-button" id="chat-mic" title="Talk to OPAX · 10 minutes free" aria-label="Talk to OPAX, 10 minutes free" data-variant="quiet">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5a3 3 0 0 1 6 0v7a3 3 0 0 1-6 0V5ZM5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg>
         </button>
-        <button type="submit" class="primary" id="chat-send">Ask</button>
+        <button type="submit" class="ui-button" id="chat-send" data-variant="primary">Ask</button>
       </form>
     </section>
 
     <section id="panel-search" class="panel" hidden aria-label="Search the record">
       <h1 class="visually-hidden">Search all public records</h1>
-      <nav class="entry-modes" aria-label="Research mode"><a href="/ask" data-entry-mode="ask">Ask a question</a><a href="/search" aria-current="page">Find records</a></nav>
+      <nav class="entry-modes" aria-label="Research mode"><a href="/ask" data-entry-mode="ask">Ask a question</a><a href="/ask?view=search" aria-current="page">Find records</a></nav>
       <form id="search-form" class="search-grid">
-        <div class="query-line">
+        <div class="query-line" data-ui-size="large">
           <label for="search-input" class="visually-hidden">Find source records</label>
-          <textarea id="search-input" class="grow-field" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false" placeholder="Search people, organisations, money, bills or words…"></textarea>
-          <button type="submit" class="primary">Search</button>
+          <textarea id="search-input" class="grow-field ui-input" rows="1" autocomplete="off" enterkeyhint="search" spellcheck="false" placeholder="Search people, organisations, money, bills or words…"></textarea>
+          <button type="submit" class="ui-button" data-variant="primary">Search</button>
           <div class="ask-options-wrap">
-          <button type="button" class="action-btn" id="search-options-btn" aria-expanded="false" aria-controls="search-options-pop">
+          <button type="button" class="ui-button" id="search-options-btn" aria-expanded="false" aria-controls="search-options-pop">
             <span class="options-word">Filters</span><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M6 10h8M9 14h2"/></svg>
           </button>
-          <dialog class="ask-options-pop" id="search-options-pop" hidden aria-labelledby="search-options-title">
-            <div class="search-sheet-head"><h2 id="search-options-title" class="subject-section-title">Search filters</h2><button type="button" class="action-btn" id="search-options-close" aria-label="Close search filters">Close</button></div>
+          <dialog class="ask-options-pop" data-ui-size="default" id="search-options-pop" hidden aria-labelledby="search-options-title">
+            <div class="search-sheet-head"><h2 id="search-options-title" class="subject-section-title">Search filters</h2><button type="button" class="ui-button ui-icon-button" id="search-options-close" aria-label="Close search filters">Close</button></div>
             <div class="filter-rail ask-pop-rail">
-              <span class="filter-item filter-item-wide">
+              <span class="filter-item filter-item-wide ui-field">
                 <span class="search-years-heading">Years <b id="f-years-label">1993–2026</b></span>
-                <span class="search-year-fields"><label>From year<select id="f-from" aria-label="From year"></select></label><label>To year<select id="f-to" aria-label="To year"></select></label></span>
+                <span class="search-year-fields"><label>From year<select id="f-from" aria-label="From year" class="ui-input"></select></label><label>To year<select id="f-to" aria-label="To year" class="ui-input"></select></label></span>
               </span>
-              <span class="filter-item">
+              <span class="filter-item ui-field">
                 <label for="f-speaker">Speaker</label>
-                <input id="f-speaker" type="text" autocomplete="off" placeholder="any" list="speakers-list">
+                <input id="f-speaker" type="text" autocomplete="off" placeholder="any" list="speakers-list" class="ui-input">
               </span>
-              <span class="filter-item">
+              <span class="filter-item ui-field">
                 <label for="f-party">Party</label>
-                <select id="f-party">
+                <select id="f-party" class="ui-input">
                   <option value="">any</option>
                   <option>Labor</option><option>Liberal</option><option>Nationals</option>
                   <option>LNP</option><option>Greens</option><option>Independent</option>
@@ -576,25 +581,25 @@
                   <option>Family First</option><option>DLP</option><option>JLN</option>
                 </select>
               </span>
-              <span class="filter-item">
+              <span class="filter-item ui-field">
                 <label for="f-state">Jurisdiction</label>
-                <select id="f-state">
+                <select id="f-state" class="ui-input">
                   <option value="">any</option>
                   <option value="federal">Federal</option><option value="nsw">NSW</option>
                   <option value="vic">VIC</option><option value="sa">SA</option>
                   <option value="qld">QLD</option><option value="tas">TAS</option><option value="wa">WA</option><option value="nt">NT</option><option value="act">ACT</option>
                 </select>
               </span>
-              <span class="filter-item">
+              <span class="filter-item ui-field">
                 <label for="f-topic">Topic</label>
-                <select id="f-topic">
+                <select id="f-topic" class="ui-input">
                   <option value="">any</option>
                   <!-- topics injected from TOPICS in app.js -->
                 </select>
               </span>
-              <span class="filter-item">
+              <span class="filter-item ui-field">
                 <label for="search-kind">Record type</label>
-                <select id="search-kind">
+                <select id="search-kind" class="ui-input">
                   <option value="all">All records</option>
                   <option value="person">People</option>
                   <option value="party">Political parties</option>
@@ -621,16 +626,16 @@
                   <option value="research_report">Research source notes</option>
                 </select>
               </span>
-              <span class="filter-item">
+              <span class="filter-item ui-field">
                 <label for="search-mode">Mode</label>
-                <select id="search-mode">
+                <select id="search-mode" class="ui-input">
                   <option value="hybrid">Meaning and words</option>
                   <option value="semantic">Match meaning</option>
                   <option value="keyword">Match words</option>
                 </select>
               </span>
             </div>
-            <div class="search-sheet-foot"><button type="button" class="action-btn" id="search-options-reset">Reset filters</button><button type="button" class="primary" id="search-options-apply">Apply filters</button></div>
+            <div class="search-sheet-foot"><button type="button" class="ui-button" id="search-options-reset">Reset filters</button><button type="button" class="ui-button" id="search-options-apply" data-variant="primary">Apply filters</button></div>
           </dialog>
           </div>
         </div>
@@ -649,7 +654,7 @@
         <div class="search-summary-heading">
           <h2 id="search-answer-head">Cited summary</h2>
           <span id="search-answer-status" role="status" aria-live="polite"></span>
-          <button type="button" id="search-answer-dismiss" aria-label="Dismiss summary"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
+          <button type="button" id="search-answer-dismiss" aria-label="Dismiss summary" class="ui-button ui-icon-button" data-variant="quiet"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
         </div>
         <div class="answer answer-compact" id="search-answer-body"></div>
         <details id="search-answer-fold" class="chat-sources" hidden>
@@ -657,7 +662,7 @@
           <ol class="source-list" id="search-answer-sources"></ol>
         </details>
         <p class="fineprint" id="search-answer-more"></p>
-        <button type="button" class="action-btn" id="search-answer-retry" hidden>Try summary again</button>
+        <button type="button" class="ui-button" id="search-answer-retry" hidden>Try summary again</button>
       </aside>
       <div class="search-results-main">
       <div id="search-empty" class="empty-state" hidden></div>
@@ -666,21 +671,21 @@
           <span id="results-count" role="status" aria-live="polite" aria-atomic="true"></span>
           <!-- Shown while the reader has dismissed the summary; pressing it
                brings the summary back and forgets the dismissal. -->
-          <button type="button" class="link" id="search-summary-show" hidden>Show cited summary</button>
+          <button type="button" class="ui-button" id="search-summary-show" hidden data-variant="quiet">Show cited summary</button>
         </span>
         <span class="results-actions">
           <!-- Passages/Briefs rides on the same line as the sort and the actions;
                app.js still shows and hides it by #search-readbar. -->
           <div id="search-readbar" class="search-readbar" hidden>
-            <div class="quiet-toggle" role="group" aria-label="Search result text">
-              <button type="button" id="search-read-passages" aria-pressed="true">Passages</button>
-              <button type="button" id="search-read-briefs" aria-pressed="false">Briefs</button>
+            <div class="ui-segmented" role="group" aria-label="Search result text">
+              <button type="button" id="search-read-passages" aria-pressed="true" class="ui-button">Passages</button>
+              <button type="button" id="search-read-briefs" aria-pressed="false" class="ui-button">Briefs</button>
             </div>
             <span id="search-brief-status" class="search-brief-status" aria-live="polite"></span>
           </div>
           <div id="search-sort-picker" class="search-sort-picker">
             <input id="search-sort" type="hidden" value="relevance">
-            <button type="button" class="action-btn search-sort-trigger" aria-haspopup="menu" aria-expanded="false" aria-controls="search-sort-menu" aria-label="Sort matches: Relevance">
+            <button type="button" class="search-sort-trigger ui-button" aria-haspopup="menu" aria-expanded="false" aria-controls="search-sort-menu" aria-label="Sort matches: Relevance">
               <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 5h14M3 10h10M3 15h6"/></svg><span class="search-sort-label">Relevance</span><svg class="search-sort-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg>
             </button>
             <div id="search-sort-menu" class="search-sort-menu" role="menu" aria-label="Sort matches" aria-describedby="search-sort-note" hidden>
@@ -693,9 +698,9 @@
               <p id="search-sort-note">Applies across all pages of retrieved matches.</p>
             </div>
           </div>
-          <button type="button" class="action-btn" id="search-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link</span></button>
+          <button type="button" class="ui-button" id="search-copylink"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.2 13.6l-1.7 1.7a2.85 2.85 0 0 1-4-4l2.5-2.5a2.85 2.85 0 0 1 4 0"/><path d="M10.8 6.4l1.7-1.7a2.85 2.85 0 0 1 4 4L14 11.2a2.85 2.85 0 0 1-4 0"/></svg><span>Copy link</span></button>
           <div class="search-sort-picker export-picker" id="search-export-picker">
-            <button type="button" class="action-btn search-sort-trigger" id="search-export" aria-haspopup="menu" aria-expanded="false" aria-controls="search-export-menu"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Export</span><svg class="search-sort-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg></button>
+            <button type="button" class="search-sort-trigger ui-button" id="search-export" aria-haspopup="menu" aria-expanded="false" aria-controls="search-export-menu"><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v9"/><path d="M6.5 8.5L10 12l3.5-3.5"/><path d="M3.5 15.5h13"/></svg><span>Export</span><svg class="search-sort-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg></button>
             <div id="search-export-menu" class="search-sort-menu" role="menu" aria-label="Export format" hidden>
               <button type="button" role="menuitem" data-format="csv" tabindex="-1"><span><strong>CSV</strong><small>A spreadsheet of every retrieved match</small></span></button>
               <button type="button" role="menuitem" data-format="bibtex" tabindex="-1"><span><strong>BibTeX</strong><small>For LaTeX and reference managers</small></span></button>
@@ -709,12 +714,12 @@
       <!-- The band keeps its height whether or not there is a second page, so
            arriving at a short last page does not lift the footer. -->
       <nav id="search-pager" class="pager" aria-label="Result pages" hidden>
-        <button type="button" class="pager-btn" id="pager-prev">
+        <button type="button" class="pager-btn ui-button" id="pager-prev">
           <svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l-6 6 6 6"/></svg><span class="pager-btn-label">Previous</span></button>
         <!-- app.js fills this: how many numbers there are, and which runs of
              pages are elided, depends on how many pages the result has. -->
         <div class="pager-pages" id="pager-pages"></div>
-        <button type="button" class="pager-btn" id="pager-next">
+        <button type="button" class="pager-btn ui-button" id="pager-next">
           <span class="pager-btn-label">Next</span><svg class="btn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4l6 6-6 6"/></svg></button>
         <!-- The numbers carry this on screen; spoken, it is what changes when
              the reader turns the page. -->
@@ -758,9 +763,9 @@
         <!-- The Money sub-nav tab "Programs &amp; places" already names this view; the heading stays for assistive tech, the page title and focus on arrival. -->
         <h1 id="connections-title" class="visually-hidden" tabindex="-1">Connections in the record</h1>
         <p class="connections-lede">Explore organisations, programs and places across speeches, official releases and grant records.</p>
-        <div class="supplier-controls">
-          <label>Find a connection<input id="connection-search" type="search" placeholder="Name, program or electorate" autocomplete="off"></label>
-          <label>Show<select id="connection-kind"><option value="">Everything</option><option value="organisation">Organisations</option><option value="program">Programs</option><option value="electorate">Electorates</option><option value="place">Places</option></select></label>
+        <div class="ui-toolbar">
+          <label class="ui-field">Find a connection<input class="ui-input" id="connection-search" type="search" placeholder="Name, program or electorate" autocomplete="off"></label>
+          <label class="ui-field">Show<select class="ui-input" id="connection-kind"><option value="">Everything</option><option value="organisation">Organisations</option><option value="program">Programs</option><option value="electorate">Electorates</option><option value="place">Places</option></select></label>
         </div>
         <p id="connection-status" role="status">Opening the records…</p>
         <div class="connections-layout">
@@ -1087,20 +1092,20 @@
     <section id="panel-declared" class="panel" hidden aria-label="Recent alterations to registers of interests">
       <h1 tabindex="-1">Registers of interests</h1>
       <p class="lede">The newest additions and deletions recorded in parliamentarians' registers of interests, in their own words.</p>
-      <form id="declared-filters" class="dir-controls" aria-label="Filter recent declarations">
-        <span class="dir-field declared-search">
+      <form id="declared-filters" class="dir-controls ui-toolbar" aria-label="Filter recent declarations">
+        <span class="ui-field dir-field declared-search">
           <label for="declared-query">Search</label>
-          <input id="declared-query" type="search" placeholder="Name, organisation or interest…">
+          <input class="ui-input" id="declared-query" type="search" placeholder="Name, organisation or interest…">
         </span>
-        <span class="dir-field">
+        <span class="ui-field dir-field">
           <label for="declared-bucket">Category</label>
-          <select id="declared-bucket"><option value="">all categories</option></select>
+          <select class="ui-input" id="declared-bucket"><option value="">all categories</option></select>
         </span>
-        <span class="dir-field">
+        <span class="ui-field dir-field">
           <label for="declared-party">Party</label>
-          <select id="declared-party"><option value="">all parties</option></select>
+          <select class="ui-input" id="declared-party"><option value="">all parties</option></select>
         </span>
-        <button class="action-btn" type="submit">Search</button>
+        <button class="ui-button" type="submit">Search</button>
       </form>
       <p class="interests-summary" id="declared-summary" hidden></p>
       <div id="declared-pagination"></div>
@@ -1497,6 +1502,7 @@
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
 <script src="/navigation.js?v=71e8315e89" defer></script>
-<script src="/app.js?v=200d24de3d" defer></script>
+<script src="/quick-search.js?v=206914f32d" defer></script>
+<script src="/app.js?v=50ec9dd534" defer></script>
 </body>
 </html>

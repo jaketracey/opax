@@ -919,6 +919,7 @@ function showPanel(name) {
     if (active) { const group = t.closest("details.drawer-group"); if (group) group.open = true; }
   }
   for (const p of PANELS) $(`panel-${p}`).hidden = p !== name;
+  if (name === "search") foldHero(false);
   document.documentElement.dataset.panel = name; // lets the stylesheet know the page (the chat drops the footer)
   // The conversation is a panel like any other, but it is also the docked
   // assistant: the loop above just hid it, so the dock puts it back.
@@ -932,7 +933,7 @@ function showPanel(name) {
 }
 
 const TITLES = {
-  ask: "OPAX: ask what Australian politicians actually said",
+  ask: "Ask & search the record · OPAX",
   chat: "Keep asking · OPAX",
   search: "Search the record · OPAX",
   discover: "Discover overlooked patterns · OPAX",
@@ -1617,7 +1618,13 @@ function hereRoute() {
 function pathFor(target) {
   const s = String(target ?? "");
   const cut = s.startsWith("/#") ? s.slice(2) : s.startsWith("#") ? s.slice(1) : s;
-  return cut.startsWith("/") ? cut : `/${cut}`;
+  const path = cut.startsWith("/") ? cut : `/${cut}`;
+  const url = new URL(path, location.origin);
+  if (/^\/search\/?$/.test(url.pathname)) {
+    url.pathname = '/ask';
+    url.searchParams.set('view', 'search');
+  }
+  return `${url.pathname}${url.search}${url.hash}`;
 }
 
 /** Rewrite the address bar to a route without adding a history entry. */
@@ -1628,6 +1635,7 @@ function replaceRoute(target) {
 /** Navigate inside the app: a history entry, then a render. */
 function goRoute(target) {
   const to = pathFor(target);
+  if (to.split(/[?#]/)[0] === '/') { location.assign(to); return; }
   if (rawFragment() || to !== `${location.pathname}${location.search}`) history.pushState(null, "", to);
   route();
 }
@@ -1644,7 +1652,9 @@ function route() {
   const frag = rawFragment();
   if (frag && !frag.startsWith("/") && !firstRoute) return; // native anchors still need their page rendered on first load
   const { segs, params } = parseHash();
-  const view = segs[0] || "ask";
+  if (!segs.length) { location.replace('/' + location.search + location.hash); return; }
+  if (segs[0] === 'search') { replaceRoute(pathFor(hereRoute())); params.set('view', 'search'); }
+  const view = segs[0] === 'search' || (segs[0] === 'ask' && params.get('view') === 'search') ? 'search' : segs[0];
   const manageFocus = !firstRoute;
   firstRoute = false;
   destroySupplierPage();
@@ -1803,10 +1813,9 @@ function route() {
     showPanel("ask");
     document.title = TITLES.ask;
     const q = params.get("q");
-    // Home shows no trail; a question is a page of its own; anything else
-    // that landed here is a route the app does not know.
+    // Ask and Search share a research workspace; unknown paths retain a not-found trail.
     if (view !== "ask" && view !== "") setCrumbs([{ label: "Not found" }]);
-    else setCrumbs(q ? [{ label: "Ask" }] : null);
+    else setCrumbs([{ label: "Ask & search" }]);
     if (view === "ask" && q && q !== lastAsk.question) {
       setQueryValue("ask-input", q);
       if ($("ask-wide")) $("ask-wide").checked = params.get("kind") !== "speech";
@@ -1817,7 +1826,7 @@ function route() {
       renderAskFilterChips(); // preserve an explicitly shared speech-only scope
       runAsk(q);
     } else if (!q && $("ask-result").hidden) {
-      renderFrontPage();
+      setFrontPageHidden(true);
       focusEntry("ask-input");
     }
   }
@@ -1841,7 +1850,7 @@ function resetAsk() {
   // The abandoned ask's finally no longer sees itself as current, so the
   // button is restored here.
   const askBtn = $("ask-form").querySelector('button[type="submit"]');
-  if (askBtn) { askBtn.disabled = false; askBtn.classList.remove("btn-loading"); askBtn.textContent = "Ask the record"; }
+  if (askBtn) { askBtn.disabled = false; askBtn.removeAttribute("aria-busy"); askBtn.textContent = "Ask the record"; }
   hideWombat();
   setQueryValue("ask-input", "");
   setStatus($("ask-status"), "");
@@ -1877,72 +1886,18 @@ document.querySelector('a[href="#main"]')?.addEventListener("click", (e) => {
 /* `source(q)` swaps the site-wide suggestions for a caller's own list (the
    directories offer their entries); `enterFallback: null` leaves Enter to the
    form when nothing is highlighted; `clearOnGo: false` keeps what was typed. */
-function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFallback = "search", clearOnGo = true } = {}) {
-  if (!input || !panel) return;
-  let items = [];
-  let active = -1;
-  let seq = 0;
-  let debounce = null;
-  const prefix = idPrefix || "ms";
-  const close = () => {
-    panel.hidden = true;
-    input.setAttribute("aria-expanded", "false");
-    active = -1;
-  };
-  const go = (href) => {
-    close();
-    if (clearOnGo) input.value = "";
-    input.blur();
-    beforeGo?.();
-    goRoute(href);
-  };
-  const render = () => {
-    panel.replaceChildren(...items.map((it, i) => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "ms-row" + (i === active ? " ms-active" : "");
-      b.setAttribute("role", "option");
-      b.id = `${prefix}-opt-${i}`;
-      b.setAttribute("aria-selected", String(i === active));
-      const t = document.createElement("span");
-      t.textContent = it.label;
-      const k = document.createElement("span");
-      k.className = "ms-type";
-      k.textContent = it.type;
-      b.append(t, k);
-      // pointerdown beats the input's blur; click would arrive too late.
-      b.addEventListener("pointerdown", (e) => { e.preventDefault(); go(it.href); });
-      return b;
-    }));
-    panel.hidden = !items.length;
-    input.setAttribute("aria-expanded", String(items.length > 0));
-    input.setAttribute("aria-activedescendant", active >= 0 ? `${prefix}-opt-${active}` : "");
-  };
-  const suggest = async () => {
-    const q = input.value.trim();
-    const my = ++seq;
-    if (q.length < 2) { items = []; render(); return; }
-    if (source) {
-      const own = await source(q);
-      if (my !== seq) return;
-      items = (own || []).slice(0, 10);
-      active = -1;
-      render();
-      return;
-    }
+async function quickSearchSuggestions(q) {
     const ql = q.toLowerCase();
     const out = [{ label: `Search the record for “${q}”`, type: "Search", href: searchHash(q, {}) }];
     try {
       const module = await loadElectorateModule();
       const reference = await module.loadIndex();
-      if (my !== seq) return;
       for (const e of reference.electorates.filter((e) => e.name.toLowerCase().includes(ql)).slice(0, 3)) {
         out.push({ label: e.name, type: `${module.JURISDICTIONS[e.jurisdiction]} electorate`, href: e.url });
       }
     } catch { /* Other search suggestions remain available. */ }
     try {
       await Promise.all([loadSpeakersDir(), loadMoneyData(), loadReportsIndex()]);
-      if (my !== seq) return;
       const dir = await loadSpeakersDir();
       for (const name of (dir?.names || []).filter((n) => n.toLowerCase().includes(ql)).slice(0, 4)) {
         out.push({ label: name, type: "Speaker", href: subjectHash("person", name) });
@@ -1961,34 +1916,10 @@ function attachQuickSearch(input, panel, { idPrefix, beforeGo, source, enterFall
         out.push({ label: `${r.title} report`, type: "Report", href: `/reports/${r.slug}` });
       }
     } catch { /* the plain-search row stands alone */ }
-    if (my !== seq) return;
-    items = out.slice(0, 10);
-    active = -1;
-    render();
-  };
-  input.addEventListener("input", () => {
-    clearTimeout(debounce);
-    debounce = setTimeout(suggest, 120);
-  });
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowDown" && items.length) {
-      e.preventDefault(); active = (active + 1) % items.length; render();
-    } else if (e.key === "ArrowUp" && items.length) {
-      e.preventDefault(); active = (active - 1 + items.length) % items.length; render();
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (active >= 0 && items[active]) go(items[active].href);
-      else if (enterFallback === "search" && input.value.trim()) go(searchHash(input.value.trim(), {}));
-      else close();
-    } else if (e.key === "Escape" && !panel.hidden) {
-      e.stopPropagation(); close();
-    }
-  });
-  input.addEventListener("focus", () => { if (items.length) { panel.hidden = false; input.setAttribute("aria-expanded", "true"); } });
-  document.addEventListener("pointerdown", (e) => {
-    if (!panel.hidden && !panel.contains(e.target) && e.target !== input) close();
-  });
-  return { close, go };
+    return out;
+}
+function attachQuickSearch(input, panel, options = {}) {
+  return OpaxQuickSearch.attach(input, panel, { source: quickSearchSuggestions, navigate: goRoute, searchHref: q => searchHash(q, {}), ...options });
 }
 // Query text remains readable after submission, including shared links and
 // suggestions. Empty fields keep the compact single-line placeholder.
@@ -2056,7 +1987,8 @@ for (const id of ["ask-input", "search-input"]) {
     field.focus();
   });
 }
-attachQuickSearch($("mast-q"), $("mast-sugg"), { idPrefix: "ms" });
+const headerSearch = OpaxQuickSearch.disclosure($('header-search-open'), $('header-search-panel'), $('mast-q'));
+attachQuickSearch($("mast-q"), $("mast-sugg"), { idPrefix: "ms", beforeGo: () => headerSearch.close() });
 attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: () => closeNavDrawer() });
 
 // --- the masthead constellation ---------------------------------------------
@@ -2344,7 +2276,7 @@ function closeNavDrawer() {
   });
   // Growing past the mobile breakpoint with the drawer open would strand a
   // modal over a page that now shows the full nav.
-  window.matchMedia("(min-width: 1440px)").addEventListener("change", (e) => {
+  window.matchMedia("(min-width: 801px)").addEventListener("change", (e) => {
     if (e.matches && drawer.open) drawer.close();
   });
 }
@@ -2639,7 +2571,7 @@ function renderEvidenceAnswer(container, text, response) {
   if (response.onRetry) {
     const retry = document.createElement("button");
     retry.type = "button";
-    retry.className = "action-btn";
+    retry.className = "ui-button";
     retry.textContent = "Try the answer again";
     retry.addEventListener("click", response.onRetry);
     container.appendChild(retry);
@@ -6410,9 +6342,9 @@ function renderDirectory(spec) {
   for (const it of spec.items) it._text = foldText(spec.text(it));
 
   const filterHTML = (f) => f.check
-    ? `<label class="dir-check"><input type="checkbox" data-filter="${esc(f.key)}"${state[f.key] ? " checked" : ""}>${esc(f.label)}</label>`
-    : `<label class="dir-field"><span>${esc(f.label)}</span>
-        <select data-filter="${esc(f.key)}">
+    ? `<label class="dir-check ui-choice"><input type="checkbox" data-filter="${esc(f.key)}"${state[f.key] ? " checked" : ""}>${esc(f.label)}</label>`
+    : `<label class="dir-field ui-field"><span>${esc(f.label)}</span>
+        <select data-filter="${esc(f.key)}" class="ui-input">
           <option value="">${esc(f.any || "All")}</option>
           ${f.options.map(([v, l]) => `<option value="${esc(v)}"${state[f.key] === v ? " selected" : ""}>${esc(l)}</option>`).join("")}
         </select></label>`;
@@ -6422,26 +6354,26 @@ function renderDirectory(spec) {
       <h2 id="subject-title" tabindex="-1">${esc(spec.title)}</h2>
       ${spec.lede ? `<p class="subject-tag"><span>${spec.lede}</span></p>` : ""}
     </div>
-    <form class="dir-controls" id="dir-controls" role="search" aria-label="Filter the list">
+    <form class="dir-controls ui-toolbar" id="dir-controls" role="search" aria-label="Filter the list">
       <label class="visually-hidden" for="dir-q">Search ${esc(spec.title.toLowerCase())} by name</label>
       <span class="dir-q-wrap">
         <input id="dir-q" type="search" autocomplete="off" spellcheck="false"
                placeholder="Search by name…" value="${esc(state.q)}"
-               role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="dir-sugg">
+               role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="dir-sugg" class="ui-input">
         <div class="dir-sugg" id="dir-sugg" role="listbox" aria-label="Matching names" hidden></div>
       </span>
       ${spec.filters.filter((f) => !f.check).map(filterHTML).join("")}
-      <label class="dir-field"><span>Sort</span>
-        <select id="dir-sort">${spec.sorts.map(([v, l]) => `<option value="${esc(v)}"${state.sort === v ? " selected" : ""}>${esc(l)}</option>`).join("")}</select></label>
+      <label class="dir-field ui-field"><span>Sort</span>
+        <select id="dir-sort" class="ui-input">${spec.sorts.map(([v, l]) => `<option value="${esc(v)}"${state.sort === v ? " selected" : ""}>${esc(l)}</option>`).join("")}</select></label>
       ${spec.filters.some((f) => f.check) ? `<div class="dir-checks">${spec.filters.filter((f) => f.check).map(filterHTML).join("")}</div>` : ""}
     </form>
     <p class="dir-count" id="dir-count" role="status" aria-live="polite"></p>
     <ul class="subject-list dir-list" id="dir-list" role="list"></ul>
     <div class="dir-empty" id="dir-empty" hidden>
       <span>Nothing in the ${esc(spec.title.toLowerCase())} directory matches that.</span>
-      <button type="button" class="secondary" id="dir-clear">Clear filters</button>
+      <button type="button" class="ui-button" id="dir-clear">Clear filters</button>
     </div>
-    <p class="dir-more-row"><button type="button" class="secondary" id="dir-more" hidden>Show more</button></p>
+    <p class="dir-more-row"><button type="button" class="ui-button" id="dir-more" hidden>Show more</button></p>
     <p class="fineprint">${spec.fineprint}</p>`;
 
   const list = $("dir-list"), count = $("dir-count"), empty = $("dir-empty"), moreBtn = $("dir-more");
@@ -9027,10 +8959,10 @@ function renderFrontMapChips(mod, data) {
   }
   const groups = [...mod.CLUSTER_COLOURS.keys()].filter((g) => g !== "parties" && counts.has(g));
   if (!groups.length) return;
-  nav.innerHTML = groups.map((g) => `<a class="map-chip" href="${esc(moneyHash("federal", g))}">
-      <span class="map-dot" style="background:${esc(mod.clusterColour(g).colour)}"></span>
+  nav.innerHTML = groups.map((g) => `<a class="ui-filter-chip ui-map-filter" href="${esc(moneyHash("federal", g))}">
+      <span class="ui-map-filter__dot" aria-hidden="true" style="background:${esc(mod.clusterColour(g).colour)}"></span>
       <span>${esc(g[0].toUpperCase() + g.slice(1))}</span>
-      <span class="map-chip-n">${counts.get(g)}</span></a>`).join("");
+      <span class="ui-map-filter__count">${counts.get(g)}</span></a>`).join("");
   nav.hidden = false;
 }
 
@@ -9190,8 +9122,7 @@ async function runAsk(question) {
   $("ask-money").hidden = true;
   let speakerFilter = parseSpeakerIntent(question);
   btn.disabled = true;
-  btn.classList.add("btn-loading");
-  btn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span>Asking…';
+  btn.setAttribute("aria-busy", "true");
   $("ask-result").hidden = true;
   $("ask-date-ruler").hidden = true;
   $("ask-date-ruler").replaceChildren();
@@ -9311,7 +9242,7 @@ async function runAsk(question) {
       p.textContent = "The record was searched and the sources below were retrieved, but no written answer came back this time.";
       const retry = document.createElement("button");
       retry.type = "button";
-      retry.className = "primary";
+      retry.className = "ui-button"; retry.dataset.variant = "primary";
       retry.textContent = "Ask again";
       retry.addEventListener("click", () => runAsk(question));
       $("ask-answer").replaceChildren(p, retry);
@@ -9375,7 +9306,7 @@ async function runAsk(question) {
     if (askAbort === myAbort) {
       clearInterval(askTimer);
       btn.disabled = false;
-      btn.classList.remove("btn-loading");
+      btn.removeAttribute("aria-busy");
       btn.textContent = "Ask the record";
     }
   }
@@ -9450,16 +9381,28 @@ function askSlotEl(slot, size) {
 /** The sentence for the current shape and variant, its blanks live. */
 function renderAskBuilder() {
   const shapeRow = document.querySelector("#ask-builder .ask-builder-shapes");
+  const modeSelect = $("ask-builder-mode");
   const sentence = $("ask-builder-sentence");
-  if (!shapeRow || !sentence) return;
-  for (const el of shapeRow.querySelectorAll(".chip")) el.remove();
-  for (const [key, shape] of Object.entries(ASK_SHAPES)) {
-    const chip = document.createElement("button");
-    chip.type = "button"; chip.className = "chip"; chip.textContent = shape.label;
-    chip.setAttribute("aria-pressed", String(key === askBuilder.shape));
-    chip.addEventListener("click", () => { askBuilder.shape = key; askBuilder.variant = 0; rememberAskShape(); renderAskBuilder(); sentence.querySelector(".ask-slot")?.focus(); });
-    shapeRow.appendChild(chip);
+  if (!shapeRow || !modeSelect || !sentence) return;
+  // Keep the mode controls mounted so selection does not discard keyboard focus.
+  if (!shapeRow.childElementCount) {
+    const selectShape = (key) => {
+      askBuilder.shape = key; askBuilder.variant = 0;
+      rememberAskShape(); renderAskBuilder();
+    };
+    for (const [key, shape] of Object.entries(ASK_SHAPES)) {
+      const label = shape.label;
+      const button = document.createElement("button");
+      button.type = "button"; button.className = "ui-button";
+      button.dataset.shape = key; button.textContent = label;
+      button.addEventListener("click", () => selectShape(key));
+      shapeRow.appendChild(button);
+      modeSelect.appendChild(Object.assign(document.createElement("option"), { value: key, textContent: label }));
+    }
+    modeSelect.addEventListener("change", () => selectShape(modeSelect.value));
   }
+  for (const button of shapeRow.children) button.setAttribute("aria-pressed", String(button.dataset.shape === askBuilder.shape));
+  modeSelect.value = askBuilder.shape;
   const shape = ASK_SHAPES[askBuilder.shape];
   const parts = shape.variants[askBuilder.variant] || shape.variants[0];
   sentence.replaceChildren();
@@ -9581,7 +9524,7 @@ function askSuggestion(q) {
 function suggestionChip(q) {
   const b = document.createElement("button");
   b.type = "button";
-  b.className = "chip";
+  b.className = "chip ui-button";
   b.textContent = q;
   b.addEventListener("click", () => askSuggestion(q));
   return b;
@@ -9714,6 +9657,7 @@ function renderMoneyNextSteps(container, answer) {
 }
 
 function setFrontPageHidden(hidden) {
+  hidden = true; // Homepage content belongs to its own document at /.
   for (const id of ["front-map", "home-tasks", "front-page"]) {
     const el = $(id);
     if (el) el.hidden = hidden;
@@ -11056,14 +11000,14 @@ function updateSearchYearsLabel() {
  * is a shareable link to one page of it.
  */
 function searchHash(q, f, page, sort) {
-  const p = new URLSearchParams();
+  const p = new URLSearchParams({ view: "search" });
   if (q) p.set("q", q);
   for (const k of ["speaker", "party", "state", "topic", "from", "to"]) if (f[k]) p.set(k, f[k]);
   if (f.kind && f.kind !== "all") p.set("kind", f.kind);
   if (f.mode && f.mode !== "hybrid") p.set("mode", f.mode);
   if (sort && sort !== "relevance") p.set("sort", sort);
   if (page > 1) p.set("page", String(page));
-  return `/search?${p.toString()}`;
+  return `/ask?${p.toString()}`;
 }
 
 const SEARCH_PER_PAGE = 20;
@@ -11199,7 +11143,7 @@ function filterChipSpecs(f) {
 }
 
 /**
- * Draw `f`'s chips into `row`; each cross calls `clear` with the spec's id, and
+ * Draw `f`'s chips into `row`; each chip calls `clear` with the spec's id, and
  * the link past two chips calls it with "all". An emptied row folds away in CSS
  * (`.filter-chips:empty`), so nothing here has to juggle `hidden`.
  */
@@ -11208,19 +11152,20 @@ function renderFilterChipsInto(row, f, clear) {
   const specs = filterChipSpecs(f);
   row.replaceChildren();
   for (const s of specs) {
-    const chip = document.createElement("span");
-    chip.className = "fchip";
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "ui-filter-chip";
+    chip.setAttribute("aria-label", `Remove the ${s.k.toLowerCase()} filter, ${s.v}`);
     chip.innerHTML =
-      `<span class="fchip-k">${esc(s.k)}</span><span class="fchip-v">${esc(s.v)}</span>` +
-      `<button type="button" class="fchip-x" aria-label="Remove the ${esc(s.k.toLowerCase())} filter, ${esc(s.v)}">` +
-      `<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2.6 2.6l6.8 6.8M9.4 2.6l-6.8 6.8"/></svg></button>`;
-    chip.querySelector("button").addEventListener("click", () => clear(s.id));
+      `<span class="ui-filter-chip__text"><span class="ui-filter-chip__key">${esc(s.k)}</span><span class="ui-filter-chip__value">${esc(s.v)}</span></span>` +
+      `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg>`;
+    chip.addEventListener("click", () => clear(s.id));
     row.appendChild(chip);
   }
   if (specs.length > 1) {
     const all = document.createElement("button");
     all.type = "button";
-    all.className = "fchip-clear";
+    all.className = "fchip-clear ui-button"; all.dataset.variant = "quiet"; all.dataset.uiSize = "compact";
     all.textContent = "Clear all";
     all.addEventListener("click", () => clear("all"));
     row.appendChild(all);
@@ -11393,7 +11338,7 @@ function renderSearchChips() {
   picks.forEach((q, i) => {
     const b = document.createElement("button");
     b.type = "button";
-    b.className = "chip rise-in";
+    b.className = "chip rise-in ui-button";
     b.style.setProperty("--i", String(i + 1));
     b.textContent = q;
     b.addEventListener("click", () => {
@@ -11477,7 +11422,7 @@ function renderResults(results) {
       li.innerHTML = `<h3 class="search-result-heading"><a class="result-title" href="/doc/${encodeURIComponent(r.slug)}">${esc(title)}</a></h3>
         <div class="result-meta">${recordTypeLink(r.kind, lastSearch.query, lastSearch.filters)}${meta ? ` · ${meta}` : ""}</div>${text}
         <button type="button" class="search-passage-more" hidden aria-controls="search-passage-${index}" aria-expanded="false" data-more="${esc(more)}">${esc(more)}</button>
-        ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a href="${esc(subjectHash("topic", topic))}">${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
+        ${topics.length ? `<nav class="search-result-topics" aria-label="Topics for ${esc(title)}">${topics.map((topic) => `<a class="ui-tag" href="${esc(subjectHash("topic", topic))}">${esc(TOPICS[topic] || topic)}</a>`).join("")}</nav>` : ""}`;
       return li;
     }),
   );
@@ -11665,9 +11610,9 @@ function renderSearchEmpty(q, f) {
     ? `No speeches found for “${f.speaker}”${bare ? ` on ${bare}` : ""}. Names appear as Hansard prints them: “Anthony Albanese”, not “the PM”.`
     : "No indexed speech uses that phrase. Hansard is literal: a company, a place or a person is usually named in full, and often only once.";
   const actions = [];
-  if (q && bare !== q) actions.push(`<a class="action-btn" href="${esc(searchHash(bare, f))}">Try without the quotes</a>`);
-  if (q && f.mode === "keyword") actions.push(`<a class="action-btn" href="${esc(searchHash(q, { ...f, mode: "hybrid" }))}">Match by meaning too</a>`);
-  if (q && activeFilterSummary(f)) actions.push(`<a class="action-btn" href="${esc(searchHash(q, { kind: f.kind, mode: f.mode }))}">Search without filters</a>`);
+  if (q && bare !== q) actions.push(`<a class="ui-button" href="${esc(searchHash(bare, f))}">Try without the quotes</a>`);
+  if (q && f.mode === "keyword") actions.push(`<a class="ui-button" href="${esc(searchHash(q, { ...f, mode: "hybrid" }))}">Match by meaning too</a>`);
+  if (q && activeFilterSummary(f)) actions.push(`<a class="ui-button" href="${esc(searchHash(q, { kind: f.kind, mode: f.mode }))}">Search without filters</a>`);
   box.innerHTML = `
     <span class="empty-mark" aria-hidden="true">“ ”</span>
     <h2 class="empty-title">Nothing in the record for “${esc(shown)}”.</h2>
@@ -11977,9 +11922,9 @@ function renderSearchRecovery(q, f) {
   const topicHref = f.topic ? subjectHash("topic", f.topic) : "/subject/topic";
   box.innerHTML = `<h2 class="empty-title">No matches for “${esc(q || f.speaker)}”</h2>
     <p class="empty-lede">${filters ? `Searched with ${esc(filters)}. ` : ""}Try a broader phrase or a different part of the record.</p>
-    <div class="empty-actions"><button type="button" class="action-btn" id="search-recovery-edit">${first ? `Remove ${esc(first.k.toLowerCase())} filter` : "Try fewer words"}</button>
-    <a class="action-btn" href="${esc(askHash(q || f.speaker, f.kind === "speech" ? "speech" : "all"))}">Try in Ask</a>
-    <a class="action-btn" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>`;
+    <div class="empty-actions"><button type="button" class="ui-button" id="search-recovery-edit">${first ? `Remove ${esc(first.k.toLowerCase())} filter` : "Try fewer words"}</button>
+    <a class="ui-button" href="${esc(askHash(q || f.speaker, f.kind === "speech" ? "speech" : "all"))}">Try in Ask</a>
+    <a class="ui-button" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>`;
   $("search-recovery-edit").addEventListener("click", () => {
     if (first) clearSearchFilter(first.id);
     else { $("search-input").focus(); $("search-input").select(); }
@@ -14162,7 +14107,8 @@ function syncPathMeta() {
   // this subject, so they beat anything the view would set.
   const landed = url === BOOT_META.url;
   if (landed && BOOT_META.title) document.title = BOOT_META.title;
-  const view = path.replace(/^\//, "").split(/[/?]/)[0];
+  const routeView = path.replace(/^\//, "").split(/[/?]/)[0];
+  const view = routeView === "ask" && new URLSearchParams(path.split("?")[1]).get("view") === "search" ? "search" : routeView;
   const desc = landed
     ? BOOT_META.description
     : path.startsWith('/money/grants')

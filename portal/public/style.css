@@ -231,18 +231,6 @@ header :focus-visible { outline-color: var(--bronze-bright); }
    must not stretch with it, or the search icon loses the input's centre. */
 .mast-search { position: relative; flex: 0 1 300px; margin-left: auto; align-self: center; }
 .nav-toggle { align-self: center; }
-.mast-search input[type="text"] {
-  width: 100%; min-height: 40px; padding: 0 0.9rem 0 2.3rem;
-  background: rgba(255, 255, 255, 0.09); border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px; color: var(--on-navy); font: 400 0.875rem/1.4 var(--sans);
-}
-.mast-search input[type="text"]::placeholder { color: var(--on-navy-soft); }
-.mast-search input[type="text"]:focus { background: var(--paper-raised); color: var(--ink); }
-.mast-search-icon {
-  position: absolute; left: 0.85rem; top: 50%; width: 17px; height: 17px;
-  transform: translateY(-50%); color: var(--on-navy-soft); pointer-events: none;
-}
-.mast-search:focus-within .mast-search-icon { color: var(--ink-faint); }
 .mast-sugg {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 40;
   width: min(380px, 90vw); background: var(--paper); border: 1px solid var(--line); border-top: none;
@@ -391,16 +379,6 @@ header :focus-visible { outline-color: var(--bronze-bright); }
 /* A search of the record at the top of the drawer: the site's own field, the
    icon engraved in it, suggestions dropping beneath as in the masthead. */
 .drawer-search { position: relative; margin: 0 0 1rem; }
-.drawer-search-icon { position: absolute; left: 0.8rem; top: 24px; width: 18px; height: 18px; transform: translateY(-50%); color: var(--ink-faint); pointer-events: none; }
-.drawer-search input[type="search"] {
-  width: 100%; min-height: 48px; padding: 0.6rem 0.8rem 0.6rem 2.4rem; font: 400 1rem/1.3 var(--sans);
-  color: var(--ink); background: var(--paper-raised); border: 1px solid var(--line-strong); border-radius: 4px;
-  -webkit-appearance: none; appearance: none; box-shadow: none;
-}
-.drawer-search input[type="search"]::-webkit-search-decoration,
-.drawer-search input[type="search"]::-webkit-search-cancel-button,
-.drawer-search input[type="search"]::-webkit-search-results-button { -webkit-appearance: none; appearance: none; display: none; }
-.drawer-search input[type="search"]:focus { outline: none; border-color: var(--bronze-ink); box-shadow: 0 0 0 3px var(--bronze-wash); }
 .drawer-sugg {
   position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 5;
   background: var(--paper-raised); border: 1px solid var(--line-strong); border-radius: 4px;
@@ -502,12 +480,11 @@ main.compact { padding-top: var(--space-5); }
 .doc-head > .kicker, .subject-head > .kicker { margin-top: 0; }
 @media (max-width: 860px) {
   /* Less of it on a phone, where the breadcrumb strip is already close work. */
-  main.compact { padding-top: var(--space-4); }
-  /* Narrow screens: the ask question takes its own line; the submit and the
+  main.compact { padding-top: var(--space-4); }/* Narrow screens: the ask question takes its own line; the submit and the
      options icon share the next one. (The search row stays on one line — see
      the mobile block at the end of the file.) */
-  .ask-row > :is(input, .grow-field, .ask-field) { flex-basis: 100%; }
-  .ask-row button.primary { flex: 1 1 auto; }
+.ask-row > :is(input, .grow-field, .ask-field) { flex: 1 1 320px; }
+  .ask-row .ui-button  { flex: 1 1 auto; }
 }
 
 .hero-intro h1 {
@@ -536,7 +513,7 @@ main.compact .hero-intro { display: none; }
 
 /* ---- forms -------------------------------------------------------------- */
 
-input[type="text"], input[type="number"], textarea.grow-field, select {
+input[type="text"], input[type="number"], textarea.grow-field:not(.ui-input), select {
   background: var(--paper-raised); color: var(--ink);
   border: 1px solid var(--line-strong); border-radius: 4px;
   font: 400 1rem/1.3 var(--sans); padding: 0.6rem 0.8rem;
@@ -564,14 +541,14 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
    bronze the way a form on paper is, above the free box it writes into. */
 .ask-builder { margin: 0 0 1.1rem; }
 .ask-builder[hidden] { display: none; }
-/* The shape chips are a small fixed set: they wrap, and stay chips on a phone
-   (the suggestion rows stack full width there; these are a control, not a list). */
-.ask-builder .chip-row { margin-top: 0; flex-wrap: wrap; overflow: visible; mask-image: none; animation: none; }
-.ask-builder .chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
+/* Mode selection uses shared controls; sentence fields keep their special treatment. */
+.ask-builder-modes { display: flex; align-items: center; gap: 1rem; }
+.ask-builder-modes > label { color: var(--ink-soft); font: 600 .875rem/1.5 var(--sans); }
+.ask-builder-modes > select { display: none; }
 @media (max-width: 700px) {
-  .ask-builder .chip-row { flex-direction: row; align-items: center; }
-  .ask-builder .chip-row .chip { width: auto; white-space: nowrap; border-radius: 999px; padding: 0.55rem 0.9rem; min-height: 40px; }
-  .ask-builder .chip-label { display: inline; }
+  .ask-builder-modes { display: grid; gap: .5rem; }
+  .ask-builder-modes > .ask-builder-shapes { display: none; }
+  .ask-builder-modes > select { display: block; }
 }
 .ask-builder-form { display: flex; align-items: flex-end; gap: 0.6rem 1.2rem; flex-wrap: wrap; margin-top: 0.9rem; }
 .ask-builder-sentence {
@@ -600,35 +577,28 @@ button.secondary:disabled { opacity: 0.55; cursor: wait; }
   .ask-builder-form .primary { width: 100%; }
 }
 .ask-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-.ask-row > :is(input, .grow-field, .ask-field) { flex: 1 1 320px; min-height: 56px; font-size: 1.0625rem; }
+.ask-row > :is(input, .grow-field, .ask-field) { flex: 1 1 320px; }
 /* The question box and its clear cross: the wrapper takes the row's flex
    share, the box fills it, and the cross sits inside the box's right edge
    (the box keeps room for it). The cross appears only once there is text. */
+.ask-field .field-clear { display: none; top: 3px; }
 .ask-field { position: relative; display: flex; min-width: 0; }
-.ask-field > .grow-field { flex: 1 1 auto; width: 100%; min-height: 56px; font-size: 1.0625rem; padding-right: 2.9rem; }
-.field-clear {
-  position: absolute; right: 8px; top: 10px; width: 36px; height: 36px;
-  display: none; align-items: center; justify-content: center;
-  border: 0; border-radius: 50%; background: transparent; color: var(--ink-faint); cursor: pointer;
-}
+.ask-field > .grow-field { flex: 1 1 auto; width: 100%; }
+
 .ask-field.has-text .field-clear { display: inline-flex; }
-.field-clear svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
-.field-clear:hover, .field-clear:focus-visible { background: var(--bronze-wash); color: var(--ink); }
+
+
 
 /* A flex item that stretches to the row, and a flex container so the button
    inside stretches with it: the textarea sets the row's height (its padding
    and line-height come to a little over 56px), and a min-height alone left the
    filter button a few pixels short of the submit beside it. */
-.ask-options-wrap { position: relative; display: inline-flex; align-items: stretch; }
-/* The ask row and the search row carry the same control, so it is one rule.
+.ask-options-wrap { position: relative; display: inline-flex; align-items: stretch; }/* The ask row and the search row carry the same control, so it is one rule.
    Held apart they drifted: search's was 48 square against a 56 tall submit. */
-#ask-options-btn, #search-options-btn {
-  min-height: 56px; width: auto; justify-content: center; padding: 0 14px; gap: 8px; align-self: stretch;
-}
-/* The word beside the icon ("Options", "Filters") shows at every width: an
+#ask-options-btn, #search-options-btn { align-self: stretch; }/* The word beside the icon ("Options", "Filters") shows at every width: an
    unlabelled icon was the only control on the row without a name. */
-.options-word { font: 600 0.875rem/1.2 var(--sans); white-space: nowrap; }
-#ask-options-btn .btn-icon, #search-options-btn .btn-icon { width: 22px; height: 22px; }
+.options-word { white-space: nowrap; }
+
 #ask-options-btn[aria-expanded="true"], #search-options-btn[aria-expanded="true"] { border-color: var(--ink); }
 .ask-options-pop {
   position: absolute; z-index: 30; top: calc(100% + 6px); right: 0; left: auto;
@@ -679,12 +649,8 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
   .btn-spinner { animation: btnspin 800ms linear infinite; }
   @keyframes btnspin { to { transform: rotate(360deg); } }
 }
+.ask-scope { margin-top: .6rem; }
 
-.ask-scope {
-  display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 0.6rem;
-  font-size: 0.8125rem; color: var(--ink-faint); cursor: pointer;
-}
-.ask-scope input { accent-color: var(--bronze-ink); width: 15px; height: 15px; }
 
 .chip-row {
   display: flex; align-items: center; gap: 0.5rem; margin-top: 0.8rem;
@@ -693,20 +659,20 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
 /* Snap-aligned like the chips: without it the initial snap pass settles on
    the first chip and the label sits scrolled out of view under the fade. */
 .chip-label { color: var(--ink-faint); font-size: 0.8125rem; flex: 0 0 auto; scroll-snap-align: start; }
-.chip {
+.chip:not(.ui-button) {
   flex: 0 0 auto; scroll-snap-align: start; cursor: pointer;
   background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;
   font: 600 0.875rem/1.2 var(--sans); color: var(--ink-soft);
   padding: 0.55rem 1rem; min-height: 40px;
 }
-.chip:hover { background: var(--bronze-wash); color: var(--ink); }
+.chip:not(.ui-button):hover { background: var(--bronze-wash); color: var(--ink); }
 /* Example searches on an empty search page: they rise in one after another. */
 .search-chips { margin-top: 1.1rem; }
 .search-chips:empty { display: none; }
 @media (max-width: 700px) {
   /* Phones see every suggestion: stacked, wrapping, full width. */
   .chip-row { flex-direction: column; align-items: stretch; overflow: visible; }
-  .chip-row .chip {
+  .chip-row .chip:not(.ui-button) {
     white-space: normal; text-align: left; line-height: 1.4;
     width: 100%; height: auto; border-radius: 10px; padding: 0.65rem 1rem;
   }
@@ -744,7 +710,7 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
   overflow: visible; scroll-snap-type: none; mask-image: none; animation: none;
 }
 #chip-row .chip-label { display: block; grid-column: 1 / -1; }
-#chip-row .chip {
+#chip-row .chip:not(.ui-button) {
   width: 100%; min-width: 0; min-height: 48px; height: auto;
   white-space: normal; text-align: left; line-height: 1.4;
   border-radius: 4px; padding: 0.75rem 1rem;
@@ -882,8 +848,8 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
 .ask-keep .chat-next { margin: 0 0 1rem; }
 .ask-keep .chat-next .subject-section-title { margin-top: 0; }
 .ask-keep-form { display: flex; gap: 0.6rem; }
-.ask-keep-form input { flex: 1 1 auto; min-width: 0; min-height: 48px; }
-.ask-keep-form button { min-height: 48px; }
+.ask-keep-form input { flex: 1 1 auto; min-width: 0; }
+
 
 .source-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
 .source-list li { margin: 0; padding: var(--row-gap) 0; }
@@ -1000,7 +966,7 @@ mark.hit { background: var(--bronze-wash); color: inherit; padding: 0 0.1em; bor
 /* "Ask something else" under an answer: the example questions, wrapping in
    place rather than scrolling sideways under the answer. */
 .ask-again .chip-row { margin-top: 0; flex-wrap: wrap; overflow: visible; mask-image: none; animation: none; }
-.ask-again .chip { min-height: 44px; }
+.ask-again .chip:not(.ui-button) { min-height: 44px; }
 /* A conversation's header: the kicker and the way out of it. */
 .chat-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem 1rem; margin-bottom: 0.4rem; }
 .chat-head .kicker { margin: 0; }
@@ -1092,8 +1058,8 @@ html[data-chat="page"] .chat-head {
   background: var(--paper); border-top: 1px solid var(--line);
   padding: 0.8rem 0 1rem; margin-top: 0.8rem;
 }
-.chat-composer input { flex: 1 1 auto; min-width: 0; min-height: 48px; }
-.chat-composer button { min-height: 48px; }
+.chat-composer input { flex: 1 1 auto; min-width: 0; }
+
 
 /* ---- scroll quote rail --------------------------------------------------- */
 /* The passage behind the answer, riding the right margin on wide screens.
@@ -1193,12 +1159,12 @@ html[data-chat="page"] .chat-head {
 
 
 .search-grid { display: grid; gap: 0.8rem; }
-.query-line { display: flex; gap: 0.6rem; flex-wrap: wrap; min-width: 0; } /* a grid item: without min-width 0 the search-grid column grows to the row's min-content and the input never shrinks */
-.query-line > :is(input, .grow-field) { flex: 1 1 280px; min-height: 48px; }
+.query-line { display: flex; gap: 0.6rem; flex-wrap: wrap; min-width: 0; }/* a grid item: without min-width 0 the search-grid column grows to the row's min-content and the input never shrinks */
+.query-line > :is(input, .grow-field) { flex: 1 1 280px; }
 .filter-rail { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: end; }
-.filter-item { display: inline-flex; flex-direction: column; gap: 0.2rem; }
-.filter-item label { font-size: 0.75rem; color: var(--ink-faint); }
-.filter-item input, .filter-item select { min-height: 44px; font-size: 0.9375rem; }
+.filter-item { min-width: 0; }
+
+
 .filter-item input[type="number"] { width: 6.5em; }
 
 .results-bar {
@@ -1288,37 +1254,13 @@ html[data-chat="page"] .chat-head {
 .coverage-band > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .coverage-band > strong { color: var(--ink-soft); font-weight: 600; }
 
-/* Active filters, said out loud under the search box and the ask box. Quieter
-   than .chip (these are state, not suggestions), borrowing .map-chip's sunken
-   pill. */
+/* Active-filter layout; shared chip appearance lives in ui-controls.css. */
 .filter-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-top: 0.9rem; }
 /* No filters, no row: the renderer just empties it and the layout closes up. */
 .filter-chips:empty { display: none; }
 /* Except on ask, where the row keeps its line: a chip can arrive from a shared
    link as the page loads, and the answer below must not jump when it does. */
 #ask-filter-chips.is-reserved:empty { display: flex; min-height: 30px; }
-.fchip {
-  display: inline-flex; align-items: center; gap: 0.3rem; min-height: 30px;
-  background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;
-  font: 400 0.75rem/1.2 var(--sans); color: var(--ink-soft);
-  padding: 0.15rem 0.2rem 0.15rem 0.65rem; max-width: 100%;
-}
-.fchip-k { color: var(--ink-faint); flex: 0 0 auto; }
-.fchip-v { font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.fchip-x {
-  display: inline-grid; place-items: center; flex: 0 0 auto;
-  width: 24px; height: 24px; padding: 0; margin-left: 0.1rem;
-  background: none; border: none; border-radius: 50%; cursor: pointer; color: var(--ink-faint);
-}
-.fchip-x svg { width: 11px; height: 11px; }
-.fchip-x:hover { background: var(--bronze-wash); color: var(--bronze-ink); }
-.fchip-clear {
-  background: none; border: none; cursor: pointer; padding: 0.25rem 0.35rem; margin-left: 0.15rem;
-  font: 400 0.75rem/1.2 var(--sans); color: var(--ink-faint);
-  text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px;
-}
-.fchip-clear:hover { color: var(--bronze-ink); text-decoration-color: var(--bronze-ink); }
-
 .results { list-style: none; margin: 0.4rem 0 0; padding: 0; }
 .results li { border-top: 1px solid var(--line); padding: var(--space-4) 0; }
 .results li:first-child { border-top: none; }
@@ -1353,19 +1295,11 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 }
 #pager-prev { justify-self: start; }
 #pager-next { justify-self: end; }
-.pager-btn {
-  display: inline-flex; align-items: center; gap: 0.45rem;
-  background: none; border: 1px solid var(--line-strong); border-radius: 4px;
-  padding: 0.5rem 0.8rem; cursor: pointer;
-  font: 600 0.875rem/1.3 var(--sans); color: var(--ink);
-}
-.pager-btn .btn-icon { width: 16px; height: 16px; flex: 0 0 auto; color: var(--bronze-ink); }
-.pager-btn:hover:not(:disabled) { border-color: var(--ink); }
-.pager-btn:disabled {
-  cursor: default; color: var(--ink-faint);
-  border-color: var(--line); border-style: dashed; background: var(--paper-sunken);
-}
-.pager-btn:disabled .btn-icon { color: var(--ink-faint); }
+
+
+
+
+
 
 /* The numbered pages. app.js always hands over the same number of slots once
    there are that many pages, and an elided run takes a slot the same width as
@@ -1392,9 +1326,8 @@ button.link.result-title:hover { color: var(--bronze-ink); }
    app.js and do not change, so nothing a screen reader hears depends on width. */
 @media (max-width: 640px) {
   .pager { gap: var(--space-2); }
-  .pager-btn-label { display: none; }
-  /* Narrower, but not shorter: a thumb still has to land on them. */
-  .pager-btn { padding: 0.45rem 0.55rem; min-height: 2.375rem; }
+  .pager-btn-label { display: none; }/* Narrower, but not shorter: a thumb still has to land on them. */
+
   .pager-pages { gap: 0.3rem; }
   .pager-num, .pager-gap { min-width: 2.125rem; }
   .pager-num { padding: 0.45rem 0.2rem; }
@@ -1519,13 +1452,13 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .rail-empty .fineprint { margin: 0; }
 
 .chat-next-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.chat-next-btns .chip {
+.chat-next-btns .chip:not(.ui-button) {
   white-space: normal; text-align: left; line-height: 1.4;
   max-width: 100%; height: auto; padding: 0.6rem 1rem;
 }
 @media (max-width: 700px) {
   .chat-next-btns { flex-direction: column; align-items: stretch; }
-  .chat-next-btns .chip { width: 100%; border-radius: 10px; }
+  .chat-next-btns .chip:not(.ui-button) { width: 100%; border-radius: 10px; }
 }
 
 /* ---- reports ------------------------------------------------------------ */
@@ -1620,10 +1553,10 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 .mw-lede b { color: var(--ink); font-variant-numeric: tabular-nums; }
 .mw-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 1.4rem; }
 .mw-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 1.1rem; }
-.mw-chips .chip { text-decoration: none; display: inline-flex; align-items: center; }
+.mw-chips .chip:not(.ui-button) { text-decoration: none; display: inline-flex; align-items: center; }
 @media (max-width: 700px) {
   .mw-cols { grid-template-columns: 1fr; }
-  .mw-chips .chip {
+  .mw-chips .chip:not(.ui-button) {
     width: 100%; border-radius: 10px; padding: 0.65rem 1rem;
     text-align: left; line-height: 1.4;
   }
@@ -2035,16 +1968,6 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
 /* The 3D bundle's own labels take Public Sans here. */
 .front-map-root.mm-root, .front-map-root .rp-map3d-label, .front-map-root .rp-map3d-territory,
 .front-map-root .rp-map3d-edge-label, .front-map-root .rp-map3d-popup { font-family: var(--sans); }
-.map-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.9rem 0 0; }
-.map-chip {
-  display: inline-flex; align-items: center; gap: 0.45rem; min-height: 30px;
-  background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 999px;
-  font: 600 0.75rem/1.2 var(--sans); color: var(--ink-soft); text-decoration: none;
-  padding: 0.25rem 0.7rem 0.25rem 0.55rem;
-}
-.map-chip:hover { background: var(--bronze-wash); color: var(--ink); }
-.map-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
-.map-chip-n { color: var(--ink-soft); font-weight: 400; font-variant-numeric: tabular-nums; }  /* weight, not colour, carries the hierarchy: faint failed contrast on the sunken chip */
 @media (max-width: 700px) {
   .front-map { margin-top: 2.5rem; }
   .front-map-grid { grid-template-columns: 1fr; }
@@ -2054,13 +1977,7 @@ a.action-btn.report-download-btn { display: inline-flex; width: auto; margin-top
     border-top: 1px solid var(--line); margin-top: 2rem; padding-top: 2rem;
   }
   .front-map-root { height: 260px; }
-  /* One scrolling row bleeding to the screen edges; the page itself never scrolls sideways. */
-  .map-chips {
-    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
-    margin: 1rem calc(-1 * clamp(1.25rem, 4vw, 4.5rem)) 0; padding: 0 clamp(1.25rem, 4vw, 4.5rem);
-  }
-  .map-chips::-webkit-scrollbar { display: none; }
-  .map-chip { flex: none; }
+
 }
 .split-list { display: grid; grid-template-columns: 1fr; gap: 0 2.5rem; }
 @media (min-width: 1100px) { .split-list { grid-template-columns: 1fr 1fr; } }
@@ -2255,13 +2172,10 @@ a.ency-name:hover, a.ency-name:focus-visible {
    are portrait | name and meta | figures, and a "Show more" button. */
 /* A directory title stands on its own above the controls: no figures, no
    sentence, just a breath of paper. */
-.dir-head { margin-bottom: 0.6rem; }
-/* The controls sit in one quiet card: raised paper, a hairline, modest padding. */
-.dir-controls {
-  display: flex; flex-wrap: wrap; gap: 0.6rem 0.8rem; align-items: end; margin: var(--space-5) 0 var(--space-1);
-  padding: 0.85rem 0.95rem 0.95rem; background: var(--paper-raised); border: 1px solid var(--line); border-radius: 6px;
-}
+.dir-head { margin-bottom: 0.6rem; }/* The controls sit in one quiet card: raised paper, a hairline, modest padding. */
+.dir-controls { margin: var(--space-5) 0 var(--space-1); }
 /* The name box carries its own suggestion panel beneath it. */
+#chip-row .ui-button, .chat-next-btns .ui-button { width: 100%; justify-content: flex-start; text-align: left; }
 .dir-q-wrap { position: relative; flex: 1 1 240px; min-width: 0; }
 .dir-q-wrap input[type="search"] { width: 100%; }
 .dir-sugg {
@@ -2270,19 +2184,13 @@ a.ency-name:hover, a.ency-name:focus-visible {
   box-shadow: 0 14px 32px rgba(21, 27, 20, 0.18); padding: 0.3rem;
 }
 .dir-sugg .ms-row { min-height: 44px; font-size: 0.9375rem; }
-.dir-controls input[type="search"] {
-  flex: 1 1 240px; min-width: 0; min-height: 44px;
-  background: var(--paper-raised); color: var(--ink);
-  border: 1px solid var(--line-strong); border-radius: 4px;
-  font: 400 1rem/1.3 var(--sans); padding: 0.6rem 0.8rem;
-  -webkit-appearance: none; appearance: none;
-}
-.dir-field { display: inline-flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
-.dir-field > span { font-size: 0.75rem; color: var(--ink-faint); }
-.dir-field select { min-height: 44px; font-size: 0.9375rem; max-width: min(100%, 230px); }
+.dir-controls input[type="search"] { flex: 1 1 240px; }
+.dir-field { min-width: 0; }
+
+.dir-field select { max-width: 100%; }
 .dir-checks { display: flex; flex-wrap: wrap; gap: 0 1rem; align-items: center; }
-.dir-check { display: inline-flex; align-items: center; gap: 0.45rem; min-height: 44px; font-size: 0.875rem; color: var(--ink-soft); cursor: pointer; }
-.dir-check input { width: 18px; height: 18px; margin: 0; accent-color: var(--navy); }
+
+
 .dir-count { margin: 0.9rem 0 0.1rem; color: var(--ink-faint); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
 .dir-list li.dir-row {
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
@@ -2317,9 +2225,9 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .dir-empty { margin: 1.2rem 0 0; color: var(--ink-soft); font-size: 0.9375rem; display: flex; flex-wrap: wrap; gap: 0.7rem 1rem; align-items: center; }
 @media (max-width: 640px) {
   .dir-controls input[type="search"], .dir-controls .dir-q-wrap { flex-basis: 100%; }
-  .dir-field { flex: 1 1 42%; }
+.dir-field {  flex: 1 1 42%;  }
   .dir-checks { flex: 1 1 100%; gap: 0 1.2rem; }
-  .dir-field select { width: 100%; max-width: 100%; }
+.dir-field select { max-width: 100%; }
   .dir-list li.dir-row { grid-template-columns: auto minmax(0, 1fr); }
   .dir-list li.dir-row-plain { grid-template-columns: minmax(0, 1fr); }
   .dir-list li.dir-row .dir-figs { grid-column: 1 / -1; justify-content: flex-start; text-align: left; }
@@ -2799,7 +2707,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 /* Switch before the full navigation can collide with quick search. */
 @media (max-width: 1439px) {
   header { padding: 0.35rem 0; }
-  .masthead-nav, .mast-search { display: none; }
+  .masthead-nav, .mast-search.ui-input-wrap { display: none; }
   .nav-toggle { display: inline-flex; margin-left: 0; }
   .mast-search-toggle { display: inline-flex; }
   .logo-mark { height: 46px; width: 51px; }
@@ -2811,23 +2719,23 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 /* ---- mobile ------------------------------------------------------------- */
 
 @media (max-width: 640px) {
-  .ask-row > :is(input, .grow-field, .ask-field), .ask-field > .grow-field { min-height: 52px; }
-  .field-clear { top: 8px; }
+
+
   /* Ask stretches, the options button rides at its right on the same line. */
-  .ask-row button.primary { flex: 1 1 auto; min-height: 52px; }
-  #ask-options-btn, #search-options-btn { min-height: 52px; }
+  .ask-row .ui-button  { flex: 1 1 auto; }
+#ask-options-btn, #search-options-btn { align-self: stretch; }
   /* Search stays on ONE line: the query shrinks as far as it must, the
      submit keeps its natural width and the filter icon rides at the right —
      no second line for the button, no third for the icon. */
   .query-line { flex-wrap: nowrap; }
-  .query-line > :is(input, .grow-field) { flex: 1 1 0; min-width: 0; min-height: 52px; }
-  .query-line button.primary { flex: 0 0 auto; min-height: 52px; padding-inline: 1rem; }
+.query-line > :is(input, .grow-field) { flex: 1 1 0; min-width: 0; }
+
   .query-line .ask-options-wrap { flex: 0 0 auto; }
   .chart { padding: 0.75rem; }
   .date-ruler { margin-top: var(--space-4); }
   .date-ruler-year { font-size: 10px; }
-  .search-readbar .quiet-toggle { width: 100%; }
-  .search-readbar .quiet-toggle button { flex: 1 1 50%; }
+  .search-readbar .ui-segmented { width: 100%; }
+  .search-readbar .ui-segmented button { flex: 1 1 0; min-width: 0; }
   .barrow { grid-template-columns: minmax(90px, 30%) 1fr auto; }
   .topic-arc-head { align-items: stretch; }
   .topic-arc-head .quiet-toggle { width: 100%; }
@@ -3096,7 +3004,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   #ask-result .action-btn { margin: 0; padding: 10px 8px; font-size: 0.8125rem; }
   #panel-chat { padding-bottom: 100px; }
   #panel-chat .chat-composer { position: fixed; bottom: 0; left: 0; right: 0; max-width: none; margin: 0; padding: 12px 20px max(16px, env(safe-area-inset-bottom)); }
-  #panel-chat #chat-input { font-size: 16px; }
 }
 #panel-ask :is(.answer, .chat-sources, .ask-row), #panel-chat :is(.chat-turn, .chat-next, .chat-sources) { scroll-margin-top: 84px; }
 #ask-date-ruler .date-ruler-frame { min-width: 0; }
@@ -3126,7 +3033,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #panel-ask .chat-next, #panel-chat .chat-next { margin: 24px 0 12px; max-width: 46rem; }
 #panel-ask .chat-next .subject-section-title, #panel-chat .chat-next .subject-section-title { font: 600 1.125rem/1.4 var(--serif); margin: 0 0 12px; }
 #panel-ask .chat-next-btns, #panel-chat .chat-next-btns { flex-direction: row; flex-wrap: wrap; gap: 8px; max-width: none; }
-#panel-ask .chat-next-btn, #panel-chat .chat-next-btn { min-height: 44px; flex: 1 1 220px; padding: 10px 12px; font-size: 0.875rem; overflow-wrap: anywhere; }
+#panel-ask .chat-next-btn, #panel-chat .chat-next-btn {flex: 1 1 220px; overflow-wrap: anywhere;}
 #panel-chat .chat-pending { min-height: 180px; max-width: 30rem; scroll-margin-block: 90px; }
 /* The waiting state in a conversation: the animal on its track, then the
    answer's steps beneath it (stages.js), both set to the thread's left edge.
@@ -3151,19 +3058,19 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   @keyframes answerDot { 0%, 60%, 100% { opacity: 0.3; transform: none; } 30% { opacity: 1; transform: translateY(-1.5px); } }
 }
 @media (prefers-reduced-motion: no-preference) {
-  #panel-ask .chat-next-btn, #panel-chat .chat-next-btn { animation: page-ask-fade 220ms ease both; }
+  #panel-ask .chat-next-btn, #panel-chat .chat-next-btn {flex: 1 1 220px; overflow-wrap: anywhere;}
   @keyframes page-ask-fade { from { opacity: 0; } to { opacity: 1; } }
 }
 @media (prefers-reduced-motion: reduce) {
-  #panel-ask .chat-next-btn, #panel-chat .chat-next-btn { animation: none; transition: none; }
+  #panel-ask .chat-next-btn, #panel-chat .chat-next-btn {flex: 1 1 220px; overflow-wrap: anywhere;}
 }
 #panel-ask .answer > *, #panel-chat .answer > * { scroll-margin-top: 84px; }
 #panel-ask .source-list li:focus, #panel-chat .source-list li:focus { outline: 2px solid var(--bronze-ink); outline-offset: 3px; background: var(--bronze-wash); }
 #ask-sources { max-width: 46rem; }
 #panel-ask .ask-source-passage, #panel-chat .ask-source-passage { max-width: 65ch; }
 #panel-ask .ask-options-pop { max-height: calc(100dvh - 180px); overflow-y: auto; overscroll-behavior: contain; }
-#panel-ask .ask-options-pop :is(input, select), #panel-ask .ask-scope { min-height: 44px; }
-#panel-ask .ask-options-pop input[type="checkbox"] { min-height: 20px; }
+
+
 #panel-ask .ask-citation:focus-visible, #panel-chat .ask-citation:focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: -3px; border-radius: 2px; }
 #ask-date-ruler .date-ruler-year { font-variant-numeric: tabular-nums; }
 @media (max-width: 600px) {
@@ -3459,7 +3366,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #front-page .front-mod > .subject-section-title,
 #front-map .subject-section-title { margin: 0 0 1rem; font-size: 1.4rem; line-height: 1.35; }
 #front-map .fineprint, #front-page .fineprint { font-size: 0.875rem; line-height: 1.6; }
-#front-map .map-chip { min-height: 44px; font-size: 0.8125rem; }
 #front-map .front-state-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
 #front-map .front-map-foot .action-btn { min-height: 48px; }
 #front-map-root { height: 380px; max-height: none; }
@@ -3471,8 +3377,6 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
   #front-map-root { height: 320px; }
   #front-map .front-map-foot { gap: 1rem; }
   #front-map .front-map-foot .action-btn { align-self: flex-start; padding-inline: 1rem; }
-  #front-map-chips { margin-inline: 0; padding: 0 0 0.5rem; scrollbar-width: thin; }
-  #front-map-chips::-webkit-scrollbar { display: block; height: 4px; }
 }
 #front-map-root .mm-card-close { width: 44px; height: 44px; top: 4px; right: 4px; }
 #front-map-root .mm-card h2 { margin-right: 40px; font-family: var(--serif); line-height: 1.4; }
@@ -3508,7 +3412,7 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 #front-page :is(a, button, summary), #front-map :is(a, button) { scroll-margin-block: 90px 20px; }
 #front-page :is(a, button, summary):focus-visible,
 #front-map :is(a, button):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
-#front-page .action-btn, #front-page button, #front-page .mw-chips .chip { min-height: 44px; }
+#front-page .action-btn, #front-page button:not(.ui-button), #front-page .mw-chips .chip:not(.ui-button) { min-height: 44px; }
 #front-page .front-declared-notes { border-top: 1px solid var(--line); margin-top: 0.75rem; }
 #front-page .front-declared-notes > summary { padding-block: 0.75rem; min-height: 44px; font: 500 0.875rem/1.5 var(--sans); cursor: pointer; }
 #front-declared .declared-match a, #mod-declared > .fineprint a { display: inline-flex; align-items: center; min-height: 44px; }
@@ -3526,22 +3430,11 @@ footer :focus-visible { outline-color: var(--bronze-bright); }
 }
 #front-page button { min-width: 44px; }
 #front-declared .front-declared-notes a { display: inline-flex; align-items: center; min-height: 44px; }
-#front-reports .report-card:focus-visible, #front-map-chips .map-chip:focus-visible { outline-offset: -3px; }
+#front-reports .report-card:focus-visible { outline-offset: -3px; }
 /* ==== page-search: The search page (/search) ==== */
 #panel-search { min-width: 0; }
-#panel-search button, #panel-search select, #panel-search input:not([type="range"]),
+#panel-search button:not(.ui-button):not(.ui-filter-chip), #panel-search select:not(.ui-input), #panel-search input:not([type="range"]):not(.ui-input),
 #panel-search .action-btn { min-height: 44px; }
-#panel-search .fchip-x { min-width: 44px; min-height: 44px; }
-/* A mouse does not need a 44px cross, and paying for one in every chip cost
-   the filter row 51px a line. On a fine pointer the chips fall back to their
-   own 30px - so more of them fit before the row wraps - while a coarse
-   pointer keeps the tap target. 24px still clears WCAG 2.2's target minimum,
-   and the chips sit far enough apart for its spacing exception besides. */
-@media (pointer: fine) {
-  #panel-search :is(.fchip-x, .fchip-clear) { min-width: 0; min-height: 0; }
-}
-#panel-search .fchip { max-width: 100%; }
-#panel-search .fchip-v { overflow-wrap: anywhere; }
 #panel-search #search-options-pop {
   position: fixed; inset: auto 0 0; margin: 0; width: 100%; max-width: none;
   min-width: 0; max-height: min(90dvh, 820px); padding: 0;
@@ -3564,11 +3457,11 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 }
 #panel-search #search-options-pop .filter-item { min-width: 0; }
 #panel-search #search-options-pop label { font-size: .875rem; color: var(--ink-soft); }
-#panel-search #search-options-pop input:not([type="range"]), #panel-search #search-options-pop select { width: 100%; font-size: 1rem; }
+#panel-search #search-options-pop input:not([type="range"]), #panel-search #search-options-pop select {width: 100%;}
 #panel-search #search-options-pop input[type="range"] { height: 44px; }
 #panel-search #search-options-pop .range-cap { font-size: .875rem; }
 #panel-search .results-actions { flex-wrap: wrap; }
-#panel-search #search-readbar button { min-width: 88px; }
+#panel-search #search-readbar button { flex: 1 1 0; min-width: 0; }
 /* Stacked pager: the numbers on their own row, Previous and Next as a pair of
    equal tap targets beneath them. Wide, it returns to one row (below). */
 #panel-search #search-pager { grid-template-columns: 1fr 1fr; row-gap: 14px; column-gap: 10px; }
@@ -3592,11 +3485,14 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 }
 
 #panel-search .range-cap { text-transform: none; letter-spacing: normal; }
-@media (max-width: 640px) {
-  #panel-search .results-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px; }
+@media (max-width: 700px) {
+  #panel-search .results-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  #panel-search #search-sort-picker { grid-column: 1 / -1; }
+  #panel-search .results-actions > *, #panel-search .results-actions .ui-button { min-width: 0; }
+  #panel-search .results-actions .ui-button { width: 100%; }
   #panel-search .results-actions .action-btn { padding-inline: 8px; min-width: 44px; }
   #panel-search #search-readbar { grid-column: 1 / -1; }
-  #panel-search #search-readbar .quiet-toggle { display: flex; width: 100%; }
+  #panel-search #search-readbar .ui-segmented { display: flex; width: 100%; }
   #panel-search .results-actions select { width: 100%; padding-inline: 8px 24px; }
 }
 
@@ -3614,11 +3510,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 }
 #panel-search .search-passage-tag { font: 400 .75rem/1.5 var(--sans); color: var(--ink-soft); }
 #panel-search .search-result-topics { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-#panel-search .search-result-topics a {
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px;
-  border: 1px solid var(--line); border-radius: 3px; font: 400 .75rem/1.4 var(--sans);
-  color: var(--bronze-ink); text-decoration: none; overflow-wrap: anywhere;
-}
 #panel-search .search-count-wide { display: none; }
 #panel-search #results-count { font-variant-numeric: tabular-nums; }
 #panel-search #search-date-ruler { margin: 20px 0; }
@@ -3670,7 +3561,6 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .search-year-fields select, #panel-search time { font-variant-numeric: tabular-nums; }
 #panel-search :is(a, button, input, select, summary):focus-visible { outline: 2px solid var(--bronze-ink); outline-offset: 3px; }
 #panel-search .search-year-band:focus-visible { outline-offset: -2px; }
-#panel-search .search-result-topics a:hover { background: var(--bronze-wash); }
 #panel-search #search-answer-readmore { margin: 0; padding: 4px 0; min-width: 100px; text-align: left; }
 #panel-search #search-answer-more { margin-top: 4px; margin-bottom: 0; }
 #panel-search #search-answer-more a { display: inline-flex; min-height: 44px; align-items: center; }
@@ -3679,9 +3569,9 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search #search-pager { margin-top: 20px; padding-top: 16px; }
 @media (max-width: 640px) {
   #panel-search .query-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
-  #panel-search #search-input { grid-column: 1 / -1; width: 100%; min-height: 48px; }
-  #panel-search .query-line button.primary { min-height: 44px; }
-  #panel-search #search-options-btn { min-height: 44px; }
+#panel-search #search-input { grid-column: 1 / -1; width: 100%; }
+
+
   #panel-search .search-answer { padding: 14px 16px; }
   #panel-search #search-answer .kicker { margin-bottom: 8px; padding-bottom: 8px; }
   #panel-search .search-results-grid { margin-top: 16px; }
@@ -3701,7 +3591,7 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search .fchip-clear { min-width: 44px; }
 #panel-search .search-year-band[aria-current] { box-shadow: inset 0 -2px var(--bronze-ink); }
 #panel-search .search-sheet-foot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); }
-#panel-search .search-sheet-foot button { min-width: 0; white-space: normal; height: auto; padding: 10px; }
+#panel-search .search-sheet-foot button {min-width: 0; white-space: normal; height: auto;}
 #panel-search .search-year-fields { grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); }
 
 /* ==== donor-side register rows on the Just declared convention ==== */
@@ -3736,19 +3626,19 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 /* ==== growing query fields (ask, search) ==== */
 /* Filled queries wrap and keep their height on blur. A long question should
    read like a question, rather than a horizontally scrolling single line. */
-textarea.grow-field {
+textarea.grow-field:not(.ui-input) {
   display: block; width: 100%; min-height: 44px; height: auto; resize: none; overflow: hidden;
   line-height: 1.35; padding-top: 0.6rem; padding-bottom: 0.6rem; box-sizing: border-box;
   font-family: var(--sans); white-space: pre-wrap; overflow-wrap: anywhere;
 }
-textarea.grow-field.is-empty { white-space: nowrap; }
+textarea.grow-field:not(.ui-input).is-empty { white-space: nowrap; }
 .ask-row > .grow-field, .query-line > .grow-field { width: auto; min-width: 0; }
-.ask-row > .grow-field, .ask-field > .grow-field { --field-h: 56px; }
-.query-line > .grow-field { --field-h: 48px; }
-.ask-row > .grow-field, .ask-field > .grow-field, .query-line > .grow-field { padding-block: calc((var(--field-h) - 2px - 1.35em) / 2); }
+.ask-row > .grow-field:not(.ui-input), .ask-field > .grow-field:not(.ui-input) { --field-h: 56px; }
+.query-line > .grow-field:not(.ui-input) { --field-h: 48px; }
+.ask-row > .grow-field:not(.ui-input), .ask-field > .grow-field:not(.ui-input), .query-line > .grow-field:not(.ui-input) { padding-block: calc((var(--field-h) - 2px - 1.35em) / 2); }
 /* Buttons retain their familiar size when a query takes several lines. */
 .ask-row, .query-line { align-items: flex-start; }
-@media (max-width: 640px) { .ask-row > .grow-field, .ask-field > .grow-field, .query-line > .grow-field { --field-h: 52px; } }
+@media (max-width: 640px) { .ask-row > .grow-field:not(.ui-input), .ask-field > .grow-field:not(.ui-input), .query-line > .grow-field:not(.ui-input) { --field-h: 52px; } }
 
 /* Keep the period and selected-donor coverage beside the funding finding. */
 .answer-money-context {
@@ -4639,9 +4529,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .supplier-page { min-width: 0; }
 .supplier-page .subject-head h2 { color: var(--navy); overflow-wrap: anywhere; }
 .supplier-lede { max-width: 76ch; color: var(--ink-soft); line-height: 1.75; }
-.supplier-controls { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: end; padding: var(--space-4); margin: var(--space-5) 0 var(--space-4); border: 1px solid var(--line); background: var(--paper-raised); }
-.supplier-controls label { display: grid; gap: .5rem; font-size: .8125rem; font-weight: 700; flex: 1; min-width: min(100%, 180px); }
-.supplier-controls input, .supplier-controls select { min-width: 0; width: 100%; padding: .7rem; border: 1px solid var(--line-strong); background: var(--paper-raised); color: var(--ink); font: 400 .875rem var(--sans); }
+.supplier-more, .supplier-contract-more, .agency-suppliers-more { margin-top: 1rem; }
 .supplier-result-count, .supplier-contract-count { color: var(--ink-faint); font-size: .8125rem; margin: 1rem 0; }
 .supplier-directory-row { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem .3rem; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; }
 .supplier-directory-row:hover { background: var(--paper-sunken); }
@@ -4649,7 +4537,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .supplier-directory-row strong { display: block; color: var(--navy); font-size: .9375rem; overflow-wrap: anywhere; }
 .supplier-directory-row small { display: block; color: var(--ink-soft); font-size: .75rem; line-height: 1.6; margin-top: .3rem; }
 .supplier-directory-value { text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
-.supplier-button { margin-top: 1rem; padding: .75rem 1rem; background: var(--navy); color: var(--on-navy); border: 0; font: 600 .875rem var(--sans); cursor: pointer; }
 .supplier-totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; border-block: 1px solid var(--line); padding: var(--space-5) 0; margin: var(--space-5) 0 var(--space-6); }
 .supplier-totals > div { display: grid; grid-template-rows: 1fr auto; gap: var(--space-3); min-width: 0; }
 .supplier-totals dt { color: var(--ink-soft); font-size: .8125rem; }
@@ -4855,14 +4742,12 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 /* Mobile and tablet controls share a comfortable text size and tap area.
    A 16px field also avoids Safari zooming the page when it receives focus. */
 @media (max-width: 1000px), (pointer: coarse) {
-  .search-sort-picker .search-sort-trigger,
+  .search-sort-picker .search-sort-trigger:not(.ui-button),
   .discovery-browser > input,
   .discovery-list-controls select,
-  .supplier-controls input,
-  .supplier-controls select,
   .journey-picker-search,
-  .dir-field select,
-  .filter-item :is(input:not([type="checkbox"]):not([type="radio"]), select) {
+  .dir-field select:not(.ui-input),
+  .filter-item :is(input:not([type="checkbox"]):not([type="radio"]), select):not(.ui-input) {
     min-height: 44px;
     font-size: 1rem;
   }
@@ -4881,11 +4766,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .money-jur button:nth-child(n+3) { border-top: 1px solid var(--line-strong); }
 }
 .search-brief-status:empty { display: none; }
-@media (max-width: 380px) {
-  #panel-search .results-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  #panel-search #search-sort-picker { grid-column: 1 / -1; }
-  #panel-search .results-actions .action-btn { justify-content: center; }
-}
+
 
 @media (max-width: 540px) {
   .ency-portrait { width: 56px; height: 56px; }
@@ -4943,7 +4824,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
     flex-direction: row; align-items: stretch; overflow-x: auto;
     padding-bottom: var(--space-2); scroll-padding-inline: 0;
   }
-  #panel-search .search-chips .chip {
+  #panel-search .search-chips .chip:not(.ui-button) {
     width: auto; min-height: 44px; padding: var(--space-3) var(--space-4);
     border-radius: 999px; white-space: nowrap;
   }
@@ -4964,12 +4845,11 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .footer-lines { padding-top: var(--space-4); }
 }
 
-@media (max-width: 540px) {
-  /* A labelled select gets a row of its own at phone widths. This avoids
+@media (max-width: 540px) {/* A labelled select gets a row of its own at phone widths. This avoids
      clipped option text across Bills, Parliamentarians, Parties and Donors. */
-  .dir-controls { padding: var(--space-3); gap: var(--space-3); }
-  .dir-field { flex: 1 1 100%; width: 100%; }
-  .dir-field select { width: 100%; max-width: none; min-width: 0; }
+
+.dir-field {  flex: 1 1 100%; width: 100%;  }
+.dir-field select {  width: 100%; max-width: none; min-width: 0;  }
   .dir-checks { gap: 0 var(--space-4); }
 
   /* Keep the portrait/name relationship, then let figures use the full line
@@ -5016,10 +4896,10 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .home-map-stage #front-map-root { width: 100%; height: clamp(420px,38vw,540px); min-height: 420px; }
 .home-map-invite { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.3rem; align-items: center; padding: 1rem 0; border-top: 1px solid var(--line); }
 .home-map-journeys { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.3rem; }
-.home-map-invite span { color: var(--ink-soft); font-size: .8rem; }
-.home-map-invite a { font-size: .85rem; color: var(--bronze-ink); }
+.home-map-journeys > span { color: var(--ink-soft); font-size: .8rem; }
+.home-map-journeys > a { font-size: .85rem; color: var(--bronze-ink); }
 .home-parliaments #front-statemap { max-width: 600px; height: 330px; margin: auto; }
-.home-map-industries.map-chips { margin-top: .75rem; }
+.home-map-industries { margin-top: .75rem; }
 .drawer-primary { min-height: 52px; padding: .75rem; border-bottom: 1px solid var(--line); font: 600 1.0625rem/1.35 var(--sans); }
 .research-filters { border: 1px solid var(--line); border-radius: 6px; padding: .8rem 1rem; margin: 1rem 0; }
 .research-filters summary { cursor: pointer; font-weight: 650; color: var(--navy); min-height: 32px; }
@@ -5048,7 +4928,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
   .home-tasks { grid-template-columns: repeat(2,1fr); gap: 1rem; margin: 1.5rem 0; }
   .home-map-stage #front-map-root { height: 460px; min-height: 460px; }
   .home-map-invite { grid-template-columns: minmax(0, 1fr); gap: .7rem; }
-  .home-map-invite a { padding: .25rem 0; min-height: 40px; }
+  .home-map-journeys > a { padding: .25rem 0; min-height: 40px; }
   .research-controls { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .research-controls label:first-child { grid-column: 1 / -1; }
   .research-summary { gap: .6rem 1rem; }
@@ -5058,7 +4938,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 }
 @media (prefers-reduced-motion: reduce) { .home-map-stage *, .research-records * { scroll-behavior: auto; } }
 
-.home-map-invite .home-map-open { margin-left: auto; color: white; text-decoration: none; flex-shrink: 0; }
+.home-map-invite .home-map-open { margin-left: auto;  text-decoration: none; flex-shrink: 0; }
 @media(max-width:700px) { .home-map-invite .home-map-open { width: 100%; justify-content: center; margin-left: 0; } }
 
 /* The map leads. Research controls are opened only when needed. */
@@ -5130,7 +5010,7 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 
 /* Search sorting shares the navy, paper and bronze of the record toolbar. */
 .search-sort-picker { position:relative; display:inline-flex; }
-.search-sort-picker .search-sort-trigger { min-width:180px; justify-content:flex-start; gap:.6rem; }
+.search-sort-picker .search-sort-trigger { min-width:180px; justify-content:flex-start; gap:.6rem; overflow-wrap: normal; }
 .search-sort-chevron { width:16px; height:16px; margin-left:auto; }
 .search-sort-trigger[aria-expanded="true"] { border-color:var(--navy); }
 .search-sort-menu { position:absolute; z-index:40; top:calc(100% + 8px); right:0; width:300px; max-width:calc(100vw - 32px); padding:.4rem; background:#fff; border:1px solid var(--line); border-radius:8px; box-shadow:0 10px 30px #152c4026; max-height:min(480px,65dvh); overflow-y:auto; }
@@ -5153,7 +5033,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .agency-supplier-controls { align-items:flex-end; }
 .agency-supplier-controls > label { flex:1 1 240px; }
 .agency-supplier-controls .search-sort-picker { flex:0 0 auto; }
-.agency-supplier-controls .search-sort-trigger { min-height:44px; }
 @media(max-width:700px) {
   .agency-supplier-controls .search-sort-picker { flex:1 1 100%; width:100%; }
 }
@@ -5218,8 +5097,6 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 
 .connections-page h1 {font:700 clamp(2rem,4vw,3rem)/1.25 var(--serif);color:var(--navy);margin-bottom:1.5rem}
 .connections-page h2 {font:700 clamp(1.4rem,2.5vw,2rem)/1.35 var(--serif);color:var(--navy);overflow-wrap:anywhere}
-.connections-page .supplier-controls :is(input,select) {font-size:1rem;min-height:44px;border-radius:4px}
-.connections-page select {appearance:none;padding-right:2rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23142A43' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center}
 .connection-choice {font:400 1rem/1.5 var(--sans)}
 #connection-detail .subject-section-title {margin-top:1.5rem}
 
@@ -5686,14 +5563,9 @@ html[data-chat="docked"] .dock-bar {
   font: 700 0.6875rem/1.3 var(--sans); letter-spacing: 0.09em; text-transform: uppercase;
   color: var(--bronze-ink);
 }
-.dock-icon {
-  display: grid; place-items: center; flex: none;
-  width: 40px; height: 40px; padding: 9px;
-  border: 0; border-radius: 50%; background: transparent;
-  color: var(--ink-soft); cursor: pointer;
-}
-.dock-icon svg { width: 19px; height: 19px; }
-.dock-icon:hover { background: var(--paper-sunken); color: var(--navy); }
+.dock-icon { flex: none; }
+
+
 
 /* The panel. The bronze edge, the paper and the layered shadow are the voice
    panel's, so the corner keeps one frame whichever mode is showing. */
@@ -5807,23 +5679,16 @@ html[data-chat="docked"] #panel-chat .chat-composer {
   padding: 10px 18px max(14px, env(safe-area-inset-bottom));
   gap: 0.5rem; background: var(--paper); border-top: 1px solid var(--line);
 }
-html[data-chat="docked"] #panel-chat #chat-input { min-height: 44px; font-size: 16px; }
-html[data-chat="docked"] #panel-chat #chat-send { min-height: 44px; padding-inline: 0.9rem; }
 
 /* The mic: a small, quiet control in the composer, on both surfaces. Voice is
    one way to ask, not the headline. */
-.chat-mic {
-  display: grid; place-items: center; flex: none;
-  width: 48px; min-height: 48px; padding: 0;
-  border: 1px solid var(--line-strong); border-radius: 6px;
-  background: transparent; color: var(--navy); cursor: pointer;
-}
-.chat-mic svg { width: 20px; height: 20px; }
-.chat-mic:hover { background: var(--paper-sunken); border-color: var(--navy); }
+.chat-mic { flex: none; }
+
+
 .chat-mic[aria-expanded="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
 .chat-mic.is-loading { opacity: 0.6; cursor: progress; }
-html[data-chat="docked"] .chat-mic { width: 44px; min-height: 44px; }
-html[data-chat="docked"] .chat-mic svg { width: 18px; height: 18px; }
+
+
 
 /* On a phone the assistant is a sheet, not a card in the corner: the launcher
    gives up its label, and steps out of the way while the sheet is open. */
@@ -5883,4 +5748,47 @@ html[data-chat="docked"] .answer-overview .answer-overview-label { font-size: 0.
 @media (max-width: 600px) {
   .answer-overview { padding: var(--space-3); }
   .answer-overview p + p { font-size: 1rem; line-height: 1.65; }
+}
+
+/* The dedicated research document never renders the old homepage modules. */
+.research-app :is(#front-map, #home-tasks, #front-page) { display: none !important; }
+html[data-panel="search"] .research-app main.compact .hero-intro { display: block; }
+
+/* Shared compact masthead, matching the homepage navigation. */
+.site-header { padding: 0; border-bottom-width: 2px; }
+.site-header .masthead { position: relative; align-items: center; justify-content: space-between; gap: 30px; min-height: 78px; }
+.site-header .masthead-id { top: 0; flex: 0 0 auto; max-width: none; }
+.site-header .logo { gap: 10px; color: var(--on-navy); }
+.site-header .logo-mark { width: 54px; height: 49px; }
+.site-wordmark { font: 700 26px var(--serif); }
+.site-header .masthead-nav { display: flex; flex: 0 1 auto; margin-left: auto; }
+.site-header .nav-list { gap: 22px; }
+.site-header .nav-link { color: var(--on-navy); font-size: 14px; font-weight: 400; padding: 0; gap: 7px; border-bottom: 0; }
+.site-header .nav-link.active { text-decoration: underline; text-underline-offset: 5px; }
+.site-header .nav-item { position: static; }
+.site-header .megamenu { left: auto; right: 0; top: 100%; border-top: 3px solid var(--bronze); max-height: calc(100vh - 150px); overflow-y: auto; }
+.site-header .nav-toggle, .site-header .mast-search-toggle { display: none; }
+@media (max-width: 1100px) {
+  .site-header .nav-list { gap: 15px; }
+  .site-header .nav-link { font-size: 13px; }
+}
+@media (max-width: 800px) {
+  .site-header .masthead-nav { display: none; }
+  .site-header .nav-toggle { display: inline-flex; margin-left: auto; }
+}
+
+/* Search is available on demand without taking space from the navigation. */
+.header-search-toggle { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 44px; width: 44px; height: 44px; padding: 10px; background: transparent; border: 0; border-radius: 4px; color: var(--on-navy); cursor: pointer; }
+.header-search-toggle:hover, .header-search-toggle[aria-expanded="true"] { background: rgb(255 255 255 / 10%); }
+.header-search-toggle svg { width: 22px; height: 22px; }
+.header-search-panel { position: absolute; right: clamp(1.25rem, 4vw, 4.5rem); top: calc(100% + 2px); z-index: 60; width: min(420px, calc(100vw - 40px)); background: var(--paper); padding: 14px; border: 1px solid var(--line); border-top: 0; box-shadow: 0 14px 30px rgb(21 27 20 / 20%); }
+.header-search-panel .mast-search.ui-input-wrap { display: flex; margin: 0; width: 100%; }
+.header-search-panel .mast-sugg { width: calc(100% + 28px); top: calc(100% + 16px); right: -14px; }
+.hp-header .hp-nav { margin-left: auto; }
+.hp-header .hp-header-inner, .site-header .masthead { gap: 20px; }
+@media (max-width: 800px) {
+  .hp-header .hp-mobile-nav { margin-left: auto; }
+  .hp-header .header-search-toggle { order: 2; }
+  .site-header .nav-toggle { margin-left: 0; }
+  .site-header .header-search-toggle { margin-left: auto; }
 }
