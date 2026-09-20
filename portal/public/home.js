@@ -125,7 +125,7 @@ function reportGlyph(slug, cls) {
 
 
 // Use the application's navigation taxonomy rather than inventing another menu.
-await import('/navigation.js');
+await import(document.getElementById('hp-navigation').src);
 const navDrawer = OpaxNavigation.mountDrawer();
 const reportMenuItems = await fetch('/reports/index.json').then(r => r.ok ? r.json() : null).then(d => d?.reports).catch(() => null);
 for (const nav of document.querySelectorAll('.hp-nav')) {
