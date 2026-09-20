@@ -90,3 +90,5 @@ python3 -m http.server 8790 --directory portal/public
 ```
 
 Run `node scripts/stamp_assets.mjs`, `npm run check` and `npm test` from the documented directories. Deploy through `npm run deploy` in `portal/`, which rebuilds the search catalog and generated bundles before stamping. Generated search shards are build output; the manifest stays versioned. Verify `/`, both research views, a representative entity page, legacy redirects and a 404 for workbench/prototype URLs after release.
+
+The homepage and application pages use the same mobile navigation drawer, with its controller in `navigation.js` and shared styles in `style.css`. It opens from the hamburger below 801px, contains search and grouped navigation, and closes on Escape, the close button, a destination, the backdrop or a return to desktop width. Closing on mobile restores focus to the opening control. The homepage does not use a separate mobile dropdown.

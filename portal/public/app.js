@@ -2211,75 +2211,9 @@ document.addEventListener("pointerdown", (e) => {
 window.addEventListener("hashchange", () => { if (openNavMenu) setNavMenu(openNavMenu, false); });
 window.addEventListener("resize", () => { if (openNavMenu) placeNavMenu(openNavMenu); });
 
-// The drawer is a modal <dialog>: native focus trap, Esc-close, and focus
-// restored to the hamburger when it closes.
-// Closing animates the panel out before the dialog actually closes; every
-// close path goes through here so the motion is the same from a link, the X,
-// the backdrop or Escape.
-function closeNavDrawer() {
-  const drawer = $("nav-drawer");
-  if (!drawer?.open || drawer.classList.contains("is-closing")) return;
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { drawer.close(); return; }
-  let done = false;
-  const finish = () => {
-    if (done) return;
-    done = true;
-    drawer.classList.remove("is-closing");
-    drawer.close();
-  };
-  drawer.classList.add("is-closing");
-  drawer.addEventListener("animationend", (e) => { if (e.target === drawer) finish(); }, { once: true });
-  setTimeout(finish, 300); // the animation is 220ms; this is the safety net
-}
-{
-  const drawer = $("nav-drawer");
-  const toggle = $("nav-open");
-  const searchToggle = $("nav-search-open");
-  searchToggle.addEventListener("click", () => {
-    drawer.showModal();
-    $("drawer-q").focus({ preventScroll: true });
-    toggle.setAttribute("aria-expanded", "true");
-    searchToggle.setAttribute("aria-expanded", "true");
-  });
-  toggle.addEventListener("click", () => {
-    drawer.showModal();
-    // The dialog itself takes focus, so a tap on the hamburger does not land
-    // a focus ring on the first control; Tab still reaches everything.
-    drawer.focus({ preventScroll: true });
-    toggle.setAttribute("aria-expanded", "true");
-    searchToggle.setAttribute("aria-expanded", "true");
-  });
-  drawer.addEventListener("close", () => {
-    toggle.setAttribute("aria-expanded", "false");
-    searchToggle.setAttribute("aria-expanded", "false");
-  });
-  // Escape: run the same exit animation instead of the instant native close.
-  drawer.addEventListener("cancel", (e) => { e.preventDefault(); closeNavDrawer(); });
-  $("drawer-close").addEventListener("click", () => closeNavDrawer());
-  // A search typed into the drawer lands on the Search page with the query.
-  $("drawer-search").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const q = $("drawer-q").value.trim();
-    if (!q) return;
-    closeNavDrawer();
-    $("drawer-q").value = "";
-    $("drawer-sugg").hidden = true;
-    goRoute(`/search?q=${encodeURIComponent(q)}`);
-  });
-  drawer.addEventListener("click", (e) => {
-    // A link tap navigates (the hash does the routing) and dismisses the drawer.
-    if (e.target.closest("a")) { closeNavDrawer(); return; }
-    const r = drawer.getBoundingClientRect(); // outside the panel = backdrop
-    const inside = e.clientX >= r.left && e.clientX <= r.right &&
-                   e.clientY >= r.top && e.clientY <= r.bottom;
-    if (!inside) closeNavDrawer();
-  });
-  // Growing past the mobile breakpoint with the drawer open would strand a
-  // modal over a page that now shows the full nav.
-  window.matchMedia("(min-width: 801px)").addEventListener("change", (e) => {
-    if (e.matches && drawer.open) drawer.close();
-  });
-}
+// Shared with the homepage so mobile navigation stays consistent.
+const navDrawer = OpaxNavigation.mountDrawer({ navigate: goRoute });
+function closeNavDrawer() { navDrawer.close(); }
 
 // Time machine / record quiz entries (megamenu + drawer): the link lands on
 // Explore via its href; the game dialog then opens on top of it.

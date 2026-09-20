@@ -5697,8 +5697,8 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .hp-header .hp-nav { margin-left: auto; }
 .hp-header .hp-header-inner, .site-header .masthead { gap: 20px; }
 @media (max-width: 800px) {
-  .hp-header .hp-mobile-nav { margin-left: auto; }
-  .hp-header .header-search-toggle { order: 2; }
+  .hp-header .nav-toggle { margin-left: 0; order: 2; }
+  .hp-header .header-search-toggle { margin-left: auto; }
   .site-header .nav-toggle { margin-left: 0; }
   .site-header .header-search-toggle { margin-left: auto; }
 }

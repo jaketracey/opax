@@ -6,11 +6,11 @@
     <meta name="robots" content="noindex,nofollow" />
     <title>Home page prototype · OPAX</title>
     <link rel="icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/style.css?v=4f67a373e3" />
+    <link rel="stylesheet" href="/style.css?v=db77b5d572" />
     <link rel="stylesheet" href="/ui-controls.css?v=db6b9cac33" />
-    <link rel="stylesheet" href="/home.css?v=c47ab41256" />
+    <link rel="stylesheet" href="/home.css?v=58cc75f703" />
     <script src="/quick-search.js?v=206914f32d" defer></script>
-    <script type="module" src="/home.js?v=ceaddf2341"></script>
+    <script type="module" src="/home.js?v=2d61e74ad0"></script>
   </head>
   <body class="hp-page">
     <a class="hp-skip" href="#hp-main">Skip to content</a>
@@ -77,14 +77,10 @@
           ><a href="/money">Money map</a><a href="/reports">Reports</a
           ><a href="/explore">Explore</a><a href="/about">About</a>
         </nav>
-        <details class="hp-mobile-nav">
-          <summary>Menu</summary>
-          <nav aria-label="Mobile navigation">
-            <a href="/ask">Ask</a><a href="/search">Search</a
-            ><a href="/money">Money map</a><a href="/reports">Reports</a
-            ><a href="/explore">Explore</a><a href="/about">About</a>
-          </nav>
-        </details>
+    <button type="button" class="nav-toggle" id="nav-open" aria-expanded="false" aria-controls="nav-drawer">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg>
+      <span class="visually-hidden">Menu</span>
+    </button>
 <button type="button" class="header-search-toggle" id="header-search-open" aria-label="Search OPAX" aria-expanded="false" aria-controls="header-search-panel"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg></button>
 <div class="header-search-panel" id="header-search-panel" hidden>
     <div class="mast-search ui-input-wrap" data-ui-size="compact">
@@ -98,6 +94,23 @@
 </div>
       </div>
     </header>
+<dialog class="nav-drawer" id="nav-drawer" aria-label="Menu" tabindex="-1">
+  <div class="drawer-head">
+    <p class="drawer-name">Menu</p>
+    <button type="button" class="drawer-close" id="drawer-close" aria-label="Close menu">
+      <svg class="drawer-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><line class="x1" x1="5" y1="5" x2="19" y2="19"/><line class="x2" x1="19" y1="5" x2="5" y2="19"/></svg>
+    </button>
+  </div>
+  <form class="drawer-search ui-input-wrap" id="drawer-search" role="search">
+    <label for="drawer-q" class="visually-hidden">Search the record</label>
+    <svg class="drawer-search-icon ui-control-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
+    <input class="ui-input" id="drawer-q" type="search" autocomplete="off" placeholder="Search the record…" enterkeyhint="search"
+           role="combobox" aria-expanded="false" aria-controls="drawer-sugg" aria-autocomplete="list">
+    <div class="drawer-sugg" id="drawer-sugg" hidden role="listbox" aria-label="Suggestions"></div>
+  </form>
+  <nav aria-label="Primary"></nav>
+</dialog>
+
     <main id="hp-main" class="wrap hp-wrap">
       <section class="hp-research" aria-labelledby="hp-title">
         <div class="hp-purpose">

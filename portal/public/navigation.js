@@ -52,7 +52,86 @@
     jur = jur || /^\/money\/grants\/(federal|qld)\/recipient\//.exec(path)?.[1];
     return `<nav class="area-nav money-area-nav" aria-label="Money">${money.map(([href,label]) => `<a href="${href}${jur && jur !== 'federal' && !oneJurisdiction.has(href) ? '?jur='+encodeURIComponent(jur) : ''}"${href===path || href==='/money/grants' && path.startsWith('/money/grants/')?' aria-current="page"':''}>${label}</a>`).join('')}</nav>`;
   }
-  globalThis.OpaxNavigation = { sections, money, active, moneyNav };
+  function mountDrawer({ navigate = href => location.assign(href) } = {}) {
+    const $ = id => document.getElementById(id);
+    if (!$("nav-drawer") || !$("nav-open")) return { close() {} };
+    // The drawer is a modal <dialog>: native focus trap, Esc-close, and focus
+    // restored to the hamburger when it closes.
+    // Closing animates the panel out before the dialog actually closes; every
+    // close path goes through here so the motion is the same from a link, the X,
+    // the backdrop or Escape.
+    function close() {
+      const drawer = $("nav-drawer");
+      if (!drawer?.open || drawer.classList.contains("is-closing")) return;
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) { drawer.close(); return; }
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        drawer.classList.remove("is-closing");
+        drawer.close();
+      };
+      drawer.classList.add("is-closing");
+      drawer.addEventListener("animationend", (e) => { if (e.target === drawer) finish(); }, { once: true });
+      setTimeout(finish, 300); // the animation is 220ms; this is the safety net
+    }
+    {
+      const drawer = $("nav-drawer");
+      const toggle = $("nav-open");
+      const searchToggle = $("nav-search-open");
+      let opener = toggle;
+      searchToggle?.addEventListener("click", () => {
+        opener = searchToggle;
+        drawer.showModal();
+        $("drawer-q").focus({ preventScroll: true });
+        toggle.setAttribute("aria-expanded", "true");
+        searchToggle?.setAttribute("aria-expanded", "true");
+      });
+      toggle.addEventListener("click", () => {
+        opener = toggle;
+        drawer.showModal();
+        // The dialog itself takes focus, so a tap on the hamburger does not land
+        // a focus ring on the first control; Tab still reaches everything.
+        drawer.focus({ preventScroll: true });
+        toggle.setAttribute("aria-expanded", "true");
+        searchToggle?.setAttribute("aria-expanded", "true");
+      });
+      drawer.addEventListener("close", () => {
+        if (!matchMedia("(min-width: 801px)").matches) opener.focus({ preventScroll: true });
+        toggle.setAttribute("aria-expanded", "false");
+        searchToggle?.setAttribute("aria-expanded", "false");
+      });
+      // Escape: run the same exit animation instead of the instant native close.
+      drawer.addEventListener("cancel", (e) => { e.preventDefault(); close(); });
+      $("drawer-close").addEventListener("click", () => close());
+      // A search typed into the drawer lands on the Search page with the query.
+      $("drawer-search").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const q = $("drawer-q").value.trim();
+        if (!q) return;
+        close();
+        $("drawer-q").value = "";
+        $("drawer-sugg").hidden = true;
+        navigate(`/ask?view=search&q=${encodeURIComponent(q)}`);
+      });
+      drawer.addEventListener("click", (e) => {
+        // A link tap navigates (the hash does the routing) and dismisses the drawer.
+        if (e.target.closest("a")) { close(); return; }
+        const r = drawer.getBoundingClientRect(); // outside the panel = backdrop
+        const inside = e.clientX >= r.left && e.clientX <= r.right &&
+                       e.clientY >= r.top && e.clientY <= r.bottom;
+        if (!inside) close();
+      });
+      // Growing past the mobile breakpoint with the drawer open would strand a
+      // modal over a page that now shows the full nav.
+      window.matchMedia("(min-width: 801px)").addEventListener("change", (e) => {
+        if (e.matches && drawer.open) drawer.close();
+      });
+    }
+
+    return { close };
+  }
+  globalThis.OpaxNavigation = { sections, money, active, moneyNav, mountDrawer };
   if (typeof document === 'undefined') return;
   const desktop = document.querySelector('#primary-nav .nav-list');
   const mobile = document.querySelector('#nav-drawer nav');

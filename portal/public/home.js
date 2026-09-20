@@ -126,8 +126,9 @@ function reportGlyph(slug, cls) {
 
 // Use the application's navigation taxonomy rather than inventing another menu.
 await import('/navigation.js');
+const navDrawer = OpaxNavigation.mountDrawer();
 const reportMenuItems = await fetch('/reports/index.json').then(r => r.ok ? r.json() : null).then(d => d?.reports).catch(() => null);
-for (const nav of document.querySelectorAll('.hp-nav, .hp-mobile-nav > nav')) {
+for (const nav of document.querySelectorAll('.hp-nav')) {
   nav.replaceChildren();
   for (const section of globalThis.OpaxNavigation.sections) {
     if (!section.children) {
@@ -599,6 +600,8 @@ async function headerSuggestions(q) {
   return out;
 }
 OpaxQuickSearch.attach($('mast-q'), $('mast-sugg'), {idPrefix:'ms', source:headerSuggestions, navigate:href => location.assign(href), searchHref, beforeGo:() => headerSearch.close()});
+
+OpaxQuickSearch.attach($('drawer-q'), $('drawer-sugg'), {idPrefix:'ds', source:headerSuggestions, navigate:href => location.assign(href), searchHref, beforeGo:() => navDrawer.close()});
 
 // Keep the approved layout while replacing prototype snapshots with source data.
 import { hydrateCollections, hydrateRecordCards } from '/home-data.js';
