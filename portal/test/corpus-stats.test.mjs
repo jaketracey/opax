@@ -16,7 +16,7 @@ test("refreshed corpus manifest retains the cleaned PM transcript tranche", () =
     coverage: "2025–2026",
   });
   assert.equal(corpus.version, "2026-09-21");
-  assert.equal(corpus.expected_resources, 625606);
+  assert.equal(corpus.expected_resources, 628657);
   assert.equal(
     Object.values(corpus.expected_resources_breakdown).reduce((sum, value) => sum + value, 0),
     corpus.expected_resources,

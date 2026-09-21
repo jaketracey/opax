@@ -1,10 +1,10 @@
 {
   "version": "2026-09-21",
-  "expected_resources": 625606,
+  "expected_resources": 628657,
   "expected_resources_breakdown": {
     "live_index_before_refresh": 620767,
     "new_bill_resources": 10,
-    "new_bill_text_resources": 1475,
+    "new_bill_text_resources": 4526,
     "new_division_resources": 147,
     "new_grant_award_resources": 978,
     "new_press_release_resources": 216,
@@ -119,8 +119,8 @@
     },
     {
       "name": "Original federal bill text versions",
-      "docs": 1696,
-      "coverage": "Complete source versions; historical import continues"
+      "docs": 4747,
+      "coverage": "Complete source versions; historical import verified"
     }
   ],
   "inclusion": "Speeches from 1993-03-13 (the election that seated the longest-serving current federal MP), at least 200 characters, deduplicated across overlapping sources, procedural rows removed (division roll-calls, chair interjections, day indexes). External statements require an official source URL, a valid date, an open licence, at least 200 characters and a unique body. News articles are excluded from ingestion and retrieval; headline links are external only. Structured grant, election and roster records retain source provenance and snapshot dates; research notes are attributed summaries, not copies of full reports.",
@@ -136,7 +136,7 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-09-21T12:44:46.515368+00:00",
+    "checked_at": "2026-09-21T13:31:32.575708+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
@@ -175,7 +175,7 @@
     },
     "resource_counts": {
       "bill": 2994,
-      "bill_text": 1696,
+      "bill_text": 4747,
       "division": 14014,
       "election_baseline": 150,
       "grant_award": 1067,
@@ -208,9 +208,17 @@
     },
     "bill_text_backfill": {
       "acquired_complete_versions": 4747,
-      "published_at_snapshot": 1696,
-      "status": "running",
-      "note": "Only complete source versions are published. Existing reviewed notes are retained; indexing may lag accepted writes."
+      "published_at_snapshot": 4747,
+      "status": "complete",
+      "note": "All acquired source versions are present and source-verified. Existing reviewed notes are retained. All versions have completed search processing.",
+      "processed_at_snapshot": 4747,
+      "pending_processing_at_snapshot": 0
+    },
+    "enrichment_completed": {
+      "new_government_release_summaries": 216,
+      "live_readbacks_verified": 216,
+      "checked_at": "2026-09-21T13:14:23.488369+00:00",
+      "speech_topic_and_summary_queues": "continuing with fresh records first"
     }
   },
   "enrichment": {
