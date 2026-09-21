@@ -19,6 +19,31 @@ const call=(...args)=>communityRoute(request(...args),env);
 async function login(email='reader@example.com'){assert.equal((await call('auth/request','POST',{email})).status,200);const token=new URL(outbox.at(-1).text.match(/https:\/\/\S+/)[0]).hash.slice(7);const response=await call('auth/consume','POST',{token});assert.equal(response.status,200);return {cookie:response.headers.get('set-cookie').split(';')[0],token,member:db.prepare('SELECT * FROM members WHERE email=?').get(email)}}
 return {db,env,outbox,call,request,login}}
 test('magic links are single-use, hashed, and issue secure private sessions',async()=>{const f=fixture(),l=await f.login();assert.match(l.cookie,/__Host-opax_session=/);assert.notEqual(f.db.prepare('SELECT token_hash FROM login_links').get().token_hash,l.token);assert.equal((await f.call('auth/consume','POST',{token:l.token})).status,400);const r=await f.call('status','GET',undefined,l.cookie);assert.equal(r.headers.get('cache-control'),'no-store');assert.equal((await r.json()).member.email,'reader@example.com');f.db.close()});
+test('branded sign-in emails preserve the same usable token in HTML and plain text',async()=>{
+ const f=fixture();
+ try{
+  assert.equal((await f.call('auth/request','POST',{email:'reader@example.com'})).status,200);
+  const mail=f.outbox[0],url=new URL(mail.text.match(/https:\/\/\S+/)[0]);
+  assert.equal(mail.to,'reader@example.com');
+  assert.deepEqual(mail.from,{email:'hello@login.opax.test',name:'Opax'});
+  assert.equal(mail.subject,'Your sign-in link for Opax');
+  const signInLinks=[...mail.html.matchAll(/href="([^"]*#token=[^"]+)"/g)].map(match=>match[1].replaceAll('&amp;','&'));
+  assert.equal(signInLinks.length,3); // Outlook button, regular button and copyable fallback.
+  assert.ok(signInLinks.every(link=>link===url.href));
+  assert.match(mail.html,/<html lang="en-AU"/);
+  assert.match(mail.html,/Open Parliamentary Accountability Exchange/);
+  assert.match(mail.html,/src="cid:opax-brand-mark"/);
+  assert.equal(mail.attachments.length,1);
+  const mark=mail.attachments[0];
+  assert.equal(mark.contentId,'opax-brand-mark');
+  assert.equal(mark.disposition,'inline');
+  assert.equal(mark.type,'image/png');
+  assert.deepEqual([...mark.content.slice(0,8)],[137,80,78,71,13,10,26,10]);
+  assert.doesNotMatch(mail.html,/<img[^>]+src="https?:/);
+  for(const content of [mail.html,mail.text]){assert.match(content,/15 minutes/);assert.match(content,/only be used once/);assert.match(content,/safely ignore/)}
+  assert.equal((await f.call('auth/consume','POST',{token:url.hash.slice(7)})).status,200);
+ }finally{f.db.close()}
+});
 test('expired links and tokens cannot sign in',async()=>{const f=fixture();await f.call('auth/request','POST',{email:'a@example.com'});const token=new URL(f.outbox[0].text.match(/https:\/\/\S+/)[0]).hash.slice(7);f.db.exec('UPDATE login_links SET expires_at=0');assert.equal((await f.call('auth/consume','POST',{token})).status,400);assert.equal((await f.call('auth/consume','POST',{token:'x'.repeat(43)})).status,400);f.db.close()});
 test('cross-origin and opaque-origin account mutations are refused',async()=>{
  const f=fixture();
