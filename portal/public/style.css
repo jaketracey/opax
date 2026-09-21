@@ -4736,20 +4736,18 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .table-scroll::-webkit-scrollbar-track { background: transparent; }
 .table-scroll::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
 
-@media (max-width: 700px) {
-  /* Suggestions remain quick choices on a phone. A horizontal strip takes
-     one row, preserves 44px targets and leaves the record visible below. */
-  #panel-search .search-chips {
-    flex-direction: row; align-items: stretch; overflow-x: auto;
-    padding-bottom: var(--space-2); scroll-padding-inline: 0;
-  }
-  #panel-search .search-chips .chip:not(.ui-button) {
-    width: auto; min-height: 44px; padding: var(--space-3) var(--space-4);
-    border-radius: 999px; white-space: nowrap;
-  }
-  #panel-search .search-chips { scrollbar-width: none; }
-  #panel-search .search-chips::-webkit-scrollbar { display: none; }
+/* Example searches wrap as complete choices, without shrinking words into
+   narrow columns or hiding choices behind a horizontal scroll area. */
+#panel-search .search-chips {
+  flex-flow: row wrap; align-items: center; overflow: visible;
+  scroll-snap-type: none; mask-image: none; animation: none;
+}
+#panel-search .search-chips .chip {
+  flex: 0 0 auto; max-width: 100%; white-space: normal;
+  overflow-wrap: normal; word-break: normal;
+}
 
+@media (max-width: 700px) {
   .report-card { min-height: 0; padding: var(--space-4); }
   .report-card .card-glyph { margin-bottom: var(--space-3); }
   .report-card .card-title { margin-bottom: var(--space-2); }
