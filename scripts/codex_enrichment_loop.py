@@ -12,6 +12,7 @@ import json
 import os
 import re
 import shutil
+import sqlite3
 import subprocess
 import sys
 import time
@@ -156,6 +157,24 @@ def release(kind: str, worker: str) -> None:
     run([sys.executable, str(harness), "release", "--worker", worker])
 
 
+def quarantine_rejected(kind: str, worker: str, items: list[dict], problems: list[str]) -> int:
+    """Hold repeatedly rejected records for review without blocking the queue."""
+    allowed = {item["rid"] for item in items}
+    rejected = {problem.split(":", 1)[0] for problem in problems} & allowed
+    if not rejected:
+        return 0
+    name = "LABEL_QUEUE_DB" if kind == "labels" else "SUMMARY_QUEUE_DB"
+    filename = "labels_queue.sqlite" if kind == "labels" else "summaries_queue.sqlite"
+    path = Path(os.environ.get(name) or Path.home() / ".cache" / "opax" / filename)
+    with sqlite3.connect(path) as con:
+        count = 0
+        for rid in rejected:
+            reason = "; ".join(p for p in problems if p.startswith(rid + ":"))[:1800]
+            count += con.execute("UPDATE queue SET status='error',error=?,worker=NULL,claimed_at=NULL WHERE rid=? AND status='claimed' AND worker=?",
+                                 ("Repeated validation rejection; needs review: " + reason, rid, worker)).rowcount
+    return count
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("kind", choices=("labels", "summaries"))
@@ -199,7 +218,11 @@ def main() -> None:
             print(f"[{args.worker}] Codex attempt {attempt} failed: {(response.stderr or response.stdout)[-500:]}", flush=True)
             time.sleep(10 * attempt)
         else:
+            held = quarantine_rejected(args.kind, args.worker, items, problems)
             release(args.kind, args.worker)
+            if held:
+                print(f"[{args.worker}] held {held} repeatedly rejected records for review; continuing", flush=True)
+                continue
             raise SystemExit(f"[{args.worker}] Codex failed three times; claims released")
         loaded = submit(args.kind, args.worker, result_path)
         message = (loaded.stdout + loaded.stderr).strip()
