@@ -451,13 +451,14 @@ const CSS = `
 .mm-award-project-amount { flex: none; font-weight: 600; font-variant-numeric: tabular-nums; }
 /* The card's one filled action: the subject's profile. Nothing else on a
    card is filled; every other way onward sits in the quiet row beneath. */
-.mm-ask { display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; min-height: 44px;
+.mm-root .mm-card a.mm-ask { display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; min-height: 44px;
   margin-top: 12px; padding: 8px 12px; border: 0; border-radius: 9px;
   background: #142a43; color: #ffffff; font-size: 13px; font-weight: 600;
   font-family: inherit; line-height: 1.35; text-decoration: none; text-align: center;
   cursor: pointer; }
-.mm-ask:hover { background: #1d3a5c; color: #ffffff; }
-.mm-ask:focus-visible { outline: 2px solid #8a5a12; outline-offset: 2px; }
+.mm-root .mm-card a.mm-ask:hover { background: #254b70; color: #ffffff; text-decoration: underline; text-underline-offset: 3px; }
+.mm-root .mm-card a.mm-ask:active { background: #0c1e31; }
+.mm-root .mm-card a.mm-ask:focus-visible { color: #ffffff; outline: 3px solid #8a5a12; outline-offset: 3px; }
 /* The quiet row: short verb-first text actions in the bronze register, each
    a 44px target through its padding, wrapping at narrow widths. A hairline
    dot trails every item but the last, so a wrapped line ends on a dot rather
