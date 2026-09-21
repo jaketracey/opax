@@ -124,73 +124,44 @@ function reportGlyph(slug, cls) {
 }
 
 
-// Use the application's navigation taxonomy rather than inventing another menu.
+// The homepage uses the same disclosure and drawer behaviour as the app.
 await import(document.getElementById('hp-navigation').src);
 const navDrawer = OpaxNavigation.mountDrawer();
-const reportMenuItems = await fetch('/reports/index.json').then(r => r.ok ? r.json() : null).then(d => d?.reports).catch(() => null);
-for (const nav of document.querySelectorAll('.hp-nav')) {
-  nav.replaceChildren();
-  for (const section of globalThis.OpaxNavigation.sections) {
-    if (!section.children) {
+let reportsMenuFilled = false;
+OpaxNavigation.mountDesktop({ onOpen(panel) {
+  if (panel.id !== 'menu-reports' || reportsMenuFilled) return;
+  reportsMenuFilled = true;
+  fetch('/reports/index.json').then(r => r.ok ? r.json() : null).then(data => {
+    if (!data?.reports?.length) return;
+    $('menu-reports-list').replaceChildren(...data.reports.map(report => {
       const link = document.createElement('a');
-      link.href = section.href;
-      link.textContent = section.label;
-      nav.append(link);
-      continue;
-    }
-    const group = document.createElement('details');
-    const summary = document.createElement('summary');
-    summary.textContent = section.label;
-    summary.insertAdjacentHTML('beforeend', '<svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>');
-    group.append(summary);
-    const panel = document.createElement('div');
-    panel.className = 'hp-menu-panel megamenu megamenu-wide';
-    const links = document.createElement('div');
-    links.className = 'mm-grid';
-    const items = section.id === 'reports' && reportMenuItems
-      ? reportMenuItems.map(r => ['/reports/' + r.slug, r.title, r.blurb])
-      : section.children.filter(([href]) => section.id !== 'reports' || href !== '/reports');
-    for (const [href, label, description] of items) {
-      const link = document.createElement('a');
-      link.href = href;
       link.className = 'mm-link';
-      if (section.id === 'reports') link.innerHTML = reportGlyph(href.split('/').pop(), 'mm-glyph');
+      link.href = '/reports/' + encodeURIComponent(report.slug);
+      link.innerHTML = reportGlyph(report.slug, 'mm-glyph');
       const title = document.createElement('span');
       title.className = 'mm-title';
-      title.textContent = label;
+      title.textContent = report.title;
       const blurb = document.createElement('span');
       blurb.className = 'mm-blurb';
-      blurb.textContent = description;
+      blurb.textContent = report.blurb;
       link.append(title, blurb);
-      links.append(link);
-    }
-    panel.append(links);
-    if (section.id === 'reports') {
-      const all = document.createElement('a');
-      all.className = 'mm-all';
-      all.href = '/reports';
-      all.textContent = 'All reports';
-      panel.append(all);
-    }
-    group.append(panel);
-    group.addEventListener('toggle', () => {
-      if (group.open) for (const peer of nav.querySelectorAll('details')) {
-        if (peer !== group) peer.open = false;
-      }
-    });
-    nav.append(group);
-  }
+      return link;
+    }));
+  }).catch(() => {}); // The shared navigation already provides fallback links.
+} });
+const headerBand = document.querySelector('.site-header');
+const measureHeader = () => document.documentElement.style.setProperty('--header-h', `${headerBand.offsetHeight}px`);
+if (headerBand) {
+  measureHeader();
+  if ('ResizeObserver' in window) new ResizeObserver(measureHeader).observe(headerBand);
 }
-document.addEventListener('keydown', (event) => {
-  if (event.key !== 'Escape') return;
-  const open = document.querySelector('.hp-header details[open]');
-  if (open) { open.open = false; open.querySelector('summary').focus(); }
-});
-document.addEventListener('click', (event) => {
-  for (const open of document.querySelectorAll('.hp-header details[open]')) {
-    if (!open.contains(event.target)) open.open = false;
-  }
-});
+// Fill the shared footer independently of the homepage's collection widgets.
+fetch('/api/stats').then(response => {
+  if (!response.ok) throw new Error('Live index figures could not load');
+  return response.json();
+}).then(stats => {
+  $('stats').textContent = `${(stats.resources ?? 0).toLocaleString()} documents · ${(stats.paragraphs ?? 0).toLocaleString()} passages indexed · growing daily`;
+}).catch(() => { $('stats').textContent = 'Live index figures are unavailable right now.'; });
 
 // Both research panels stay mounted, preserving their drafts when modes change.
 for (const button of document.querySelectorAll("[data-mode]")) {

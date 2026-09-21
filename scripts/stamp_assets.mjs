@@ -7,6 +7,7 @@
  * This rewrites both stamps from the bytes on disk. A new release is then a new
  * URL, and a returning visitor picks it up on the first request instead of
  * sitting on a year-old cache entry.
+ * Also syncs the homepage header, mobile drawer and footer from index.html.
  *
  *   node scripts/stamp_assets.mjs           # stamp (what `npm run deploy` runs)
  *   node scripts/stamp_assets.mjs --check   # exit 1 if the stamps are stale
@@ -115,6 +116,21 @@ async function refreshFonts() {
 
 // --- stamping ---------------------------------------------------------------
 
+// Keep the homepage's first-render chrome identical to the application shell.
+// Both documents then use navigation.js for the same menus and interactions.
+function syncHomeChrome(html, shell) {
+  const header = shell.match(/<header class="site-header">[\s\S]*?<\/header>/)?.[0]
+  const drawer = shell.match(/<dialog class="nav-drawer"[\s\S]*?<\/dialog>/)?.[0]
+  const footer = shell.match(/<footer>[\s\S]*?<\/footer>/)?.[0]
+  if (!header || !drawer || !footer) throw new Error('Shared site chrome is missing from index.html')
+  for (const [part, content] of [['header', `${header}\n${drawer}`], ['footer', footer]]) {
+    const pattern = new RegExp(`<!-- site-${part}:start -->[\\s\\S]*?<!-- site-${part}:end -->`)
+    if (!pattern.test(html)) throw new Error(`Homepage site-${part} markers are missing`)
+    html = html.replace(pattern, () => `<!-- site-${part}:start -->\n${content}\n<!-- site-${part}:end -->`)
+  }
+  return html
+}
+
 function stamp({ check }) {
   const before = readFileSync(INDEX, 'utf8')
   const hashes = Object.fromEntries(STAMPED.map((f) => [f, hashOf(f)]))
@@ -142,15 +158,15 @@ function stamp({ check }) {
   if (!check && workbenchAfter !== workbenchBefore) writeFileSync(workbenchPath, workbenchAfter)
   const prototypePath = join(PUBLIC, 'home-prototype.html')
   const prototypeBefore = readFileSync(prototypePath, 'utf8')
-  const prototypeAfter = prototypeBefore.replace(/\/(style\.css|ui-controls\.css|home\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  const prototypeAfter = syncHomeChrome(prototypeBefore, after).replace(/\/(style\.css|ui-controls\.css|home\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && prototypeAfter !== prototypeBefore) writeFileSync(prototypePath, prototypeAfter)
   const homePath = join(PUBLIC, 'home.html')
   const homeBefore = readFileSync(homePath, 'utf8')
-  const homeAfter = homeBefore.replace(/\/(style\.css|ui-controls\.css|home\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  const homeAfter = syncHomeChrome(homeBefore, after).replace(/\/(style\.css|ui-controls\.css|home\.css|home\.js|navigation\.js|quick-search\.js|analytics\.js|events\.js|gtm\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && homeAfter !== homeBefore) writeFileSync(homePath, homeAfter)
   if (check) {
     if (homeAfter !== homeBefore || after !== before || communityAfter !== communityBefore || workbenchAfter !== workbenchBefore || prototypeAfter !== prototypeBefore) {
-      console.error('stamp_assets: index.html stamps are stale — run `node scripts/stamp_assets.mjs`.')
+      console.error('stamp_assets: entry-page stamps or shared chrome are stale — run `node scripts/stamp_assets.mjs`.')
       process.exit(1)
     }
     console.log('stamp_assets: stamps are current.')

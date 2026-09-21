@@ -5664,7 +5664,7 @@ html[data-chat="docked"] .answer-overview .answer-overview-label { font-size: 0.
 .research-app :is(#front-map, #home-tasks, #front-page) { display: none !important; }
 html[data-panel="search"] .research-app main.compact .hero-intro { display: block; }
 
-/* Shared compact masthead, matching the homepage navigation. */
+/* Shared compact masthead for the homepage and research pages. */
 .site-header { padding: 0; border-bottom-width: 2px; }
 .site-header .masthead { position: relative; align-items: center; justify-content: space-between; gap: 30px; min-height: 78px; }
 .site-header .masthead-id { top: 0; flex: 0 0 auto; max-width: none; }
@@ -5694,11 +5694,8 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .header-search-panel { position: absolute; right: clamp(1.25rem, 4vw, 4.5rem); top: calc(100% + 2px); z-index: 60; width: min(420px, calc(100vw - 40px)); background: var(--paper); padding: 14px; border: 1px solid var(--line); border-top: 0; box-shadow: 0 14px 30px rgb(21 27 20 / 20%); }
 .header-search-panel .mast-search.ui-input-wrap { display: flex; margin: 0; width: 100%; }
 .header-search-panel .mast-sugg { width: calc(100% + 28px); top: calc(100% + 16px); right: -14px; }
-.hp-header .hp-nav { margin-left: auto; }
-.hp-header .hp-header-inner, .site-header .masthead { gap: 20px; }
+.site-header .masthead { gap: 20px; }
 @media (max-width: 800px) {
-  .hp-header .nav-toggle { margin-left: 0; order: 2; }
-  .hp-header .header-search-toggle { margin-left: auto; }
   .site-header .nav-toggle { margin-left: 0; }
   .site-header .header-search-toggle { margin-left: auto; }
 }

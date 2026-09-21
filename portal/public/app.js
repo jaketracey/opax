@@ -2096,15 +2096,6 @@ document.addEventListener('click', (event) => {
 // (each panel sits right after its button). Hover opens on fine pointers
 // with a 150ms close delay so diagonal travel to the panel doesn't shut it.
 
-const navMenus = [...document.querySelectorAll("#primary-nav .has-menu")].map((item) => ({
-  item,
-  btn: item.querySelector("button[aria-controls]"),
-  panel: item.querySelector(".megamenu"),
-}));
-let openNavMenu = null;
-let navMenuTimer = 0;
-const hoverFine = window.matchMedia("(hover: hover) and (pointer: fine)");
-
 // Report pictograms, keyed by slug: hairline line art on a 24-unit grid, the
 // same stroke and bronze as the house icons. The static menu markup in
 // index.html carries the same drawings; keep the two in step. Unknown slugs
@@ -2145,61 +2136,9 @@ function fillReportsMenu() {
   });
 }
 
-// CSS anchors panels to the centred masthead on every viewport size.
-function setNavMenu(m, open) {
-  clearTimeout(navMenuTimer);
-  if (open) {
-    if (openNavMenu && openNavMenu !== m) setNavMenu(openNavMenu, false);
-    if (m.panel.id === "menu-reports") fillReportsMenu();
-    m.panel.hidden = false;
-    m.btn.setAttribute("aria-expanded", "true");
-    openNavMenu = m;
-  } else {
-    m.panel.hidden = true;
-    m.btn.setAttribute("aria-expanded", "false");
-    m.byHover = false;
-    if (openNavMenu === m) openNavMenu = null;
-  }
-}
-
-for (const m of navMenus) {
-  m.btn.addEventListener("click", () => {
-    // A click right after a hover-open reads as "yes, this menu" — closing
-    // it would punish the most natural gesture. It confirms instead.
-    if (openNavMenu === m && m.byHover) { m.byHover = false; return; }
-    setNavMenu(m, openNavMenu !== m);
-  });
-  m.item.addEventListener("mouseenter", () => {
-    if (!hoverFine.matches) return;
-    clearTimeout(navMenuTimer);
-    if (openNavMenu !== m) { setNavMenu(m, true); m.byHover = true; }
-  });
-  // Following a panel link closes the panel even when the hash is already
-  // the destination (no hashchange fires then).
-  m.panel.addEventListener("click", (e) => {
-    if (e.target.closest("a")) setNavMenu(m, false);
-  });
-  m.item.addEventListener("mouseleave", () => {
-    if (!hoverFine.matches) return;
-    clearTimeout(navMenuTimer);
-    navMenuTimer = setTimeout(() => { if (openNavMenu === m) setNavMenu(m, false); }, 150);
-  });
-  m.item.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && openNavMenu === m) {
-      e.stopPropagation();
-      setNavMenu(m, false);
-      m.btn.focus();
-    }
-  });
-  // Tabbing out of the item (past the panel's last link) closes it quietly.
-  m.item.addEventListener("focusout", (e) => {
-    if (openNavMenu === m && !m.item.contains(e.relatedTarget)) setNavMenu(m, false);
-  });
-}
-document.addEventListener("pointerdown", (e) => {
-  if (openNavMenu && !openNavMenu.item.contains(e.target)) setNavMenu(openNavMenu, false);
-});
-window.addEventListener("hashchange", () => { if (openNavMenu) setNavMenu(openNavMenu, false); });
+OpaxNavigation.mountDesktop({ onOpen: panel => {
+  if (panel.id === "menu-reports") fillReportsMenu();
+} });
 
 // Shared with the homepage so mobile navigation stays consistent.
 const navDrawer = OpaxNavigation.mountDrawer({ navigate: goRoute });
