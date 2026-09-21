@@ -42,7 +42,7 @@ test('generated summaries are never substituted for missing source text',async()
 
 
 test('verified venue note sources are readable while unrelated slugs stay closed',async()=>{
- for(const slug of ['grant-site-evidence-mlci-invitation-067','grant-site-evidence-mlci-invitation-070','grant-site-evidence-ga566033']) {
+ for(const slug of ['grantconnect-award-ga580272','grantconnect-award-ga580272-v1','grant-site-evidence-mlci-invitation-067','grant-site-evidence-mlci-invitation-070','grant-site-evidence-ga566033']) {
   assert.equal(isPublicSlug(slug),true);
   const result=await readSource({'t-body':field('Derived venue evidence, not an award or payment.')},slug);
   assert.equal(result.text,'Derived venue evidence, not an award or payment.');
