@@ -474,7 +474,7 @@ async function mount() {
   started = true;
   try {
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=home-page-scroll-20260913"
+      "/money-map.js?v=profile-button-20260921"
     );
     if (disposed) return;
     root.replaceChildren();
