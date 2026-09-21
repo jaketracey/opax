@@ -1035,9 +1035,28 @@ def write_out(docs: list[dict], index: dict, out: Path, sample: int | None) -> N
     for d in docs:
         if keys is not None and d["key"] not in keys:
             continue
-        (out / f"{d['key']}.json").write_text(json.dumps(d, ensure_ascii=False, indent=1) + "\n")
+        path = out / f"{d['key']}.json"
+        if path.exists():
+            preserve_speech_briefs(d, json.loads(path.read_text()))
+        path.write_text(json.dumps(d, ensure_ascii=False, indent=1) + "\n")
         written += 1
     log(f"wrote {written} bill files + index.json to {out}")
+
+
+def preserve_speech_briefs(doc: dict, previous: dict) -> None:
+    """Registry refreshes do not produce briefs; retain them for the same speech.
+
+    Removed or reassigned speech links are never restored, and a supplied new
+    brief wins. Identity/date/speaker checks prevent a brief crossing records.
+    """
+    if previous.get('key') != doc.get('key'):
+        return
+    prior = {s.get('slug'): s for s in previous.get('speeches', []) if s.get('slug')}
+    for speech in doc.get('speeches', []):
+        old = prior.get(speech.get('slug'), {})
+        if (not speech.get('brief') and old.get('brief')
+                and all(speech.get(k) == old.get(k) for k in ('speaker', 'date', 'state'))):
+            speech['brief'] = old['brief']
 
 
 # ---------------------------------------------------------------------------

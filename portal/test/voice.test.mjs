@@ -275,7 +275,7 @@ test.after(()=>rmSync(folder,{recursive:true,force:true}));
 
 test('voice can read verified invitation venue evidence without accepting arbitrary IDs',async()=>{
  const f=fixture();
- for(const slug of ['grant-site-evidence-mlci-invitation-067','grant-site-evidence-ga566033']) {
+ for(const slug of ['grantconnect-award-ga580272','grantconnect-award-ga580272-v1','grant-site-evidence-mlci-invitation-067','grant-site-evidence-ga566033']) {
   const r=await runVoiceTool('read_record',{slug},f.env,async path=>{
    assert.equal(path,'/api/resource/'+slug);return Response.json({title:'Verified venue',text:'Invitation venue evidence, not a payment.'});
   });
