@@ -94,3 +94,5 @@ Run `node scripts/stamp_assets.mjs`, `npm run check` and `npm test` from the doc
 The homepage and application pages use the same mobile navigation drawer, with its controller in `navigation.js` and shared styles in `style.css`. It opens from the hamburger below 801px, contains search and grouped navigation, and closes on Escape, the close button, a destination, the backdrop or a return to desktop width. Closing on mobile restores focus to the opening control. The homepage does not use a separate mobile dropdown.
 
 Desktop megamenus use CSS positioning relative to the centred masthead, matching the homepage. Do not add viewport- or full-header-relative inline offsets: these apply the outer page margin twice and can move panels off-screen on wide displays.
+
+On mobile (up to 800px), the homepage header is sticky at the top, matching the application header. Safari uses a viewport-attached header to extend its background into the top browser inset; `theme-color` alone does not provide that behaviour in Safari 26. Keep the navy theme meta tag for browsers that use it. Desktop homepage positioning is unchanged.

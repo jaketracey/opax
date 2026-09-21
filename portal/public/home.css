@@ -443,6 +443,8 @@
   .hp-investigate .hp-section-head > .ui-button { align-self: start; }
 }
 @media (max-width: 800px) {
+  /* Match the app header and let Safari extend its navy into the top inset. */
+  .hp-header { position: sticky; top: 0; }
   .hp-investigate { display: flex; flex-direction: column; gap: 24px; padding-top: 0; }
   .hp-browse { order: -1; padding: 0; border: 0; border-bottom: 1px solid var(--divider-subtle); }
   .hp-browse > h2 { margin: 0; padding: 16px 0; }
