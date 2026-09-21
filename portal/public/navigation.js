@@ -52,6 +52,74 @@
     jur = jur || /^\/money\/grants\/(federal|qld)\/recipient\//.exec(path)?.[1];
     return `<nav class="area-nav money-area-nav" aria-label="Money">${money.map(([href,label]) => `<a href="${href}${jur && jur !== 'federal' && !oneJurisdiction.has(href) ? '?jur='+encodeURIComponent(jur) : ''}"${href===path || href==='/money/grants' && path.startsWith('/money/grants/')?' aria-current="page"':''}>${label}</a>`).join('')}</nav>`;
   }
+  // Shared disclosure behaviour: keyboard, pointer, dismissal and focus return.
+  // Pages can lazily refresh panel content without replacing the interaction.
+  function mountDesktop({ onOpen = () => {} } = {}) {
+    const navMenus = [...document.querySelectorAll("#primary-nav .has-menu")].map((item) => ({
+      item,
+      btn: item.querySelector("button[aria-controls]"),
+      panel: item.querySelector(".megamenu"),
+    }));
+    let openNavMenu = null;
+    let navMenuTimer = 0;
+    const hoverFine = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+    // CSS anchors panels to the centred masthead on every viewport size.
+    function setNavMenu(m, open) {
+      clearTimeout(navMenuTimer);
+      if (open) {
+        if (openNavMenu && openNavMenu !== m) setNavMenu(openNavMenu, false);
+        onOpen(m.panel);
+        m.panel.hidden = false;
+        m.btn.setAttribute("aria-expanded", "true");
+        openNavMenu = m;
+      } else {
+        m.panel.hidden = true;
+        m.btn.setAttribute("aria-expanded", "false");
+        m.byHover = false;
+        if (openNavMenu === m) openNavMenu = null;
+      }
+    }
+
+    for (const m of navMenus) {
+      m.btn.addEventListener("click", () => {
+        // A click right after a hover-open reads as "yes, this menu" — closing
+        // it would punish the most natural gesture. It confirms instead.
+        if (openNavMenu === m && m.byHover) { m.byHover = false; return; }
+        setNavMenu(m, openNavMenu !== m);
+      });
+      m.item.addEventListener("mouseenter", () => {
+        if (!hoverFine.matches) return;
+        clearTimeout(navMenuTimer);
+        if (openNavMenu !== m) { setNavMenu(m, true); m.byHover = true; }
+      });
+      // Following a panel link closes the panel even when the hash is already
+      // the destination (no hashchange fires then).
+      m.panel.addEventListener("click", (e) => {
+        if (e.target.closest("a")) setNavMenu(m, false);
+      });
+      m.item.addEventListener("mouseleave", () => {
+        if (!hoverFine.matches) return;
+        clearTimeout(navMenuTimer);
+        navMenuTimer = setTimeout(() => { if (openNavMenu === m) setNavMenu(m, false); }, 150);
+      });
+      m.item.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && openNavMenu === m) {
+          e.stopPropagation();
+          setNavMenu(m, false);
+          m.btn.focus();
+        }
+      });
+      // Tabbing out of the item (past the panel's last link) closes it quietly.
+      m.item.addEventListener("focusout", (e) => {
+        if (openNavMenu === m && !m.item.contains(e.relatedTarget)) setNavMenu(m, false);
+      });
+    }
+    document.addEventListener("pointerdown", (e) => {
+      if (openNavMenu && !openNavMenu.item.contains(e.target)) setNavMenu(openNavMenu, false);
+    });
+    window.addEventListener("hashchange", () => { if (openNavMenu) setNavMenu(openNavMenu, false); });
+  }
   function mountDrawer({ navigate = href => location.assign(href) } = {}) {
     const $ = id => document.getElementById(id);
     if (!$("nav-drawer") || !$("nav-open")) return { close() {} };
@@ -131,7 +199,7 @@
 
     return { close };
   }
-  globalThis.OpaxNavigation = { sections, money, active, moneyNav, mountDrawer };
+  globalThis.OpaxNavigation = { sections, money, active, moneyNav, mountDesktop, mountDrawer };
   if (typeof document === 'undefined') return;
   const desktop = document.querySelector('#primary-nav .nav-list');
   const mobile = document.querySelector('#nav-drawer nav');
