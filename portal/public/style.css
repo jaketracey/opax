@@ -843,6 +843,8 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
 .ask-keep .chat-next .subject-section-title { margin-top: 0; }
 .ask-keep-form { display: flex; gap: 0.6rem; }
 .ask-keep-form input { flex: 1 1 auto; min-width: 0; }
+/* Reserve the action's natural width; the question field takes the remaining space. */
+.ask-keep-form > .ui-button, .chat-composer > .ui-button { flex: 0 0 auto; white-space: nowrap; }
 
 
 .source-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
