@@ -13,7 +13,7 @@ const {communityRoute}=await import(pathToFileURL(join(folder,'community.mjs')))
 test.after(()=>rmSync(folder,{recursive:true,force:true}));
 function fixture(){
  const db=new DatabaseSync(':memory:');
- for(const file of ['0001_community.sql','0002_free_community.sql','0009_community_social.sql'])db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
+ for(const file of ['0001_community.sql','0002_free_community.sql','0009_community_social.sql','0010_reply_email_notifications.sql'])db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
  const statement=(sql,args=[])=>({bind(...values){return statement(sql,values)},async first(){return db.prepare(sql).get(...args)||null},async all(){return {results:db.prepare(sql).all(...args)}},async run(){const result=db.prepare(sql).run(...args);return {success:true,meta:{changes:Number(result.changes)}}}});
  const env={COMMUNITY_DB:{prepare:statement,async batch(stmts){db.exec('BEGIN');try{const results=[];for(const stmt of stmts)results.push(await stmt.run());db.exec('COMMIT');return results}catch(e){db.exec('ROLLBACK');throw e}}},COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test'};
  const cookies={};

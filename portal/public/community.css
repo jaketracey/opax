@@ -210,6 +210,9 @@
 .community-radio input{margin-top:.3rem;width:1.1rem;height:1.1rem;accent-color:var(--navy);flex-shrink:0}
 .community-radio strong,.community-radio small{display:block}
 .community-radio small{margin-top:.3rem}
+.community-email-settings{margin-top:2rem;padding-top:2rem;border-top:1px solid var(--line);scroll-margin-top:calc(var(--community-header-height,84px) + 1.5rem)}
+.community-reply{scroll-margin-top:calc(var(--community-header-height,84px) + 1.5rem)}
+.community-reply:target,.community-reply.is-linked-reply{border-left:3px solid var(--bronze-bright);padding-left:1rem;background:var(--paper)}
 .community-blocked-member{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 0;border-top:1px solid var(--line)}
 .community-blocked-member:last-of-type{margin-bottom:1rem}
 .community-subnav{gap:1.5rem;margin-bottom:2rem;border-bottom:1px solid var(--line)}

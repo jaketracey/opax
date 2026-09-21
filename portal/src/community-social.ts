@@ -1,6 +1,6 @@
 import {body, CommunityError, json, limit, member, now, publicMember, requireMember, text, type Member} from './community-core'
 
-type SocialMember = Member & {message_policy: 'everyone'|'following'|'nobody'}
+type SocialMember = Member & {message_policy: 'everyone'|'following'|'nobody',reply_email_notifications:number}
 type Conversation = {id:string, member_a:string, member_b:string}
 // These predicates are shared by list/detail/count queries so badges cannot leak
 // activity that a member is not allowed to see. All interpolated SQL is static.
@@ -73,8 +73,11 @@ export async function socialRoute(req:Request,env:Env):Promise<Response|null>{
   if(threadId){
    const thread=await env.COMMUNITY_DB.prepare(`SELECT ${threadColumns} FROM community_threads t JOIN members m ON m.id=t.member_id WHERE t.id=?2 AND t.hidden=0 AND m.disabled=0 AND ${unblocked('?1','t.member_id')}`).bind(id,threadId).first()
    if(!thread)throw new CommunityError(404,'This discussion is unavailable.')
-   const replies=await env.COMMUNITY_DB.prepare(`SELECT r.id,r.member_id,r.body,r.created_at,m.display_name FROM community_replies r JOIN members m ON m.id=r.member_id WHERE r.thread_id=?2 AND r.hidden=0 AND m.disabled=0 AND ${unblocked('?1','r.member_id')} ORDER BY r.created_at,r.id LIMIT 200`).bind(id,threadId).all()
-   return json({thread,replies:replies.results})
+   const focus=url.searchParams.get('reply')||''
+   if(focus&&!/^[\w-]{1,64}$/.test(focus))throw new CommunityError(400,'Choose a valid reply.')
+   // Include the linked reply even in a long discussion, alongside the latest replies.
+   const replies=await env.COMMUNITY_DB.prepare(`SELECT * FROM (SELECT r.id,r.member_id,r.body,r.created_at,m.display_name FROM community_replies r JOIN members m ON m.id=r.member_id WHERE r.thread_id=?2 AND r.hidden=0 AND m.disabled=0 AND ${unblocked('?1','r.member_id')} ORDER BY CASE WHEN r.id=?3 THEN 0 ELSE 1 END,r.created_at DESC,r.id DESC LIMIT 200) ORDER BY created_at,id`).bind(id,threadId,focus).all()
+   return json({thread,replies:replies.results,more_replies:Number(thread.replies)>replies.results.length})
   }
   if(profileId){
    const peer=await peerMember(env,profileId),blocked=viewer?await isBlocked(env,id,peer.id):false
@@ -104,8 +107,20 @@ export async function socialRoute(req:Request,env:Env):Promise<Response|null>{
   return json({members:rows.results.slice(0,24),more:rows.results.length>24})
  }
  if(path==='preferences'){
-  if(read){const own=await peerMember(env,m.id);return json({message_policy:own.message_policy})}
-  if(req.method==='PATCH'){const d=await body(req);if(!['everyone','following','nobody'].includes(String(d.message_policy)))throw new CommunityError(400,'Choose who can message you.');await env.COMMUNITY_DB.prepare('UPDATE members SET message_policy=? WHERE id=?').bind(d.message_policy,m.id).run();return json({saved:true})}
+  if(read){const own=await peerMember(env,m.id);return json({message_policy:own.message_policy,reply_email_notifications:!!own.reply_email_notifications})}
+  if(req.method==='PATCH'){
+   const d=await body(req),updates:D1PreparedStatement[]=[]
+   if(d.message_policy!==undefined){if(!['everyone','following','nobody'].includes(String(d.message_policy)))throw new CommunityError(400,'Choose who can message you.');updates.push(env.COMMUNITY_DB.prepare('UPDATE members SET message_policy=? WHERE id=?').bind(d.message_policy,m.id))}
+   if(d.reply_email_notifications!==undefined){
+    if(typeof d.reply_email_notifications!=='boolean')throw new CommunityError(400,'Choose whether to receive reply emails.')
+    // Re-enabling invalidates old unsubscribe links; opting out cancels queued emails immediately.
+    if(d.reply_email_notifications)updates.push(env.COMMUNITY_DB.prepare('DELETE FROM community_email_unsubscribes WHERE member_id=? AND EXISTS(SELECT 1 FROM members WHERE id=? AND reply_email_notifications=0)').bind(m.id,m.id))
+    updates.push(env.COMMUNITY_DB.prepare('UPDATE members SET reply_email_notifications=? WHERE id=?').bind(Number(d.reply_email_notifications),m.id))
+    if(!d.reply_email_notifications)updates.push(env.COMMUNITY_DB.prepare("UPDATE community_email_outbox SET state='skipped' WHERE member_id=? AND state='pending'").bind(m.id))
+   }
+   if(!updates.length)throw new CommunityError(400,'Choose a setting to update.')
+   await env.COMMUNITY_DB.batch(updates);return json({saved:true})
+  }
  }
  if(path==='blocks'&&read){const rows=await env.COMMUNITY_DB.prepare('SELECT m.id,m.display_name AS name FROM member_blocks b JOIN members m ON m.id=b.blocked_id WHERE b.member_id=? ORDER BY b.created_at DESC LIMIT 200').bind(m.id).all();return json({members:rows.results})}
  const relationship=path.match(/^members\/([\w-]+)\/(follow|block)$/)

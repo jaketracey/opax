@@ -23,6 +23,7 @@ import {readGenerationCache, storeGenerationCache} from './generation-cache'
 import { ASK_PIPELINE_VERSION, EVIDENCE_GAP_ANSWER, isEvidenceGap, isPositionBody, guardPositionAnswer, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQuestion, POSITION_GROUNDING, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
+import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { communityMcp } from './community-mcp'
@@ -4758,6 +4759,8 @@ const CSP_PAGE = [
 
 // A JSON or SSE body is never a document, so it needs to load nothing at all.
 const CSP_API = "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+// The unsubscribe endpoint is a script-free HTML form, including when signed out.
+const CSP_UNSUBSCRIBE = "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
 
 // Statuses whose Response must be constructed with a null body.
 const NULL_BODY_STATUS = new Set([101, 204, 205, 304])
@@ -4774,7 +4777,8 @@ function withSecurityHeaders(res: Response, url: URL): Response {
   // res.body is passed through unread, so SSE keeps streaming.
   const out = new Response(NULL_BODY_STATUS.has(res.status) ? null : res.body, { status: res.status, statusText: res.statusText, headers: res.headers, ...(res.webSocket ? { webSocket: res.webSocket } : {}) })
   for (const [k, v] of Object.entries(BASE_SECURITY_HEADERS)) out.headers.set(k, v)
-  out.headers.set('content-security-policy', isApi ? CSP_API : CSP_PAGE)
+  const isUnsubscribePage = url.pathname === '/api/community/email/unsubscribe' && res.headers.get('content-type')?.startsWith('text/html')
+  out.headers.set('content-security-policy', isUnsubscribePage ? CSP_UNSUBSCRIBE : isApi ? CSP_API : CSP_PAGE)
   if (url.pathname.startsWith('/api/community/') || url.pathname.startsWith('/api/voice/') || url.pathname === '/mcp') { out.headers.set('cache-control', 'no-store'); out.headers.set('referrer-policy', 'no-referrer') }
   if (url.pathname === '/community' || url.pathname === '/community.html') out.headers.set('referrer-policy', 'no-referrer')
   if (NO_STORE_PATHS.has(url.pathname) && !out.headers.has('cache-control')) {
@@ -5095,7 +5099,7 @@ export default {
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     const entry = await pageEntry(request, env.ASSETS)
     if (entry) return communityResponse(entry)
-    if (url.pathname.startsWith('/api/community/')) return communityResponse(await communityRoute(request, env))
+    if (url.pathname.startsWith('/api/community/')) return communityResponse(await communityRoute(request, env, ctx))
     if (url.pathname.startsWith('/api/voice/')) return communityResponse(await voiceRoute(request, env, ctx, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
       const local = new Request(target, { headers: { 'cf-connecting-ip': 'voice-tools' } })
@@ -5160,6 +5164,10 @@ export default {
 
   // Cron: one daily edition across connected channels. See docs/DAILY-POST.md.
   async scheduled(controller: ScheduledController, env: Env, _ctx: ExecutionContext): Promise<void> {
+    if (controller.cron === REPLY_EMAIL_CRON) {
+      console.log('community-reply-emails', JSON.stringify(await deliverReplyEmails(env)))
+      return
+    }
     const result = await runSocialPublication(env, {
       now: controller.scheduledTime, personTopics: name => personTopicsFor(name, env),
       sourceResponse: async (target, method = 'HEAD') => {
