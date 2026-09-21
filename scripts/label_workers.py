@@ -134,6 +134,9 @@ def db(path: Path = DEFAULT_DB) -> sqlite3.Connection:
     con.execute("""CREATE TABLE IF NOT EXISTS queue (
         rid TEXT PRIMARY KEY, status TEXT NOT NULL DEFAULT 'pending', worker TEXT,
         claimed_at REAL, done_at REAL, slug TEXT, existing TEXT, labels TEXT, error TEXT, force INTEGER NOT NULL DEFAULT 0)""")
+    if 'priority' not in {row[1] for row in con.execute('PRAGMA table_info(queue)')}:
+        con.execute("ALTER TABLE queue ADD COLUMN priority INTEGER NOT NULL DEFAULT 0")
+    con.execute("CREATE INDEX IF NOT EXISTS queue_priority ON queue(status, priority DESC)")
     con.execute("CREATE INDEX IF NOT EXISTS queue_status ON queue(status)")
     con.execute("""CREATE TABLE IF NOT EXISTS log (
         ts REAL, worker TEXT, rid TEXT, slug TEXT, labels TEXT)""")
@@ -175,10 +178,12 @@ def fetch_item(kb: Kb, rid: str) -> dict:
 
 
 def cmd_init(a: argparse.Namespace) -> None:
-    rids = json.load(open(a.rids))
+    rids = json.loads(Path(a.rids).read_text())
     rids = [r if isinstance(r, str) else (r.get("id") or r.get("rid")) for r in rids][a.skip:]
     con = db()
     con.executemany("INSERT OR IGNORE INTO queue(rid) VALUES (?)", [(r,) for r in rids])
+    con.executemany("UPDATE queue SET priority=MAX(priority, ?) WHERE rid=? AND status='pending'",
+                    [(getattr(a, 'priority', 0), r) for r in rids if r])
     con.commit()
     print(f"queued {len(rids)} rids (skipped the first {a.skip}); total rows {con.execute('SELECT COUNT(*) FROM queue').fetchone()[0]}")
 
@@ -221,7 +226,7 @@ def cmd_next(a: argparse.Namespace) -> None:
         if want <= 0:
             break
         with con:
-            rows = con.execute("SELECT rid FROM queue WHERE status='pending' LIMIT ?", (want,)).fetchall()
+            rows = con.execute("SELECT rid FROM queue WHERE status='pending' ORDER BY priority DESC, rowid LIMIT ?", (want,)).fetchall()
             rids = [r[0] for r in rows]
             con.executemany("UPDATE queue SET status='claimed', worker=?, claimed_at=? WHERE rid=? AND status='pending'",
                             [(a.worker, time.time(), r) for r in rids])
@@ -446,7 +451,7 @@ def cmd_agreement(a: argparse.Namespace) -> None:
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)
-    s = sub.add_parser("init"); s.add_argument("--rids", required=True); s.add_argument("--skip", type=int, default=0); s.set_defaults(fn=cmd_init)
+    s = sub.add_parser("init"); s.add_argument("--rids", required=True); s.add_argument("--skip", type=int, default=0); s.add_argument("--priority", type=int, default=0); s.set_defaults(fn=cmd_init)
     s = sub.add_parser("next"); s.add_argument("--worker", required=True); s.add_argument("--n", type=int, default=40); s.add_argument("--out", required=True); s.set_defaults(fn=cmd_next)
     s = sub.add_parser("submit"); s.add_argument("--worker", required=True); s.add_argument("--labels", required=True); s.set_defaults(fn=cmd_submit)
     s = sub.add_parser("status"); s.set_defaults(fn=cmd_status)

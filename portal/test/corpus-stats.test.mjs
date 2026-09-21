@@ -12,18 +12,18 @@ test("refreshed corpus manifest retains the cleaned PM transcript tranche", () =
   const source = corpus.sources.find((item) => item.name.startsWith("Prime Minister transcripts"));
   assert.deepEqual(source, {
     name: "Prime Minister transcripts and releases (PM&C)",
-    docs: 614,
+    docs: 631,
     coverage: "2025–2026",
   });
-  assert.equal(corpus.version, "2026-09-13");
-  assert.equal(corpus.expected_resources, 620540);
+  assert.equal(corpus.version, "2026-09-21");
+  assert.equal(corpus.expected_resources, 625606);
   assert.equal(
     Object.values(corpus.expected_resources_breakdown).reduce((sum, value) => sum + value, 0),
     corpus.expected_resources,
   );
   assert.deepEqual(corpus.sources.find((item) => item.name.startsWith("NSW Government")), {
     name: "NSW Government ministerial releases",
-    docs: 5185,
+    docs: 5243,
     coverage: "2024–2026",
   });
 });

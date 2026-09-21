@@ -1,14 +1,16 @@
 {
-  "version": "2026-09-13",
-  "expected_resources": 620540,
+  "version": "2026-09-21",
+  "expected_resources": 625606,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 620066,
-    "new_speeches_federal_to_9_sep_and_victoria_to_10_sep": 405,
-    "new_nsw_ministerial_releases": 34,
-    "new_bill_records": 10,
-    "other_verified_index_growth": 25
+    "live_index_before_refresh": 620767,
+    "new_bill_resources": 10,
+    "new_bill_text_resources": 1475,
+    "new_division_resources": 147,
+    "new_grant_award_resources": 978,
+    "new_press_release_resources": 216,
+    "new_speech_resources": 2013
   },
-  "collected_speeches": 596409,
+  "collected_speeches": 598425,
   "sources": [
     {
       "name": "Federal Hansard: House of Representatives (zenodo)",
@@ -17,7 +19,7 @@
     },
     {
       "name": "NSW Parliament",
-      "docs": 109393,
+      "docs": 110764,
       "coverage": "2015–2026"
     },
     {
@@ -37,7 +39,7 @@
     },
     {
       "name": "Federal Hansard: Senate + recent House (openaustralia)",
-      "docs": 32993,
+      "docs": 33638,
       "coverage": "2006–2026"
     },
     {
@@ -47,17 +49,17 @@
     },
     {
       "name": "Recorded divisions (TheyVoteForYou + state Hansard)",
-      "docs": 13867,
+      "docs": 14014,
       "coverage": "1998–2026"
     },
     {
       "name": "Prime Minister transcripts and releases (PM&C)",
-      "docs": 614,
+      "docs": 631,
       "coverage": "2025–2026"
     },
     {
       "name": "NSW Government ministerial releases",
-      "docs": 5185,
+      "docs": 5243,
       "coverage": "2024–2026"
     },
     {
@@ -89,12 +91,43 @@
       "name": "Grant research notes and source totals",
       "docs": 2,
       "coverage": "2025–2026"
+    },
+    {
+      "name": "Queensland Government ministerial statements",
+      "docs": 55,
+      "coverage": "7–21 Sep 2026 refresh"
+    },
+    {
+      "name": "Victorian Premier releases",
+      "docs": 50,
+      "coverage": "7–21 Sep 2026 refresh"
+    },
+    {
+      "name": "Australian Treasury ministerial releases",
+      "docs": 36,
+      "coverage": "7–21 Sep 2026 refresh"
+    },
+    {
+      "name": "GrantConnect award notices (recent refresh)",
+      "docs": 978,
+      "coverage": "7–21 Sep 2026 publication window; awards, not payments"
+    },
+    {
+      "name": "Federal bill records",
+      "docs": 2994,
+      "coverage": "Registry records; source versions counted separately"
+    },
+    {
+      "name": "Original federal bill text versions",
+      "docs": 1696,
+      "coverage": "Complete source versions; historical import continues"
     }
   ],
   "inclusion": "Speeches from 1993-03-13 (the election that seated the longest-serving current federal MP), at least 200 characters, deduplicated across overlapping sources, procedural rows removed (division roll-calls, chair interjections, day indexes). External statements require an official source URL, a valid date, an open licence, at least 200 characters and a unique body. News articles are excluded from ingestion and retrieval; headline links are external only. Structured grant, election and roster records retain source provenance and snapshot dates; research notes are attributed summaries, not copies of full reports.",
   "models": {
     "embeddings": "multilingual-2024-05-06",
-    "generation": "gemini-2.5-flash-lite"
+    "generation": "openai-compatible",
+    "enrichment": "Codex subscription workers; automatic provider summaries disabled"
   },
   "known_defects": [
     "openaustralia-derived texts: roughly a quarter contain missing-space concatenation artefacts ('toSenator'); verify wording against the official record before quoting.",
@@ -103,15 +136,18 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-09-13",
+    "checked_at": "2026-09-21T12:44:46.515368+00:00",
     "news_resources": 0,
-    "bills_registry": 2978,
-    "current_parliament_bills": 285,
-    "latest_bill_introduced": "2026-09-10",
-    "latest_nsw_release": "2026-09-11",
+    "bills_registry": 2988,
+    "current_parliament_bills": 295,
+    "latest_bill_introduced": "2026-09-17",
+    "latest_nsw_release": "2026-09-21",
     "source_limitations": [
       "SA Hansard refresh blocked by source HTTP 403; stored coverage ends 2024-11-12.",
-      "Federal Hansard (OpenAustralia) now current to 2026-09-09; Victoria to 2026-09-10; NSW Parliament to 2026-08-06 (next sitting 15 September); QLD to 2026-08-26."
+      "Federal Hansard is current to 2026-09-17 with three source pages returning HTTP 403; NSW Parliament to 2026-09-17; Victoria to 2026-09-10; QLD to 2026-08-26.",
+      "Federal interests pages returned no usable records during this refresh. Existing disclosures were preserved.",
+      "New AEC source snapshots are retained for reconciliation. Amended federal donation rows have not replaced reviewed public data.",
+      "Ministerial diary and IPEA expense refreshes returned the same published rows as the previous verified snapshots."
     ],
     "grants_research": {
       "checked_at": "2026-09-09",
@@ -136,6 +172,45 @@
         "delivery_postcode": 21,
         "source_fields_preserved": 89
       }
+    },
+    "resource_counts": {
+      "bill": 2994,
+      "bill_text": 1696,
+      "division": 14014,
+      "election_baseline": 150,
+      "grant_award": 1067,
+      "grant_invitation": 227,
+      "parliamentary_profile": 983,
+      "press_release": 6015,
+      "research_report": 35,
+      "speech": 598425
+    },
+    "raw_source_updates": {
+      "federal_speeches": 693,
+      "nsw_speeches": 1434,
+      "grantconnect_notices": 978,
+      "austender_notices_fetched": 2043,
+      "new_federal_divisions": 69
+    },
+    "structured_sources": {
+      "grantconnect_awards": 361036,
+      "austender_latest_contracts": 869225,
+      "published_supplier_contracts": 104242,
+      "lobbyist_firms": 1957,
+      "lobbyist_client_links": 15041,
+      "lobbyist_people": 5984,
+      "lobbyist_contact_disclosures": 8345
+    },
+    "enrichment_queued": {
+      "new_speech_resources": 2016,
+      "new_release_resources": 216,
+      "priority": "New records first; completed and claimed work preserved."
+    },
+    "bill_text_backfill": {
+      "acquired_complete_versions": 4747,
+      "published_at_snapshot": 1696,
+      "status": "running",
+      "note": "Only complete source versions are published. Existing reviewed notes are retained; indexing may lag accepted writes."
     }
   },
   "enrichment": {

@@ -1,7 +1,7 @@
 {
  "key": "au-federal-r7414",
- "title": "Telecommunications Legislation Amendment (Universal Outdoor Mobile Obligation) Bill 2025",
- "short_title": "Telecommunications Legislation Amendment (Universal Outdoor Mobile Obligation) Bill 2025",
+ "title": "Telecommunications Legislation Amendment (Universal Outdoor Mobile Obligation) Bill 2026",
+ "short_title": "Telecommunications Legislation Amendment (Universal Outdoor Mobile Obligation) Bill 2026",
  "aliases": [],
  "jurisdiction": "federal",
  "parliament": 48,
@@ -12,7 +12,7 @@
  "sponsor_person_id": null,
  "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
  "status": "before_parliament",
- "status_as_of": "2026-08-11",
+ "status_as_of": "2026-09-14",
  "key_dates": [
   {
    "stage": "introduced",
@@ -55,12 +55,54 @@
    "date": "2026-08-11",
    "house": "representatives",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7414%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7414%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7414%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7414%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7414%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7414%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7414%22"
   }
  ],
  "sources": [
   {
    "kind": "em",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7414_ems_b979950d-5143-4e75-ba70-2794374e11c6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7414_ems_1b0c7b91-8b81-4743-be4a-f4ef1e94a9e0%22",
    "document_date": null,
    "licence": "CC BY-NC-ND 4.0"
   },

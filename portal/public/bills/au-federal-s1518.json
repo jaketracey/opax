@@ -1,0 +1,72 @@
+{
+ "key": "au-federal-s1518",
+ "title": "Military Rehabilitation and Compensation Amendment (Veterans’ Healthcare Without Caps) Bill 2026",
+ "short_title": "Military Rehabilitation and Compensation Amendment (Veterans’ Healthcare Without Caps) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-09-15",
+ "originating_house": "senate",
+ "sponsor": "LAMBIE, Sen Jacqui",
+ "sponsor_party": "Jacqui Lambie Network",
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-09-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1518%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1518%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1518%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1518_ems_9803b8b4-37ca-4b37-bde8-3e01c04a1487%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1518%22",
+   "document_date": "2026-09-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

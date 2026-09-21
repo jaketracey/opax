@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-r7543",
+ "title": "Housing Legislation Amendment (National Definition of Affordable Housing) Bill 2026",
+ "short_title": "Housing Legislation Amendment (National Definition of Affordable Housing) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-09-14",
+ "originating_house": "representatives",
+ "sponsor": "BOELE, Nicolette, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-09-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7543%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7543_ems_cfb5bb37-cf42-4259-a11a-98d19c5939ba%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7543%22",
+   "document_date": "2026-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

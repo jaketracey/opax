@@ -11,8 +11,8 @@
  "sponsor_party": null,
  "sponsor_person_id": null,
  "portfolio": "Defence",
- "status": "before_parliament",
- "status_as_of": "2026-07-02",
+ "status": "passed",
+ "status_as_of": "2026-09-17",
  "key_dates": [
   {
    "stage": "introduced",
@@ -67,12 +67,42 @@
    "date": "2026-07-02",
    "house": "senate",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
   }
  ],
  "sources": [
   {
    "kind": "em",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7498_ems_41c41bfa-05ac-41a4-913e-bca5f69e4643%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7498_ems_7eb8e6b6-7568-43d9-9d2f-a1ef23193554%22",
    "document_date": null,
    "licence": "CC BY-NC-ND 4.0"
   },
