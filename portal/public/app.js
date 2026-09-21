@@ -2145,22 +2145,13 @@ function fillReportsMenu() {
   });
 }
 
-/** The panel drops from the navy band, aligned to its trigger but kept inside the band. */
-function placeNavMenu(m) {
-  const header = document.querySelector("header");
-  const hr = header.getBoundingClientRect();
-  const br = m.btn.getBoundingClientRect();
-  const left = Math.max(12, Math.min(br.left - hr.left, hr.width - m.panel.offsetWidth - 12));
-  m.panel.style.left = `${Math.round(left)}px`;
-}
-
+// CSS anchors panels to the centred masthead on every viewport size.
 function setNavMenu(m, open) {
   clearTimeout(navMenuTimer);
   if (open) {
     if (openNavMenu && openNavMenu !== m) setNavMenu(openNavMenu, false);
     if (m.panel.id === "menu-reports") fillReportsMenu();
     m.panel.hidden = false;
-    placeNavMenu(m);
     m.btn.setAttribute("aria-expanded", "true");
     openNavMenu = m;
   } else {
@@ -2209,7 +2200,6 @@ document.addEventListener("pointerdown", (e) => {
   if (openNavMenu && !openNavMenu.item.contains(e.target)) setNavMenu(openNavMenu, false);
 });
 window.addEventListener("hashchange", () => { if (openNavMenu) setNavMenu(openNavMenu, false); });
-window.addEventListener("resize", () => { if (openNavMenu) placeNavMenu(openNavMenu); });
 
 // Shared with the homepage so mobile navigation stays consistent.
 const navDrawer = OpaxNavigation.mountDrawer({ navigate: goRoute });
