@@ -48,7 +48,9 @@ function failure(root, retry, message = "The supplier records could not be loade
 
 export function coverageHTML(meta) {
   const snapshot = meta?.generated_at || meta?.snapshot_at;
-  const window = meta?.published_from && meta?.published_to ? ` Current notices published ${date(meta.published_from)} to ${date(meta.published_to)}${meta.supplemental_legacy_contract_count ? ", supplemented by older contract records" : ""}.` : "";
+  const from = meta?.publication_window_start || meta?.published_from;
+  const hasOlder = meta?.supplemental_legacy_contract_count || (meta?.publication_window_start && meta?.published_from < meta.publication_window_start);
+  const window = from && meta?.published_to ? ` Publication window: ${date(from)} to ${date(meta.published_to)}${hasOlder ? ", plus selected older contracts" : ""}.` : "";
   return `<p class="fineprint">Recorded contract values are commitments, not verified payments. Coverage reflects the available AusTender records, not all government procurement.${window}${snapshot ? ` Exported ${esc(date(snapshot))}.` : ""}</p>`;
 }
 
