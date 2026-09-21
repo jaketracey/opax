@@ -55,6 +55,7 @@ def main():
     p.add_argument('--env', required=True)
     p.add_argument('--receipt', required=True)
     p.add_argument('--enrichment', help='Previously reviewed, source-verified Codex notes')
+    p.add_argument('--keys', help='Comma-separated bill keys to publish from the snapshot')
     p.add_argument('--apply', action='store_true')
     p.add_argument('--limit', type=int, default=0)
     p.add_argument('--workers', type=int, default=4)
@@ -65,6 +66,11 @@ def main():
     entries = json.loads(Path(args.enrichment).read_text()) if args.enrichment else []
     notes = {(e['bill_key'], e['version_id']): e for e in entries}
     rows = db.execute("SELECT v.bill_key,v.source_version,b.doc_json FROM bill_text_versions v JOIN bill_text_bills b USING(bill_key) WHERE v.status='complete' ORDER BY b.bill_key,v.source_version").fetchall()
+    if args.keys:
+        keys = {key.strip() for key in args.keys.split(',') if key.strip()}
+        if not keys:
+            raise ValueError('At least one bill key is required')
+        rows = [row for row in rows if row['bill_key'] in keys]
     load_dotenv(args.env)
     kb = KbClient(AragConfig.from_env())
     schema = _request('GET', kb._rag('/schema'), kb._headers)

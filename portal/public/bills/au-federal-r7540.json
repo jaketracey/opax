@@ -12,7 +12,7 @@
  "sponsor_person_id": null,
  "portfolio": "Home Affairs",
  "status": "before_parliament",
- "status_as_of": "2026-09-10",
+ "status_as_of": "2026-09-17",
  "key_dates": [
   {
    "stage": "introduced",
@@ -23,6 +23,12 @@
   {
    "stage": "second_reading",
    "date": "2026-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-17",
    "house": "representatives",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7540%22"
   }

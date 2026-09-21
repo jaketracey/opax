@@ -57,16 +57,23 @@ def contract_base(identifier):
     return re.sub(r'-A\d+$', '', str(identifier or '').strip(), flags=re.I)
 
 
-def contract_rows(db):
+def contract_rows(db, published_since=None):
     """Current notices win each lineage; supplement only missing legacy bases."""
     current = [dict(r) | {'source_table': 'ext_contracts_current'} for r in db.execute(
         'SELECT * FROM ext_contracts_current ORDER BY base_cn')]
-    current_bases = {contract_base(r['base_cn']) for r in current}
     have_legacy = db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='contracts'").fetchone()
+    legacy_rows = list(db.execute('SELECT * FROM contracts ORDER BY contract_id')) if have_legacy else []
+    if published_since:
+        # Keep the established publication window and every legacy lineage.
+        # An older current notice still outranks its legacy counterpart.
+        legacy_bases = {contract_base(r['contract_id']) for r in legacy_rows}
+        current = [r for r in current if (r.get('published') or '') >= published_since
+                   or contract_base(r['base_cn']) in legacy_bases]
+    current_bases = {contract_base(r['base_cn']) for r in current}
     if not have_legacy:
         return current
     legacy = {}
-    for row in db.execute('SELECT * FROM contracts ORDER BY contract_id'):
+    for row in legacy_rows:
         r = dict(row)
         identifier = r['contract_id']
         base = contract_base(identifier)
@@ -88,7 +95,7 @@ def contract_rows(db):
     return current + [legacy[key][1] for key in sorted(legacy)]
 
 
-def build_export(db, graph):
+def build_export(db, graph, published_since=None):
     started = time.monotonic()
     db.row_factory = sqlite3.Row
     db.execute("PRAGMA query_only=ON")
@@ -121,7 +128,7 @@ def build_export(db, graph):
     published_values = []
     original_notices = 0
     source_counts = defaultdict(int)
-    for row in contract_rows(db):
+    for row in contract_rows(db, published_since):
         r = dict(row)
         amount = float(r['amount'] or 0)
         if not math.isfinite(amount):
@@ -236,6 +243,7 @@ def build_export(db, graph):
         'current_contract_count': source_counts['ext_contracts_current'],
         'supplemental_legacy_contract_count': source_counts['contracts'],
         'published_from': min(published_values, default=None), 'published_to': max(published_values, default=None),
+        'publication_window_start': published_since,
         'source': 'AusTender, Department of Finance. Latest contract notice per amendment lineage.',
         'source_url': 'https://www.tenders.gov.au/', 'licence': 'CC BY 3.0 AU',
         'year_basis': 'Calendar year of recorded contract start date',
@@ -270,17 +278,22 @@ def main():
     parser.add_argument('--money', type=Path, default=Path('portal/public/graph/money.json'))
     parser.add_argument('--output', type=Path, default=Path('portal/public'))
     parser.add_argument('--stdout', action='store_true')
+    parser.add_argument('--published-since', type=lambda value: date.fromisoformat(value).isoformat(),
+                        help='Keep notices in this publication window plus existing legacy lineages')
     args = parser.parse_args()
     graph = globals().get('BUNDLED_GRAPH') or json.loads(args.money.read_text())
     if args.ssh:
         script = Path(__file__).read_text()
-        payload = f"import sys\nsys.argv=['export_suppliers.py','--db',{args.db!r},'--stdout']\nexec({script!r},{{'__name__':'__main__','BUNDLED_GRAPH':{graph!r}}})\n"
+        remote_args = ['export_suppliers.py', '--db', args.db, '--stdout']
+        if args.published_since:
+            remote_args += ['--published-since', args.published_since]
+        payload = f"import sys\nsys.argv={remote_args!r}\nexec({script!r},{{'__name__':'__main__','BUNDLED_GRAPH':{graph!r}}})\n"
         remote = subprocess.run(['ssh', args.ssh, 'python3', '-'], input=payload, text=True,
                                 capture_output=True, check=True)
         result = json.loads(remote.stdout)
     else:
         with closing(sqlite3.connect('file:' + quote(str(Path(args.db).expanduser()), safe='/') + '?mode=ro', uri=True)) as db:
-            result = build_export(db, graph)
+            result = build_export(db, graph, args.published_since)
     if args.stdout:
         print(json.dumps(result, ensure_ascii=False, allow_nan=False, separators=(',', ':')))
     else:

@@ -11,8 +11,8 @@
  "sponsor_party": null,
  "sponsor_person_id": null,
  "portfolio": "Finance",
- "status": "before_parliament",
- "status_as_of": "2026-09-07",
+ "status": "passed",
+ "status_as_of": "2026-09-18",
  "key_dates": [
   {
    "stage": "introduced",
@@ -79,6 +79,60 @@
    "date": "2026-09-07",
    "house": "senate",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
   }
  ],
  "sources": [
@@ -103,6 +157,12 @@
   {
    "kind": "em_supp",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7481_ems_d6938e68-215d-4111-9c1e-ab8200f6fef7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7481_ems_021f8e2e-429b-4a85-a52a-5771a6f3c422%22",
    "document_date": null,
    "licence": "CC BY-NC-ND 4.0"
   },

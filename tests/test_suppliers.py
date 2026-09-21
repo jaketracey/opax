@@ -172,6 +172,22 @@ class SupplierExportTests(unittest.TestCase):
         self.assertEqual(detail['contracts'][0]['amount'], 40)
         self.assertEqual(detail['contracts'][0]['source_table'], 'contracts')
 
+    def test_publication_window_keeps_latest_values_for_legacy_lineages(self):
+        self.add('CN1', value=100)
+        self.add('CN2', value=10)
+        self.add('CN3', value=20)
+        self.db.execute("UPDATE ext_contracts_current SET published='2010-01-01' WHERE base_cn IN ('CN1','CN2')")
+        self.db.executescript("""
+            CREATE TABLE contracts (contract_id TEXT PRIMARY KEY,supplier_name TEXT,agency TEXT,
+                amount REAL,start_date TEXT,end_date TEXT,title TEXT,description TEXT,procurement_method TEXT);
+            INSERT INTO contracts VALUES ('CN1','ACME','Agency',900,'2010-01-01',NULL,'Legacy',NULL,NULL);
+        """)
+        self.db.commit()
+        result = exporter.build_export(self.db, self.graph, '2025-07-08')
+        self.assertEqual(result['index']['meta']['contract_count'], 2)
+        self.assertEqual(result['index']['meta']['total'], 120)
+        self.assertEqual(result['index']['meta']['supplemental_legacy_contract_count'], 0)
+
     def test_legacy_direct_name_key_cannot_bypass_identity_ambiguity(self):
         self.db.execute("UPDATE ext_contract_suppliers SET canonical_name='ACME'")
         self.db.execute('INSERT INTO ext_contract_suppliers VALUES (?,?,?,?,?,?,?,?,?,?,?)',

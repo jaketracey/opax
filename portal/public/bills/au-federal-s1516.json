@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-s1516",
+ "title": "Environment and Other Legislation Amendment (Fast Tracking Coal, Gas and Oil Projects) Bill 2026",
+ "short_title": "Environment and Other Legislation Amendment (Fast Tracking Coal, Gas and Oil Projects) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-09-14",
+ "originating_house": "senate",
+ "sponsor": "BRAGG, Sen Andrew",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-09-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1516%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1516%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1516_ems_a26f3f8f-0a85-4145-8293-87761002d2c3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1516%22",
+   "document_date": "2026-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -11,8 +11,8 @@
  "sponsor_party": null,
  "sponsor_person_id": null,
  "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
- "status": "before_parliament",
- "status_as_of": "2026-09-07",
+ "status": "passed",
+ "status_as_of": "2026-09-18",
  "key_dates": [
   {
    "stage": "introduced",
@@ -73,12 +73,48 @@
    "date": "2026-09-07",
    "house": "senate",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
   }
  ],
  "sources": [
   {
    "kind": "em",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7499_ems_6abf2ca3-3c8d-4528-9cec-4886bd5b3008%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7499_ems_311d2daa-cd69-4465-8a4f-bf13eeb8fb4c%22",
    "document_date": null,
    "licence": "CC BY-NC-ND 4.0"
   },

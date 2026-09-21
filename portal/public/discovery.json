@@ -155,12 +155,12 @@
       "id": "procurement_concentration:bf948d98a8a51a93",
       "category": "procurement_concentration",
       "entity": "SECURE JOURNEYS PTY LTD",
-      "title": "Department of Home Affairs: 41% awarded to one supplier",
-      "summary": "SECURE JOURNEYS PTY LTD accounts for 41.0% of the positive recorded contract value for Department of Home Affairs.",
+      "title": "Department of Home Affairs: 39% awarded to one supplier",
+      "summary": "SECURE JOURNEYS PTY LTD accounts for 38.7% of the positive recorded contract value for Department of Home Affairs.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 41.01,
+          "value": 38.68,
           "format": "percent"
         },
         {
@@ -170,17 +170,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 5713189812.32,
+          "value": 6057606016.84,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 522.0,
+          "value": 534.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 898.0,
+          "value": 931.0,
           "format": "number"
         }
       ],
@@ -200,46 +200,46 @@
       "chart": {
         "type": "concentration",
         "group_label": "Department of Home Affairs",
-        "group_total": 5713189812.32,
+        "group_total": 6057606016.84,
         "leading_name": "SECURE JOURNEYS PTY LTD",
         "participant_label": "supplier",
-        "participant_count": 522,
-        "record_count": 898,
+        "participant_count": 534,
+        "record_count": 931,
         "participants": [
           {
             "name": "SECURE JOURNEYS PTY LTD",
             "value": 2343038544.0,
-            "share": 41.01,
+            "share": 38.68,
             "record_count": 1
           },
           {
             "name": "CUSHMAN & WAKEFIELD PTY LTD",
             "value": 1019223563.3,
-            "share": 17.84,
+            "share": 16.83,
             "record_count": 3
           },
           {
             "name": "TEEKAY SHIPPING (AUSTRALIA) PTY LTD",
             "value": 211577041.91,
-            "share": 3.7,
+            "share": 3.49,
             "record_count": 1
+          },
+          {
+            "name": "IBM AUSTRALIA LTD",
+            "value": 197398378.91,
+            "share": 3.26,
+            "record_count": 14
           },
           {
             "name": "SKYTRADERS PTY LTD",
             "value": 190795803.32,
-            "share": 3.34,
+            "share": 3.15,
             "record_count": 1
-          },
-          {
-            "name": "TOLL REMOTE LOGISTICS PTY LTD",
-            "value": 187441311.75,
-            "share": 3.28,
-            "record_count": 4
           }
         ],
-        "other_total": 1761113548.04,
-        "other_share": 30.83,
-        "other_count": 517,
+        "other_total": 2095572685.4,
+        "other_share": 34.59,
+        "other_count": 529,
         "period": {
           "kind": "contract_start_date",
           "from": "2009-12-23",
@@ -264,7 +264,7 @@
         },
         {
           "label": "Recorded contract value",
-          "value": 74283106.25,
+          "value": 77583106.25,
           "format": "currency"
         },
         {
@@ -274,7 +274,7 @@
         },
         {
           "label": "Contract records",
-          "value": 4.0,
+          "value": 5.0,
           "format": "number"
         }
       ],
@@ -405,12 +405,12 @@
       "id": "procurement_concentration:92a6d37582784de6",
       "category": "procurement_concentration",
       "entity": "API Services Australia Pty Ltd",
-      "title": "Department of Health, Disability and Ageing: 31% awarded to one supplier",
-      "summary": "API Services Australia Pty Ltd accounts for 31.4% of the positive recorded contract value for Department of Health, Disability and Ageing.",
+      "title": "Department of Health, Disability and Ageing: 29% awarded to one supplier",
+      "summary": "API Services Australia Pty Ltd accounts for 29.3% of the positive recorded contract value for Department of Health, Disability and Ageing.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 31.38,
+          "value": 29.35,
           "format": "percent"
         },
         {
@@ -420,17 +420,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 3799557851.84,
+          "value": 4062159176.65,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 170.0,
+          "value": 201.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 242.0,
+          "value": 307.0,
           "format": "number"
         }
       ],
@@ -450,50 +450,50 @@
       "chart": {
         "type": "concentration",
         "group_label": "Department of Health, Disability and Ageing",
-        "group_total": 3799557851.84,
+        "group_total": 4062159176.65,
         "leading_name": "API Services Australia Pty Ltd",
         "participant_label": "supplier",
-        "participant_count": 170,
-        "record_count": 242,
+        "participant_count": 201,
+        "record_count": 307,
         "participants": [
           {
             "name": "API Services Australia Pty Ltd",
             "value": 1192129400.0,
-            "share": 31.38,
+            "share": 29.35,
             "record_count": 2
           },
           {
             "name": "GlaxoSmithKline Australia Pty Ltd",
             "value": 718600000.0,
-            "share": 18.91,
+            "share": 17.69,
             "record_count": 2
           },
           {
             "name": "SYMBION PTY LTD",
             "value": 596460700.0,
-            "share": 15.7,
+            "share": 14.68,
             "record_count": 1
           },
           {
             "name": "Accenture Australia Pty Ltd",
-            "value": 290752499.99,
-            "share": 7.65,
-            "record_count": 3
+            "value": 291811469.99,
+            "share": 7.18,
+            "record_count": 4
           },
           {
             "name": "SANOFI-AVENTIS AUSTRALIA PTY LTD",
             "value": 137100000.0,
-            "share": 3.61,
+            "share": 3.38,
             "record_count": 2
           }
         ],
-        "other_total": 864515251.85,
-        "other_share": 22.75,
-        "other_count": 165,
+        "other_total": 1126057606.66,
+        "other_share": 27.72,
+        "other_count": 196,
         "period": {
           "kind": "contract_start_date",
           "from": "2020-02-19",
-          "to": "2026-08-19",
+          "to": "2026-10-10",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -656,11 +656,11 @@
       "category": "procurement_concentration",
       "entity": "LOCKHEED MARTIN AUSTRALIA PTY LIMITED",
       "title": "Geoscience Australia: 93% awarded to one supplier",
-      "summary": "LOCKHEED MARTIN AUSTRALIA PTY LIMITED accounts for 93.4% of the positive recorded contract value for Geoscience Australia.",
+      "summary": "LOCKHEED MARTIN AUSTRALIA PTY LIMITED accounts for 92.8% of the positive recorded contract value for Geoscience Australia.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 93.38,
+          "value": 92.77,
           "format": "percent"
         },
         {
@@ -670,17 +670,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 1266845808.5,
+          "value": 1275130727.74,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 111.0,
+          "value": 113.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 151.0,
+          "value": 155.0,
           "format": "number"
         }
       ],
@@ -700,22 +700,22 @@
       "chart": {
         "type": "concentration",
         "group_label": "Geoscience Australia",
-        "group_total": 1266845808.5,
+        "group_total": 1275130727.74,
         "leading_name": "LOCKHEED MARTIN AUSTRALIA PTY LIMITED",
         "participant_label": "supplier",
-        "participant_count": 111,
-        "record_count": 151,
+        "participant_count": 113,
+        "record_count": 155,
         "participants": [
           {
             "name": "LOCKHEED MARTIN AUSTRALIA PTY LIMITED",
             "value": 1183000000.0,
-            "share": 93.38,
+            "share": 92.77,
             "record_count": 1
           },
           {
             "name": "Ensign Australia Pty Ltd",
             "value": 5400000.0,
-            "share": 0.43,
+            "share": 0.42,
             "record_count": 1
           },
           {
@@ -727,19 +727,19 @@
           {
             "name": "TERREX PTY LTD",
             "value": 4770223.26,
-            "share": 0.38,
+            "share": 0.37,
             "record_count": 1
           },
           {
-            "name": "Department of Transport and Planning (VIC)",
-            "value": 3240000.0,
-            "share": 0.26,
+            "name": "Pivotel Satellite Pty Limited",
+            "value": 3431480.24,
+            "share": 0.27,
             "record_count": 1
           }
         ],
-        "other_total": 65382773.84,
-        "other_share": 5.16,
-        "other_count": 106,
+        "other_total": 73476212.84,
+        "other_share": 5.76,
+        "other_count": 108,
         "period": {
           "kind": "contract_start_date",
           "from": "2012-08-21",
@@ -806,11 +806,11 @@
       "category": "procurement_concentration",
       "entity": "Wise Employment Ltd",
       "title": "Department of Social Services: 28% awarded to one supplier",
-      "summary": "Wise Employment Ltd accounts for 27.9% of the positive recorded contract value for Department of Social Services.",
+      "summary": "Wise Employment Ltd accounts for 27.7% of the positive recorded contract value for Department of Social Services.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 27.93,
+          "value": 27.68,
           "format": "percent"
         },
         {
@@ -820,17 +820,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 1346031493.32,
+          "value": 1357925787.56,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 219.0,
+          "value": 222.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 365.0,
+          "value": 371.0,
           "format": "number"
         }
       ],
@@ -850,46 +850,46 @@
       "chart": {
         "type": "concentration",
         "group_label": "Department of Social Services",
-        "group_total": 1346031493.32,
+        "group_total": 1357925787.56,
         "leading_name": "Wise Employment Ltd",
         "participant_label": "supplier",
-        "participant_count": 219,
-        "record_count": 365,
+        "participant_count": 222,
+        "record_count": 371,
         "participants": [
           {
             "name": "Wise Employment Ltd",
             "value": 375903562.05,
-            "share": 27.93,
+            "share": 27.68,
             "record_count": 1
           },
           {
             "name": "The Trustee for the Salvation Army (Victoria) Property Trust",
             "value": 134300238.54,
-            "share": 9.98,
+            "share": 9.89,
             "record_count": 1
           },
           {
             "name": "AMES Australia",
             "value": 105045402.61,
-            "share": 7.8,
+            "share": 7.74,
             "record_count": 1
           },
           {
             "name": "The Personnel Group Ltd",
             "value": 93210154.95,
-            "share": 6.92,
+            "share": 6.86,
             "record_count": 1
           },
           {
             "name": "VERTO LTD",
             "value": 92736083.55,
-            "share": 6.89,
+            "share": 6.83,
             "record_count": 1
           }
         ],
-        "other_total": 544836051.62,
-        "other_share": 40.48,
-        "other_count": 214,
+        "other_total": 556730345.86,
+        "other_share": 41.0,
+        "other_count": 217,
         "period": {
           "kind": "contract_start_date",
           "from": "2010-08-31",
@@ -914,7 +914,7 @@
         },
         {
           "label": "Recorded contract value",
-          "value": 48698417.69,
+          "value": 67606358.48,
           "format": "currency"
         },
         {
@@ -924,7 +924,7 @@
         },
         {
           "label": "Contract records",
-          "value": 73.0,
+          "value": 81.0,
           "format": "number"
         }
       ],
@@ -1105,12 +1105,12 @@
       "id": "procurement_concentration:073e897e6eaaabd2",
       "category": "procurement_concentration",
       "entity": "Built Pty Limited",
-      "title": "Reserve Bank of Australia: 57% awarded to one supplier",
-      "summary": "Built Pty Limited accounts for 57.4% of the positive recorded contract value for Reserve Bank of Australia.",
+      "title": "Reserve Bank of Australia: 50% awarded to one supplier",
+      "summary": "Built Pty Limited accounts for 50.4% of the positive recorded contract value for Reserve Bank of Australia.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 57.44,
+          "value": 50.44,
           "format": "percent"
         },
         {
@@ -1120,17 +1120,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 523753730.04,
+          "value": 596465009.29,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 27.0,
+          "value": 33.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 36.0,
+          "value": 44.0,
           "format": "number"
         }
       ],
@@ -1150,46 +1150,46 @@
       "chart": {
         "type": "concentration",
         "group_label": "Reserve Bank of Australia",
-        "group_total": 523753730.04,
+        "group_total": 596465009.29,
         "leading_name": "Built Pty Limited",
         "participant_label": "supplier",
-        "participant_count": 27,
-        "record_count": 36,
+        "participant_count": 33,
+        "record_count": 44,
         "participants": [
           {
             "name": "Built Pty Limited",
             "value": 300829838.0,
-            "share": 57.44,
+            "share": 50.44,
             "record_count": 1
           },
           {
             "name": "Mirvac 8 Chifley Trust",
             "value": 45804193.0,
-            "share": 8.75,
+            "share": 7.68,
             "record_count": 4
+          },
+          {
+            "name": "Buildcorp Group Pty Ltd",
+            "value": 41991040.4,
+            "share": 7.04,
+            "record_count": 1
           },
           {
             "name": "MSS Security Pty Limited",
             "value": 29674935.0,
-            "share": 5.67,
+            "share": 4.98,
             "record_count": 1
           },
           {
             "name": "NTT Australia",
             "value": 28862663.47,
-            "share": 5.51,
-            "record_count": 2
-          },
-          {
-            "name": "Hitachi Vantara Australia Pty Limited",
-            "value": 14736679.1,
-            "share": 2.81,
+            "share": 4.84,
             "record_count": 2
           }
         ],
-        "other_total": 103845421.47,
-        "other_share": 19.83,
-        "other_count": 22,
+        "other_total": 149302339.42,
+        "other_share": 25.03,
+        "other_count": 28,
         "period": {
           "kind": "contract_start_date",
           "from": "2014-03-30",
@@ -1252,43 +1252,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:d50efcd16ed45054",
+      "id": "procurement_concentration:55a3487fd5c825dd",
       "category": "procurement_concentration",
-      "entity": "JONES LANG LASALLE (ACT) PTY LIMITED",
-      "title": "Department of the Prime Minister and Cabinet: 49% awarded to one supplier",
-      "summary": "JONES LANG LASALLE (ACT) PTY LIMITED accounts for 48.5% of the positive recorded contract value for Department of the Prime Minister and Cabinet.",
+      "entity": "Besix Watpac",
+      "title": "CSIRO: 33% awarded to one supplier",
+      "summary": "Besix Watpac accounts for 32.9% of the positive recorded contract value for CSIRO.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 48.51,
+          "value": 32.86,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 140207244.49,
+          "value": 284106451.2,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 289013750.66,
+          "value": 864487234.62,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 172.0,
+          "value": 174.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 228.0,
+          "value": 216.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Department of the Prime Minister and Cabinet → JONES LANG LASALLE (ACT) PTY LIMITED: $140,207,244.49 · starts 2018-06-03 · austender · record CN3520534",
+          "label": "CSIRO → Besix Watpac: $2,383,287.50 · starts 2023-02-26 · austender · record CN3952688",
           "table": "contracts",
-          "record_id": "CN3520534",
+          "record_id": "CN3952688",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -1299,51 +1299,51 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Department of the Prime Minister and Cabinet",
-        "group_total": 289013750.66,
-        "leading_name": "JONES LANG LASALLE (ACT) PTY LIMITED",
+        "group_label": "CSIRO",
+        "group_total": 864487234.62,
+        "leading_name": "Besix Watpac",
         "participant_label": "supplier",
-        "participant_count": 172,
-        "record_count": 228,
+        "participant_count": 174,
+        "record_count": 216,
         "participants": [
           {
-            "name": "JONES LANG LASALLE (ACT) PTY LIMITED",
-            "value": 140207244.49,
-            "share": 48.51,
-            "record_count": 1
-          },
-          {
-            "name": "DATA#3 LIMITED",
-            "value": 16923742.69,
-            "share": 5.86,
+            "name": "Besix Watpac",
+            "value": 284106451.2,
+            "share": 32.86,
             "record_count": 2
           },
           {
-            "name": "WILSON PARKING AUSTRALIA",
-            "value": 13750000.0,
-            "share": 4.76,
+            "name": "SIMEC ZEN Energy Retail Pty Ltd",
+            "value": 127211000.0,
+            "share": 14.72,
             "record_count": 1
           },
           {
-            "name": "WILSON SECURITY",
-            "value": 13750000.0,
-            "share": 4.76,
+            "name": "Data#3 Limited",
+            "value": 37263043.4,
+            "share": 4.31,
             "record_count": 1
           },
           {
-            "name": "Australian National University",
-            "value": 9775000.0,
-            "share": 3.38,
+            "name": "Duratec Limited",
+            "value": 27206083.9,
+            "share": 3.15,
+            "record_count": 2
+          },
+          {
+            "name": "Aurecon Australasia Pty Ltd",
+            "value": 26965105.95,
+            "share": 3.12,
             "record_count": 1
           }
         ],
-        "other_total": 94607763.48,
-        "other_share": 32.73,
-        "other_count": 167,
+        "other_total": 361735550.17,
+        "other_share": 41.84,
+        "other_count": 169,
         "period": {
           "kind": "contract_start_date",
-          "from": "2013-03-24",
-          "to": "2026-06-30",
+          "from": "2012-12-31",
+          "to": "2026-07-29",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -1364,7 +1364,7 @@
         },
         {
           "label": "Recorded contract value",
-          "value": 80623452.69,
+          "value": 99531368.36,
           "format": "currency"
         },
         {
@@ -1374,7 +1374,7 @@
         },
         {
           "label": "Contract records",
-          "value": 87.0,
+          "value": 95.0,
           "format": "number"
         }
       ],
@@ -1402,43 +1402,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:acf5dc5886b8268d",
+      "id": "procurement_concentration:df6431d26346ddc8",
       "category": "procurement_concentration",
-      "entity": "SIMEC ZEN Energy Retail Pty Ltd",
-      "title": "CSIRO: 25% awarded to one supplier",
-      "summary": "SIMEC ZEN Energy Retail Pty Ltd accounts for 25.4% of the positive recorded contract value for CSIRO.",
+      "entity": "Accenture Australia Pty Ltd",
+      "title": "Australian Digital Health Agency: 51% awarded to one supplier",
+      "summary": "Accenture Australia Pty Ltd accounts for 51.4% of the positive recorded contract value for Australian Digital Health Agency.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 25.41,
+          "value": 51.37,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 127211000.0,
+          "value": 164299918.84,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 500630418.29,
+          "value": 319838614.15,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 152.0,
+          "value": 62.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 187.0,
+          "value": 103.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "CSIRO → SIMEC ZEN Energy Retail Pty Ltd: $127,211,000.00 · starts 2020-06-30 · austender · record CN3696633",
+          "label": "Australian Digital Health Agency → Accenture Australia Pty Ltd: $2,743,424.24 · starts 2026-01-19 · austender · record CN4228532",
           "table": "contracts",
-          "record_id": "CN3696633",
+          "record_id": "CN4228532",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -1449,51 +1449,51 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "CSIRO",
-        "group_total": 500630418.29,
-        "leading_name": "SIMEC ZEN Energy Retail Pty Ltd",
+        "group_label": "Australian Digital Health Agency",
+        "group_total": 319838614.15,
+        "leading_name": "Accenture Australia Pty Ltd",
         "participant_label": "supplier",
-        "participant_count": 152,
-        "record_count": 187,
+        "participant_count": 62,
+        "record_count": 103,
         "participants": [
           {
-            "name": "SIMEC ZEN Energy Retail Pty Ltd",
-            "value": 127211000.0,
-            "share": 25.41,
+            "name": "Accenture Australia Pty Ltd",
+            "value": 164299918.84,
+            "share": 51.37,
+            "record_count": 2
+          },
+          {
+            "name": "ACCENTURE AUSTRALIA HOLDINGS PTY LT",
+            "value": 51720251.0,
+            "share": 16.17,
             "record_count": 1
           },
           {
-            "name": "Data#3 Limited",
-            "value": 37263043.4,
-            "share": 7.44,
+            "name": "ORACLE CORPORATION AUSTRALIA PTY LI",
+            "value": 39022057.8,
+            "share": 12.2,
+            "record_count": 3
+          },
+          {
+            "name": "Dexus Property Services Pty Ltd",
+            "value": 13623563.83,
+            "share": 4.26,
             "record_count": 1
           },
           {
-            "name": "Aurecon Australasia Pty Ltd",
-            "value": 26965105.95,
-            "share": 5.39,
+            "name": "Dynatrace Asia Pacific Pty",
+            "value": 8935053.69,
+            "share": 2.79,
             "record_count": 1
-          },
-          {
-            "name": "Metro North Hospital and Health Service",
-            "value": 16726749.0,
-            "share": 3.34,
-            "record_count": 1
-          },
-          {
-            "name": "Cirrus Networks (ACT) Pty Ltd",
-            "value": 14722788.18,
-            "share": 2.94,
-            "record_count": 5
           }
         ],
-        "other_total": 277741731.76,
-        "other_share": 55.48,
-        "other_count": 147,
+        "other_total": 42237768.99,
+        "other_share": 13.21,
+        "other_count": 57,
         "period": {
           "kind": "contract_start_date",
-          "from": "2012-12-31",
-          "to": "2026-07-29",
+          "from": "2017-12-20",
+          "to": "2026-08-27",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -1552,43 +1552,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:67139922f1785612",
+      "id": "procurement_concentration:d50efcd16ed45054",
       "category": "procurement_concentration",
-      "entity": "Evolve FM Pty Ltd",
-      "title": "Australian Bureau of Statistics: 56% awarded to one supplier",
-      "summary": "Evolve FM Pty Ltd accounts for 56.0% of the positive recorded contract value for Australian Bureau of Statistics.",
+      "entity": "JONES LANG LASALLE (ACT) PTY LIMITED",
+      "title": "Department of the Prime Minister and Cabinet: 46% awarded to one supplier",
+      "summary": "JONES LANG LASALLE (ACT) PTY LIMITED accounts for 46.2% of the positive recorded contract value for Department of the Prime Minister and Cabinet.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 56.02,
+          "value": 46.24,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 127160000.0,
+          "value": 140207244.49,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 226991167.02,
+          "value": 303186943.05,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 82.0,
+          "value": 174.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 92.0,
+          "value": 235.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Australian Bureau of Statistics → Evolve FM Pty Ltd: $123,580,000.00 · starts 2025-06-30 · austender · record CN4176290",
+          "label": "Department of the Prime Minister and Cabinet → JONES LANG LASALLE (ACT) PTY LIMITED: $140,207,244.49 · starts 2018-06-03 · austender · record CN3520534",
           "table": "contracts",
-          "record_id": "CN4176290",
+          "record_id": "CN3520534",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -1599,51 +1599,51 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Australian Bureau of Statistics",
-        "group_total": 226991167.02,
-        "leading_name": "Evolve FM Pty Ltd",
+        "group_label": "Department of the Prime Minister and Cabinet",
+        "group_total": 303186943.05,
+        "leading_name": "JONES LANG LASALLE (ACT) PTY LIMITED",
         "participant_label": "supplier",
-        "participant_count": 82,
-        "record_count": 92,
+        "participant_count": 174,
+        "record_count": 235,
         "participants": [
           {
-            "name": "Evolve FM Pty Ltd",
-            "value": 127160000.0,
-            "share": 56.02,
+            "name": "JONES LANG LASALLE (ACT) PTY LIMITED",
+            "value": 140207244.49,
+            "share": 46.24,
+            "record_count": 1
+          },
+          {
+            "name": "DATA#3 LIMITED",
+            "value": 16923742.69,
+            "share": 5.58,
             "record_count": 2
           },
           {
-            "name": "Hines (Aus) Nominees Pty Ltd as Trustee for Hines Global REIT Bourke Trust",
-            "value": 19266385.98,
-            "share": 8.49,
+            "name": "Australian National University",
+            "value": 14795000.0,
+            "share": 4.88,
+            "record_count": 2
+          },
+          {
+            "name": "WILSON PARKING AUSTRALIA",
+            "value": 13750000.0,
+            "share": 4.54,
             "record_count": 1
           },
           {
-            "name": "Deakin University",
-            "value": 9858780.42,
-            "share": 4.34,
-            "record_count": 1
-          },
-          {
-            "name": "Forsta Australia Pty Ltd",
-            "value": 7679585.6,
-            "share": 3.38,
-            "record_count": 1
-          },
-          {
-            "name": "SAS Institute Australia Pty. Limited",
-            "value": 6145367.8,
-            "share": 2.71,
+            "name": "WILSON SECURITY",
+            "value": 13750000.0,
+            "share": 4.54,
             "record_count": 1
           }
         ],
-        "other_total": 56881047.22,
-        "other_share": 25.06,
-        "other_count": 77,
+        "other_total": 103760955.87,
+        "other_share": 34.22,
+        "other_count": 169,
         "period": {
           "kind": "contract_start_date",
-          "from": "2011-07-24",
-          "to": "2026-07-20",
+          "from": "2013-03-24",
+          "to": "2026-06-30",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -1702,43 +1702,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:63138efa297ac458",
+      "id": "procurement_concentration:67139922f1785612",
       "category": "procurement_concentration",
-      "entity": "Microsoft Services",
-      "title": "Digital Transformation Agency: 61% awarded to one supplier",
-      "summary": "Microsoft Services accounts for 61.3% of the positive recorded contract value for Digital Transformation Agency.",
+      "entity": "Evolve FM Pty Ltd",
+      "title": "Australian Bureau of Statistics: 38% awarded to one supplier",
+      "summary": "Evolve FM Pty Ltd accounts for 38.3% of the positive recorded contract value for Australian Bureau of Statistics.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 61.34,
+          "value": 38.28,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 101739820.85,
+          "value": 127160000.0,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 165867099.51,
+          "value": 332214049.5,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 85.0,
+          "value": 88.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 117.0,
+          "value": 101.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Digital Transformation Agency → Microsoft Services: $101,739,820.85 · starts 2026-05-31 · austender · record CN4253616",
+          "label": "Australian Bureau of Statistics → Evolve FM Pty Ltd: $123,580,000.00 · starts 2025-06-30 · austender · record CN4176290",
           "table": "contracts",
-          "record_id": "CN4253616",
+          "record_id": "CN4176290",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -1749,51 +1749,51 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Digital Transformation Agency",
-        "group_total": 165867099.51,
-        "leading_name": "Microsoft Services",
+        "group_label": "Australian Bureau of Statistics",
+        "group_total": 332214049.5,
+        "leading_name": "Evolve FM Pty Ltd",
         "participant_label": "supplier",
-        "participant_count": 85,
-        "record_count": 117,
+        "participant_count": 88,
+        "record_count": 101,
         "participants": [
           {
-            "name": "Microsoft Services",
-            "value": 101739820.85,
-            "share": 61.34,
-            "record_count": 1
-          },
-          {
-            "name": "Telstra Australia",
-            "value": 9445748.5,
-            "share": 5.69,
+            "name": "Evolve FM Pty Ltd",
+            "value": 127160000.0,
+            "share": 38.28,
             "record_count": 2
           },
           {
-            "name": "Oracle Corporation Australia Pty Ltd",
-            "value": 7956850.0,
-            "share": 4.8,
+            "name": "Data#3 Limited",
+            "value": 59808163.19,
+            "share": 18.0,
+            "record_count": 2
+          },
+          {
+            "name": "Universal McCann",
+            "value": 33000000.0,
+            "share": 9.93,
             "record_count": 1
           },
           {
-            "name": "KPMG",
-            "value": 5059164.3,
-            "share": 3.05,
-            "record_count": 5
+            "name": "Hines (Aus) Nominees Pty Ltd as Trustee for Hines Global REIT Bourke Trust",
+            "value": 19266385.98,
+            "share": 5.8,
+            "record_count": 1
           },
           {
-            "name": "The Trust Company (Australia) Limited",
-            "value": 4767690.16,
-            "share": 2.87,
+            "name": "Deakin University",
+            "value": 9858780.42,
+            "share": 2.97,
             "record_count": 1
           }
         ],
-        "other_total": 36897825.7,
-        "other_share": 22.25,
-        "other_count": 80,
+        "other_total": 83120719.91,
+        "other_share": 25.02,
+        "other_count": 83,
         "period": {
           "kind": "contract_start_date",
-          "from": "2015-11-16",
-          "to": "2026-05-31",
+          "from": "2011-07-24",
+          "to": "2026-07-20",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -1814,7 +1814,7 @@
         },
         {
           "label": "Recorded contract value",
-          "value": 112143535.61,
+          "value": 170567838.86,
           "format": "currency"
         },
         {
@@ -1824,7 +1824,7 @@
         },
         {
           "label": "Contract records",
-          "value": 64.0,
+          "value": 68.0,
           "format": "number"
         }
       ],
@@ -1852,43 +1852,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:8a3044bff7501405",
+      "id": "procurement_concentration:63138efa297ac458",
       "category": "procurement_concentration",
-      "entity": "QANTAS AIRWAYS LIMITED",
-      "title": "Austrade: 39% awarded to one supplier",
-      "summary": "QANTAS AIRWAYS LIMITED accounts for 39.2% of the positive recorded contract value for Austrade.",
+      "entity": "Microsoft Services",
+      "title": "Digital Transformation Agency: 61% awarded to one supplier",
+      "summary": "Microsoft Services accounts for 60.8% of the positive recorded contract value for Digital Transformation Agency.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 39.18,
+          "value": 60.81,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 100000000.0,
+          "value": 101739820.85,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 255231235.92,
+          "value": 167299827.63,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 177.0,
+          "value": 86.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 253.0,
+          "value": 118.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Austrade → QANTAS AIRWAYS LIMITED: $100,000,000.00 · starts 2020-10-26 · austender · record CN3728337",
+          "label": "Digital Transformation Agency → Microsoft Services: $101,739,820.85 · starts 2026-05-31 · austender · record CN4253616",
           "table": "contracts",
-          "record_id": "CN3728337",
+          "record_id": "CN4253616",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -1899,51 +1899,51 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Austrade",
-        "group_total": 255231235.92,
-        "leading_name": "QANTAS AIRWAYS LIMITED",
+        "group_label": "Digital Transformation Agency",
+        "group_total": 167299827.63,
+        "leading_name": "Microsoft Services",
         "participant_label": "supplier",
-        "participant_count": 177,
-        "record_count": 253,
+        "participant_count": 86,
+        "record_count": 118,
         "participants": [
           {
-            "name": "QANTAS AIRWAYS LIMITED",
-            "value": 100000000.0,
-            "share": 39.18,
+            "name": "Microsoft Services",
+            "value": 101739820.85,
+            "share": 60.81,
             "record_count": 1
           },
           {
-            "name": "JAPAN AIRLINES CO. LTD",
-            "value": 16429000.0,
-            "share": 6.44,
-            "record_count": 4
+            "name": "Telstra Australia",
+            "value": 9445748.5,
+            "share": 5.65,
+            "record_count": 2
           },
           {
-            "name": "Air New Zealand Limited",
-            "value": 15853500.0,
-            "share": 6.21,
-            "record_count": 3
+            "name": "Oracle Corporation Australia Pty Ltd",
+            "value": 7956850.0,
+            "share": 4.76,
+            "record_count": 1
           },
           {
-            "name": "Department of Foreign Affairs and Trade",
-            "value": 9276086.71,
-            "share": 3.63,
-            "record_count": 9
+            "name": "KPMG",
+            "value": 5059164.3,
+            "share": 3.02,
+            "record_count": 5
           },
           {
-            "name": "DEXUS WHOLESALE MANAGEMENT LIMITED",
-            "value": 9241247.4,
-            "share": 3.62,
+            "name": "The Trust Company (Australia) Limited",
+            "value": 4767690.16,
+            "share": 2.85,
             "record_count": 1
           }
         ],
-        "other_total": 104431401.81,
-        "other_share": 40.92,
-        "other_count": 172,
+        "other_total": 38330553.82,
+        "other_share": 22.91,
+        "other_count": 81,
         "period": {
           "kind": "contract_start_date",
-          "from": "2010-06-17",
-          "to": "2026-06-18",
+          "from": "2015-11-16",
+          "to": "2026-05-31",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -2002,43 +2002,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:c80224c2f5220f36",
+      "id": "procurement_concentration:8a3044bff7501405",
       "category": "procurement_concentration",
-      "entity": "Trace Consulting Group Pty Ltd",
-      "title": "Australian Electoral Commission: 27% awarded to one supplier",
-      "summary": "Trace Consulting Group Pty Ltd accounts for 27.2% of the positive recorded contract value for Australian Electoral Commission.",
+      "entity": "QANTAS AIRWAYS LIMITED",
+      "title": "Austrade: 39% awarded to one supplier",
+      "summary": "QANTAS AIRWAYS LIMITED accounts for 39.0% of the positive recorded contract value for Austrade.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 27.18,
+          "value": 39.01,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 93280000.0,
+          "value": 100000000.0,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 343198169.32,
+          "value": 256331235.92,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 193.0,
+          "value": 178.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 263.0,
+          "value": 254.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Australian Electoral Commission → Trace Consulting Group Pty Ltd: $93,280,000.00 · starts 2025-04-30 · austender · record CN4148657",
+          "label": "Austrade → QANTAS AIRWAYS LIMITED: $100,000,000.00 · starts 2020-10-26 · austender · record CN3728337",
           "table": "contracts",
-          "record_id": "CN4148657",
+          "record_id": "CN3728337",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -2049,51 +2049,51 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Australian Electoral Commission",
-        "group_total": 343198169.32,
-        "leading_name": "Trace Consulting Group Pty Ltd",
+        "group_label": "Austrade",
+        "group_total": 256331235.92,
+        "leading_name": "QANTAS AIRWAYS LIMITED",
         "participant_label": "supplier",
-        "participant_count": 193,
-        "record_count": 263,
+        "participant_count": 178,
+        "record_count": 254,
         "participants": [
           {
-            "name": "Trace Consulting Group Pty Ltd",
-            "value": 93280000.0,
-            "share": 27.18,
+            "name": "QANTAS AIRWAYS LIMITED",
+            "value": 100000000.0,
+            "share": 39.01,
             "record_count": 1
           },
           {
-            "name": "Fuji Xerox Businessforce Pty Ltd",
-            "value": 27000000.0,
-            "share": 7.87,
-            "record_count": 1
-          },
-          {
-            "name": "Ernst & Young",
-            "value": 23100665.91,
-            "share": 6.73,
-            "record_count": 2
-          },
-          {
-            "name": "Goulburn 048 Service Pty Ltd",
-            "value": 15221646.43,
-            "share": 4.44,
-            "record_count": 1
-          },
-          {
-            "name": "PERSOLKELLY AUSTRALIA PTY LTD",
-            "value": 11380459.01,
-            "share": 3.32,
+            "name": "JAPAN AIRLINES CO. LTD",
+            "value": 16429000.0,
+            "share": 6.41,
             "record_count": 4
+          },
+          {
+            "name": "Air New Zealand Limited",
+            "value": 15853500.0,
+            "share": 6.18,
+            "record_count": 3
+          },
+          {
+            "name": "Department of Foreign Affairs and Trade",
+            "value": 9276086.71,
+            "share": 3.62,
+            "record_count": 9
+          },
+          {
+            "name": "DEXUS WHOLESALE MANAGEMENT LIMITED",
+            "value": 9241247.4,
+            "share": 3.61,
+            "record_count": 1
           }
         ],
-        "other_total": 173215397.97,
-        "other_share": 50.47,
-        "other_count": 188,
+        "other_total": 105531401.81,
+        "other_share": 41.17,
+        "other_count": 173,
         "period": {
           "kind": "contract_start_date",
-          "from": "2012-12-31",
-          "to": "2026-06-30",
+          "from": "2010-06-17",
+          "to": "2026-06-18",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -2155,12 +2155,12 @@
       "id": "procurement_concentration:0f8b1f055731ae26",
       "category": "procurement_concentration",
       "entity": "Mitch Arch Pty Ltd",
-      "title": "National Archives of Australia: 84% awarded to one supplier",
-      "summary": "Mitch Arch Pty Ltd accounts for 84.4% of the positive recorded contract value for National Archives of Australia.",
+      "title": "National Archives of Australia: 82% awarded to one supplier",
+      "summary": "Mitch Arch Pty Ltd accounts for 82.0% of the positive recorded contract value for National Archives of Australia.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 84.43,
+          "value": 82.02,
           "format": "percent"
         },
         {
@@ -2170,17 +2170,17 @@
         },
         {
           "label": "Total recorded value",
-          "value": 97329653.19,
+          "value": 100179775.19,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 30.0,
+          "value": 32.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 34.0,
+          "value": 36.0,
           "format": "number"
         }
       ],
@@ -2200,46 +2200,46 @@
       "chart": {
         "type": "concentration",
         "group_label": "National Archives of Australia",
-        "group_total": 97329653.19,
+        "group_total": 100179775.19,
         "leading_name": "Mitch Arch Pty Ltd",
         "participant_label": "supplier",
-        "participant_count": 30,
-        "record_count": 34,
+        "participant_count": 32,
+        "record_count": 36,
         "participants": [
           {
             "name": "Mitch Arch Pty Ltd",
             "value": 82170593.8,
-            "share": 84.43,
+            "share": 82.02,
             "record_count": 1
           },
           {
             "name": "Chalfont Consulting Pty Ltd",
             "value": 3400000.0,
-            "share": 3.49,
+            "share": 3.39,
             "record_count": 1
           },
           {
             "name": "Grace Removals Group",
             "value": 1870962.5,
-            "share": 1.92,
+            "share": 1.87,
             "record_count": 1
           },
           {
             "name": "Colliers International (Victoria) Pty Limited",
             "value": 1754883.0,
-            "share": 1.8,
+            "share": 1.75,
             "record_count": 1
           },
           {
             "name": "Blackhawk Logistics",
             "value": 1485865.9,
-            "share": 1.53,
+            "share": 1.48,
             "record_count": 2
           }
         ],
-        "other_total": 6647347.99,
-        "other_share": 6.83,
-        "other_count": 25,
+        "other_total": 9497469.99,
+        "other_share": 9.48,
+        "other_count": 27,
         "period": {
           "kind": "contract_start_date",
           "from": "2014-09-14",
@@ -2264,7 +2264,7 @@
         },
         {
           "label": "Recorded contract value",
-          "value": 29267803.1,
+          "value": 30472485.5,
           "format": "currency"
         },
         {
@@ -2274,7 +2274,7 @@
         },
         {
           "label": "Contract records",
-          "value": 20.0,
+          "value": 21.0,
           "format": "number"
         }
       ],
@@ -2302,43 +2302,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:70d6113de280ac28",
+      "id": "procurement_concentration:372999cdb22330f1",
       "category": "procurement_concentration",
-      "entity": "DATA#3 LTD",
-      "title": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts: 35% awarded to one supplier",
-      "summary": "DATA#3 LTD accounts for 35.3% of the positive recorded contract value for Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts.",
+      "entity": "Data#3 Limited",
+      "title": "Department of Parliamentary Services: 25% awarded to one supplier",
+      "summary": "Data#3 Limited accounts for 25.1% of the positive recorded contract value for Department of Parliamentary Services.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 35.28,
+          "value": 25.1,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 78537784.26,
+          "value": 62781613.37,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 222599290.58,
+          "value": 250087271.54,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 42.0,
+          "value": 124.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 43.0,
+          "value": 185.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts → DATA#3 LTD: $1,487,944.63 · starts 2025-05-11 · austender · record CN4150978",
+          "label": "Department of Parliamentary Services → Data#3 Limited: $1,352,735.01 · starts 2016-06-30 · austender · record CN3358964",
           "table": "contracts",
-          "record_id": "CN4150978",
+          "record_id": "CN3358964",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -2349,51 +2349,51 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
-        "group_total": 222599290.58,
-        "leading_name": "DATA#3 LTD",
+        "group_label": "Department of Parliamentary Services",
+        "group_total": 250087271.54,
+        "leading_name": "Data#3 Limited",
         "participant_label": "supplier",
-        "participant_count": 42,
-        "record_count": 43,
+        "participant_count": 124,
+        "record_count": 185,
         "participants": [
           {
-            "name": "DATA#3 LTD",
-            "value": 78537784.26,
-            "share": 35.28,
+            "name": "Data#3 Limited",
+            "value": 62781613.37,
+            "share": 25.1,
+            "record_count": 6
+          },
+          {
+            "name": "BAE Systems Australia Ltd",
+            "value": 22215762.77,
+            "share": 8.88,
             "record_count": 2
           },
           {
-            "name": "INDIAN OCEAN OIL COMPANY",
-            "value": 72679695.17,
-            "share": 32.65,
+            "name": "ERM Power Retail Pty Ltd",
+            "value": 20608487.23,
+            "share": 8.24,
             "record_count": 1
           },
           {
-            "name": "TOLL REMOTE LOGISTICS PTY LTD",
-            "value": 19000000.0,
-            "share": 8.54,
+            "name": "The Trustee for OPP West Block Trus",
+            "value": 19328570.0,
+            "share": 7.73,
             "record_count": 1
           },
           {
-            "name": "CHARTAIR PTY LTD",
-            "value": 6506506.6,
-            "share": 2.92,
-            "record_count": 1
-          },
-          {
-            "name": "SCYNE ADVISORY PTY LTD",
-            "value": 5972482.0,
-            "share": 2.68,
-            "record_count": 1
+            "name": "Manteena Security Aust Pty Ltd",
+            "value": 16142894.4,
+            "share": 6.45,
+            "record_count": 3
           }
         ],
-        "other_total": 39902822.55,
-        "other_share": 17.93,
-        "other_count": 37,
+        "other_total": 109009943.77,
+        "other_share": 43.59,
+        "other_count": 119,
         "period": {
           "kind": "contract_start_date",
-          "from": "2015-06-30",
-          "to": "2026-08-31",
+          "from": "2013-10-01",
+          "to": "2026-08-09",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -2452,43 +2452,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:372999cdb22330f1",
+      "id": "procurement_concentration:bf535c5af7dbb5ad",
       "category": "procurement_concentration",
-      "entity": "Data#3 Limited",
-      "title": "Department of Parliamentary Services: 26% awarded to one supplier",
-      "summary": "Data#3 Limited accounts for 25.6% of the positive recorded contract value for Department of Parliamentary Services.",
+      "entity": "Department of Climate Change, Energy, the Environment and Water",
+      "title": "Director of National Parks: 57% awarded to one supplier",
+      "summary": "Department of Climate Change, Energy, the Environment and Water accounts for 57.4% of the positive recorded contract value for Director of National Parks.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 25.55,
+          "value": 57.42,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 62781613.37,
+          "value": 56909160.87,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 245676294.25,
+          "value": 99103265.15,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 123.0,
+          "value": 20.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 183.0,
+          "value": 22.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Department of Parliamentary Services → Data#3 Limited: $1,352,735.01 · starts 2016-06-30 · austender · record CN3358964",
+          "label": "Director of National Parks → Department of Climate Change, Energy, the Environment and Water: $13,624,462.29 · starts 2024-06-30 · austender · record CN4170870",
           "table": "contracts",
-          "record_id": "CN3358964",
+          "record_id": "CN4170870",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -2499,51 +2499,51 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Department of Parliamentary Services",
-        "group_total": 245676294.25,
-        "leading_name": "Data#3 Limited",
+        "group_label": "Director of National Parks",
+        "group_total": 99103265.15,
+        "leading_name": "Department of Climate Change, Energy, the Environment and Water",
         "participant_label": "supplier",
-        "participant_count": 123,
-        "record_count": 183,
+        "participant_count": 20,
+        "record_count": 22,
         "participants": [
           {
-            "name": "Data#3 Limited",
-            "value": 62781613.37,
-            "share": 25.55,
-            "record_count": 6
-          },
-          {
-            "name": "BAE Systems Australia Ltd",
-            "value": 22215762.77,
-            "share": 9.04,
-            "record_count": 2
-          },
-          {
-            "name": "ERM Power Retail Pty Ltd",
-            "value": 20608487.23,
-            "share": 8.39,
-            "record_count": 1
-          },
-          {
-            "name": "The Trustee for OPP West Block Trus",
-            "value": 19328570.0,
-            "share": 7.87,
-            "record_count": 1
-          },
-          {
-            "name": "Manteena Security Aust Pty Ltd",
-            "value": 16142894.4,
-            "share": 6.57,
+            "name": "Department of Climate Change, Energy, the Environment and Water",
+            "value": 56909160.87,
+            "share": 57.42,
             "record_count": 3
+          },
+          {
+            "name": "Northern Building and Property Services Pty Ltd",
+            "value": 12183285.9,
+            "share": 12.29,
+            "record_count": 1
+          },
+          {
+            "name": "McMahon Services Australia (NT) PTY LTD",
+            "value": 9279155.47,
+            "share": 9.36,
+            "record_count": 1
+          },
+          {
+            "name": "Acker Pty Ltd",
+            "value": 3998080.0,
+            "share": 4.03,
+            "record_count": 1
+          },
+          {
+            "name": "Comcover",
+            "value": 1962313.22,
+            "share": 1.98,
+            "record_count": 1
           }
         ],
-        "other_total": 104598966.48,
-        "other_share": 42.58,
-        "other_count": 118,
+        "other_total": 14771269.69,
+        "other_share": 14.9,
+        "other_count": 15,
         "period": {
           "kind": "contract_start_date",
-          "from": "2013-10-01",
-          "to": "2026-08-09",
+          "from": "2015-09-30",
+          "to": "2026-06-30",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -2602,43 +2602,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:bf535c5af7dbb5ad",
+      "id": "procurement_concentration:881bf70d45c42ad3",
       "category": "procurement_concentration",
-      "entity": "Department of Climate Change, Energy, the Environment and Water",
-      "title": "Director of National Parks: 60% awarded to one supplier",
-      "summary": "Department of Climate Change, Energy, the Environment and Water accounts for 60.1% of the positive recorded contract value for Director of National Parks.",
+      "entity": "NTT AUSTRALIA PTY LTD (FORMERLY DIMENSION DATA AUSTRALIA PTY LTD)",
+      "title": "Australian Prudential Regulation Authority: 31% awarded to one supplier",
+      "summary": "NTT AUSTRALIA PTY LTD (FORMERLY DIMENSION DATA AUSTRALIA PTY LTD) accounts for 31.0% of the positive recorded contract value for Australian Prudential Regulation Authority.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 60.1,
+          "value": 30.99,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 56909160.87,
+          "value": 55120431.89,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 94695951.93,
+          "value": 177850813.85,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 17.0,
+          "value": 91.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 19.0,
+          "value": 137.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Director of National Parks → Department of Climate Change, Energy, the Environment and Water: $13,624,462.29 · starts 2024-06-30 · austender · record CN4170870",
+          "label": "Australian Prudential Regulation Authority → NTT AUSTRALIA PTY LTD (FORMERLY DIMENSION DATA AUSTRALIA PTY LTD): $16,452,950.26 · starts 2019-03-31 · austender · record CN3670961",
           "table": "contracts",
-          "record_id": "CN4170870",
+          "record_id": "CN3670961",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -2649,51 +2649,51 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Director of National Parks",
-        "group_total": 94695951.93,
-        "leading_name": "Department of Climate Change, Energy, the Environment and Water",
+        "group_label": "Australian Prudential Regulation Authority",
+        "group_total": 177850813.85,
+        "leading_name": "NTT AUSTRALIA PTY LTD (FORMERLY DIMENSION DATA AUSTRALIA PTY LTD)",
         "participant_label": "supplier",
-        "participant_count": 17,
-        "record_count": 19,
+        "participant_count": 91,
+        "record_count": 137,
         "participants": [
           {
-            "name": "Department of Climate Change, Energy, the Environment and Water",
-            "value": 56909160.87,
-            "share": 60.1,
+            "name": "NTT AUSTRALIA PTY LTD (FORMERLY DIMENSION DATA AUSTRALIA PTY LTD)",
+            "value": 55120431.89,
+            "share": 30.99,
+            "record_count": 4
+          },
+          {
+            "name": "DIMENSION DATA AUSTRALIA PTY LTD",
+            "value": 22851297.16,
+            "share": 12.85,
+            "record_count": 2
+          },
+          {
+            "name": "DATA#3 LIMITED",
+            "value": 14834458.89,
+            "share": 8.34,
             "record_count": 3
           },
           {
-            "name": "Northern Building and Property Services Pty Ltd",
-            "value": 12183285.9,
-            "share": 12.87,
+            "name": "MIRVAC REAL ESTATE PTY LTD",
+            "value": 11504270.24,
+            "share": 6.47,
             "record_count": 1
           },
           {
-            "name": "McMahon Services Australia (NT) PTY LTD",
-            "value": 9279155.47,
-            "share": 9.8,
-            "record_count": 1
-          },
-          {
-            "name": "Acker Pty Ltd",
-            "value": 3998080.0,
-            "share": 4.22,
-            "record_count": 1
-          },
-          {
-            "name": "Comcover, Member Services",
-            "value": 1815658.65,
-            "share": 1.92,
+            "name": "Vizor Limited",
+            "value": 4204317.7,
+            "share": 2.36,
             "record_count": 1
           }
         ],
-        "other_total": 10510611.04,
-        "other_share": 11.1,
-        "other_count": 12,
+        "other_total": 69336037.97,
+        "other_share": 38.99,
+        "other_count": 86,
         "period": {
           "kind": "contract_start_date",
-          "from": "2015-09-30",
-          "to": "2026-05-11",
+          "from": "2009-10-23",
+          "to": "2026-07-27",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -2752,43 +2752,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:881bf70d45c42ad3",
+      "id": "procurement_concentration:8b61e63bb9cd76ab",
       "category": "procurement_concentration",
-      "entity": "NTT AUSTRALIA PTY LTD (FORMERLY DIMENSION DATA AUSTRALIA PTY LTD)",
-      "title": "Australian Prudential Regulation Authority: 31% awarded to one supplier",
-      "summary": "NTT AUSTRALIA PTY LTD (FORMERLY DIMENSION DATA AUSTRALIA PTY LTD) accounts for 31.5% of the positive recorded contract value for Australian Prudential Regulation Authority.",
+      "entity": "National Aboriginal Community Contr Health Organisation (NACCHO)",
+      "title": "Australian Centre for Disease Control: 39% awarded to one supplier",
+      "summary": "National Aboriginal Community Contr Health Organisation (NACCHO) accounts for 38.9% of the positive recorded contract value for Australian Centre for Disease Control.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 31.45,
+          "value": 38.9,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 55120431.89,
+          "value": 51982700.01,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 175259437.4,
+          "value": 133617985.66,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 89.0,
+          "value": 18.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 135.0,
+          "value": 23.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Australian Prudential Regulation Authority → NTT AUSTRALIA PTY LTD (FORMERLY DIMENSION DATA AUSTRALIA PTY LTD): $16,452,950.26 · starts 2019-03-31 · austender · record CN3670961",
+          "label": "Australian Centre for Disease Control → National Aboriginal Community Contr Health Organisation (NACCHO): $51,982,700.01 · starts 2026-06-30 · austender · record CN4245716",
           "table": "contracts",
-          "record_id": "CN3670961",
+          "record_id": "CN4245716",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -2799,51 +2799,201 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Australian Prudential Regulation Authority",
-        "group_total": 175259437.4,
-        "leading_name": "NTT AUSTRALIA PTY LTD (FORMERLY DIMENSION DATA AUSTRALIA PTY LTD)",
+        "group_label": "Australian Centre for Disease Control",
+        "group_total": 133617985.66,
+        "leading_name": "National Aboriginal Community Contr Health Organisation (NACCHO)",
         "participant_label": "supplier",
-        "participant_count": 89,
-        "record_count": 135,
+        "participant_count": 18,
+        "record_count": 23,
         "participants": [
           {
-            "name": "NTT AUSTRALIA PTY LTD (FORMERLY DIMENSION DATA AUSTRALIA PTY LTD)",
-            "value": 55120431.89,
-            "share": 31.45,
-            "record_count": 4
+            "name": "National Aboriginal Community Contr Health Organisation (NACCHO)",
+            "value": 51982700.01,
+            "share": 38.9,
+            "record_count": 1
           },
           {
-            "name": "DIMENSION DATA AUSTRALIA PTY LTD",
-            "value": 22851297.16,
-            "share": 13.04,
+            "name": "PROMOTING HEALTH4ALL PTY LTD",
+            "value": 17199999.0,
+            "share": 12.87,
+            "record_count": 1
+          },
+          {
+            "name": "UNIVERSITY OF NEW SOUTH WALES",
+            "value": 15606000.0,
+            "share": 11.68,
+            "record_count": 1
+          },
+          {
+            "name": "Monash University",
+            "value": 11168539.31,
+            "share": 8.36,
             "record_count": 2
           },
           {
-            "name": "DATA#3 LIMITED",
-            "value": 14834458.89,
-            "share": 8.46,
-            "record_count": 3
-          },
-          {
-            "name": "MIRVAC REAL ESTATE PTY LTD",
-            "value": 11504270.24,
-            "share": 6.56,
-            "record_count": 1
-          },
-          {
-            "name": "Vizor Limited",
-            "value": 4204317.7,
-            "share": 2.4,
-            "record_count": 1
+            "name": "Australasian Society for HIV, Viral Hepatitis & Sexual Health Medicine",
+            "value": 5376487.6,
+            "share": 4.02,
+            "record_count": 2
           }
         ],
-        "other_total": 66744661.52,
-        "other_share": 38.08,
-        "other_count": 84,
+        "other_total": 32284259.74,
+        "other_share": 24.16,
+        "other_count": 13,
         "period": {
           "kind": "contract_start_date",
-          "from": "2009-10-23",
-          "to": "2026-07-27",
+          "from": "2022-02-24",
+          "to": "2026-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
+      "entity_url": null
+    },
+    {
+      "id": "donor_contract_overlap:3dbf66a86549f4bf",
+      "category": "donor_contract_overlap",
+      "entity": "Memocorp Australia Pty Ltd",
+      "title": "Memocorp Australia Pty Ltd appears in party receipts and contracts",
+      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
+      "metrics": [
+        {
+          "label": "Recorded party receipts",
+          "value": 766120.0,
+          "format": "currency"
+        },
+        {
+          "label": "Recorded contract value",
+          "value": 5096881.0,
+          "format": "currency"
+        },
+        {
+          "label": "Party receipt records",
+          "value": 102.0,
+          "format": "number"
+        },
+        {
+          "label": "Contract records",
+          "value": 1.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Memocorp Australia Pty Ltd → Liberal Party of Australia: $20,000.00 · FY 2009-10 · AEC annual receipt · local record 721288",
+          "table": "donations",
+          "record_id": "721288",
+          "url": "https://transparency.aec.gov.au/",
+          "link_scope": "source_register"
+        },
+        {
+          "label": "Australian Institute of Health and Welfare → Memocorp Australia Pty Ltd: $5,096,881.00 · starts 2026-05-31 · austender · record CN4241377",
+          "table": "contracts",
+          "record_id": "CN4241377",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "Matching names are not verified legal identities; unrelated entities can share a name.",
+        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
+        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
+      ],
+      "entity_url": null
+    },
+    {
+      "id": "procurement_concentration:91aa6b13f60990b9",
+      "category": "procurement_concentration",
+      "entity": "MSS Security Pty Ltd",
+      "title": "Federal Court of Australia: 28% awarded to one supplier",
+      "summary": "MSS Security Pty Ltd accounts for 27.7% of the positive recorded contract value for Federal Court of Australia.",
+      "metrics": [
+        {
+          "label": "Largest supplier share",
+          "value": 27.68,
+          "format": "percent"
+        },
+        {
+          "label": "Largest supplier value",
+          "value": 51022723.97,
+          "format": "currency"
+        },
+        {
+          "label": "Total recorded value",
+          "value": 184341922.31,
+          "format": "currency"
+        },
+        {
+          "label": "Distinct suppliers",
+          "value": 46.0,
+          "format": "number"
+        },
+        {
+          "label": "Records in comparison",
+          "value": 70.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Federal Court of Australia → MSS Security Pty Ltd: $51,022,723.97 · starts 2025-03-17 · austender · record CN4152290",
+          "table": "contracts",
+          "record_id": "CN4152290",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "This share describes available records only; missing disclosures can materially change it.",
+        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
+      ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Federal Court of Australia",
+        "group_total": 184341922.31,
+        "leading_name": "MSS Security Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 46,
+        "record_count": 70,
+        "participants": [
+          {
+            "name": "MSS Security Pty Ltd",
+            "value": 51022723.97,
+            "share": 27.68,
+            "record_count": 1
+          },
+          {
+            "name": "TERRACE TOWER PTY LTD",
+            "value": 35485743.0,
+            "share": 19.25,
+            "record_count": 1
+          },
+          {
+            "name": "JONES LANG LASALLE (ACT) PTY LIMITED",
+            "value": 14191323.28,
+            "share": 7.7,
+            "record_count": 1
+          },
+          {
+            "name": "BUILT PTY LIMITED",
+            "value": 11044978.0,
+            "share": 5.99,
+            "record_count": 1
+          },
+          {
+            "name": "SG FLEET Australia Pty Ltd",
+            "value": 9366465.76,
+            "share": 5.08,
+            "record_count": 5
+          }
+        ],
+        "other_total": 63230688.3,
+        "other_share": 34.3,
+        "other_count": 41,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2012-06-30",
+          "to": "2026-05-03",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -2902,43 +3052,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:8b61e63bb9cd76ab",
+      "id": "procurement_concentration:1ed0baf5852aa7a9",
       "category": "procurement_concentration",
-      "entity": "National Aboriginal Community Contr Health Organisation (NACCHO)",
-      "title": "Australian Centre for Disease Control: 42% awarded to one supplier",
-      "summary": "National Aboriginal Community Contr Health Organisation (NACCHO) accounts for 41.5% of the positive recorded contract value for Australian Centre for Disease Control.",
+      "entity": "WSP Australia pty Limited",
+      "title": "High Speed Rail Authority: 54% awarded to one supplier",
+      "summary": "WSP Australia pty Limited accounts for 54.4% of the positive recorded contract value for High Speed Rail Authority.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 41.5,
+          "value": 54.42,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 51982700.01,
+          "value": 47585221.53,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 125257483.06,
+          "value": 87434836.6,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 17.0,
+          "value": 10.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 20.0,
+          "value": 11.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Australian Centre for Disease Control → National Aboriginal Community Contr Health Organisation (NACCHO): $51,982,700.01 · starts 2026-06-30 · austender · record CN4245716",
+          "label": "High Speed Rail Authority → WSP Australia pty Limited: $47,585,221.53 · starts 2026-06-17 · austender · record CN4259915",
           "table": "contracts",
-          "record_id": "CN4245716",
+          "record_id": "CN4259915",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -2949,50 +3099,50 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Australian Centre for Disease Control",
-        "group_total": 125257483.06,
-        "leading_name": "National Aboriginal Community Contr Health Organisation (NACCHO)",
+        "group_label": "High Speed Rail Authority",
+        "group_total": 87434836.6,
+        "leading_name": "WSP Australia pty Limited",
         "participant_label": "supplier",
-        "participant_count": 17,
-        "record_count": 20,
+        "participant_count": 10,
+        "record_count": 11,
         "participants": [
           {
-            "name": "National Aboriginal Community Contr Health Organisation (NACCHO)",
-            "value": 51982700.01,
-            "share": 41.5,
+            "name": "WSP Australia pty Limited",
+            "value": 47585221.53,
+            "share": 54.42,
             "record_count": 1
           },
           {
-            "name": "PROMOTING HEALTH4ALL PTY LTD",
-            "value": 17199999.0,
-            "share": 13.73,
+            "name": "Bellgrove Advisory Pty Ltd",
+            "value": 18010682.0,
+            "share": 20.6,
             "record_count": 1
           },
           {
-            "name": "UNIVERSITY OF NEW SOUTH WALES",
-            "value": 15606000.0,
-            "share": 12.46,
+            "name": "J A T SERVICES PTY LTD JAT SERVICES",
+            "value": 9436973.0,
+            "share": 10.79,
+            "record_count": 2
+          },
+          {
+            "name": "ARUP AUSTRALIA PROJECTS PTY LIMITED",
+            "value": 4946042.2,
+            "share": 5.66,
             "record_count": 1
           },
           {
-            "name": "Monash University",
-            "value": 8184524.31,
-            "share": 6.53,
-            "record_count": 1
-          },
-          {
-            "name": "Australian Commission on Safety and Quality in Health Care",
-            "value": 4566207.0,
-            "share": 3.65,
+            "name": "VEITCH LISTER CONSULTING PTY LTD",
+            "value": 2973305.44,
+            "share": 3.4,
             "record_count": 1
           }
         ],
-        "other_total": 27718052.74,
-        "other_share": 22.13,
-        "other_count": 12,
+        "other_total": 4482612.43,
+        "other_share": 5.13,
+        "other_count": 5,
         "period": {
           "kind": "contract_start_date",
-          "from": "2022-02-24",
+          "from": "2024-05-26",
           "to": "2026-06-30",
           "undated_records": 0,
           "invalid_date_records": 0
@@ -3052,43 +3202,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:83fa80b0f171aebf",
+      "id": "procurement_concentration:a64cbdd3d33b591e",
       "category": "procurement_concentration",
-      "entity": "ACCENTURE AUSTRALIA HOLDINGS PTY LT",
-      "title": "Australian Digital Health Agency: 41% awarded to one supplier",
-      "summary": "ACCENTURE AUSTRALIA HOLDINGS PTY LT accounts for 41.4% of the positive recorded contract value for Australian Digital Health Agency.",
+      "entity": "Areva NC",
+      "title": "Australian Nuclear Science and Technology Organisation: 32% awarded to one supplier",
+      "summary": "Areva NC accounts for 32.3% of the positive recorded contract value for Australian Nuclear Science and Technology Organisation.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 41.35,
+          "value": 32.28,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 51720251.0,
+          "value": 46000000.0,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 125075050.76,
+          "value": 142494710.23,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 61.0,
+          "value": 22.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 98.0,
+          "value": 22.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Australian Digital Health Agency → ACCENTURE AUSTRALIA HOLDINGS PTY LT: $51,720,251.00 · starts 2025-06-30 · austender · record CN4176025",
+          "label": "Australian Nuclear Science and Technology Organisation → Areva NC: $46,000,000.00 · starts 2016-07-06 · austender · record CN3448461",
           "table": "contracts",
-          "record_id": "CN4176025",
+          "record_id": "CN3448461",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -3099,51 +3249,51 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Australian Digital Health Agency",
-        "group_total": 125075050.76,
-        "leading_name": "ACCENTURE AUSTRALIA HOLDINGS PTY LT",
+        "group_label": "Australian Nuclear Science and Technology Organisation",
+        "group_total": 142494710.23,
+        "leading_name": "Areva NC",
         "participant_label": "supplier",
-        "participant_count": 61,
-        "record_count": 98,
+        "participant_count": 22,
+        "record_count": 22,
         "participants": [
           {
-            "name": "ACCENTURE AUSTRALIA HOLDINGS PTY LT",
-            "value": 51720251.0,
-            "share": 41.35,
+            "name": "Areva NC",
+            "value": 46000000.0,
+            "share": 32.28,
             "record_count": 1
           },
           {
-            "name": "ORACLE CORPORATION AUSTRALIA PTY LI",
-            "value": 20730337.84,
-            "share": 16.57,
+            "name": "Synertec Pty Ltd",
+            "value": 45530474.0,
+            "share": 31.95,
             "record_count": 1
           },
           {
-            "name": "Dynatrace Asia Pacific Pty",
-            "value": 8935053.69,
-            "share": 7.14,
+            "name": "Isotope Technologies Dresden GmbH",
+            "value": 11057840.0,
+            "share": 7.76,
             "record_count": 1
           },
           {
-            "name": "Amazon Web Services Australia Pty Ltd",
-            "value": 7000000.0,
-            "share": 5.6,
+            "name": "Wipro Technologies Australia P/L",
+            "value": 7156402.0,
+            "share": 5.02,
             "record_count": 1
           },
           {
-            "name": "ServiceNow Australia Pty Ltd",
-            "value": 2916023.75,
-            "share": 2.33,
+            "name": "Power System Australia Pty Ltd",
+            "value": 6339750.0,
+            "share": 4.45,
             "record_count": 1
           }
         ],
-        "other_total": 33773384.48,
-        "other_share": 27.0,
-        "other_count": 56,
+        "other_total": 26410244.23,
+        "other_share": 18.53,
+        "other_count": 17,
         "period": {
           "kind": "contract_start_date",
-          "from": "2017-12-20",
-          "to": "2026-05-19",
+          "from": "2016-02-03",
+          "to": "2026-09-03",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -3202,43 +3352,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:91aa6b13f60990b9",
+      "id": "procurement_concentration:01eff87fac5d53f0",
       "category": "procurement_concentration",
-      "entity": "MSS Security Pty Ltd",
-      "title": "Federal Court of Australia: 29% awarded to one supplier",
-      "summary": "MSS Security Pty Ltd accounts for 29.2% of the positive recorded contract value for Federal Court of Australia.",
+      "entity": "Vopak Terminal Darwin Pty Ltd",
+      "title": "National Indigenous Australians Agency: 43% awarded to one supplier",
+      "summary": "Vopak Terminal Darwin Pty Ltd accounts for 42.9% of the positive recorded contract value for National Indigenous Australians Agency.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 29.19,
+          "value": 42.89,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 51022723.97,
+          "value": 45635451.28,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 174819441.51,
+          "value": 106394895.27,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 42.0,
+          "value": 63.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 65.0,
+          "value": 80.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Federal Court of Australia → MSS Security Pty Ltd: $51,022,723.97 · starts 2025-03-17 · austender · record CN4152290",
+          "label": "National Indigenous Australians Agency → Vopak Terminal Darwin Pty Ltd: $45,635,451.28 · starts 2024-12-31 · austender · record CN4122768",
           "table": "contracts",
-          "record_id": "CN4152290",
+          "record_id": "CN4122768",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -3249,51 +3399,201 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Federal Court of Australia",
-        "group_total": 174819441.51,
-        "leading_name": "MSS Security Pty Ltd",
+        "group_label": "National Indigenous Australians Agency",
+        "group_total": 106394895.27,
+        "leading_name": "Vopak Terminal Darwin Pty Ltd",
         "participant_label": "supplier",
-        "participant_count": 42,
-        "record_count": 65,
+        "participant_count": 63,
+        "record_count": 80,
         "participants": [
           {
-            "name": "MSS Security Pty Ltd",
-            "value": 51022723.97,
-            "share": 29.19,
+            "name": "Vopak Terminal Darwin Pty Ltd",
+            "value": 45635451.28,
+            "share": 42.89,
             "record_count": 1
           },
           {
-            "name": "TERRACE TOWER PTY LTD",
-            "value": 35485743.0,
-            "share": 20.3,
+            "name": "INDIGENOUS DEFENCE AND INFRASTRUCTURE CONSORTIUM PTY LTD",
+            "value": 11594250.0,
+            "share": 10.9,
+            "record_count": 2
+          },
+          {
+            "name": "Power Back Pty Ltd",
+            "value": 10927498.36,
+            "share": 10.27,
             "record_count": 1
           },
           {
-            "name": "JONES LANG LASALLE (ACT) PTY LIMITED",
-            "value": 14191323.28,
-            "share": 8.12,
-            "record_count": 1
+            "name": "Ninti One Limited",
+            "value": 5803382.33,
+            "share": 5.45,
+            "record_count": 3
           },
           {
-            "name": "BUILT PTY LIMITED",
-            "value": 11044978.0,
-            "share": 6.32,
+            "name": "Australian Institute of Health and Welfare",
+            "value": 5127908.0,
+            "share": 4.82,
             "record_count": 1
-          },
-          {
-            "name": "SG FLEET Australia Pty Ltd",
-            "value": 9366465.76,
-            "share": 5.36,
-            "record_count": 5
           }
         ],
-        "other_total": 53708207.5,
-        "other_share": 30.72,
-        "other_count": 37,
+        "other_total": 27306405.3,
+        "other_share": 25.67,
+        "other_count": 58,
         "period": {
           "kind": "contract_start_date",
-          "from": "2012-06-30",
-          "to": "2026-05-03",
+          "from": "2008-12-03",
+          "to": "2026-06-15",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
+      "entity_url": null
+    },
+    {
+      "id": "donor_contract_overlap:11b93c3591812703",
+      "category": "donor_contract_overlap",
+      "entity": "Medtronic Australasia Pty Ltd",
+      "title": "Medtronic Australasia Pty Ltd appears in party receipts and contracts",
+      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
+      "metrics": [
+        {
+          "label": "Recorded party receipts",
+          "value": 495745.0,
+          "format": "currency"
+        },
+        {
+          "label": "Recorded contract value",
+          "value": 3107779.2,
+          "format": "currency"
+        },
+        {
+          "label": "Party receipt records",
+          "value": 65.0,
+          "format": "number"
+        },
+        {
+          "label": "Contract records",
+          "value": 1.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Medtronic Australasia Pty Ltd → Australian Labor Party (ALP): $27,500.00 · FY 2024-25 · AEC annual receipt · local record 643294",
+          "table": "donations",
+          "record_id": "643294",
+          "url": "https://transparency.aec.gov.au/",
+          "link_scope": "source_register"
+        },
+        {
+          "label": "Department of Health, Disability and Ageing → Medtronic Australasia Pty Ltd: $3,107,779.20 · starts 2026-06-30 · austender · record CN4260932",
+          "table": "contracts",
+          "record_id": "CN4260932",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "Matching names are not verified legal identities; unrelated entities can share a name.",
+        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
+        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
+      ],
+      "entity_url": null
+    },
+    {
+      "id": "procurement_concentration:71f6c3fbfec12c57",
+      "category": "procurement_concentration",
+      "entity": "Deka Australia One GmbH",
+      "title": "Administrative Review Tribunal: 31% awarded to one supplier",
+      "summary": "Deka Australia One GmbH accounts for 31.4% of the positive recorded contract value for Administrative Review Tribunal.",
+      "metrics": [
+        {
+          "label": "Largest supplier share",
+          "value": 31.38,
+          "format": "percent"
+        },
+        {
+          "label": "Largest supplier value",
+          "value": 41440515.97,
+          "format": "currency"
+        },
+        {
+          "label": "Total recorded value",
+          "value": 132072652.53,
+          "format": "currency"
+        },
+        {
+          "label": "Distinct suppliers",
+          "value": 20.0,
+          "format": "number"
+        },
+        {
+          "label": "Records in comparison",
+          "value": 25.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Administrative Review Tribunal → Deka Australia One GmbH: $41,440,515.97 · starts 2017-03-31 · austender · record CN3407236",
+          "table": "contracts",
+          "record_id": "CN3407236",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "This share describes available records only; missing disclosures can materially change it.",
+        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
+      ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Administrative Review Tribunal",
+        "group_total": 132072652.53,
+        "leading_name": "Deka Australia One GmbH",
+        "participant_label": "supplier",
+        "participant_count": 20,
+        "record_count": 25,
+        "participants": [
+          {
+            "name": "Deka Australia One GmbH",
+            "value": 41440515.97,
+            "share": 31.38,
+            "record_count": 1
+          },
+          {
+            "name": "AM 166 Creek Street Investment Unit Trust",
+            "value": 29330182.4,
+            "share": 22.21,
+            "record_count": 2
+          },
+          {
+            "name": "DATA #3 LIMITED",
+            "value": 20683583.98,
+            "share": 15.66,
+            "record_count": 3
+          },
+          {
+            "name": "360 Capital Investment Management Ltd",
+            "value": 18231802.8,
+            "share": 13.8,
+            "record_count": 1
+          },
+          {
+            "name": "Jones Lang LaSalle (ACT) Pty Ltd",
+            "value": 7557934.29,
+            "share": 5.72,
+            "record_count": 2
+          }
+        ],
+        "other_total": 14828633.09,
+        "other_share": 11.23,
+        "other_count": 15,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2016-12-31",
+          "to": "2026-06-30",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -3352,43 +3652,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:1ed0baf5852aa7a9",
+      "id": "procurement_concentration:b0158ef3817c00f1",
       "category": "procurement_concentration",
-      "entity": "WSP Australia pty Limited",
-      "title": "High Speed Rail Authority: 57% awarded to one supplier",
-      "summary": "WSP Australia pty Limited accounts for 56.6% of the positive recorded contract value for High Speed Rail Authority.",
+      "entity": "Universal McCann",
+      "title": "Department of the Treasury: 32% awarded to one supplier",
+      "summary": "Universal McCann accounts for 31.6% of the positive recorded contract value for Department of the Treasury.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 56.62,
+          "value": 31.6,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 47585221.53,
+          "value": 40271000.0,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 84036045.6,
+          "value": 127421472.73,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 9.0,
+          "value": 131.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 9.0,
+          "value": 168.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "High Speed Rail Authority → WSP Australia pty Limited: $47,585,221.53 · starts 2026-06-17 · austender · record CN4259915",
+          "label": "Department of the Treasury → Universal McCann: $9,350,000.00 · starts 2024-08-07 · austender · record CN4093761",
           "table": "contracts",
-          "record_id": "CN4259915",
+          "record_id": "CN4093761",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -3399,51 +3699,51 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "High Speed Rail Authority",
-        "group_total": 84036045.6,
-        "leading_name": "WSP Australia pty Limited",
+        "group_label": "Department of the Treasury",
+        "group_total": 127421472.73,
+        "leading_name": "Universal McCann",
         "participant_label": "supplier",
-        "participant_count": 9,
-        "record_count": 9,
+        "participant_count": 131,
+        "record_count": 168,
         "participants": [
           {
-            "name": "WSP Australia pty Limited",
-            "value": 47585221.53,
-            "share": 56.62,
+            "name": "Universal McCann",
+            "value": 40271000.0,
+            "share": 31.6,
+            "record_count": 3
+          },
+          {
+            "name": "MSS Security Pty Ltd",
+            "value": 7407816.45,
+            "share": 5.81,
             "record_count": 1
           },
           {
-            "name": "Bellgrove Advisory Pty Ltd",
-            "value": 18010682.0,
-            "share": 21.43,
+            "name": "Mitchell and Partners Australia",
+            "value": 5390000.0,
+            "share": 4.23,
             "record_count": 1
           },
           {
-            "name": "J A T SERVICES PTY LTD JAT SERVICES",
-            "value": 7358182.0,
-            "share": 8.76,
-            "record_count": 1
+            "name": "HP PPS Australia PL",
+            "value": 4424310.0,
+            "share": 3.47,
+            "record_count": 3
           },
           {
-            "name": "ARUP AUSTRALIA PROJECTS PTY LIMITED",
-            "value": 4946042.2,
-            "share": 5.89,
-            "record_count": 1
-          },
-          {
-            "name": "VEITCH LISTER CONSULTING PTY LTD",
-            "value": 2973305.44,
-            "share": 3.54,
-            "record_count": 1
+            "name": "303 Lowe Australia Pty Ltd",
+            "value": 3893359.8,
+            "share": 3.06,
+            "record_count": 2
           }
         ],
-        "other_total": 3162612.43,
-        "other_share": 3.76,
-        "other_count": 4,
+        "other_total": 66034986.48,
+        "other_share": 51.82,
+        "other_count": 126,
         "period": {
           "kind": "contract_start_date",
-          "from": "2024-05-26",
-          "to": "2026-06-30",
+          "from": "2012-06-17",
+          "to": "2026-05-21",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -3490,456 +3790,6 @@
           "label": "Export Finance Australia → Gilbert + Tobin: $604,937.30 · starts 2025-11-20 · austender · record CN4211286",
           "table": "contracts",
           "record_id": "CN4211286",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "Matching names are not verified legal identities; unrelated entities can share a name.",
-        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
-        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
-      ],
-      "entity_url": null
-    },
-    {
-      "id": "procurement_concentration:a64cbdd3d33b591e",
-      "category": "procurement_concentration",
-      "entity": "Areva NC",
-      "title": "Australian Nuclear Science and Technology Organisation: 47% awarded to one supplier",
-      "summary": "Areva NC accounts for 47.4% of the positive recorded contract value for Australian Nuclear Science and Technology Organisation.",
-      "metrics": [
-        {
-          "label": "Largest supplier share",
-          "value": 47.44,
-          "format": "percent"
-        },
-        {
-          "label": "Largest supplier value",
-          "value": 46000000.0,
-          "format": "currency"
-        },
-        {
-          "label": "Total recorded value",
-          "value": 96964236.23,
-          "format": "currency"
-        },
-        {
-          "label": "Distinct suppliers",
-          "value": 21.0,
-          "format": "number"
-        },
-        {
-          "label": "Records in comparison",
-          "value": 21.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "Australian Nuclear Science and Technology Organisation → Areva NC: $46,000,000.00 · starts 2016-07-06 · austender · record CN3448461",
-          "table": "contracts",
-          "record_id": "CN3448461",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "This share describes available records only; missing disclosures can materially change it.",
-        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
-      ],
-      "chart": {
-        "type": "concentration",
-        "group_label": "Australian Nuclear Science and Technology Organisation",
-        "group_total": 96964236.23,
-        "leading_name": "Areva NC",
-        "participant_label": "supplier",
-        "participant_count": 21,
-        "record_count": 21,
-        "participants": [
-          {
-            "name": "Areva NC",
-            "value": 46000000.0,
-            "share": 47.44,
-            "record_count": 1
-          },
-          {
-            "name": "Isotope Technologies Dresden GmbH",
-            "value": 11057840.0,
-            "share": 11.4,
-            "record_count": 1
-          },
-          {
-            "name": "Wipro Technologies Australia P/L",
-            "value": 7156402.0,
-            "share": 7.38,
-            "record_count": 1
-          },
-          {
-            "name": "Power System Australia Pty Ltd",
-            "value": 6339750.0,
-            "share": 6.54,
-            "record_count": 1
-          },
-          {
-            "name": "Nepean Engineering and Innovation Pty Ltd",
-            "value": 4115150.0,
-            "share": 4.24,
-            "record_count": 1
-          }
-        ],
-        "other_total": 22295094.23,
-        "other_share": 22.99,
-        "other_count": 16,
-        "period": {
-          "kind": "contract_start_date",
-          "from": "2016-02-03",
-          "to": "2026-08-23",
-          "undated_records": 0,
-          "invalid_date_records": 0
-        }
-      },
-      "entity_url": null
-    },
-    {
-      "id": "donor_contract_overlap:74a7afe9cef6572e",
-      "category": "donor_contract_overlap",
-      "entity": "Clayton Utz",
-      "title": "Clayton Utz appears in party receipts and contracts",
-      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
-      "metrics": [
-        {
-          "label": "Recorded party receipts",
-          "value": 463261.0,
-          "format": "currency"
-        },
-        {
-          "label": "Recorded contract value",
-          "value": 22441755.41,
-          "format": "currency"
-        },
-        {
-          "label": "Party receipt records",
-          "value": 146.0,
-          "format": "number"
-        },
-        {
-          "label": "Contract records",
-          "value": 52.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "Clayton Utz → Australian Labor Party (State of Queensland): $1,870.00 · FY 2019-20 · AEC annual receipt · local record 675045",
-          "table": "donations",
-          "record_id": "675045",
-          "url": "https://transparency.aec.gov.au/",
-          "link_scope": "source_register"
-        },
-        {
-          "label": "Department of Defence → CLAYTON UTZ: $105,171.00 · starts 2013-01-24 · austender · record CN1175672",
-          "table": "contracts",
-          "record_id": "CN1175672",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "Matching names are not verified legal identities; unrelated entities can share a name.",
-        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
-        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
-      ],
-      "entity_url": null
-    },
-    {
-      "id": "procurement_concentration:01eff87fac5d53f0",
-      "category": "procurement_concentration",
-      "entity": "Vopak Terminal Darwin Pty Ltd",
-      "title": "National Indigenous Australians Agency: 47% awarded to one supplier",
-      "summary": "Vopak Terminal Darwin Pty Ltd accounts for 47.1% of the positive recorded contract value for National Indigenous Australians Agency.",
-      "metrics": [
-        {
-          "label": "Largest supplier share",
-          "value": 47.1,
-          "format": "percent"
-        },
-        {
-          "label": "Largest supplier value",
-          "value": 45635451.28,
-          "format": "currency"
-        },
-        {
-          "label": "Total recorded value",
-          "value": 96899659.67,
-          "format": "currency"
-        },
-        {
-          "label": "Distinct suppliers",
-          "value": 61.0,
-          "format": "number"
-        },
-        {
-          "label": "Records in comparison",
-          "value": 77.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "National Indigenous Australians Agency → Vopak Terminal Darwin Pty Ltd: $45,635,451.28 · starts 2024-12-31 · austender · record CN4122768",
-          "table": "contracts",
-          "record_id": "CN4122768",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "This share describes available records only; missing disclosures can materially change it.",
-        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
-      ],
-      "chart": {
-        "type": "concentration",
-        "group_label": "National Indigenous Australians Agency",
-        "group_total": 96899659.67,
-        "leading_name": "Vopak Terminal Darwin Pty Ltd",
-        "participant_label": "supplier",
-        "participant_count": 61,
-        "record_count": 77,
-        "participants": [
-          {
-            "name": "Vopak Terminal Darwin Pty Ltd",
-            "value": 45635451.28,
-            "share": 47.1,
-            "record_count": 1
-          },
-          {
-            "name": "INDIGENOUS DEFENCE AND INFRASTRUCTURE CONSORTIUM PTY LTD",
-            "value": 11594250.0,
-            "share": 11.97,
-            "record_count": 2
-          },
-          {
-            "name": "Power Back Pty Ltd",
-            "value": 10927498.36,
-            "share": 11.28,
-            "record_count": 1
-          },
-          {
-            "name": "Australian Private Networks Pty Ltd",
-            "value": 4760478.15,
-            "share": 4.91,
-            "record_count": 1
-          },
-          {
-            "name": "Ninti One Limited",
-            "value": 2987437.73,
-            "share": 3.08,
-            "record_count": 2
-          }
-        ],
-        "other_total": 20994544.15,
-        "other_share": 21.67,
-        "other_count": 56,
-        "period": {
-          "kind": "contract_start_date",
-          "from": "2008-12-03",
-          "to": "2026-06-09",
-          "undated_records": 0,
-          "invalid_date_records": 0
-        }
-      },
-      "entity_url": null
-    },
-    {
-      "id": "donor_contract_overlap:d2b5bd20b78dabcf",
-      "category": "donor_contract_overlap",
-      "entity": "EY",
-      "title": "EY appears in party receipts and contracts",
-      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
-      "metrics": [
-        {
-          "label": "Recorded party receipts",
-          "value": 405210.0,
-          "format": "currency"
-        },
-        {
-          "label": "Recorded contract value",
-          "value": 1132620.0,
-          "format": "currency"
-        },
-        {
-          "label": "Party receipt records",
-          "value": 14.0,
-          "format": "number"
-        },
-        {
-          "label": "Contract records",
-          "value": 1.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "EY → Australian Labor Party (ALP): $1,444.00 · FY 2024-25 · AEC annual receipt · local record 643055",
-          "table": "donations",
-          "record_id": "643055",
-          "url": "https://transparency.aec.gov.au/",
-          "link_scope": "source_register"
-        },
-        {
-          "label": "Australian National Audit Office → EY: $1,132,620.00 · starts 2022-08-22 · austender · record CN3907746",
-          "table": "contracts",
-          "record_id": "CN3907746",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "Matching names are not verified legal identities; unrelated entities can share a name.",
-        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
-        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
-      ],
-      "entity_url": null
-    },
-    {
-      "id": "procurement_concentration:71f6c3fbfec12c57",
-      "category": "procurement_concentration",
-      "entity": "Deka Australia One GmbH",
-      "title": "Administrative Review Tribunal: 40% awarded to one supplier",
-      "summary": "Deka Australia One GmbH accounts for 40.2% of the positive recorded contract value for Administrative Review Tribunal.",
-      "metrics": [
-        {
-          "label": "Largest supplier share",
-          "value": 40.2,
-          "format": "percent"
-        },
-        {
-          "label": "Largest supplier value",
-          "value": 41440515.97,
-          "format": "currency"
-        },
-        {
-          "label": "Total recorded value",
-          "value": 103074877.05,
-          "format": "currency"
-        },
-        {
-          "label": "Distinct suppliers",
-          "value": 18.0,
-          "format": "number"
-        },
-        {
-          "label": "Records in comparison",
-          "value": 19.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "Administrative Review Tribunal → Deka Australia One GmbH: $41,440,515.97 · starts 2017-03-31 · austender · record CN3407236",
-          "table": "contracts",
-          "record_id": "CN3407236",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "This share describes available records only; missing disclosures can materially change it.",
-        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
-      ],
-      "chart": {
-        "type": "concentration",
-        "group_label": "Administrative Review Tribunal",
-        "group_total": 103074877.05,
-        "leading_name": "Deka Australia One GmbH",
-        "participant_label": "supplier",
-        "participant_count": 18,
-        "record_count": 19,
-        "participants": [
-          {
-            "name": "Deka Australia One GmbH",
-            "value": 41440515.97,
-            "share": 40.2,
-            "record_count": 1
-          },
-          {
-            "name": "AM 166 Creek Street Investment Unit Trust",
-            "value": 29330182.4,
-            "share": 28.46,
-            "record_count": 2
-          },
-          {
-            "name": "360 Capital Investment Management Ltd",
-            "value": 18231802.8,
-            "share": 17.69,
-            "record_count": 1
-          },
-          {
-            "name": "Comcare",
-            "value": 2179065.9,
-            "share": 2.11,
-            "record_count": 1
-          },
-          {
-            "name": "LEXIS-NEXIS",
-            "value": 2021118.19,
-            "share": 1.96,
-            "record_count": 1
-          }
-        ],
-        "other_total": 9872191.79,
-        "other_share": 9.58,
-        "other_count": 13,
-        "period": {
-          "kind": "contract_start_date",
-          "from": "2016-12-31",
-          "to": "2026-06-30",
-          "undated_records": 0,
-          "invalid_date_records": 0
-        }
-      },
-      "entity_url": null
-    },
-    {
-      "id": "donor_contract_overlap:b0575faf11a26d51",
-      "category": "donor_contract_overlap",
-      "entity": "Kellogg Brown & Root Pty Ltd",
-      "title": "Kellogg Brown & Root Pty Ltd appears in party receipts and contracts",
-      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
-      "metrics": [
-        {
-          "label": "Recorded party receipts",
-          "value": 362000.0,
-          "format": "currency"
-        },
-        {
-          "label": "Recorded contract value",
-          "value": 394442145.97,
-          "format": "currency"
-        },
-        {
-          "label": "Party receipt records",
-          "value": 55.0,
-          "format": "number"
-        },
-        {
-          "label": "Contract records",
-          "value": 16.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "Kellogg Brown & Root Pty Ltd → Australian Labor Party (ALP): $15,000.00 · FY 2007-08 · AEC annual receipt · local record 726549",
-          "table": "donations",
-          "record_id": "726549",
-          "url": "https://transparency.aec.gov.au/",
-          "link_scope": "source_register"
-        },
-        {
-          "label": "Department of Defence → KELLOGG BROWN & ROOT PTY LTD: $292,891.98 · starts 2013-05-12 · austender · record CN1420041",
-          "table": "contracts",
-          "record_id": "CN1420041",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -4051,6 +3901,456 @@
       "entity_url": null
     },
     {
+      "id": "donor_contract_overlap:74a7afe9cef6572e",
+      "category": "donor_contract_overlap",
+      "entity": "Clayton Utz",
+      "title": "Clayton Utz appears in party receipts and contracts",
+      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
+      "metrics": [
+        {
+          "label": "Recorded party receipts",
+          "value": 463261.0,
+          "format": "currency"
+        },
+        {
+          "label": "Recorded contract value",
+          "value": 28493690.65,
+          "format": "currency"
+        },
+        {
+          "label": "Party receipt records",
+          "value": 146.0,
+          "format": "number"
+        },
+        {
+          "label": "Contract records",
+          "value": 57.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Clayton Utz → Australian Labor Party (State of Queensland): $1,870.00 · FY 2019-20 · AEC annual receipt · local record 675045",
+          "table": "donations",
+          "record_id": "675045",
+          "url": "https://transparency.aec.gov.au/",
+          "link_scope": "source_register"
+        },
+        {
+          "label": "Department of Defence → CLAYTON UTZ: $105,171.00 · starts 2013-01-24 · austender · record CN1175672",
+          "table": "contracts",
+          "record_id": "CN1175672",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "Matching names are not verified legal identities; unrelated entities can share a name.",
+        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
+        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
+      ],
+      "entity_url": null
+    },
+    {
+      "id": "procurement_concentration:a564169fdb46a952",
+      "category": "procurement_concentration",
+      "entity": "Accenture Australia",
+      "title": "Tourism Australia: 39% awarded to one supplier",
+      "summary": "Accenture Australia accounts for 38.7% of the positive recorded contract value for Tourism Australia.",
+      "metrics": [
+        {
+          "label": "Largest supplier share",
+          "value": 38.7,
+          "format": "percent"
+        },
+        {
+          "label": "Largest supplier value",
+          "value": 38914489.0,
+          "format": "currency"
+        },
+        {
+          "label": "Total recorded value",
+          "value": 100553848.25,
+          "format": "currency"
+        },
+        {
+          "label": "Distinct suppliers",
+          "value": 23.0,
+          "format": "number"
+        },
+        {
+          "label": "Records in comparison",
+          "value": 25.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Tourism Australia → Accenture Australia: $38,914,489.00 · starts 2024-07-07 · austender · record CN4076861",
+          "table": "contracts",
+          "record_id": "CN4076861",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "This share describes available records only; missing disclosures can materially change it.",
+        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
+      ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Tourism Australia",
+        "group_total": 100553848.25,
+        "leading_name": "Accenture Australia",
+        "participant_label": "supplier",
+        "participant_count": 23,
+        "record_count": 25,
+        "participants": [
+          {
+            "name": "Accenture Australia",
+            "value": 38914489.0,
+            "share": 38.7,
+            "record_count": 1
+          },
+          {
+            "name": "Lendlease (Circular Quay) Pty Ltd as trustee for the Lendlease (Circular Quay) Trust",
+            "value": 24144598.0,
+            "share": 24.01,
+            "record_count": 1
+          },
+          {
+            "name": "Expertise Events Pty Ltd",
+            "value": 5538935.0,
+            "share": 5.51,
+            "record_count": 1
+          },
+          {
+            "name": "Sitecore Australia Pty Ltd",
+            "value": 3294250.33,
+            "share": 3.28,
+            "record_count": 1
+          },
+          {
+            "name": "Adobe Systems Pty Ltd",
+            "value": 2916444.29,
+            "share": 2.9,
+            "record_count": 2
+          }
+        ],
+        "other_total": 25745131.63,
+        "other_share": 25.6,
+        "other_count": 18,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2014-12-09",
+          "to": "2026-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
+      "entity_url": null
+    },
+    {
+      "id": "donor_contract_overlap:d2b5bd20b78dabcf",
+      "category": "donor_contract_overlap",
+      "entity": "EY",
+      "title": "EY appears in party receipts and contracts",
+      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
+      "metrics": [
+        {
+          "label": "Recorded party receipts",
+          "value": 405210.0,
+          "format": "currency"
+        },
+        {
+          "label": "Recorded contract value",
+          "value": 1132620.0,
+          "format": "currency"
+        },
+        {
+          "label": "Party receipt records",
+          "value": 14.0,
+          "format": "number"
+        },
+        {
+          "label": "Contract records",
+          "value": 1.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "EY → Australian Labor Party (ALP): $1,444.00 · FY 2024-25 · AEC annual receipt · local record 643055",
+          "table": "donations",
+          "record_id": "643055",
+          "url": "https://transparency.aec.gov.au/",
+          "link_scope": "source_register"
+        },
+        {
+          "label": "Australian National Audit Office → EY: $1,132,620.00 · starts 2022-08-22 · austender · record CN3907746",
+          "table": "contracts",
+          "record_id": "CN3907746",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "Matching names are not verified legal identities; unrelated entities can share a name.",
+        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
+        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
+      ],
+      "entity_url": null
+    },
+    {
+      "id": "procurement_concentration:572b1e4f495b5c97",
+      "category": "procurement_concentration",
+      "entity": "52 Goulburn Landowner Pty Ltd",
+      "title": "Office of the Director of Public Prosecutions: 47% awarded to one supplier",
+      "summary": "52 Goulburn Landowner Pty Ltd accounts for 46.9% of the positive recorded contract value for Office of the Director of Public Prosecutions.",
+      "metrics": [
+        {
+          "label": "Largest supplier share",
+          "value": 46.92,
+          "format": "percent"
+        },
+        {
+          "label": "Largest supplier value",
+          "value": 31402608.83,
+          "format": "currency"
+        },
+        {
+          "label": "Total recorded value",
+          "value": 66930849.54,
+          "format": "currency"
+        },
+        {
+          "label": "Distinct suppliers",
+          "value": 28.0,
+          "format": "number"
+        },
+        {
+          "label": "Records in comparison",
+          "value": 34.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Office of the Director of Public Prosecutions → 52 Goulburn Landowner Pty Ltd: $31,402,608.83 · starts 2024-06-30 · austender · record CN4161966",
+          "table": "contracts",
+          "record_id": "CN4161966",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "This share describes available records only; missing disclosures can materially change it.",
+        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
+      ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Office of the Director of Public Prosecutions",
+        "group_total": 66930849.54,
+        "leading_name": "52 Goulburn Landowner Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 28,
+        "record_count": 34,
+        "participants": [
+          {
+            "name": "52 Goulburn Landowner Pty Ltd",
+            "value": 31402608.83,
+            "share": 46.92,
+            "record_count": 1
+          },
+          {
+            "name": "Jones Lang LaSalle (ACT) Pty Ltd",
+            "value": 11716105.5,
+            "share": 17.5,
+            "record_count": 1
+          },
+          {
+            "name": "EDT Solutions Pty Ltd",
+            "value": 9239450.0,
+            "share": 13.8,
+            "record_count": 1
+          },
+          {
+            "name": "Objective Corporation Limited",
+            "value": 3000000.0,
+            "share": 4.48,
+            "record_count": 1
+          },
+          {
+            "name": "Macquarie Telecom Pty Ltd",
+            "value": 2950000.0,
+            "share": 4.41,
+            "record_count": 1
+          }
+        ],
+        "other_total": 8622685.21,
+        "other_share": 12.88,
+        "other_count": 23,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2013-12-17",
+          "to": "2026-02-25",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
+      "entity_url": null
+    },
+    {
+      "id": "donor_contract_overlap:b0575faf11a26d51",
+      "category": "donor_contract_overlap",
+      "entity": "Kellogg Brown & Root Pty Ltd",
+      "title": "Kellogg Brown & Root Pty Ltd appears in party receipts and contracts",
+      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
+      "metrics": [
+        {
+          "label": "Recorded party receipts",
+          "value": 362000.0,
+          "format": "currency"
+        },
+        {
+          "label": "Recorded contract value",
+          "value": 404218892.18,
+          "format": "currency"
+        },
+        {
+          "label": "Party receipt records",
+          "value": 55.0,
+          "format": "number"
+        },
+        {
+          "label": "Contract records",
+          "value": 17.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Kellogg Brown & Root Pty Ltd → Australian Labor Party (ALP): $15,000.00 · FY 2007-08 · AEC annual receipt · local record 726549",
+          "table": "donations",
+          "record_id": "726549",
+          "url": "https://transparency.aec.gov.au/",
+          "link_scope": "source_register"
+        },
+        {
+          "label": "Department of Defence → KELLOGG BROWN & ROOT PTY LTD: $292,891.98 · starts 2013-05-12 · austender · record CN1420041",
+          "table": "contracts",
+          "record_id": "CN1420041",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "Matching names are not verified legal identities; unrelated entities can share a name.",
+        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
+        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
+      ],
+      "entity_url": null
+    },
+    {
+      "id": "procurement_concentration:1cb45208d9c7dc5a",
+      "category": "procurement_concentration",
+      "entity": "Terrace Tower Pty Ltd",
+      "title": "Fair Work Commission: 35% awarded to one supplier",
+      "summary": "Terrace Tower Pty Ltd accounts for 34.7% of the positive recorded contract value for Fair Work Commission.",
+      "metrics": [
+        {
+          "label": "Largest supplier share",
+          "value": 34.72,
+          "format": "percent"
+        },
+        {
+          "label": "Largest supplier value",
+          "value": 28209459.0,
+          "format": "currency"
+        },
+        {
+          "label": "Total recorded value",
+          "value": 81255988.88,
+          "format": "currency"
+        },
+        {
+          "label": "Distinct suppliers",
+          "value": 29.0,
+          "format": "number"
+        },
+        {
+          "label": "Records in comparison",
+          "value": 62.0,
+          "format": "number"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "Fair Work Commission → Terrace Tower Pty Ltd: $28,105,425.00 · starts 2022-06-30 · austender · record CN3945048",
+          "table": "contracts",
+          "record_id": "CN3945048",
+          "url": "https://www.tenders.gov.au/",
+          "link_scope": "source_register"
+        }
+      ],
+      "caveats": [
+        "This share describes available records only; missing disclosures can materially change it.",
+        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
+      ],
+      "chart": {
+        "type": "concentration",
+        "group_label": "Fair Work Commission",
+        "group_total": 81255988.88,
+        "leading_name": "Terrace Tower Pty Ltd",
+        "participant_label": "supplier",
+        "participant_count": 29,
+        "record_count": 62,
+        "participants": [
+          {
+            "name": "Terrace Tower Pty Ltd",
+            "value": 28209459.0,
+            "share": 34.72,
+            "record_count": 2
+          },
+          {
+            "name": "The Trustee for Deka Australia No.1 Trust",
+            "value": 7789307.78,
+            "share": 9.59,
+            "record_count": 1
+          },
+          {
+            "name": "Evolution Trustees Limited",
+            "value": 7662602.19,
+            "share": 9.43,
+            "record_count": 1
+          },
+          {
+            "name": "MERRILL CORPORATION AUSTRALIA PTY LTD",
+            "value": 6078843.32,
+            "share": 7.48,
+            "record_count": 1
+          },
+          {
+            "name": "EXCO PARTNERS PTY LTD ta Exco Partners",
+            "value": 6029210.0,
+            "share": 7.42,
+            "record_count": 6
+          }
+        ],
+        "other_total": 25486566.59,
+        "other_share": 31.37,
+        "other_count": 24,
+        "period": {
+          "kind": "contract_start_date",
+          "from": "2014-08-27",
+          "to": "2026-06-30",
+          "undated_records": 0,
+          "invalid_date_records": 0
+        }
+      },
+      "entity_url": null
+    },
+    {
       "id": "donor_contract_overlap:73cbbe8709091608",
       "category": "donor_contract_overlap",
       "entity": "Saab Australia Pty Ltd",
@@ -4064,7 +4364,7 @@
         },
         {
           "label": "Recorded contract value",
-          "value": 122165013.27,
+          "value": 123319983.37,
           "format": "currency"
         },
         {
@@ -4074,7 +4374,7 @@
         },
         {
           "label": "Contract records",
-          "value": 9.0,
+          "value": 10.0,
           "format": "number"
         }
       ],
@@ -4102,43 +4402,43 @@
       "entity_url": null
     },
     {
-      "id": "procurement_concentration:1cb45208d9c7dc5a",
+      "id": "procurement_concentration:f2756fed55e36c96",
       "category": "procurement_concentration",
-      "entity": "Terrace Tower Pty Ltd",
-      "title": "Fair Work Commission: 46% awarded to one supplier",
-      "summary": "Terrace Tower Pty Ltd accounts for 46.0% of the positive recorded contract value for Fair Work Commission.",
+      "entity": "TELSTRA LIMITED",
+      "title": "National Emergency Management Agency: 41% awarded to one supplier",
+      "summary": "TELSTRA LIMITED accounts for 40.7% of the positive recorded contract value for National Emergency Management Agency.",
       "metrics": [
         {
           "label": "Largest supplier share",
-          "value": 45.95,
+          "value": 40.73,
           "format": "percent"
         },
         {
           "label": "Largest supplier value",
-          "value": 28209459.0,
+          "value": 23933079.52,
           "format": "currency"
         },
         {
           "label": "Total recorded value",
-          "value": 61388910.71,
+          "value": 58759075.09,
           "format": "currency"
         },
         {
           "label": "Distinct suppliers",
-          "value": 26.0,
+          "value": 42.0,
           "format": "number"
         },
         {
           "label": "Records in comparison",
-          "value": 56.0,
+          "value": 47.0,
           "format": "number"
         }
       ],
       "evidence": [
         {
-          "label": "Fair Work Commission → Terrace Tower Pty Ltd: $28,105,425.00 · starts 2022-06-30 · austender · record CN3945048",
+          "label": "National Emergency Management Agency → TELSTRA LIMITED: $22,171,621.79 · starts 2025-02-19 · austender · record CN4139048",
           "table": "contracts",
-          "record_id": "CN3945048",
+          "record_id": "CN4139048",
           "url": "https://www.tenders.gov.au/",
           "link_scope": "source_register"
         }
@@ -4149,51 +4449,51 @@
       ],
       "chart": {
         "type": "concentration",
-        "group_label": "Fair Work Commission",
-        "group_total": 61388910.71,
-        "leading_name": "Terrace Tower Pty Ltd",
+        "group_label": "National Emergency Management Agency",
+        "group_total": 58759075.09,
+        "leading_name": "TELSTRA LIMITED",
         "participant_label": "supplier",
-        "participant_count": 26,
-        "record_count": 56,
+        "participant_count": 42,
+        "record_count": 47,
         "participants": [
           {
-            "name": "Terrace Tower Pty Ltd",
-            "value": 28209459.0,
-            "share": 45.95,
+            "name": "TELSTRA LIMITED",
+            "value": 23933079.52,
+            "share": 40.73,
             "record_count": 2
           },
           {
-            "name": "MERRILL CORPORATION AUSTRALIA PTY LTD",
-            "value": 6078843.32,
-            "share": 9.9,
+            "name": "VERITEC PTY LTD",
+            "value": 4356660.0,
+            "share": 7.41,
             "record_count": 1
           },
           {
-            "name": "DATA# 3 LIMITED",
-            "value": 4646627.24,
-            "share": 7.57,
-            "record_count": 4
+            "name": "EVOLVE FM PTY LTD",
+            "value": 4191976.98,
+            "share": 7.13,
+            "record_count": 2
           },
           {
-            "name": "HUDSON GLOBAL RESOURCES (AUST) PTY LTD",
-            "value": 4604457.36,
-            "share": 7.5,
-            "record_count": 22
+            "name": "HUMANIHUT PTY LTD",
+            "value": 3362169.8,
+            "share": 5.72,
+            "record_count": 1
           },
           {
-            "name": "CENTURIA PROPERTY FUNDS LIMITED",
-            "value": 4307664.0,
-            "share": 7.02,
+            "name": "BUSHFIRE BUILDING COUNCIL OF AUSTRA",
+            "value": 3297250.0,
+            "share": 5.61,
             "record_count": 1
           }
         ],
-        "other_total": 13541859.79,
-        "other_share": 22.06,
-        "other_count": 21,
+        "other_total": 19617938.79,
+        "other_share": 33.39,
+        "other_count": 37,
         "period": {
           "kind": "contract_start_date",
-          "from": "2014-08-27",
-          "to": "2026-06-30",
+          "from": "2020-10-27",
+          "to": "2026-07-23",
           "undated_records": 0,
           "invalid_date_records": 0
         }
@@ -4250,311 +4550,11 @@
         "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
       ],
       "entity_url": null
-    },
-    {
-      "id": "procurement_concentration:284eec8b1c479917",
-      "category": "procurement_concentration",
-      "entity": "Data #3 Limited",
-      "title": "Australian Competition and Consumer Commission: 31% awarded to one supplier",
-      "summary": "Data #3 Limited accounts for 30.5% of the positive recorded contract value for Australian Competition and Consumer Commission.",
-      "metrics": [
-        {
-          "label": "Largest supplier share",
-          "value": 30.55,
-          "format": "percent"
-        },
-        {
-          "label": "Largest supplier value",
-          "value": 24616935.76,
-          "format": "currency"
-        },
-        {
-          "label": "Total recorded value",
-          "value": 80590181.72,
-          "format": "currency"
-        },
-        {
-          "label": "Distinct suppliers",
-          "value": 63.0,
-          "format": "number"
-        },
-        {
-          "label": "Records in comparison",
-          "value": 135.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "Australian Competition and Consumer Commission → Data #3 Limited: $122,187.25 · starts 2015-06-30 · austender · record CN2989232",
-          "table": "contracts",
-          "record_id": "CN2989232",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "This share describes available records only; missing disclosures can materially change it.",
-        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
-      ],
-      "chart": {
-        "type": "concentration",
-        "group_label": "Australian Competition and Consumer Commission",
-        "group_total": 80590181.72,
-        "leading_name": "Data #3 Limited",
-        "participant_label": "supplier",
-        "participant_count": 63,
-        "record_count": 135,
-        "participants": [
-          {
-            "name": "Data #3 Limited",
-            "value": 24616935.76,
-            "share": 30.55,
-            "record_count": 2
-          },
-          {
-            "name": "Johnson Winter and Slattery Lawyers",
-            "value": 9328419.0,
-            "share": 11.58,
-            "record_count": 14
-          },
-          {
-            "name": "SamKnows Limited",
-            "value": 6495000.0,
-            "share": 8.06,
-            "record_count": 1
-          },
-          {
-            "name": "AUSTRALIAN GOVERNMENT SOLICITOR",
-            "value": 4974822.9,
-            "share": 6.17,
-            "record_count": 22
-          },
-          {
-            "name": "Datacom Systems (AU) Pty Ltd",
-            "value": 4158942.7,
-            "share": 5.16,
-            "record_count": 2
-          }
-        ],
-        "other_total": 31016061.36,
-        "other_share": 38.49,
-        "other_count": 58,
-        "period": {
-          "kind": "contract_start_date",
-          "from": "2013-02-28",
-          "to": "2026-06-30",
-          "undated_records": 0,
-          "invalid_date_records": 0
-        }
-      },
-      "entity_url": null
-    },
-    {
-      "id": "donor_contract_overlap:d69c23f713881d49",
-      "category": "donor_contract_overlap",
-      "entity": "Built Pty Ltd",
-      "title": "Built Pty Ltd appears in party receipts and contracts",
-      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
-      "metrics": [
-        {
-          "label": "Recorded party receipts",
-          "value": 292820.0,
-          "format": "currency"
-        },
-        {
-          "label": "Recorded contract value",
-          "value": 48016021.16,
-          "format": "currency"
-        },
-        {
-          "label": "Party receipt records",
-          "value": 12.0,
-          "format": "number"
-        },
-        {
-          "label": "Contract records",
-          "value": 7.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "Built Holdings Pty Ltd → Australian Labor Party (ALP): $33,000.00 · FY 2024-25 · AEC annual receipt · local record 642924",
-          "table": "donations",
-          "record_id": "642924",
-          "url": "https://transparency.aec.gov.au/",
-          "link_scope": "source_register"
-        },
-        {
-          "label": "Department of Finance → Built Pty Ltd: $589,043.40 · starts 2016-09-22 · austender · record CN3379165",
-          "table": "contracts",
-          "record_id": "CN3379165",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "Matching names are not verified legal identities; unrelated entities can share a name.",
-        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
-        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
-      ],
-      "entity_url": null
-    },
-    {
-      "id": "procurement_concentration:9fbf8c93838747f2",
-      "category": "procurement_concentration",
-      "entity": "Lendlease (Circular Quay) Pty Ltd as trustee for the Lendlease (Circular Quay) Trust",
-      "title": "Tourism Australia: 42% awarded to one supplier",
-      "summary": "Lendlease (Circular Quay) Pty Ltd as trustee for the Lendlease (Circular Quay) Trust accounts for 42.5% of the positive recorded contract value for Tourism Australia.",
-      "metrics": [
-        {
-          "label": "Largest supplier share",
-          "value": 42.47,
-          "format": "percent"
-        },
-        {
-          "label": "Largest supplier value",
-          "value": 24144598.0,
-          "format": "currency"
-        },
-        {
-          "label": "Total recorded value",
-          "value": 56852927.35,
-          "format": "currency"
-        },
-        {
-          "label": "Distinct suppliers",
-          "value": 20.0,
-          "format": "number"
-        },
-        {
-          "label": "Records in comparison",
-          "value": 21.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "Tourism Australia → Lendlease (Circular Quay) Pty Ltd as trustee for the Lendlease (Circular Quay) Trust: $24,144,598.00 · starts 2023-02-17 · austender · record CN3838712",
-          "table": "contracts",
-          "record_id": "CN3838712",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "This share describes available records only; missing disclosures can materially change it.",
-        "At least two positive records and a 25% share are required. A single reporting period is not imposed."
-      ],
-      "chart": {
-        "type": "concentration",
-        "group_label": "Tourism Australia",
-        "group_total": 56852927.35,
-        "leading_name": "Lendlease (Circular Quay) Pty Ltd as trustee for the Lendlease (Circular Quay) Trust",
-        "participant_label": "supplier",
-        "participant_count": 20,
-        "record_count": 21,
-        "participants": [
-          {
-            "name": "Lendlease (Circular Quay) Pty Ltd as trustee for the Lendlease (Circular Quay) Trust",
-            "value": 24144598.0,
-            "share": 42.47,
-            "record_count": 1
-          },
-          {
-            "name": "Expertise Events Pty Ltd",
-            "value": 5538935.0,
-            "share": 9.74,
-            "record_count": 1
-          },
-          {
-            "name": "Sitecore Australia Pty Ltd",
-            "value": 3294250.33,
-            "share": 5.79,
-            "record_count": 1
-          },
-          {
-            "name": "Shanghai Wanning Cultural and Creative Industry Development Co. Ltd",
-            "value": 2820597.0,
-            "share": 4.96,
-            "record_count": 1
-          },
-          {
-            "name": "Data#3 Limited",
-            "value": 2621561.94,
-            "share": 4.61,
-            "record_count": 1
-          }
-        ],
-        "other_total": 18432985.08,
-        "other_share": 32.42,
-        "other_count": 15,
-        "period": {
-          "kind": "contract_start_date",
-          "from": "2014-12-09",
-          "to": "2026-06-30",
-          "undated_records": 0,
-          "invalid_date_records": 0
-        }
-      },
-      "entity_url": null
-    },
-    {
-      "id": "donor_contract_overlap:ea3da2842d6c1dfb",
-      "category": "donor_contract_overlap",
-      "entity": "Australian Airports Association",
-      "title": "Australian Airports Association appears in party receipts and contracts",
-      "summary": "An exact supplier-name match connects a canonical donor in annual AEC party-receipt disclosures with government contract awards.",
-      "metrics": [
-        {
-          "label": "Recorded party receipts",
-          "value": 283250.0,
-          "format": "currency"
-        },
-        {
-          "label": "Recorded contract value",
-          "value": 110000.0,
-          "format": "currency"
-        },
-        {
-          "label": "Party receipt records",
-          "value": 14.0,
-          "format": "number"
-        },
-        {
-          "label": "Contract records",
-          "value": 1.0,
-          "format": "number"
-        }
-      ],
-      "evidence": [
-        {
-          "label": "Australian Airports Association → Australian Labor Party (ALP): $22,000.00 · FY 2024-25 · AEC annual receipt · local record 642819",
-          "table": "donations",
-          "record_id": "642819",
-          "url": "https://transparency.aec.gov.au/",
-          "link_scope": "source_register"
-        },
-        {
-          "label": "Department of Defence → AUSTRALIAN AIRPORTS ASSOCIATION: $110,000.00 · starts 2013-01-29 · austender · record CN1175442",
-          "table": "contracts",
-          "record_id": "CN1175442",
-          "url": "https://www.tenders.gov.au/",
-          "link_scope": "source_register"
-        }
-      ],
-      "caveats": [
-        "Matching names are not verified legal identities; unrelated entities can share a name.",
-        "The records can cover different years and jurisdictions. No sequence or causal link is inferred.",
-        "Annual party receipts are not all verified gifts; source donation_type=direct is an ingestion classification. State, election and referendum disclosures are excluded."
-      ],
-      "entity_url": null
     }
   ],
   "coverage": {
     "donations": 92642,
-    "contracts": 18042,
+    "contracts": 19301,
     "available_categories": [
       "donor_contract_overlap",
       "recipient_concentration",
@@ -4562,7 +4562,7 @@
     ],
     "unavailable_categories": [],
     "source_donation_rows": 199233,
-    "source_contract_rows": 18042,
+    "source_contract_rows": 19301,
     "eligible_annual_party_receipt_rows": 100482,
     "excluded_before_name_checks": 98751,
     "excluded_receipt_rows": {
@@ -4574,7 +4574,7 @@
     "financial_year_from": "1998-99",
     "financial_year_to": "2024-25",
     "receipt_scope": "AEC annual returns to canonical parties, direct classification only",
-    "snapshot_at": "2026-09-07T04:07:09.692940+00:00"
+    "snapshot_at": "2026-09-21T12:22:45.355457+00:00"
   },
   "methodology": [
     "This snapshot uses annual AEC party-receipt records with a canonical party recipient and ingestion classification direct. These are disclosed receipts, not a verified gifts-only dataset.",
@@ -4588,6 +4588,6 @@
     "Source links open the official source register, not an individual receipt or notice. Evidence labels carry original reported names, row amounts and local source IDs; each is one example behind the aggregate.",
     "Reporting thresholds, incomplete coverage and duplicated/amended disclosures can affect totals. Absence of a signal is not evidence of absence."
   ],
-  "generated_at": "2026-09-07T04:07:09.692940+00:00",
-  "export_seconds": 1.88
+  "generated_at": "2026-09-21T12:22:45.355457+00:00",
+  "export_seconds": 1.665
 }

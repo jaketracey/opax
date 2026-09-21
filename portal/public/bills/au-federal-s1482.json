@@ -11,8 +11,8 @@
  "sponsor_party": "Liberal Party of Australia",
  "sponsor_person_id": "10954",
  "portfolio": null,
- "status": "before_parliament",
- "status_as_of": "2025-11-26",
+ "status": "lapsed",
+ "status_as_of": "2026-09-16",
  "key_dates": [
   {
    "stage": "introduced",
@@ -23,6 +23,18 @@
   {
    "stage": "second_reading",
    "date": "2025-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-16",
    "house": "senate",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1482%22"
   }

@@ -12,7 +12,7 @@
  "sponsor_person_id": null,
  "portfolio": "Home Affairs",
  "status": "before_parliament",
- "status_as_of": "2026-03-12",
+ "status_as_of": "2026-09-16",
  "key_dates": [
   {
    "stage": "introduced",
@@ -25,12 +25,60 @@
    "date": "2026-03-12",
    "house": "representatives",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7448%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7448%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7448%22"
   }
  ],
  "sources": [
   {
    "kind": "em",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7448_ems_d3be5266-10e6-40d3-9c02-6bc9d8421a02%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7448_ems_0607cf8c-45c9-49d0-837c-eb9d89bafcb6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7448_ems_10275177-da05-4aa3-9fe1-08c9299819a2%22",
    "document_date": null,
    "licence": "CC BY-NC-ND 4.0"
   },

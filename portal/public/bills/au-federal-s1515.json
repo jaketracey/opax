@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-s1515",
+ "title": "Military Rehabilitation and Compensation Amendment (Veterans’ Allied Health Care) Bill 2026",
+ "short_title": "Military Rehabilitation and Compensation Amendment (Veterans’ Allied Health Care) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-09-15",
+ "originating_house": "senate",
+ "sponsor": "CADELL, Sen Ross",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-09-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1515%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1515%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1515_ems_0387227f-6683-46d6-b785-2a627595c1b7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1515%22",
+   "document_date": "2026-09-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -471,22 +471,35 @@ def parse_attributable(text: str) -> list[dict]:
     return out
 
 
-def vic_slugs(session: PoliteSession, max_pages: int) -> list[str]:
-    slugs: list[str] = []
+def vic_slugs(session: PoliteSession, max_pages: int, since: str | None = None) -> list[str]:
+    # The sitemap is oldest first. A capped refresh must prioritise recently
+    # changed pages; publication dates are still checked after fetching them.
+    slugs: dict[str, str] = {}
     for page in range(1, max_pages + 1):
         resp = session.get(VIC_SITEMAP.format(page=page))
         if resp.status_code != 200:
             break
-        locs = re.findall(r"<loc>(.*?)</loc>", resp.text)
-        if not locs:
+        entries = re.findall(r"<url>(.*?)</url>", resp.text, re.S)
+        if not entries:
             break
-        for loc in locs:
+        for entry in entries:
+            loc_match = re.search(r"<loc>(.*?)</loc>", entry)
+            if not loc_match:
+                continue
+            loc = loc_match.group(1)
             path = loc.replace(VIC_BASE, "").strip("/")
             if "/" in path or path in VIC_STATIC or not re.fullmatch(r"[a-z0-9-]+", path):
                 continue
-            slugs.append(path)
-        log(f"  sitemap page {page}: {len(locs)} urls")
-    return list(dict.fromkeys(slugs))
+            modified = re.search(r"<lastmod>(\d{4}-\d{2}-\d{2})", entry)
+            day = modified.group(1) if modified else ""
+            if since and day and day < since:
+                continue
+            slugs[path] = max(day, slugs.get(path, ""))
+        log(f"  sitemap page {page}: {len(entries)} urls")
+        # Out-of-range pages repeat the final sitemap page on this source.
+        if page > 1 and len(entries) < 2000:
+            break
+    return sorted(slugs, key=lambda slug: slugs[slug], reverse=True)
 
 
 def fetch_vic_page(session: PoliteSession, slug: str) -> Optional[dict]:
@@ -514,8 +527,9 @@ def fetch_vic_page(session: PoliteSession, slug: str) -> Optional[dict]:
         speaker_raw=lead.get("raw"), speaker=lead.get("name"), role=lead.get("role"),
         party=party if politicians else None, government=gov,
         body_html=body_html or None, body_text=text,
-        subjects="; ".join(t.get("name", t) if isinstance(t, dict) else str(t)
-                           for t in (data.get("topicTags") or [])) or None,
+        subjects="; ".join(filter(None, (
+            str(t.get("name") or t.get("text") or "") if isinstance(t, dict) else str(t)
+            for t in (data.get("topicTags") or [])))) or None,
         extra_json={"speakers": speakers, "nid": data.get("nid"),
                     "location": (data.get("details") or {}).get("location")},
     )
@@ -525,7 +539,7 @@ def run_vic(args) -> None:
     db = connect_db(args.db)
     ensure_table(db, TABLE, DDL, INDEXES)
     session = PoliteSession(min_interval=2.0)  # robots.txt Crawl-delay: 2
-    slugs = vic_slugs(session, args.sitemap_pages)
+    slugs = vic_slugs(session, args.sitemap_pages, args.since)
     done = existing_ids(db, TABLE, "source_id", "source='vic'")
     todo = [s for s in slugs if s not in done]
     if args.limit:
@@ -629,6 +643,10 @@ def run_treasury(args) -> None:
         if empty_pages >= 3:
             break
         if args.since:
+            # The API is sorted newest first. Once a complete dated page is
+            # older than the requested window, the remaining archive is too.
+            if rows and all(r.get("date") and r["date"] < args.since for r in rows):
+                break
             rows = [r for r in rows if (r["date"] or "") >= args.since]
         stored += upsert(db, TABLE, rows)
         log(f"  stored={stored:,} (oldest on page {rows[-1]['date'] if rows else '-'})")

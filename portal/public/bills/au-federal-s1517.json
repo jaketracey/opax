@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-s1517",
+ "title": "Red Lines Package Omnibus Bill 2026 [No. 2]",
+ "short_title": "Red Lines Package Omnibus Bill 2026 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-09-15",
+ "originating_house": "senate",
+ "sponsor": "POCOCK, Sen David",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-09-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1517%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1517_ems_6dfa634a-9185-4841-8e68-13735c3248d6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1517%22",
+   "document_date": "2026-09-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}
