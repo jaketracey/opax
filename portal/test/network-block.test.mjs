@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { networkBlock, blockedAsns, generationBlockedAsns, DEFAULT_BLOCKED_ASNS, DEFAULT_GENERATION_BLOCKED_ASNS, GENERATION_PATHS } from '../src/network-block.ts';
+import { networkBlock, blockedAsns, generationBlockedAsns, DEFAULT_BLOCKED_ASNS, DEFAULT_GENERATION_BLOCKED_ASNS, GENERATION_PATHS, CRAWLER_UA } from '../src/network-block.ts';
 
 function req(path, asn) {
   const r = new Request(`https://opax.com.au${path}`);
@@ -54,4 +54,18 @@ test('a generation-blocked network loses the model routes but keeps retrieval an
   assert.equal(networkBlock(req('/search', meta), {}, '/search'), null, 'pages stay open');
   assert.equal(networkBlock(req('/api/ask', meta), { GENERATION_BLOCKED_ASNS: '' }, '/api/ask'), null, 'empty list disables the block');
   assert.equal(networkBlock(req('/api/ask', 1221), {}, '/api/ask'), null, 'Telstra');
+});
+
+test('a self-declared crawler loses the model routes on any network, readers do not', async () => {
+  const ua = ua => { const r = new Request('https://opax.com.au/api/ask', { headers: { 'user-agent': ua } }); Object.defineProperty(r, 'cf', { value: { asn: 4837 } }); return r; };
+  const baidu = 'Mozilla/5.0 (compatible; Baiduspider-render/2.0; +http://www.baidu.com/search/spider.html)';
+  const refused = networkBlock(ua(baidu), {}, '/api/ask');
+  assert.equal(refused.status, 403);
+  assert.deepEqual(await refused.json(), { error: 'forbidden', reason: 'network' });
+  assert.equal(networkBlock(ua(baidu), {}, '/api/search-summary')?.status, 403);
+  assert.equal(networkBlock(ua(baidu), {}, '/api/search'), null, 'retrieval stays open for indexing');
+  assert.equal(networkBlock(ua(baidu), {}, '/og/money.png'), null);
+  for (const b of ['Googlebot/2.1', 'Mozilla/5.0 (compatible; bingbot/2.0)', 'Mozilla/5.0 HeadlessChrome/120', 'facebookexternalhit/1.1', 'GPTBot/1.0', 'ClaudeBot/1.0']) assert.ok(CRAWLER_UA.test(b), b);
+  for (const h of ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/18.0 Safari/605.1.15', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) Mobile/15E148', 'Mozilla/5.0 (Linux; Android 14; Pixel 8) Chrome/128.0 Mobile Safari/537.36', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36 Edg/120', '']) assert.ok(!CRAWLER_UA.test(h), h);
+  assert.equal(networkBlock(ua('Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0'), {}, '/api/ask'), null, 'a China Unicom reader can still ask');
 });

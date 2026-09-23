@@ -15,6 +15,12 @@
  * readers. Meta's crawler also fetches the /og share images for link previews,
  * so it is refused only on the routes that call a model.
  *
+ * From Sep 2026 Baidu's rendering crawler (Baiduspider-render, China Unicom
+ * AS4837) ran the page scripts and fired ~80 Asks and ~60 search summaries a
+ * day. Blocking its ASN would shut out a whole national carrier, and a crawler
+ * that names itself never needs a generated answer, so any self-declared bot
+ * user agent is refused on the model routes whatever its network.
+ *
  * Both lists live in vars (comma-separated) so they can change without a code
  * deploy. Cloudflare supplies request.cf.asn on every request.
  */
@@ -27,6 +33,9 @@ export const GENERATION_PATHS = /^\/api\/(?:ask|search-summary|followups|journey
 
 export const DEFAULT_BLOCKED_ASNS = '45102,24429,37963' // Alibaba Cloud (intl, CN, Hangzhou)
 export const DEFAULT_GENERATION_BLOCKED_ASNS = '32934' // Meta (Facebook) crawler network
+
+/** Self-declared crawlers: they index pages, they never need a generated answer. */
+export const CRAWLER_UA = /bot\b|bot\/|spider|crawl|slurp|facebookexternalhit|bytespider|headlesschrome/i
 
 export type NetworkBlockEnv = { BLOCKED_ASNS?: string; GENERATION_BLOCKED_ASNS?: string }
 
@@ -50,10 +59,14 @@ export function requestAsn(request: Request): number | null {
 /** A 403 for a blocked network on a blocked path, otherwise null. */
 export function networkBlock(request: Request, env: NetworkBlockEnv, pathname: string): Response | null {
   if (!BLOCKED_PATHS.test(pathname)) return null
+  if (GENERATION_PATHS.test(pathname) && CRAWLER_UA.test(request.headers.get('user-agent') ?? '')) return forbidden()
   const asn = requestAsn(request)
   if (asn === null) return null
   const refused = blockedAsns(env).has(asn) || (GENERATION_PATHS.test(pathname) && generationBlockedAsns(env).has(asn))
-  if (!refused) return null
+  return refused ? forbidden() : null
+}
+
+function forbidden(): Response {
   return new Response(JSON.stringify({ error: 'forbidden', reason: 'network' }), {
     status: 403,
     headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
