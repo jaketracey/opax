@@ -5,6 +5,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import {
+  resolveProgramId,
   APPROVAL_BUCKETS, MARGIN_BUCKETS, SEAT_BLOCS, TIMING_BUCKETS, bucketRows,
   buildCSV, donorBlocs, donorSummary, filterElectorates, filterPrograms, filterRecipients, fmtMoney,
   fileKey, formatABN, fyShort, fyStart, govBlocAt, govShare, grantConnectUrl, grantDate, latestMargin,
@@ -262,4 +263,15 @@ test('buildCSV programs view carries the new columns and blanks them on an index
   assert.equal(lines[1], 'Community Development Grants,GO3141,Department of Infrastructure, Transport, Regional Development, Communications and the Arts,8500000,12,9,900000,11,450000,5650000,8250000,68,550000,8200000,7,2018-19,2025-26'.replace('Department of Infrastructure, Transport, Regional Development, Communications and the Arts', '"Department of Infrastructure, Transport, Regional Development, Communications and the Arts"'))
   assert.match(lines[2], /^Primary Health Networks,GO2,.*,0,0,0,0,,1000000,4000000,25,2020-21,2021-22$/)
   assert.match(lines[4], /^Legacy row without a key,GO9,.*,0,,,,,,,2016-17,2016-17$/)
+})
+
+test('a program link opens its file whatever the casing of its id', () => {
+  const programs = [{ id: 'GO6047', key: 'go6047' }, { id: 'activity:Family and Relationship Services' }]
+  assert.equal(resolveProgramId(programs, 'GO6047'), 'GO6047')
+  assert.equal(resolveProgramId(programs, 'go6047'), 'GO6047', 'the ad and file key use lower case')
+  assert.equal(resolveProgramId(programs, 'Go6047'), 'GO6047')
+  assert.equal(resolveProgramId(programs, 'activity-family-and-relationship-services'), 'activity:Family and Relationship Services')
+  assert.equal(resolveProgramId(programs, 'go9999'), null)
+  assert.equal(resolveProgramId(programs, ''), null)
+  assert.equal(resolveProgramId(undefined, 'GO6047'), null)
 })

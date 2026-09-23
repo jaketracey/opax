@@ -154,6 +154,20 @@ export function programByName (programs) {
   return out
 }
 
+/**
+ * The program row an address asks for. Links carry the id as the register
+ * prints it (GO6047), the file key (go6047) or any other casing, so an exact
+ * match wins and otherwise the program key decides; null when none matches.
+ */
+export function resolveProgramId (programs, id) {
+  if (!id) return null
+  const rows = programs || []
+  if (rows.some((p) => p.id === id)) return id
+  const key = programKey(id)
+  const hit = rows.find((p) => (p.key || programKey(p.id)) === key)
+  return hit ? hit.id : null
+}
+
 /** The grant date the program file's seat, holder and timing fields were computed on. */
 export function grantDate (g) {
   return g.s || g.a || ''
@@ -633,6 +647,13 @@ th[aria-sort] .gr-sort { color: var(--ink, #23271F); }
 .gr-toplist li { display: flex; justify-content: space-between; gap: 0.6rem; align-items: baseline; padding: 0.18rem 0; border-bottom: 1px dotted var(--line, #DFDCD2); }
 .gr-toplist .gr-num { white-space: nowrap; }
 .gr-tag { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--bronze-ink, #8A5A12); }
+.gr-jump { display: inline-flex; align-items: center; min-height: 44px; margin: 0.6rem 0 0.2rem; padding: 0.45rem 0.9rem;
+  border: 1px solid var(--bronze-ink, #8A5A12); border-radius: 2px; background: var(--paper-raised, #FFFFFF);
+  color: var(--navy, #142A43); font: inherit; font-size: 0.9375rem; font-weight: 600; cursor: pointer; }
+.gr-jump::after { content: ''; width: 0.45em; height: 0.45em; margin-left: 0.55em; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: translateY(-0.15em) rotate(45deg); }
+.gr-jump:hover { background: var(--bronze-wash, rgba(160,118,27,.16)); }
+.gr-electorates-kicker { scroll-margin-top: 5rem; }
+.gr-electorates-kicker:focus { outline: none; }
 .gr-notes { margin: 0.5rem 0 0.4rem; font-size: 0.8125rem; line-height: 1.5; color: var(--ink-soft, #575C52); }
 .gr-notes summary { cursor: pointer; font-weight: 600; color: var(--ink, #23271F); }
 .gr-notes dl { margin: 0.4rem 0 0; }
@@ -1632,6 +1653,19 @@ export function mountGrants (container, opts = {}) {
     if (govShareOfMapped != null) tiles.append(tile(pct(govShareOfMapped), 'to seats held by the government of the day, of the dollars mapped to an electorate'))
     if (p.t > 0) tiles.append(tile(pct(shareOf(elKnown, p.t) || 0), 'of the dollars are mapped to an electorate'))
     td.appendChild(tiles)
+    // A reader arriving from a local story wants their seat, which sits below
+    // the charts; one button takes them there (the router drops #hash links).
+    if ((p.electorates || []).length) {
+      const jump = el('button', 'gr-jump', `Jump to the ${NUM.format(p.electorates.length)} electorates`)
+      jump.type = 'button'
+      jump.addEventListener('click', () => {
+        const target = td.querySelector('.gr-electorates-kicker')
+        if (!target) return
+        target.scrollIntoView({ block: 'start', behavior: 'smooth' })
+        target.focus({ preventScroll: true })
+      })
+      td.appendChild(jump)
+    }
 
     // selection process definitions from the notes file, under the tiles
     if (notes && notes.selection && p.sel) {
@@ -1744,7 +1778,9 @@ export function mountGrants (container, opts = {}) {
 
     // electorates
     if ((p.electorates || []).length) {
-      td.appendChild(el('p', 'gr-kicker', `Electorates (${NUM.format(p.electorates.length)})`))
+      const elKicker = el('p', 'gr-kicker gr-electorates-kicker', `Electorates (${NUM.format(p.electorates.length)})`)
+      elKicker.tabIndex = -1
+      td.appendChild(elKicker)
       const table = el('table', 'gr-electorates')
       const tb = el('tbody')
       const show = 24
@@ -2035,7 +2071,7 @@ export function mountGrants (container, opts = {}) {
   /** Opens a program's file in the Programs view, likewise. */
   function openProgram (id) {
     state.open = null
-    state.program = id
+    state.program = (data && resolveProgramId(data.programs, id)) || id
     state.q = ''
     searchEl.value = ''
     state.donors = false
@@ -2149,6 +2185,7 @@ export function mountGrants (container, opts = {}) {
       const d = await fetchIndex(state.jur)
       if (token !== loadSeq) return
       data = d
+      if (state.program) state.program = resolveProgramId(data.programs, state.program) || state.program
       populateSelects()
       renderTiles()
       renderChart()
@@ -2203,7 +2240,7 @@ export function mountGrants (container, opts = {}) {
       if (destroyed) return
       if (state.view !== 'programs') showView('programs')
       if (id) {
-        state.program = id
+        state.program = (data && resolveProgramId(data.programs, id)) || id
         state.open = null
         state.q = ''
         searchEl.value = ''
@@ -2213,7 +2250,7 @@ export function mountGrants (container, opts = {}) {
       const target = JURISDICTIONS[jur] ? jur : state.jur
       if (target !== state.jur || !data) await load(target)
       else { renderHead(); render() }
-      if (id) focusOpened(`.gr-open[data-program="${cssEscape(id)}"]`)
+      if (id) focusOpened(`.gr-open[data-program="${cssEscape(state.program)}"]`)
     },
     destroy () {
       if (destroyed) return
