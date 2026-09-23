@@ -160,7 +160,16 @@ def release(kind: str, worker: str) -> None:
 def quarantine_rejected(kind: str, worker: str, items: list[dict], problems: list[str]) -> int:
     """Hold repeatedly rejected records for review without blocking the queue."""
     allowed = {item["rid"] for item in items}
-    rejected = {problem.split(":", 1)[0] for problem in problems} & allowed
+    reasons: dict[str, list[str]] = {}
+    for problem in problems:
+        prefix, separator, _ = problem.partition(":")
+        if not separator:
+            continue
+        # Duplicate-brief validation names several records in one diagnostic.
+        # Only IDs in its prefix and this batch may be held for review.
+        for rid in {value.strip() for value in prefix.split(",")} & allowed:
+            reasons.setdefault(rid, []).append(problem)
+    rejected = set(reasons)
     if not rejected:
         return 0
     name = "LABEL_QUEUE_DB" if kind == "labels" else "SUMMARY_QUEUE_DB"
@@ -169,7 +178,7 @@ def quarantine_rejected(kind: str, worker: str, items: list[dict], problems: lis
     with sqlite3.connect(path) as con:
         count = 0
         for rid in rejected:
-            reason = "; ".join(p for p in problems if p.startswith(rid + ":"))[:1800]
+            reason = "; ".join(reasons[rid])[:1800]
             count += con.execute("UPDATE queue SET status='error',error=?,worker=NULL,claimed_at=NULL WHERE rid=? AND status='claimed' AND worker=?",
                                  ("Repeated validation rejection; needs review: " + reason, rid, worker)).rowcount
     return count
