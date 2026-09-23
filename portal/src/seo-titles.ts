@@ -1,20 +1,18 @@
 /**
  * Search-result titles for people and bills: the words an Australian types
- * into Google ("anthony albanese labor grayndler", "anti-doping bill 2026")
- * up front, inside the ~60 characters a results page shows.
+ * into Google ("anthony albanese labor grayndler", a bill's full name) in the
+ * title, the most important first.
  *
  * A person's title names their role the way the parliament does ("MP",
- * "Senator for", "MLC for") and their seat. A bill's official title often runs
- * past 100 characters ("Child Support and Family Assistance Legislation
- * Amendment (Ending Financial Abuse in the Child Support Scheme No. 1) Bill
- * 2026"); the part in brackets is what the bill is about, so the search title
- * leads with that purpose and the year, and cuts at a word.
+ * "Senator for", "MLC for") and their seat. A bill's title is its official
+ * name in full: Search Console shows bill traffic arriving on exact full-name
+ * queries, so a shortened or reworded title loses the match.
  */
 
 /** How long a title may run before the lower-value pieces are dropped. */
 export const TITLE_MAX = 65
-/** A long bill title drops the masthead and may run a little past TITLE_MAX. */
-export const BILL_TITLE_MAX = 72
+/** A bill title keeps the masthead only up to this length (see billTitle). */
+export const BILL_TITLE_MAX = 70
 
 const LOWER_HOUSES = new Set(['representatives', 'nsw_la', 'vic_la', 'qld_la', 'sa_ha'])
 const COUNCILS = new Set(['nsw_lc', 'vic_lc', 'sa_lc'])
@@ -115,58 +113,15 @@ export function personTitle(display: string, r: PersonRole | null, suffix: strin
   return candidates.find(t => t.length <= max) ?? candidates[candidates.length - 1]
 }
 
-/** Cut at a word, never mid-word, with an ellipsis when anything was cut. */
-function cutAtWord(s: string, max: number): string {
-  if (s.length <= max) return s
-  const cut = s.slice(0, max - 1)
-  const at = cut.lastIndexOf(' ')
-  return `${cut.slice(0, at > max / 2 ? at : cut.length).replace(/[,;:(\s]+$/, '')}…`
-}
-
 /**
- * A bill's search title. Short official titles stand as they are (without the
- * masthead when that makes them fit). A long amending bill
- * "<Act> [Legislation] Amendment (<purpose>) Bill <year>" becomes
- * "<purpose> · Amendment Bill <year>": the words in brackets are what the
- * bill does and what people search for. A bracket that says nothing ("2026
- * Measures No. 1") keeps the Act; a new Act keeps its name and drops the
- * bracket. The official title stays in the description and on the page.
+ * A bill's search title is its full official name, never cut: people search
+ * bills by typing the whole name ("fair work amendment (disqualified officers)
+ * bill 2026"), and Google matches and bolds the whole title even where it
+ * displays only the first ~60 characters. The masthead follows only when the
+ * two together fit in BILL_TITLE_MAX.
  */
-export function billTitle(name: string, max = TITLE_MAX): string {
-  const room = max - ' · OPAX'.length
+export function billTitle(name: string): string {
   const full = name.replace(/\s+/g, ' ').trim()
-  if (full.length <= room) return `${full} · OPAX`
-  // Nearly short enough: the official title whole beats any rewrite.
-  if (full.length <= BILL_TITLE_MAX) return full
-  const open = full.indexOf(' (')
-  const m = /\) (?:Amendment )?Bill (\d{4})(.*)$/.exec(full)
-  if (open > 0 && m && m.index > open) {
-    const purpose = full.slice(open + 2, m.index)
-    const before = full.slice(0, open)
-    const amends = /\bAmendment$/.test(before) || /^\) Amendment /.test(full.slice(m.index))
-    // "(Ending Financial Abuse in the Child Support Scheme No. 1)" is what a
-    // reader searches for; "(2026 Measures No. 1)" is not, so keep the Act there.
-    // "Amendment Bill" keeps an amending bill apart from a new Act of the same
-    // name (the TEQSA amendment and the National Student Ombudsman Levy Bill).
-    // Only an amending bill's Act is boilerplate. "Automated Decision-Making
-    // (Safeguards and Transparency) Bill" is about automated decisions.
-    if (amends && !/^(?:\d{4} )?Measures\b|^No\. \d/.test(purpose)) {
-      const lead = `${purpose} · ${amends ? 'Amendment ' : ''}Bill ${m[1]}`
-      // The masthead is the first thing to give way: the bill's own words
-      // are what a search matches.
-      if (lead.length <= room) return `${lead} · OPAX`
-      const label = lead.slice(purpose.length)
-      return cutAtWord(purpose, BILL_TITLE_MAX - label.length) + label
-    }
-    const rest = m[2].trim()
-    if (!amends) {
-      // A new Act: its name is the subject, the bracket a qualifier to drop.
-      const named = `${before} Bill ${m[1]}${rest ? ` ${rest}` : ''}`
-      if (named.length <= BILL_TITLE_MAX) return named
-    }
-    const act = before.replace(/\s+(?:Legislation\s+)?Amendment$/, '')
-    const head = `${act}${amends ? ' Amendment' : ''} Bill ${m[1]}${rest ? ` ${rest}` : ''}`
-    return `${cutAtWord(`${head}: ${purpose}`, room)} · OPAX`
-  }
-  return `${cutAtWord(full, room)} · OPAX`
+  const branded = `${full} · OPAX`
+  return branded.length <= BILL_TITLE_MAX ? branded : full
 }

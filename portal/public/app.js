@@ -7820,7 +7820,10 @@ async function openBill(key, manageFocus) {
   }
   const title = bill.title || bill.short_title || key;
   // Landed here from outside: keep the Worker's search title (see BOOT_META).
-  document.title = bootTitleHere() || `${crumbLabel(billName(bill), 60)} · OPAX`;
+  // Otherwise the same rule as seo-titles.ts billTitle(): the full official
+  // name, never cut, with the masthead only when both fit in 70 characters.
+  const fullName = String(billName(bill) || "").replace(/\s+/g, " ").trim();
+  document.title = bootTitleHere() || (`${fullName} · OPAX`.length <= 70 ? `${fullName} · OPAX` : fullName);
   setCrumbs([{ label: "Bills", href: "/bills" }, { label: crumbLabel(billName(bill), 48) }]);
   const members = billSponsorFromPortfolio(bill.portfolio);
   // Each co-sponsor is a person with an entry of their own, so each is a link.

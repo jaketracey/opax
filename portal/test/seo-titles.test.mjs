@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { billTitle, personRole, personTitle, roleLine, TITLE_MAX, BILL_TITLE_MAX } from '../src/seo-titles.ts';
+import { billTitle, personRole, personTitle, roleLine, BILL_TITLE_MAX } from '../src/seo-titles.ts';
 
 const seat = (electorate, chamber, jurisdiction = 'federal', state = 'NSW') => ({ electorate, chamber, jurisdiction, state });
 
@@ -37,18 +37,15 @@ test('a long title drops the suffix, then the state, then the party', () => {
   assert.equal(t, 'Concetta Fierravanti-Wells, former Senator for New South Wales · OPAX');
 });
 
-test('bill titles lead with what the bill does and never cut a word', () => {
+test('bill titles are the full official name, never cut, with the masthead only when it fits', () => {
   assert.equal(billTitle('National Student Ombudsman Levy Bill 2026'), 'National Student Ombudsman Levy Bill 2026 · OPAX');
-  assert.equal(billTitle('Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026'), 'World Anti-Doping Code Implementation · Amendment Bill 2026');
-  assert.equal(billTitle('Tertiary Education Quality and Standards Agency Amendment (National Student Ombudsman Levy) Bill 2026'), 'National Student Ombudsman Levy · Amendment Bill 2026 · OPAX');
-  assert.equal(billTitle('Private Health Insurance (National Joint Replacement Register Levy) Amendment Bill 2026'), 'National Joint Replacement Register Levy · Amendment Bill 2026');
-  const long = billTitle('Child Support and Family Assistance Legislation Amendment (Ending Financial Abuse in the Child Support Scheme No. 1) Bill 2026');
-  assert.equal(long, 'Ending Financial Abuse in the Child Support… · Amendment Bill 2026');
-  assert.ok(long.length <= BILL_TITLE_MAX);
-  // Not an amendment: the words before the bracket are the subject.
   assert.equal(billTitle('Automated Decision-Making (Safeguards and Transparency) Bill 2026'), 'Automated Decision-Making (Safeguards and Transparency) Bill 2026');
-  assert.equal(billTitle('Automated Decision-Making and Other Public Service Matters (Safeguards and Transparency) Bill 2026'), 'Automated Decision-Making and Other Public Service Matters Bill 2026');
-  // An empty bracket keeps the Act.
-  assert.match(billTitle('Treasury Laws Amendment (2026 Measures No. 1) Bill 2026 and Other Things That Run Long'), /^Treasury Laws/);
-  assert.ok(billTitle('A'.repeat(40) + ' ' + 'B'.repeat(40)).length <= TITLE_MAX);
+  const child = 'Child Support and Family Assistance Legislation Amendment (Ending Financial Abuse in the Child Support Scheme No. 1) Bill 2026';
+  assert.equal(billTitle(child), child);
+  const customs = 'Customs and Other Legislation Amendment (Illicit Tobacco Enforcement Modernisation and Other Measures) Bill 2026';
+  assert.equal(billTitle(`  ${customs.replace(/ /g, '  ')} `), customs);
+  const edge = 'X'.repeat(BILL_TITLE_MAX - ' · OPAX'.length);
+  assert.equal(billTitle(edge), `${edge} · OPAX`);
+  assert.equal(billTitle(`${edge}Y`), `${edge}Y`);
+  for (const t of [child, customs, edge]) assert.ok(!billTitle(t).includes('…'));
 });
