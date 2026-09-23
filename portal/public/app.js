@@ -935,9 +935,9 @@ function showPanel(name) {
 const TITLES = {
   ask: "Ask & search the record · OPAX",
   chat: "Keep asking · OPAX",
-  search: "Search the record · OPAX",
+  search: "Search Hansard: every parliamentary speech · OPAX",
   discover: "Discover overlooked patterns · OPAX",
-  money: "Money map · OPAX",
+  money: "Political donations & public money map · OPAX",
   connections: "Connections in the record · OPAX",
   reports: "Reports · OPAX",
   doc: "From the record · OPAX",
@@ -949,7 +949,7 @@ const TITLES = {
   stats: "Corpus stats · OPAX",
   expenses: "What the expense categories mean · OPAX",
   bill: "Bill · OPAX",
-  bills: "Bills · OPAX",
+  bills: "Federal bills: votes, speeches & summaries · OPAX",
 };
 
 // --- discovery: choose an agency, see where the recorded money goes ----------
@@ -7819,7 +7819,8 @@ async function openBill(key, manageFocus) {
     return;
   }
   const title = bill.title || bill.short_title || key;
-  document.title = `${crumbLabel(billName(bill), 60)} · OPAX`;
+  // Landed here from outside: keep the Worker's search title (see BOOT_META).
+  document.title = bootTitleHere() || `${crumbLabel(billName(bill), 60)} · OPAX`;
   setCrumbs([{ label: "Bills", href: "/bills" }, { label: crumbLabel(billName(bill), 48) }]);
   const members = billSponsorFromPortfolio(bill.portfolio);
   // Each co-sponsor is a person with an entry of their own, so each is a link.
@@ -13948,12 +13949,17 @@ const BOOT_META = {
   document.documentElement.classList.add("spa-ready");
 }
 
+/** The Worker's title for this page when it is still the page the reader landed on, else "". */
+function bootTitleHere() {
+  return `${SITE_ORIGIN}${hereRoute()}` === BOOT_META.url ? BOOT_META.title : "";
+}
+
 // Keeps the head's canonical/og:url on the current route after each route(),
 // and the title/description on the view now showing.
 const VIEW_DESCRIPTIONS = {
   discover: "Explore overlaps and concentrations across recorded party receipts and government contracts, with evidence and limitations for every investigation lead.",
   search: "Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year.",
-  money: "Disclosed political donations as territory you can spin: donors, parties and 28 years of returns.",
+  money: "Follow the money in Australian politics: who donates to which party, by industry and year, and the contracts and grants that flow back, from federal and state records.",
   connections: "Organisations, programs and places named across speeches, official releases and grant records, each opened to its source excerpts.",
   reports: "Standing investigations pairing the money with the words, every claim cited to the record.",
   subject: "An entry in the OPAX encyclopedia of Australian parliamentarians, parties, donors and topics.",
@@ -13977,7 +13983,7 @@ function syncPathMeta() {
   const desc = landed
     ? BOOT_META.description
     : path.startsWith('/money/grants')
-      ? 'Published government grant awards and Queensland expenditure records, with recipient details, donor-register context and original sources.'
+      ? 'Every published federal and Queensland grant award by recipient, program and electorate: which seats got the money, who held them, and which recipients also donate.'
     : view && view !== "ask"
       ? (VIEW_DESCRIPTIONS[view] || VIEW_DESCRIPTIONS.subject)
       : "Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.";

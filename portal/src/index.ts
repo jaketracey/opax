@@ -45,6 +45,7 @@ import { OG_FONT_FILES, OG_VERSION, homeCard, ogFormat, type OgCard } from './og
 import { renderOgPng, renderOgJpeg, type OgFont } from './og-render'
 // The story renderer is reached through the namespace: tests stub './og-render' with the two card renderers only.
 import * as storyRender from './og-render'
+import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { photoFor, storyFrames, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
 interface FindParagraph {
@@ -3051,22 +3052,30 @@ const isDirectoryKind = (s: string): s is DirectoryKind => s in DIRECTORY_KINDS
 const STATIC_PAGES: Record<string, { title: string; description: string; query?: boolean }> = {
   ask: { title: 'Ask & search the record · OPAX', description: 'Ask questions with answers linked to supporting records, or search Australian parliamentary speeches, votes, funding and disclosures.', query: true },
   bills: {
-    title: 'Bills · OPAX',
+    title: 'Federal bills: votes, speeches & summaries · OPAX',
     description: 'Every bill before the federal parliament since 2013: what it changes, who sponsored it, how the parties divided, and the speeches that argued it, with machine-written summaries marked as such.',
     query: true,
   },
   search: {
-    title: 'Search the record · OPAX',
+    title: 'Search Hansard: every parliamentary speech · OPAX',
     description: 'Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year. Every result links to the official record.',
     query: true,
   },
   money: {
-    title: 'Money map · OPAX',
-    description: 'Explore political funding and public money in 3D. Guided journeys follow contracts, shared party connections, industries and changes over time, with federal and state records.',
+    title: 'Political donations & public money map · OPAX',
+    description: 'Follow the money in Australian politics: who donates to which party, by industry and year, and the contracts and grants that flow back, from federal and state records.',
     query: true,
   },
-  'money/receipts': { title: 'Political receipts · OPAX', description: 'Explore disclosed political receipts by donor, party and industry.', query: true },
-  'money/grants': { title: 'Grants · OPAX', description: 'Explore public grant awards and their recipients.', query: true },
+  'money/receipts': {
+    title: 'Political donations by donor & party · OPAX',
+    description: 'Who gives money to Australian political parties: every disclosed receipt by donor, party, industry and year, from AEC and state electoral commission returns.',
+    query: true,
+  },
+  'money/grants': {
+    title: 'Who gets government grants · OPAX',
+    description: 'Every published federal and Queensland grant award by recipient, program and electorate: which seats got the money, who held them, and which recipients also donate.',
+    query: true,
+  },
   connections: {
     title: 'Connections in the record · OPAX',
     description: 'Organisations, programs and places named across speeches, official releases and grant records, each opened to its source excerpts.',
@@ -3216,6 +3225,9 @@ interface Person {
   first: number | null
   last: number | null
   pid?: string
+  /** On the current APH roster (federal only), with the party they sit with now. */
+  current?: boolean
+  party_now?: string
   representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[]
   rosterOnly?: { asOf?: string; seats: string[] }
 }
@@ -3832,15 +3844,22 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
   const counts: string[] = []
   if (b.divisions) counts.push(`${num(b.divisions)} division${b.divisions === 1 ? '' : 's'}`)
   if (b.speeches) counts.push(`${num(b.speeches)} speech${b.speeches === 1 ? '' : 'es'}`)
-  const tail = counts.length ? `${andList(counts)} in the record.` : 'The official record, on OPAX.'
   const detail = b.has_summary ? await assetJson<{ summary?: { sentences?: string[] } }>(env, `/bills/${encodeURIComponent(key)}.json`).catch(() => null) : null
   const summary = detail?.summary?.sentences?.[0]?.trim()
-  const facts = `${name}. ${opening}`.trim()
-  const description = withTail(facts, tail)
+  // The share card keeps the short count line; the description says what the page holds.
+  const recordLine = counts.length ? `${andList(counts)} in the record.` : 'The official record, on OPAX.'
+  const tail = counts.length ? `${andList(counts)}: who argued for and against it${b.divisions ? ', and how the parties voted' : ''}.`
+    : b.status === 'exposure_draft' ? 'The draft, its consultation and what it would change.'
+    : 'Its progress, the bill text and every speech on it as the debate starts.'
+  const portfolio = b.portfolio ? ` ${b.portfolio} portfolio.` : ''
+  const facts = `${name}. ${opening}${portfolio}`.trim()
+  // A bill's official name can take 130 characters on its own; the description
+  // keeps it whole (it is what an exact search matches) and lets the facts run
+  // past the snippet width rather than cutting them.
+  const description = withTail(facts, tail, Math.max(158, name.length + 200))
   return {
-    // Bill titles run long. Trim the bill, never the masthead — the same way
-    // docMeta trims a division's motion.
-    title: `${clip(name, 90)} · OPAX`,
+    // Bill titles run long: lead with what the bill is about (seo-titles.ts).
+    title: billTitle(name),
     description,
     canonical,
     ogType: 'article',
@@ -3857,7 +3876,7 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
       publisher,
     },
     prerender: prerenderBlock(name, `${facts} ${tail}`, 'Bill'),
-    card: { kicker: summary ? 'Bill summary' : 'Bill · Federal parliament', title: summary || name, lines: summary ? [name, opening] : [opening, tail], wide: !!summary },
+    card: { kicker: summary ? 'Bill summary' : 'Bill · Federal parliament', title: summary || name, lines: summary ? [name, opening] : [opening, recordLine], wide: !!summary },
   }
 }
 
@@ -3928,6 +3947,16 @@ async function apiPersonSlugs(env: Env): Promise<Response> {
   return res
 }
 
+/** Lower-cased names and ids on a published register of interests (/interests/index.json). */
+let interestsMemo: Promise<Set<string>> | null = null
+async function hasInterestsRegister(env: Env, name: string, pid: string | undefined): Promise<boolean> {
+  interestsMemo ??= assetJson<{ people: Record<string, unknown>; _by_name: Record<string, string> }>(env, '/interests/index.json')
+    .then(d => new Set([...Object.keys(d.people ?? {}), ...Object.keys(d._by_name ?? {})]))
+    .catch((error) => { interestsMemo = null; throw error })
+  const known = await interestsMemo.catch(() => null)
+  return !!known && (known.has(name.toLowerCase()) || (!!pid && known.has(pid)))
+}
+
 async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const [people, photos, moneyData] = await Promise.all([
     loadPeople(env).catch(() => null),
@@ -3937,7 +3966,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const p = (people ? personAt(people, name) : null)
   const display = p?.name ?? name
   const canonical = `${SITE_ORIGIN}${personPath(people, display)}`
-  const title = `${display} · OPAX`
+  let title = `${display} · OPAX`
   const portraitId = photoIdFor(photos, display)
   const credit = await creditLine(env, portraitId)
   if (!p) {
@@ -3962,9 +3991,15 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       prerender: prerenderBlock(display, description, 'Parliamentarian'),
       card: { kicker: 'Parliamentarian', title: display, lines: [description], portraitId, credit } }
   }
-  const facts = `${display}${who ? ` (${who})` : ''}: ${num(p.speeches)} speeches in the Australian parliamentary record, ${years(p.first, p.last)}.`
-  const tail = 'What they said, and who funds them.'
   const federal = p.states.includes('federal')
+  // The title a search result shows: their role and seat as the parliament
+  // names them, then what the page holds (see seo-titles.ts).
+  const role = personRole(p, new Date().getUTCFullYear())
+  const interests = await hasInterestsRegister(env, display, p.pid)
+  title = personTitle(display, role, federal ? (interests ? 'Speeches, votes & interests' : 'Speeches & votes') : 'Speeches')
+  const facts = `${display}${role ? `, ${roleLine(role)}` : who ? ` (${who})` : ''}: ${num(p.speeches)} speeches in Hansard, ${years(p.first, p.last)}.`
+  const holds = andList([federal ? 'votes' : '', interests ? 'register of interests' : '', p.party ? 'who funds their party' : ''].filter(Boolean))
+  const tail = holds ? `Their ${holds}.` : 'Every speech linked to the official record.'
   return {
     title,
     description: withTail(facts, tail),
