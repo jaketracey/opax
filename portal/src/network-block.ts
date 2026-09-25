@@ -21,8 +21,15 @@
  * that names itself never needs a generated answer, so any self-declared bot
  * user agent is refused on the model routes whatever its network.
  *
- * Both lists live in vars (comma-separated) so they can change without a code
- * deploy. Cloudflare supplies request.cf.asn on every request.
+ * From 24 Sep 2026 a second Baidu renderer in the same address blocks sent a
+ * plain Windows Chrome 99 user agent, so the user-agent rule missed it (~16
+ * Asks and ~11 search summaries a day at 200). Baidu's crawlers sit in a few
+ * small blocks inside China Unicom, so those blocks are refused on the model
+ * routes whatever the user agent says.
+ *
+ * The lists live in vars (comma-separated) so they can change without a code
+ * deploy. Cloudflare supplies request.cf.asn and cf-connecting-ip on every
+ * request.
  */
 
 /** Paths that cost money or CPU: the knowledge-base proxy and share images. */
@@ -33,11 +40,13 @@ export const GENERATION_PATHS = /^\/api\/(?:ask|search-summary|followups|journey
 
 export const DEFAULT_BLOCKED_ASNS = '45102,24429,37963' // Alibaba Cloud (intl, CN, Hangzhou)
 export const DEFAULT_GENERATION_BLOCKED_ASNS = '32934' // Meta (Facebook) crawler network
+// Baidu crawler blocks: 116.179.32-39 (Baiduspider-render and its Chrome 99 twin), 220.181.108 (Baiduspider).
+export const DEFAULT_GENERATION_BLOCKED_CIDRS = '116.179.32.0/21,220.181.108.0/24'
 
 /** Self-declared crawlers: they index pages, they never need a generated answer. */
 export const CRAWLER_UA = /bot\b|bot\/|spider|crawl|slurp|facebookexternalhit|bytespider|headlesschrome/i
 
-export type NetworkBlockEnv = { BLOCKED_ASNS?: string; GENERATION_BLOCKED_ASNS?: string }
+export type NetworkBlockEnv = { BLOCKED_ASNS?: string; GENERATION_BLOCKED_ASNS?: string; GENERATION_BLOCKED_CIDRS?: string }
 
 function parseAsns(raw: string): Set<number> {
   return new Set(raw.split(',').map(s => Number(s.trim())).filter(n => Number.isInteger(n) && n > 0))
@@ -51,6 +60,35 @@ export function generationBlockedAsns(env: NetworkBlockEnv): Set<number> {
   return parseAsns(env.GENERATION_BLOCKED_ASNS ?? DEFAULT_GENERATION_BLOCKED_ASNS)
 }
 
+/** IPv4 CIDRs as [network, mask] pairs; malformed entries and IPv6 are dropped. */
+export function generationBlockedCidrs(env: NetworkBlockEnv): Array<[number, number]> {
+  const out: Array<[number, number]> = []
+  for (const entry of (env.GENERATION_BLOCKED_CIDRS ?? DEFAULT_GENERATION_BLOCKED_CIDRS).split(',')) {
+    const [addr, bitsRaw = '32'] = entry.trim().split('/')
+    const ip = ipv4(addr)
+    const bits = Number(bitsRaw)
+    if (ip === null || !Number.isInteger(bits) || bits < 1 || bits > 32) continue
+    const mask = bits === 32 ? 0xffffffff : (~(0xffffffff >>> bits)) >>> 0
+    out.push([(ip & mask) >>> 0, mask])
+  }
+  return out
+}
+
+export function ipv4(raw: string | null | undefined): number | null {
+  const parts = (raw ?? '').trim().split('.')
+  if (parts.length !== 4) return null
+  let n = 0
+  for (const p of parts) {
+    if (!/^\d{1,3}$/.test(p) || Number(p) > 255) return null
+    n = n * 256 + Number(p)
+  }
+  return n
+}
+
+function inCidrs(ip: number | null, cidrs: Array<[number, number]>): boolean {
+  return ip !== null && cidrs.some(([net, mask]) => ((ip & mask) >>> 0) === net)
+}
+
 export function requestAsn(request: Request): number | null {
   const asn = (request as Request & { cf?: { asn?: unknown } }).cf?.asn
   return typeof asn === 'number' && Number.isInteger(asn) ? asn : null
@@ -59,7 +97,10 @@ export function requestAsn(request: Request): number | null {
 /** A 403 for a blocked network on a blocked path, otherwise null. */
 export function networkBlock(request: Request, env: NetworkBlockEnv, pathname: string): Response | null {
   if (!BLOCKED_PATHS.test(pathname)) return null
-  if (GENERATION_PATHS.test(pathname) && CRAWLER_UA.test(request.headers.get('user-agent') ?? '')) return forbidden()
+  if (GENERATION_PATHS.test(pathname)) {
+    if (CRAWLER_UA.test(request.headers.get('user-agent') ?? '')) return forbidden()
+    if (inCidrs(ipv4(request.headers.get('cf-connecting-ip')), generationBlockedCidrs(env))) return forbidden()
+  }
   const asn = requestAsn(request)
   if (asn === null) return null
   const refused = blockedAsns(env).has(asn) || (GENERATION_PATHS.test(pathname) && generationBlockedAsns(env).has(asn))

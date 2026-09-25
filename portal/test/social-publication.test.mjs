@@ -4,7 +4,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
 import { build } from 'esbuild';
 const built = await build({ entryPoints: [new URL('../src/social-publication.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
-const { runSocialPublication, publicationCopy, readiness, socialStatus, previewPublication, socialEngagement } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
+const { runSocialPublication, publicationCopy, readiness, socialStatus, previewPublication, socialEngagement, todayRedirect, tagFacets, instagramTags } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
 const storyBuilt = await build({ entryPoints: [new URL('../src/story.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
 const { STORY_VERSION, storyFrames } = await import('data:text/javascript;base64,' + Buffer.from(storyBuilt.outputFiles[0].text).toString('base64'));
 const post = { date: '2026-09-13', subject: 'person:Test Member', kind: 'politician', title: 'Test Member', text: 'Check the parliamentary record.\n\nhttps://opax.com.au/subject/person/Test%20Member', caption: 'The longer source-qualified caption.\n\nhttps://opax.com.au/subject/person/Test%20Member', url: 'https://opax.com.au/subject/person/Test%20Member' };
@@ -295,13 +295,13 @@ test('bluesky posts a link card with the share image as thumb and journals the a
  const only={X_ACCOUNT_ID:undefined,FACEBOOK_POST_ENABLED:'false',INSTAGRAM_POST_ENABLED:'false',INSTAGRAM_STORY_ENABLED:'false',FACEBOOK_STORY_ENABLED:'false',BLUESKY_POST_ENABLED:'true',BSKY_HANDLE:'opax.bsky.social',BSKY_APP_PASSWORD:'app-pass'};
  const off=harness({...only,BSKY_APP_PASSWORD:undefined});assert.equal(readiness(off.env).bluesky.ready,false);await off.run();assert.equal(off.calls.length,0);
  const h=harness(only);assert.equal(readiness(h.env).bluesky.ready,true);
- assert.equal(publicationCopy(post,'bluesky').text,'Check the parliamentary record.');
- const long={...post,text:'x'.repeat(350)+'\n\n'+post.url};assert.ok([...publicationCopy(long,'bluesky').text].length<=300);
+ assert.equal(publicationCopy(post,'bluesky').text,'Check the parliamentary record.\n\n#auspol');
+ const long={...post,text:'x'.repeat(350)+'\n\n'+post.url};assert.ok([...publicationCopy(long,'bluesky').text].length<=300);assert.match(publicationCopy(long,'bluesky').text,/\n\n#auspol$/);
  const r=await h.run();assert.deepEqual(r.channels,{bluesky:'posted'});
  const login=h.calls.filter(c=>c.url.endsWith('/xrpc/com.atproto.server.createSession'));assert.equal(login.length,2);assert.equal(login[0].body.identifier,'opax.bsky.social');
  const upload=h.calls.find(c=>c.url.endsWith('/xrpc/com.atproto.repo.uploadBlob'));assert.equal(upload.init.headers.authorization,'Bearer jwt');assert.equal(upload.init.headers['content-type'],'image/jpeg');
  const create=h.calls.find(c=>c.url.endsWith('/xrpc/com.atproto.repo.createRecord'));assert.equal(create.body.repo,'did:plc:test');assert.equal(create.body.collection,'app.bsky.feed.post');
- const rec=create.body.record;assert.equal(rec.text,'Check the parliamentary record.');assert.doesNotMatch(rec.text,/https:/);
+ const rec=create.body.record;assert.equal(rec.text,'Check the parliamentary record.\n\n#auspol');assert.doesNotMatch(rec.text,/https:/);assert.deepEqual(rec.facets,[{index:{byteStart:33,byteEnd:40},features:[{$type:'app.bsky.richtext.facet#tag',tag:'auspol'}]}]);
  assert.equal(rec.embed.$type,'app.bsky.embed.external');assert.equal(new URL(rec.embed.external.uri).searchParams.get('utm_source'),'bluesky');assert.equal(rec.embed.external.title,'Test Member');assert.equal(rec.embed.external.thumb.ref.$link,'bafyblob');
  const row=h.sqlite.prepare("SELECT status,post_id FROM social_deliveries WHERE channel='bluesky'").get();assert.deepEqual({...row},{status:'posted',post_id:'at://did:plc:test/app.bsky.feed.post/3kabc'});
  // A wrong account answers the session: nothing is written and the journal says why.
@@ -323,4 +323,38 @@ test('engagement reads bluesky from the public AppView without credentials',asyn
  assert.deepEqual(e.accounts.bluesky,{followers:9,following:40,posts:3});
  assert.deepEqual(e.posts,[{date:post.date,channel:'bluesky',post_id:'at://did:plc:test/app.bsky.feed.post/3kabc',likes:4,comments:2,shares:2}]);
  assert.equal(h.calls.some(c=>c.url.includes('createSession')),false);
+});
+
+test('every channel carries #auspol; Instagram swaps the unfollowed tags for kind tags, never a party',()=>{
+ assert.match(publicationCopy(post,'x').text,/\n\n#auspol$/);
+ assert.match(publicationCopy(post,'facebook').text,/\n\n#auspol$/);
+ const ig=publicationCopy(post,'instagram').text;
+ assert.match(ig,/#auspol #australianpolitics #parliament #opax$/);assert.doesNotMatch(ig,/#AustralianParliament|#PublicRecords/);
+ assert.deepEqual(instagramTags({kind:'grant'}),['#auspol','#australianpolitics','#grants','#publicmoney','#opax']);
+ assert.deepEqual(instagramTags({kind:'bill'}),['#auspol','#australianpolitics','#legislation','#parliament','#opax']);
+ // An X post already at the limit keeps its words and drops the tag.
+ const full={...post,text:'y'.repeat(254)+'\n\n'+post.url};
+ assert.equal(publicationCopy(full,'x').text.includes('#auspol'),false);
+ assert.ok(publicationCopy({...post,text:'y'.repeat(240)+'\n\n'+post.url},'x').text.endsWith('#auspol'));
+});
+test('Bluesky hashtags become tag facets at UTF-8 byte offsets',()=>{
+ const text='Grant for the Café — roof\n\n#auspol';
+ const [f]=tagFacets(text);const bytes=new TextEncoder().encode(text);
+ assert.equal(new TextDecoder().decode(bytes.slice(f.index.byteStart,f.index.byteEnd)),'#auspol');
+ assert.deepEqual(f.features,[{$type:'app.bsky.richtext.facet#tag',tag:'auspol'}]);
+ assert.deepEqual(tagFacets('no tags, a C# note and url#frag'),[]);
+ assert.equal(tagFacets('#one and #two').length,2);
+});
+test('the bio link opens the latest edition with bio UTMs, home without one',async()=>{
+ const h=harness();
+ let r=await todayRedirect(h.env,new URL('https://opax.com.au/today'),'2026-08-13');
+ assert.equal(r.status,302);let to=new URL(r.headers.get('location'));assert.equal(to.pathname,'/');assert.equal(to.searchParams.get('utm_campaign'),'bio_link');
+ h.sqlite.prepare('INSERT INTO social_editions(date,subject,post_json,created_at) VALUES(?,?,?,?)').run('2026-08-12',post.subject,JSON.stringify({...post,date:'2026-08-12',url:'https://opax.com.au/money/grants/federal/recipient/abn%3A97694995462?award=GA34203'}),'x');
+ h.sqlite.prepare('INSERT INTO social_editions(date,subject,post_json,created_at) VALUES(?,?,?,?)').run('2026-08-14',post.subject,JSON.stringify(post),'x');
+ r=await todayRedirect(h.env,new URL('https://opax.com.au/today?via=bluesky'),'2026-08-13');to=new URL(r.headers.get('location'));
+ assert.equal(to.pathname,'/money/grants/federal/recipient/abn%3A97694995462');assert.equal(to.searchParams.get('award'),'GA34203');
+ assert.deepEqual([to.searchParams.get('utm_source'),to.searchParams.get('utm_medium'),to.searchParams.get('utm_content')],['bluesky','social','2026-08-12']);
+ r=await todayRedirect(h.env,new URL('https://opax.com.au/today?via=Evil%20Thing'),'2026-08-13');assert.equal(new URL(r.headers.get('location')).searchParams.get('utm_source'),'instagram');
+ h.sqlite.prepare('INSERT INTO social_editions(date,subject,post_json,created_at) VALUES(?,?,?,?)').run('2026-08-13',post.subject,JSON.stringify({...post,url:'https://evil.example/x'}),'x');
+ r=await todayRedirect(h.env,new URL('https://opax.com.au/today'),'2026-08-13');assert.equal(new URL(r.headers.get('location')).origin,'https://opax.com.au');
 });

@@ -84,6 +84,10 @@
     // its Chrome-UA crawler rendered /search ~400x a day from 11 Sep 2026 and fired
     // ~350 paid search summaries a day against ~7 from readers. Edit here, no code change.
     "GENERATION_BLOCKED_ASNS": "32934",
+    // IPv4 blocks refused on the same model routes whatever the user agent says.
+    // Baidu's crawlers: 116.179.32.0/21 (Baiduspider-render plus a Chrome 99 twin
+    // that hid its name, Sep 2026) and 220.181.108.0/24 (Baiduspider).
+    "GENERATION_BLOCKED_CIDRS": "116.179.32.0/21,220.181.108.0/24",
     // Generative model per pipeline. Edit here, no code change. Values are
     // platform model names. "openai-compatible" is the KB's one OpenRouter
     // slot (model_id @preset/opax-pro = DeepSeek V4 Pro pinned to DeepSeek,
@@ -128,7 +132,7 @@
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-21-bill-text-refresh", "DAILY_POST_ENABLED": "false", "BLUESKY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963", "GENERATION_BLOCKED_ASNS": "32934" },
+      "vars": { "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-09-21-bill-text-refresh", "DAILY_POST_ENABLED": "false", "BLUESKY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963", "GENERATION_BLOCKED_ASNS": "32934", "GENERATION_BLOCKED_CIDRS": "116.179.32.0/21,220.181.108.0/24" },
       "ratelimits": [],
       // Never post from staging; triggers would otherwise be inherited.
       "triggers": { "crons": [] },

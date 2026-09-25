@@ -1,7 +1,7 @@
 /** One frozen edition per Melbourne day, independent delivery receipts per channel.
  * Claims are atomic in D1. An uncertain write is held for review, never blindly retried.
  */
-import { clip, composeDailyPost, envSources, melbourneDate, oauth1Header, postToX, xCredentials, type DailyPost, type DailyPostKind } from './daily-post'
+import { clip, composeDailyPost, envSources, melbourneDate, oauth1Header, postToX, xCredentials, xLength, type DailyPost, type DailyPostKind } from './daily-post'
 import { OG_VERSION } from './og'
 import { STORY_VERSION, storyFrames, validStory } from './story'
 
@@ -55,11 +55,12 @@ export function publicationCopy(post: DailyPost, channel: Channel): { text: stri
   // Instagram's feed and grid are portrait; the landscape card is cropped there.
   if (channel === 'instagram') image.searchParams.set('format', 'portrait')
   const full = (post.caption || post.text).replace(post.url, '').trim()
+  const xText = post.text.replace(post.url, link.toString())
   // Bluesky allows 300 graphemes and the link rides in the card, so the text drops the URL.
-  const text = channel === 'x' ? post.text.replace(post.url, link.toString())
-    : channel === 'bluesky' ? clip(post.text.replace(post.url, '').replace(/\n{3,}/g, '\n\n').trim(), 300)
-    : channel === 'facebook' ? full.slice(0, 5000)
-    : `${full.slice(0, 1850)}\n\nExplore ${post.title} at opax.com.au — link in bio.\n\n#AustralianParliament #PublicRecords #Opax`
+  const text = channel === 'x' ? (xLength(`${xText}\n\n${AUSPOL}`) <= 280 ? `${xText}\n\n${AUSPOL}` : xText)
+    : channel === 'bluesky' ? `${clip(post.text.replace(post.url, '').replace(/\n{3,}/g, '\n\n').trim(), 300 - AUSPOL.length - 2)}\n\n${AUSPOL}`
+    : channel === 'facebook' ? `${full.slice(0, 4900)}\n\n${AUSPOL}`
+    : `${full.slice(0, 1850)}\n\nExplore ${post.title} at opax.com.au — link in bio.\n\n${instagramTags(post).join(' ')}`
   // A story channel posts a few of the slides as 9:16 frames (story.ts chooses which); the feed channels post them all at 4:5.
   const frames = isStoryChannel(channel) ? storyFrames(post.slides) : undefined
   const slides = frames
@@ -69,6 +70,45 @@ export function publicationCopy(post: DailyPost, channel: Channel): { text: stri
     : undefined
   if (frames && !frames.length) return { text, link: link.toString(), image: image.toString() }
   return { text, link: link.toString(), image: image.toString(), ...(slides ? { slides } : {}), ...(frames ? { frames } : {}) }
+}
+
+/**
+ * #auspol is the tag Australian politics runs on across X, Bluesky (the Aus
+ * politics feeds pick it up), Instagram and Threads; the old tags
+ * (#AustralianParliament, #PublicRecords) had almost no one following them.
+ * Instagram gets a few more, chosen by the edition's kind; never a party tag.
+ */
+export const AUSPOL = '#auspol'
+const KIND_TAGS: Record<DailyPostKind, string[]> = {
+  politician: ['#parliament'],
+  bill: ['#legislation', '#parliament'],
+  topic: ['#publicpolicy'],
+  grant: ['#grants', '#publicmoney'],
+}
+export function instagramTags(post: Pick<DailyPost, 'kind'>): string[] {
+  return [AUSPOL, '#australianpolitics', ...(KIND_TAGS[post.kind] ?? []), '#opax']
+}
+
+/**
+ * Where the Instagram bio link (opax.com.au/today) sends a reader: the page
+ * behind the latest edition, so "link in bio" opens the post they just saw.
+ * Home when there is no edition yet.
+ */
+export async function todayRedirect(env: Pick<Env, 'COMMUNITY_DB'>, url: URL, date = melbourneDate()): Promise<Response> {
+  let target = new URL('https://opax.com.au/')
+  let content = 'home'
+  try {
+    const row = await env.COMMUNITY_DB.prepare('SELECT date, post_json FROM social_editions WHERE date<=? ORDER BY date DESC LIMIT 1').bind(date).first<{ date: string; post_json: string }>()
+    const post = row ? JSON.parse(row.post_json) as Partial<DailyPost> : null
+    const page = post?.url ? new URL(post.url) : null
+    if (page && page.origin === 'https://opax.com.au') { target = page; content = row!.date }
+  } catch { /* the journal is optional here: fall back to home */ }
+  const via = url.searchParams.get('via') ?? ''
+  target.searchParams.set('utm_source', /^[a-z_]{1,20}$/.test(via) ? via : 'instagram')
+  target.searchParams.set('utm_medium', 'social')
+  target.searchParams.set('utm_campaign', 'bio_link')
+  target.searchParams.set('utm_content', content)
+  return new Response(null, { status: 302, headers: { location: target.toString(), 'cache-control': 'public, max-age=300' } })
 }
 
 /** Only controlled error codes go to logs/receipts. Never persist a provider body or token. */
@@ -341,6 +381,17 @@ async function bskyLogin(env: SocialEnv, fetchImpl: typeof fetch): Promise<BskyS
   return { accessJwt, did, handle }
 }
 
+/** Hashtags as Bluesky tag facets (UTF-8 byte offsets): without one "#auspol" is plain text and no feed or tag search sees it. */
+export function tagFacets(text: string): Array<{ index: { byteStart: number; byteEnd: number }; features: Array<{ $type: string; tag: string }> }> {
+  const encoder = new TextEncoder()
+  const out: ReturnType<typeof tagFacets> = []
+  for (const m of text.matchAll(/(^|\s)#([A-Za-z][A-Za-z0-9_]{0,63})\b/g)) {
+    const start = encoder.encode(text.slice(0, m.index! + m[1].length)).length
+    out.push({ index: { byteStart: start, byteEnd: start + encoder.encode(`#${m[2]}`).length }, features: [{ $type: 'app.bsky.richtext.facet#tag', tag: m[2] }] })
+  }
+  return out
+}
+
 /** One post: text plus an external link card, with the share image uploaded as its thumb when it fits Bluesky's blob limit. */
 export async function postToBluesky(env: SocialEnv, session: BskySession, post: { text: string; link: string; title: string; description: string; image: ArrayBuffer | null }, fetchImpl: typeof fetch, now = Date.now()): Promise<string> {
   const service = bskyService(env)
@@ -353,6 +404,7 @@ export async function postToBluesky(env: SocialEnv, session: BskySession, post: 
   }
   const record = {
     $type: 'app.bsky.feed.post', text: post.text, createdAt: new Date(now).toISOString(), langs: ['en'],
+    ...(tagFacets(post.text).length ? { facets: tagFacets(post.text) } : {}),
     embed: { $type: 'app.bsky.embed.external', external: { uri: post.link, title: post.title, description: post.description, ...(thumb ? { thumb } : {}) } },
   }
   const res = await fetchImpl(`${service}/xrpc/com.atproto.repo.createRecord`, { method: 'POST', headers: { authorization, 'content-type': 'application/json' }, body: JSON.stringify({ repo: session.did, collection: 'app.bsky.feed.post', record }), signal: AbortSignal.timeout(20000), redirect: 'manual' })

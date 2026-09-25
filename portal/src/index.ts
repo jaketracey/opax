@@ -1,4 +1,4 @@
-import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, CHANNELS, type Channel } from './social-publication'
+import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { rankedMoneyAnswer } from './ask-money'
 import { paidAnswer, mentionsPay } from './ask-pay'
@@ -5130,6 +5130,8 @@ export default {
     // Scraper fleets (see network-block.ts) are refused before any paid route runs.
     const blocked = networkBlock(request, env, url.pathname)
     if (blocked) return withSecurityHeaders(blocked, url)
+    // The Instagram bio link: always the page behind the day's post.
+    if (url.pathname === '/today' && (request.method === 'GET' || request.method === 'HEAD')) return withSecurityHeaders(await todayRedirect(env, url), url)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     const entry = await pageEntry(request, env.ASSETS)

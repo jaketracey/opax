@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { networkBlock, blockedAsns, generationBlockedAsns, DEFAULT_BLOCKED_ASNS, DEFAULT_GENERATION_BLOCKED_ASNS, GENERATION_PATHS, CRAWLER_UA } from '../src/network-block.ts';
+import { networkBlock, blockedAsns, generationBlockedAsns, generationBlockedCidrs, ipv4, DEFAULT_BLOCKED_ASNS, DEFAULT_GENERATION_BLOCKED_ASNS, GENERATION_PATHS, CRAWLER_UA } from '../src/network-block.ts';
 
 function req(path, asn) {
   const r = new Request(`https://opax.com.au${path}`);
@@ -68,4 +68,28 @@ test('a self-declared crawler loses the model routes on any network, readers do 
   for (const b of ['Googlebot/2.1', 'Mozilla/5.0 (compatible; bingbot/2.0)', 'Mozilla/5.0 HeadlessChrome/120', 'facebookexternalhit/1.1', 'GPTBot/1.0', 'ClaudeBot/1.0']) assert.ok(CRAWLER_UA.test(b), b);
   for (const h of ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/18.0 Safari/605.1.15', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) Mobile/15E148', 'Mozilla/5.0 (Linux; Android 14; Pixel 8) Chrome/128.0 Mobile Safari/537.36', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36 Edg/120', '']) assert.ok(!CRAWLER_UA.test(h), h);
   assert.equal(networkBlock(ua('Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0'), {}, '/api/ask'), null, 'a China Unicom reader can still ask');
+});
+
+test('Baidu crawler blocks lose the model routes whatever the user agent says', async () => {
+  const from = (ip, path = '/api/ask') => { const r = new Request(`https://opax.com.au${path}`, { headers: { 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36', 'cf-connecting-ip': ip } }); Object.defineProperty(r, 'cf', { value: { asn: 4837 } }); return r; };
+  const refused = networkBlock(from('116.179.33.212'), {}, '/api/ask');
+  assert.equal(refused.status, 403);
+  assert.deepEqual(await refused.json(), { error: 'forbidden', reason: 'network' });
+  assert.equal(networkBlock(from('116.179.33.18', '/api/search-summary'), {}, '/api/search-summary')?.status, 403);
+  assert.equal(networkBlock(from('116.179.37.4'), {}, '/api/ask')?.status, 403, 'the Baiduspider-render block');
+  assert.equal(networkBlock(from('220.181.108.90'), {}, '/api/followups')?.status, 403);
+  assert.equal(networkBlock(from('116.179.33.212', '/api/search'), {}, '/api/search'), null, 'retrieval stays open for indexing');
+  assert.equal(networkBlock(from('116.179.33.212', '/og/money.png'), {}, '/og/money.png'), null);
+  assert.equal(networkBlock(from('116.179.40.1'), {}, '/api/ask'), null, 'the rest of China Unicom can still ask');
+  assert.equal(networkBlock(from('116.179.31.255'), {}, '/api/ask'), null);
+  assert.equal(networkBlock(from('2408:8000::1'), {}, '/api/ask'), null, 'IPv6 is not matched');
+  assert.equal(networkBlock(from('116.179.33.212'), { GENERATION_BLOCKED_CIDRS: '' }, '/api/ask'), null, 'empty list disables the block');
+});
+
+test('the CIDR list parses from the var and drops malformed entries', () => {
+  assert.deepEqual(generationBlockedCidrs({ GENERATION_BLOCKED_CIDRS: ' 10.0.0.0/8, x, 1.2.3.4, 300.1.1.1/8, 1.2.3.0/0, 2001:db8::/32 ' }),
+    [[0x0a000000, 0xff000000], [0x01020304, 0xffffffff]]);
+  assert.equal(generationBlockedCidrs({}).length, 2);
+  assert.equal(ipv4('116.179.33.212'), ((116 * 256 + 179) * 256 + 33) * 256 + 212);
+  for (const bad of ['', '1.2.3', '1.2.3.4.5', '1.2.3.256', '01.2.3.x', null]) assert.equal(ipv4(bad), null, String(bad));
 });
