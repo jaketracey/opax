@@ -74,7 +74,10 @@
     "META_API_VERSION": "v25.0",
     // Bluesky: the handle is public; the app password is a secret (npx wrangler secret put BSKY_APP_PASSWORD).
     "BLUESKY_POST_ENABLED": "true",
-    "BSKY_HANDLE": "opax.bsky.social",
+    // opax.bsky.social is a stranger's account (checked 2026-09-25), so the handle is the
+    // domain, which only our DNS can claim. There is no Opax account yet; until
+    // there is, the engagement read reports "Profile not found" and nothing posts.
+    "BSKY_HANDLE": "opax.com.au",
     // Networks refused on /api and /og. 45102/24429/37963 = Alibaba Cloud: a
     // 650-address headless-Chrome fleet in Singapore was making ~100x the real
     // readers' paid /api/ask calls from 4 Sep 2026. Edit here, no code change.

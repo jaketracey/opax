@@ -201,8 +201,9 @@ Bluesky is the second text channel (`bluesky` in `CHANNELS`, added 2026-09-17).
 It posts through the AT Protocol with an app password, never the account
 password:
 
-- Vars: `BLUESKY_POST_ENABLED`, `BSKY_HANDLE` (the account's handle, e.g.
-  `opax.bsky.social`, or `opax.com.au` once the domain handle is verified),
+- Vars: `BLUESKY_POST_ENABLED`, `BSKY_HANDLE` (the account's handle; set to
+  `opax.com.au`, the domain handle, because `opax.bsky.social` belongs to a
+  stranger — there is no Opax account yet, as of 2026-09-25),
   optional `BSKY_SERVICE` (default `https://bsky.social`).
 - Secret: `BSKY_APP_PASSWORD`, made at Settings → Privacy and security → App
   passwords in the Bluesky app, installed with `npx wrangler secret put
