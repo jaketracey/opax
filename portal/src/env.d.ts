@@ -30,6 +30,8 @@ interface Env {
   /** Bluesky (AT Protocol): the account handle, an app password (secret), the PDS (default https://bsky.social). */
   BLUESKY_POST_ENABLED?: string
   BSKY_HANDLE?: string
+  /** The account's DID, served at /.well-known/atproto-did so the domain can be the handle. */
+  BSKY_DID?: string
   BSKY_APP_PASSWORD?: string
   BSKY_SERVICE?: string
 
@@ -79,6 +81,7 @@ declare namespace Cloudflare {
     META_API_VERSION?: string
     BLUESKY_POST_ENABLED?: string
     BSKY_HANDLE?: string
+    BSKY_DID?: string
     BSKY_APP_PASSWORD?: string
     BSKY_SERVICE?: string
 

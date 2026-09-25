@@ -78,6 +78,9 @@
     // domain, which only our DNS can claim. There is no Opax account yet; until
     // there is, the engagement read reports "Profile not found" and nothing posts.
     "BSKY_HANDLE": "opax.com.au",
+    // @opax.com.au on Bluesky is verified over HTTP: /.well-known/atproto-did returns this
+    // DID (account created 2026-09-25 as opaxaustralia.bsky.social). No DNS record needed.
+    "BSKY_DID": "did:plc:gxhxwtkoml3bmj7gljcjkn5o",
     // Networks refused on /api and /og. 45102/24429/37963 = Alibaba Cloud: a
     // 650-address headless-Chrome fleet in Singapore was making ~100x the real
     // readers' paid /api/ask calls from 4 Sep 2026. Edit here, no code change.

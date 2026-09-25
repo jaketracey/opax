@@ -5132,6 +5132,10 @@ export default {
     if (blocked) return withSecurityHeaders(blocked, url)
     // The Instagram bio link: always the page behind the day's post.
     if (url.pathname === '/today' && (request.method === 'GET' || request.method === 'HEAD')) return withSecurityHeaders(await todayRedirect(env, url), url)
+    // Bluesky's domain-handle check: the handle @opax.com.au belongs to this DID.
+    if (url.pathname === '/.well-known/atproto-did') return /^did:plc:[a-z2-7]{24}$/.test(env.BSKY_DID ?? '')
+      ? new Response(env.BSKY_DID, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=300' } })
+      : new Response('Not found', { status: 404 })
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     const entry = await pageEntry(request, env.ASSETS)
