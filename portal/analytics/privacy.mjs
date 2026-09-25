@@ -41,6 +41,7 @@ export function cleanEvent(event, props = {}) {
   }
   return clean;
 }
+const CAMPAIGN_TAGS = new Set(['utm_source', 'utm_medium', 'utm_campaign']);
 export function beforeSend(event) {
   if (!event) return null;
   const p = event.properties;
@@ -48,9 +49,14 @@ export function beforeSend(event) {
   delete p.$set_once;
   // SDK enrichment includes referrers, initial URLs, titles and campaign/search
   // parameters even when the application captures no free text. The referring
-  // domain alone (no path, no query) is kept so traffic sources are visible.
+  // domain alone (no path, no query) is kept so traffic sources are visible,
+  // and so are the three campaign tags Opax puts on its own links (which
+  // platform, social or referral, which campaign) when they are plain slugs:
+  // Instagram and Facebook often send no referrer, so the tag is the only
+  // way to see which channel a visit came from. Anything free-form is dropped.
   for (const key of Object.keys(p)) {
     if (key === '$current_url' || key === '$pathname' || key === '$referring_domain') continue;
+    if (CAMPAIGN_TAGS.has(key) && typeof p[key] === 'string' && /^[A-Za-z0-9_.-]{1,40}$/.test(p[key])) continue;
     if (/^\$.*(?:url|referr|initial|title|search|keyword)|^(?:utm_|gclid|fbclid|msclkid)/i.test(key)) delete p[key];
   }
   p.$pathname = safePath(p.$pathname || p.$current_url || '/');

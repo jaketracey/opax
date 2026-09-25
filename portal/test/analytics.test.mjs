@@ -20,6 +20,17 @@ test('event properties are allowlisted and SDK enrichment is sanitized', () => {
   assert.equal(event.properties.$referrer, undefined);
   assert.ok(!JSON.stringify(event).includes('private'));
 });
+test('the three campaign tags on Opax links survive when they are plain slugs; everything else campaign-shaped is dropped', () => {
+  const event = beforeSend({ properties: { $current_url: 'https://opax.com.au/bill/x?utm_source=bluesky&utm_medium=social&utm_campaign=daily_record&utm_content=2026-09-26', utm_source: 'bluesky', utm_medium: 'social', utm_campaign: 'daily_record', utm_content: '2026-09-26', utm_term: 'private', gclid: 'private', fbclid: 'private', $client_session_initial_utm_source: 'private', $set_once: { $initial_utm_source: 'private' } } });
+  assert.deepEqual([event.properties.utm_source, event.properties.utm_medium, event.properties.utm_campaign], ['bluesky', 'social', 'daily_record']);
+  assert.equal(event.properties.utm_content, undefined);
+  assert.equal(event.properties.$current_url, 'https://opax.com.au/bill/x');
+  assert.ok(!JSON.stringify(event).includes('private'));
+  const free = beforeSend({ properties: { $current_url: 'https://opax.com.au/', utm_source: 'my name is private', utm_campaign: 'x'.repeat(41), utm_medium: 7 } });
+  assert.equal(free.properties.utm_source, undefined);
+  assert.equal(free.properties.utm_campaign, undefined);
+  assert.equal(free.properties.utm_medium, undefined);
+});
 test('analytics loads before the shared event emitter, both deferred', () => {
   const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   assert.match(html, /src="\/analytics.js\?v=[^"]+" defer/);

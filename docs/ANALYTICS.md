@@ -51,7 +51,12 @@ query-free internal paths. Google signals and advertising personalization are of
 No raw questions, search strings, answers, titles, postcodes, or errors are sent.
 URLs have query strings and fragments removed, including legacy hash routes.
 Only explicitly allowed categories and counts are accepted. SDK referrer, initial
-URL, campaign, search and person-property enrichment is removed before send.
+URL, search and person-property enrichment is removed before send. Of the
+campaign parameters, only `utm_source`, `utm_medium` and `utm_campaign` are kept,
+and only when each is a plain slug (letters, digits, `_ . -`, up to 40
+characters), so the tags on Opax's own social links show which channel a visit
+came from (Instagram and Facebook often send no referrer). `utm_content`,
+`utm_term`, click ids and any free-form value are dropped (since 2026-09-26).
 There are no accounts to identify; anonymous IDs support session/funnel analysis,
 but person profiles are disabled. Do Not Track is respected and IP capture is
 disabled. Session replay, generic DOM autocapture, exception text capture, surveys
