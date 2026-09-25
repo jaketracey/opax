@@ -31,6 +31,19 @@ test('the three campaign tags on Opax links survive when they are plain slugs; e
   assert.equal(free.properties.utm_campaign, undefined);
   assert.equal(free.properties.utm_medium, undefined);
 });
+test('a reader\'s search words in the page title, session-entry copies of free tags and ad click ids never leave the browser', () => {
+  const event = beforeSend({ properties: { $current_url: 'https://opax.com.au/ask', title: 'Search: private words · OPAX', $title: 'private', utm_source: 'bluesky',
+    $session_entry_utm_source: 'bluesky', $session_entry_utm_medium: 'social', $session_entry_utm_campaign: 'daily_record', $session_entry_utm_term: 'private', $session_entry_utm_content: 'private',
+    $session_entry_url: 'https://opax.com.au/ask?q=private', $session_entry_referrer: 'https://example.com/private', $session_entry_host: 'opax.com.au', $session_entry_pathname: '/private-typed-path',
+    $prev_pageview_pathname: '/private-typed-path', igshid: 'private', ttclid: 'private', li_fat_id: 'private', gad_source: 'private', gbraid: 'private', wbraid: 'private', mc_cid: 'private', _kx: 'private', twclid: 'private', rdt_cid: 'private' } });
+  const p = event.properties;
+  assert.deepEqual([p.$session_entry_utm_source, p.$session_entry_utm_medium, p.$session_entry_utm_campaign, p.utm_source], ['bluesky', 'social', 'daily_record', 'bluesky']);
+  assert.equal(p.$session_entry_host, 'opax.com.au');
+  assert.equal(p.$session_entry_pathname, '/other');
+  assert.equal(p.$prev_pageview_pathname, '/other');
+  assert.equal(p.title, undefined);
+  assert.ok(!JSON.stringify(event).includes('private'), JSON.stringify(event));
+});
 test('analytics loads before the shared event emitter, both deferred', () => {
   const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   assert.match(html, /src="\/analytics.js\?v=[^"]+" defer/);

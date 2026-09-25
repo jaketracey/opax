@@ -54,10 +54,16 @@ export function beforeSend(event) {
   // platform, social or referral, which campaign) when they are plain slugs:
   // Instagram and Facebook often send no referrer, so the tag is the only
   // way to see which channel a visit came from. Anything free-form is dropped.
+  // PostHog also copies the landing page's tags into $session_entry_* and
+  // collects a long list of ad click ids; the page title carries a reader's
+  // search words ("Search: … · OPAX"), with or without a $.
   for (const key of Object.keys(p)) {
     if (key === '$current_url' || key === '$pathname' || key === '$referring_domain') continue;
-    if (CAMPAIGN_TAGS.has(key) && typeof p[key] === 'string' && /^[A-Za-z0-9_.-]{1,40}$/.test(p[key])) continue;
-    if (/^\$.*(?:url|referr|initial|title|search|keyword)|^(?:utm_|gclid|fbclid|msclkid)/i.test(key)) delete p[key];
+    const tag = key.replace(/^\$session_entry_/, '');
+    if (CAMPAIGN_TAGS.has(tag) && typeof p[key] === 'string' && /^[A-Za-z0-9_.-]{1,40}$/.test(p[key])) continue;
+    if (key === '$session_entry_host') continue;
+    if (/pathname$/.test(key)) { if (key !== '$pathname') p[key] = safePath(p[key] || '/'); continue; }
+    if (/^\$session_entry_|^\$.*(?:url|referr|initial|search|keyword)|title|^(?:utm_|gclid|gclsrc|gad_|gbraid|wbraid|dclid|fbclid|msclkid|twclid|li_fat_id|igshid|ttclid|rdt_cid|epik|qclid|sccid|irclid|_kx|mc_)/i.test(key)) delete p[key];
   }
   p.$pathname = safePath(p.$pathname || p.$current_url || '/');
   p.$current_url = `https://opax.com.au${p.$pathname}`;

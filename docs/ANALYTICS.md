@@ -57,6 +57,11 @@ and only when each is a plain slug (letters, digits, `_ . -`, up to 40
 characters), so the tags on Opax's own social links show which channel a visit
 came from (Instagram and Facebook often send no referrer). `utm_content`,
 `utm_term`, click ids and any free-form value are dropped (since 2026-09-26).
+PostHog's `$session_entry_*` copies follow the same rule (entry pathname through
+the same path allowlist), every ad click id posthog-js collects (`igshid`,
+`ttclid`, `li_fat_id`, `gad_source`, `gbraid`, …) is dropped, and so is any
+`title` property: until 2026-09-26 an unprefixed `title` carrying the page
+title (which names a reader's search, "Search: … · OPAX") reached PostHog.
 There are no accounts to identify; anonymous IDs support session/funnel analysis,
 but person profiles are disabled. Do Not Track is respected and IP capture is
 disabled. Session replay, generic DOM autocapture, exception text capture, surveys
