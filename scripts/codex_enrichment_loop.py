@@ -212,7 +212,16 @@ def main() -> None:
         for attempt in range(1, 4):
             problems = []
             result_path.unlink(missing_ok=True)
-            response = ask_codex(args.model, args.effort, prompt, schema_path, result_path)
+            try:
+                response = ask_codex(args.model, args.effort, prompt, schema_path, result_path)
+            except subprocess.TimeoutExpired as error:
+                # A timed-out process may have left output, but it is not a
+                # completed response. Release ownership before launchd retries.
+                result_path.unlink(missing_ok=True)
+                release(args.kind, args.worker)
+                raise SystemExit(
+                    f"[{args.worker}] Codex timed out after {error.timeout} seconds; claims released"
+                ) from None
             if response.returncode == 0 and result_path.exists():
                 try:
                     payload = json.loads(result_path.read_text())
