@@ -57,6 +57,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import os
 import re
 import shutil
 import sqlite3
@@ -1108,10 +1109,15 @@ def run_merge(args) -> None:
 def _add_writer_args(p) -> None:
     # Mirrors ext_common.add_writer_args without importing it: the fetch path
     # must stay stdlib-only for the system python3 on `desktop`.
-    p.add_argument("--db", default=None, help="write to this local SQLite file instead of the remote parli.db")
+    p.add_argument("--db", default=None,
+                   help="write to this local SQLite file instead of the remote parli.db (default: $OPAX_DB when set)")
+    p.add_argument("--db-local", "--local", dest="db_local", action="store_true",
+                   help="write to the local parli.db ($OPAX_DB, else ~/.cache/autoresearch/parli.db); never ssh")
     p.add_argument("--host", default="desktop", help="ssh host holding parli.db (default: %(default)s)")
     p.add_argument("--remote-db", default="/home/jake/.cache/autoresearch/parli.db", help="parli.db path on --host")
     p.add_argument("--dry-run", action="store_true", help="fetch and parse but write nothing")
+    p.add_argument("--allow-shrink", action="store_true",
+                   help="let a replace delete rows even when the fresh fetch is empty or far smaller")
 
 
 def _add_load_args(p) -> None:
@@ -1146,7 +1152,8 @@ def main() -> None:
     _add_load_args(p)
 
     p = sub.add_parser("federal")
-    p.add_argument("--db", default="~/.cache/autoresearch/parli.db", help="parli.db to READ divisions/votes from")
+    p.add_argument("--db", default=os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db",
+                   help="parli.db to READ divisions/votes from (default: $OPAX_DB, else ~/.cache/autoresearch/parli.db)")
     p.add_argument("--since", default="2025-01-01")
     p.add_argument("--days", type=int, default=6, help="newest N chamber-days (whole days, never partial)")
     p.add_argument("--out", required=True)

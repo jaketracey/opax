@@ -50,6 +50,7 @@ its sibling; the shared constants below are a deliberate copy of
 export_money_graph.py and must be kept in step with it.
 """
 
+import os
 import json
 import re
 import sqlite3
@@ -57,7 +58,7 @@ import sys
 from collections import defaultdict
 from datetime import datetime, timezone
 
-DB_PATH = "/home/jake/.cache/autoresearch/parli.db"
+DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 TOP_DONORS = 250
 
 NOT_SUMMED = (

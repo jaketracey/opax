@@ -41,7 +41,7 @@ from parli.ingest.abr_match import INDEX_NAME, Index, match_entity
 SOURCE = "contract_suppliers"
 SUSPECT_FLOOR = 5_000_000_000
 SUSPECT_RATIO = 10
-DEFAULT_DB = "/home/jake/.cache/autoresearch/parli.db"
+DEFAULT_DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 DEFAULT_ABR = "~/.cache/autoresearch/abr"
 
 DDL = """

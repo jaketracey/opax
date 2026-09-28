@@ -59,6 +59,7 @@ there; nothing here needs more than the stdlib):
 
 from __future__ import annotations
 
+import os
 import argparse
 import json
 import re
@@ -76,7 +77,7 @@ from parli.ingest.donor_entities import (
 from parli.ingest.ext_common import ExtWriter, log
 
 SOURCE = "grant_recipients"
-DEFAULT_DB = "/home/jake/.cache/autoresearch/parli.db"
+DEFAULT_DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 DEFAULT_ABR = "~/.cache/autoresearch/abr"
 
 DDL = """

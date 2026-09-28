@@ -41,7 +41,7 @@ from datetime import datetime, timezone
 
 import requests
 
-DB = os.path.expanduser("~/.cache/autoresearch/parli.db")
+DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 BASE = "https://www.grants.gov.au"
 # GrantConnect answers 403 to anything that does not look like a browser; the
 # compatible-token form still names the project and a contact.

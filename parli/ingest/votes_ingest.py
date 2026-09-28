@@ -38,6 +38,7 @@ Run on `desktop` (parli.db and the ARAG .env live there):
 
 from __future__ import annotations
 
+import os
 import argparse
 import html
 import json
@@ -55,7 +56,7 @@ from parli.ingest.speaker_names import normalize_speaker
 from parli.ingest.votes_state import Division, Vote, _read_unified, bill_ref, division_document
 
 STATE_PATH = Path("~/.cache/autoresearch/votes_ingest_state.json").expanduser()
-DB_PATH = Path("~/.cache/autoresearch/parli.db").expanduser()
+DB_PATH = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
 SAFETY_LIMIT = 100
 WORKERS = 6
 FIND_POLL_SECONDS = 20

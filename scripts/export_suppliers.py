@@ -4,6 +4,7 @@
 python3 scripts/export_suppliers.py --ssh desktop --output portal/public
 Source DB is read-only; the export never rebuilds registers or alters source rows.
 """
+import os
 import argparse
 from collections import defaultdict
 from contextlib import closing
@@ -20,7 +21,7 @@ import sys
 import time
 from urllib.parse import quote
 
-DB_PATH = "/home/jake/.cache/autoresearch/parli.db"
+DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 CAVEATS = [
     "Commonwealth AusTender records only; state contracts are outside this profile's totals.",
     "One row per contract at its latest recorded notice value. Amendments are not added together. Values are awards, not verified expenditure.",

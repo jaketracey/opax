@@ -14,11 +14,12 @@ searchable by speaker like anything else.
     ssh desktop python3 - < scripts/export_speakers.py > portal/public/speakers.json
 """
 
+import os
 import json
 import sqlite3
 import sys
 
-DB = "/home/jake/.cache/autoresearch/parli.db"
+DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 MIN_SPEECHES = 5
 
 db = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)

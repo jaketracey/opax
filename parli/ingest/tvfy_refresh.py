@@ -48,7 +48,7 @@ from pathlib import Path
 
 API = "https://theyvoteforyou.org.au/api/v1"
 USER_AGENT = "OPAX research (opax.com.au; contact jake.tracey@noice.work)"
-DB_PATH = Path("~/.cache/autoresearch/parli.db").expanduser()
+DB_PATH = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
 CACHE = Path("~/.cache/autoresearch/tvfy").expanduser()
 STATE_PATH = CACHE / "refresh_state.json"
 RATE_SECONDS = 1.0

@@ -504,7 +504,7 @@ def cmd_resolve(db_path: str, dry_run: bool) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("phase", choices=["fetch", "resolve"])
-    ap.add_argument("--db", default=os.path.expanduser("~/.cache/autoresearch/parli.db"))
+    ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"))
     ap.add_argument("--refetch", action="store_true")
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--dry-run", action="store_true")

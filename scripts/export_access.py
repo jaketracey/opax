@@ -58,6 +58,7 @@ Method, so the numbers can be defended:
    every disclosed row; external_total is what the lists summarise.
 """
 
+import os
 import json
 import re
 import sqlite3
@@ -65,7 +66,7 @@ import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 
-DB_PATH = "/home/jake/.cache/autoresearch/parli.db"
+DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 MAX_ITEMS = 8
 PURPOSE_MAX = 160
 

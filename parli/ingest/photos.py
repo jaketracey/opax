@@ -21,6 +21,7 @@ Usage:
     uv run python -m parli.ingest.photos --person-id 10007
 """
 
+import os
 import argparse
 import io
 import json
@@ -33,7 +34,7 @@ from pathlib import Path
 import requests
 from PIL import Image
 
-DB_PATH = Path("~/.cache/autoresearch/parli.db").expanduser()
+DB_PATH = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
 PHOTOS_DIR = Path("~/.cache/autoresearch/photos").expanduser()
 MPID_CACHE_PATH = PHOTOS_DIR / "_mpid_cache.json"
 

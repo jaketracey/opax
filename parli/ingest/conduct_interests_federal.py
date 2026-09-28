@@ -51,7 +51,7 @@ BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.3
               "(KHTML, like Gecko) Chrome/128.0 Safari/537.36 OPAX-research/1.0 (+https://opax.com.au)")
 
 CACHE_DIR = Path(os.environ.get("OPAX_INTERESTS_CACHE", "~/.cache/autoresearch/conduct_interests/federal")).expanduser()
-DEFAULT_DB = Path("~/.cache/autoresearch/parli.db").expanduser()
+DEFAULT_DB = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
 
 HOUSE_INDEX_URL = "https://www.aph.gov.au/Senators_and_Members/Members/Register"
 SENATE_INDEX_URL = ("https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/"

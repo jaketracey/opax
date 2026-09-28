@@ -9,19 +9,21 @@ Speech stats approximate the migrating corpus (date >= 1993-03-13, >= 200
 chars); donation stats cover the full AEC dataset with industry classification.
 """
 
+import os
 import json
 import re
 import sqlite3
 import sys
 
-sys.path.insert(0, "/tmp/arag_mig")
+sys.path.insert(0, "/tmp/arag_mig")  # legacy desktop staging dir (harmless elsewhere)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # this checkout wins: VM / laptop
 try:
     from parli.ingest.speaker_names import normalize_speaker
 except ImportError:  # running somewhere without the staged package
     def normalize_speaker(raw):  # type: ignore
         return raw
 
-DB = "file:/home/jake/.cache/autoresearch/parli.db?mode=ro"
+DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 
 # report slug -> (topic names, donation industries)
 TOPIC_MAP = {

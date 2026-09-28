@@ -78,7 +78,7 @@ import sys
 import unicodedata
 from datetime import date
 
-DB = "file:/home/jake/.cache/autoresearch/parli.db?mode=ro"
+DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 PER_BUCKET = 6
 RECENT_LIMIT = 300
 DESC_CHARS = 120

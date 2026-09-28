@@ -16,10 +16,11 @@ Usage:
     python -m parli.schema
 """
 
+import os
 import sqlite3
 from pathlib import Path
 
-DEFAULT_DB_PATH = Path("~/.cache/autoresearch/parli.db").expanduser()
+DEFAULT_DB_PATH = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
 
 SCHEMA_SQL = """
 PRAGMA journal_mode = WAL;

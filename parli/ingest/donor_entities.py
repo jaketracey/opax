@@ -52,6 +52,7 @@ AU). Without it `abn` stays NULL.
 
 from __future__ import annotations
 
+import os
 import argparse
 import json
 import re
@@ -68,7 +69,7 @@ from parli.ingest.ext_common import ExtWriter, log
 SOURCE = "donor_entities"
 SOURCE_URL = "https://github.com/jaketracey/opax/blob/main/parli/ingest/donor_aliases.json"
 CURATED_PATH = Path(__file__).with_name("donor_aliases.json")
-DEFAULT_DB = "/home/jake/.cache/autoresearch/parli.db"
+DEFAULT_DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 
 KINDS = ("company", "union", "association", "individual", "party_unit", "government", "other")
 

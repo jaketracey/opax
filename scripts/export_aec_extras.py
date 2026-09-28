@@ -48,6 +48,7 @@ Rules
      recent year's.
 """
 
+import os
 import json
 import re
 import sqlite3
@@ -55,7 +56,7 @@ import sys
 from collections import defaultdict
 from datetime import datetime, timezone
 
-DB_PATH = "/home/jake/.cache/autoresearch/parli.db"
+DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 AEC_ANNUAL_URL = "https://transparency.aec.gov.au/Download/AllAnnualData"
 REGISTER_URL = "https://transparency.aec.gov.au/"
 LICENCE_URL = "https://www.aec.gov.au/footer/Copyright.htm"

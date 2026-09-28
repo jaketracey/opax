@@ -11,6 +11,7 @@ docs/DATA-WORDS.md).
 Run on the machine that holds parli.db (the WSL box `desktop`).
 """
 
+import os
 import json
 import re
 import sqlite3
@@ -25,7 +26,7 @@ from typing import Iterable, Optional
 
 import requests
 
-DB_PATH = Path("~/.cache/autoresearch/parli.db").expanduser()
+DB_PATH = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
 
 # Honest identification. Some hosts (aph.gov.au / parlinfo.aph.gov.au behind
 # Azure WAF) reject any non-browser UA outright; those fetchers require an

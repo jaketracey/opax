@@ -43,6 +43,7 @@ positive lines. by_year is keyed on the reporting quarter's calendar year
 (from_date is empty on 93% of rows), so 2017 and 2026 are partial years.
 """
 
+import os
 import json
 import re
 import sqlite3
@@ -50,7 +51,7 @@ import sys
 from collections import defaultdict
 from datetime import datetime, timezone
 
-DB = "file:/home/jake/.cache/autoresearch/parli.db?mode=ro"
+DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 TOP_ITEMS = 5
 MAX_CATEGORIES = 12
 DESC_CHARS = 90

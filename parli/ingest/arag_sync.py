@@ -24,6 +24,7 @@ Checkpoint: ~/.cache/autoresearch/arag_sync_state.json (per-table last rowid
 re-attempts recorded failures.
 """
 
+import os
 import argparse
 import json
 import sqlite3
@@ -45,7 +46,7 @@ STATE_PATH = Path("~/.cache/autoresearch/arag_sync_state.json").expanduser()
 SPEECH_REPAIR_STATE_PATH = Path(
     "~/.cache/autoresearch/arag_speech_text_repair_state.json"
 ).expanduser()
-DB_PATH = Path("~/.cache/autoresearch/parli.db").expanduser()
+DB_PATH = Path(os.environ.get("OPAX_DB") or "~/.cache/autoresearch/parli.db").expanduser()
 
 # Corpus cutoff: nothing predating any currently serving parliamentarian.
 # The members table is too dirty to derive this (1901 senators linked to

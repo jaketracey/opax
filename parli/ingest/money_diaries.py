@@ -294,7 +294,33 @@ def nsw_header(first_text: str, link: dict) -> dict:
             "period_start": ps, "period_end": pe, "period_label": label}
 
 
-def run_nsw(session, years: list[int] | None, limit_pdfs: int, dry_run: bool) -> tuple[list[list], list[str]]:
+def loaded_urls(writer, source: str) -> set[str]:
+    """Diary PDF URLs already loaded for `source` (for --new-only). Local DB directly, remote over ssh."""
+    sql = "SELECT DISTINCT source_url FROM ext_ministerial_meetings WHERE source = ?"
+    if writer.db_path:
+        import sqlite3
+        try:
+            con = sqlite3.connect(f"file:{writer.db_path}?mode=ro", uri=True)
+        except sqlite3.Error:
+            return set()
+        try:
+            return {r[0] for r in con.execute(sql, (source,)) if r[0]}
+        except sqlite3.Error:  # table not created yet: nothing loaded
+            return set()
+        finally:
+            con.close()
+    import subprocess
+    prog = ("import sqlite3,json,sys\ncon=sqlite3.connect('file:%s?mode=ro',uri=True)\n"
+            "try:\n print(json.dumps([r[0] for r in con.execute(%r,(%r,)) if r[0]]))\n"
+            "except sqlite3.Error:\n print('[]')\n") % (writer.remote_db, sql, source)
+    out = subprocess.run(["ssh", writer.ssh_host, "python3", "-"], input=prog, capture_output=True, text=True, timeout=300)
+    if out.returncode != 0:
+        raise RuntimeError(f"could not list loaded diary URLs on {writer.ssh_host}: {out.stderr[-500:]}")
+    return set(json.loads(out.stdout.strip().splitlines()[-1]))
+
+
+def run_nsw(session, years: list[int] | None, limit_pdfs: int, dry_run: bool,
+            skip_urls: frozenset[str] | set[str] = frozenset()) -> tuple[list[list], list[str]]:
     pages = nsw_year_pages(session)
     log(f"  NSW year pages: {sorted(pages)}")
     rows, urls, n_pdf = [], [], 0
@@ -306,7 +332,7 @@ def run_nsw(session, years: list[int] | None, limit_pdfs: int, dry_run: bool) ->
         for link in links:
             if limit_pdfs and n_pdf >= limit_pdfs:
                 break
-            if link["url"] in urls:
+            if link["url"] in urls or link["url"] in skip_urls:
                 continue
             pdf = cached_bytes(session, link["url"], _cache_path("nsw", link["url"]))
             if not pdf:
@@ -447,7 +473,8 @@ def qld_header(first_text: str, page_name: str | None, link: dict) -> dict:
             "period_start": ps, "period_end": pe, "period_label": label}
 
 
-def run_qld(session, period: str, ministers: list[str] | None, limit_pdfs: int, dry_run: bool) -> tuple[list[list], list[str]]:
+def run_qld(session, period: str, ministers: list[str] | None, limit_pdfs: int, dry_run: bool,
+            skip_urls: frozenset[str] | set[str] = frozenset()) -> tuple[list[list], list[str]]:
     pages = qld_minister_pages(session, period)
     if ministers:
         pages = [p for p in pages if p["slug"] in ministers]
@@ -464,7 +491,7 @@ def run_qld(session, period: str, ministers: list[str] | None, limit_pdfs: int, 
         for link in links:
             if limit_pdfs and n_pdf >= limit_pdfs:
                 break
-            if link["url"] in urls:  # the same PDF can be linked from two minister pages
+            if link["url"] in urls or link["url"] in skip_urls:  # linked from two minister pages / already loaded
                 continue
             pdf = cached_bytes(session, link["url"], _cache_path("qld", link["url"]))
             if not pdf:
@@ -489,17 +516,23 @@ def main() -> None:
     ap.add_argument("--period", default="current", help="QLD: 'current' or a former government e.g. 2020-2024")
     ap.add_argument("--minister", action="append", help="QLD: restrict to these slugs")
     ap.add_argument("--limit-pdfs", type=int, default=0, help="stop after N PDFs (sampling)")
+    ap.add_argument("--new-only", action="store_true",
+                    help="skip diary PDFs whose URL is already in ext_ministerial_meetings for this source "
+                         "(a weekly check costs one index fetch per year plus any new PDF; a PDF re-issued at "
+                         "the same URL is only picked up by a run without this flag)")
     add_writer_args(ap)
     args = ap.parse_args()
     session = make_session()
     writer = writer_from_args(args)
     log(f"ext_ministerial_meetings <- {args.jurisdiction} ; writer={writer.describe()}")
+    source = "nsw_diary" if args.jurisdiction == "nsw" else "qld_diary"
+    skip = loaded_urls(writer, source) if args.new_only else set()
+    if args.new_only:
+        log(f"  --new-only: skipping {len(skip):,} PDF URLs already loaded for {source}")
     if args.jurisdiction == "nsw":
-        rows, urls = run_nsw(session, args.years, args.limit_pdfs, args.dry_run)
-        source = "nsw_diary"
+        rows, urls = run_nsw(session, args.years, args.limit_pdfs, args.dry_run, skip)
     else:
-        rows, urls = run_qld(session, args.period, args.minister, args.limit_pdfs, args.dry_run)
-        source = "qld_diary"
+        rows, urls = run_qld(session, args.period, args.minister, args.limit_pdfs, args.dry_run, skip)
     log(f"\n{len(urls)} PDFs -> {len(rows):,} meetings; "
         f"{sum(1 for r in rows if r[COLUMNS.index('meeting_date')])} with a parsed date")
     if not urls:

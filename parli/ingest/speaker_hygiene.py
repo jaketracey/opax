@@ -360,7 +360,7 @@ CREATE TABLE IF NOT EXISTS ext_ingest_log (
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--db", default=os.path.expanduser("~/.cache/autoresearch/parli.db"))
+    ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"))
     ap.add_argument("--loops", default="jurisdiction,fullname,junk,committee_party,role_stub")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()

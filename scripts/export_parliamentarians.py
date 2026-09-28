@@ -48,6 +48,7 @@ CLIENT-SIDE by lowercased name, so this export stays a pure function of the
 corpus and the two other files can be regenerated independently.
 """
 
+import os
 import json
 import re
 import sqlite3
@@ -56,14 +57,15 @@ import time
 from collections import Counter
 from datetime import date
 
-sys.path.insert(0, "/tmp/arag_mig")
+sys.path.insert(0, "/tmp/arag_mig")  # legacy desktop staging dir (harmless elsewhere)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # this checkout wins: VM / laptop
 from parli.ingest.arag_sync import (  # noqa: E402
     DEDUPE_PREDICATES, DEFAULT_SINCE, JUNK_PREDICATES, MIN_SPEECH_CHARS,
     clean_party, prepare_dedupe,
 )
 from parli.ingest.speaker_names import normalize_speaker  # noqa: E402
 
-DB = "file:/home/jake/.cache/autoresearch/parli.db?mode=ro"
+DB = "file:" + (os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")) + "?mode=ro"
 FLOOR = 5
 
 # Letters (any script), spaces, hyphens, apostrophes, dots; 2-5 tokens; not a

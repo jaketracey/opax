@@ -38,7 +38,7 @@ def now_iso():
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--db", default=os.path.expanduser("~/.cache/autoresearch/parli.db"))
+    ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"))
     ap.add_argument("--source", required=True)
     ap.add_argument("--rule", required=True, help="only rows where this rule fired are written")
     ap.add_argument("--dry-run", action="store_true")

@@ -159,7 +159,7 @@ def fetch_day(day: str) -> tuple[list[dict], int]:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--db", default=os.path.expanduser("~/.cache/autoresearch/parli.db"))
+    ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"))
     ap.add_argument("--since", default="2007-01-01")
     ap.add_argument("--until", default=date.today().isoformat())
     ap.add_argument("--max-days", type=int, default=0, help="stop after this many days (testing)")

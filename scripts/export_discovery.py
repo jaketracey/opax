@@ -7,6 +7,7 @@ The database is opened mode=ro with query_only enabled. Filtered analysis tables
 exist only in a separate in-memory connection. SSH streams source code to Python;
 it does not install files or alter the source checkout/database on the host.
 """
+import os
 import argparse
 from collections import Counter
 from contextlib import closing
@@ -22,7 +23,7 @@ import sys
 import time
 from urllib.parse import quote
 
-DEFAULT_DB = "/home/jake/.cache/autoresearch/parli.db"
+DEFAULT_DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 # Match the current federal money export's public/internal funding exclusions,
 # including the observed source spelling "Electoral Comission" (one m).
 PUBLIC_FUNDING_RE = re.compile(

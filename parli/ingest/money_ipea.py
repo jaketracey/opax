@@ -94,7 +94,8 @@ COLUMNS = [
 ]
 
 # Link to the members table by (first, last) name. Runs inside the load
-# transaction on the box that holds parli.db; skipped for --db test files.
+# transaction against any database that has a members table (the live parli.db, local or
+# remote); skipped only for a scratch staging file without one.
 LINK_SQL = """
 UPDATE ext_expenses SET person_id = (
     SELECT m.person_id FROM members m
@@ -103,6 +104,21 @@ UPDATE ext_expenses SET person_id = (
     ORDER BY m.left_house IS NULL DESC, m.left_house DESC LIMIT 1)
 WHERE source = 'ipea' AND reporting_period_id = '{period}' AND person_id IS NULL;
 """
+
+
+def db_has_table(path, name: str) -> bool:
+    """True when the SQLite file at `path` exists and holds table `name` (checked read-only)."""
+    import sqlite3
+    try:
+        con = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    except sqlite3.Error:
+        return False
+    try:
+        return bool(con.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (name,)).fetchone())
+    except sqlite3.Error:
+        return False
+    finally:
+        con.close()
 
 
 def discover(session) -> list[dict]:
@@ -185,7 +201,9 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="IPEA quarterly expenditure -> ext_expenses")
     ap.add_argument("--since", default=None, help="only quarters >= this id, e.g. 2026q01")
     ap.add_argument("--until", default=None, help="only quarters <= this id")
-    ap.add_argument("--no-link", action="store_true", help="skip the members.person_id link SQL")
+    ap.add_argument("--no-link", action="store_true",
+                    help="skip the members.person_id link SQL (it also runs for a local --db/OPAX_DB target that "
+                         "has a members table; only a scratch staging file skips it)")
     ap.add_argument("--list", action="store_true", help="list quarters and exit")
     add_writer_args(ap)
     args = ap.parse_args()
@@ -202,6 +220,11 @@ def main() -> None:
     todo = [d for d in datasets if (not args.since or d["quarter"] >= args.since.lower())
             and (not args.until or d["quarter"] <= args.until.lower())]
     log(f"writer={writer.describe()} ; loading {len(todo)} quarter(s)")
+    # The person_id link needs `members`. Loading into the live DB (local via --db/OPAX_DB, or
+    # remote) has it; a scratch staging file does not, and would fail the whole transaction.
+    link_ok = writer.db_path is None or db_has_table(writer.db_path, "members")
+    if not link_ok and not args.no_link:
+        log("  target DB has no members table (staging file): person_id link skipped; run LINK_SQL after applying")
     summary = {}
     for ds in todo:
         path = download(session, ds)
@@ -209,7 +232,12 @@ def main() -> None:
         period_id = rows[0][2] if rows else ds["quarter"].upper()
         total = sum((r[COLUMNS.index("amount")] or 0) for r in rows)
         log(f"  {ds['quarter']}: {len(rows):,} rows, ${total:,.0f}")
-        post = [] if (args.no_link or args.db) else [LINK_SQL.format(period=period_id)]
+        if not rows:
+            # an upstream file that parses to nothing must not delete the quarter it replaces
+            log(f"  {ds['quarter']}: 0 rows parsed; keeping what is stored (refusing to replace with nothing)")
+            summary[ds["quarter"]] = "skipped: empty"
+            continue
+        post = [] if (args.no_link or not link_ok) else [LINK_SQL.format(period=period_id)]
         res = writer.replace("ext_expenses", DDL, COLUMNS, rows, source="ipea",
                              delete_where="source = ? AND reporting_period_id = ?",
                              delete_params=["ipea", period_id], post_sql=post,

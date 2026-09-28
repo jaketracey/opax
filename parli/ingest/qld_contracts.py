@@ -38,6 +38,8 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
+from parli.ingest.replace_guard import env_allow_shrink, replace_guard
+
 SOURCE = "qld_contract_disclosure"
 UA = "OPAX research (https://opax.com.au; contact jake.tracey@noice.work)"
 CKAN = "https://www.data.qld.gov.au/api/3/action/package_search"
@@ -266,10 +268,12 @@ def build_current(db: sqlite3.Connection, jur: str) -> tuple[int, float]:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--db", default=os.path.expanduser("~/.cache/autoresearch/parli.db"))
+    ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"))
     ap.add_argument("--cache", default=os.path.expanduser("~/.cache/autoresearch/qld_contracts"))
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--current-only", action="store_true", help="rebuild ext_state_contracts_current from the loaded rows")
+    ap.add_argument("--allow-shrink", action="store_true",
+                    help="replace the register even when the fresh load is empty or under half of what is stored (also OPAX_ALLOW_SHRINK=1)")
     args = ap.parse_args()
     cache = Path(args.cache)
     cache.mkdir(parents=True, exist_ok=True)
@@ -337,6 +341,13 @@ def main() -> None:
         if i % 100 == 0 or i == len(files):
             log(f"  {i:,}/{len(files):,} files · {stats['rows']:,} rows · unmapped {stats['unmapped']} · failed {stats['download_failed'] + stats['parse_failed']}")
     db.commit()   # the per-file log rows above opened an implicit transaction
+    stored = db.execute("SELECT COUNT(*) FROM ext_state_contracts WHERE jurisdiction = 'qld'").fetchone()[0]
+    reason = replace_guard(stored, len(rows_out), allow_shrink=args.allow_shrink or env_allow_shrink())
+    if reason:
+        # a dead portal, a changed column layout or a run of failed downloads must not wipe the register
+        log(f"REFUSED: {reason}; ext_state_contracts left untouched "
+            f"(unmapped {stats['unmapped']}, failed {stats['download_failed'] + stats['parse_failed']}; --allow-shrink overrides)")
+        raise SystemExit(3)
     cur = db.cursor()
     cur.execute("BEGIN")
     cur.execute("DELETE FROM ext_state_contracts WHERE jurisdiction = 'qld'")
@@ -348,7 +359,7 @@ def main() -> None:
     cur.execute("COMMIT")
     n, total = build_current(db, "qld")
     db.commit()
-    log(f"done: {kept[0]:,} rows (${kept[1]}B) from {kept[2]:,} supplier names, {kept[3]:,} rows with an ABN; "
+    log(f"done: {kept[0]:,} rows (${kept[1] or 0}B) from {kept[2] or 0:,} supplier names, {kept[3] or 0:,} rows with an ABN; "
         f"{n:,} contracts (${total/1e9:.1f}B) after folding variations; "
         f"unmapped files {stats['unmapped']}, failed {stats['download_failed'] + stats['parse_failed']}")
 

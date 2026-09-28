@@ -41,6 +41,8 @@ import urllib.request
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 
+from parli.ingest.replace_guard import ExtGuardError, env_allow_shrink, replace_guard
+
 SOURCE = "state_rosters"
 UA = "OPAX research (https://opax.com.au; contact jake.tracey@noice.work)"
 SPARQL = "https://query.wikidata.org/sparql"
@@ -150,10 +152,19 @@ SELECT ?p ?pLabel ?givenLabel ?familyLabel ?districtLabel ?partyLabel ?start ?en
 }}"""
 
 
-def fetch(db: sqlite3.Connection) -> None:
+def fetch(db: sqlite3.Connection, allow_shrink: bool = False) -> None:
+    """Replace the roster, one (state, chamber) at a time, and never with less than Wikidata used to give.
+
+    A position whose fresh fetch is empty or under half of what is stored keeps its old rows
+    (an empty 200 from the SPARQL endpoint used to wipe the whole table). Nothing is written
+    at all when every position came back empty. A refused position makes the run exit
+    non-zero after the good ones have been written, so an unattended job is loud but the
+    roster is never worse than yesterday's.
+    """
     db.executescript(DDL)
     stamp = now_iso()
     rows = []
+    fresh_by_pos: dict = {}
     for (state, chamber), qid in POSITIONS.items():
         got = sparql(roster_query(qid))
         v = lambda r, k: (r.get(k) or {}).get("value")  # noqa: E731
@@ -166,16 +177,36 @@ def fetch(db: sqlite3.Connection) -> None:
                          v(r, "districtLabel"), v(r, "partyLabel"), (v(r, "start") or "")[:10] or None,
                          (v(r, "end") or "")[:10] or None, v(r, "genderLabel"), (v(r, "born") or "")[:4] or None, stamp))
             n += 1
+        fresh_by_pos[(state, chamber)] = n
         log(f"  {state}/{chamber}: {n} term rows")
         time.sleep(1)
+    stored = {(s_, c_): n_ for s_, c_, n_ in db.execute("SELECT state, chamber, COUNT(*) FROM ext_state_roster GROUP BY 1, 2")}
+    refused = {}
+    for pos in POSITIONS:
+        reason = replace_guard(stored.get(pos, 0), fresh_by_pos[pos], allow_shrink=allow_shrink)
+        if reason:
+            refused[pos] = reason
+            log(f"  KEEPING {pos[0]}/{pos[1]}: {reason}")
+    replaced = [pos for pos in POSITIONS if pos not in refused]
+    if stored and not any(fresh_by_pos[pos] for pos in replaced) and not allow_shrink:
+        raise ExtGuardError("every roster position came back empty; ext_state_roster left untouched")
+    keep_rows = [r for r in rows if (r[1], r[2]) in replaced]
     cur = db.cursor()
     cur.execute("BEGIN")
-    cur.execute("DELETE FROM ext_state_roster")
-    cur.executemany("INSERT INTO ext_state_roster VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", rows)
+    deleted = 0
+    for state, chamber in replaced:
+        deleted += cur.execute("DELETE FROM ext_state_roster WHERE state = ? AND chamber = ?", (state, chamber)).rowcount
+    cur.executemany("INSERT INTO ext_state_roster VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", keep_rows)
+    note = "wikidata P39 terms, end >= 2010 or open, living"
+    if refused:
+        note += "; kept unchanged: " + ", ".join(f"{s_}/{c_}" for s_, c_ in refused)
     cur.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
-                ("ext_state_roster", SOURCE, len(rows), 0, stamp, "wikidata P39 terms, end >= 2010 or open, living"))
+                ("ext_state_roster", SOURCE, len(keep_rows), deleted, stamp, note))
     cur.execute("COMMIT")
-    log(f"wrote {len(rows):,} roster rows")
+    log(f"wrote {len(keep_rows):,} roster rows (replaced {deleted:,})")
+    if refused:
+        raise ExtGuardError("kept the stored rows for " + ", ".join(f"{s_}/{c_}" for s_, c_ in refused)
+                            + " (fresh fetch empty or far smaller); pass --allow-shrink to override")
 
 
 # ── resolve ──────────────────────────────────────────────────────────────────
@@ -382,14 +413,20 @@ def resolve(db: sqlite3.Connection, dry_run: bool) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("command", choices=["fetch", "resolve"])
-    ap.add_argument("--db", default=os.path.expanduser("~/.cache/autoresearch/parli.db"))
+    ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"))
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--allow-shrink", action="store_true",
+                    help="fetch: replace a position even when the fresh fetch is empty or far smaller (also OPAX_ALLOW_SHRINK=1)")
     args = ap.parse_args()
     db = sqlite3.connect(args.db, timeout=600)
     db.execute("PRAGMA busy_timeout = 600000")
     db.row_factory = sqlite3.Row
     if args.command == "fetch":
-        fetch(db)
+        try:
+            fetch(db, allow_shrink=args.allow_shrink or env_allow_shrink())
+        except ExtGuardError as e:
+            log(f"REFUSED: {e}")
+            raise SystemExit(3)
     else:
         resolve(db, args.dry_run)
 

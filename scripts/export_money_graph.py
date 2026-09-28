@@ -60,6 +60,7 @@ portal's year scrub can re-sum totals, counts and spans for any window
 instead of only testing whether a lifetime span overlaps it.
 """
 
+import os
 import json
 import re
 import sqlite3
@@ -67,7 +68,7 @@ import sys
 from collections import defaultdict
 from datetime import date, datetime, timezone
 
-DB_PATH = "/home/jake/.cache/autoresearch/parli.db"
+DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 TOP_DONORS = 250
 OTHER_INDUSTRY_FLOOR = 5_000_000  # rule 5
 

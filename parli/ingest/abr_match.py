@@ -321,7 +321,7 @@ def main() -> None:
     if args.dump:
         ents = load_entities_from_dump(args.dump)
     else:
-        ents = load_entities_from_db(args.db or "/home/jake/.cache/autoresearch/parli.db")
+        ents = load_entities_from_db(args.db or os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"))
     match(abr_dir, ents, Path(args.out or (abr_dir / "matches.json")).expanduser())
 
 

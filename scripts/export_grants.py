@@ -4,6 +4,7 @@ detail file per listed recipient, from parli.db on the database host.
 
     .venv/bin/python scripts/export_grants.py federal
     .venv/bin/python scripts/export_grants.py qld
+    .venv/bin/python scripts/export_grants.py federal --local            # DB on this machine (or OPAX_DB set)
     .venv/bin/python scripts/export_grants.py federal --out-dir /tmp/x   # anywhere else
 
 Writes (default --out-dir portal/public):
@@ -34,7 +35,8 @@ Writes (default --out-dir portal/public):
 
 The heavy lifting runs on the DB host: the REMOTE string below is streamed to
 `ssh desktop python3 -` (stdlib only there), and the JSON it prints is split
-into files here. Tables read: ext_grants + ext_grant_details (Commonwealth,
+into files here. With --local (or OPAX_DB set, as on the nightly VM) the same
+program is piped to a local python3 instead, reading that machine's parli.db. Tables read: ext_grants + ext_grant_details (Commonwealth,
 GrantConnect), government_grants (Queensland), ext_grant_recipients +
 ext_grant_recipient_keys (parli.ingest.grant_recipients), ext_donor_entities /
 ext_donor_aliases, donations (AEC), ext_donations (state registers: only the
@@ -587,7 +589,7 @@ def current_seats_from_roster(path: Path) -> dict:
 def remote_program(current_seats: dict | None = None) -> str:
     """The stdlib-only program streamed to the DB host: shared rules + REMOTE_BODY."""
     head = ["from __future__ import annotations",
-            "import json, re, sqlite3, sys, zlib",
+            "import json, os, re, sqlite3, sys, zlib",
             "from collections import Counter, defaultdict",
             "from datetime import date, datetime, timezone",
             "ISO_DAY = re.compile(r'^\\d{4}-\\d{2}-\\d{2}')"]
@@ -603,7 +605,7 @@ CAP_RECIPIENTS = int(sys.argv[3]) if len(sys.argv) > 3 else 6000
 FORCE_ABNS = [a for a in sys.argv[4].split(",")] if len(sys.argv) > 4 and sys.argv[4] else []
 TOP_PROGRAMS = int(sys.argv[5]) if len(sys.argv) > 5 else 500
 GRANTS_PER_DETAIL = 40
-DB = "/home/jake/.cache/autoresearch/parli.db"
+DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 
 db = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
 db.execute("PRAGMA busy_timeout = 600000")
@@ -1178,10 +1180,20 @@ def write_outputs(data: dict, out: Path, jur: str) -> dict:
     }
 
 
-def run_remote(host: str, jur: str, top: int, cap: int, force_abns: list[str], programs: int) -> dict | None:
+def run_remote(host: str | None, jur: str, top: int, cap: int, force_abns: list[str], programs: int,
+               local_db: str | None = None) -> dict | None:
+    """Run the stdlib-only program on the DB host (ssh), or, with host=None, in a local python3.
+
+    Locally the database is `local_db` (exported to the child as OPAX_DB), else $OPAX_DB,
+    else ~/.cache/autoresearch/parli.db: the same rule the program itself applies.
+    """
     current = current_seats_from_roster(ROOT / "portal" / "public" / "parliamentarians.json")
-    proc = subprocess.run(["ssh", host, "python3", "-", jur, str(top), str(cap), ",".join(force_abns), str(programs)],
-                          input=remote_program(current), capture_output=True, text=True, timeout=3600)
+    argv = ["python3" if host else sys.executable, "-", jur, str(top), str(cap), ",".join(force_abns), str(programs)]
+    if host:
+        cmd, env = ["ssh", host, *argv], None
+    else:
+        cmd, env = argv, dict(os.environ, **({"OPAX_DB": local_db} if local_db else {}))
+    proc = subprocess.run(cmd, input=remote_program(current), capture_output=True, text=True, timeout=3600, env=env)
     if proc.returncode != 0:
         sys.stderr.write(proc.stderr[-4000:])
         return None
@@ -1193,6 +1205,10 @@ def main() -> int:
     ap.add_argument("jurisdiction", choices=["federal", "qld"])
     ap.add_argument("--out-dir", default=str(DEFAULT_OUT))
     ap.add_argument("--host", default=DB_HOST)
+    ap.add_argument("--local", action="store_true",
+                    help="read the database on THIS machine ($OPAX_DB, else ~/.cache/autoresearch/parli.db) "
+                         "instead of ssh-ing to --host; also the default when OPAX_DB is set")
+    ap.add_argument("--db", default=None, help="with --local: the parli.db path to read (else $OPAX_DB / default)")
     ap.add_argument("--top", type=int, default=3800, help="largest recipients listed by dollars")
     ap.add_argument("--cap", type=int, default=6000, help="hard cap on listed recipients (donors fill up to it)")
     ap.add_argument("--programs", type=int, default=500,
@@ -1213,14 +1229,18 @@ def main() -> int:
             if rid.startswith("abn:")
         })
 
-    data = run_remote(args.host, args.jurisdiction, args.top, args.cap, force_abns, args.programs)
+    # OPAX_DB in the environment means "the database is here": never ssh to the desktop by accident.
+    local = args.local or bool(args.db) or bool(os.environ.get("OPAX_DB"))
+    host = None if local else args.host
+    local_db = os.path.expanduser(args.db) if args.db else None
+    data = run_remote(host, args.jurisdiction, args.top, args.cap, force_abns, args.programs, local_db)
     if data is None:
         return 1
     out = Path(args.out_dir)
     w = write_outputs(data, out, args.jurisdiction)
     if w["index_size"] > INDEX_SIZE_LIMIT and args.programs > 300:
         print(f"index is {w['index_size']/1024:.0f} KB with {args.programs} programs; re-running with 300")
-        data = run_remote(args.host, args.jurisdiction, args.top, args.cap, force_abns, 300)
+        data = run_remote(host, args.jurisdiction, args.top, args.cap, force_abns, 300, local_db)
         if data is None:
             return 1
         w = write_outputs(data, out, args.jurisdiction)

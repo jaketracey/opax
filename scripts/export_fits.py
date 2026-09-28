@@ -48,6 +48,7 @@ Matching, so the numbers can be defended:
    export carries that sentence in meta so the client can print it.
 """
 
+import os
 import argparse
 import json
 import re
@@ -57,7 +58,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-DB_PATH = "/home/jake/.cache/autoresearch/parli.db"
+DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 SOURCE_URL = "https://foreigninfluence.ag.gov.au/"
 LICENCE = "CC BY 4.0 (Attorney-General's Department, https://www.ag.gov.au/copyright-statement)"
 DISCLAIMER = ("Registration under the Foreign Influence Transparency Scheme is a disclosure required by law "

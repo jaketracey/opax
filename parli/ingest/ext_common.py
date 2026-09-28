@@ -20,6 +20,18 @@ the repo lives on the laptop, so a writer has two backends:
 Both paths run the same DDL / DELETE / INSERT / post-SQL sequence and log the
 load into `ext_ingest_log`.
 
+Which backend? `--db PATH` (or `--db-local`) always means "open that SQLite file
+here". With the environment variable OPAX_DB set (the nightly VM exports it) the
+default is local too, at that path; only when neither is given does a loader fall
+back to the old `ssh desktop` behaviour. So an unattended run on a box that holds
+parli.db can never scp rows to the retired desktop by accident.
+
+Empty-upstream guard: `replace` refuses (ExtGuardError, nothing deleted) when the
+fresh rows are empty, or fewer than `min_ratio` (default 0.5) of the rows the
+DELETE would remove. `--allow-shrink` / OPAX_ALLOW_SHRINK=1 lifts it for a
+deliberate re-baseline. For a staged, 0.9-guarded, id-preserving swap of a whole
+register use scripts/ext_apply.py instead of loading straight into the live DB.
+
 Everything here identifies itself as OPAX research (opax.com.au) and rate
 limits by default.
 """
@@ -43,10 +55,27 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+from parli.ingest.replace_guard import (  # noqa: F401  (re-exported for the loaders)
+    DEFAULT_MIN_RATIO, ExtGuardError, env_allow_shrink, replace_guard,
+)
+
 USER_AGENT = "OPAX research (opax.com.au; contact jake.tracey@noice.work)"
 DEFAULT_DB_HOST = os.environ.get("OPAX_DB_HOST", "desktop")
 DEFAULT_REMOTE_DB = os.environ.get("OPAX_REMOTE_DB", "/home/jake/.cache/autoresearch/parli.db")
 CACHE_ROOT = Path(os.environ.get("OPAX_CACHE", "~/.cache/autoresearch/ext_money")).expanduser()
+DEFAULT_LOCAL_DB = "~/.cache/autoresearch/parli.db"
+
+
+def env_db_path() -> str | None:
+    """OPAX_DB, expanded, when set: we are on the box that holds parli.db."""
+    v = os.environ.get("OPAX_DB")
+    return os.path.expanduser(v) if v else None
+
+
+def default_local_db() -> str:
+    """The local parli.db: OPAX_DB, else ~/.cache/autoresearch/parli.db."""
+    return env_db_path() or os.path.expanduser(DEFAULT_LOCAL_DB)
+
 
 MONTHS = ["january", "february", "march", "april", "may", "june",
           "july", "august", "september", "october", "november", "december"]
@@ -301,49 +330,72 @@ CREATE TABLE IF NOT EXISTS ext_ingest_log (
 """
 
 # Runs on the box that holds parli.db (stdlib only). argv[1] = gz jsonl path.
-_REMOTE_LOADER = r'''
+_REMOTE_LOADER = r"""
 import gzip, json, sqlite3, sys, os, time
 path = sys.argv[1]
-with gzip.open(path, "rt", encoding="utf-8") as f:
-    meta = json.loads(f.readline())
-    rows = [json.loads(line) for line in f if line.strip()]
-db = sqlite3.connect(meta["db_path"], timeout=600)
-db.execute("PRAGMA busy_timeout = 600000")
-db.execute("PRAGMA journal_mode = WAL")
-db.executescript(meta["ddl"])
-db.executescript(meta["log_ddl"])
-cols = meta["columns"]
-placeholders = ",".join("?" for _ in cols)
-insert = "INSERT INTO %s (%s) VALUES (%s)" % (meta["table"], ",".join(cols), placeholders)
-cur = db.cursor()
-cur.execute("BEGIN")
-deleted = cur.execute("DELETE FROM %s WHERE %s" % (meta["table"], meta["delete_where"]), meta["delete_params"]).rowcount
-cur.executemany(insert, rows)
-for stmt in meta.get("post_sql", []):
-    cur.execute(stmt)
-cur.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
-            (meta["table"], meta["source"], len(rows), deleted, meta["loaded_at"], meta.get("notes")))
-cur.execute("COMMIT")
-total = db.execute("SELECT COUNT(*) FROM %s" % meta["table"]).fetchone()[0]
-src_total = db.execute("SELECT COUNT(*) FROM %s WHERE %s" % (meta["table"], meta["delete_where"]), meta["delete_params"]).fetchone()[0]
-print(json.dumps({"table": meta["table"], "source": meta["source"], "inserted": len(rows), "deleted": deleted,
-                  "source_rows_now": src_total, "table_rows_now": total}))
-db.close()
-os.remove(path)
-'''
+try:
+    with gzip.open(path, "rt", encoding="utf-8") as f:
+        meta = json.loads(f.readline())
+        rows = [json.loads(line) for line in f if line.strip()]
+    db = sqlite3.connect(meta["db_path"], timeout=600)
+    db.execute("PRAGMA busy_timeout = 600000")
+    db.execute("PRAGMA journal_mode = WAL")
+    db.executescript(meta["ddl"])
+    db.executescript(meta["log_ddl"])
+    cols = meta["columns"]
+    placeholders = ",".join("?" for _ in cols)
+    insert = "INSERT INTO %s (%s) VALUES (%s)" % (meta["table"], ",".join(cols), placeholders)
+    cur = db.cursor()
+    cur.execute("BEGIN")
+    existing = cur.execute("SELECT COUNT(*) FROM %s WHERE %s" % (meta["table"], meta["delete_where"]), meta["delete_params"]).fetchone()[0]
+    reason = None
+    if not meta.get("allow_shrink") and existing > 0:
+        if len(rows) == 0:
+            reason = "upstream returned no rows but %d exist" % existing
+        elif len(rows) < existing * meta.get("min_ratio", 0.5):
+            reason = "upstream returned %d rows against %d stored (below %d%%)" % (len(rows), existing, int(meta.get("min_ratio", 0.5) * 100))
+    if reason:
+        cur.execute("ROLLBACK")
+        sys.stderr.write("EXT_GUARD_REFUSED %s: %s\n" % (meta["table"], reason))
+        sys.exit(3)
+    deleted = cur.execute("DELETE FROM %s WHERE %s" % (meta["table"], meta["delete_where"]), meta["delete_params"]).rowcount
+    cur.executemany(insert, rows)
+    for stmt in meta.get("post_sql", []):
+        cur.execute(stmt)
+    cur.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
+                (meta["table"], meta["source"], len(rows), deleted, meta["loaded_at"], meta.get("notes")))
+    cur.execute("COMMIT")
+    total = db.execute("SELECT COUNT(*) FROM %s" % meta["table"]).fetchone()[0]
+    src_total = db.execute("SELECT COUNT(*) FROM %s WHERE %s" % (meta["table"], meta["delete_where"]), meta["delete_params"]).fetchone()[0]
+    print(json.dumps({"table": meta["table"], "source": meta["source"], "inserted": len(rows), "deleted": deleted,
+                      "source_rows_now": src_total, "table_rows_now": total}))
+    db.close()
+finally:
+    try:
+        os.remove(path)
+    except OSError:
+        pass
+"""
 
 
 class ExtWriter:
     """Load rows into an ext_* table, locally or on the remote DB host."""
 
     def __init__(self, db_path: str | Path | None = None, ssh_host: str | None = None,
-                 remote_db: str = DEFAULT_REMOTE_DB, dry_run: bool = False):
+                 remote_db: str = DEFAULT_REMOTE_DB, dry_run: bool = False,
+                 min_ratio: float = DEFAULT_MIN_RATIO, allow_shrink: bool | None = None):
         if db_path is None and ssh_host is None:
-            ssh_host = DEFAULT_DB_HOST
+            # No explicit choice: the box that holds parli.db says so through OPAX_DB;
+            # otherwise this is the laptop and the database is on the desktop.
+            db_path = env_db_path()
+            if db_path is None:
+                ssh_host = DEFAULT_DB_HOST
         self.db_path = Path(db_path).expanduser() if db_path else None
         self.ssh_host = ssh_host
         self.remote_db = remote_db
         self.dry_run = dry_run
+        self.min_ratio = min_ratio
+        self.allow_shrink = env_allow_shrink() if allow_shrink is None else allow_shrink
 
     def describe(self) -> str:
         if self.dry_run:
@@ -352,7 +404,8 @@ class ExtWriter:
 
     def replace(self, table: str, ddl: str, columns: Sequence[str], rows: Iterable[Sequence],
                 source: str, delete_where: str = "source = ?", delete_params: Sequence | None = None,
-                post_sql: Sequence[str] = (), notes: str | None = None) -> dict:
+                post_sql: Sequence[str] = (), notes: str | None = None,
+                min_ratio: float | None = None, allow_shrink: bool | None = None) -> dict:
         rows = [list(r) for r in rows]
         if delete_params is None:
             delete_params = [source]
@@ -360,6 +413,8 @@ class ExtWriter:
             "table": table, "ddl": ddl, "log_ddl": INGEST_LOG_DDL, "columns": list(columns),
             "delete_where": delete_where, "delete_params": list(delete_params),
             "post_sql": list(post_sql), "source": source, "notes": notes,
+            "min_ratio": self.min_ratio if min_ratio is None else min_ratio,
+            "allow_shrink": self.allow_shrink if allow_shrink is None else allow_shrink,
             "loaded_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         }
         if self.dry_run:
@@ -371,22 +426,34 @@ class ExtWriter:
 
     def _replace_local(self, meta: dict, rows: list) -> dict:
         db = sqlite3.connect(str(self.db_path), timeout=600)
-        db.execute("PRAGMA busy_timeout = 600000")
-        db.executescript(meta["ddl"])
-        db.executescript(meta["log_ddl"])
-        cols = meta["columns"]
-        insert = f"INSERT INTO {meta['table']} ({','.join(cols)}) VALUES ({','.join('?' for _ in cols)})"
-        cur = db.cursor()
-        cur.execute("BEGIN")
-        deleted = cur.execute(f"DELETE FROM {meta['table']} WHERE {meta['delete_where']}", meta["delete_params"]).rowcount
-        cur.executemany(insert, rows)
-        for stmt in meta["post_sql"]:
-            cur.execute(stmt)
-        cur.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
-                    (meta["table"], meta["source"], len(rows), deleted, meta["loaded_at"], meta.get("notes")))
-        cur.execute("COMMIT")
-        total = db.execute(f"SELECT COUNT(*) FROM {meta['table']}").fetchone()[0]
-        db.close()
+        try:
+            db.execute("PRAGMA busy_timeout = 600000")
+            db.executescript(meta["ddl"])
+            db.executescript(meta["log_ddl"])
+            cols = meta["columns"]
+            insert = f"INSERT INTO {meta['table']} ({','.join(cols)}) VALUES ({','.join('?' for _ in cols)})"
+            cur = db.cursor()
+            cur.execute("BEGIN")
+            try:
+                existing = cur.execute(f"SELECT COUNT(*) FROM {meta['table']} WHERE {meta['delete_where']}",
+                                       meta["delete_params"]).fetchone()[0]
+                reason = replace_guard(existing, len(rows), meta["min_ratio"], meta["allow_shrink"])
+                if reason:
+                    raise ExtGuardError(f"{meta['table']} source={meta['source']}: refusing to replace: {reason}")
+                deleted = cur.execute(f"DELETE FROM {meta['table']} WHERE {meta['delete_where']}", meta["delete_params"]).rowcount
+                cur.executemany(insert, rows)
+                for stmt in meta["post_sql"]:
+                    cur.execute(stmt)
+                cur.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
+                            (meta["table"], meta["source"], len(rows), deleted, meta["loaded_at"], meta.get("notes")))
+                cur.execute("COMMIT")
+            except BaseException:
+                if db.in_transaction:
+                    db.rollback()
+                raise
+            total = db.execute(f"SELECT COUNT(*) FROM {meta['table']}").fetchone()[0]
+        finally:
+            db.close()
         res = {"table": meta["table"], "source": meta["source"], "inserted": len(rows), "deleted": deleted, "table_rows_now": total}
         log(f"  loaded {res}")
         return res
@@ -410,6 +477,8 @@ class ExtWriter:
         finally:
             os.remove(local_path)
         if proc.returncode != 0:
+            if "EXT_GUARD_REFUSED" in proc.stderr:
+                raise ExtGuardError(proc.stderr.strip().splitlines()[-1])
             raise RuntimeError(f"remote load failed: {proc.stderr[-2000:]}")
         res = json.loads(proc.stdout.strip().splitlines()[-1])
         log(f"  loaded {res}")
@@ -417,12 +486,34 @@ class ExtWriter:
 
 
 def add_writer_args(parser) -> None:
-    parser.add_argument("--db", default=None, help="Write to this local SQLite file instead of the remote parli.db")
+    parser.add_argument("--db", default=None,
+                        help="Write to this local SQLite file instead of the remote parli.db "
+                             "(default: $OPAX_DB when set, else the remote one)")
+    parser.add_argument("--db-local", "--local", dest="db_local", action="store_true",
+                        help="Write to the local parli.db ($OPAX_DB, else ~/.cache/autoresearch/parli.db); never ssh")
     parser.add_argument("--host", default=DEFAULT_DB_HOST, help="ssh host holding parli.db (default: %(default)s)")
     parser.add_argument("--remote-db", default=DEFAULT_REMOTE_DB, help="parli.db path on --host")
     parser.add_argument("--dry-run", action="store_true", help="Fetch and parse but write nothing")
+    parser.add_argument("--allow-shrink", action="store_true",
+                        help="Let a replace delete rows even when the fresh fetch is empty or far smaller "
+                             "(default: refuse; also OPAX_ALLOW_SHRINK=1)")
+
+
+def resolve_db_path(args) -> str | None:
+    """The local SQLite path the writer args select, or None for the remote (ssh) backend.
+
+    --db wins; then --db-local (default local path); then OPAX_DB; then remote.
+    """
+    db = getattr(args, "db", None)
+    if db:
+        return os.path.expanduser(db)
+    if getattr(args, "db_local", False):
+        return default_local_db()
+    return env_db_path()
 
 
 def writer_from_args(args) -> ExtWriter:
-    return ExtWriter(db_path=args.db, ssh_host=None if args.db else args.host,
-                     remote_db=args.remote_db, dry_run=args.dry_run)
+    db = resolve_db_path(args)
+    return ExtWriter(db_path=db, ssh_host=None if db else args.host, remote_db=args.remote_db,
+                     dry_run=args.dry_run,
+                     allow_shrink=True if getattr(args, "allow_shrink", False) else None)

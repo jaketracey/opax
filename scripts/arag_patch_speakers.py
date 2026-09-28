@@ -87,7 +87,7 @@ def patch_one(kb: KbClient, row: sqlite3.Row, reason: str | None = None) -> tupl
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--db", default=os.path.expanduser("~/.cache/autoresearch/parli.db"))
+    ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"))
     ap.add_argument("--env", default=os.path.expanduser("~/opax/.env"))
     ap.add_argument("--threads", type=int, default=6)
     ap.add_argument("--limit", type=int, default=None)
