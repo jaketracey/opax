@@ -1,10 +1,14 @@
 // opax-enrich: unattended enrichment of the OPAX knowledge box with Workers AI.
 //
 //   scheduled (every minute): discover new speeches / press releases, then process a bounded batch.
-//   fetch: GET /status (Bearer ENRICH_ADMIN_TOKEN). Nothing else is served.
+//   fetch (Bearer ENRICH_ADMIN_TOKEN on both):
+//     GET  /status  queue counts, spend, cursors, last tick, recent errors
+//     POST /canary  {"rids": [<=10]} write those rids' stored dry-run results for real, with a full before/after diff
+//   Nothing else is served.
 
 import { readConfig, type Env } from './env.ts'
 import { Kb } from './kb.ts'
+import { parseCanaryBody, runCanary } from './canary.ts'
 import { buildStatus, bearerOk } from './status.ts'
 import { runTick } from './tick.ts'
 
@@ -30,10 +34,19 @@ export default {
 
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url)
-    if (request.method !== 'GET' || url.pathname !== '/status') return new Response('Not found', { status: 404 })
+    const route = `${request.method} ${url.pathname}`
+    if (route !== 'GET /status' && route !== 'POST /canary') return new Response('Not found', { status: 404 })
     if (!bearerOk(request.headers.get('authorization'), env.ENRICH_ADMIN_TOKEN)) {
       return new Response('Unauthorized', { status: 401, headers: { 'www-authenticate': 'Bearer' } })
     }
-    return json(await buildStatus(env.DB, readConfig(env), Date.now()))
+    if (route === 'GET /status') return json(await buildStatus(env.DB, readConfig(env), Date.now()))
+
+    const parsed = parseCanaryBody(await request.json().catch(() => null))
+    if ('error' in parsed) return json({ error: parsed.error }, 400)
+    const out = await runCanary(
+      { db: env.DB, kb: new Kb(env), now: () => Date.now(), settle: (ms) => new Promise((resolve) => setTimeout(resolve, ms)) },
+      parsed.rids,
+    )
+    return json(out)
   },
 } satisfies ExportedHandler<Env>

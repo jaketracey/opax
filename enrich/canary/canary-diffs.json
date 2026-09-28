@@ -1,0 +1,251 @@
+{
+ "takenAt": "2026-09-28T13:51:54.173Z",
+ "note": "diff of the FULL resource read before the canary write vs a fresh read after the platform settled; show=basic,values,origin,extra,relations,errors",
+ "allClean": true,
+ "results": [
+  {
+   "rid": "5574cc33c6a84693873e7274f9bbf2ae",
+   "slug": "speech-1323157",
+   "title": "Julia Finn — Fair Trading Amendment (24-Hour Fuel Price Lock) Bill 2026 — 2026-09-24",
+   "metadataStatusNow": "PROCESSED",
+   "writes": [
+    {
+     "task": "speech_summary",
+     "outcome": "written"
+    },
+    {
+     "task": "speech_topics",
+     "outcome": "written"
+    }
+   ],
+   "classifications": {
+    "added": [
+     "topic/financial-services",
+     "topic/infrastructure-transport"
+    ],
+    "removed": []
+   },
+   "expected": [
+    "usermetadata.classifications + topic/financial-services",
+    "usermetadata.classifications + topic/infrastructure-transport",
+    "data.texts.da-summary-t-body.value.body",
+    "data.texts.da-summary-t-body.value.format",
+    "data.texts.da-summary-t-body.value.md5",
+    "data.texts.da-summary-t-body.value.extract_strategy",
+    "data.texts.da-summary-t-body.value.split_strategy",
+    "data.texts.da-summary-t-body.status"
+   ],
+   "volatile": [
+    "modified"
+   ],
+   "unexpected": [],
+   "clean": true,
+   "briefWritten": "Opposed the Fair Trading Amendment (24-Hour Fuel Price Lock) Bill 2026, arguing it would not lower fuel prices and risks entrenching higher prices by creating perverse incentives, citing evidence from other jurisdictions and highlighting the government's FuelCheck initiative as a better solution.",
+   "unchangedKeys": [
+    "title",
+    "origin",
+    "extra",
+    "relations",
+    "metadata (except status)",
+    "fieldmetadata",
+    "computedmetadata",
+    "data.texts.body",
+    "data.generics"
+   ]
+  },
+  {
+   "rid": "269069284733445bb97c3b463f2bbfa3",
+   "slug": "speech-1323463",
+   "title": "Cate Faehrmann — Divine Playhouse — 2026-09-24",
+   "metadataStatusNow": "PROCESSED",
+   "writes": [
+    {
+     "task": "speech_summary",
+     "outcome": "written"
+    },
+    {
+     "task": "speech_topics",
+     "outcome": "written"
+    }
+   ],
+   "classifications": {
+    "added": [
+     "topic/health",
+     "topic/welfare-social"
+    ],
+    "removed": []
+   },
+   "expected": [
+    "usermetadata.classifications + topic/health",
+    "usermetadata.classifications + topic/welfare-social",
+    "data.texts.da-summary-t-body.value.body",
+    "data.texts.da-summary-t-body.value.format",
+    "data.texts.da-summary-t-body.value.md5",
+    "data.texts.da-summary-t-body.value.extract_strategy",
+    "data.texts.da-summary-t-body.value.split_strategy",
+    "data.texts.da-summary-t-body.status"
+   ],
+   "volatile": [
+    "modified"
+   ],
+   "unexpected": [],
+   "clean": true,
+   "briefWritten": "Cate Faehrmann highlighted the Mardi Gras parade's history, including the Sisters of Perpetual Indulgence, and noted the government's past support for LGBTQIA+ celebrations, emphasizing their role in acknowledging historical discrimination and promoting inclusivity.",
+   "unchangedKeys": [
+    "title",
+    "origin",
+    "extra",
+    "relations",
+    "metadata (except status)",
+    "fieldmetadata",
+    "computedmetadata",
+    "data.texts.body",
+    "data.generics"
+   ]
+  },
+  {
+   "rid": "07bc2fe7cc06493b84fd4d1b65e9f2cf",
+   "slug": "speech-1323077",
+   "title": "Sarah Mitchell — Patient and Hospital Staff Safety — 2026-09-23",
+   "metadataStatusNow": "PROCESSED",
+   "writes": [
+    {
+     "task": "speech_summary",
+     "outcome": "written"
+    },
+    {
+     "task": "speech_topics",
+     "outcome": "written"
+    }
+   ],
+   "classifications": {
+    "added": [
+     "topic/health"
+    ],
+    "removed": []
+   },
+   "expected": [
+    "usermetadata.classifications + topic/health",
+    "data.texts.da-summary-t-body.value.body",
+    "data.texts.da-summary-t-body.value.format",
+    "data.texts.da-summary-t-body.value.md5",
+    "data.texts.da-summary-t-body.value.extract_strategy",
+    "data.texts.da-summary-t-body.value.split_strategy",
+    "data.texts.da-summary-t-body.status"
+   ],
+   "volatile": [
+    "modified"
+   ],
+   "unexpected": [],
+   "clean": true,
+   "briefWritten": "Argued that privacy protections for patients and staff must be maintained while pursuing transparency in hospital data, citing procedural mechanisms like Standing Order 52 and acknowledging cross-party support for the motion.",
+   "unchangedKeys": [
+    "title",
+    "origin",
+    "extra",
+    "relations",
+    "metadata (except status)",
+    "fieldmetadata",
+    "computedmetadata",
+    "data.texts.body",
+    "data.generics"
+   ]
+  },
+  {
+   "rid": "ec27fd513af14616aade9ee638a7e6d0",
+   "slug": "speech-1323430",
+   "title": "Mark Buttigieg — September 11 Twenty-Fifth Anniversary — 2026-09-24",
+   "metadataStatusNow": "PROCESSED",
+   "writes": [
+    {
+     "task": "speech_summary",
+     "outcome": "written"
+    },
+    {
+     "task": "speech_topics",
+     "outcome": "written"
+    }
+   ],
+   "classifications": {
+    "added": [
+     "topic/welfare-social"
+    ],
+    "removed": []
+   },
+   "expected": [
+    "usermetadata.classifications + topic/welfare-social",
+    "data.texts.da-summary-t-body.value.body",
+    "data.texts.da-summary-t-body.value.format",
+    "data.texts.da-summary-t-body.value.md5",
+    "data.texts.da-summary-t-body.value.extract_strategy",
+    "data.texts.da-summary-t-body.value.split_strategy",
+    "data.texts.da-summary-t-body.status"
+   ],
+   "volatile": [
+    "modified"
+   ],
+   "unexpected": [],
+   "clean": true,
+   "briefWritten": "Moved that this House notes the twenty-fifth anniversary of the 9/11 attacks, the attendance at a Bondi remembrance event with over 100 participants including diplomatic and faith leaders, and the work of Our Big Kitchen in providing over 250,000 meals annually.",
+   "unchangedKeys": [
+    "title",
+    "origin",
+    "extra",
+    "relations",
+    "metadata (except status)",
+    "fieldmetadata",
+    "computedmetadata",
+    "data.texts.body",
+    "data.generics"
+   ]
+  },
+  {
+   "rid": "3269f71c86724b7c9435a3fd7721063e",
+   "slug": "speech-1323339",
+   "title": "Tina Ayyad — Georges Riverkeeper — 2026-09-24",
+   "metadataStatusNow": "PROCESSED",
+   "writes": [
+    {
+     "task": "speech_summary",
+     "outcome": "written"
+    },
+    {
+     "task": "speech_topics",
+     "outcome": "written"
+    }
+   ],
+   "classifications": {
+    "added": [
+     "topic/climate-environment"
+    ],
+    "removed": []
+   },
+   "expected": [
+    "usermetadata.classifications + topic/climate-environment",
+    "data.texts.da-summary-t-body.value.body",
+    "data.texts.da-summary-t-body.value.format",
+    "data.texts.da-summary-t-body.value.md5",
+    "data.texts.da-summary-t-body.value.extract_strategy",
+    "data.texts.da-summary-t-body.value.split_strategy",
+    "data.texts.da-summary-t-body.status"
+   ],
+   "volatile": [
+    "modified"
+   ],
+   "unexpected": [],
+   "clean": true,
+   "briefWritten": "Congratulated Georges Riverkeeper for its work in protecting the Georges River through pollution removal, habitat restoration, and community engagement, noting 110 tonnes of litter removed in 12 months.",
+   "unchangedKeys": [
+    "title",
+    "origin",
+    "extra",
+    "relations",
+    "metadata (except status)",
+    "fieldmetadata",
+    "computedmetadata",
+    "data.texts.body",
+    "data.generics"
+   ]
+  }
+ ]
+}

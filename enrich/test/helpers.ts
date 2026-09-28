@@ -120,6 +120,15 @@ export class FakeKb implements KbApi {
     this.calls.push(`GET full ${rid}`)
     return this.view(rid, true)
   }
+  /** Extra keys a full read carries; a test can mutate them to prove they survive a write. */
+  extras: Record<string, unknown> = { origin: { source_id: 'opax-parli', collaborators: ['Jane Citizen'] }, extra: { metadata: { electorate: 'Croydon' } }, relations: null }
+  async getEverything(rid: string) {
+    this.calls.push(`GET everything ${rid}`)
+    const v = this.view(rid, true)
+    if (!v) return null
+    const r = this.resources.get(rid)!
+    return JSON.parse(JSON.stringify({ ...v, ...this.extras, modified: r.created, metadata: { status: 'PROCESSED' } }))
+  }
   async getBasic(rid: string) {
     this.calls.push(`GET basic ${rid}`)
     return this.view(rid, false)

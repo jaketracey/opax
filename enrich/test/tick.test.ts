@@ -524,24 +524,43 @@ test('a dry run can be flushed by switching to live: the stored results are writ
   assert.equal(r2.speech_topics, 'written')
 })
 
-test('a model outage leaves rows pending (transient), and a quota error pauses the day', async () => {
+test('a lone model failure counts against the row (transient); a run of failures is an outage and counts against nobody', async () => {
   const kb = new FakeKb()
-  seed(kb)
+  for (let i = 0; i < 4; i += 1) seed(kb, `r${i}`)
   const ai = new FakeAi(() => new Error('InferenceUpstreamError: 3040: Capacity temporarily exceeded'))
-  const { deps, d1, raw } = makeDeps({ kb, ai })
-  await queueBoth(d1)
-  const stats = await runTick(deps)
-  assert.equal(stats.transient, 2)
-  const r = rows(raw, 'SELECT status, transient, attempts FROM queue')
-  assert.ok(r.every((x) => x.status === 'pending' && x.transient === 1 && x.attempts === 0))
+  const { deps, d1, raw } = makeDeps({ kb, ai, env: { CONCURRENCY: '1', BATCH_SIZE: '4' } })
+  for (let i = 0; i < 4; i += 1) await enqueue(d1, [{ rid: `r${i}`, task: 'speech_summary', priority: 100 }], 1)
+  await runTick(deps)
+  const r = rows(raw, 'SELECT rid, status, transient FROM queue ORDER BY rid')
+  assert.ok(r.every((x) => x.status === 'pending'))
+  assert.deepEqual(r.map((x) => x.transient), [1, 0, 0, 0], 'only the first failure is charged; the rest were part of a run')
+})
 
-  const quota = new FakeAi(() => new Error('4006: you have used up your daily free allocation of 10,000 neurons'))
-  const b = makeDeps({ kb, ai: quota, d1: { d1, raw } })
-  const s2 = await runTick(b.deps)
-  assert.equal(s2.stop, 'ai-quota')
-  const s3 = await runTick(b.deps)
-  assert.equal(s3.stop, 'ai-paused')
-  assert.equal(quota.calls.length, 1)
+test('a quota error stops the tick cleanly: rows stay pending and UNCHARGED, the exact error is recorded, and it is probed again later', async () => {
+  const kb = new FakeKb()
+  for (let i = 0; i < 3; i += 1) seed(kb, `r${i}`)
+  const message = "AiError: 4006: you have used up your daily free allocation of 10,000 neurons. Please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage."
+  const ai = new FakeAi(() => new Error(message))
+  let clock = Date.parse('2026-09-28T12:00:00Z')
+  const { deps, d1, raw } = makeDeps({ kb, ai, now: () => clock, env: { CONCURRENCY: '1', BATCH_SIZE: '3' } })
+  for (let i = 0; i < 3; i += 1) await queueBoth(d1, `r${i}`)
+  const s1 = await runTick(deps)
+  assert.equal(s1.stop, 'ai-quota')
+  assert.equal(ai.calls.length, 1, 'no retries burned on the wall')
+  const q = rows(raw, 'SELECT status, transient, attempts, outcome FROM queue')
+  assert.ok(q.every((x) => x.status === 'pending' && x.transient === 0 && x.attempts === 0 && x.outcome === null), JSON.stringify(q))
+  assert.equal(rows(raw, "SELECT COUNT(*) AS n FROM queue WHERE status = 'quarantined'")[0].n, 0)
+  const e = rows(raw, "SELECT kind, message FROM errors WHERE kind = 'ai-quota'")
+  assert.equal(e.length, 1)
+  assert.equal(e[0].message, `@cf/qwen/qwen3-30b-a3b-fp8: ${message}`, 'the exact error text, with the model that raised it')
+  assert.equal(await getState(d1, 'ai_pause_reason'), `@cf/qwen/qwen3-30b-a3b-fp8: ${message}`)
+  // paused for the next quarter hour, then probed again (so an upgrade takes effect without a redeploy)
+  clock += 60_000
+  assert.equal((await runTick(deps)).stop, 'ai-paused')
+  assert.equal(ai.calls.length, 1)
+  clock += 20 * 60_000
+  await runTick(deps)
+  assert.equal(ai.calls.length, 2)
 })
 
 test('a row that keeps hitting infrastructure failures is quarantined after eight', async () => {

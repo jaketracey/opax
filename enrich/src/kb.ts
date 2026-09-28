@@ -61,6 +61,8 @@ export interface KbApi {
   getResource(rid: string): Promise<KbResource | null>
   /** The resource's basic view (classifications) without text values, or null on 404. */
   getBasic(rid: string): Promise<KbResource | null>
+  /** Everything the box will show for a resource (basic, values, origin, extra, relations, errors), or null on 404. */
+  getEverything(rid: string): Promise<unknown | null>
   /** The current body of the machine-brief field ('' when absent). */
   getSummaryBody(rid: string): Promise<string>
   patchSummary(rid: string, body: string): Promise<void>
@@ -109,6 +111,10 @@ export class Kb implements KbApi {
 
   getResource(rid: string): Promise<KbResource | null> {
     return this.call('GET', `/resource/${rid}?show=basic&show=values`, undefined, true)
+  }
+
+  getEverything(rid: string): Promise<unknown | null> {
+    return this.call('GET', `/resource/${rid}?show=basic&show=values&show=origin&show=extra&show=relations&show=errors`, undefined, true)
   }
 
   getBasic(rid: string): Promise<KbResource | null> {

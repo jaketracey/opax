@@ -1,6 +1,6 @@
 // One cron tick: discover, then process a bounded batch of claimed resources.
 
-import { budgetView, nextUtcMidnight, utcDay } from './budget.ts'
+import { budgetView, utcDay } from './budget.ts'
 import { hasTopicLabels, readClassifications } from './classify.ts'
 import {
   MAX_TRANSIENT,
@@ -75,6 +75,9 @@ interface Ctl {
 
 const kbBackoffKey = 'kb_backoff_until'
 const aiPauseKey = 'ai_pause_until'
+const aiPauseReasonKey = 'ai_pause_reason'
+/** After a quota error, look again after this long. */
+const AI_QUOTA_PROBE_MS = 15 * 60 * 1000
 
 const errText = (err: unknown): string => String((err as Error)?.message ?? err).slice(0, 400)
 
@@ -313,16 +316,24 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
 
   if (gen.unavailable) {
     ctl.consecutiveModelFailures += 1
-    await logError(d.db, d.now(), 'model', gen.unavailable.message, rid)
     if (gen.unavailable.quota) {
+      // The daily allocation is spent (or the plan has none): stop the tick cleanly, record the exact
+      // error where /status shows it, and probe again in 15 minutes (so an upgrade takes effect without
+      // a redeploy). Nothing is charged to the rows: they stay pending, untouched.
       ctl.stop = 'ai-quota'
-      await setState(d.db, aiPauseKey, String(nextUtcMidnight(d.now())), d.now())
-    } else if (ctl.consecutiveModelFailures >= 5) {
-      ctl.stop = 'model-failing'
+      await setState(d.db, aiPauseKey, String(d.now() + AI_QUOTA_PROBE_MS), d.now())
+      await setState(d.db, aiPauseReasonKey, gen.unavailable.message.slice(0, 500), d.now())
+      await logError(d.db, d.now(), 'ai-quota', gen.unavailable.message, rid)
+    } else {
+      await logError(d.db, d.now(), 'model', gen.unavailable.message, rid)
+      if (ctl.consecutiveModelFailures >= 5) ctl.stop = 'model-failing'
     }
   } else {
     ctl.consecutiveModelFailures = 0
   }
+  // A failure that is part of a run (an outage or a quota wall) is not the row's fault and must never
+  // count toward quarantining it; only an isolated failure counts.
+  const rowFault = gen.unavailable !== undefined && !gen.unavailable.quota && ctl.consecutiveModelFailures < 2
 
   // ---- place each outstanding row
   const toWrite: Array<{ row: QueueRow; item: WriteItem; neurons: number; model: string; rejected: number }> = []
@@ -341,10 +352,15 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
       stats.quarantined += 1
       await logError(d.db, d.now(), 'quarantined', why, rid, row.task)
     } else if (gen.unavailable) {
-      const u = retryOrQuarantine(row, gen.unavailable.message, r.neurons)
-      updates.push({ ...u, model: r.model, addAttempts: r.rejected })
-      if (u.status === 'quarantined') stats.quarantined += 1
-      else stats.transient += 1
+      if (rowFault) {
+        const u = retryOrQuarantine(row, gen.unavailable.message, r.neurons)
+        updates.push({ ...u, model: r.model, addAttempts: r.rejected })
+        if (u.status === 'quarantined') stats.quarantined += 1
+        else stats.transient += 1
+      } else {
+        updates.push({ rid, task: row.task, status: 'pending', model: r.model, lastError: gen.unavailable.message.slice(0, 300), addAttempts: r.rejected, addNeurons: r.neurons })
+        stats.retried += 1
+      }
     } else {
       // Cut short (budget or tick deadline) with attempts to spare: try again next tick.
       updates.push({ rid, task: row.task, status: 'pending', model: r.model, lastError: 'cut short before every attempt ran', addAttempts: r.rejected, addNeurons: r.neurons })
@@ -392,7 +408,8 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
 
 /** Live mode: write results the model already produced, without paying for them again. */
 async function flush(d: TickDeps, ctl: Ctl, stats: TickStats): Promise<void> {
-  const rows = await unwrittenRows(d.db, d.cfg.batchSize * 2)
+  // A generous window: results already paid for are delivered before any new model work starts.
+  const rows = await unwrittenRows(d.db, d.cfg.batchSize * 6)
   const byRid = new Map<string, QueueRow[]>()
   for (const row of rows) byRid.set(row.rid, [...(byRid.get(row.rid) ?? []), row])
   await pool([...byRid.entries()], d.cfg.concurrency, async ([rid, group]) => {

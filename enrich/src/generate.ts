@@ -49,7 +49,8 @@ export class ModelUnavailable extends Error {
 }
 
 /** Workers AI: "you have used up your daily free allocation of 10,000 neurons" (error 4006). */
-export const isQuotaError = (message: string): boolean => /daily free allocation|4006|exceeded.*(?:quota|allocation)/i.test(message)
+export const isQuotaError = (message: string): boolean =>
+  /daily free allocation|4006|allocation|quota|payment required|\b402\b|exceeded your/i.test(message)
 
 /**
  * The JSON schema for constrained decoding: the outstanding keys only, topics an enum of the
