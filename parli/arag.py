@@ -304,6 +304,18 @@ class KbClient:
     def counters(self) -> dict:
         return _request("GET", self._rag("/counters"), self._headers)
 
+    def catalog_post(self, body: dict) -> dict:
+        """POST /catalog: the filter_expression form, keyed {"resource": ...}."""
+        return _request("POST", self._rag("/catalog"), self._headers, body)
+
+    def label_total(self, labelset: str, label: str) -> int:
+        """How many resources carry one label (e.g. labelset "kind", label "speech")."""
+        res = self.catalog_post({
+            "filter_expression": {"resource": {"prop": "label", "labelset": labelset, "label": label}},
+            "page_size": 1,
+        })
+        return int(res["fulltext"]["total"])
+
     def catalog(self, **params) -> dict:
         qs = "&".join(f"{k}={v}" for k, v in params.items())
         return _request("GET", self._rag("/catalog" + (f"?{qs}" if qs else "")), self._headers)

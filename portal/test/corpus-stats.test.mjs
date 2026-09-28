@@ -8,24 +8,34 @@ const app = fs.readFileSync(new URL("app.js", root), "utf8");
 const html = fs.readFileSync(new URL("index.html", root), "utf8");
 const worker = fs.readFileSync(new URL("../src/index.ts", import.meta.url), "utf8");
 
-test("refreshed corpus manifest retains the cleaned PM transcript tranche", () => {
-  const source = corpus.sources.find((item) => item.name.startsWith("Prime Minister transcripts"));
-  assert.deepEqual(source, {
-    name: "Prime Minister transcripts and releases (PM&C)",
-    docs: 631,
-    coverage: "2025–2026",
-  });
-  assert.equal(corpus.version, "2026-09-28");
-  assert.equal(corpus.expected_resources, 630777);
+// The nightly refresh rewrites corpus.json (scripts/update_corpus_manifest.py), so
+// nothing here pins a count or a date: it checks the manifest is coherent.
+test("corpus manifest is coherent and keeps the PM transcript and NSW release rows", () => {
+  assert.match(corpus.version, /^\d{4}-\d{2}-\d{2}$/);
+  assert.ok(Number.isFinite(Date.parse(corpus.version)), "version is a real date");
+  assert.ok(Number.isInteger(corpus.expected_resources) && corpus.expected_resources > 0);
+  const breakdown = Object.values(corpus.expected_resources_breakdown);
+  assert.ok(breakdown.length > 0);
   assert.equal(
-    Object.values(corpus.expected_resources_breakdown).reduce((sum, value) => sum + value, 0),
+    breakdown.reduce((sum, value) => sum + value, 0),
     corpus.expected_resources,
   );
-  assert.deepEqual(corpus.sources.find((item) => item.name.startsWith("NSW Government")), {
-    name: "NSW Government ministerial releases",
-    docs: 5297,
-    coverage: "2024–2026",
-  });
+  assert.equal(corpus.collected_speeches, corpus.refresh.resource_counts.speech);
+  assert.ok(
+    Object.values(corpus.refresh.resource_counts).reduce((sum, value) => sum + value, 0) <= corpus.expected_resources,
+  );
+
+  const pm = corpus.sources.find((item) => item.name.startsWith("Prime Minister transcripts"));
+  assert.ok(pm, "PM transcripts source is listed");
+  assert.equal(pm.name, "Prime Minister transcripts and releases (PM&C)");
+  assert.ok(Number.isInteger(pm.docs) && pm.docs > 0);
+  assert.equal(pm.coverage, "2025–2026");
+
+  const nsw = corpus.sources.find((item) => item.name.startsWith("NSW Government"));
+  assert.ok(nsw, "NSW Government releases source is listed");
+  assert.equal(nsw.name, "NSW Government ministerial releases");
+  assert.ok(Number.isInteger(nsw.docs) && nsw.docs > 0);
+  assert.equal(nsw.coverage, "2024–2026");
 });
 
 test("live corpus table names the new resource kind", () => {
