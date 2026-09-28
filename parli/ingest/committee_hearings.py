@@ -27,6 +27,7 @@ from urllib.parse import quote, unquote
 
 import requests
 
+from parli.ingest.dedup import LazyDateSeen
 from parli.schema import get_db, init_db
 
 # ---------------------------------------------------------------------------
@@ -447,17 +448,14 @@ def text_hash(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
 
-def build_dedup_index(db: sqlite3.Connection) -> set[str]:
-    """Build a set of dedup keys from existing committee speeches."""
-    seen: set[str] = set()
-    rows = db.execute(
-        "SELECT speaker_name, date, text FROM speeches "
-        "WHERE source IN ('committee_senate', 'committee_house', 'committee_joint')"
-    ).fetchall()
-    for row in rows:
-        key = f"{row['speaker_name'] or ''}|{row['date']}|{text_hash(row['text'])}"
-        seen.add(key)
-    return seen
+COMMITTEE_SOURCES = ("committee_senate", "committee_house", "committee_joint")
+
+
+def build_dedup_index(db: sqlite3.Connection) -> LazyDateSeen:
+    """Dedup keys of existing committee speeches, loaded a hearing date at a time as hearings are
+    ingested (a key has the hearing's date, so no other date's rows can match). It used to read
+    every committee speech's text up front."""
+    return LazyDateSeen(db, text_hash, sources=COMMITTEE_SOURCES)
 
 
 def get_ingested_hearings(db: sqlite3.Connection) -> set[str]:
@@ -642,9 +640,7 @@ def main():
     migrate_committee_columns(db)
 
     # Build dedup index
-    print("Building deduplication index...")
-    seen = build_dedup_index(db)
-    print(f"  {len(seen)} existing committee speeches indexed")
+    seen = build_dedup_index(db)  # lazy: each hearing date is loaded when first needed
 
     ingested_hearings = get_ingested_hearings(db) if args.skip_ingested else set()
     if ingested_hearings:

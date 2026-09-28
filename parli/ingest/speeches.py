@@ -28,6 +28,8 @@ from pathlib import Path
 
 import pyarrow.parquet as pq
 
+from parli.ingest import fts
+from parli.ingest.dedup import build_seen
 from parli.schema import get_db, init_db
 
 CACHE_DIR = Path("~/.cache/autoresearch/hansard").expanduser()
@@ -268,20 +270,18 @@ def main():
                         help="Skip historical Zenodo data")
     parser.add_argument("--since", type=str, default=None,
                         help="Only load speeches after this date (YYYY-MM-DD)")
+    fts.add_argument(parser)
     args = parser.parse_args()
 
     db = get_db()
     init_db(db)
 
-    # Build dedup set from existing speeches
-    print("Building deduplication index from existing speeches...")
-    seen: set[str] = set()
-    rows = db.execute(
-        "SELECT speaker_name, date, text FROM speeches"
-    ).fetchall()
-    for row in rows:
-        key = f"{row['speaker_name'] or ''}|{row['date']}|{text_hash(row['text'])}"
-        seen.add(key)
+    # Build the dedup set from stored speeches. A modern-only run inserts rows dated on or after
+    # --since (the key includes the date), so only those can match; the Zenodo history needs the lot.
+    window = args.since if (args.modern_only and args.since) else None
+    print("Building deduplication index from existing speeches"
+          + (f" dated {window} or later..." if window else "..."))
+    seen = build_seen(db, text_hash, since=window)
     print(f"  {len(seen)} existing speeches indexed")
 
     if not args.modern_only:
@@ -296,14 +296,18 @@ def main():
     total = db.execute("SELECT COUNT(*) FROM speeches").fetchone()[0]
     print(f"\nTotal speeches in DB: {total}")
 
-    # Rebuild FTS5 index so full-text search works correctly
-    print("\nRebuilding FTS5 index...")
-    db.execute("INSERT INTO speeches_fts(speeches_fts) VALUES('rebuild')")
-    db.commit()
-    fts_count = db.execute(
-        "SELECT COUNT(*) FROM speeches_fts WHERE speeches_fts MATCH '\"the\"'"
-    ).fetchone()[0]
-    print(f"  FTS5 index rebuilt ({fts_count} entries match test query)")
+    # The full-text index is brought up to date by scripts/fts_sync.py (new rows only); a full
+    # rebuild from here is opt-in (--rebuild-fts / OPAX_FTS_REBUILD=1).
+    if fts.rebuild_wanted(args.rebuild_fts):
+        print("\nRebuilding FTS5 index...")
+        db.execute("INSERT INTO speeches_fts(speeches_fts) VALUES('rebuild')")
+        db.commit()
+        fts_count = db.execute(
+            "SELECT COUNT(*) FROM speeches_fts WHERE speeches_fts MATCH '\"the\"'"
+        ).fetchone()[0]
+        print(f"  FTS5 index rebuilt ({fts_count} entries match test query)")
+    else:
+        print("\nFTS5 index not rebuilt (scripts/fts_sync.py indexes new rows; --rebuild-fts for a full rebuild)")
 
 
 if __name__ == "__main__":

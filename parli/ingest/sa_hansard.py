@@ -32,6 +32,8 @@ from pathlib import Path
 # Force unbuffered output for background/nohup runs
 print = functools.partial(print, flush=True)
 
+from parli.ingest import fts
+from parli.ingest.dedup import build_seen
 from parli.schema import get_db, init_db
 
 BASE_URL = "https://hansardsearch.parliament.sa.gov.au"
@@ -347,16 +349,10 @@ def save_progress(progress_file: Path, key: str) -> None:
         f.write(key + "\n")
 
 
-def build_dedup_set(db: sqlite3.Connection) -> set[str]:
-    """Build deduplication set from existing SA Hansard speeches."""
-    seen: set[str] = set()
-    rows = db.execute(
-        "SELECT speaker_name, date, text FROM speeches WHERE source = 'sa_hansard'"
-    ).fetchall()
-    for row in rows:
-        key = f"{row['speaker_name'] or ''}|{row['date']}|{text_hash(row['text'])}"
-        seen.add(key)
-    return seen
+def build_dedup_set(db: sqlite3.Connection, since: str | None = None) -> set[str]:
+    """Build deduplication set from existing SA Hansard speeches (only those dated `since` or later
+    when given: a run writes rows dated inside its own window, and the key has the date)."""
+    return build_seen(db, text_hash, sources=["sa_hansard"], since=since)
 
 
 def ingest_day_chamber(
@@ -468,6 +464,7 @@ def main():
         "--no-resume", action="store_true",
         help="Ignore progress file and re-ingest everything",
     )
+    fts.add_argument(parser)
     args = parser.parse_args()
 
     since = date.fromisoformat(args.since)
@@ -505,8 +502,8 @@ def main():
 
     # Build dedup set
     print("\nBuilding deduplication index...")
-    seen = build_dedup_set(db)
-    print(f"  {len(seen)} existing SA speeches indexed")
+    seen = build_dedup_set(db, since=since.isoformat())
+    print(f"  {len(seen)} existing SA speeches indexed (dated {since} or later)")
 
     # Discover sitting dates
     print("\nFetching sitting day calendar...")
@@ -571,14 +568,17 @@ def main():
         print(f"  Total SA speeches in DB: {total_sa}")
         print(f"  Total speeches in DB: {total_all}")
 
-        # Rebuild FTS5 index
-        print("\nRebuilding FTS5 index...")
-        try:
-            db.execute("INSERT INTO speeches_fts(speeches_fts) VALUES('rebuild')")
-            db.commit()
-            print("  Done.")
-        except sqlite3.OperationalError as e:
-            print(f"  FTS rebuild skipped: {e}")
+        # Rebuild FTS5 index (opt-in: scripts/fts_sync.py indexes new rows)
+        if fts.rebuild_wanted(args.rebuild_fts):
+            print("\nRebuilding FTS5 index...")
+            try:
+                db.execute("INSERT INTO speeches_fts(speeches_fts) VALUES('rebuild')")
+                db.commit()
+                print("  Done.")
+            except sqlite3.OperationalError as e:
+                print(f"  FTS rebuild skipped: {e}")
+        else:
+            print("\nFTS5 index not rebuilt (scripts/fts_sync.py indexes new rows; --rebuild-fts for a full rebuild)")
 
     db.close()
 

@@ -639,12 +639,8 @@ def main():
     ).fetchone()[0]
     print(f"Total VIC Hansard speeches in DB: {vic_total}")
 
-    for ch_label, ch_code in [("Legislative Assembly", "vic_la"), ("Legislative Council", "vic_lc")]:
-        n = db.execute(
-            "SELECT COUNT(*) FROM speeches WHERE chamber = ?", (ch_code,)
-        ).fetchone()[0]
-        if n:
-            print(f"  {ch_label}: {n}")
+    # (per-chamber counts used to follow: SELECT COUNT(*) FROM speeches WHERE chamber = ? is a full
+    #  scan of the whole table, minutes on a network disk, for two informational lines)
 
     progress = db.execute(
         "SELECT COUNT(*) FROM vic_hansard_progress"

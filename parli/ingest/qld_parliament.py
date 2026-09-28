@@ -39,6 +39,8 @@ import urllib.request
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
+from parli.ingest import fts
+from parli.ingest.dedup import build_seen
 from parli.schema import get_db, init_db
 
 # ── Configuration ─────────────────────────────────────────────────────────────
@@ -708,20 +710,13 @@ def ingest_hansard_day(
     return speech_count, div_count
 
 
-def build_dedup_set(db: sqlite3.Connection) -> set[str]:
-    """Build deduplication set from existing QLD Hansard speeches."""
-    seen: set[str] = set()
+def build_dedup_set(db: sqlite3.Connection, since: str | None = None) -> set[str]:
+    """Build deduplication set from existing QLD Hansard speeches (only those dated `since` or later
+    when given: a run writes rows dated inside its own window, and the key has the date)."""
     try:
-        rows = db.execute(
-            "SELECT speaker_name, date, text FROM speeches WHERE source = ?",
-            (SOURCE_HANSARD,),
-        ).fetchall()
-        for row in rows:
-            key = f"{row['speaker_name'] or ''}|{row['date']}|{text_hash(row['text'])}"
-            seen.add(key)
+        return build_seen(db, text_hash, sources=[SOURCE_HANSARD], since=since)
     except Exception:
-        pass
-    return seen
+        return set()
 
 
 def ingest_hansard(
@@ -748,8 +743,8 @@ def ingest_hansard(
 
     # Build dedup set
     print("  Building deduplication index...")
-    seen = build_dedup_set(db)
-    print(f"  {len(seen)} existing QLD speeches indexed")
+    seen = build_dedup_set(db, since=start.isoformat())
+    print(f"  {len(seen)} existing QLD speeches indexed (dated {start} or later)")
 
     # Get candidate dates
     if use_sitting_dates:
@@ -929,6 +924,7 @@ def main():
         "--scan-weekdays", action="store_true",
         help="Scan all weekdays for Hansard PDFs (not just API sitting dates)",
     )
+    fts.add_argument(parser)
     args = parser.parse_args()
 
     start_date = date.fromisoformat(args.start)
@@ -995,14 +991,17 @@ def main():
         except Exception:
             pass
 
-        # Rebuild FTS5 index
-        print("\nRebuilding FTS5 index...")
-        try:
-            db.execute("INSERT INTO speeches_fts(speeches_fts) VALUES('rebuild')")
-            db.commit()
-            print("  Done.")
-        except Exception as e:
-            print(f"  FTS rebuild error: {e}")
+        # Rebuild FTS5 index (opt-in: scripts/fts_sync.py indexes new rows)
+        if fts.rebuild_wanted(args.rebuild_fts):
+            print("\nRebuilding FTS5 index...")
+            try:
+                db.execute("INSERT INTO speeches_fts(speeches_fts) VALUES('rebuild')")
+                db.commit()
+                print("  Done.")
+            except Exception as e:
+                print(f"  FTS rebuild error: {e}")
+        else:
+            print("\nFTS5 index not rebuilt (scripts/fts_sync.py indexes new rows; --rebuild-fts for a full rebuild)")
 
 
 if __name__ == "__main__":
