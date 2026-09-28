@@ -55,7 +55,7 @@ import time
 from datetime import datetime, timezone
 
 from parli.ingest.ext_common import (
-    CACHE_ROOT, PowerPagesGrid, add_writer_args, clean_ws, log, make_session, parse_date,
+    CACHE_ROOT, ExtGuardError, PowerPagesGrid, add_writer_args, clean_ws, log, make_session, parse_date,
     polite_get, writer_from_args,
 )
 
@@ -565,6 +565,7 @@ def main() -> None:
     writer = writer_from_args(args)
     log(f"lobbyist registers <- {args.jurisdiction or sorted(FETCHERS)} ; writer={writer.describe()}")
     summary = {}
+    refused: list[str] = []
     for jur in args.jurisdiction or sorted(FETCHERS):
         log(f"\n== {jur} ==")
         try:
@@ -579,10 +580,19 @@ def main() -> None:
                                   ("ext_lobbyist_people", PPL_COLS, b.people), ("ext_lobbyist_contacts", CON_COLS, b.contacts)):
             if not rows and table != "ext_lobbyists":
                 continue
-            r = writer.replace(table, DDL, cols, rows, source=b.source, notes=f"limit={args.limit}" if args.limit else None)
+            try:
+                r = writer.replace(table, DDL, cols, rows, source=b.source, notes=f"limit={args.limit}" if args.limit else None)
+            except ExtGuardError as ex:
+                # empty / far smaller fetch for this register: keep every stored table for it, carry on with the rest
+                log(f"  REFUSED {jur} {table}: {ex}")
+                res[table] = f"REFUSED: {ex}"
+                refused.append(jur)
+                break
             res[table] = r.get("inserted")
         summary[jur] = res
     log("\nSummary: " + json.dumps(summary, default=str))
+    if refused:
+        raise SystemExit(3)
 
 
 if __name__ == "__main__":

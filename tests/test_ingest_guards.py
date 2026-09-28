@@ -19,7 +19,7 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from parli.ingest import money_diaries, money_ipea, qld_contracts, state_rosters  # noqa: E402
+from parli.ingest import money_diaries, money_ipea, money_state_donations, qld_contracts, state_rosters  # noqa: E402
 from parli.ingest.ext_common import ExtWriter  # noqa: E402
 from parli.ingest.replace_guard import ExtGuardError  # noqa: E402
 
@@ -127,6 +127,37 @@ class QldContractsGuardTests(unittest.TestCase):
             self.run_main(db)                      # empty catalogue, empty table: nothing to lose, no refusal
             con = sqlite3.connect(db)
             self.assertEqual(con.execute("SELECT COUNT(*) FROM ext_state_contracts").fetchone()[0], 0)
+            con.close()
+
+
+class DonationLoaderGuardTests(unittest.TestCase):
+    """A direct load into the live DB: an empty source is refused, the other sources still load, exit is non-zero."""
+
+    def test_empty_source_is_refused_and_the_rest_carry_on(self):
+        with tempfile.TemporaryDirectory() as d:
+            db = Path(d) / "p.sqlite"
+            con = sqlite3.connect(db)
+            con.executescript(money_state_donations.DDL)
+            for i in range(5):
+                con.execute("INSERT INTO ext_donations (jurisdiction, source, donor_name, recipient) VALUES ('qld','qld_ecq',?,'A')", (f"D{i}",))
+            con.commit()
+            con.close()
+            col = money_state_donations.COLUMNS
+
+            def row(**kw):
+                r = {c: None for c in col}
+                r.update(jurisdiction="vic", source="vic_vec", donor_name="New", recipient="B", **kw)
+                return [r[c] for c in col]
+
+            fetchers = {"qld": lambda s, limit=0: [], "vic": lambda s, limit=0: [row(amount=1.0)]}
+            argv = ["money_state_donations.py", "--db", str(db)]
+            with mock.patch.object(money_state_donations, "FETCHERS", fetchers), mock.patch.object(sys, "argv", argv), quiet():
+                with self.assertRaises(SystemExit) as cm:
+                    money_state_donations.main()
+            self.assertEqual(cm.exception.code, 3)
+            con = sqlite3.connect(db)
+            self.assertEqual(con.execute("SELECT COUNT(*) FROM ext_donations WHERE source='qld_ecq'").fetchone()[0], 5)
+            self.assertEqual(con.execute("SELECT COUNT(*) FROM ext_donations WHERE source='vic_vec'").fetchone()[0], 1)
             con.close()
 
 

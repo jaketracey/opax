@@ -46,7 +46,7 @@ import re
 from datetime import datetime, timezone
 
 from parli.ingest.ext_common import (
-    CACHE_ROOT, PowerPagesGrid, add_writer_args, au_financial_year, canonical_party,
+    CACHE_ROOT, ExtGuardError, PowerPagesGrid, add_writer_args, au_financial_year, canonical_party,
     classify_donor_type, classify_industry, clean_ws, log, make_session, parse_amount,
     parse_date, polite_get, writer_from_args,
 )
@@ -259,16 +259,25 @@ def main() -> None:
     session = make_session()
     log(f"ext_donations <- {args.source or sorted(FETCHERS)} ; writer={writer.describe()}")
     summary = {}
+    refused: list[str] = []
     for src in args.source or sorted(FETCHERS):
         log(f"\n== {src} ==")
         rows = FETCHERS[src](session, limit=args.limit)
         n_ind = sum(1 for r in rows if r[COLUMNS.index("industry")])
         log(f"  {len(rows):,} rows; industry classified (keyword pass): {n_ind:,} "
             f"({(n_ind / len(rows) * 100) if rows else 0:.0f}%)")
-        res = writer.replace("ext_donations", DDL, COLUMNS, rows, source=SOURCE_KEY[src],
-                             notes=f"limit={args.limit}" if args.limit else None)
+        try:
+            res = writer.replace("ext_donations", DDL, COLUMNS, rows, source=SOURCE_KEY[src],
+                                 notes=f"limit={args.limit}" if args.limit else None)
+        except ExtGuardError as ex:      # empty / far smaller fetch: the stored register stays; the other sources carry on
+            log(f"  REFUSED {src}: {ex}")
+            summary[src] = f"REFUSED: {ex}"
+            refused.append(src)
+            continue
         summary[src] = res
     log("\nSummary: " + json.dumps(summary, default=str))
+    if refused:
+        raise SystemExit(3)
 
 
 if __name__ == "__main__":
