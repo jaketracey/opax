@@ -315,10 +315,11 @@ done
 
 # The portal test suite reads the generated files (grant shards, money graph, suppliers ...), and the deploy job runs
 # it before it ships anything: a red test would leave tonight's data on main but undeployed until someone noticed.
-# So run it here, against the new files, before committing (8 s on a laptop, well under a minute here). If it goes
-# red, put the changed groups back to HEAD one at a time (periodic ones first, then votes and bills), re-running
-# after each, until it is green; those groups are not published tonight. Needs Node 24 and portal/node_modules
-# (scripts/vm/bootstrap.sh installs them); without them the gate is skipped and the deploy job is the only test.
+# So run it here, against the new files, before committing (~1.5 min on the VM: the search catalog is rebuilt first, as
+# the deploy job does). If it goes red, the group to blame is found by putting each changed group back to HEAD on its own
+# and re-running (an innocent group is restored from a backup, not lost); only the culprit is not published tonight.
+# Needs Node 24 and portal/node_modules (scripts/vm/bootstrap.sh installs them); without them the gate is skipped and
+# the deploy job is the only test.
 if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
   gate_groups=()
   for group in "${DATA_GROUPS[@]}"; do
@@ -347,17 +348,35 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
       }
       log "portal tests against the new data (${gate_groups[*]})"
       if ! run_suite; then
-        reverted=()
-        green=false
+        # Red. Find the group(s) to blame without throwing away innocent ones: back every changed group up, then put
+        # each back to HEAD alone and re-run; the first one whose revert turns the suite green is the culprit (it stays
+        # reverted; the others are restored from the backup). If no single group does it, two or more together break
+        # a test: put them back cumulatively, in order, until green (the same as blaming all of them).
+        BK="$PIPE/gate-backup"; rm -rf "$BK"; mkdir -p "$BK"
+        backup_group() { local g=$1 paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; tar cf "$BK/$g.tar" -- "${paths[@]}" 2>/dev/null || true; }
+        restore_group() { local g=$1 paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; rm -rf -- "${paths[@]}"; tar xf "$BK/$g.tar" 2>/dev/null || true; }
+        for group in "${gate_groups[@]}"; do backup_group "$group"; done
+        culprit=""
         for group in "${gate_groups[@]}"; do
-          revert_group "$group"; reverted+=("$group")
-          if run_suite; then green=true; break; fi
+          revert_group "$group"
+          if run_suite; then culprit=$group; break; fi
+          restore_group "$group"
         done
-        if [ "$green" = true ]; then
-          fail "portal tests failed against the new data; green again with ${reverted[*]} put back to HEAD, so ${reverted[*]} not published tonight"
+        if [ -n "$culprit" ]; then
+          fail "portal tests failed against the new $culprit files (green with only that group put back to HEAD): $culprit not published tonight"
         else
-          fail "portal tests fail even with every changed group (${reverted[*]}) put back to HEAD: the suite is red on main itself; nothing published tonight except corpus.json"
+          reverted=(); green=false
+          for group in "${gate_groups[@]}"; do
+            revert_group "$group"; reverted+=("$group")
+            if run_suite; then green=true; break; fi
+          done
+          if [ "$green" = true ]; then
+            fail "portal tests failed against the new data; no single group was to blame, green again with ${reverted[*]} put back to HEAD: not published tonight"
+          else
+            fail "portal tests fail even with every changed group (${reverted[*]}) put back to HEAD: the suite is red on main itself; nothing published tonight except corpus.json"
+          fi
         fi
+        rm -rf "$BK"
       fi
       git checkout -q HEAD -- portal/public/search-catalog/manifest.json 2>/dev/null || true   # a build output, never ours to commit
     else

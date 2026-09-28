@@ -126,7 +126,8 @@ if [ "$want_weekly" = 1 ]; then
 
   # --- exports, in dependency order (later ones read earlier outputs) -------------------------------------------
   run_step x_speakers "" "$EXPORT" json portal/public/speakers.json "$PY" scripts/export_speakers.py
-  run_step x_people "" "$EXPORT" json portal/public/parliamentarians.json "$PY" scripts/export_parliamentarians.py
+  # the directory plus the recorded representation the portal needs (scripts/vm/export_people.sh says why)
+  run_step x_people "" "$EXPORT" json portal/public/parliamentarians.json bash scripts/vm/export_people.sh
   run_step x_money "" "$EXPORT" json portal/public/graph/money.json "$PY" scripts/export_money_graph.py
   for j in qld vic tas; do
     run_step "x_money_$j" "" "$EXPORT" json "portal/public/graph/money.$j.json" "$PY" scripts/export_state_money.py "$j"

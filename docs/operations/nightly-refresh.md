@@ -37,7 +37,7 @@ The nightly only brings new records in and publishes them.
    7  git commit (data files only) as "OPAX nightly"; git push to main over SSH (deploy key),
       rebase-and-retry on a race
    8  force-push {status, failures, warnings} to the `nightly-status` branch (one parentless commit)
-   ▼  ExecStopPost (also after a failure or the 4 h limit): poweroff-if-idle.sh
+   ▼  ExecStopPost (also after a failure or the 6 h limit): poweroff-if-idle.sh
       apply security updates, then `systemctl poweroff` unless ~/.config/opax/hold exists or
       someone is logged in / connected over ssh
 08:00 Sydney   EventBridge Scheduler "opax-refresh-stop-backstop" stops the instance if still up
@@ -274,7 +274,7 @@ end (in `status.json`, so the watchdog can email) and keeps publishing whatever 
 - The run stops outright only if the checkout cannot be synced, or `daily_refresh.sh` did not actually complete a run.
 - Push race with a human: `git rebase origin/main` and retry, five times. A refused push (deploy key, network) leaves the
   commit local and it goes out on the next run.
-- The power-off always happens (unless held), even if the run crashed or hit the 4 hour limit, so a hung run cannot leave a
+- The power-off always happens (unless held), even if the run crashed or hit the 6 hour limit, so a hung run cannot leave a
   paid instance on all day. The 08:00 EventBridge backstop is the second guard.
 
 **`corpus.json`** is written by `scripts/update_corpus_manifest.py` from three sources only: the live KB

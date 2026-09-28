@@ -514,8 +514,10 @@ check "and listed in OPAX_ALLOW_FAIL it is logged but the run stays complete (th
 new_weekly_sandbox() {
   new_refresh_sandbox "$1"
   cp "$SRC/scripts/weekly_refresh.sh" "$RS/repo/scripts/"; mkdir -p "$RS/repo/scripts/vm"
-  cp "$SRC/scripts/vm/export_step.sh" "$SRC/scripts/vm/keep_if_unchanged.py" "$RS/repo/scripts/vm/"
+  cp "$SRC/scripts/vm/export_step.sh" "$SRC/scripts/vm/keep_if_unchanged.py" "$SRC/scripts/vm/export_people.sh" "$RS/repo/scripts/vm/"
   chmod +x "$RS/repo/scripts/weekly_refresh.sh" "$RS/repo/scripts/vm/export_step.sh"
+  # export_people.sh reads the members table with the sqlite3 CLI
+  python3 -c "import sqlite3,os; d=sqlite3.connect(os.path.expanduser('~/.cache/autoresearch/parli.db')); d.execute('create table if not exists members(full_name,state,chamber,electorate)'); d.commit()"
 }
 weekly() { (cd "$RS" && "$RS/repo/scripts/weekly_refresh.sh" "$@" >"$RS/out.txt" 2>&1); WRC=$?; }
 WLOG='$HOME/.cache/autoresearch/pipeline/weekly.log'
@@ -531,6 +533,7 @@ check "log brackets the run" bash -c "grep -q 'weekly refresh start (groups: wee
 check "state donations are staged in a scratch file and applied by ext_apply, then labelled" bash -c "grep 'money_state_donations --source qld' '$RS_CALLS' | grep -q 'stage/weekly/donations/qld.sqlite' && grep 'scripts/ext_apply.py donations --stage-dir' '$RS_CALLS' | grep -q 'stage/weekly/donations' && grep -q 'money_classify' '$RS_CALLS'"
 check "lobbyists and FITS are staged then applied" bash -c "grep -q 'ext_apply.py lobbyists --stage' '$RS_CALLS' && grep -q 'ext_apply.py fits --stage' '$RS_CALLS'"
 check "ACNC/ATO runs with --check-updated" grep -q 'parli.ingest.acnc_ato --check-updated' "$RS_CALLS"
+check "the people directory is enriched with the recorded representation right after it is exported" order scripts/export_parliamentarians.py scripts/enrich_profile_jurisdictions.py
 check "the loaders come before the exports, and the tax/charity export is the last" order parli.ingest.acnc_ato scripts/export_speakers.py scripts/export_money_graph.py scripts/export_access.py scripts/export_fits.py scripts/export_interests.py scripts/export_tax_charity.py
 check "no monthly step ran" bash -c "! grep -qE 'qld_contracts|money_ipea|state_rosters|export_suppliers|export_grants|build_pay|export_discovery' '$RS_CALLS'"
 check "the contract_suppliers step is given the ABR index directory" bash -c "grep 'contract_suppliers' '$RS_CALLS' | grep -q -- '--abr-dir .*/abr'"
@@ -654,7 +657,14 @@ check "portal suite red because of a group's files: exit 1" test "$NRC" -eq 1
 check "that group is not published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
 check "the suite is green again after that one revert, so votes and bills still go out" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"' && git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q 2026-09-28"
 check "the suite was run twice (red, then green), each time after rebuilding the search catalog" bash -c "[ \$(grep -c 'node --test' '$HOME/node.calls') -eq 2 ] && [ \$(grep -c 'npm run build:search' '$HOME/npm.calls') -eq 2 ]"
-check "status names the group that was put back" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'green again with speakers put back to HEAD'"
+check "status names the group that was put back" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'new speakers files (green with only that group put back to HEAD)'"
+new_sandbox s25d3
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RED_WHILE_CHANGED=portal/public/votes.json nightly
+check "the culprit is found by trying each group alone: votes (not the first group) is the one not published" bash -c "[ '$NRC' -eq 1 ] && ! git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"'"
+check "the innocent groups tried on the way (speakers) are restored, not lost, and bills go out too" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101' && git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q 2026-09-28"
+check "three runs: all changed (red), speakers alone put back (still red), votes alone put back (green)" test "$(grep -c 'node --test' "$HOME/node.calls")" -eq 3
+check "status names votes as the culprit" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'new votes files (green with only that group put back to HEAD)'"
 new_sandbox s25d2
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RC=1 nightly

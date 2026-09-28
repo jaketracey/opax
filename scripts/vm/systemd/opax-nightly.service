@@ -18,10 +18,10 @@ WorkingDirectory=@REPO@
 ExecStart=@REPO@/scripts/vm/run-nightly.sh
 # `+` = run as root even though User= is set (it needs to update packages and power off)
 ExecStopPost=+@REPO@/scripts/vm/poweroff-if-idle.sh @USER@ @HOME@
-# Cost guard: a hung run is killed after 4 hours and the machine still powers off (ExecStopPost
+# Cost guard: a hung run is killed after 6 hours and the machine still powers off (ExecStopPost
 # runs after a timeout too). For a Type=oneshot unit it is TimeoutStartSec that bites:
 # systemd ignores RuntimeMaxSec on oneshot services.
-TimeoutStartSec=4h
+TimeoutStartSec=6h
 # ExecStopPost runs the security updates (25 min limit) and needs longer than the default 90 s
 TimeoutStopSec=45min
 KillMode=control-group
