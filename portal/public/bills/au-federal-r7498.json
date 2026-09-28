@@ -12,7 +12,7 @@
  "sponsor_person_id": null,
  "portfolio": "Defence",
  "status": "passed",
- "status_as_of": "2026-09-17",
+ "status_as_of": "2026-09-28",
  "key_dates": [
   {
    "stage": "introduced",
@@ -89,6 +89,12 @@
   {
    "stage": "passed",
    "date": "2026-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-09-28",
    "house": "senate",
    "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7498%22"
   }

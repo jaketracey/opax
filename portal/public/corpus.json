@@ -1,16 +1,12 @@
 {
-  "version": "2026-09-21",
-  "expected_resources": 628657,
+  "version": "2026-09-28",
+  "expected_resources": 630777,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 620767,
-    "new_bill_resources": 10,
-    "new_bill_text_resources": 4526,
-    "new_division_resources": 147,
-    "new_grant_award_resources": 978,
-    "new_press_release_resources": 216,
-    "new_speech_resources": 2013
+    "live_index_before_refresh": 628657,
+    "new_press_release_resources": 54,
+    "new_speech_resources": 2066
   },
-  "collected_speeches": 598425,
+  "collected_speeches": 600491,
   "sources": [
     {
       "name": "Federal Hansard: House of Representatives (zenodo)",
@@ -19,7 +15,7 @@
     },
     {
       "name": "NSW Parliament",
-      "docs": 110764,
+      "docs": 112022,
       "coverage": "2015–2026"
     },
     {
@@ -29,7 +25,7 @@
     },
     {
       "name": "Victorian Parliament",
-      "docs": 50210,
+      "docs": 50744,
       "coverage": "2018–2026"
     },
     {
@@ -44,7 +40,7 @@
     },
     {
       "name": "QLD Parliament",
-      "docs": 9954,
+      "docs": 10228,
       "coverage": "2024–2026"
     },
     {
@@ -59,7 +55,7 @@
     },
     {
       "name": "NSW Government ministerial releases",
-      "docs": 5243,
+      "docs": 5297,
       "coverage": "2024–2026"
     },
     {
@@ -136,15 +132,15 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-09-21T13:31:32.575708+00:00",
+    "checked_at": "2026-09-28T11:58:00+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
     "latest_bill_introduced": "2026-09-17",
-    "latest_nsw_release": "2026-09-21",
+    "latest_nsw_release": "2026-09-28",
     "source_limitations": [
       "SA Hansard refresh blocked by source HTTP 403; stored coverage ends 2024-11-12.",
-      "Federal Hansard is current to 2026-09-17 with three source pages returning HTTP 403; NSW Parliament to 2026-09-17; Victoria to 2026-09-10; QLD to 2026-08-26.",
+      "Federal Hansard is current to 2026-09-17 (no sittings since); NSW Parliament to 2026-09-24; Victoria to 2026-09-24; QLD to 2026-09-16. Senate committee hearings are current to the last estimates round (2026-06-05).",
       "Federal interests pages returned no usable records during this refresh. Existing disclosures were preserved.",
       "New AEC source snapshots are retained for reconciliation. Amended federal donation rows have not replaced reviewed public data.",
       "Ministerial diary and IPEA expense refreshes returned the same published rows as the previous verified snapshots."
@@ -181,16 +177,18 @@
       "grant_award": 1067,
       "grant_invitation": 227,
       "parliamentary_profile": 983,
-      "press_release": 6015,
+      "press_release": 6069,
       "research_report": 35,
-      "speech": 598425
+      "speech": 600491
     },
     "raw_source_updates": {
-      "federal_speeches": 693,
-      "nsw_speeches": 1434,
-      "grantconnect_notices": 978,
-      "austender_notices_fetched": 2043,
-      "new_federal_divisions": 69
+      "federal_speeches": 0,
+      "nsw_speeches": 1318,
+      "vic_speeches": 673,
+      "qld_speeches": 501,
+      "nsw_releases": 54,
+      "austender_contracts": 17,
+      "new_federal_divisions": 0
     },
     "structured_sources": {
       "grantconnect_awards": 361036,
