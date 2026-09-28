@@ -102,7 +102,7 @@ def check_kb_no_generation() -> None:
     sys.path.insert(0, str(ROOT / "scripts"))
     from parli.arag import AragConfig, KbClient, _request, load_dotenv
     from publish_collected_bill_texts import assert_no_generation
-    load_dotenv()
+    load_dotenv(str(ROOT / ".env"))     # the repo's .env, whatever the caller's cwd (the environment still wins)
     kb = KbClient(AragConfig.from_env())
     assert_no_generation(_request("GET", kb._rag("/configuration"), kb._headers),
                          _request("GET", kb._rag("/schema"), kb._headers), kb.list_tasks())
