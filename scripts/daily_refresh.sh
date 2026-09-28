@@ -69,6 +69,7 @@ QLD_START="${OPAX_QLD_START:-$SINCE}"
 SA_SINCE="${OPAX_SA_SINCE:-$SINCE}"
 IPEA_SINCE="${OPAX_IPEA_SINCE:-$(date +%Y)}"
 ONLY="${OPAX_ONLY:-}"
+declare -A STEP_DELTA=()   # step name -> rows it added ("?" when the table could not be counted)
 ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 SYNC_GATE="${OPAX_SYNC_GATE:-}"
 FAILED_STEPS=()
@@ -131,8 +132,10 @@ run_step() {
   dur=$(( $(date +%s) - t0 ))
   if [ "$before" != "-" ] && [ "$after" != "-" ]; then
     delta="rows $before -> $after (+$((after - before)))"
+    STEP_DELTA[$name]=$((after - before))
   else
     delta="(no row count)"
+    STEP_DELTA[$name]="?"
   fi
   case $rc in
     0)   status=OK ;;
@@ -181,6 +184,11 @@ run_step nsw "SELECT COUNT(*) FROM speeches WHERE source='nsw_hansard'" \
 run_step sa "SELECT COUNT(*) FROM speeches WHERE source='sa_hansard'" \
   "$PY" -m parli.ingest.sa_hansard --since "$SA_SINCE"
 
+# The full-text index is brought up to date once, after every loader, instead of each loader rebuilding
+# all 1.3M speeches at its end (scripts/fts_sync.py). Nothing later in this script reads it.
+run_step fts_sync "" \
+  "$PY" scripts/fts_sync.py
+
 run_step bills "SELECT COUNT(*) FROM bills_v2" \
   bash scripts/refresh_bills.sh
 
@@ -195,6 +203,18 @@ fi
 # --- derived data ------------------------------------------------------------
 run_step link_speakers "SELECT COUNT(*) FROM speeches WHERE person_id IS NOT NULL AND person_id != ''" \
   "$PY" -m parli.ingest.link_speakers
+# docs/COMMITTEE-WITNESSES.md: link_speakers surname-links witnesses to members ("Ms Hall" -> Jill Hall), so
+# after new committee rows arrive, `fetch` (the hearing's attendance list) and `resolve` (witnesses are never
+# members; full names, positions) must run before those rows reach the knowledge box. They read committee rows
+# only, so they run only when the committees step added some (estimates rounds), and the KB push waits for them
+# (OPAX_SYNC_GATE). `resolve` also queues KB patches for rows already pushed; draining that queue is
+# scripts/arag_patch_speakers.py, not part of the nightly.
+if [ "${STEP_DELTA[committees]:-0}" != "0" ]; then
+  run_step committee_fetch "" \
+    "$PY" -m parli.ingest.committee_witnesses fetch --db "$DB"
+  run_step committee_resolve "" \
+    "$PY" -m parli.ingest.committee_witnesses resolve --db "$DB"
+fi
 run_step classify "SELECT COUNT(*) FROM speech_topics" \
   "$PY" classify_state_speeches.py
 

@@ -313,7 +313,13 @@ new_refresh_sandbox() {
 #!/usr/bin/env bash
 echo "$*" >> "$RS_CALLS"
 if [ "${1:-}" = "-" ]; then
-  case "${2:-}" in *.json) exit 0 ;; "") cat >/dev/null; exit 0 ;; *) cat >/dev/null; echo 0; exit 0 ;; esac
+  case "${2:-}" in
+    *.json) exit 0 ;;
+    "") cat >/dev/null; exit 0 ;;
+    # the committees row count: COMMITTEE_ADDS new rows appear between the count before and the count after
+    *committee_%*) cat >/dev/null; f="$(dirname "$RS_CALLS")/cc"; n=$(cat "$f" 2>/dev/null || echo 10); echo "$n"; echo $((n + ${COMMITTEE_ADDS:-0})) > "$f"; exit 0 ;;
+    *) cat >/dev/null; echo 0; exit 0 ;;
+  esac
 fi
 if [ "${1:-}" = "-m" ]; then
   for f in ${FAIL_STEPS:-}; do [ "$2" = "parli.ingest.$f" ] && exit 1; done
@@ -379,6 +385,28 @@ new_refresh_sandbox r17b
 OPAX_ENSURE_INDEXES=1 refresh
 check "runs the index step when asked" grep -q 'scripts/ensure_db_indexes.py' "$RS_CALLS"
 check "and before the first fetch" bash -c "[ \"\$(head -1 '$RS_CALLS')\" = 'scripts/ensure_db_indexes.py' ]"
+
+echo "== 18. daily_refresh.sh: the full-text index is synced once, after the loaders and before bills"
+new_refresh_sandbox r18
+refresh
+check "fts_sync ran" grep -q 'scripts/fts_sync.py' "$RS_CALLS"
+check "after the last loader (sa) and before the bills step" bash -c "
+  a=\$(grep -n 'parli.ingest.sa_hansard' '$RS_CALLS' | head -1 | cut -d: -f1); b=\$(grep -n 'scripts/fts_sync.py' '$RS_CALLS' | head -1 | cut -d: -f1); c=\$(grep -n 'refresh_bills\|bills_fetch' '$RS_CALLS' | head -1 | cut -d: -f1)
+  [ -n \"\$a\" ] && [ -n \"\$b\" ] && [ \"\$a\" -lt \"\$b\" ] && { [ -z \"\$c\" ] || [ \"\$b\" -lt \"\$c\" ]; }"
+
+echo "== 19. daily_refresh.sh: new committee rows are resolved (fetch + resolve) after link_speakers and before the KB push"
+new_refresh_sandbox r19
+COMMITTEE_ADDS=7 OPAX_SYNC_KB=1 OPAX_SYNC_GATE=link_speakers,classify,committee_fetch,committee_resolve refresh
+check "committees added rows, so fetch and resolve both ran" bash -c "grep -q 'committee_witnesses fetch' '$RS_CALLS' && grep -q 'committee_witnesses resolve' '$RS_CALLS'"
+check "in the order link_speakers, fetch, resolve, arag_sync" bash -c "
+  n() { grep -n \"\$1\" '$RS_CALLS' | head -1 | cut -d: -f1; }
+  [ \"\$(n parli.ingest.link_speakers)\" -lt \"\$(n 'committee_witnesses fetch')\" ] && [ \"\$(n 'committee_witnesses fetch')\" -lt \"\$(n 'committee_witnesses resolve')\" ] && [ \"\$(n 'committee_witnesses resolve')\" -lt \"\$(n parli.ingest.arag_sync)\" ]"
+new_refresh_sandbox r19b
+OPAX_SYNC_KB=1 refresh
+check "no new committee rows: neither runs" bash -c "! grep -q 'committee_witnesses' '$RS_CALLS'"
+new_refresh_sandbox r19c
+COMMITTEE_ADDS=3 OPAX_SYNC_KB=1 OPAX_SYNC_GATE=link_speakers,classify,committee_fetch,committee_resolve FAIL_STEPS="committee_witnesses" refresh
+check "a failing resolve holds the KB push back" bash -c "! grep -q 'parli.ingest.arag_sync' '$RS_CALLS'"
 echo
 echo "passed $PASS, failed $FAILN"
 [ "$FAILN" -eq 0 ]
