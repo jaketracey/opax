@@ -175,6 +175,10 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     if (data.abn) { const abr = link(`https://abr.business.gov.au/ABN/View?abn=${encodeURIComponent(data.abn)}`, 'View Australian Business Register'); abr.target = '_blank'; abr.rel = 'noopener'; identity.append(abr); }
     if (data.aliases?.length) { identity.append(node('h3', 'Names in the records')); const names = node('ul', null, 'grant-recipient-aliases'); for (const alias of data.aliases) names.append(node('li', alias)); identity.append(names); }
     aside.append(identity);
+    // Charity register, AIS and ATO tax transparency, by the recipient's ABN only (no ABN: no block).
+    const taxCharity = node('section', null, 'grant-recipient-section'); taxCharity.hidden = true; aside.append(taxCharity);
+    if (data.abn) import('/tax-charity.js?v=tax-charity-20260929c').then(m => m.mountTaxCharity(taxCharity, { abn: data.abn, alive: () => !destroyed && taxCharity.isConnected })).catch(() => taxCharity.remove());
+    else taxCharity.remove();
     const donations = section('In the donor registers', 'recipient-donations');
     if (data.d) {
       const donor = data.d;

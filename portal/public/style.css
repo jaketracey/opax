@@ -2099,6 +2099,26 @@ a.ency-name:hover, a.ency-name:focus-visible {
   text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
 .alias-more[open] > summary .alias-toggle::after { content: " (hide)"; }
 .alias-rest { display: block; margin-top: 0.3rem; }
+/* Charity and tax transparency (tax-charity.js): ACNC register + AIS, ATO tax transparency.
+   Hairline rows, tabular figures, sources in the fineprint; no colour carries meaning. */
+.taxcharity { margin-top: var(--space-5); }
+.taxcharity .kicker { margin-top: 0; }
+.tc-facts { margin: var(--space-2) 0 0; display: grid; grid-template-columns: minmax(4.5rem, max-content) minmax(0, 1fr); gap: 0.55rem 1rem; }
+.tc-facts dt { color: var(--ink-faint); font-size: 0.8125rem; padding-top: 0.1rem; }
+.tc-facts dd { margin: 0; font-size: 0.9375rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.tc-sub { display: block; color: var(--ink-faint); font-size: 0.8125rem; margin-top: 0.15rem; }
+.tc-blank { color: var(--ink-faint); font-style: italic; }
+.tc-more { margin-top: 0.35rem; font-size: 0.875rem; }
+.tc-more summary { cursor: pointer; color: var(--ink-soft); }
+.tc-more ul { margin: 0.35rem 0 0; padding-left: 1.1rem; }
+.tc-table { border-collapse: collapse; margin-top: 0.4rem; font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
+.tc-table th, .tc-table td { text-align: right; padding: 0.2rem 0.75rem 0.2rem 0; border-top: 1px solid var(--line); font-weight: 400; }
+.tc-table thead th { border-top: none; color: var(--ink-faint); }
+.tc-table tbody th { text-align: left; }
+@media (max-width: 40rem) {
+  .tc-facts { grid-template-columns: minmax(0, 1fr); gap: 0.1rem; }
+  .tc-facts dd { margin-bottom: 0.55rem; }
+}
 .subject-list { list-style: none; margin: 0; padding: 0; }
 .subject-list li { border-top: 1px solid var(--line); padding: var(--row-gap) 0; }
 .subject-list li:first-child { border-top: none; }

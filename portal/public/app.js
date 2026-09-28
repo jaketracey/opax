@@ -4040,6 +4040,25 @@ async function renderDonorStateMoney(name, sections) {
       threshold are not reported, so these totals are a floor, not a ceiling. ${esc(STATE_NOT_SUMMED)}</p>`;
 }
 
+/**
+ * "Charity and tax transparency" on a donor page: the ACNC register and Annual
+ * Information Statement, and the ATO's Corporate Tax Transparency report, all by
+ * ABN (tax-charity.js). A donor reaches an ABN through its donor entity, never by
+ * matching the name to a charity or taxpayer; the block is absent when there is
+ * no ABN or no row. Suppliers and grant recipients mount the same block from
+ * their own ABN.
+ */
+async function renderDonorTaxCharity(name, sections) {
+  const key = currentSubjectKey;
+  const slot = document.createElement("section");
+  slot.hidden = true;
+  sections.appendChild(slot);
+  try {
+    const { mountTaxCharity } = await import("/tax-charity.js?v=tax-charity-20260929c");
+    await mountTaxCharity(slot, { name, alive: () => currentSubjectKey === key && slot.isConnected });
+  } catch { slot.remove(); }
+}
+
 // --- parliamentary expenses (IPEA) ------------------------------------------
 // Per-person totals, category split and per-year series, exported by
 // scripts/export_expenses.py from the IPEA quarterly
@@ -5020,6 +5039,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         [actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for them", { primary: true }),
          actionBtn("map", "/money", "Open the money map")]);
       if (kind === "donor") renderDonorStateMoney(name, sections);
+      if (kind === "donor") renderDonorTaxCharity(name, sections);
       subjectMentions(name, sections, "In parliament");
       return;
     }
@@ -5108,6 +5128,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     }
     if (!isParty) renderDonorInterests(node.label, sections);
     if (!isParty) renderDonorStateMoney(node.label, sections);
+    if (!isParty) renderDonorTaxCharity(node.label, sections);
     if (isParty) {
       renderPartyMembers(node.label, body.querySelector(".subject-head"), key);
       renderPartyDebts(node.label, sections);
