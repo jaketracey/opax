@@ -73,7 +73,7 @@ MAX_RETRIES = 4
 
 # Bump when a parser change alters the rows a document produces: days stored under an
 # older version are re-parsed and aligned in place (text changes are queued for the box).
-PARSER_VERSION = "3"
+PARSER_VERSION = "4"
 
 CACHE_DIR = Path(os.environ.get("OPAX_ACT_CACHE", "~/.cache/autoresearch/act_hansard")).expanduser()
 
@@ -366,6 +366,11 @@ LABEL_REST_RE = re.compile(
 # Older volumes sometimes drop the colon: 'MR STANHOPE (Chief Minister, ...) (6.20) Mr Speaker, ...'
 LABEL_REST_NOCOLON_RE = re.compile(
     r"^\s*(?:\((?P<paren>[^()]*)\)\s*)?\((?P<time>\d{1,2}[.:]\d{2})\s*(?:am|pm)?\)\s+(?P<body>[A-Z].*)$", re.S)
+# A label whose role bracket lost its closing parenthesis in the source ('(Brindabella-Manager of
+# Government Business, ... Emergency Services (12.18), by leave: ...', 2023).
+LABEL_REST_UNCLOSED_RE = re.compile(
+    r"^\s*\((?P<paren>[^()]*?)\s+\((?P<time>\d{1,2}[.:]\d{2})\s*(?:am|pm)?\)\s*"
+    r"(?P<mod>,?\s*(?:by\s+leave|in\s+reply|in\s+explanation|in\s+response)[^:()]{0,40}?)?\s*:\s*(?P<body>.*)$", re.S)
 # No-bold fallback: an upper-case label at the start of a paragraph.
 UPPER_LABEL_RE = re.compile(
     r"^(?P<name>(?:MR|MS|MRS|MISS|DR|PROF|MADAM)\s+[A-Z][A-Z'’\-]+(?:\s+[A-Z][A-Z'’\-]+){0,3})"
@@ -506,7 +511,9 @@ def _blocks(lines: list[Line]) -> list[_Block]:
             label = normalise_label(name_part)
             if label and not re.match(r"\s*[(:,]|\s+[a-z]", l.text[len(name_part):] or ":"):
                 label = None
-        if label is None and not is_heading and not l.bold_prefix:
+        if label is None and not is_heading:
+            # no bold run, or one that stops short ('MS STEPHEN' bold, '-SMITH:' in a regular-weight
+            # hyphen glyph, seen in the 2026 proofs): fall back to the printed text
             m = UPPER_LABEL_RE.match(l.text)
             if m and l.x0 < 120:
                 name_part = m.group("name")
@@ -605,7 +612,7 @@ def parse_turns(lines: list[Line], trace: list | None = None) -> list[Turn]:
             full = _para_text(b.lines)
             bold = b.name_part
             rest = full[len(bold):] if full.startswith(bold) else full
-            m = LABEL_REST_RE.match(rest) or LABEL_REST_NOCOLON_RE.match(rest)
+            m = LABEL_REST_RE.match(rest) or LABEL_REST_NOCOLON_RE.match(rest) or LABEL_REST_UNCLOSED_RE.match(rest)
             if not m:
                 # a bold name that is not a speaker label ('Ms Cheyne, pursuant to standing order 211,
                 # presented the following papers:'): the record's narration, the start of a new item.

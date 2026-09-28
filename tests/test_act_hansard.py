@@ -56,8 +56,8 @@ def make_pdf(pages: list[list[tuple]]) -> bytes:
                 ops.append(f"/F3 {size} Tf 1 0 0 1 90 {y:.1f} Tm ({text}) Tj")
             elif kind == "L":
                 rest = ln[2].replace("(", "\\(").replace(")", "\\)")
-                ops.append(f"/F2 12 Tf 1 0 0 1 90 {y:.1f} Tm ({text}) Tj")
-                ops.append(f"/F1 12 Tf 1 0 0 1 {90 + 9.5 * len(ln[1]) + 6:.1f} {y:.1f} Tm ({rest}) Tj")
+                # one text line, two fonts: the glyphs abut exactly as they do in the Word export
+                ops.append(f"/F2 12 Tf 1 0 0 1 90 {y:.1f} Tm ({text}) Tj /F1 12 Tf ({rest}) Tj")
             elif kind == "I":
                 ops.append(f"/F4 12 Tf 1 0 0 1 90 {y:.1f} Tm ({text}) Tj")
             elif kind == "Q":
@@ -152,6 +152,10 @@ def day_pdf(*, extra_turn: bool = False, edited: bool = False, drop_last: bool =
         ("L", "MS CHEYNE", " (Ginninderra—Attorney-General) (5.01), by leave: I move that the Assembly do now adjourn."),
         ("GAP",),
         ("L", "MR CAIN", " (Ginninderra) (5.02) I rise to speak, although the printed label lost its colon."),
+        ("GAP",),
+        ("L", "MR GENTLEMAN", " (Brindabella—Manager of Government Business, Minister for Police (5.09), by leave: I table this unclosed-bracket label."),
+        ("GAP",),
+        ("L", "MS STEPHEN", "-SMITH: A hyphenated surname whose bold run stops at the hyphen, as in the 2026 proofs."),
     ]
     return make_pdf([p1, p2, p3])
 
@@ -216,6 +220,14 @@ class ParserTests(unittest.TestCase):
     def test_cover_and_date_headings_are_not_topics(self):
         first = self.turns[0]
         self.assertEqual((first.speaker, first.topic), ("Mr Speaker", ""))
+
+    def test_label_typos_and_a_bold_run_that_stops_at_the_hyphen(self):
+        gentleman = self.by("Mr Gentleman")
+        self.assertEqual(gentleman.time, "5:09")
+        self.assertTrue(gentleman.text.startswith("I table this unclosed-bracket label"))
+        ss = self.by("Ms Stephen-Smith")
+        self.assertTrue(ss.text.startswith("A hyphenated surname whose bold run"))
+        self.assertNotIn("-SMITH", gentleman.text)                       # not swallowed by the turn above
 
     def test_topics_follow_headings(self):
         self.assertEqual(self.by("Ms Cheyne").topic, "Adjournment: Health—lymphoedema")
