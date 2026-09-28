@@ -216,6 +216,10 @@ class ParserTests(unittest.TestCase):
     def test_topics_follow_headings(self):
         self.assertEqual(self.by("Ms Cheyne").topic, "Adjournment: Health—lymphoedema")
 
+    def test_pdf_typography_is_normalised_without_touching_words(self):
+        self.assertEqual(act._clean_body("scienti\ufb01c e\ufb00ects re\ufb02ect medium\u2011term\u00a0plans \u00ad"),
+                         "scientific effects reflect medium-term plans")
+
     def test_normalise_label(self):
         self.assertEqual(act.normalise_label("MS STEPHEN-SMITH"), ("Ms Stephen-Smith", "stephen-smith"))
         self.assertEqual(act.normalise_label("MS LE COUTEUR")[0], "Ms Le Couteur")

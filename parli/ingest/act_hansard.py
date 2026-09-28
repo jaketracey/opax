@@ -73,7 +73,7 @@ MAX_RETRIES = 4
 
 # Bump when a parser change alters the rows a document produces: days stored under an
 # older version are re-parsed and aligned in place (text changes are queued for the box).
-PARSER_VERSION = "2"
+PARSER_VERSION = "3"
 
 CACHE_DIR = Path(os.environ.get("OPAX_ACT_CACHE", "~/.cache/autoresearch/act_hansard")).expanduser()
 
@@ -543,7 +543,18 @@ def _blocks(lines: list[Line]) -> list[_Block]:
     return blocks
 
 
+# Typography the PDFs' fonts leave in the text layer: ligature glyphs would make "financial" and
+# "reflect" unsearchable, a non-breaking hyphen splits "medium-term"; Symbol-font bullets come out
+# as private-use characters. Nothing here changes a word.
+_CHAR_FIXES = str.maketrans({
+    "\ufb00": "ff", "\ufb01": "fi", "\ufb02": "fl", "\ufb03": "ffi", "\ufb04": "ffl", "\ufb05": "st",
+    "\ufb06": "st", "\u2011": "-", "\u00ad": "", "\u200b": "", "\ufeff": "", "\u00a0": " ",
+    "\uf0a7": "•", "\uf0b7": "•", "\uf0d8": "•",
+})
+
+
 def _clean_body(text: str) -> str:
+    text = text.translate(_CHAR_FIXES)
     text = re.sub(r"\s+([,.;:?!])", r"\1", text)
     return re.sub(r"[ \t]+", " ", text).strip()
 
