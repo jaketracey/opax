@@ -439,6 +439,25 @@ class LoadTests(unittest.TestCase):
                           cache_dir=self.cache, refresh_proofs=False)
         self.assertEqual(outside["results"], [])
 
+    def test_run_swaps_a_proof_older_than_the_window_when_its_final_appears(self):
+        self.load(self.proof, day_pdf())                      # stored as a proof, months ago
+        site = FakeSite({
+            act.INDEX_URL: b'<a href="11th-assembly/2025/debates(PDF).htm">2025</a>',
+            act.BASE + "11th-assembly/2025/debates(PDF).htm":
+                f'<a href="{self.final.url}">18 March</a><a href="{self.proof.url}">18 March</a>'.encode(),
+            self.final.url: day_pdf(edited=True),
+        })
+        rep = act.run(self.db, act.Fetcher(delay=0, opener=site), date(2025, 9, 1), date(2025, 9, 30), cache_dir=self.cache)
+        self.assertEqual([r["status"] for r in rep["results"]], ["updated"])
+        self.assertEqual(rep["updated"], 1)
+        self.assertEqual(self.db.execute("SELECT kind FROM act_hansard_days").fetchone()["kind"], "final")
+        # a proof still shown unchanged, outside the window, costs no request for the document
+        site2 = FakeSite({act.INDEX_URL: b'<a href="11th-assembly/2025/debates(PDF).htm">2025</a>',
+                          act.BASE + "11th-assembly/2025/debates(PDF).htm": f'<a href="{self.proof.url}">18 March</a>'.encode()})
+        self.load(act.DayDoc("2025-04-01", "proof", "https://x/P250401.pdf", "P250401.pdf"), day_pdf())
+        act.run(self.db, act.Fetcher(delay=0, opener=site2), date(2025, 9, 1), date(2025, 9, 30), cache_dir=self.cache)
+        self.assertFalse([u for u, _ in site2.log if u.endswith(".pdf")])
+
 
 MEMBERS_HTML = """<table><tbody>
 <tr><td headers="a"><a href="https://www.parliament.act.gov.au/members/current/barry"><img src="x.png" alt="" />Chiaka <strong>Barry</strong></a></td>

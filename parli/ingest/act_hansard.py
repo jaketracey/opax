@@ -990,7 +990,12 @@ def process_day(db: sqlite3.Connection | None, fetcher: Fetcher | None, doc: Day
         res.update(status="error", error=f"reload would cut {prior} stored turns to {len(turns)}; refused "
                                           f"(format change? re-run with --force after checking the parse)")
         return res
-    counts = load_day(db, doc, turns, doc_sha=sha, etag=etag, last_modified=lm)
+    try:
+        counts = load_day(db, doc, turns, doc_sha=sha, etag=etag, last_modified=lm)
+    except Exception as e:  # noqa: BLE001 - a database error on one day leaves that day as it was
+        db.rollback()
+        res.update(status="error", error=f"load failed: {type(e).__name__}: {e}"[:300])
+        return res
     res.update(counts)
     res["status"] = "updated" if prior else "loaded"
     return res
@@ -1010,7 +1015,8 @@ def run(db: sqlite3.Connection | None, fetcher: Fetcher, start: date, end: date,
             "SELECT date FROM act_hansard_days WHERE kind='proof' AND date < ? ORDER BY date", (start.isoformat(),))]
         if old:
             older = discover(fetcher, date.fromisoformat(old[0]), date.fromisoformat(old[-1]))
-            docs += [d for d in older if d.date in set(old)]
+            wanted = set(old)
+            docs += [d for d in older if d.date in wanted]
     docs = sorted(docs, key=lambda d: d.date)
     if limit_days:
         docs = docs[:limit_days]
