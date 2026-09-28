@@ -292,13 +292,10 @@ class LoadTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.cache = Path(self.tmp.name)
         self.db = act.open_db(self.tmp.name + "/t.db")
-        self._min_turns = act.MIN_TURNS
-        act.MIN_TURNS = 5                       # the generated days are short
         self.proof = act.DayDoc("2025-03-18", "proof", "https://x/P250318.pdf", "P250318.pdf")
         self.final = act.DayDoc("2025-03-18", "final", "https://x/20250318.pdf", "20250318.pdf")
 
     def tearDown(self):
-        act.MIN_TURNS = self._min_turns
         self.db.close()
         self.tmp.cleanup()
 
@@ -418,7 +415,10 @@ class LoadTests(unittest.TestCase):
         pdf = make_pdf([[("L", "MR BARR:", " A single surviving turn. " * 3)] * 1] * 1)
         site = FakeSite({self.final.url: pdf})
         act.MIN_TURNS = 1
-        r = act.process_day(self.db, act.Fetcher(delay=0, opener=site), self.final, cache_dir=self.cache)
+        try:
+            r = act.process_day(self.db, act.Fetcher(delay=0, opener=site), self.final, cache_dir=self.cache)
+        finally:
+            act.MIN_TURNS = 5
         self.assertEqual(r["status"], "error")
         self.assertIn("refused", r["error"])
         self.assertEqual(self.db.execute("SELECT COUNT(*) FROM act_hansard_turns").fetchone()[0], prior)
@@ -447,8 +447,8 @@ MEMBERS_HTML = """<table><tbody>
 <tr><td><a href="https://www.parliament.act.gov.au/members/current/stephen-smith"><img src="x.png"/>Rachel <strong>Stephen-Smith</strong></a></td>
 <td>Kurrajong</td><td><span>⬤</span>&nbsp;Labor</td><td></td></tr>
 <tr><td><a href="https://www.parliament.act.gov.au/members/current/carrick"><img src="x.png"/>Fiona <strong>Carrick</strong></a></td>
-<td>Murrumbidgee</td><td><span>⬤</span> Independent</td><td></td></tr>
-<tr><td><a href="https://www.parliament.act.gov.au/members/current/vassarotti"><img src="x.png"/>Rebecca <strong>Vassarotti</strong></a></td>
+<td>Murrumbidgee</td><td><span style="color: grey">⬤ I</span>ndependent </td><td></td></tr>
+<tr><td><a href="https://www.parliament.act.gov.au/members/current/vassarotti"><img src="x.png"/>Rebecca <b>Vassarotti</b></a></td>
 <td>Kurrajong</td><td><span>⬤</span>&nbsp;Green</td><td></td></tr>
 <tr><td>Not a member row</td><td>x</td><td>y</td></tr>
 </tbody></table>"""
@@ -462,6 +462,13 @@ class MemberTests(unittest.TestCase):
         self.assertEqual([x["party"] for x in m], ["Liberal", "Liberal", "Labor", "Independent", "Greens"])
         self.assertEqual(m[1]["last_name"], "Hanson")                            # 'CSC' is not part of the name
         self.assertEqual(m[0]["electorate"], "Ginninderra")
+        self.assertEqual(m[4]["last_name"], "Vassarotti")                        # a <b> surname, not only <strong>
+
+    def test_a_member_the_table_parse_missed_is_an_error_not_a_silent_drop(self):
+        broken = MEMBERS_HTML.replace("Rebecca <b>Vassarotti</b>", "Rebecca").replace(
+            '<td>Kurrajong</td><td><span>⬤</span>&nbsp;Green</td>', '<td></td><td></td>')
+        with self.assertRaises(RuntimeError):
+            act.parse_current_members(broken)
 
     def test_seed_members_completes_a_surname_stub_in_place(self):
         import tempfile
@@ -476,11 +483,52 @@ class MemberTests(unittest.TestCase):
             self.assertEqual((row["full_name"], row["first_name"], row["party"], row["electorate"]),
                              ("Jeremy Hanson", "Jeremy", "Liberal", "Murrumbidgee"))
             new = db.execute("SELECT person_id, chamber, state FROM members WHERE full_name='Rachel Stephen-Smith'").fetchone()
-            self.assertEqual(tuple(new), ("act_rachel_stephensmith", "act_la", "act"))
+            # the id link_speakers' own surname stub would get, so the two never become two people
+            self.assertEqual(tuple(new), ("act_stephensmith", "act_la", "act"))
             self.assertEqual(db.execute("SELECT full_name FROM members WHERE person_id='qld_hanson'").fetchone()[0], "Hanson")
             again = act.seed_members(db, act.parse_current_members(MEMBERS_HTML))
             self.assertEqual(again["inserted"], 0)                               # idempotent
             db.close()
+
+
+@unittest.skipUnless(HAVE_PDFMINER, "pdfminer.six not installed")
+class LinkerTests(unittest.TestCase):
+    """The loaded rows and the seeded roster meet in link_speakers as they do for the other states."""
+
+    def test_roster_then_linker_links_by_surname_with_no_duplicate_people(self):
+        import tempfile
+        from parli.ingest import link_speakers as ls
+        roster = [{"first_name": f, "last_name": l, "full_name": f"{f} {l}", "electorate": e, "party": p}
+                  for f, l, e, p in [("Mark", "Parton", "Brindabella", "Liberal"), ("Chris", "Steel", "Murrumbidgee", "Labor"),
+                                     ("Jo", "Clay", "Ginninderra", "Greens"), ("Leanne", "Castley", "Yerrabi", "Independent"),
+                                     ("Andrew", "Barr", "Kurrajong", "Labor"), ("Ed", "Cocks", "Murrumbidgee", "Liberal"),
+                                     ("Tara", "Cheyne", "Ginninderra", "Labor"), ("Peter", "Cain", "Ginninderra", "Liberal")]]
+        with tempfile.TemporaryDirectory() as d:
+            db = act.open_db(d + "/t.db")
+            act.load_day(db, act.DayDoc("2025-03-18", "final", "u", "20250318.pdf"),
+                         act.dedupe_turns(act.parse_pdf(day_pdf())), doc_sha="x")
+            act.seed_members(db, roster)
+            ls.seed_state_members(db)
+            ls.link_state_speakers(db)
+            people = [r[0] for r in db.execute("SELECT full_name FROM members WHERE state='act' ORDER BY full_name")]
+            self.assertEqual(people, sorted(m["full_name"] for m in roster))     # no 'Parton' beside 'Mark Parton'
+            linked = dict(db.execute("SELECT speaker_name, person_id FROM speeches WHERE source='act_hansard' "
+                                     "AND person_id IS NOT NULL").fetchall())
+            self.assertEqual(linked["Mr Parton"], "act_parton")
+            self.assertEqual(linked["Ms Clay"], "act_clay")
+            self.assertEqual(linked["Ms Castley"], "act_castley")
+            self.assertNotIn("Mr Speaker", linked)                               # the chair is never a person
+            db.close()
+
+
+class MissTests(unittest.TestCase):
+    def test_miss_is_an_honorific_for_the_state_linker(self):
+        from parli.ingest import link_speakers as ls
+        self.assertEqual(ls.normalize_state_speaker_name("Miss Nuttall", "act"), "Nuttall")
+        self.assertEqual(ls.normalize_state_speaker_name("Ms Castley", "act"), "Castley")
+        self.assertEqual(ls.normalize_state_speaker_name("Mr Stephen-Smith", "act"), "Stephen-Smith")
+        self.assertTrue(ls.is_procedural("Madam Assistant Speaker"))
+        self.assertTrue(ls.is_procedural("Mr Deputy Speaker"))
 
 
 class FakeKb:

@@ -897,8 +897,10 @@ def load_day(db: sqlite3.Connection, doc: DayDoc, turns: list[Turn], *, doc_sha:
 # One sitting day, end to end
 # ─────────────────────────────────────────────────────────────────────────────
 
-# A day that parses to fewer turns than this is a parse failure, never a sitting.
-MIN_TURNS = 15
+# A day that parses to fewer turns than this, or fewer than MIN_TURNS_PER_PAGE per PDF page
+# (a real day gives 1.5-2), is a parse failure, never a sitting.
+MIN_TURNS = 5
+MIN_TURNS_PER_PAGE = 0.4
 # A reload that would drop more than this share of a stored day's turns is refused.
 MAX_SHRINK = 0.4
 
@@ -956,14 +958,17 @@ def process_day(db: sqlite3.Connection | None, fetcher: Fetcher | None, doc: Day
         if row and same_file and row["doc_sha"] == sha and row["parser_version"] == PARSER_VERSION and not force:
             res["status"] = "unchanged"
             return res
-        turns = dedupe_turns(parse_pdf(body))
+        lines = pdf_lines(body)
+        pages = (max(l.page for l in lines) + 1) if lines else 0
+        turns = dedupe_turns(parse_turns(lines))
     except Exception as e:  # noqa: BLE001 - one bad day must not stop the run
         res.update(status="error", error=f"{type(e).__name__}: {e}"[:300])
         return res
     res["turns"] = len(turns)
     res["turns_200"] = sum(1 for t in turns if len(t.text) >= MIN_CORPUS_CHARS)
-    if len(turns) < MIN_TURNS:
-        res.update(status="error", error=f"parsed only {len(turns)} turns from {doc.name} ({len(body)} bytes)")
+    if len(turns) < MIN_TURNS or len(turns) < MIN_TURNS_PER_PAGE * pages:
+        res.update(status="error", error=f"parsed only {len(turns)} turns from {doc.name} "
+                                          f"({pages} pages, {len(body)} bytes): the layout may have changed")
         return res
     if dry_run or db is None:
         res["status"] = "parsed"
@@ -1038,15 +1043,19 @@ _CELLS_RE = re.compile(r"<td[^>]*>(.*?)</td>", re.S | re.I)
 
 
 def _plain(html_frag: str) -> str:
+    """Text of an HTML fragment. Inline tags vanish without a space (the Assembly's page writes
+    `<span>⬤ I</span>ndependent`); breaks and cell edges become one."""
     import html as _html
-    return re.sub(r"\s+", " ", _html.unescape(re.sub(r"<[^>]+>", " ", html_frag))).strip()
+    frag = re.sub(r"<br\s*/?>|</?(?:td|tr|p|div|li)[^>]*>", " ", html_frag, flags=re.I)
+    return re.sub(r"\s+", " ", _html.unescape(re.sub(r"<[^>]+>", "", frag))).strip()
 
 
 def parse_current_members(html: str) -> list[dict]:
     """The Assembly's 'Current members' table: name, electorate, party (as they are today).
 
     Facts only; the Assembly's member portraits are excluded from its CC BY-NC-ND licence and
-    are never fetched."""
+    are never fetched. Raises if the page links more members than the table parsed (a layout
+    change must not silently drop a member, as `<b>` for `<strong>` once did)."""
     out = []
     for row in _ROW_RE.findall(html):
         cells = _CELLS_RE.findall(row)
@@ -1056,10 +1065,12 @@ def parse_current_members(html: str) -> list[dict]:
         if not a:
             continue
         inner = re.sub(r"<img[^>]*>", "", a.group(1))
-        m = re.match(r"^(?P<first>.*?)<strong>(?P<last>.*?)</strong>", inner, re.S | re.I)
-        if not m:
-            continue
-        first, last = _plain(m.group("first")), _plain(m.group("last"))
+        m = re.match(r"^(?P<first>.*?)<(?P<tag>strong|b)>(?P<last>.*?)</(?P=tag)>", inner, re.S | re.I)
+        if m:
+            first, last = _plain(m.group("first")), _plain(m.group("last"))
+        else:                                    # no bold surname: the last word of the name
+            words = _plain(inner).split()
+            first, last = " ".join(words[:-1]), (words[-1] if words else "")
         electorate = _plain(cells[1])
         party_raw = re.sub(r"^[^A-Za-z]+", "", _plain(cells[2]))
         if not (first and last and electorate):
@@ -1069,22 +1080,33 @@ def parse_current_members(html: str) -> list[dict]:
             "electorate": electorate, "party": PARTY_LABELS.get(party_raw.lower(), party_raw or None),
             "slug": re.search(r"/members/current/([\w\-]+)", cells[0]).group(1),
         })
+    linked = set(re.findall(r"/members/current/([\w\-]+)", html))
+    missing = linked - {m["slug"] for m in out}
+    if missing:
+        raise RuntimeError(f"members page links {sorted(missing)} that the table parse did not read; layout changed?")
     return out
+
+
+def _member_safe(name: str) -> str:
+    """link_speakers' person_id stem: lower case, spaces to underscores, only [a-z0-9_]."""
+    return re.sub(r"[^a-z0-9_]", "", name.lower().replace(" ", "_").replace("'", ""))
 
 
 def seed_members(db: sqlite3.Connection, members: list[dict]) -> dict:
     """Upsert the sitting MLAs into `members` (state 'act', chamber 'act_la').
 
-    A surname-only stub that link_speakers already made for the same person is completed in place
-    (same person_id: the site addresses people by name, and old links keep working); anyone else
-    gets `act_<first>_<last>` like the other state members."""
+    person_id follows link_speakers' surname-stub convention (`act_<surname>`), because that is
+    the id its `seed_state_members` would make for the same person from the Hansard label; a
+    stub that already exists is completed in place. Seeding under `act_<first>_<last>` instead
+    would leave two people, a full-named member with no speeches and a surname stub with all of
+    them. Two sitting members sharing a surname get `act_<first>_<last>`."""
     cols = {r[1] for r in db.execute("PRAGMA table_info(members)")}
     counts = {"inserted": 0, "updated": 0}
     for m in members:
         row = db.execute(
-            "SELECT person_id FROM members WHERE state='act' AND (LOWER(full_name)=LOWER(?) OR "
-            "(LOWER(COALESCE(last_name,''))=LOWER(?) AND COALESCE(first_name,'') IN ('', ?)) OR LOWER(full_name)=LOWER(?))",
-            (m["full_name"], m["last_name"], m["first_name"], m["last_name"])).fetchone()
+            "SELECT person_id FROM members WHERE state='act' AND (LOWER(full_name)=LOWER(?) OR LOWER(full_name)=LOWER(?) OR "
+            "(LOWER(COALESCE(last_name,''))=LOWER(?) AND COALESCE(first_name,'') IN ('', ?)))",
+            (m["full_name"], m["last_name"], m["last_name"], m["first_name"])).fetchone()
         if row:
             sets = ["first_name=?", "last_name=?", "full_name=?", "electorate=?", "chamber=?"]
             args = [m["first_name"], m["last_name"], m["full_name"], m["electorate"], CHAMBER]
@@ -1096,16 +1118,18 @@ def seed_members(db: sqlite3.Connection, members: list[dict]) -> dict:
                     args.append(m["party"])
             db.execute(f"UPDATE members SET {', '.join(sets)} WHERE person_id=?", (*args, row[0]))
             counts["updated"] += 1
-        else:
-            safe = re.sub(r"[^a-z0-9_]", "", m["full_name"].lower().replace(" ", "_").replace("'", ""))
-            fields = {"person_id": f"act_{safe}", "first_name": m["first_name"], "last_name": m["last_name"],
-                      "full_name": m["full_name"], "party": m["party"], "electorate": m["electorate"],
-                      "chamber": CHAMBER, "state": STATE}
-            if "party_canonical" in cols and m["party"]:
-                fields["party_canonical"] = m["party"]
-            db.execute(f"INSERT OR IGNORE INTO members ({', '.join(fields)}) VALUES ({', '.join('?' * len(fields))})",
-                       tuple(fields.values()))
-            counts["inserted"] += 1
+            continue
+        pid = f"act_{_member_safe(m['last_name'])}"
+        if db.execute("SELECT 1 FROM members WHERE person_id=?", (pid,)).fetchone():
+            pid = f"act_{_member_safe(m['full_name'])}"
+        fields = {"person_id": pid, "first_name": m["first_name"], "last_name": m["last_name"],
+                  "full_name": m["full_name"], "party": m["party"], "electorate": m["electorate"],
+                  "chamber": CHAMBER, "state": STATE}
+        if "party_canonical" in cols and m["party"]:
+            fields["party_canonical"] = m["party"]
+        db.execute(f"INSERT OR IGNORE INTO members ({', '.join(fields)}) VALUES ({', '.join('?' * len(fields))})",
+                   tuple(fields.values()))
+        counts["inserted"] += 1
     db.commit()
     return counts
 
