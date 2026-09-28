@@ -25,6 +25,14 @@ identical. "Identical" is strict: key order, list order and the type of each val
 --ignore-key adds more patterns (re.search against each key, so anchor them yourself). Any
 other file is compared byte for byte.
 
+Directory exports (grants/federal, suppliers, agencies, interests) rewrite hundreds of stamped shards in
+place; after such an export run
+
+    python3 scripts/vm/keep_if_unchanged.py --sweep portal/public/grants/federal portal/public/suppliers
+
+and every tracked .json file under those paths that differs from HEAD only by stamps is put back to HEAD's
+bytes (git then shows only the shards that really changed). Untracked and deleted files are left alone.
+
 Prints `unchanged <path>` or `changed <path>` and exits 0 either way. Exits 2 without touching
 <committed-path> when <new-file> is missing, empty, or (for a .json path) not valid JSON. Exits 3
 when the repo cannot be read or the path is outside it.
@@ -198,14 +206,50 @@ def keep_if_unchanged(
     return True
 
 
+def sweep(
+    paths: Iterable[Union[str, Path]],
+    repo: Union[str, Path, None] = None,
+    ignore_re: Patterns = DEFAULT_IGNORE,
+) -> dict:
+    """Restore HEAD's bytes for every tracked, modified .json file under `paths` whose change is stamp-only.
+
+    Returns {"examined": n, "kept": [rel, ...], "changed": [rel, ...], "unreadable": [rel, ...]}. A file the
+    working tree corrupted (not valid JSON) is reported in "unreadable" and left as it is, for validate_data.
+    """
+    repo_root = Path(os.path.realpath(repo)) if repo else ROOT
+    rels = [_relative(repo_root, p) for p in paths]
+    if _git(repo_root, "rev-parse", "--git-dir").returncode != 0:
+        raise RepoError(f"{repo_root} is not a git repository")
+    r = _git(repo_root, "diff", "--name-only", "--diff-filter=M", "-z", "HEAD", "--", *rels)
+    if r.returncode != 0:
+        raise RepoError(f"git diff failed: {r.stderr.decode(errors='replace')[:200]}")
+    out: dict = {"examined": 0, "kept": [], "changed": [], "unreadable": []}
+    for raw in r.stdout.split(b"\0"):
+        if not raw:
+            continue
+        rel = raw.decode()
+        if not rel.lower().endswith(".json"):
+            continue
+        out["examined"] += 1
+        try:
+            (out["kept"] if keep_if_unchanged(rel, repo_root / rel, repo=repo_root, ignore_re=ignore_re)
+             else out["changed"]).append(rel)
+        except NewFileError:
+            out["unreadable"].append(rel)
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         description="Keep the committed file when the new export differs only by timestamp keys.",
         epilog="Exit 0: unchanged or changed. Exit 2: new file missing/empty/invalid JSON (committed file untouched). "
                "Exit 3: repo unreadable or path outside it.")
-    ap.add_argument("committed", metavar="committed-path",
+    ap.add_argument("committed", metavar="committed-path", nargs="?",
                     help="tracked path (repo-relative, or absolute inside the repo)")
-    ap.add_argument("new", metavar="new-file", help="the freshly exported file")
+    ap.add_argument("new", metavar="new-file", nargs="?", help="the freshly exported file")
+    ap.add_argument("--sweep", nargs="+", metavar="PATH",
+                    help="instead of one file: restore every tracked .json under these paths whose change vs HEAD is "
+                         "stamp-only")
     ap.add_argument("--ignore-key", action="append", default=[], metavar="REGEX",
                     help="also ignore object keys matching REGEX (re.search); repeatable")
     ap.add_argument("--repo", default=str(ROOT), help="repo root (default: the repo this script lives in)")
@@ -214,6 +258,21 @@ def main(argv: list[str] | None = None) -> int:
         ignore = _compile([DEFAULT_IGNORE, *args.ignore_key])
     except re.error as e:
         ap.error(f"bad --ignore-key pattern: {e}")
+    if args.sweep:
+        if args.committed or args.new:
+            ap.error("--sweep takes paths, not committed-path / new-file")
+        try:
+            res = sweep(args.sweep, repo=args.repo, ignore_re=ignore)
+        except (RepoError, OSError) as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 3
+        print(f"swept {res['examined']} modified json file(s): kept {len(res['kept'])} (stamps only), "
+              f"{len(res['changed'])} really changed, {len(res['unreadable'])} unreadable")
+        for rel in res["unreadable"]:
+            print(f"unreadable {rel}", file=sys.stderr)
+        return 0
+    if not (args.committed and args.new):
+        ap.error("give committed-path and new-file, or --sweep PATH...")
     try:
         kept = keep_if_unchanged(args.committed, args.new, repo=args.repo, ignore_re=ignore)
     except NewFileError as e:

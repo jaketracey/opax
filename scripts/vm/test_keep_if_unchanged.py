@@ -435,5 +435,64 @@ class CommandLineTests(Base):
         self.assertEqual(rc, 2)
 
 
+class SweepTests(Base):
+    """--sweep: put back every tracked shard under a directory whose change vs HEAD is stamps only."""
+
+    def setUp(self):
+        super().setUp()
+        self.paths = {}
+        for name in ("a", "b", "c", "d"):
+            rel = f"portal/public/grants/federal/{name}.json"
+            self.paths[name] = (rel, self.commit(rel, dump({"generated": "old", "v": name, "n": {"generated": "old", "x": 1}})))
+        self.other = self.commit("portal/public/grants/program-notes.json", dump({"note": "hand written"}))
+        self.txt = self.commit("portal/public/grants/federal/readme.txt", b"hello\n")
+
+    def rewrite(self, name, doc):
+        self.paths[name][1].write_bytes(dump(doc))
+
+    def sweep(self, *paths, **kw):
+        return kiu.sweep(paths, repo=self.repo, **kw)
+
+    def test_stamp_only_shards_are_restored_and_real_changes_stay(self):
+        self.rewrite("a", {"generated": "NEW", "v": "a", "n": {"generated": "NEW", "x": 1}})     # stamps only
+        self.rewrite("b", {"generated": "NEW", "v": "b", "n": {"generated": "NEW", "x": 2}})     # real change
+        self.paths["c"][1].unlink()                                                             # deleted: left alone
+        newf = self.repo / "portal/public/grants/federal/new.json"
+        newf.write_bytes(dump({"v": "new"}))                                                    # untracked: left alone
+        self.txt.write_bytes(b"changed\n")                                                      # not json: left alone
+        res = self.sweep("portal/public/grants/federal")
+        self.assertEqual(res["examined"], 2)
+        self.assertEqual(res["kept"], [self.paths["a"][0]])
+        self.assertEqual(res["changed"], [self.paths["b"][0]])
+        self.assertEqual(self.paths["a"][1].read_bytes(), dump({"generated": "old", "v": "a", "n": {"generated": "old", "x": 1}}))
+        self.assertEqual(json.loads(self.paths["b"][1].read_bytes())["n"]["x"], 2)
+        self.assertFalse(self.paths["c"][1].exists())
+        self.assertTrue(newf.exists())
+        self.assertEqual(self.txt.read_bytes(), b"changed\n")
+        status = self.git("status", "--porcelain").stdout.decode().splitlines()
+        self.assertEqual(sorted(l[3:] for l in status), sorted([
+            self.paths["b"][0], self.paths["c"][0], "portal/public/grants/federal/new.json", "portal/public/grants/federal/readme.txt"]))
+
+    def test_sweep_is_limited_to_the_named_paths(self):
+        for name in ("a", "b"):
+            self.rewrite(name, {"generated": "NEW", "v": name, "n": {"generated": "NEW", "x": 1}})
+        self.other.write_bytes(dump({"note": "hand written", "generated": "NEW"}))
+        res = self.sweep("portal/public/grants/federal")
+        self.assertEqual(sorted(res["kept"]), sorted(self.paths[n][0] for n in ("a", "b")))
+        self.assertIn("generated", json.loads(self.other.read_bytes()))          # program-notes.json not swept
+
+    def test_unreadable_working_copy_is_reported_and_left(self):
+        self.paths["a"][1].write_bytes(b'{"broken":')
+        res = self.sweep("portal/public/grants/federal")
+        self.assertEqual(res["unreadable"], [self.paths["a"][0]])
+        self.assertEqual(self.paths["a"][1].read_bytes(), b'{"broken":')
+
+    def test_cli_sweep(self):
+        self.rewrite("a", {"generated": "NEW", "v": "a", "n": {"generated": "NEW", "x": 1}})
+        rc, out, _ = self.cli("--sweep", "portal/public/grants/federal")
+        self.assertEqual(rc, 0)
+        self.assertIn("swept 1 modified json file(s): kept 1 (stamps only), 0 really changed", out)
+
+
 if __name__ == "__main__":
     unittest.main()
