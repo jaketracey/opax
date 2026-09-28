@@ -39,6 +39,8 @@ way and every file that `git status` shows as changed or added must parse.
   people     parliamentarians.json: meta, people
   pay        pay.json: meta, base, offices, current, names, people
   discovery  discovery.json: signals, coverage, methodology, generated_at
+  taxcharity entities/tax-charity: index.json (meta.counts, sources, caveats; the ABN counts held), names.json
+             (by_name), and the <dd>.json shards by the last two digits of the ABN
 """
 import json
 import re
@@ -66,6 +68,7 @@ SPEAKERS_MIN_RATIO = 0.95      # speakers
 PEOPLE_MIN_RATIO = 0.95        # people in parliamentarians.json
 PAY_MIN_RATIO = 0.80           # base, offices, current, names, people
 DISCOVERY_MIN_RATIO = 0.80     # signals, methodology
+TAXCHARITY_MIN_RATIO = 0.90    # ABNs written, charity/AIS/ATO matches, by_name keys, and the shard files
 
 
 def head_bytes(rel: str) -> bytes | None:
@@ -363,10 +366,19 @@ def check_discovery() -> list[str]:
                        ("signals", "methodology"), DISCOVERY_MIN_RATIO)
 
 
+def check_taxcharity() -> list[str]:
+    d = f"{PUBLIC}/entities/tax-charity"
+    errs = _check_json(f"{d}/index.json", ("meta", "meta.counts", "meta.sources", "meta.caveats"),
+                       ("meta.counts.abns_written", "meta.counts.charity", "meta.counts.ais", "meta.counts.ato",
+                        "meta.counts.register_rows"), TAXCHARITY_MIN_RATIO)
+    errs += _check_json(f"{d}/names.json", ("by_name",), ("by_name",), TAXCHARITY_MIN_RATIO)
+    return errs + _check_dir(d, r"[0-9]{2}\.json", TAXCHARITY_MIN_RATIO)
+
+
 CHECKS = {"bills": check_bills, "votes": check_votes, "corpus": check_corpus, "wrangler": check_wrangler,
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,
-          "people": check_people, "pay": check_pay, "discovery": check_discovery}
+          "people": check_people, "pay": check_pay, "discovery": check_discovery, "taxcharity": check_taxcharity}
 
 
 def main() -> int:

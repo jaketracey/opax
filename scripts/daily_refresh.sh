@@ -69,17 +69,16 @@ QLD_START="${OPAX_QLD_START:-$SINCE}"
 SA_SINCE="${OPAX_SA_SINCE:-$SINCE}"
 IPEA_SINCE="${OPAX_IPEA_SINCE:-$(date +%Y)}"
 ONLY="${OPAX_ONLY:-}"
-declare -A STEP_DELTA=()   # step name -> rows it added ("?" when the table could not be counted)
 ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 SYNC_GATE="${OPAX_SYNC_GATE:-}"
-FAILED_STEPS=()
 
-mkdir -p "$PIPE"
-ts() { date '+%F %T'; }
-log() { echo "$(ts) $*" | tee -a "$LOG"; }
+# log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with weekly_refresh.sh)
+. "$REPO/scripts/lib/refresh_lib.sh"
 
 cd "$REPO" || { log "FATAL: cannot cd $REPO"; exit 1; }
 [ -x "$PY" ] || { log "FATAL: $PY missing (run: uv sync)"; exit 1; }
+# The ext_* loaders and exporters read OPAX_DB (never the desktop over ssh); scripts/ needs the package importable.
+export OPAX_DB="$DB" PYTHONPATH="$REPO${PYTHONPATH:+:$PYTHONPATH}"
 
 # The cutover rule (docs/operations/nightly-refresh.md): once the pipeline has moved to the VM,
 # this machine must never push to the knowledge box again, because the push checkpoint
@@ -101,57 +100,6 @@ fi
 # Secrets: ARAG_*, OPENAUSTRALIA_API_KEY, TVFY_API_KEY.
 # News is excluded from both acquisition and the knowledge box.
 if [ -f .env ]; then set -a; . ./.env; set +a; fi
-
-# Read-only row count. $1 is a SQL statement returning one number; empty $1
-# (steps with no natural table) prints "-".
-count() {
-  if [ -z "$1" ]; then echo "-"; return; fi
-  "$PY" - "$1" <<'PYEOF' 2>/dev/null || echo "-"
-import os, sqlite3, sys
-db = sqlite3.connect("file:" + os.path.expanduser("~/.cache/autoresearch/parli.db") + "?mode=ro", uri=True)
-print(db.execute(sys.argv[1]).fetchone()[0] or 0)
-PYEOF
-}
-
-# run_step NAME COUNT_SQL CMD... : runs CMD under timeout, logs OK/FAIL, delta.
-run_step() {
-  local name=$1 sql=$2; shift 2
-  if [ -n "$ONLY" ] && ! printf ',%s,' "$ONLY" | grep -q ",$name,"; then
-    return 0
-  fi
-  local before after rc t0 dur delta status
-  before=$(count "$sql")
-  t0=$(date +%s)
-  log "[$name] start: $*"
-  if timeout --kill-after=60 "$STEP_TIMEOUT" "$@" >"$PIPE/$name.log" 2>&1; then
-    rc=0
-  else
-    rc=$?
-  fi
-  after=$(count "$sql")
-  dur=$(( $(date +%s) - t0 ))
-  if [ "$before" != "-" ] && [ "$after" != "-" ]; then
-    delta="rows $before -> $after (+$((after - before)))"
-    STEP_DELTA[$name]=$((after - before))
-  else
-    delta="(no row count)"
-    STEP_DELTA[$name]="?"
-  fi
-  case $rc in
-    0)   status=OK ;;
-    124|137) status="FAIL(timeout ${STEP_TIMEOUT})" ;;
-    *)   status="FAIL(rc=$rc)" ;;
-  esac
-  if [ "$rc" -ne 0 ]; then
-    if [[ "$ALLOW_FAIL" == *",$name,"* ]]; then
-      status="$status (allowed)"
-    else
-      FAILED_STEPS+=("$name")
-    fi
-  fi
-  log "[$name] $status in ${dur}s; $delta; log $PIPE/$name.log"
-  return $rc
-}
 
 log "===== daily refresh start (since=$SINCE, timeout/step=$STEP_TIMEOUT, host=$(hostname)) ====="
 
@@ -200,6 +148,39 @@ if [ "${OPAX_SYNC_KB:-0}" = "1" ]; then
     "$PY" -m parli.ingest.words_sync --db "$DB" --source nsw --since "$SINCE" --full --limit 10000 --apply
 fi
 
+# --- the other government releases: PM transcripts, QLD statements, VIC Premier, Treasury ------------
+# scripts/refresh_releases.py: the id-probe windows come from the highest stored id, the fetchers upsert and
+# never delete, and --apply (KB on) creates only what is new after checking the KB has no automatic generation.
+REL_APPLY=()
+[ "${OPAX_SYNC_KB:-0}" = "1" ] && REL_APPLY=(--apply)
+run_step releases "SELECT COUNT(*) FROM ext_press_releases WHERE source IN ('pmtranscripts','qld','vic','treasury')" \
+  "$PY" scripts/refresh_releases.py --db "$DB" --since "$SINCE" ${REL_APPLY[@]+"${REL_APPLY[@]}"}
+
+# --- AusTender: the full OCDS feed into ext_contracts (never deletes; the last 3 days are always refetched) ----
+run_step austender_full "SELECT COUNT(*) FROM ext_contracts" \
+  "$PY" -m parli.ingest.austender_full --db "$DB" --since "$(date -d '-10 days' +%F)"
+
+# --- GrantConnect awards: staged, reconciled by ext_apply (refuses an empty or shrunken window), then the KB ---
+# Awards are varied later (a -Vn suffix), so the window is 45 days. The loader deletes its window in whatever
+# file it is pointed at, so it is pointed at a scratch file and ext_apply decides what reaches parli.db.
+GRANTS_SINCE="${OPAX_GRANTS_SINCE:-$(date -d '-45 days' +%F)}"
+GRANTS_STAGE="$PIPE/stage/grants"
+rm -rf "$GRANTS_STAGE"; mkdir -p "$GRANTS_STAGE"
+if run_step grants_fetch "" \
+     "$PY" -m parli.ingest.grantconnect --since "$GRANTS_SINCE" --refetch --db "$GRANTS_STAGE/grants.sqlite"; then
+  run_step grants_apply "SELECT COUNT(*) FROM ext_grants WHERE source='grantconnect'" \
+    "$PY" scripts/ext_apply.py grants --stage "$GRANTS_STAGE/grants.sqlite" --db "$DB" --since "$GRANTS_SINCE"
+else
+  log "[grants_apply] SKIP: the fetch failed, nothing to apply"
+fi
+
+# --- state votes (NSW, VIC): parsed from Hansard into ext_divisions / ext_votes (per chamber-day replace) -------
+VOTES_YEAR=$(TZ=Australia/Sydney date +%Y)
+run_step votes_nsw "SELECT COUNT(*) FROM ext_divisions WHERE jurisdiction='nsw'" \
+  "$PY" -m parli.ingest.votes_state nsw --year "$VOTES_YEAR" --days 6 --out "$PIPE/votes_nsw.json" --load --db "$DB"
+run_step votes_vic "SELECT COUNT(*) FROM ext_divisions WHERE jurisdiction='vic'" \
+  "$PY" -m parli.ingest.votes_state vic --days 8 --out "$PIPE/votes_vic.json" --load --db "$DB"
+
 # --- derived data ------------------------------------------------------------
 run_step link_speakers "SELECT COUNT(*) FROM speeches WHERE person_id IS NOT NULL AND person_id != ''" \
   "$PY" -m parli.ingest.link_speakers
@@ -247,6 +228,20 @@ PYEOF
   fi
   run_step tvfy_refresh "SELECT COUNT(*) FROM divisions WHERE state='federal'" \
     "$PY" -m parli.ingest.tvfy_refresh
+  # division documents for the KB (409 = already there): the state ones just loaded, then the federal ones
+  # tvfy_refresh brought in (legacy tables)
+  run_step votes_kb_ext "" \
+    "$PY" -m parli.ingest.votes_ingest --db "$DB" --from-ext --since "$SINCE" --full --limit 5000
+  run_step votes_kb_legacy "" \
+    "$PY" -m parli.ingest.votes_ingest --db "$DB" --from-legacy --since "$SINCE" --full --limit 5000
+  # GrantConnect awards from the window into the KB (create-only; amendments are held, not overwritten)
+  if [ -s "$GRANTS_STAGE/grants.sqlite" ]; then
+    run_step grants_kb "" bash -c '
+      set -e
+      sqlite3 -readonly -json "$1" "select * from ext_grants where source=\"grantconnect\" and publish_date >= \"$2\"" > "$3/rows.json"
+      "$4" scripts/publish_recent_grants.py --input "$3/rows.json" --env .env --receipt "$3/receipt-$(date +%F).jsonl" --apply
+    ' _ "$DB" "$GRANTS_SINCE" "$GRANTS_STAGE" "$PY"
+  fi
   # export_votes writes JSON to stdout and progress to stderr. run_step folds
   # both into one log (2>&1), which interleaved a progress line INTO the middle
   # of the JSON and made every run unpublishable. Keep the two streams apart:

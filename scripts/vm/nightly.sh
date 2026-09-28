@@ -45,7 +45,17 @@
 #   OPAX_MIN_FREE_GB      refuse to start with less free disk than this (default 5)
 #   OPAX_PUSH_SLEEP_UNIT  seconds multiplied by the attempt number between push retries (default 5)
 #   OPAX_NIGHTLY_NO_PUSH  1 = commit locally only: no push, no status publication
-#   OPAX_NIGHTLY_SKIP_REFRESH  1 = skip daily_refresh.sh (rerun the publish half only)
+#   OPAX_NIGHTLY_SKIP_REFRESH  1 = skip daily_refresh.sh and the periodic groups (rerun the publish half only)
+#   OPAX_NIGHTLY_SKIP_DAILY    1 = skip daily_refresh.sh only (the periodic groups still run; for rehearsing them)
+#   OPAX_NIGHTLY_SKIP_PERIODIC 1 = skip the weekly/monthly groups tonight
+#   OPAX_PERIODIC_SYNC_KB 0 = the periodic groups do not write to the knowledge box (rehearsal; default 1)
+#   OPAX_PERIODIC_ALLOW_FAIL  periodic steps allowed to fail without failing the night (default none)
+#   OPAX_NODE / OPAX_NPM  node and npm binaries for the pre-commit portal test gate (default: from PATH)
+#   OPAX_GATE_BUILD       0 = the gate does not run `npm run build:search` before the tests
+#   OPAX_FORCE_GROUPS     "weekly", "monthly" or "weekly monthly": run those groups tonight whatever the day
+#                         (rehearsal; normally weekly = every Sunday Sydney, monthly = the first Sunday too)
+#   OPAX_WEEKLY_REFRESH   periodic script (default scripts/weekly_refresh.sh)
+#   OPAX_TEST_GATE        0 = do not run the portal test suite against the new data before committing
 #   OPAX_BOT_NAME / OPAX_BOT_EMAIL   commit identity
 
 set -uo pipefail
@@ -64,7 +74,9 @@ LOGFILE="$PIPE/nightly-$TODAY.log"
 LASTFILE="$PIPE/nightly-last.json"
 LOCKFILE="$PIPE/nightly.lock"
 DAILY_LOG="$PIPE/daily.log"
-DATA_PATHS=(portal/public/bills portal/public/votes.json portal/public/corpus.json portal/wrangler.jsonc)
+# every committed group and its paths (scripts/vm/data_groups.sh): what a night may commit, validate and revert
+# shellcheck source=scripts/vm/data_groups.sh
+. "$(dirname "${BASH_SOURCE[0]}")/data_groups.sh"
 MIN_FREE_GB="${OPAX_MIN_FREE_GB:-5}"
 
 mkdir -p "$PIPE"
@@ -98,6 +110,8 @@ export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 export GIT_TERMINAL_PROMPT=0
 PY="$REPO/.venv/bin/python"
 cd "$REPO" || { fail "cannot cd $REPO"; exit 1; }
+# only paths HEAD tracks can be checked out or cleaned; a group's file that does not exist yet needs a first manual commit
+mapfile -t DATA_PATHS < <(all_data_paths | while read -r p; do [ -n "$(git ls-tree --name-only HEAD -- "$p" 2>/dev/null)" ] && echo "$p"; done)
 
 # Fetching works over HTTPS (the repository is public); pushing goes over SSH with the deploy
 # key. BatchMode makes a missing or refused key fail at once instead of waiting for a prompt,
@@ -170,7 +184,7 @@ sync_repo() {
   git checkout -q "$BRANCH" 2>/dev/null || git checkout -q -B "$BRANCH" "origin/$BRANCH" || return 1
   # leftovers of a run that died half way: only the data paths are ever touched by the nightly
   git checkout -q HEAD -- "${DATA_PATHS[@]}" || return 1
-  git clean -fdq -- portal/public/bills
+  git clean -fdq -- "${DATA_PATHS[@]}"
   if git merge-base --is-ancestor "origin/$BRANCH" HEAD; then
     return 0                                   # up to date, or ahead by an unpushed nightly commit
   elif git merge-base --is-ancestor HEAD "origin/$BRANCH"; then
@@ -185,11 +199,17 @@ sync_repo() {
 }
 log "syncing $BRANCH"
 if ! sync_repo; then fail "could not sync the checkout with origin/$BRANCH"; finish; fi
+mapfile -t DATA_PATHS < <(all_data_paths | while read -r p; do [ -n "$(git ls-tree --name-only HEAD -- "$p" 2>/dev/null)" ] && echo "$p"; done)
 log "checkout at $(git rev-parse --short HEAD): $(git log -1 --format=%s | cut -c1-90)"
 
+# git helpers for putting a group of data files back to what HEAD has
+revert() { git checkout -q HEAD -- "$@"; git clean -fdq -- "$@" 2>/dev/null || true; }
+revert_group() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; revert "${paths[@]}"; }
+group_changed() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; [ -n "$(git status --porcelain -- "${paths[@]}")" ]; }
+
 # ---- 2. the refresh -------------------------------------------------------------------------
-if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ]; then
-  log "OPAX_NIGHTLY_SKIP_REFRESH=1: not running daily_refresh.sh"
+if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ] || [ "${OPAX_NIGHTLY_SKIP_DAILY:-0}" = 1 ]; then
+  log "OPAX_NIGHTLY_SKIP_REFRESH/SKIP_DAILY=1: not running daily_refresh.sh"
 else
   REFRESH="${OPAX_DAILY_REFRESH:-$REPO/scripts/daily_refresh.sh}"
   log "running $REFRESH (KB sync on)"
@@ -214,8 +234,42 @@ else
   fi
 fi
 
+# ---- 2b. the periodic groups: weekly (Sundays, Sydney) and monthly (the first Sunday) ------------------
+select_groups() {
+  if [ -n "${OPAX_FORCE_GROUPS:-}" ]; then echo "$OPAX_FORCE_GROUPS"; return; fi
+  local today dow dom
+  today=${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}   # OPAX_TODAY=YYYY-MM-DD pretends it is that night (rehearsal, tests)
+  dow=$(date -d "$today" +%u); dom=${today##*-}
+  if [ "$dow" = 7 ]; then
+    if [ "$((10#$dom))" -le 7 ]; then echo "weekly monthly"; else echo "weekly"; fi
+  fi
+}
+WEEKLY_LOG="$PIPE/weekly.log"
+if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC:-0}" != 1 ]; then
+  groups=$(select_groups)
+  if [ -n "$groups" ]; then
+    PERIODIC="${OPAX_WEEKLY_REFRESH:-$REPO/scripts/weekly_refresh.sh}"
+    log "periodic groups tonight: $groups"
+    # shellcheck disable=SC2086  # $groups is a word list on purpose
+    OPAX_SYNC_KB="${OPAX_PERIODIC_SYNC_KB:-1}" OPAX_ALLOW_FAIL="${OPAX_PERIODIC_ALLOW_FAIL:-}" run "$PERIODIC" $groups
+    prc=$?
+    if ! awk '/===== weekly refresh start/ { seen=1; complete=0 }
+              /===== weekly refresh end/ && seen { complete=1 }
+              END { exit !(seen && complete) }' "$WEEKLY_LOG" 2>/dev/null || [ ! "$WEEKLY_LOG" -nt "$MARK" ]; then
+      # it never got to the end (lock held, killed, crashed): trust none of the periodic files it may have touched
+      for g in "${DATA_GROUPS[@]}"; do
+        case $g in bills|votes|corpus|wrangler) continue ;; esac
+        revert_group "$g"
+      done
+      fail "weekly_refresh.sh ($groups) did not complete a run (rc=$prc); the periodic files were put back to HEAD"
+    elif [ "$prc" -ne 0 ]; then
+      failed_steps=$(grep -E 'Incomplete weekly refresh: failed steps' "$WEEKLY_LOG" | tail -1 | sed 's/.*failed steps //')
+      fail "weekly_refresh.sh ($groups) reported failed steps: ${failed_steps:-unknown} (rc=$prc); the rest was still published"
+    fi
+  fi
+fi
+
 # ---- 3. bills: put the speech briefs back, prove none was lost -----------------------------------
-revert() { git checkout -q HEAD -- "$@"; git clean -fdq -- "$@" 2>/dev/null || true; }
 log "filling bill speech briefs from the knowledge box"
 if ! run "$PY" scripts/export_bills.py --fill-briefs portal/public/bills; then
   log "WARN: fill-briefs exited non-zero; the verification below decides whether the bills are usable"
@@ -226,15 +280,69 @@ if ! run "$PY" scripts/verify_bill_briefs.py; then
 fi
 
 # ---- 4. validate what will be committed ----------------------------------------------------------
-for group in bills votes; do
+# bills and votes are checked every night; every periodic group only when `git status` shows its files changed.
+# A group that fails is put back to HEAD and the night goes on with the rest.
+for group in "${DATA_GROUPS[@]}"; do
+  case $group in corpus|wrangler) continue ;; esac
+  if [ "$group" != bills ] && [ "$group" != votes ] && ! group_changed "$group"; then continue; fi
   if ! run "$PY" scripts/vm/validate_data.py "$group"; then
-    case $group in
-      bills) revert portal/public/bills ;;
-      votes) revert portal/public/votes.json ;;
-    esac
+    revert_group "$group"
     fail "validation failed for $group: reverted to HEAD and not published tonight"
   fi
 done
+
+# The portal test suite reads the generated files (grant shards, money graph, suppliers ...), and the deploy job runs
+# it before it ships anything: a red test would leave tonight's data on main but undeployed until someone noticed.
+# So run it here, against the new files, before committing (8 s on a laptop, well under a minute here). If it goes
+# red, put the changed groups back to HEAD one at a time (periodic ones first, then votes and bills), re-running
+# after each, until it is green; those groups are not published tonight. Needs Node 24 and portal/node_modules
+# (scripts/vm/bootstrap.sh installs them); without them the gate is skipped and the deploy job is the only test.
+if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
+  gate_groups=()
+  for group in "${DATA_GROUPS[@]}"; do
+    case $group in corpus|wrangler|bills|votes) continue ;; esac
+    group_changed "$group" && gate_groups+=("$group")
+  done
+  for group in votes bills; do group_changed "$group" && gate_groups+=("$group"); done
+  if [ "${#gate_groups[@]}" -gt 0 ]; then
+    NODE="${OPAX_NODE:-node}"; NPM="${OPAX_NPM:-npm}"
+    if [ -f "$REPO/portal/package-lock.json" ] && [ -d "$REPO/portal/node_modules" ] \
+       && [ "$(cat "$REPO/portal/node_modules/.opax-lock-sha" 2>/dev/null)" != "$(sha256sum "$REPO/portal/package-lock.json" | cut -d' ' -f1)" ] \
+       && command -v "$NODE" >/dev/null 2>&1 && command -v "$NPM" >/dev/null 2>&1; then
+      log "portal/package-lock.json changed since the last install: npm ci"
+      if (cd "$REPO/portal" && run "$NPM" ci --ignore-scripts --no-audit --no-fund); then
+        sha256sum "$REPO/portal/package-lock.json" | cut -d' ' -f1 > "$REPO/portal/node_modules/.opax-lock-sha"
+      else
+        log "WARN: npm ci failed; the tests below run against the old node_modules"
+      fi
+    fi
+    if command -v "$NODE" >/dev/null 2>&1 && [ -d "$REPO/portal/node_modules" ]; then
+      # what the deploy job does before its tests: rebuild the search catalog from the public data (~50 s; the
+      # generated shards are gitignored, only manifest.json is tracked and is put back below)
+      run_suite() {
+        [ "${OPAX_GATE_BUILD:-1}" = 0 ] || (cd "$REPO/portal" && run "$NPM" run build:search) || return 1
+        (cd "$REPO/portal" && run "$NODE" --test --test-reporter=dot test/*.test.mjs)
+      }
+      log "portal tests against the new data (${gate_groups[*]})"
+      if ! run_suite; then
+        reverted=()
+        green=false
+        for group in "${gate_groups[@]}"; do
+          revert_group "$group"; reverted+=("$group")
+          if run_suite; then green=true; break; fi
+        done
+        if [ "$green" = true ]; then
+          fail "portal tests failed against the new data; green again with ${reverted[*]} put back to HEAD, so ${reverted[*]} not published tonight"
+        else
+          fail "portal tests fail even with every changed group (${reverted[*]}) put back to HEAD: the suite is red on main itself; nothing published tonight except corpus.json"
+        fi
+      fi
+      git checkout -q HEAD -- portal/public/search-catalog/manifest.json 2>/dev/null || true   # a build output, never ours to commit
+    else
+      log "WARN: node or portal/node_modules missing: not running the portal tests before committing (${gate_groups[*]} changed)"
+    fi
+  fi
+fi
 
 # ---- 5. corpus manifest + cache epoch ---------------------------------------------------------------------
 RESULT_JSON=$(mktemp)
@@ -242,7 +350,7 @@ RESULT_JSON=$(mktemp)
 # whenever anything else is about to be pushed, and at least once a day even when nothing else moved:
 # that daily stamp is also what the watchdog reads to know the whole chain is alive.
 stamp_args=(--stamp-after-hours "${OPAX_STAMP_AFTER_HOURS:-12}")
-if [ -n "$(git status --porcelain -- portal/public/bills portal/public/votes.json)" ]; then stamp_args=(--always-stamp); fi
+if [ -n "$(git status --porcelain -- "${DATA_PATHS[@]}")" ]; then stamp_args=(--always-stamp); fi
 log "updating portal/public/corpus.json from the live knowledge box (${stamp_args[*]})"
 "$PY" scripts/update_corpus_manifest.py --daily-log "$DAILY_LOG" --settle "${OPAX_SETTLE_SECONDS:-60}" \
     "${stamp_args[@]}" --result-json "$RESULT_JSON" 2>&1 | tee -a "$LOGFILE"
@@ -276,8 +384,13 @@ fi
 
 # ---- 6. commit -----------------------------------------------------------------------------------------------
 git add -A -- "${DATA_PATHS[@]}"
-others=$(git status --porcelain | grep -v '^??' | grep -vE ' (portal/public/bills/|portal/public/votes.json|portal/public/corpus.json|portal/wrangler.jsonc)' || true)
-[ -z "$others" ] || log "WARN: other tracked files are modified and were NOT committed: $(echo "$others" | tr '\n' ' ' | cut -c1-300)"
+others=""
+while IFS= read -r line; do
+  f=${line:3}; ours=false
+  for p in "${DATA_PATHS[@]}"; do case "$f" in "$p"|"$p"/*) ours=true; break ;; esac; done
+  [ "$ours" = true ] || others+="$line "
+done < <(git status --porcelain | grep -v '^??' || true)
+[ -z "$others" ] || log "WARN: other tracked files are modified and were NOT committed: $(echo "$others" | cut -c1-300)"
 if git diff --cached --quiet; then
   if [ -n "$(git log "origin/$BRANCH..HEAD" --oneline 2>/dev/null)" ]; then
     log "nothing new to commit, but an earlier nightly commit is unpushed: pushing it"
@@ -288,16 +401,23 @@ if git diff --cached --quiet; then
   fi
 else
   nbills=$(git diff --cached --name-only -- portal/public/bills | wc -l | tr -d ' ')
-  parts=()
+  parts=(); changed_groups=()
   [ -n "$RESULT_SUMMARY" ] && [ "$KB_CHANGED" = true ] && parts+=("$RESULT_SUMMARY")
   [ "$nbills" -gt 0 ] && parts+=("$nbills bill files")
   git diff --cached --quiet -- portal/public/votes.json || parts+=("votes.json")
+  for group in "${DATA_GROUPS[@]}"; do
+    case $group in bills|votes|corpus|wrangler) continue ;; esac
+    read -ra gpaths <<<"${GROUP_PATHS[$group]}"
+    git diff --cached --quiet -- "${gpaths[@]}" || { changed_groups+=("$group"); parts+=("$group"); }
+  done
   subject="Nightly refresh $TODAY"
   if [ "${#parts[@]}" -gt 0 ]; then
     joined=$(printf '%s; ' "${parts[@]}")
     subject="$subject: ${joined%; }"
   fi
-  git commit -q -m "$subject" -m "Unattended run of scripts/vm/nightly.sh on the OPAX VM. Data files only: bills, votes.json, corpus.json, CACHE_EPOCH." \
+  body="Unattended run of scripts/vm/nightly.sh on the OPAX VM. Data files only: bills, votes.json, corpus.json, CACHE_EPOCH"
+  [ "${#changed_groups[@]}" -gt 0 ] && body="$body, ${changed_groups[*]}"
+  git commit -q -m "$subject" -m "$body." \
     || { fail "git commit failed"; finish; }
   log "committed: $subject"
 fi

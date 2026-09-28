@@ -35,7 +35,7 @@ new_sandbox() {
   ORIGIN="$SB/origin.git"; git init -q --bare "$ORIGIN"
   local seed="$SB/seed"; mkdir -p "$seed"
   # the files the nightly reads, from the real tree
-  for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/export_bills.py \
+  for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/export_bills.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
            parli/__init__.py parli/arag.py portal/wrangler.jsonc portal/public/corpus.json; do
     mkdir -p "$seed/$(dirname "$f")"; cp "$SRC/$f" "$seed/$f"
@@ -56,6 +56,7 @@ for d in docs:
 index = {"generated_at": "2026-09-21T12:00:00+00:00", "count": len(rows), "meta": {"mode": "registry"}, "bills": rows}
 open(f"{seed}/portal/public/bills/index.json", "w").write(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
 open(f"{seed}/portal/public/votes.json", "w").write(json.dumps({"divisions": [{"id": i} for i in range(400)]}) + "\n")
+open(f"{seed}/portal/public/speakers.json", "w").write(json.dumps([{"id": i, "name": f"Speaker {i}"} for i in range(100)]) + "\n")
 PYEOF
   (cd "$seed" && git init -q && git add -A && git commit -q -m seed && git remote add origin "$ORIGIN" && git push -q origin HEAD:main)
   REPO="$HOME/opax"; git clone -q "$ORIGIN" "$REPO"
@@ -130,7 +131,47 @@ fi
 exit 0
 FREOF
   chmod +x "$SB/fake_refresh.sh"
-  export OPAX_DAILY_REFRESH="$SB/fake_refresh.sh" OPAX_REPO="$REPO" ORIGIN
+  # stands in for scripts/weekly_refresh.sh: records how it was called and rewrites speakers.json, the group's file
+  cat > "$SB/fake_weekly.sh" <<'FWEOF'
+#!/usr/bin/env bash
+PIPE="$HOME/.cache/autoresearch/pipeline"
+echo "$*" > "$HOME/weekly.args"
+python3 - "${FAKE_WEEKLY_MODE:-ok}" <<'PYEOF'
+import json, sys
+mode = sys.argv[1]
+p = "portal/public/speakers.json"
+d = json.load(open(p))
+if mode in ("ok", "failsteps", "crash"):
+    d.append({"id": len(d), "name": f"Speaker {len(d)}"})
+elif mode == "shrink":
+    d = d[:10]
+if mode != "none":
+    open(p, "w").write(json.dumps(d) + "\n")
+PYEOF
+[ "${FAKE_WEEKLY_MODE:-ok}" = crash ] && exit 137
+[ "${FAKE_WEEKLY_MODE:-ok}" = noblock ] && exit 0
+{
+  echo "$(date '+%F %T') ===== weekly refresh start (groups: $*; timeout/step=3h, host=fake) ====="
+  echo "$(date '+%F %T') [x_speakers] OK in 2s; (no row count); log /x"
+  [ "${FAKE_WEEKLY_MODE:-ok}" = failsteps ] && echo "$(date '+%F %T') [x_fits] FAIL(rc=1) in 1s; (no row count); log /x"
+  echo "$(date '+%F %T') ===== weekly refresh end ====="
+  [ "${FAKE_WEEKLY_MODE:-ok}" = failsteps ] && echo "$(date '+%F %T') Incomplete weekly refresh: failed steps x_fits"
+} >> "$PIPE/weekly.log"
+[ "${FAKE_WEEKLY_MODE:-ok}" = failsteps ] && exit 1
+exit 0
+FWEOF
+  chmod +x "$SB/fake_weekly.sh"
+  # a node that records its arguments and exits FAKE_NODE_RC
+  cat > "$SB/bin/node" <<'NDEOF'
+#!/bin/sh
+echo "node $*" >> "$HOME/node.calls"
+# FAKE_NODE_RED_WHILE_CHANGED=<repo path>: red for as long as that file differs from HEAD (a test the new data breaks)
+if [ -n "${FAKE_NODE_RED_WHILE_CHANGED:-}" ] && [ -n "$(git status --porcelain -- ":(top)$FAKE_NODE_RED_WHILE_CHANGED" 2>/dev/null)" ]; then exit 1; fi
+exit ${FAKE_NODE_RC:-0}
+NDEOF
+  chmod +x "$SB/bin/node"
+  printf '#!/bin/sh\necho "npm $*" >> "$HOME/npm.calls"\nexit ${FAKE_NPM_RC:-0}\n' > "$SB/bin/npm"; chmod +x "$SB/bin/npm"
+  export OPAX_DAILY_REFRESH="$SB/fake_refresh.sh" OPAX_WEEKLY_REFRESH="$SB/fake_weekly.sh" OPAX_NODE="$SB/bin/node" OPAX_NPM="$SB/bin/npm" OPAX_REPO="$REPO" ORIGIN
   export PATH="$SB/bin:$PATH"
 }
 
@@ -305,6 +346,7 @@ new_refresh_sandbox() {
   export HOME="$RS/home"; mkdir -p "$HOME/.cache/autoresearch"
   unset OPAX_REPO OPAX_DAILY_REFRESH OPAX_ALLOW_FAIL OPAX_SYNC_GATE OPAX_SYNC_KB   # nothing left over from the nightly scenarios
   cp "$SRC/scripts/daily_refresh.sh" "$SRC/scripts/refresh_bills.sh" "$RS/repo/scripts/"
+  mkdir -p "$RS/repo/scripts/lib"; cp "$SRC/scripts/lib/refresh_lib.sh" "$RS/repo/scripts/lib/"
   : > "$RS/repo/.env"; : > "$RS/repo/download_hansard_fast.py"
   mkdir -p "$RS/repo/portal/public/bills"; echo '{"bills":[]}' > "$RS/repo/portal/public/bills/index.json"
   echo '{"tables":{"speeches":{"after":1323635,"pushed":600482,"failed":{}}}}' > "$HOME/.cache/autoresearch/arag_sync_state.json"
@@ -323,6 +365,8 @@ if [ "${1:-}" = "-" ]; then
 fi
 if [ "${1:-}" = "-m" ]; then
   for f in ${FAIL_STEPS:-}; do [ "$2" = "parli.ingest.$f" ] && exit 1; done
+else
+  for f in ${FAIL_STEPS:-}; do [ "${1:-}" = "scripts/$f" ] && exit 1; done
 fi
 exit 0
 PYSTUB
@@ -407,6 +451,167 @@ check "no new committee rows: neither runs" bash -c "! grep -q 'committee_witnes
 new_refresh_sandbox r19c
 COMMITTEE_ADDS=3 OPAX_SYNC_KB=1 OPAX_SYNC_GATE=link_speakers,classify,committee_fetch,committee_resolve FAIL_STEPS="committee_witnesses" refresh
 check "a failing resolve holds the KB push back" bash -c "! grep -q 'parli.ingest.arag_sync' '$RS_CALLS'"
+
+echo "== 20. daily_refresh.sh: releases, AusTender, GrantConnect and the state votes run every night"
+new_refresh_sandbox r20
+refresh
+check "exit 0" test "$RRC" -eq 0
+check "releases ran without --apply (no KB sync)" bash -c "grep -q 'scripts/refresh_releases.py' '$RS_CALLS' && ! grep 'refresh_releases' '$RS_CALLS' | grep -q -- '--apply'"
+check "austender_full ran" grep -q 'parli.ingest.austender_full' "$RS_CALLS"
+check "GrantConnect is fetched into a scratch file, then reconciled into the database by ext_apply" bash -c "
+  grep 'parli.ingest.grantconnect' '$RS_CALLS' | grep -q 'stage/grants/grants.sqlite' && grep 'scripts/ext_apply.py grants' '$RS_CALLS' | grep -q -- '--stage .*stage/grants/grants.sqlite'"
+check "state votes NSW and VIC loaded" bash -c "grep -q 'parli.ingest.votes_state nsw' '$RS_CALLS' && grep -q 'parli.ingest.votes_state vic' '$RS_CALLS'"
+check "no KB steps without OPAX_SYNC_KB" bash -c "! grep -q 'votes_ingest' '$RS_CALLS'"
+new_refresh_sandbox r20b
+OPAX_SYNC_KB=1 refresh
+check "with the KB on: releases --apply and the two division-document steps run" bash -c "grep 'refresh_releases' '$RS_CALLS' | grep -q -- '--apply' && grep -q 'votes_ingest.*--from-ext' '$RS_CALLS' && grep -q 'votes_ingest.*--from-legacy' '$RS_CALLS'"
+new_refresh_sandbox r20c
+FAIL_STEPS="grantconnect" refresh
+check "a failed GrantConnect fetch is a failed step" test "$RRC" -eq 1
+check "and ext_apply is skipped, so the register is never touched by a half load" bash -c "grep -q '\[grants_apply\] SKIP' '$HOME/.cache/autoresearch/pipeline/daily.log' && ! grep -q 'ext_apply.py grants' '$RS_CALLS'"
+check "the nightly went on to the votes and the derived steps" bash -c "grep -q 'votes_state vic' '$RS_CALLS' && grep -q 'link_speakers' '$RS_CALLS'"
+
+# --- weekly_refresh.sh itself -------------------------------------------------------------------------------
+new_weekly_sandbox() {
+  new_refresh_sandbox "$1"
+  cp "$SRC/scripts/weekly_refresh.sh" "$RS/repo/scripts/"; mkdir -p "$RS/repo/scripts/vm"
+  cp "$SRC/scripts/vm/export_step.sh" "$SRC/scripts/vm/keep_if_unchanged.py" "$RS/repo/scripts/vm/"
+  chmod +x "$RS/repo/scripts/weekly_refresh.sh" "$RS/repo/scripts/vm/export_step.sh"
+}
+weekly() { (cd "$RS" && "$RS/repo/scripts/weekly_refresh.sh" "$@" >"$RS/out.txt" 2>&1); WRC=$?; }
+WLOG='$HOME/.cache/autoresearch/pipeline/weekly.log'
+order() { # order STEP_A STEP_B ...: the first calls of each pattern are in this order
+  bash -c "prev=0; for pat in \"\$@\"; do n=\$(grep -n -- \"\$pat\" '$RS_CALLS' | head -1 | cut -d: -f1); [ -n \"\$n\" ] && [ \"\$n\" -gt \"\$prev\" ] || { echo \"out of order or missing: \$pat\"; exit 1; }; prev=\$n; done" _ "$@"
+}
+
+echo "== 21. weekly_refresh.sh weekly: registers loaded (staged where they replace), then exports, tax/charity block last"
+new_weekly_sandbox w21
+weekly weekly
+check "exit 0" test "$WRC" -eq 0
+check "log brackets the run" bash -c "grep -q 'weekly refresh start (groups: weekly' $WLOG && grep -q '===== weekly refresh end' $WLOG"
+check "state donations are staged in a scratch file and applied by ext_apply, then labelled" bash -c "grep 'money_state_donations --source qld' '$RS_CALLS' | grep -q 'stage/weekly/donations/qld.sqlite' && grep 'scripts/ext_apply.py donations --stage-dir' '$RS_CALLS' | grep -q 'stage/weekly/donations' && grep -q 'money_classify' '$RS_CALLS'"
+check "lobbyists and FITS are staged then applied" bash -c "grep -q 'ext_apply.py lobbyists --stage' '$RS_CALLS' && grep -q 'ext_apply.py fits --stage' '$RS_CALLS'"
+check "ACNC/ATO runs with --check-updated" grep -q 'parli.ingest.acnc_ato --check-updated' "$RS_CALLS"
+check "the loaders come before the exports, and the tax/charity export is the last" order parli.ingest.acnc_ato scripts/export_speakers.py scripts/export_money_graph.py scripts/export_access.py scripts/export_fits.py scripts/export_interests.py scripts/export_tax_charity.py
+check "no monthly step ran" bash -c "! grep -qE 'qld_contracts|money_ipea|state_rosters|export_suppliers|export_grants|build_pay|export_discovery' '$RS_CALLS'"
+check "the contract_suppliers step is given the ABR index directory" bash -c "grep 'contract_suppliers' '$RS_CALLS' | grep -q -- '--abr-dir .*/abr'"
+new_weekly_sandbox w21b
+weekly monthly
+check "monthly alone: exit 0 and only the monthly loaders/exports (plus the tax/charity block at the end)" bash -c "[ '$WRC' -eq 0 ] && grep -q qld_contracts '$RS_CALLS' && grep -q build_pay.py '$RS_CALLS' && ! grep -q 'parli.ingest.acnc_ato' '$RS_CALLS' && grep -q export_tax_charity '$RS_CALLS'"
+check "suppliers and grants exports come before the tax/charity block that reads them" order scripts/export_suppliers.py scripts/export_grants.py scripts/export_tax_charity.py
+check "no KB patch drain without OPAX_SYNC_KB" bash -c "! grep -q arag_patch_speakers '$RS_CALLS'"
+new_weekly_sandbox w21c
+OPAX_SYNC_KB=1 weekly monthly
+check "with the KB on the roster patches are drained" grep -q 'scripts/arag_patch_speakers.py' "$RS_CALLS"
+new_weekly_sandbox w21d
+weekly weekly monthly
+check "both groups: the weekly ones come first" order parli.ingest.acnc_ato qld_contracts export_tax_charity
+check "and the tax/charity export runs once" test "$(grep -c export_tax_charity "$RS_CALLS")" -eq 1
+
+echo "== 22. weekly_refresh.sh: a failing fetch skips its apply; failures make the run incomplete; bad usage; the cutover marker"
+new_weekly_sandbox w22
+FAIL_STEPS="fits_register" weekly weekly
+check "exit 1" test "$WRC" -eq 1
+check "the failed FITS fetch is named" grep -q 'Incomplete weekly refresh: failed steps fits_fetch' "$HOME/.cache/autoresearch/pipeline/weekly.log"
+check "its apply was skipped, never run on a half load" bash -c "grep -q '\[fits_apply\] SKIP' '$HOME/.cache/autoresearch/pipeline/weekly.log' && ! grep -q 'ext_apply.py fits' '$RS_CALLS'"
+check "the other steps still ran (exports after the failure)" grep -q 'export_tax_charity.py' "$RS_CALLS"
+new_weekly_sandbox w22b
+OPAX_ALLOW_FAIL=fits_fetch FAIL_STEPS="fits_register" weekly weekly
+check "an allowed failure leaves the run complete (exit 0)" test "$WRC" -eq 0
+new_weekly_sandbox w22c
+FAIL_STEPS="export_speakers.py" weekly weekly
+check "a failing export is a failed step and the rest of the exports still run" bash -c "[ '$WRC' -eq 1 ] && grep -q 'failed steps x_speakers' '$HOME/.cache/autoresearch/pipeline/weekly.log' && grep -q export_tax_charity.py '$RS_CALLS'"
+new_weekly_sandbox w22d
+weekly nonsense
+check "an unknown group is refused (exit 64) and nothing runs" bash -c "[ '$WRC' -eq 64 ] && [ ! -s '$RS_CALLS' ]"
+new_weekly_sandbox w22e
+touch "$HOME/.cache/autoresearch/MIGRATED_TO_VM"
+OPAX_SYNC_KB=1 weekly weekly
+check "the desktop cutover marker refuses a KB-syncing run (exit 3)" test "$WRC" -eq 3
+
+echo "== 23. export_step.sh: an unchanged export leaves the tree alone; a failing directory export is restored"
+ES=$(mktemp -d); mkdir -p "$ES/scripts/vm" "$ES/out"; cp "$SRC/scripts/vm/export_step.sh" "$SRC/scripts/vm/keep_if_unchanged.py" "$ES/scripts/vm/"
+( cd "$ES" && git init -q && git config user.email t@t && git config user.name t
+  printf '{"generated_at":"2026-01-01","n":1}\n' > out/a.json; printf '{"generated_at":"2026-01-01","n":1}\n' > out/b.json
+  git add -A && git commit -q -m base )
+export PY=python3
+( cd "$ES" && bash scripts/vm/export_step.sh json out/a.json bash -c 'printf "{\"generated_at\":\"2026-09-01\",\"n\":1}\n"' )
+check "json mode: only the timestamp differs, so the file is not touched" bash -c "cd '$ES' && git diff --quiet"
+( cd "$ES" && bash scripts/vm/export_step.sh json out/a.json bash -c 'printf "{\"generated_at\":\"2026-09-01\",\"n\":2}\n"' )
+check "json mode: real change is installed" bash -c "cd '$ES' && git diff --quiet -- out/a.json; [ \$? -eq 1 ]"
+( cd "$ES" && git checkout -q -- out )
+( cd "$ES" && bash scripts/vm/export_step.sh dir out -- bash -c 'for f in out/a.json out/b.json; do sed -i.bak "s/2026-01-01/2026-09-01/" $f; rm -f $f.bak; done' )
+check "dir mode: stamp-only rewrites are put back" bash -c "cd '$ES' && git diff --quiet"
+( cd "$ES" && bash scripts/vm/export_step.sh dir out -- bash -c 'echo {} > out/a.json; echo {} > out/new.json; exit 7' ); ESRC=$?
+check "dir mode: a failing exporter exits with its status, restores the tree and drops what it added" bash -c "[ '$ESRC' -eq 7 ] && cd '$ES' && git diff --quiet && [ ! -e out/new.json ]"
+rm -rf "$ES"; unset PY
+
+echo "== 24. nightly: which periodic groups run (Sydney date) and what happens when they run"
+new_sandbox s24
+OPAX_TODAY=2026-09-21 FAKE_WEEKLY_MODE=ok nightly
+check "a Monday (2026-09-21): the periodic refresh is not called" test ! -e "$HOME/weekly.args"
+new_sandbox s24b
+OPAX_TODAY=2026-09-20 FAKE_WEEKLY_MODE=ok nightly
+check "Sunday 2026-09-20 (not the first): weekly only" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = weekly ]"
+check "exit 0 and the group's file was published" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101'"
+check "the commit subject names the group" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q 'speakers'"
+check "corpus.json changed with it (that starts the deploy)" bash -c "git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -qx portal/public/corpus.json"
+check "the log says which groups ran" grep -q 'periodic groups tonight: weekly' "$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log"
+new_sandbox s24c
+OPAX_TODAY=2026-09-06 FAKE_WEEKLY_MODE=ok nightly
+check "Sunday 2026-09-06, the first: weekly and monthly" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = 'weekly monthly' ]"
+new_sandbox s24d
+OPAX_FORCE_GROUPS="monthly" OPAX_TODAY=2026-09-23 FAKE_WEEKLY_MODE=ok nightly
+check "OPAX_FORCE_GROUPS overrides the calendar" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = monthly ]"
+new_sandbox s24e
+OPAX_FORCE_GROUPS="weekly" OPAX_NIGHTLY_SKIP_PERIODIC=1 FAKE_WEEKLY_MODE=ok nightly
+check "OPAX_NIGHTLY_SKIP_PERIODIC=1 switches them off" test ! -e "$HOME/weekly.args"
+
+echo "== 25. nightly: a periodic group that fails validation, fails its tests, or never completes is put back; the rest goes out"
+new_sandbox s25
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=shrink nightly
+check "exit 1" test "$NRC" -eq 1
+check "the shrunken speakers.json was not published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
+check "votes and corpus still went out" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"' && git --git-dir='$ORIGIN' show main:portal/public/corpus.json | grep -q '$TODAY'"
+check "status says which group failed validation" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'validation failed for speakers'"
+new_sandbox s25b
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=failsteps nightly
+check "failed steps: exit 1, but the finished exports are published" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101'"
+check "status names the failed step" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'failed steps: x_fits'"
+new_sandbox s25c
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=crash nightly
+check "a run that never reaches its end block: exit 1, its files are put back" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
+check "status says it did not complete" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'weekly_refresh.sh (weekly) did not complete'"
+new_sandbox s25d
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RED_WHILE_CHANGED=portal/public/speakers.json nightly
+check "portal suite red because of a group's files: exit 1" test "$NRC" -eq 1
+check "that group is not published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
+check "the suite is green again after that one revert, so votes and bills still go out" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"' && git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | grep -q 2026-09-28"
+check "the suite was run twice (red, then green), each time after rebuilding the search catalog" bash -c "[ \$(grep -c 'node --test' '$HOME/node.calls') -eq 2 ] && [ \$(grep -c 'npm run build:search' '$HOME/npm.calls') -eq 2 ]"
+check "status names the group that was put back" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'green again with speakers put back to HEAD'"
+new_sandbox s25d2
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RC=1 nightly
+check "a suite that is red whatever the data: everything changed goes back to HEAD, exit 1" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100' && ! git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"'"
+check "status says the suite is red on main itself" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'red on main itself'"
+check "the manifest still went out (the deploy job will report the red suite)" bash -c "git --git-dir='$ORIGIN' show main:portal/public/corpus.json | grep -q '$TODAY'"
+new_sandbox s25e
+mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RC=0 nightly
+check "portal tests green: exit 0, the group is published, the suite ran once" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101' && [ \$(grep -c 'node --test' '$HOME/node.calls') -eq 1 ]"
+new_sandbox s25f
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok nightly
+check "no portal checkout (no node_modules): the gate is skipped with a warning and the group goes out" bash -c "[ '$NRC' -eq 0 ] && grep -q 'not running the portal tests' '$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log'"
+new_sandbox s25g
+mkdir -p "$REPO/portal/node_modules"
+OPAX_TEST_GATE=0 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RC=1 nightly
+check "OPAX_TEST_GATE=0 turns the gate off" bash -c "[ '$NRC' -eq 0 ] && [ ! -e '$HOME/node.calls' ]"
+new_sandbox s25h
+git -C "$REPO" ls-files portal/public | grep -q speakers.json   # the group's file is tracked
+echo 'x' > "$REPO/portal/public/speakers.json.untracked.txt"
+FAKE_MODE=ok nightly
+check "a file the nightly does not own is never swept into its commit" bash -c "! git --git-dir='$ORIGIN' ls-tree -r --name-only main | grep -q untracked"
 echo
 echo "passed $PASS, failed $FAILN"
 [ "$FAILN" -eq 0 ]
