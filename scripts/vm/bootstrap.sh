@@ -135,7 +135,10 @@ if [ "$ENABLE" -eq 1 ]; then
            "$REPO_DIR/.env"; do
     [ -s "$f" ] || { echo "refusing to enable: $f is missing or empty (state not in place / secrets not filled in)" >&2; exit 1; }
   done
-  as_user ssh -o BatchMode=yes -T git@github.com 2>&1 | grep -q 'successfully authenticated' \
+  # `ssh -T git@github.com` exits 1 even when the key works, so under pipefail a
+  # `ssh | grep -q` pipeline always fails: capture the greeting, then match it.
+  gh_greeting=$(as_user ssh -o BatchMode=yes -T git@github.com 2>&1 || true)
+  grep -q 'successfully authenticated' <<<"$gh_greeting" \
     || { echo "refusing to enable: the deploy key does not authenticate to github.com (ssh -T git@github.com)" >&2; exit 1; }
   $SUDO systemctl enable opax-nightly.service
   echo "Enabled: opax-nightly.service now runs at EVERY boot and powers the machine off afterwards"
