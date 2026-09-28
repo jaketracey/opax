@@ -213,6 +213,10 @@ class ParserTests(unittest.TestCase):
         cain = self.by("Mr Cain")
         self.assertTrue(cain.text.startswith("I rise to speak"))
 
+    def test_cover_and_date_headings_are_not_topics(self):
+        first = self.turns[0]
+        self.assertEqual((first.speaker, first.topic), ("Mr Speaker", ""))
+
     def test_topics_follow_headings(self):
         self.assertEqual(self.by("Ms Cheyne").topic, "Adjournment: Health—lymphoedema")
 

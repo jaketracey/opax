@@ -569,6 +569,7 @@ def parse_turns(lines: list[Line], trace: list | None = None) -> list[Turn]:
     cur: Turn | None = None
     paras: list[str] = []
     in_division = False
+    started = False          # the cover, contents and date heading come before the first turn
 
     def close():
         nonlocal cur, paras
@@ -584,6 +585,10 @@ def parse_turns(lines: list[Line], trace: list | None = None) -> list[Turn]:
             close()
             in_division = False
             text = _para_text(b.lines)
+            if not started:
+                if trace is not None:
+                    trace.append(("front-matter", text))
+                continue
             if DATE_HEADING_RE.match(text):
                 if trace is not None:
                     trace.append(("date-heading", text))
@@ -609,6 +614,7 @@ def parse_turns(lines: list[Line], trace: list | None = None) -> list[Turn]:
                     trace.append(("narration", full))
                 continue
             disp, key = b.label
+            started = True
             if OFFICE_LABEL_RE.match(bold.strip().rstrip(":")) and not CHAIR_RE.search(disp):
                 # 'THE CLERK:', 'MEMBERS: Hear, hear!' -- procedure and noise, not a member's words
                 if trace is not None:
