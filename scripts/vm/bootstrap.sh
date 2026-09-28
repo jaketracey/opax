@@ -105,7 +105,7 @@ if [ "$CHECK" -eq 1 ]; then
   chk "timezone $TZ_NAME" bash -c "[ \"\$(timedatectl show -p Timezone --value 2>/dev/null)\" = $TZ_NAME ]"
   chk "swap" bash -c 'swapon --show | grep -q .'
   chk "unattended-upgrades installed, background timers off" bash -c 'command -v unattended-upgrade && ! systemctl is-enabled --quiet apt-daily-upgrade.timer'
-  chk "ssh password login off" bash -c 'sshd -T 2>/dev/null | grep -q "^passwordauthentication no"'
+  chk "ssh password login off" bash -c "$SUDO sshd -T 2>/dev/null | grep -q '^passwordauthentication no'"
   chk "fail2ban running" bash -c 'systemctl is-active --quiet fail2ban'
   chk "uv" test -x "$USER_HOME/.local/bin/uv"
   chk "clone at $REPO_DIR" test -d "$REPO_DIR/.git"
@@ -146,13 +146,14 @@ fi
 
 # ---- 1. apt packages -------------------------------------------------------------------------------------
 say "apt packages"
-export DEBIAN_FRONTEND=noninteractive
-$SUDO apt-get update -qq
+# sudo drops the caller's environment, so the frontend is passed through `env`
+APT="env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt-get"
+$SUDO $APT update -qq
 PKGS=(ca-certificates curl gnupg git python3 python3-venv python3-dev build-essential zstd rsync sqlite3 jq
       util-linux tzdata less iproute2)
 [ "$SKIP_F2B" -eq 1 ] || PKGS+=(fail2ban)
 [ "$SKIP_UPGRADES" -eq 1 ] || PKGS+=(unattended-upgrades)
-$SUDO apt-get install -y -qq "${PKGS[@]}"
+$SUDO $APT install -y -qq "${PKGS[@]}"
 
 # ---- 2. timezone ---------------------------------------------------------------------------------------------
 if [ "$CONTAINER" -eq 0 ] && have_systemd; then
