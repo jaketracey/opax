@@ -71,6 +71,20 @@ test('qwen3 with thinking off: content is null and the answer sits in the reason
   assert.equal(reply.usage.neurons, null)
 })
 
+test('with allowReasoning=false the reasoning fields are ignored, even when content is empty (thinking-on runs)', () => {
+  const thinking = { choices: [{ finish_reason: 'length', message: { content: null, reasoning: 'Draft: {"summary": "a draft", "topics": ["health"]} but wait', reasoning_content: 'Draft: {"summary": "a draft", "topics": ["health"]} but wait' } }] }
+  const strict = readModelReply(thinking, false)
+  assert.equal(strict.text, '')
+  assert.equal(strict.fromReasoning, false)
+  assert.equal(extractJsonObject(strict.text), null)
+  // the same response with reasoning allowed would have yielded the DRAFT
+  assert.deepEqual(extractJsonObject(readModelReply(thinking).text), { summary: 'a draft', topics: ['health'] })
+  // content, when present, is still used
+  assert.equal(readModelReply({ choices: [{ message: { content: '{"a":1}', reasoning: 'x' } }] }, false).text, '{"a":1}')
+  // Responses-API reasoning items are ignored too
+  assert.equal(readModelReply({ output: [{ type: 'reasoning', content: [{ text: '{"a":1}' }] }] }, false).text, '')
+})
+
 test('a "reasoning" field is used only when content is empty', () => {
   const reply = readModelReply({ choices: [{ message: { content: '  ', reasoning: 'the answer {"topics": ["health"]}' } }] })
   assert.equal(reply.fromReasoning, true)

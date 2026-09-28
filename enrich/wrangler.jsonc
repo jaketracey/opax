@@ -22,10 +22,14 @@
 
   "vars": {
     "ARAG_ZONE": "aws-ap-southeast-2-1",
-    // Models: the primary does the work, the escalation model gets a record only after
-    // the primary's output was rejected twice by the validator.
+    // Models (bake-off 2026-09-28, 200 speeches blind-reviewed). PRIMARY: qwen3-30b-a3b with thinking ON and
+    // constrained decoding (json_schema, topics an enum of the slugs); about 620 completion tokens and
+    // ~26 neurons per speech. ESCALATION: gpt-oss-120b at low reasoning effort, no schema, only after the
+    // primary was rejected twice by the validator (~90 neurons a call). Prices live in src/budget.ts.
     "PRIMARY_MODEL": "@cf/qwen/qwen3-30b-a3b-fp8",
     "ESCALATION_MODEL": "@cf/openai/gpt-oss-120b",
+    // Cap per call, thinking tokens included (a runaway costs at most ~120 neurons on qwen3).
+    "MAX_TOKENS": "4000",
     // Neurons per UTC day; processing stops when reached. 400000 for the backfill
     // (about $4.40/day above the free 10,000); lower to "10000" (the free tier) afterwards.
     "DAILY_NEURON_BUDGET": "400000",

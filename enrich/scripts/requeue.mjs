@@ -51,7 +51,9 @@ if (mode === 'count') {
 }
 
 const now = Date.now()
+// Discarded dry results also lose their neuron count (the spend table keeps the money actually spent).
+const resetNeurons = mode === 'dry' ? 'neurons = 0, ' : ''
 const out = run(
-  `UPDATE queue SET status = 'pending', priority = 200, attempts = 0, transient = 0, outcome = NULL, result = NULL, last_error = NULL, claim_token = NULL, claimed_at = NULL, done_at = NULL, updated_at = ${now} WHERE ${where[mode]}`,
+  `UPDATE queue SET status = 'pending', priority = 200, ${resetNeurons}attempts = 0, transient = 0, outcome = NULL, result = NULL, last_error = NULL, claim_token = NULL, claimed_at = NULL, done_at = NULL, updated_at = ${now} WHERE ${where[mode]}`,
 )
 console.log(`requeued ${out.meta?.changes ?? '?'} ${mode} rows${task ? ` (${task})` : ''}`)

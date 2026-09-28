@@ -5,7 +5,8 @@
 import { neuronsFor } from './budget.ts'
 import { extractJsonObject, readModelReply } from './extract.ts'
 import { buildMessages, type PromptRecord, type Task } from './prompts.ts'
-import { normaliseTypography, validateSummary, validateTopics } from './validate.ts'
+import { cleanupSummary, validateSummary, validateTopics } from './validate.ts'
+import { TOPIC_SLUGS } from './topics.ts'
 import type { AiLike } from './env.ts'
 
 export const MAX_ATTEMPTS = 3
@@ -51,14 +52,43 @@ export class ModelUnavailable extends Error {
 export const isQuotaError = (message: string): boolean => /daily free allocation|4006|exceeded.*(?:quota|allocation)/i.test(message)
 
 /**
- * The request body for a model. qwen3 reasons by default and can spend all of
- * max_tokens inside `reasoning` (probed 2026-09-28), so thinking is switched
- * off; gpt-oss is held to low reasoning effort. Other models get the plain body.
+ * The JSON schema for constrained decoding: the outstanding keys only, topics an enum of the
+ * taxonomy slugs (scratchpad/bakeoff/bake.py _SCHEMA). No length limits: the validator owns those.
  */
-export function requestBody(model: string, messages: Array<{ role: string; content: string }>, maxTokens: number): Record<string, unknown> {
+export function responseSchema(tasks: readonly Task[]): Record<string, unknown> {
+  const properties: Record<string, unknown> = {}
+  const required: string[] = []
+  if (tasks.includes('summary')) {
+    properties.summary = { type: 'string' }
+    required.push('summary')
+  }
+  if (tasks.includes('topics')) {
+    properties.topics = { type: 'array', items: { type: 'string', enum: [...TOPIC_SLUGS] }, maxItems: 3 }
+    required.push('topics')
+  }
+  return { type: 'object', properties, required, additionalProperties: false }
+}
+
+/**
+ * The request body for a model (bake-off decision 2026-09-28, 200 speeches blind-reviewed):
+ *  - qwen3: thinking ON (no /no_think, no chat_template_kwargs) with constrained decoding
+ *    (response_format json_schema, strict). Thinking tokens bill as output; the JSON comes back in
+ *    `content` and the reasoning fields are ignored. About 620 completion tokens on average.
+ *  - gpt-oss: reasoning effort low, NO schema; its JSON is parsed leniently.
+ *  - anything else: the plain body.
+ */
+export function requestBody(
+  model: string,
+  messages: Array<{ role: string; content: string }>,
+  maxTokens: number,
+  tasks: readonly Task[] = ['summary', 'topics'],
+): Record<string, unknown> {
   const body: Record<string, unknown> = { messages, max_tokens: maxTokens, temperature: 0.2 }
-  if (/qwen3/i.test(model)) body.chat_template_kwargs = { enable_thinking: false }
-  else if (/gpt-oss/i.test(model)) body.reasoning_effort = 'low'
+  if (/qwen3/i.test(model)) {
+    body.response_format = { type: 'json_schema', json_schema: { name: 'enrichment', schema: responseSchema(tasks), strict: true } }
+  } else if (/gpt-oss/i.test(model)) {
+    body.reasoning = { effort: 'low' }
+  }
   return body
 }
 
@@ -90,7 +120,7 @@ export async function generate(opts: GenerateOptions): Promise<Generation> {
     if (!opts.mayContinue()) return { results, incomplete: true }
     const model = models[attempt]
     const messages = buildMessages(record, outstanding, complaints)
-    const body = requestBody(model, messages, opts.maxTokens)
+    const body = requestBody(model, messages, opts.maxTokens, outstanding)
 
     let response: unknown
     try {
@@ -100,7 +130,7 @@ export async function generate(opts: GenerateOptions): Promise<Generation> {
       return { results, incomplete: true, unavailable: new ModelUnavailable(`${model}: ${message}`.slice(0, 400), isQuotaError(message)) }
     }
 
-    const reply = readModelReply(response)
+    const reply = readModelReply(response, false)
     const promptChars = messages.reduce((n, m) => n + m.content.length, 0)
     const cost = neuronsFor(model, reply.usage, promptChars, reply.text.length)
     await opts.onSpend({ model, neurons: cost.neurons, promptTokens: reply.usage.promptTokens ?? 0, completionTokens: reply.usage.completionTokens ?? 0 })
@@ -129,7 +159,7 @@ export async function generate(opts: GenerateOptions): Promise<Generation> {
       for (const t of outstanding) {
         if (t === 'summary') {
           const raw = parsed.summary
-          const cleaned = typeof raw === 'string' ? normaliseTypography(raw).split(/\s+/).filter(Boolean).join(' ') : raw
+          const cleaned = typeof raw === 'string' ? cleanupSummary(raw, record.text) : raw
           const problems = validateSummary(cleaned, { title: record.title, text: record.text })
           if (problems.length === 0) found.summary = cleaned as string
           else {

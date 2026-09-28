@@ -176,6 +176,9 @@ export class FakeAi {
       usage: { prompt_tokens: r.promptTokens ?? 1000, completion_tokens: r.completionTokens ?? 100, neurons: r.neurons ?? 5 },
     }
   }
+  systemPrompts(): string[] {
+    return this.calls.map((c) => c.body.messages.find((m: any) => m.role === 'system').content as string)
+  }
   userPrompts(): string[] {
     return this.calls.map((c) => c.body.messages.find((m: any) => m.role === 'user').content as string)
   }

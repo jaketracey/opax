@@ -63,7 +63,8 @@ export function readConfig(env: Partial<Env>): Config {
     batchSize: clampInt(env.BATCH_SIZE, 30, 1, 90),
     // Workers hold at most six simultaneous outbound connections.
     concurrency: clampInt(env.CONCURRENCY, 6, 1, 6),
-    maxTokens: clampInt(env.MAX_TOKENS, 1500, 200, 8000),
+    // Thinking tokens count: the bake-off averaged ~620 completion tokens (p95 ~1,100) with one runaway.
+    maxTokens: clampInt(env.MAX_TOKENS, 4000, 200, 8000),
     // Only the exact string "live" ever writes to the box.
     live: env.WRITE_MODE === 'live',
     discoveryStart: new Date(env.DISCOVERY_START || DEFAULT_DISCOVERY_START).toISOString(),

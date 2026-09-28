@@ -285,6 +285,8 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
   // ---- generate
   const tasks = [...new Set(todo.map((r) => taskOf(r.task)))]
   const record: PromptRecord = {
+    rid,
+    slug: resource.slug ?? null,
     kind: kindOf(resource, todo[0].task),
     title: resource.title ?? '',
     state: tagOf(resource, 'state'),

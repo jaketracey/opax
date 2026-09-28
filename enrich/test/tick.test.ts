@@ -316,8 +316,9 @@ test('a rejected brief is retried once on the primary with the complaint, then e
   const retry = ai.userPrompts()[1]
   assert.ok(retry.includes('figure 2003 is not present in the supplied text'))
   assert.ok(retry.includes('The previous attempt failed these checks'))
-  assert.ok(!retry.includes('TAXONOMY'), 'a summary-only retry does not resend the taxonomy')
-  assert.ok(ai.userPrompts()[0].includes('The only valid topic values are exactly: gambling | financial-services'), 'the slug list sits beside the output shape')
+  assert.ok(!ai.systemPrompts()[1].includes('TAXONOMY'), 'a summary-only retry does not resend the taxonomy')
+  assert.ok(ai.systemPrompts()[0].includes('TAXONOMY'))
+  assert.deepEqual(Object.keys(ai.calls[1].body.response_format.json_schema.schema.properties), ['summary'], 'and constrains only the summary')
   const q = Object.fromEntries(rows(raw, 'SELECT * FROM queue').map((r) => [r.task, r]))
   assert.equal(q.speech_summary.status, 'done')
   assert.equal(q.speech_summary.model, '@cf/openai/gpt-oss-120b')
@@ -359,18 +360,19 @@ test('unparseable output and truncated output are rejected and retried; JSON in 
   assert.equal(rows(raw, 'SELECT status FROM queue').every((r) => r.status === 'done'), true)
 })
 
-test('an answer that arrives in the reasoning field (qwen3, thinking off) is accepted', async () => {
+test('reasoning is ignored: an answer that only appears in the reasoning field is a parse failure, not an answer', async () => {
   const kb = new FakeKb()
   seed(kb)
-  const ai = new FakeAi(() => ({ content: null, reasoning: both }))
+  const ai = new FakeAi(({ n }) => (n === 0 ? { content: null, reasoning: both, finish: 'length' } : both))
   const { deps, d1, raw } = makeDeps({ kb, ai })
   await queueBoth(d1)
   await runTick(deps)
-  assert.equal(ai.calls.length, 1)
+  assert.equal(ai.calls.length, 2, 'the first reply had no content, so it was retried')
+  assert.ok(ai.userPrompts()[1].includes('cut off'))
   assert.equal(rows(raw, "SELECT COUNT(*) AS n FROM queue WHERE outcome = 'dry'")[0].n, 2)
 })
 
-test('qwen3 is asked with thinking off; gpt-oss with low reasoning effort', async () => {
+test('request shapes: qwen3 thinking ON with strict json_schema (topics an enum); gpt-oss reasoning effort low with NO schema', async () => {
   const kb = new FakeKb()
   seed(kb)
   const bad = JSON.stringify({ summary: 'no', topics: ['housing'] })
@@ -378,8 +380,52 @@ test('qwen3 is asked with thinking off; gpt-oss with low reasoning effort', asyn
   const { deps, d1 } = makeDeps({ kb, ai })
   await queueBoth(d1)
   await runTick(deps)
-  assert.deepEqual(ai.calls[0].body.chat_template_kwargs, { enable_thinking: false })
-  assert.equal(ai.calls[2].body.reasoning_effort, 'low')
+  const q = ai.calls[0].body
+  assert.equal(q.chat_template_kwargs, undefined, 'thinking is not switched off')
+  assert.ok(!JSON.stringify(q.messages).includes('/no_think'))
+  assert.equal(q.max_tokens, 4000)
+  assert.equal(q.temperature, 0.2)
+  assert.equal(q.response_format.type, 'json_schema')
+  assert.equal(q.response_format.json_schema.name, 'enrichment')
+  assert.equal(q.response_format.json_schema.strict, true)
+  const schema = q.response_format.json_schema.schema
+  assert.deepEqual(schema.required, ['summary', 'topics'])
+  assert.equal(schema.additionalProperties, false)
+  assert.deepEqual(schema.properties.summary, { type: 'string' })
+  assert.equal(schema.properties.topics.items.enum.length, 21)
+  assert.ok(schema.properties.topics.items.enum.includes('integrity-democracy'))
+  assert.equal(schema.properties.topics.maxItems, 3)
+  const oss = ai.calls[2]
+  assert.equal(oss.model, '@cf/openai/gpt-oss-120b')
+  assert.deepEqual(oss.body.reasoning, { effort: 'low' })
+  assert.equal(oss.body.response_format, undefined)
+  assert.equal(oss.body.reasoning_effort, undefined)
+})
+
+test('a degenerate gpt-oss reply ("!!!!") is a parse failure: the row is quarantined after the third attempt', async () => {
+  const kb = new FakeKb()
+  seed(kb)
+  const ai = new FakeAi(({ model }) => (model.includes('gpt-oss') ? '!'.repeat(400) : '{"summary": "x"}'))
+  const { deps, d1, raw } = makeDeps({ kb, ai, env: { WRITE_MODE: 'live' } })
+  await enqueue(d1, [{ rid: 'r1', task: 'speech_summary', priority: 100 }], 1)
+  await runTick(deps)
+  assert.deepEqual(ai.calls.map((c) => c.model.split('/').pop()), ['qwen3-30b-a3b-fp8', 'qwen3-30b-a3b-fp8', 'gpt-oss-120b'])
+  assert.equal(rows(raw, 'SELECT status FROM queue')[0].status, 'quarantined')
+  assert.deepEqual(kb.writes(), [])
+})
+
+test('cleanup runs before validation: percent signs and dashes are fixed, so a faithful brief passes', async () => {
+  const kb = new FakeKb()
+  kb.add('r1', { texts: { body: 'The minister said unemployment fell to 4 per cent in the region, the lowest in a decade, at Portfolio Committee No. 5 - Justice and Communities today.' } })
+  const brief = 'Reported that unemployment fell to 4% in the region \u2013 the lowest in a decade \u2013 the minister said at the \u201cJustice and Communities\u201d committee.'
+  const ai = new FakeAi(() => JSON.stringify({ summary: brief, topics: ['Health', 'made-up', 'health'] }))
+  const { deps, d1, raw } = makeDeps({ kb, ai })
+  await queueBoth(d1)
+  await runTick(deps)
+  assert.equal(ai.calls.length, 1)
+  const q = Object.fromEntries(rows(raw, 'SELECT task, result FROM queue').map((r) => [r.task, r.result]))
+  assert.equal(q.speech_summary, 'Reported that unemployment fell to 4 per cent in the region - the lowest in a decade - the minister said at the "Justice and Communities" committee.')
+  assert.equal(q.speech_topics, '["health"]')
 })
 
 // ---------------------------------------------------------------- budget

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { normaliseTypography, validateSummary, validateTopics } from '../src/validate.ts'
+import { asciiPunct, cleanupSummary, validateSummary, validateTopics } from '../src/validate.ts'
 
 const check = (text: string, summary: unknown, title = 'A speaker') => validateSummary(summary, { title, text })
 
@@ -65,23 +65,51 @@ test('length limits: too short, too few words, too long', () => {
   assert.ok(check('text', long).some((p) => p.includes('use 40-600 characters')))
 })
 
-test('non-ASCII punctuation is rejected (dashes), curly quotes are normalised first', () => {
+test('non-ASCII punctuation is rejected (dashes), curly quotes and dashes are cleaned first', () => {
   const source = 'The minister said the Government would fund the program in the electorate.'
   assert.ok(check(source, 'Argued that the Government — not the states — should fund the program in the electorate.').includes('use plain ASCII punctuation'))
-  assert.equal(normaliseTypography('the Government’s “plan”'), 'the Government\'s "plan"')
-  assert.deepEqual(check(source, normaliseTypography('Argued that the Government’s program should be funded in the electorate by the minister.')), [])
+  assert.equal(asciiPunct('the Government’s “plan”'), 'the Government\'s "plan"')
+  assert.deepEqual(check(source, asciiPunct('Argued that the Government’s program should be funded in the electorate by the minister.')), [])
 })
 
-test('typography normalisation: dashes, ellipses and hyphens become plain ASCII; validation still runs afterwards', () => {
-  assert.equal(normaliseTypography('report No. 66 of Portfolio Committee No. 5 \u2013 Justice and Communities'), 'report No. 66 of Portfolio Committee No. 5 - Justice and Communities')
-  assert.equal(normaliseTypography('Disputed Claim of Privilege\u2014Resources Regulator'), 'Disputed Claim of Privilege - Resources Regulator')
-  assert.equal(normaliseTypography('from 1998\u20132000 and 1998 \u2014 2000'), 'from 1998-2000 and 1998-2000')
-  assert.equal(normaliseTypography('wait\u2026 then'), 'wait... then')
-  assert.equal(normaliseTypography('non\u2011binding'), 'non-binding')
-  // a range that the record does not support still fails the figure check once normalised
+test('bake-off cleanup: ascii_punct maps exactly as final.py does', () => {
+  assert.equal(asciiPunct('report No. 66 of Portfolio Committee No. 5 \u2013 Justice and Communities'), 'report No. 66 of Portfolio Committee No. 5 - Justice and Communities')
+  assert.equal(asciiPunct('Disputed Claim of Privilege\u2014Resources Regulator'), 'Disputed Claim of Privilege - Resources Regulator')
+  assert.equal(asciiPunct('Privilege\u2013Resources'), 'Privilege-Resources', 'an en dash is a bare hyphen')
+  assert.equal(asciiPunct('from 1998\u20132000 and 1998 \u2014 2000'), 'from 1998-2000 and 1998 - 2000', 'an em dash is " - ", then whitespace runs collapse')
+  assert.equal(asciiPunct('wait\u2026 then'), 'wait... then')
+  assert.equal(asciiPunct('non\u2011binding \u2212 5 \u2010 \u2012'), 'non-binding - 5 - -')
+  assert.equal(asciiPunct('a\u00a0b\u202fc\u2009d'), 'a b c d')
+  assert.equal(asciiPunct('  padded  '), 'padded')
+  // curly quotes
+  assert.equal(asciiPunct('\u2018a\u2019 \u201cb\u201d'), '\'a\' "b"')
+})
+
+test('bake-off cleanup: N% becomes "N per cent" only when the source says so and does not say N%', () => {
+  assert.equal(cleanupSummary('Reported a rise of 5% in the rate.', 'The rate rose by 5 per cent last year.'), 'Reported a rise of 5 per cent in the rate.')
+  assert.equal(cleanupSummary('Reported a rise of 5 % in the rate.', 'The rate rose by 5 per cent.'), 'Reported a rise of 5 per cent in the rate.')
+  assert.equal(cleanupSummary('Reported 5% here.', 'It said 5 percent and nothing else.'), 'Reported 5 percent here.')
+  assert.equal(cleanupSummary('Reported 5% here.', 'The rate rose by 5% and by 5 per cent.'), 'Reported 5% here.', 'the source also says 5%: left alone')
+  assert.equal(cleanupSummary('Reported 12.5% here.', 'Rates were 12.5 per cent.'), 'Reported 12.5 per cent here.')
+  assert.equal(cleanupSummary('Reported 7% here.', 'Nothing about that figure.'), 'Reported 7% here.', 'no source phrase: untouched (the validator will then reject it)')
+  // and the cleaned brief now passes the figure check that the raw one failed
+  const source = 'The minister said unemployment fell to 4 per cent, the lowest rate in the region for a decade, and thanked staff.'
+  const raw = 'Reported that unemployment fell to 4% in the region, the lowest rate for a decade, the minister said.'
+  assert.ok(check(source, raw).includes('figure 4% is not present in the supplied text'))
+  assert.deepEqual(check(source, cleanupSummary(raw, source)), [])
+})
+
+test('a year range the record does not support still fails the figure check after cleanup', () => {
   const source = 'The funding runs from 2026 to 2027 for all schools in the region, the minister said.'
-  const problems = check(source, normaliseTypography('Reported that funding would run during 2026\u201327 to support the program for schools in the region.'))
+  const problems = check(source, cleanupSummary('Reported that funding would run during 2026\u201327 to support the program for schools in the region.', source))
   assert.ok(problems.includes('figure 27 is not present in the supplied text'))
+})
+
+test('a degenerate reply is not readable prose (gpt-oss once emitted a string of "!!!!")', () => {
+  const source = 'The minister spoke about the new hospital being built in the region this year, at length.'
+  assert.ok(check(source, '!'.repeat(120)).length > 0)
+  assert.ok(check(source, Array.from({ length: 30 }, () => '!').join(' ')).includes('not readable prose'))
+  assert.ok(check(source, '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23').includes('not readable prose'))
 })
 
 test('banned openers are rejected', () => {
@@ -124,10 +152,12 @@ test('topics: an empty list is a legitimate verdict', () => {
   assert.deepEqual(validateTopics([]), { topics: [], problems: [] })
 })
 
-test('topics: a list with no valid slug is rejected; a missing field is rejected', () => {
-  assert.equal(validateTopics(['roads', 'schools']).problems.length, 1)
+test('topics: invalid slugs are DROPPED (a list with no valid slug is an empty verdict); a non-list is rejected', () => {
+  assert.deepEqual(validateTopics(['roads', 'schools']), { topics: [], problems: [] })
+  assert.deepEqual(validateTopics(['Law', 'health', 'government']).topics, ['health'])
   assert.equal(validateTopics(undefined).problems.length, 1)
   assert.equal(validateTopics({ a: 1 }).problems.length, 1)
+  assert.equal(validateTopics(5).problems.length, 1)
 })
 
 test('topics: a comma-separated string is tolerated', () => {

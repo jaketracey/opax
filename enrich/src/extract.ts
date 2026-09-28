@@ -3,8 +3,9 @@
 // Observed 2026-09-28 (probing @cf/qwen/qwen3-30b-a3b-fp8 and @cf/openai/gpt-oss-120b):
 //  - both answer in chat-completion shape: choices[0].message.{content, reasoning, reasoning_content};
 //  - qwen3 reasons by default and can spend the whole max_tokens inside `reasoning` (content: null,
-//    finish_reason: "length"); with thinking off it puts its ANSWER in `reasoning`/`reasoning_content`
-//    and leaves `content` null; so the reader falls back to the reasoning fields;
+//    finish_reason: "length"); with thinking OFF it puts its ANSWER in `reasoning`/`reasoning_content`
+//    and leaves `content` null, so the reader CAN fall back to the reasoning fields, but the
+//    pipeline runs thinking ON with constrained decoding and ignores them (allowReasoning=false);
 //  - `usage.neurons` is reported by the platform on every response;
 //  - other models may return {response: "..."} (legacy) or a Responses-API {output: [...]}.
 // Models also wrap JSON in prose or ```json fences, and may emit <think>...</think> blocks.
@@ -46,7 +47,12 @@ export function readUsage(response: unknown): ModelUsage {
   }
 }
 
-export function readModelReply(response: unknown): ModelReply {
+/**
+ * `allowReasoning` (default true) lets the reasoning fields stand in when the content is
+ * empty. The pipeline passes false: with qwen3 thinking ON the reasoning is thinking-aloud
+ * (drafts, half-JSON) and must never be mistaken for the answer, which is in `content`.
+ */
+export function readModelReply(response: unknown, allowReasoning = true): ModelReply {
   const r = (response ?? {}) as Record<string, any>
   const usage = readUsage(r)
   const choice = Array.isArray(r.choices) ? r.choices[0] : undefined
@@ -70,15 +76,15 @@ export function readModelReply(response: unknown): ModelReply {
       .map((item: any) => partsToText(item.content))
       .join('')
     if (messageText.trim()) return { text: messageText, fromReasoning: false, finishReason, usage }
-    const reasoningText = r.output
+    const reasoningText = (allowReasoning ? r.output : [])
       .filter((item: any) => item?.type === 'reasoning')
       .map((item: any) => partsToText(item.content) || partsToText(item.summary))
       .join('\n')
     if (reasoningText.trim()) return { text: reasoningText, fromReasoning: true, finishReason, usage }
   }
 
-  // 4. The reasoning fields: qwen3 with thinking off puts its answer here.
-  text = partsToText(message.reasoning_content) || partsToText(message.reasoning)
+  // 4. The reasoning fields: qwen3 with thinking OFF puts its answer here (only when allowed).
+  text = allowReasoning ? partsToText(message.reasoning_content) || partsToText(message.reasoning) : ''
   return { text, fromReasoning: text.trim().length > 0, finishReason, usage }
 }
 
