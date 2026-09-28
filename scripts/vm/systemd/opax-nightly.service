@@ -1,0 +1,23 @@
+# Installed by scripts/vm/bootstrap.sh (placeholders filled in). Do not edit the installed
+# copy by hand: change this template and re-run bootstrap.
+[Unit]
+Description=OPAX nightly corpus refresh, publish and deploy
+Documentation=https://github.com/jaketracey/opax/blob/main/docs/operations/nightly-refresh.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=@USER@
+WorkingDirectory=@REPO@
+ExecStart=@REPO@/scripts/vm/nightly.sh
+# A refresh is ~1-2 h on a normal night; a first run after a long gap can be much longer.
+TimeoutStartSec=10h
+KillMode=control-group
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=6
+# nightly.sh writes its own dated log; this is only for crashes before it starts.
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=opax-nightly

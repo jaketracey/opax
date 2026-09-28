@@ -1,0 +1,14 @@
+# Installed by scripts/vm/bootstrap.sh. Times are the VM's local time (Australia/Sydney):
+# by 03:30 the day's Hansard from the federal, NSW, Victorian and Queensland parliaments
+# has been published. Persistent=true runs a missed night (VM was down) at next boot.
+[Unit]
+Description=Run the OPAX nightly refresh
+
+[Timer]
+OnCalendar=*-*-* @TIME@:00
+RandomizedDelaySec=300
+Persistent=true
+Unit=opax-nightly.service
+
+[Install]
+WantedBy=timers.target
