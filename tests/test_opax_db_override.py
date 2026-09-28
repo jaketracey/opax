@@ -124,7 +124,7 @@ class ExportGrantsLocalTests(unittest.TestCase):
     def test_main_goes_local_when_opax_db_is_set(self):
         seen = {}
 
-        def fake_remote(host, jur, top, cap, force, programs, local_db=None):
+        def fake_remote(host, jur, top, cap, force, programs, local_db=None, force_programs=None):
             seen["host"], seen["local_db"] = host, local_db
             return None            # main returns 1 without writing files
 
