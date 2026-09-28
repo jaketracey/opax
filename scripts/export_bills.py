@@ -29,7 +29,10 @@ data box and the projection does not need them:
 
 reads every bill file, fetches the knowledge box's `da-summary-t-body` field
 for each speech slug (cached in --brief-cache so a rerun costs nothing) and
-writes the briefs back into the files.
+writes the briefs back into the files. A speech with no brief yet is cached as
+null and asked about again on later runs (bounded; see BRIEF_RECHECK_* below),
+because the enrichment Worker writes briefs onto recent speeches after the
+first export.
 
 Read-only throughout: the connection is opened `mode=ro` with
 `PRAGMA query_only=ON`, and the whole read runs in one transaction.
@@ -44,12 +47,14 @@ import os
 import re
 import sqlite3
 import sys
+import time
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-DB_URI = "file:/home/jake/.cache/autoresearch/parli.db?mode=ro"
+DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
+DB_URI = f"file:{DB_PATH}?mode=ro"
 BRIEF_FIELD = "da-summary-t-body"
 DEFAULT_BRIEF_CACHE = Path.home() / ".cache" / "autoresearch" / "bill_speech_briefs.json"
 SPEECH_CAP = 24
@@ -1011,15 +1016,22 @@ def sample_keys(index: dict, n: int) -> set[str]:
 
 
 def write_index(path: Path, index: dict) -> None:
-    """One bill per line inside an ordinary JSON array. Indenting five thousand
-    rows would add a megabyte the browser has to download and the reviewer has
-    to scroll; one line each keeps the file small and still diffs cleanly."""
-    head = {k: v for k, v in index.items() if k != "bills"}
-    body = json.dumps(head, ensure_ascii=False, indent=1)[:-2].rstrip()  # drop closing brace
-    rows = ",\n  ".join(
-        json.dumps(b, ensure_ascii=False, separators=(",", ":")) for b in index["bills"]
-    )
-    path.write_text(f"{body},\n \"bills\": [\n  {rows}\n ]\n}}\n")
+    """Write index.json in the layout that is committed: `json.dumps(indent=1,
+    ensure_ascii=False)` plus a newline, so a rerun diffs only where a bill did.
+
+    `generated_at` is a build stamp, not data. If the previous file is identical
+    apart from that stamp, its stamp is kept, so a night on which nothing about
+    any bill changed leaves the file byte-identical and nothing is committed."""
+    if path.exists():
+        try:
+            previous = json.loads(path.read_text())
+        except (OSError, ValueError):
+            previous = None
+        if isinstance(previous, dict) and previous.get("generated_at"):
+            rest = {k: v for k, v in previous.items() if k != "generated_at"}
+            if rest == {k: v for k, v in index.items() if k != "generated_at"}:
+                index["generated_at"] = previous["generated_at"]
+    path.write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
 
 
 def write_out(docs: list[dict], index: dict, out: Path, sample: int | None) -> None:
@@ -1064,50 +1076,133 @@ def preserve_speech_briefs(doc: dict, previous: dict) -> None:
 # ---------------------------------------------------------------------------
 
 
-def fill_briefs(out: Path, cache_path: Path, workers: int = 8) -> None:
+# A speech with no brief yet is cached as None. The enrichment Worker writes
+# briefs onto recent speeches after the first export, so None is not final:
+# each run re-asks the box for the speeches that are still empty, but bounded.
+#   tier A  speeches dated in the last RECENT_DAYS: every one, each run
+#           (enrichment works newest-first, so these are the ones about to land)
+#   tier B  older empty speeches: the RECHECK_LIMIT least recently checked
+# Neither tier re-asks about a slug checked within RECHECK_HOURS. The time a
+# None was last checked lives beside the cache (<cache>.checked.json) so the
+# cache file itself keeps its {slug: brief-or-null} shape.
+BRIEF_RECHECK_HOURS = 20
+BRIEF_RECHECK_LIMIT = 1500
+BRIEF_RECENT_DAYS = 60
+BRIEF_RECENT_CAP = 4000
+BRIEF_FETCH_ATTEMPTS = 3
+
+
+def _read_json_dict(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    data = json.loads(path.read_text())
+    return data if isinstance(data, dict) else {}
+
+
+def _write_json_atomic(path: Path, data: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(json.dumps(data, ensure_ascii=False))
+    os.replace(tmp, path)
+
+
+def checked_path(cache_path: Path) -> Path:
+    return cache_path.with_name(cache_path.stem + ".checked.json")
+
+
+def plan_brief_fetches(speeches: dict[str, str], cache: dict, checked: dict, now: float,
+                       today: str, recheck_hours: float = BRIEF_RECHECK_HOURS,
+                       recheck_limit: int = BRIEF_RECHECK_LIMIT,
+                       recent_days: int = BRIEF_RECENT_DAYS,
+                       recent_cap: int = BRIEF_RECENT_CAP) -> tuple[list[str], list[str]]:
+    """Which slugs to ask the box about: (never asked, empty and due a recheck)."""
+    new = [slug for slug in speeches if slug not in cache]
+    due = [slug for slug, brief in cache.items()
+           if brief is None and slug in speeches
+           and now - float(checked.get(slug, 0)) >= recheck_hours * 3600]
+    cutoff = (datetime.fromisoformat(today) - timedelta(days=recent_days)).date().isoformat()
+    recent = sorted((s for s in due if (speeches[s] or "") >= cutoff),
+                    key=lambda s: speeches[s], reverse=True)[:recent_cap]
+    older = sorted((s for s in due if (speeches[s] or "") < cutoff),
+                   key=lambda s: (float(checked.get(s, 0)), s))[:recheck_limit]
+    return new, recent + older
+
+
+def fill_briefs(out: Path, cache_path: Path, workers: int = 8,
+                recheck_hours: float = BRIEF_RECHECK_HOURS,
+                recheck_limit: int = BRIEF_RECHECK_LIMIT,
+                recent_days: int = BRIEF_RECENT_DAYS, kb=None, now: float | None = None) -> dict:
+    """Attach the box's speech briefs to every bill file. Returns counters; `failed`
+    is the number of slugs the box could not answer for (their files are left as
+    they were, never blanked)."""
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     from parli.arag import AragConfig, AragError, KbClient, load_dotenv  # noqa: E402
 
-    load_dotenv()
-    kb = KbClient(AragConfig.from_env())
+    if kb is None:
+        load_dotenv()
+        kb = KbClient(AragConfig.from_env())
 
-    cache: dict[str, str | None] = {}
-    if cache_path.exists():
-        cache = json.loads(cache_path.read_text())
+    now = time.time() if now is None else now
+    today = datetime.fromtimestamp(now, timezone.utc).date().isoformat()
+    cache: dict[str, str | None] = _read_json_dict(cache_path)
+    checked: dict[str, float] = _read_json_dict(checked_path(cache_path))
     files = sorted(p for p in out.glob("*.json") if p.name != "index.json")
-    wanted: list[str] = []
+    speeches: dict[str, str] = {}
     for p in files:
         for s in json.loads(p.read_text()).get("speeches", []):
-            if s["slug"] not in cache and s["slug"] not in wanted:
-                wanted.append(s["slug"])
-    log(f"{len(files)} bill files; {len(cache)} briefs cached, {len(wanted)} to fetch")
+            speeches.setdefault(s["slug"], s.get("date") or "")
+    new, recheck = plan_brief_fetches(speeches, cache, checked, now, today, recheck_hours,
+                                      recheck_limit, recent_days)
+    wanted = new + recheck
+    log(f"{len(files)} bill files; {len(cache)} briefs cached, {len(new)} new to fetch, "
+        f"{len(recheck)} empty ones to recheck")
 
-    def fetch(slug: str) -> tuple[str, str | None]:
-        try:
-            data = kb.get_text_field_by_slug(slug, BRIEF_FIELD)
-        except AragError as e:
-            if e.status in (404, 422):
-                return slug, None  # no brief on that speech, or no such resource
-            raise
-        return slug, (((data.get("value") or {}).get("body")) or "").strip() or None
+    def fetch(slug: str) -> tuple[str, str | None, bool]:
+        for attempt in range(BRIEF_FETCH_ATTEMPTS):
+            try:
+                data = kb.get_text_field_by_slug(slug, BRIEF_FIELD)
+            except AragError as e:
+                if e.status in (404, 422):
+                    return slug, None, True  # no brief on that speech, or no such resource
+                if attempt + 1 < BRIEF_FETCH_ATTEMPTS:
+                    time.sleep(2 ** attempt)
+                    continue
+                log(f"  brief fetch failed for {slug}: {e}")
+                return slug, None, False
+            return slug, (((data.get("value") or {}).get("body")) or "").strip() or None, True
+        return slug, None, False
 
+    def save() -> None:
+        _write_json_atomic(cache_path, cache)
+        _write_json_atomic(checked_path(cache_path), checked)
+
+    failed = filled_now = 0
     if wanted:
         with ThreadPoolExecutor(max_workers=workers) as pool:
-            for i, (slug, brief) in enumerate(pool.map(fetch, wanted), 1):
-                cache[slug] = brief
+            for i, (slug, brief, ok) in enumerate(pool.map(fetch, wanted), 1):
+                if not ok:
+                    failed += 1
+                elif brief is None:
+                    cache[slug] = None
+                    checked[slug] = now
+                else:
+                    if cache.get(slug) is None and slug in cache:
+                        filled_now += 1
+                    cache[slug] = brief
+                    checked.pop(slug, None)
                 if i % 200 == 0:
                     log(f"  {i}/{len(wanted)}")
-                    cache_path.parent.mkdir(parents=True, exist_ok=True)
-                    cache_path.write_text(json.dumps(cache, ensure_ascii=False))
-        cache_path.parent.mkdir(parents=True, exist_ok=True)
-        cache_path.write_text(json.dumps(cache, ensure_ascii=False))
+                    save()
+        save()
 
     touched = filled = 0
     for p in files:
         doc = json.loads(p.read_text())
         changed = False
         for s in doc.get("speeches", []):
-            brief = cache.get(s["slug"])
+            if s["slug"] not in cache:
+                continue  # the box did not answer; keep what the file already has
+            brief = cache[s["slug"]]
             if brief != s.get("brief"):
                 s["brief"] = brief
                 changed = True
@@ -1116,7 +1211,10 @@ def fill_briefs(out: Path, cache_path: Path, workers: int = 8) -> None:
         if changed:
             p.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n")
             touched += 1
-    log(f"briefs: {filled} attached across {len(files)} files ({touched} rewritten)")
+    log(f"briefs: {filled} attached across {len(files)} files ({touched} rewritten); "
+        f"{filled_now} empty speeches gained a brief; {failed} fetches failed")
+    return {"files": len(files), "attached": filled, "rewritten": touched,
+            "new": len(new), "rechecked": len(recheck), "gained": filled_now, "failed": failed}
 
 
 # ---------------------------------------------------------------------------
@@ -1133,14 +1231,24 @@ def main() -> int:
     ap.add_argument("--fill-briefs", metavar="DIR",
                     help="second phase: attach knowledge-box speech briefs to an existing export")
     ap.add_argument("--brief-cache", default=str(DEFAULT_BRIEF_CACHE))
+    ap.add_argument("--recheck-hours", type=float, default=BRIEF_RECHECK_HOURS,
+                    help="fill-briefs: do not re-ask about an empty speech checked more recently than this")
+    ap.add_argument("--recheck-limit", type=int, default=BRIEF_RECHECK_LIMIT,
+                    help="fill-briefs: at most this many older empty speeches are re-asked per run")
+    ap.add_argument("--recent-days", type=int, default=BRIEF_RECENT_DAYS,
+                    help="fill-briefs: speeches dated within this many days are always re-asked")
+    ap.add_argument("--max-failures", type=int, default=25,
+                    help="fill-briefs: exit 1 if more than this many fetches failed")
     ap.add_argument("--merge-drafts", metavar="DIR",
                     help="merge scripts/bills_registry/exposure_drafts.json into an existing export (no database)")
     ap.add_argument("--drafts", default=str(DRAFTS_PATH), help="exposure drafts file")
     args = ap.parse_args()
 
     if args.fill_briefs:
-        fill_briefs(Path(args.fill_briefs), Path(args.brief_cache))
-        return 0
+        stats = fill_briefs(Path(args.fill_briefs), Path(args.brief_cache),
+                            recheck_hours=args.recheck_hours, recheck_limit=args.recheck_limit,
+                            recent_days=args.recent_days)
+        return 1 if stats["failed"] > args.max_failures else 0
     if args.merge_drafts:
         merge_drafts_into_dir(Path(args.merge_drafts), load_drafts(Path(args.drafts)))
         return 0
