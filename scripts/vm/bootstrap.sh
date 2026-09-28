@@ -21,6 +21,9 @@
 #   7. `uv` (pinned to the version the desktop uses) and the clone at ~/opax, fetched over HTTPS
 #      with the PUSH url set to SSH when the deploy key ~/.ssh/opax_deploy exists; then
 #      `uv sync --frozen`, which installs exactly the locked dependencies
+#   7b. Node 24 (the official tarball, checksum-verified, into /opt) and `npm ci` in ~/opax/portal: the nightly
+#      runs the portal test suite against the new data before it commits (a red suite would leave the data on
+#      main but undeployed). The Python steps never need Node.
 #   8. ~/.cache/autoresearch, ~/.config/opax, and TEMPLATES for ~/opax/.env and
 #      ~/.config/opax/nightly.env (never overwritten; you fill them in)
 #   9. systemd: opax-nightly.service installed but NOT enabled. Once the state is in place and a
@@ -38,18 +41,19 @@
 #   --fail2ban-ignore IPS   addresses fail2ban must never ban (space or comma separated). Put your own
 #                      here if the security group only admits you: a few wrong keys offered by an
 #                      ssh agent would otherwise ban the one address that can reach the machine.
-#   --skip-ssh --skip-fail2ban --skip-swap --skip-upgrades --skip-python   skip one step
+#   --skip-ssh --skip-fail2ban --skip-swap --skip-upgrades --skip-python --skip-node   skip one step
 set -euo pipefail
 
 REPO_URL="https://github.com/jaketracey/opax"
 BRANCH="main"
 SWAP_SIZE="4G"
 UV_VERSION="0.11.2"
+NODE_VERSION="v24.21.0"   # the portal's CI runs Node 24 (.github/workflows/deploy.yml); an LTS release
 TZ_NAME="Australia/Sydney"
 TARGET_USER="${SUDO_USER:-$(id -un)}"
 ENABLE=0; DISABLE=0; CHECK=0; CONTAINER=0
 F2B_IGNORE=""
-SKIP_SSH=0; SKIP_F2B=0; SKIP_SWAP=0; SKIP_UPGRADES=0; SKIP_PYTHON=0
+SKIP_SSH=0; SKIP_F2B=0; SKIP_SWAP=0; SKIP_UPGRADES=0; SKIP_PYTHON=0; SKIP_NODE=0
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -67,6 +71,7 @@ while [ $# -gt 0 ]; do
     --skip-swap) SKIP_SWAP=1; shift ;;
     --skip-upgrades) SKIP_UPGRADES=1; shift ;;
     --skip-python) SKIP_PYTHON=1; shift ;;
+    --skip-node) SKIP_NODE=1; shift ;;
     -h|--help) sed -n '2,/^set -euo/p' "$0" | sed '$d' | sed 's/^# \{0,1\}//'; exit 0 ;;
     *) echo "unknown option: $1" >&2; exit 64 ;;
   esac
@@ -111,6 +116,7 @@ if [ "$CHECK" -eq 1 ]; then
   chk "clone at $REPO_DIR" test -d "$REPO_DIR/.git"
   chk "push url is SSH" bash -c "git -C '$REPO_DIR' remote get-url --push origin | grep -q '^git@github.com:'"
   chk "deploy key authenticates to github.com" bash -c "ssh -o BatchMode=yes -T git@github.com 2>&1 | grep -q 'successfully authenticated'"
+  chk "node $NODE_VERSION and portal/node_modules (pre-commit test gate)" bash -c "[ \"\$(node --version 2>/dev/null)\" = $NODE_VERSION ] && [ -d '$REPO_DIR/portal/node_modules' ]"
   chk "venv imports the fetchers' dependencies" "$REPO_DIR/.venv/bin/python" -c 'import requests, aiohttp, bs4, pyarrow, pdfminer'
   chk "$REPO_DIR/.env filled in (ARAG_KB_TOKEN)" bash -c "grep -Eq '^ARAG_KB_TOKEN=.+' '$REPO_DIR/.env'"
   chk "parli.db present" test -s "$USER_HOME/.cache/autoresearch/parli.db"
@@ -153,7 +159,7 @@ say "apt packages"
 APT="env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt-get"
 $SUDO $APT update -qq
 PKGS=(ca-certificates curl gnupg git python3 python3-venv python3-dev build-essential zstd rsync sqlite3 jq
-      util-linux tzdata less iproute2)
+      util-linux tzdata less iproute2 xz-utils)
 [ "$SKIP_F2B" -eq 1 ] || PKGS+=(fail2ban)
 [ "$SKIP_UPGRADES" -eq 1 ] || PKGS+=(unattended-upgrades)
 $SUDO $APT install -y -qq "${PKGS[@]}"
@@ -261,6 +267,33 @@ if [ "$SKIP_PYTHON" -eq 0 ]; then
   # the exact locked versions; --frozen never re-resolves, so a bad upstream release cannot slip in
   as_user bash -c "cd '$REPO_DIR' && '$UV_BIN' sync --frozen --python /usr/bin/python3"
   as_user "$REPO_DIR/.venv/bin/python" -c 'import requests, aiohttp, bs4, pyarrow, pdfminer, pandas, openpyxl; print("    python deps import OK")'
+fi
+
+if [ "$SKIP_NODE" -eq 0 ]; then
+  say "Node $NODE_VERSION and portal/node_modules (the nightly's pre-commit test gate)"
+  case "$(uname -m)" in aarch64|arm64) NODE_ARCH=arm64 ;; x86_64) NODE_ARCH=x64 ;; *) NODE_ARCH="" ;; esac
+  NODE_DIR="/opt/node-$NODE_VERSION-linux-$NODE_ARCH"
+  if [ -z "$NODE_ARCH" ]; then
+    note "unsupported architecture $(uname -m): no Node (the nightly then skips its test gate)"
+  else
+    if [ -x "$NODE_DIR/bin/node" ]; then
+      note "node already at $NODE_VERSION"
+    else
+      ntmp=$(mktemp -d); ntar="node-$NODE_VERSION-linux-$NODE_ARCH.tar.xz"
+      curl -fsSL -o "$ntmp/$ntar" "https://nodejs.org/dist/$NODE_VERSION/$ntar"
+      curl -fsSL -o "$ntmp/SHASUMS256.txt" "https://nodejs.org/dist/$NODE_VERSION/SHASUMS256.txt"
+      ( cd "$ntmp" && grep " $ntar\$" SHASUMS256.txt | sha256sum -c - >/dev/null ) || { echo "Node checksum mismatch; not installing" >&2; rm -rf "$ntmp"; exit 1; }
+      $SUDO tar -xJf "$ntmp/$ntar" -C /opt
+      rm -rf "$ntmp"
+    fi
+    for b in node npm npx; do $SUDO ln -sfn "$NODE_DIR/bin/$b" "/usr/local/bin/$b"; done
+    note "$(node --version) at $NODE_DIR"
+    if [ -f "$REPO_DIR/portal/package-lock.json" ]; then
+      # --ignore-scripts: the tests need no native build step, and a lockfile change must not run install scripts unattended
+      as_user bash -c "cd '$REPO_DIR/portal' && npm ci --ignore-scripts --no-audit --no-fund >/dev/null && sha256sum package-lock.json | cut -d' ' -f1 > node_modules/.opax-lock-sha"
+      note "portal/node_modules installed ($(ls "$REPO_DIR/portal/node_modules" | wc -l) packages)"
+    fi
+  fi
 fi
 
 # ---- 8. directories and secret templates -------------------------------------------------------------------------------------------

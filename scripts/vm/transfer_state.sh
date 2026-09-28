@@ -5,6 +5,7 @@
 #   scripts/vm/transfer_state.sh --dest ubuntu@<ip>                  # everything, first time
 #   scripts/vm/transfer_state.sh --dest ubuntu@<ip> --mode delta     # top-up (block-delta of the DB)
 #   scripts/vm/transfer_state.sh --dest ubuntu@<ip> --only caches    # just the small caches
+#   scripts/vm/transfer_state.sh --dest ubuntu@<ip> --only periodic  # the weekly/monthly inputs (ABR index ...), any time
 #   scripts/vm/transfer_state.sh --mark-migrated                     # the cutover marker, see below
 #   SSH_OPTS="-i ~/.ssh/opax-refresh.pem" scripts/vm/transfer_state.sh --dest ...
 # The EC2 instance's public IP changes at every stop/start: scripts/vm/ec2.sh ip
@@ -22,6 +23,14 @@
 #   ipea/  qld_parliament/  nsw_hansard/  sa_hansard/  tvfy/     fetcher caches and progress files
 #   bill_speech_briefs.json           (+ .checked.json) if present locally; it normally lives on the Mac,
 #                                     so also: scp ~/.cache/autoresearch/bill_speech_briefs.json <vm>:.cache/autoresearch/
+#   periodic inputs (scripts/weekly_refresh.sh; docs/operations/periodic-refresh.md section 5; sent by `all` and
+#   by `--only periodic`, which is safe on a VM that is already in service):
+#                                     abr/abr_names.sqlite (3.3GB ABN index for contract_suppliers, grant_recipients,
+#                                     donor entities; rsync -z), ext_money/ (diary PDFs 110MB, lobbyist, donation,
+#                                     IPEA, GrantConnect caches), qld_contracts/ (394MB), federal_lobbyists/,
+#                                     conduct_interests/, fits/, votes_state/, mp_interests/, ministerial_diaries/,
+#                                     donations/. Every one is only a cache (the loaders re-download what is
+#                                     missing; the diary PDFs alone are ~65 min cold).
 # NOT moved: hansard-corpus.zip, hansard-xml, embeddings, shards (13GB the daily steps never read), the
 # old .bak copies of parli.db, pipeline logs, ext_money and other one-off research caches.
 #
@@ -41,7 +50,7 @@
 #   --dest USER@HOST     the VM (required except with --mark-migrated)
 #   --mode full|delta    full = compressed snapshot (default if the VM has no parli.db)
 #                        delta = rsync block-delta of the raw file into the VM's existing copy
-#   --only WHAT          all (default) | db | state | caches
+#   --only WHAT          all (default) | db | state | caches | periodic
 #   --copy-env           also copy the desktop's ~/opax/.env to the VM (only if the VM's is still the template)
 #   --work DIR           where the compressed snapshot is staged (default ~/parli-transfer; needs ~12GB)
 #   --keep               keep the staged snapshot afterwards
@@ -55,6 +64,8 @@ DB="$CACHE/parli.db"
 STATE_FILES=(arag_sync_state.json arag_speech_text_repair_state.json)
 CACHE_DIRS=(hansard/modern bills_v2 ipea qld_parliament nsw_hansard sa_hansard tvfy)
 BRIEF_FILES=(bill_speech_briefs.json bill_speech_briefs.checked.json)
+PERIODIC_FILES=(abr/abr_names.sqlite abr/matches.json)   # 3.3GB + 2MB: the ABN name index the loaders read via --abr-dir
+PERIODIC_DIRS=(ext_money qld_contracts federal_lobbyists conduct_interests fits votes_state mp_interests ministerial_diaries donations)
 DEST=""; MODE=""; ONLY=all; COPY_ENV=0; WORK="$HOME/parli-transfer"; KEEP=0; DRY=0; FORCE=0; MARK=0
 SSH_OPTS="${SSH_OPTS:-}"
 
@@ -83,7 +94,7 @@ if [ "$MARK" -eq 1 ]; then
 fi
 
 [ -n "$DEST" ] || { echo "--dest USER@HOST is required" >&2; exit 64; }
-case "$ONLY" in all|db|state|caches) ;; *) echo "--only must be all, db, state or caches" >&2; exit 64 ;; esac
+case "$ONLY" in all|db|state|caches|periodic) ;; *) echo "--only must be all, db, state, caches or periodic" >&2; exit 64 ;; esac
 
 say()  { printf '\n==> %s\n' "$*"; }
 die()  { echo "ERROR: $*" >&2; exit 1; }
@@ -101,7 +112,9 @@ for c in ssh rsync zstd sqlite3 sha256sum; do command -v "$c" >/dev/null || die 
 [ "$DRY" -eq 1 ] || vm true || die "cannot ssh to $DEST (set SSH_OPTS for keys/ports)"
 if [ "$DRY" -eq 0 ]; then
   vm 'command -v zstd rsync sqlite3 sha256sum >/dev/null' || die "the VM lacks zstd/rsync/sqlite3: run scripts/vm/bootstrap.sh there first"
-  if [ "$FORCE" -eq 0 ] && vm 'test -f ~/.cache/autoresearch/pipeline/nightly-last.json'; then
+  # the guard protects the DB and the push checkpoint; the caches are safe to send to a VM in service
+  if [ "$FORCE" -eq 0 ] && { [ "$ONLY" = all ] || [ "$ONLY" = db ] || [ "$ONLY" = state ]; } \
+     && vm 'test -f ~/.cache/autoresearch/pipeline/nightly-last.json'; then
     die "the VM has already run a nightly. Sending state now would overwrite a checkpoint that may be ahead of the desktop's. If you are sure: --force"
   fi
   if [ -z "$MODE" ]; then
@@ -194,6 +207,34 @@ if [ "$ONLY" = all ] || [ "$ONLY" = caches ]; then
   done
   for f in "${BRIEF_FILES[@]}"; do
     if [ -f "$CACHE/$f" ]; then echo "  $f"; run rsync_to "$CACHE/$f" "$DEST:.cache/autoresearch/" >/dev/null; fi
+  done
+fi
+
+# ---- 2b. the periodic inputs (ABR index, diary PDFs, ...) ------------------------------------------------------------------
+if [ "$ONLY" = all ] || [ "$ONLY" = periodic ]; then
+  say "periodic inputs"
+  for f in "${PERIODIC_FILES[@]}"; do
+    if [ -f "$CACHE/$f" ]; then
+      echo "  $f ($(du -sh "$CACHE/$f" | cut -f1))"
+      vm "mkdir -p ~/.cache/autoresearch/$(dirname "$f")"
+      # --inplace + --partial: an interrupted 3GB send resumes; -z because name indexes compress well
+      if [ "$DRY" -eq 1 ]; then echo "  [local] rsync -az --partial --inplace $CACHE/$f $DEST:.cache/autoresearch/$f"; else
+        retry rsync_to -z --inplace "$CACHE/$f" "$DEST:.cache/autoresearch/$f" >/dev/null || die "rsync of $f kept failing"
+      fi
+    else
+      echo "  $f: not on this machine, skipped"
+    fi
+  done
+  for d in "${PERIODIC_DIRS[@]}"; do
+    if [ -d "$CACHE/$d" ]; then
+      echo "  $d ($(du -sh "$CACHE/$d" | cut -f1))"
+      vm "mkdir -p ~/.cache/autoresearch/$d"
+      if [ "$DRY" -eq 1 ]; then echo "  [local] rsync -az --partial --exclude='*.tmp' $CACHE/$d/ $DEST:.cache/autoresearch/$d/"; else
+        retry rsync_to -z --exclude='*.tmp' "$CACHE/$d/" "$DEST:.cache/autoresearch/$d/" >/dev/null || die "rsync of $d kept failing"
+      fi
+    else
+      echo "  $d: not on this machine, skipped"
+    fi
   done
 fi
 

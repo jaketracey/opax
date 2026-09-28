@@ -11,8 +11,11 @@ answers 403/429/503 or serves a bot challenge page (Cloudflare, Azure Front Door
 DOWN on a network error or timeout, CHECK if it answered but not with the expected shape.
 
 Reads OPENAUSTRALIA_API_KEY, TVFY_API_KEY and the ARAG_* values from ~/opax/.env (never printed).
-Exit status: number of BLOCKED/DOWN sources among those the refresh needs. `sa` is expected to
-fail (its WAF refuses every non-browser client) and does not count.
+Exit status: number of BLOCKED/DOWN sources among those the refresh needs. `sa` (Hansard) and the SA lobbyist
+site are expected to fail (their WAF refuses every non-browser client) and do not count.
+
+The second half of the list covers the daily additions (releases, AusTender full feed, GrantConnect) and the
+weekly and monthly groups run by scripts/weekly_refresh.sh (docs/operations/periodic-refresh.md section 4).
 """
 import argparse
 import json
@@ -43,6 +46,24 @@ QLD_UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko
           "Chrome/128.0.0.0 Safari/537.36 OPAX/1.0 (+https://opax.com.au)")
 CHALLENGE_MARKERS = ("just a moment", "cf-chl", "attention required", "_incapsula_", "request unsuccessful",
                      "enable javascript", "access denied", "azure front door", "errors.edgesuite", "captcha")
+
+
+ORG_UA = "OPAX research (opax.com.au)"                                   # words_common.USER_AGENT
+EXT_UA = "OPAX research (opax.com.au; contact jake.tracey@noice.work)"    # ext_common.USER_AGENT
+RES_UA = "OPAX research (https://opax.com.au; contact jake.tracey@noice.work)"
+
+
+def clean(r) -> bool:
+    """No bot-challenge marker in the first 6 KB of the body."""
+    body = (r.text or "")[:6000].lower()
+    return not any(m in body for m in CHALLENGE_MARKERS)
+
+
+def page_ok(*statuses, needle=None):
+    """A page the loader reads as HTML/XML: one of the statuses (200 by default), no challenge, optional needle."""
+    def ok(r):
+        return r.status_code in (statuses or (200,)) and clean(r) and (needle is None or needle in (r.text or "").lower())
+    return ok
 
 
 def json_of(r):
@@ -92,6 +113,80 @@ def probes() -> list[dict]:
         dict(name="theyvoteforyou", step="tvfy_refresh", ua="OPAX research (opax.com.au; contact jake.tracey@noice.work)",
              url="https://theyvoteforyou.org.au/api/v1/people.json", params={"key": tvfy},
              ok=lambda r: isinstance(json_of(r), list), need_key=bool(tvfy), key_name="TVFY_API_KEY"),
+        # --- periodic groups (docs/operations/periodic-refresh.md section 4): daily releases/AusTender/GrantConnect/votes
+        dict(name="pm transcripts", step="releases", ua=ORG_UA, url="https://pmtranscripts.pmc.gov.au/query?transcript=1",
+             ok=page_ok(200, 404)),
+        dict(name="qld statements", step="releases", ua=ORG_UA, url="https://statements.qld.gov.au/statements/1",
+             ok=page_ok(200, 404)),
+        dict(name="vic premier sitemap", step="releases", ua=ORG_UA, url="https://www.premier.vic.gov.au/sitemap.xml",
+             params={"page": 1}, ok=page_ok(200, needle="<loc>")),
+        dict(name="treasury ministers", step="releases", ua=ORG_UA,
+             url="https://ministers.treasury.gov.au/jsonapi/node/media", params={"page[limit]": 1},
+             ok=lambda r: "data" in (json_of(r) or {})),
+        dict(name="austender (full feed UA)", step="austender_full", ua=RES_UA,
+             url="https://api.tenders.gov.au/ocds/findByDates/contractPublished/2026-09-20T00:00:00Z/2026-09-20T23:59:59Z",
+             ok=lambda r: isinstance(json_of(r), dict) and "releases" in json_of(r)),
+        dict(name="grantconnect (WAF?)", step="grants_fetch", ua="Mozilla/5.0 (compatible; OPAX research; +https://opax.com.au; contact jake.tracey@noice.work)",
+             url="https://www.grants.gov.au/Ga/List", ok=page_ok(200, needle="grant")),
+        # --- weekly
+        dict(name="legislation.gov.au api", step="frl_acts", ua=ORG_UA, url="https://api.prod.legislation.gov.au/v1/titles",
+             params={"$top": 1}, ok=lambda r: "value" in (json_of(r) or {})),
+        dict(name="ecq disclosures (WAF?)", step="donations_qld", ua=EXT_UA, url="https://disclosures.ecq.qld.gov.au/Map",
+             ok=page_ok(200)),
+        dict(name="vec disclosures", step="donations_vic", ua=EXT_UA, url="https://disclosures.vec.vic.gov.au/public-donations/",
+             ok=page_ok(200)),
+        dict(name="tec tas disclosures", step="donations_tas", ua=EXT_UA, url="https://disclosures.tec.tas.gov.au/public-donations/",
+             ok=page_ok(200)),
+        dict(name="tec tas site", step="donations_tas", ua=EXT_UA,
+             url="https://www.tec.tas.gov.au/disclosure-and-funding/registers-and-reports/", ok=page_ok(200)),
+        dict(name="lobbyists federal api", step="lobbyists_fetch", ua=None, method="POST",
+             url="https://api.lobbyists.ag.gov.au/search/organisations",
+             extra={"Content-Type": "application/json", "Origin": "https://lobbyists.ag.gov.au",
+                    "Referer": "https://lobbyists.ag.gov.au/"},
+             json={"entity": "organisation", "query": "", "pageNumber": 1, "pagingCookie": None, "count": 1,
+                   "sortCriteria": {"fieldName": "name", "sortOrder": 0}, "isDeregistered": False},
+             ok=lambda r: json_of(r) is not None),
+        dict(name="lobbyists federal site", step="lobbyists_fetch", ua=EXT_UA, url="https://lobbyists.ag.gov.au/register",
+             ok=page_ok(200)),
+        dict(name="lobbyists nsw (WAF?)", step="lobbyists_fetch", ua=EXT_UA, url="https://lobbyists.elections.nsw.gov.au/",
+             ok=page_ok(200)),
+        dict(name="lobbyists qld", step="lobbyists_fetch", ua=EXT_UA,
+             url="https://lobbyists.integrity.qld.gov.au/Lobbying-Register/", ok=page_ok(200)),
+        dict(name="lobbyists vic sitemap", step="lobbyists_fetch", ua=EXT_UA, url="https://www.lobbyists.vic.gov.au/sitemap.xml",
+             ok=page_ok(200, needle="<loc>")),
+        dict(name="lobbyists sa api", step="lobbyists_fetch", ua=EXT_UA,
+             extra={"Origin": "https://www.lobbyists.sa.gov.au", "Referer": "https://www.lobbyists.sa.gov.au/"},
+             url="https://saglobbyistapi02prdaue.azurewebsites.net/api/lobbyist",
+             ok=lambda r: "$values" in (json_of(r) or {})),
+        dict(name="lobbyists sa site (known WAF)", step="lobbyists_fetch", ua=EXT_UA, expected_fail=True,
+             url="https://www.lobbyists.sa.gov.au/", ok=page_ok(200)),
+        dict(name="lobbyists wa", step="lobbyists_fetch", ua=EXT_UA, url="https://www.lobbyists.wa.gov.au/", ok=page_ok(200)),
+        dict(name="foreign influence (FITS)", step="fits_fetch", ua="OPAX/1.0 (+https://opax.com.au)",
+             url="https://foreigninfluence.ag.gov.au/", ok=page_ok(200)),
+        dict(name="qld members register PDF", step="interests_qld", ua=ORG_UA, extra={"Range": "bytes=0-1023", "Accept": "application/pdf"},
+             url="https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+             ok=lambda r: r.status_code in (200, 206) and r.content[:4] == b"%PDF"),
+        dict(name="nsw ministers diaries", step="diaries_nsw", ua=EXT_UA,
+             url="https://www.nsw.gov.au/departments-and-agencies/cabinet-office/access-to-information/ministers-diary-disclosures",
+             ok=page_ok(200)),
+        dict(name="acnc/ato (data.gov.au)", step="acnc_ato", ua="OPAX/1.0 (+https://opax.com.au)",
+             url="https://data.gov.au/data/api/3/action/package_show", params={"id": "corporate-transparency"},
+             ok=lambda r: (json_of(r) or {}).get("success") is True),
+        # --- monthly
+        dict(name="qld open data (contracts)", step="qld_contracts", ua=EXT_UA,
+             url="https://www.data.qld.gov.au/api/3/action/package_search", params={"q": "contract disclosure", "rows": 1},
+             ok=lambda r: (json_of(r) or {}).get("success") is True),
+        dict(name="qld cabinet diaries", step="diaries_qld", ua=EXT_UA, url="https://cabinet.qld.gov.au/ministers-portfolios.aspx",
+             ok=page_ok(200, needle="ministers")),
+        dict(name="wikidata sparql", step="rosters_fetch", ua="OPAX research (https://opax.com.au; contact jake.tracey@noice.work)",
+             url="https://query.wikidata.org/sparql", params={"query": "SELECT ?x WHERE { BIND(1 AS ?x) }", "format": "json"},
+             ok=lambda r: "results" in (json_of(r) or {})),
+        dict(name="handbook api (pay)", step="x_pay", ua="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36",
+             url="https://handbookapi.aph.gov.au/api/individuals", params={"$top": 1},
+             ok=lambda r: "value" in (json_of(r) or {})),
+        dict(name="openaustralia people.csv (pay)", step="x_pay", ua="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36",
+             url="https://raw.githubusercontent.com/openaustralia/openaustralia-parser/master/data/people.csv",
+             ok=lambda r: r.status_code == 200 and "," in r.text[:400]),
         dict(name="knowledge box", step="arag_sync", ua=None, kb=True),
         dict(name="sa hansard (expected to fail)", step="sa", ua=FIREFOX, expected_fail=True,
              url="https://hansardsearch.parliament.sa.gov.au/",
