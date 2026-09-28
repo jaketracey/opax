@@ -101,6 +101,7 @@ sleep 1
   echo "$(date '+%F %T')   qld_hansard        newest 2026-09-16  rows 10"
   echo "$(date '+%F %T')   committee_senate   newest 2026-06-05  rows 10"
   echo "$(date '+%F %T') ===== daily refresh end ====="
+  [ "${FAKE_MODE:-ok}" = partial ] && echo "$(date '+%F %T') Partial daily refresh: cut by its time limit, resumes from its checkpoint next run: arag_sync"
 } >> "$PIPE/daily.log"
 echo "GET https://www.openaustralia.org.au/api/getDebates?key=$OPENAUSTRALIA_API_KEY&date=2026-09-28"
 python3 - <<'PYEOF'
@@ -404,6 +405,16 @@ new_refresh_sandbox r10c
 OPAX_SYNC_KB=1 FAIL_STEPS="link_speakers" refresh
 check "without a gate the push still runs (the old behaviour)" grep -q 'parli.ingest.arag_sync' "$RS_CALLS"
 
+echo "== 15b. daily_refresh.sh: a KB push cut by its own time limit is partial (resumes next run), not a failed night"
+new_refresh_sandbox r15p
+OPAX_SYNC_KB=1 OPAX_PUSH_TIMEOUT=7h FAIL_RC=124 FAIL_STEPS="arag_sync" refresh
+check "exit 0" test "$RRC" -eq 0
+check "logged PARTIAL and listed on the Partial line" bash -c "grep -q '\[arag_sync\] PARTIAL(timeout 7h' '$HOME/.cache/autoresearch/pipeline/daily.log' && grep -q 'Partial daily refresh: .*arag_sync' '$HOME/.cache/autoresearch/pipeline/daily.log'"
+check "the push has its own limit (OPAX_PUSH_TIMEOUT), not the per-step one" bash -c "! grep -q 'timeout 3h' '$HOME/.cache/autoresearch/pipeline/daily.log' || grep -q 'arag_sync\] PARTIAL(timeout 7h' '$HOME/.cache/autoresearch/pipeline/daily.log'"
+new_refresh_sandbox r15q
+OPAX_SYNC_KB=1 FAIL_RC=124 FAIL_STEPS="link_speakers" refresh
+check "a timeout of any other step is still a failure" test "$RRC" -eq 1
+
 echo "== 16. daily_refresh.sh: the cutover marker keeps the desktop off the knowledge box"
 new_refresh_sandbox r11
 touch "$HOME/.cache/autoresearch/MIGRATED_TO_VM"
@@ -594,6 +605,11 @@ check "OPAX_FORCE_GROUPS overrides the calendar" bash -c "[ \"\$(cat '$HOME/week
 new_sandbox s24e
 OPAX_FORCE_GROUPS="weekly" OPAX_NIGHTLY_SKIP_PERIODIC=1 FAKE_WEEKLY_MODE=ok nightly
 check "OPAX_NIGHTLY_SKIP_PERIODIC=1 switches them off" test ! -e "$HOME/weekly.args"
+
+echo "== 27. a night whose KB push was cut short is ok, with a warning"
+new_sandbox s27
+FAKE_MODE=partial nightly
+check "exit 0 and status ok" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"resumes from its checkpoint\" in w and \"arag_sync\" in w for w in s[\"warnings\"]), s'"
 
 echo "== 26. an exit status of 3 (the source refused to change the register) is stale, not failed"
 new_weekly_sandbox w22f

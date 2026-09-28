@@ -25,6 +25,8 @@
 #                       OPAX_STEP_TIMEOUT=12h OPAX_NSW_START=2024-11-22 scripts/daily_refresh.sh
 #   OPAX_ACT_START      ACT Assembly Hansard window start (default: DAYS_BACK ago; the one-off 11th Assembly
 #                       backfill is docs/DATA-ACT-HANSARD.md: OPAX_ACT_START=2024-10-19)
+#   OPAX_PUSH_TIMEOUT   time limit of the knowledge-box push alone (default 2h; the KB ingests only ~12-30k resources
+#                       an hour, so a big catch-up push is cut here, resumes next run and never eats the whole night)
 #   OPAX_IPEA_SINCE     first IPEA quarter to consider (default: this year)
 #   OPAX_ONLY           comma-separated step names to run (debugging)
 #   OPAX_SYNC_KB=1      enable arag_sync + tvfy_refresh + export_votes
@@ -73,6 +75,7 @@ ACT_START="${OPAX_ACT_START:-$SINCE}"
 IPEA_SINCE="${OPAX_IPEA_SINCE:-$(date +%Y)}"
 ONLY="${OPAX_ONLY:-}"
 ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
+PARTIAL_OK=",arag_sync,"   # the KB push resumes from its checkpoint: hitting its own time limit is not a failure
 STALE_OK=",grants_apply,"   # exit 3 from ext_apply = the fetched window was empty or shrunken: rows kept, not a failure
 SYNC_GATE="${OPAX_SYNC_GATE:-}"
 
@@ -233,7 +236,7 @@ s = json.load(open(sys.argv[1]))["tables"]
 assert s["speeches"]["after"] > 1_000_000
 PYEOF
   then
-    run_step arag_sync "" \
+    STEP_TIMEOUT="${OPAX_PUSH_TIMEOUT:-2h}" run_step arag_sync "" \
       "$PY" -m parli.ingest.arag_sync --tables speeches --full
     # ACT turns that changed after they were pushed (proof -> final): text-only PATCH, deletes of removed turns
     run_step act_kb_patch "SELECT COUNT(*) FROM act_hansard_kb_queue WHERE done_at IS NULL" \
@@ -288,6 +291,7 @@ for src, mx, n in db.execute("SELECT source, MAX(date), COUNT(*) FROM speeches G
 PYEOF
 log "===== daily refresh end ====="
 [ "${#STALE_STEPS[@]}" -eq 0 ] || log "Stale daily refresh: source refused to change the register: ${STALE_STEPS[*]}"
+[ "${#PARTIAL_STEPS[@]}" -eq 0 ] || log "Partial daily refresh: cut by its time limit, resumes from its checkpoint next run: ${PARTIAL_STEPS[*]}"
 if [ "${#FAILED_STEPS[@]}" -gt 0 ]; then
   log "Incomplete refresh: failed steps ${FAILED_STEPS[*]}"
   exit 1

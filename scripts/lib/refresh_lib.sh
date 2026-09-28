@@ -10,6 +10,8 @@
 #   STALE_OK      ",step,step," -- steps for which exit status 3 means "the source refused to change the register
 #                 (empty or shrunken upstream): the last good rows are kept". Logged STALE, listed in STALE_STEPS,
 #                 not a failure (docs/operations/periodic-refresh.md, exit codes and section 6).
+#   PARTIAL_OK    ",step,step," -- steps that resume from their own checkpoint (the KB push): a timeout there is
+#                 logged PARTIAL, listed in PARTIAL_STEPS, and is a warning, not a failure.
 # It defines log, count, run_step and the FAILED_STEPS / STEP_DELTA it fills in.
 #
 # Count SQL is read-only against ~/.cache/autoresearch/parli.db. A step's log goes to $PIPE/<name>.log.
@@ -18,6 +20,7 @@
 declare -A STEP_DELTA=()   # step name -> rows it added ("?" when the table could not be counted)
 FAILED_STEPS=()
 STALE_STEPS=()
+PARTIAL_STEPS=()
 mkdir -p "$PIPE"
 
 ts() { date '+%F %T'; }
@@ -64,7 +67,10 @@ run_step() {
     *)   status="FAIL(rc=$rc)" ;;
   esac
   if [ "$rc" -ne 0 ]; then
-    if [ "$rc" -eq 3 ] && [[ ",${STALE_OK:-}," == *",$name,"* ]]; then
+    if { [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; } && [[ ",${PARTIAL_OK:-}," == *",$name,"* ]]; then
+      status="PARTIAL(timeout ${STEP_TIMEOUT:-3h}: resumes from its checkpoint next run)"
+      PARTIAL_STEPS+=("$name")
+    elif [ "$rc" -eq 3 ] && [[ ",${STALE_OK:-}," == *",$name,"* ]]; then
       status="STALE(rc=3: refused, last good rows kept)"
       STALE_STEPS+=("$name")
     elif [[ "$ALLOW_FAIL" == *",$name,"* ]]; then

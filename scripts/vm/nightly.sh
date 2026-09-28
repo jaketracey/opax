@@ -40,6 +40,7 @@
 #   OPAX_ALLOW_FAIL       refresh steps allowed to fail (default sa,act_members)
 #   OPAX_SYNC_GATE        steps that must pass before the KB push (default link_speakers,classify,committee_fetch,committee_resolve)
 #   OPAX_DAILY_REFRESH    refresh script (default scripts/daily_refresh.sh)
+#   OPAX_PUSH_TIMEOUT     time limit of the knowledge-box push (arag_sync) alone, default 2h; a cut push resumes next run
 #   OPAX_SETTLE_SECONDS   wait for KB counters to stop moving before reading them (default 60)
 #   OPAX_STAMP_AFTER_HOURS  refresh corpus.json's checked_at when older than this (default 12)
 #   OPAX_MIN_FREE_GB      refuse to start with less free disk than this (default 5)
@@ -251,6 +252,8 @@ else
   fi
   stale=$(last_run_line "$DAILY_LOG" 'Stale daily refresh:' | sed 's/.*register: //')
   [ -z "$stale" ] || warn "a source refused to change its register tonight (kept the last good rows): $stale"
+  partial=$(last_run_line "$DAILY_LOG" 'Partial daily refresh:' | sed 's/.*next run: //')
+  [ -z "$partial" ] || warn "cut by its time limit tonight, resumes from its checkpoint next run: $partial (the knowledge box takes only ~12-30k resources an hour)"
 fi
 
 # ---- 2b. the periodic groups: weekly (Sundays, Sydney) and monthly (the first Sunday) ------------------
