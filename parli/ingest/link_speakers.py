@@ -71,6 +71,22 @@ PROCEDURAL_NAMES = {
 }
 
 
+def committee_guard(db) -> str:
+    """SQL that keeps this linker off committee-hearing rows it must not touch.
+
+    A committee transcript names witnesses the way the reporter does at the microphone ("Ms Hall", "Mr Cook"), and a
+    surname link files those officials under MPs (docs/COMMITTEE-WITNESSES.md: 12,119 rows under sitting or former
+    members). House and Joint hearings print MPs as "Mr KENNEDY", which a surname cannot tell from a witness either.
+    `committee_witnesses resolve` decides who is who (from the transcript's markup and the members' Handbook ids), so
+    this linker only ever links an untyped committee row that is a "Senator ..." (the pre-2026-09-29 behaviour) and
+    leaves every other committee row alone. Returns '' when the database holds no such rows or column.
+    """
+    marks = "'committee_senate', 'committee_house', 'committee_joint'"
+    cols = {r[1] for r in db.execute("PRAGMA table_info(speeches)")}
+    typed = "speaker_type IS NOT NULL OR " if "speaker_type" in cols else ""
+    return (f" AND NOT (source IN ({marks}) AND ({typed}COALESCE(speaker_name, '') NOT LIKE 'Senator%'))")
+
+
 def is_procedural(raw: str) -> bool:
     """Return True if the speaker_name is a procedural/role entry, not a person."""
     if not raw:
@@ -1045,12 +1061,14 @@ def link_ambiguous_by_date(db, surname_lookup: dict) -> int:
              len(member_date_ranges))
 
     # Find speaker_names that are still unlinked and look like surname-only
+    guard = committee_guard(db)
     speaker_rows = db.execute("""
         SELECT DISTINCT speaker_name, COUNT(*) as cnt
         FROM speeches
         WHERE person_id IS NULL
           AND speaker_name IS NOT NULL AND speaker_name != ''
           AND (state IS NULL OR state = '' OR state = 'federal')
+        """ + guard + """
         GROUP BY speaker_name
         HAVING COUNT(*) >= 5
         ORDER BY cnt DESC
@@ -1079,7 +1097,7 @@ def link_ambiguous_by_date(db, surname_lookup: dict) -> int:
             WHERE speaker_name = ? AND person_id IS NULL
               AND (state IS NULL OR state = '' OR state = 'federal')
               AND date IS NOT NULL AND date != ''
-        """, (speaker_name,)).fetchall()
+        """ + guard, (speaker_name,)).fetchall()
 
         if not speeches:
             continue
@@ -1234,10 +1252,11 @@ def link_speakers() -> None:
     log.info("Counting procedural speaker entries...")
     procedural_count = 0
     procedural_names = set()
+    guard = committee_guard(db)
     proc_rows = db.execute(
         "SELECT DISTINCT speaker_name, COUNT(*) as cnt FROM speeches "
         "WHERE person_id IS NULL AND speaker_name IS NOT NULL AND speaker_name != '' "
-        "GROUP BY speaker_name"
+        f"{guard} GROUP BY speaker_name"
     ).fetchall()
     for row in proc_rows:
         if is_procedural(row["speaker_name"]):
@@ -1254,7 +1273,7 @@ def link_speakers() -> None:
     speaker_rows = db.execute(
         "SELECT DISTINCT speaker_name, COUNT(*) as cnt FROM speeches "
         "WHERE person_id IS NULL AND speaker_name IS NOT NULL AND speaker_name != '' "
-        "AND (state IS NULL OR state = 'federal') "
+        f"AND (state IS NULL OR state = 'federal') {guard} "
         "GROUP BY speaker_name ORDER BY cnt DESC"
     ).fetchall()
     log.info("Found %d distinct federal speaker names to match", len(speaker_rows))
@@ -1348,7 +1367,7 @@ def link_speakers() -> None:
         )
         WHERE person_id IS NULL
           AND speaker_name IN (SELECT speaker_name FROM _fed_speaker_map)
-    """)
+    """ + guard)
     total_updated = db.execute("SELECT changes()").fetchone()[0]
     db.commit()
     db.execute("DROP TABLE IF EXISTS _fed_speaker_map")

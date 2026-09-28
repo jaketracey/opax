@@ -21,15 +21,21 @@ officials, "Ms Margaret Lopez, Acting First Assistant Secretary". This module
            post-nominals, position, organisation and group heading, and
            whether they are a minister or an official.
   resolve  walks every committee speech and
-             - a "Senator X" row linked to a member gets the member's full name
-               as `speaker_name_clean`;
-             - a row with any other honorific (Mr, Ms, Dr, Prof, a rank) is a
+             - rows the committee ingest wrote with its own speaker_type (parli.ingest.committee_hearings, hearings with
+               a row in ext_committee_hearings at parser_version >= 2) are TRUSTED: the type comes from the transcript's
+               markup, not from an honorific. A `member` row is linked to a person by the Parliamentary Handbook id in
+               its label (ext_handbook_people, parli.ingest.handbook) and never by a surname; a `witness` row is
+               matched against the hearing's witness list (or In Attendance block) by surname, honorific breaking ties;
+               a `chair` row stays a chair. This is what makes House and Joint hearings safe, where MPs are also printed
+               as "Mr KENNEDY" and a surname alone cannot tell an MP from a witness.
+             - older rows (the estimates ingest before 2026-09-29) keep the honorific rule:
+               a "Senator X" row linked to a member gets the member's full name as `speaker_name_clean`;
+               a row with any other honorific (Mr, Ms, Dr, Prof, a rank) is a
                witness: matched against the hearing's attendance list by
                surname (honorific breaks ties), it gets the full name, position
                and organisation; matched or not, its `person_id` is cleared,
                because a witness is never a member of parliament;
-             - `speaker_type` is set on every row (member | witness | chair |
-               unknown).
+             - `speaker_type` is set on every row (member | witness | chair | unknown).
            The changed rows go to `ext_kb_patch_queue`, which
            scripts/arag_patch_speakers.py drains against the knowledge box.
 
@@ -55,6 +61,8 @@ import time
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+
+from parli.ingest.committee_store import COMMITTEE_SOURCES_SQL, read_cached_page, write_cached_page
 
 PARLINFO_BASE = "https://parlinfo.aph.gov.au"
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0"
@@ -230,34 +238,47 @@ def toc_url(base: str) -> str:
     return f"{PARLINFO_BASE}/parlInfo/search/display/display.w3p;query=Id%3A%22{quote(base, safe='')}/0000%22"
 
 
+def _body(resp) -> str:
+    """The response as UTF-8 (ParlInfo sends no charset, so `resp.text` would be read as ISO-8859-1)."""
+    return resp.content.decode("utf-8", errors="replace")
+
+
 def hearing_fragments(session, base: str) -> list[str]:
     """Every fragment id the hearing's table of contents links to, in order."""
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    path = CACHE_DIR / (base.replace("/", "-") + "-0000.html")
-    if path.exists() and path.stat().st_size > 5000:
-        page = path.read_text(encoding="utf-8", errors="replace")
-    else:
+    page = read_cached_page(CACHE_DIR, base, "0000")
+    if not page or len(page) < 5000:
         time.sleep(DELAY)
         r = session.get(toc_url(base), timeout=60)
         if r.status_code != 200:
             return []
-        page = r.text
-        path.write_text(page, encoding="utf-8")
+        page = _body(r)
+        write_cached_page(CACHE_DIR, base, "0000", page)
     ids = sorted({m.group(1) for m in FRAG_LINK_RE.finditer(page)} - {"0000"})
     return ids
 
 
 def fetch_page(session, base: str, frag: str) -> str | None:
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    path = CACHE_DIR / (base.replace("/", "-") + f"-{frag}.html")
-    if path.exists() and path.stat().st_size > 5000:
-        return path.read_text(encoding="utf-8", errors="replace")
+    page = read_cached_page(CACHE_DIR, base, frag)
+    if page and len(page) > 5000:
+        return page
     time.sleep(DELAY)
     r = session.get(fragment_url(base, frag), timeout=60)
     if r.status_code != 200:
         return None
-    path.write_text(r.text, encoding="utf-8")
-    return r.text
+    page = _body(r)
+    write_cached_page(CACHE_DIR, base, frag, page)
+    return page
+
+
+def witness_rows(page: str) -> list[dict]:
+    """The structured witness list a House / Joint / Senate committee fragment opens with, as attendance rows."""
+    from parli.ingest.committee_transcript import parse_witness_list     # lazy: committee_transcript imports this module
+    rows = []
+    for n, w in enumerate(parse_witness_list(page), 1):
+        rows.append({"seq": n, "honorific": w.honorific, "honorific_class": w.honorific_class, "name": w.name,
+                     "surname": w.surname, "postnominals": w.postnominals, "position": w.position,
+                     "organisation": w.organisation, "group_heading": None, "kind": "witness"})
+    return rows
 
 
 ATT_DDL = """
@@ -290,9 +311,12 @@ def cmd_fetch(db_path: str, refetch: bool, limit: int | None) -> None:
     db = sqlite3.connect(db_path, timeout=600)
     db.execute("PRAGMA busy_timeout = 600000")
     db.executescript(ATT_DDL)
+    # who the members are: refresh the Handbook people (id in a transcript's member link -> person_id) weekly
+    from parli.ingest import handbook
+    handbook.ensure_people(db, say=log)
     bases = [r[0] for r in db.execute(
         "SELECT DISTINCT substr(hearing_id, 1, length(hearing_id) - 5) FROM speeches "
-        "WHERE source LIKE 'committee%' AND hearing_id IS NOT NULL ORDER BY 1")]
+        f"WHERE source IN ({COMMITTEE_SOURCES_SQL}) AND hearing_id IS NOT NULL ORDER BY 1")]
     if limit:
         bases = bases[:limit]
     have = {r[0] for r in db.execute("SELECT DISTINCT hearing_base FROM ext_committee_attendance")}
@@ -313,9 +337,13 @@ def cmd_fetch(db_path: str, refetch: bool, limit: int | None) -> None:
         blocks = 0
         for frag in frags:
             page = fetch_page(session, base, frag)
-            if not page or "In Attendance" not in page and "In attendance" not in page:
+            if not page:
                 continue
-            found = parse_attendance(page)
+            # Senate estimates open a portfolio's session with an In Attendance block; the other committees print a
+            # structured witness list at the top of each fragment (normally written by the ingest already).
+            found = parse_attendance(page) if ("In Attendance" in page or "In attendance" in page) else []
+            if not found:
+                found = witness_rows(page)
             if not found:
                 continue
             blocks += 1
@@ -369,11 +397,8 @@ CREATE TABLE IF NOT EXISTS ext_committee_relinks (
 
 
 def ensure_columns(db: sqlite3.Connection) -> None:
-    cols = {r[1] for r in db.execute("PRAGMA table_info(speeches)")}
-    for col in ("speaker_type", "witness_position", "witness_organisation"):
-        if col not in cols:
-            db.execute(f"ALTER TABLE speeches ADD COLUMN {col} TEXT")
-    db.commit()
+    from parli.ingest.committee_store import ensure_speech_columns
+    ensure_speech_columns(db, say=lambda *_: None)
 
 
 def match_roster(tail: str, hon_class: str | None, roster: list[dict]) -> dict | None:
@@ -404,7 +429,16 @@ def match_roster(tail: str, hon_class: str | None, roster: list[dict]) -> dict |
     return None
 
 
+def trusted_hearings(db: sqlite3.Connection) -> set[str]:
+    """Hearings whose rows the committee ingest wrote with a speaker_type read from the transcript's markup."""
+    try:
+        return {r[0] for r in db.execute("SELECT hearing_base FROM ext_committee_hearings WHERE parser_version >= 2")}
+    except sqlite3.OperationalError:
+        return set()
+
+
 def cmd_resolve(db_path: str, dry_run: bool) -> None:
+    from parli.ingest import handbook
     db = sqlite3.connect(db_path, timeout=600)
     db.execute("PRAGMA busy_timeout = 600000")
     db.row_factory = sqlite3.Row
@@ -416,32 +450,72 @@ def cmd_resolve(db_path: str, dry_run: bool) -> None:
         roster[r["hearing_base"]].append(dict(r))
     members = {r["person_id"]: r["full_name"] for r in db.execute(
         "SELECT person_id, full_name FROM members WHERE full_name IS NOT NULL AND full_name != ''")}
+    mcols = {r[1] for r in db.execute("PRAGMA table_info(members)")}
+    party_col = "COALESCE(party_canonical, party)" if "party_canonical" in mcols else "party"
+    party_of = {r["person_id"]: (r["p"] or None) for r in db.execute(f"SELECT person_id, {party_col} AS p FROM members")}
+    people = handbook.load_people(db)
+    trusted = trusted_hearings(db)
     cols = {r[1] for r in db.execute("PRAGMA table_info(speeches)")}
     extra = ", speaker_type, witness_position, witness_organisation" if "speaker_type" in cols else ""
+    extra += ", handbook_id" if "handbook_id" in cols else ""
+    extra += ", party_canonical" if "party_canonical" in cols else ""
     rows = db.execute(
         f"SELECT speech_id, hearing_id, speaker_name, speaker_name_clean, person_id, witness_name{extra} "
-        "FROM speeches WHERE source LIKE 'committee%'").fetchall()
-    log(f"{len(rows):,} committee rows; attendance for {len(roster)} hearings; {len(members):,} members")
+        f"FROM speeches WHERE source IN ({COMMITTEE_SOURCES_SQL})").fetchall()
+    log(f"{len(rows):,} committee rows; attendance for {len(roster)} hearings; {len(members):,} members; "
+        f"{len(people)} Handbook people ({sum(1 for p in people.values() if p['person_id'])} matched); "
+        f"{len(trusted)} hearings with transcript-typed rows")
+    if trusted and not people:
+        log("  WARNING: no Handbook people loaded (run `committee_witnesses fetch`): members in House / Joint hearings stay unlinked")
 
     stats = Counter()
     unmatched = Counter()
+    unmapped_phids = Counter()
     updates = []     # (speaker_name_clean, person_id, witness_name, witness_position, witness_organisation, speaker_type, speech_id)
     relinks = []
+    party_updates = []   # (party_canonical, speech_id): the committee source records no party, the member's row does
     stamp = now_iso()
+    keys = None
     for r in rows:
+        if keys is None:
+            keys = set(r.keys())
         name = (r["speaker_name"] or "").strip()
         base = (r["hearing_id"] or "").rsplit("/", 1)[0]
         old_clean = r["speaker_name_clean"]
         old_pid = r["person_id"]
-        cur_type = r["speaker_type"] if "speaker_type" in r.keys() else None
+        cur_type = r["speaker_type"] if "speaker_type" in keys else None
+        phid = r["handbook_id"] if "handbook_id" in keys else None
         new = {"clean": old_clean, "pid": old_pid, "wname": r["witness_name"], "pos": None, "org": None, "type": None}
-        if not name or name in ("&#10;", "M", "Lt", "Adm.", "Lt Gen.") or name.upper() == "UNKNOWN":
+        typed = cur_type if (base in trusted and cur_type in ("chair", "member", "witness", "unknown")) else None
+        if typed == "unknown" or (typed is None and (not name or name in ("&#10;", "M", "Lt", "Adm.", "Lt Gen.") or name.upper() == "UNKNOWN")):
             new["type"] = "unknown"
             stats["unknown"] += 1
-        elif CHAIR_RE.match(name) or name.upper() in ("CHAIR", "ACTING CHAIR", "DEPUTY CHAIR", "THE PRESIDENT"):
+        elif typed == "chair" or (typed is None and (CHAIR_RE.match(name) or name.upper() in ("CHAIR", "ACTING CHAIR", "DEPUTY CHAIR", "THE PRESIDENT"))):
             new["type"] = "chair"
             stats["chair"] += 1
-        elif SENATOR_RE.match(name):
+            mapped = (people.get(str(phid)) or {}).get("person_id") if phid else None
+            if typed and mapped and old_pid is None:
+                new["pid"] = mapped
+                new["clean"] = members.get(mapped) or old_clean
+                stats["chair_linked_by_handbook"] += 1
+        elif typed == "member":
+            new["type"] = "member"
+            stats["member_rows"] += 1
+            mapped = (people.get(str(phid)) or {}).get("person_id") if phid else None
+            if mapped:
+                new["pid"] = mapped
+                stats["member_linked_by_handbook"] += 1
+            elif phid:
+                unmapped_phids[phid] += 1
+                stats["member_phid_unmapped"] += 1
+            else:
+                stats["member_without_handbook_id"] += 1
+            if new["pid"] and str(new["pid"]).isdigit() and members.get(new["pid"]):
+                new["clean"] = members[new["pid"]]
+                party = party_of.get(new["pid"])
+                if party and "party_canonical" in keys and not r["party_canonical"]:
+                    party_updates.append((party, r["speech_id"]))
+        elif typed is None and SENATOR_RE.match(name):
             new["type"] = "member"
             stats["senator_rows"] += 1
             if old_pid and str(old_pid).isdigit() and members.get(old_pid):
@@ -468,7 +542,7 @@ def cmd_resolve(db_path: str, dry_run: bool) -> None:
                 stats["witness_unlinked_from_" + ("member" if str(old_pid).isdigit() else "stub")] += 1
                 new["pid"] = None
         changed = (new["clean"] != old_clean or new["pid"] != old_pid or new["type"] != cur_type or
-                   (new["pos"] and new["pos"] != (r["witness_position"] if "witness_position" in r.keys() else None)) or
+                   (new["pos"] and new["pos"] != (r["witness_position"] if "witness_position" in keys else None)) or
                    new["wname"] != r["witness_name"])
         if changed:
             updates.append((new["clean"], new["pid"], new["wname"], new["pos"], new["org"], new["type"], r["speech_id"]))
@@ -478,8 +552,11 @@ def cmd_resolve(db_path: str, dry_run: bool) -> None:
                                 "witness" if new["type"] == "witness" else "member_full_name", stamp))
     stats["rows_changed"] = len(updates)
     stats["rows_relinked"] = len(relinks)
+    stats["party_filled"] = len(party_updates)
     log("  " + ", ".join(f"{k}={v:,}" for k, v in sorted(stats.items())))
     log("  most frequent unmatched witnesses: " + "; ".join(f"{n} ({c})" for n, c in unmatched.most_common(15)))
+    if unmapped_phids:
+        log("  Handbook ids with no members match: " + "; ".join(f"{p} ({c})" for p, c in unmapped_phids.most_common(15)))
     if dry_run:
         return
     cur = db.cursor()
@@ -488,11 +565,16 @@ def cmd_resolve(db_path: str, dry_run: bool) -> None:
         cur.executemany(
             "UPDATE speeches SET speaker_name_clean = ?, person_id = ?, witness_name = ?, witness_position = ?, "
             "witness_organisation = ?, speaker_type = ? WHERE speech_id = ?", updates[i:i + 5000])
+    cur.executemany("UPDATE speeches SET party_canonical = ? WHERE speech_id = ? AND COALESCE(party_canonical, '') = ''",
+                    party_updates)
     cur.executemany(
         "INSERT OR REPLACE INTO ext_committee_relinks VALUES (?,?,?,?,?,?,?,?)", relinks)
+    # a queued text update (Proof -> Final) must survive: the speaker-field patch it would be replaced by never sends text
     cur.executemany(
         "INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?, ?, 'pending', ?) "
-        "ON CONFLICT(slug) DO UPDATE SET status = 'pending', reason = excluded.reason, queued_at = excluded.queued_at",
+        "ON CONFLICT(slug) DO UPDATE SET status = 'pending', queued_at = excluded.queued_at, "
+        "reason = CASE WHEN ext_kb_patch_queue.status = 'pending' AND ext_kb_patch_queue.reason LIKE 'text:%' "
+        "THEN ext_kb_patch_queue.reason ELSE excluded.reason END",
         [(f"speech-{u[6]}", u[5], stamp) for u in updates])
     cur.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
                 ("speeches", SOURCE, len(updates), 0, stamp, ", ".join(f"{k}={v}" for k, v in sorted(stats.items()))))
@@ -503,7 +585,7 @@ def cmd_resolve(db_path: str, dry_run: bool) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("phase", choices=["fetch", "resolve"])
+    ap.add_argument("phase", choices=["fetch", "resolve", "handbook"])
     ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"))
     ap.add_argument("--refetch", action="store_true")
     ap.add_argument("--limit", type=int, default=None)
@@ -511,6 +593,11 @@ def main() -> None:
     args = ap.parse_args()
     if args.phase == "fetch":
         cmd_fetch(args.db, args.refetch, args.limit)
+    elif args.phase == "handbook":
+        from parli.ingest import handbook
+        conn = sqlite3.connect(args.db, timeout=600)
+        conn.execute("PRAGMA busy_timeout = 600000")
+        handbook.ensure_people(conn, force=True, say=log)
     else:
         cmd_resolve(args.db, args.dry_run)
 
