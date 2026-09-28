@@ -83,7 +83,9 @@ HONORIFICS = [
     (r"Senator the Hon\.?", "senator"), (r"Senator", "senator"),
     (r"The Hon\.?", "hon"), (r"Hon\.?", "hon"),
     (r"Mr", "mr"), (r"Mrs", "mrs"), (r"Ms", "ms"), (r"Miss", "miss"), (r"Mx", "mx"),
-    (r"Dr", "dr"), (r"Professor", "prof"), (r"Prof\.?", "prof"),
+    (r"Dr", "dr"), (r"(?:Associate|Adjunct|Emeritus|Distinguished|Clinical|Honorary) Professor", "prof"),
+    (r"(?:Associate|Adjunct|Emeritus|Distinguished|Clinical) Prof\.?", "prof"), (r"Professor", "prof"), (r"Prof\.?", "prof"),
+    (r"Aunty", "elder"), (r"Uncle", "elder"), (r"Judge", "judge"), (r"Justice", "judge"), (r"Pastor", "rev"),
     (r"Air Chief Marshal", "rank"), (r"Air Vice-?Marshal", "rank"), (r"Air Marshal", "rank"), (r"Air Commodore", "rank"),
     (r"Air Cdre\.?", "rank"), (r"AVM", "rank"),
     (r"Vice Admiral", "rank"), (r"Vice Adm\.?", "rank"), (r"Rear Admiral", "rank"), (r"Rear Adm\.?", "rank"),
@@ -437,7 +439,19 @@ def trusted_hearings(db: sqlite3.Connection) -> set[str]:
         return set()
 
 
-def cmd_resolve(db_path: str, dry_run: bool) -> None:
+def pushed_checkpoint() -> int | None:
+    """The highest speech_id the knowledge-box push has reached (arag_sync_state.json), or None when there is no state.
+    Rows above it are not in the box yet: the push will send them with their fields already resolved, so there is
+    nothing to patch."""
+    import json
+    path = Path(os.environ.get("OPAX_ARAG_STATE", "~/.cache/autoresearch/arag_sync_state.json")).expanduser()
+    try:
+        return int(json.loads(path.read_text())["tables"]["speeches"]["after"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
+def cmd_resolve(db_path: str, dry_run: bool, pushed_upto: int | None | str = "auto") -> None:
     from parli.ingest import handbook
     db = sqlite3.connect(db_path, timeout=600)
     db.execute("PRAGMA busy_timeout = 600000")
@@ -491,13 +505,11 @@ def cmd_resolve(db_path: str, dry_run: bool) -> None:
             new["type"] = "unknown"
             stats["unknown"] += 1
         elif typed == "chair" or (typed is None and (CHAIR_RE.match(name) or name.upper() in ("CHAIR", "ACTING CHAIR", "DEPUTY CHAIR", "THE PRESIDENT"))):
+            # A chair row stays unlinked, as the presiding-officer rows of every other source do: only the first turn of
+            # a fragment names the chair ("CHAIR (Mr Husic):"), so linking would credit a person with a handful of
+            # chair turns and not the rest. The id the transcript gave stays in speeches.handbook_id.
             new["type"] = "chair"
             stats["chair"] += 1
-            mapped = (people.get(str(phid)) or {}).get("person_id") if phid else None
-            if typed and mapped and old_pid is None:
-                new["pid"] = mapped
-                new["clean"] = members.get(mapped) or old_clean
-                stats["chair_linked_by_handbook"] += 1
         elif typed == "member":
             new["type"] = "member"
             stats["member_rows"] += 1
@@ -543,6 +555,7 @@ def cmd_resolve(db_path: str, dry_run: bool) -> None:
                 new["pid"] = None
         changed = (new["clean"] != old_clean or new["pid"] != old_pid or new["type"] != cur_type or
                    (new["pos"] and new["pos"] != (r["witness_position"] if "witness_position" in keys else None)) or
+                   (new["org"] and new["org"] != (r["witness_organisation"] if "witness_organisation" in keys else None)) or
                    new["wname"] != r["witness_name"])
         if changed:
             updates.append((new["clean"], new["pid"], new["wname"], new["pos"], new["org"], new["type"], r["speech_id"]))
@@ -559,6 +572,9 @@ def cmd_resolve(db_path: str, dry_run: bool) -> None:
         log("  Handbook ids with no members match: " + "; ".join(f"{p} ({c})" for p, c in unmapped_phids.most_common(15)))
     if dry_run:
         return
+    if pushed_upto == "auto":
+        pushed_upto = pushed_checkpoint()
+    queued = [u for u in updates if pushed_upto is None or u[6] <= pushed_upto]
     cur = db.cursor()
     cur.execute("BEGIN")
     for i in range(0, len(updates), 5000):
@@ -575,12 +591,13 @@ def cmd_resolve(db_path: str, dry_run: bool) -> None:
         "ON CONFLICT(slug) DO UPDATE SET status = 'pending', queued_at = excluded.queued_at, "
         "reason = CASE WHEN ext_kb_patch_queue.status = 'pending' AND ext_kb_patch_queue.reason LIKE 'text:%' "
         "THEN ext_kb_patch_queue.reason ELSE excluded.reason END",
-        [(f"speech-{u[6]}", u[5], stamp) for u in updates])
+        [(f"speech-{u[6]}", u[5], stamp) for u in queued])
     cur.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
                 ("speeches", SOURCE, len(updates), 0, stamp, ", ".join(f"{k}={v}" for k, v in sorted(stats.items()))))
     cur.execute("COMMIT")
     q = db.execute("SELECT COUNT(*) FROM ext_kb_patch_queue WHERE status = 'pending'").fetchone()[0]
-    log(f"  updated {len(updates):,} rows; {q:,} slugs queued for the knowledge box")
+    log(f"  updated {len(updates):,} rows; {len(queued):,} of them already in the knowledge box (speech_id <= "
+        f"{pushed_upto}) queued for a patch; {q:,} slugs pending in all")
 
 
 def main() -> None:
@@ -590,6 +607,9 @@ def main() -> None:
     ap.add_argument("--refetch", action="store_true")
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--pushed-upto", type=int, default=None,
+                    help="Queue knowledge-box patches only for speech_id <= N (default: the push checkpoint in "
+                         "arag_sync_state.json; every changed row when that file is absent).")
     args = ap.parse_args()
     if args.phase == "fetch":
         cmd_fetch(args.db, args.refetch, args.limit)
@@ -599,7 +619,7 @@ def main() -> None:
         conn.execute("PRAGMA busy_timeout = 600000")
         handbook.ensure_people(conn, force=True, say=log)
     else:
-        cmd_resolve(args.db, args.dry_run)
+        cmd_resolve(args.db, args.dry_run, args.pushed_upto if args.pushed_upto is not None else "auto")
 
 
 if __name__ == "__main__":

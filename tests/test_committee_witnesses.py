@@ -20,7 +20,8 @@ LEGACY = "committees/estimate/9"
 
 
 @pytest.fixture
-def path(tmp_path):
+def path(tmp_path, monkeypatch):
+    monkeypatch.setenv("OPAX_ARAG_STATE", str(tmp_path / "no-state.json"))       # never read the real push checkpoint
     conn = get_db(tmp_path / "w.db")
     ch.ensure_schema(conn)
     conn.execute("PRAGMA foreign_keys = OFF")
@@ -109,12 +110,13 @@ def test_a_member_with_an_unmapped_or_missing_handbook_id_stays_unlinked_rather_
         assert (r["speaker_type"], r["person_id"]) == ("member", None)         # not Simon Kennedy, not the wragge stub
 
 
-def test_the_chair_is_a_chair_and_is_linked_when_the_transcript_names_them(path):
+def test_the_chair_is_a_chair_and_stays_unlinked_even_when_the_transcript_names_them(path):
     named = add(path, BASE, "CHAIR", "chair", phid="91219")
     plain = add(path, BASE, "CHAIR", "chair")
     cw.cmd_resolve(path, dry_run=False)
-    assert (row(path, named)["speaker_type"], row(path, named)["person_id"]) == ("chair", "10749")
-    assert (row(path, plain)["speaker_type"], row(path, plain)["person_id"]) == ("chair", None)
+    for sid in (named, plain):
+        assert (row(path, sid)["speaker_type"], row(path, sid)["person_id"]) == ("chair", None)
+    assert row(path, named)["handbook_id"] == "91219"           # the id is kept on the row
 
 
 def test_a_witness_missing_from_the_witness_list_keeps_the_transcripts_name_and_is_still_a_witness(path):
@@ -220,3 +222,48 @@ def test_link_speakers_still_links_an_untyped_senator_committee_row(path, monkey
     conn.close()
     run_linker(path, monkeypatch)
     assert row(path, sid)["person_id"] == "11009"
+
+
+def test_first_name_only_and_honorific_free_witnesses_match_their_transcript_labels():
+    rows = [{"seq": 1, "honorific": None, "honorific_class": None, "name": "Brendan", "surname": "Brendan", "kind": "witness",
+             "position": None, "organisation": "Private capacity"},
+            {"seq": 2, "honorific": None, "honorific_class": None, "name": "Caitlin Delaney", "surname": "Delaney", "kind": "witness",
+             "position": "First Assistant Secretary", "organisation": "Department of Education"},
+            {"seq": 3, "honorific": "Associate Professor", "honorific_class": "prof", "name": "Jing Qi", "surname": "Qi", "kind": "witness",
+             "position": "Program Manager", "organisation": "RMIT"}]
+    assert cw.match_roster("Brendan", None, rows)["organisation"] == "Private capacity"
+    assert cw.match_roster("Caitlin Delaney", None, rows)["name"] == "Caitlin Delaney"
+    hon, cls, tail = cw.split_honorific("Prof. Qi")
+    assert cw.match_roster(tail, cls, rows)["name"] == "Jing Qi"
+
+
+def test_a_witness_whose_only_news_is_an_organisation_still_gets_it(path):
+    conn = sqlite3.connect(path)
+    conn.execute("INSERT INTO ext_committee_attendance (hearing_base, seq, honorific, honorific_class, name, surname, position, "
+                 "organisation, kind, fragment, fetched_at) VALUES (?,3,NULL,NULL,'Brendan','Brendan',NULL,'Private capacity','witness','0001','x')", (BASE,))
+    conn.commit()
+    conn.close()
+    sid = add(path, BASE, "Brendan", "witness")
+    conn = sqlite3.connect(path)
+    conn.execute("UPDATE speeches SET speaker_name_clean = 'Brendan' WHERE speech_id = ?", (sid,))     # name already right
+    conn.commit()
+    conn.close()
+    cw.cmd_resolve(path, dry_run=False)
+    assert row(path, sid)["witness_organisation"] == "Private capacity"
+
+
+def test_only_rows_already_in_the_box_are_queued_for_a_patch(path):
+    pushed = add(path, BASE, "Mr KENNEDY", "member", phid="267506")
+    fresh = add(path, BASE, "Ms Kennedy", "witness")
+    cw.cmd_resolve(path, dry_run=False, pushed_upto=pushed)
+    conn = sqlite3.connect(path)
+    assert [r[0] for r in conn.execute("SELECT slug FROM ext_kb_patch_queue")] == [f"speech-{pushed}"]
+    assert row(path, fresh)["witness_position"] == "Director"                # still resolved in the database
+    conn.close()
+
+
+def test_the_push_checkpoint_is_read_from_the_state_file(tmp_path, monkeypatch):
+    monkeypatch.setenv("OPAX_ARAG_STATE", str(tmp_path / "state.json"))
+    assert cw.pushed_checkpoint() is None
+    (tmp_path / "state.json").write_text('{"tables": {"speeches": {"after": 1234567}}}')
+    assert cw.pushed_checkpoint() == 1234567

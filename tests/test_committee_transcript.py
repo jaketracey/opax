@@ -240,10 +240,29 @@ def test_witness_line_shapes(raw, name, position, org, remote):
     assert (w.name, w.position, w.organisation, w.remote) == (name, position, org, remote)
 
 
+@pytest.mark.parametrize("raw,name,surname,hon,position,org", [
+    ("QI, Associate Professor Jing, Program Manager, RMIT Community Languages Teacher Education Program, Royal Melbourne Institute of Technology",
+     "Jing Qi", "Qi", "Associate Professor", "Program Manager, RMIT Community Languages Teacher Education Program", "Royal Melbourne Institute of Technology"),
+    ("DELANEY, Caitlin, First Assistant Secretary, National Reform and Youth Division, Department of Education",
+     "Caitlin Delaney", "Delaney", None, "First Assistant Secretary, National Reform and Youth Division", "Department of Education"),
+    ("Brendan, Private capacity", "Brendan", "Brendan", None, None, "Private capacity"),
+    ("Jennifer (Jen), Private capacity [by video link]", "Jennifer", "Jennifer", None, None, "Private capacity"),
+    ("ROACH, Aunty Vickie, Private capacity", "Vickie Roach", "Roach", "Aunty", None, "Private capacity"),
+    ("McBEAN, Ms Kim, Chief Executive Officer, Service Providers Australia", "Kim McBean", "McBean", "Ms", "Chief Executive Officer", "Service Providers Australia"),
+    ("BAROLITS-McCABE, Ms Ann, Director, Regional Health Network", "Ann Barolits-McCabe", "Barolits-McCabe", "Ms", "Director", "Regional Health Network"),
+    ("MacDONALD, Dr Ian, Senior Fellow, Grattan Institute", "Ian MacDonald", "MacDonald", "Dr", "Senior Fellow", "Grattan Institute"),
+])
+def test_witnesses_listed_with_unusual_honorifics_or_no_surname(raw, name, surname, hon, position, org):
+    w = ct.parse_witness_line(raw)
+    assert (w.name, w.surname, w.honorific, w.position, w.organisation) == (name, surname, hon, position, org)
+
+
 def test_a_line_that_is_not_a_person_is_not_a_witness():
     assert ct.parse_witness_line("Department of Health and Aged Care") is None
     assert ct.parse_witness_line("") is None
-    assert ct.parse_witness_line("SMITH, Department of Health") is None       # no honorific: a heading, not a witness
+    assert ct.parse_witness_line("SMITH, Department of Health") is None       # a heading, not a witness
+    assert ct.parse_witness_line("Department of Health and Aged Care, Canberra") is None
+    assert ct.parse_witness_line("AUSTRALIAN BANKING ASSOCIATION, Melbourne") is None
 
 
 def test_surname_case():

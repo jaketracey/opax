@@ -516,27 +516,38 @@ _REMOTE_RE = re.compile(r"\s*\[(?:by|via)\s+[^\]]*\]\s*", re.I)
 
 
 def surname_case(s: str) -> str:
-    """'BULLOCK' -> 'Bullock', "O'LOUGHLIN" -> "O'Loughlin", 'MCDONALD' -> 'McDonald', 'LA RANCE' -> 'La Rance'."""
+    """'BULLOCK' -> 'Bullock', "O'LOUGHLIN" -> "O'Loughlin", 'MCDONALD' / 'McDONALD' -> 'McDonald', 'MacDONALD' -> 'MacDonald',
+    'BAROLITS-McCABE' -> 'Barolits-McCabe', 'LA RANCE' -> 'La Rance'."""
+    def part(p: str) -> str:
+        if re.fullmatch(r"Mc[A-Z]{2,}|MC[A-Z]{2,}", p):
+            return "Mc" + p[2:].capitalize()
+        if re.fullmatch(r"Mac[A-Z]{3,}", p):
+            return "Mac" + p[3:].capitalize()
+        return p.capitalize() if p.isupper() else p
+
     out = []
     for word in s.split():
-        if not word.isupper():
-            out.append(word)
-            continue
-        parts = re.split(r"([-'’])", word)
-        cased = []
-        for p in parts:
-            if p in {"-", "'", "’"}:
-                cased.append(p)
-            elif p.startswith("MC") and len(p) > 3:
-                cased.append("Mc" + p[2:].capitalize())
-            else:
-                cased.append(p.capitalize())
-        out.append("".join(cased))
+        out.append("".join(x if x in {"-", "'", "’"} else part(x) for x in re.split(r"([-'’])", word)))
     return " ".join(out)
 
 
+def _surname_in_capitals(s: str) -> bool:
+    """'BULLOCK', 'MCDONALD', 'McKENZIE', 'BAROLITS-McCABE': a surname the way a witness list prints it."""
+    letters = re.search(r"[A-Za-z]", s) is not None
+    return letters and re.sub(r"(?<![A-Za-z])(?:Mc|Mac)(?=[A-Z])", "", s) == re.sub(r"(?<![A-Za-z])(?:Mc|Mac)(?=[A-Z])", "", s).upper()
+
+
+def _looks_like_a_given_name(part: str) -> bool:
+    """'Caitlin' or 'Jennifer (Jen)': a short name with no organisation word (unlike 'Department of Health')."""
+    bare = re.sub(r"\s*\([^)]*\)", "", part).strip()
+    return bool(bare) and len(bare.split()) <= 3 and not re.search(r"\d", bare) and not _ORG_WORDS_RE.search(bare)
+
+
 def parse_witness_line(raw: str) -> WitnessEntry | None:
-    """'EAGAR, Professor Kathleen (Kathy), Private capacity [by video link]' -> WitnessEntry."""
+    """'EAGAR, Professor Kathleen (Kathy), Private capacity [by video link]' -> WitnessEntry.
+
+    Two other shapes occur: a witness listed without an honorific ('DELANEY, Caitlin, First Assistant Secretary, ...'),
+    and one listed by first name only, for privacy ('Brendan, Private capacity'; the transcript then calls them 'Brendan')."""
     text = SPACE_RE.sub(" ", htmlmod.unescape(TAG_RE.sub(" ", raw))).strip()
     if not text or "," not in text:
         return None
@@ -547,8 +558,21 @@ def parse_witness_line(raw: str) -> WitnessEntry | None:
     if not surname_raw or not second:
         return None
     hon, cls, given_part = split_honorific(second)
+    tail = [p for p in parts[2:] if p]
     if not hon:
-        return None            # a heading or a line that is not a person
+        # Neither an honorific nor a person named in capitals: 'Brendan, Private capacity' (a witness listed by first name
+        # only, for privacy; the transcript calls them 'Brendan'), or a heading, which is not a witness.
+        if not _surname_in_capitals(surname_raw):
+            first = re.sub(r"\s*\([^)]*\)", "", surname_raw).strip()
+            if len(parts) >= 2 and 1 <= len(first.split()) <= 2 and not _ORG_WORDS_RE.search(first) \
+                    and re.fullmatch(r"private capacity|individual|.*private capacity.*", second, re.I):
+                return WitnessEntry(raw=text, surname=first, name=first, honorific=None, honorific_class=None,
+                                    postnominals=None, position=None, organisation=", ".join([second] + tail), remote=remote)
+            return None
+        # 'DELANEY, Caitlin, First Assistant Secretary, ...': listed without an honorific
+        if not _looks_like_a_given_name(second) or len(surname_raw.split()) > 3 or _ORG_WORDS_RE.search(surname_raw):
+            return None                      # a heading ("AUSTRALIAN BANKING ASSOCIATION, Melbourne"), not a person
+        given_part = second
     nick = re.search(r"\(([^)]+)\)", given_part)
     given = re.sub(r"\s*\([^)]*\)", "", given_part).strip()
     toks = given.split()
@@ -559,7 +583,6 @@ def parse_witness_line(raw: str) -> WitnessEntry | None:
     first = nick.group(1).strip() if nick else given
     surname = surname_case(surname_raw)
     name = f"{first} {surname}".strip()
-    tail = [p for p in parts[2:] if p]
     position = organisation = None
     if len(tail) == 1:
         if _ORG_WORDS_RE.search(tail[0]):
@@ -568,8 +591,9 @@ def parse_witness_line(raw: str) -> WitnessEntry | None:
             position = tail[0]
     elif len(tail) >= 2:
         position, organisation = ", ".join(tail[:-1]), tail[-1]
-    return WitnessEntry(raw=text, surname=surname, name=name, honorific=hon.rstrip("."), honorific_class=cls,
-                        postnominals=" ".join(post) or None, position=position, organisation=organisation, remote=remote)
+    return WitnessEntry(raw=text, surname=surname, name=name, honorific=hon.rstrip(".") if hon else None,
+                        honorific_class=cls, postnominals=" ".join(post) or None, position=position,
+                        organisation=organisation, remote=remote)
 
 
 def parse_witness_list(page_html: str) -> list[WitnessEntry]:
