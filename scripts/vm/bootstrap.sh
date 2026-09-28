@@ -291,7 +291,7 @@ if [ ! -e "$USER_HOME/.config/opax/nightly.env" ]; then
 # GitHub token: git pushes over SSH with ~/.ssh/opax_deploy. NEVER COMMIT.
 # OPAX_BRANCH=main
 # OPAX_ALLOW_FAIL=sa
-# OPAX_SYNC_GATE=link_speakers,classify
+# OPAX_SYNC_GATE=link_speakers,classify,committee_fetch,committee_resolve
 # OPAX_STAMP_AFTER_HOURS=12
 # OPAX_MIN_FREE_GB=5
 ENVEOF

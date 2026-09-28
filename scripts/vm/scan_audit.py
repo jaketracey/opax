@@ -110,16 +110,35 @@ def report(json_path: str | None) -> None:
             json.dump(rows, f, indent=1)
 
 
+def parse_args(argv: list[str]) -> tuple[str | None, str, str | None, list[str]]:
+    """(module, tables, json path, target argv). This tool's own options come first; everything from
+    the module name / script path onwards belongs to the target and is passed through untouched."""
+    module, tables, json_path = None, WATCH_DEFAULT, None
+    i = 0
+    while i < len(argv):
+        a = argv[i]
+        if a in ("-h", "--help"):
+            print(__doc__)
+            raise SystemExit(0)
+        if a == "--tables" and i + 1 < len(argv):
+            tables = argv[i + 1]; i += 2
+        elif a == "--json" and i + 1 < len(argv):
+            json_path = argv[i + 1]; i += 2
+        elif a == "-m" and i + 1 < len(argv):
+            module = argv[i + 1]; i += 2
+            break
+        else:
+            break
+    return module, tables, json_path, argv[i:]
+
+
 def main() -> int:
-    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], allow_abbrev=False)
-    ap.add_argument("--tables", default=WATCH_DEFAULT, help=f"comma-separated tables to watch (default {WATCH_DEFAULT})")
-    ap.add_argument("--json", help="also write the findings here")
-    ap.add_argument("-m", dest="module", help="run this module (like python -m)")
-    ap.add_argument("target", nargs="*", help="a script path and its arguments (or the module's arguments with -m)")
-    args = ap.parse_args()
-    watch.update(t.strip() for t in args.tables.split(",") if t.strip())
-    if not args.module and not args.target:
-        ap.error("give -m MODULE or a script path")
+    module, tables, json_path, target = parse_args(sys.argv[1:])
+    watch.update(t.strip() for t in tables.split(",") if t.strip())
+    if not module and not target:
+        print("usage: scan_audit.py [--tables T] [--json FILE] (-m MODULE | SCRIPT) [args...]", file=sys.stderr)
+        return 64
+    args = argparse.Namespace(module=module, target=target, json=json_path)
     sqlite3.connect = patched_connect
     atexit.register(report, args.json)
     sys.path.insert(0, os.getcwd())
@@ -130,6 +149,8 @@ def main() -> int:
             runpy.run_module(args.module, run_name="__main__", alter_sys=True)
         else:
             sys.argv = args.target
+            # like `python script.py`: the script's own directory is importable (bills_fetch imports bills_common)
+            sys.path.insert(0, os.path.dirname(os.path.abspath(args.target[0])))
             runpy.run_path(args.target[0], run_name="__main__")
         rc = 0
     except SystemExit as e:

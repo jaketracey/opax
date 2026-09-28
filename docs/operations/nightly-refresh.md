@@ -272,6 +272,43 @@ hand from the Actions tab to test.
 limit) because the machine is off when the usual background timers would fire; those timers are switched off. The
 power-off after them is the reboot, so a new kernel takes effect at the next start.
 
+## Why the refresh is written for a small, slow disk
+
+The refresh was built on a desktop with NVMe and 16 GB free. The instance has 8 GB of RAM and a gp3 volume that
+reads about 130 MB/s (3,000 IOPS). `speeches` is a 29 GB table, so **one full scan costs about 3.5 minutes**, and any
+query that reads every speech's text into Python needs GBs of RAM. The first real run choked on three such things;
+each is fixed and measured on the box:
+
+| Was | Cost on the box | Now |
+| --- | --- | --- |
+| Every loader (federal, NSW, SA, QLD, committees) read **all** stored speeches' text into a Python set to dedup | 1.3M rows, 4.6 GB text, 6.4 GB resident, swapping | `parli/ingest/dedup.py`: only stored rows a run could match (the key includes the date, and a run writes only rows dated in its own window): `WHERE source = ? AND date >= ?`, streamed. Committees load each hearing date's keys when first needed. Federal read 5,531 keys, 99 MB peak |
+| Every loader ended with a full FTS5 `rebuild` of all 1.3M speeches | over 30 min, random-I/O bound, per loader | off by default (`--rebuild-fts` / `OPAX_FTS_REBUILD=1`); **one** `scripts/fts_sync.py` step after the loaders indexes only rows past the newest indexed one (2 s when nothing is new) |
+| `arag_sync` partitioned and sorted every speech's text since 1993 (window function) to exclude duplicates | 2 min on NVMe, a night of temp-file I/O here | runs over the dates that hold rows past the push checkpoint only (same exclusions for those rows; unit-tested) |
+| `daily_refresh.sh` counted `speeches WHERE source = ?` before and after every step, and closed with a `GROUP BY source, MAX(date)` | 210-217 s each, a dozen per run | index on `(source, date)`: 0.0-0.2 s |
+| `classify_state_speeches.py` re-read the text of every speech that matches no topic, every run (no topic row = "unclassified" for ever) | a large part of a night | only speeches past the newest classified one minus 100,000 (`--full` after editing the topic keywords); the per-source join report is opt-in (`--report`) |
+| `export_bills.py` PartyTimeline: every federal speech's person/date/party, grouped and ordered | full scan and sort | covering index `(state, person_id, date, party_canonical)`: 0.3 s |
+| Committee loader's "which hearings are already in" (`SELECT DISTINCT hearing_id`), VIC's two per-chamber counts | full scans | partial index on `hearing_id` (0.03 s); the VIC counts (informational) were dropped |
+
+The indexes come from `scripts/ensure_db_indexes.py` (run as the first refresh step when `OPAX_ENSURE_INDEXES=1`, which
+`nightly.sh` sets; about 1.5 to 4 minutes each, once, and they are additive). If `parli.db` is ever re-synced from the
+desktop they are rebuilt automatically at the next run.
+
+**Finding the next one.** `scripts/vm/scan_audit.py -m parli.ingest.<step> …` (or a script path) runs the step for real
+under a sqlite trace callback and lists every distinct statement whose `EXPLAIN QUERY PLAN` is a full scan of `speeches`
+(or any table named with `--tables`), with how often it ran. Run it on the box, not the desktop, when a step is slow;
+it is how the list above was checked, and a clean run of every daily step reports none.
+
+**Full-text search.** Nothing in the nightly or the site reads `speeches_fts` (the site searches the knowledge box), so
+the incremental sync only keeps the old local search current. It cannot notice edited or deleted speeches; a
+`python scripts/fts_sync.py --rebuild` (or `OPAX_FTS_REBUILD=1` on a loader) is the way to repair that, best from the
+desktop; once a month is plenty.
+
+**Committee hearings** (`docs/COMMITTEE-WITNESSES.md`): `link_speakers` surname-links committee witnesses to MPs, so when
+the committees step adds rows (estimates rounds only), `daily_refresh.sh` runs `committee_witnesses fetch` and `resolve`
+right after `link_speakers` and before the knowledge-box push, and the push waits for them (`OPAX_SYNC_GATE`). `resolve`
+also queues KB patches for rows already pushed; draining that queue is `scripts/arag_patch_speakers.py`, not part of the
+nightly.
+
 ## Recovery
 
 | Symptom | What to do |
