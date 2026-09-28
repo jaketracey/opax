@@ -41,6 +41,9 @@ for canonical, aliases in {
 
 
 _NUMERIC_ENTITY_RE = re.compile(r"&#(?:\d+|x[0-9a-f]+);", re.I)
+
+# Committee hearing sources (Senate, House, Joint): their text carries the "[topic] " context prefix.
+COMMITTEE_SOURCES = ("committee_senate", "committee_house", "committee_joint")
 _CONTROL_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 _HYPHEN_WRAP_RE = re.compile(r"(?<=\w)-[ \t]*\r?\n[ \t]*(?=\w)")
 _SOFT_WRAP_RE = re.compile(r"(?<=[a-z,;])[ \t]*\r?\n[ \t]*(?=[a-z])")
@@ -324,7 +327,7 @@ def clean_speech_text_with_rules(
     if _BLANK_RUN_RE.search(value):
         apply("blank_line_run", _BLANK_RUN_RE.sub("\n\n", value))
 
-    if source == "committee_senate" and topic:
+    if source in COMMITTEE_SOURCES and topic:
         prefix = f"[{topic}] "
         if not value.startswith(prefix):
             apply("committee_topic_context", prefix + value)
@@ -354,6 +357,6 @@ def legacy_clean_speech_text(
     value = value.lstrip(": ").lstrip("—- ").lstrip()
     if source == "nsw_hansard" and topic and value.startswith(topic.upper()):
         value = value[len(topic):].lstrip()
-    if source == "committee_senate" and topic:
+    if source in COMMITTEE_SOURCES and topic:
         value = f"[{topic}] {value}"
     return value

@@ -56,7 +56,8 @@ KINDS = [
 ]
 # labelset "source" values the manifest reports on.
 SOURCES = [
-    "zenodo", "nsw_hansard", "committee_senate", "vic_hansard", "sa_hansard", "openaustralia",
+    "zenodo", "nsw_hansard", "committee_senate", "committee_house", "committee_joint",
+    "vic_hansard", "sa_hansard", "openaustralia",
     "qld_hansard", "act_hansard", "pmtranscripts", "nsw", "qld", "vic", "treasury",
 ]
 # sources[].name -> which live total it is. Only rows whose docs equal a whole
@@ -67,6 +68,8 @@ SOURCE_ROWS = {
     "Federal Hansard: House of Representatives (zenodo)": ("source", "zenodo"),
     "NSW Parliament": ("source", "nsw_hansard"),
     "Senate committee hearings": ("source", "committee_senate"),
+    "House committee hearings": ("source", "committee_house"),
+    "Joint committee hearings": ("source", "committee_joint"),
     "Victorian Parliament": ("source", "vic_hansard"),
     "SA Parliament": ("source", "sa_hansard"),
     "Federal Hansard: Senate + recent House (openaustralia)": ("source", "openaustralia"),
@@ -84,6 +87,7 @@ SOURCE_ROWS = {
     "Federal bill records": ("kind", "bill"),
     "Original federal bill text versions": ("kind", "bill_text"),
 }
+COMMITTEE_SOURCE_NAMES = ("committee_senate", "committee_house", "committee_joint")
 # daily_refresh.sh step -> raw_source_updates key, in the order the manifest lists them.
 RAW_STEPS = [
     ("fed_load", "federal_speeches"),
@@ -98,7 +102,12 @@ RAW_STEPS = [
 # Sources that join the manifest the first time the box holds any of them, instead of being
 # hand-added: name -> (source label, first year). Move the first year back when a backfill
 # reaches further (docs/DATA-ACT-HANSARD.md).
-NEW_SOURCE_ROWS = {"ACT Legislative Assembly": ("act_hansard", "2024")}
+NEW_SOURCE_ROWS = {
+    "ACT Legislative Assembly": ("act_hansard", "2024"),
+    # House and Joint committee hearings are ingested from the start of the 48th Parliament (1 July 2025)
+    "House committee hearings": ("committee_house", "2025"),
+    "Joint committee hearings": ("committee_joint", "2025"),
+}
 INSERT_AFTER = "QLD Parliament"
 DRAFT_STATUS = "exposure_draft"
 FED_LINE = "Federal Hansard is current to"
@@ -221,9 +230,10 @@ def federal_line(log: dict, run_date: date) -> str | None:
     if fed_step and fed_step["delta"] == 0 and (run_date - date.fromisoformat(fed)).days >= NO_SITTINGS_AFTER_DAYS:
         quiet = " (no sittings since)"
     act = f"; ACT to {n['act_hansard']}" if n.get("act_hansard") else ""
+    committees = max(n[k] for k in COMMITTEE_SOURCE_NAMES if k in n)
     return (f"{FED_LINE} {fed}{quiet}; NSW Parliament to {n['nsw_hansard']}; Victoria to {n['vic_hansard']}; "
-            f"QLD to {n['qld_hansard']}{act}. Senate committee hearings are current to the last estimates round "
-            f"({n['committee_senate']}).")
+            f"QLD to {n['qld_hansard']}{act}. Federal committee hearings (Senate, House and Joint) are current to "
+            f"{committees}.")
 
 
 def extend_coverage(coverage: str, newest: str) -> str:

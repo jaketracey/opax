@@ -303,11 +303,15 @@ the incremental sync only keeps the old local search current. It cannot notice e
 `python scripts/fts_sync.py --rebuild` (or `OPAX_FTS_REBUILD=1` on a loader) is the way to repair that, best from the
 desktop; once a month is plenty.
 
-**Committee hearings** (`docs/COMMITTEE-WITNESSES.md`): `link_speakers` surname-links committee witnesses to MPs, so when
-the committees step adds rows (estimates rounds only), `daily_refresh.sh` runs `committee_witnesses fetch` and `resolve`
-right after `link_speakers` and before the knowledge-box push, and the push waits for them (`OPAX_SYNC_GATE`). `resolve`
-also queues KB patches for rows already pushed; draining that queue is `scripts/arag_patch_speakers.py`, not part of the
-nightly.
+**Committee hearings** (`docs/COMMITTEE-WITNESSES.md`): the `committees` step lists every federal committee hearing of the
+last 45 days on ParlInfo (Senate estimates, references, legislation and select committees, House, Joint), syncs the new
+ones, and fetches again any hearing still at Proof status once a week for 60 days (`OPAX_COMMITTEES_SINCE` /
+`OPAX_COMMITTEES_DAYS` change the window; a Proof transcript that the Final replaces has its rows updated in place, and,
+with `OPAX_SYNC_KB=1`, the knowledge-box text patched). `link_speakers` skips committee rows it must not surname-link. When the
+step adds rows, `daily_refresh.sh` runs `committee_witnesses fetch` and `resolve` right after `link_speakers` and before the
+knowledge-box push, and the push waits for them (`OPAX_SYNC_GATE`). `resolve` links House and Joint members by the Parliamentary
+Handbook id in the transcript, never by surname. Draining the speaker-field patch queue (`scripts/arag_patch_speakers.py`) is
+not part of the nightly, and must not be run over enriched resources (it drops the Worker's topic labels).
 
 ## Recovery
 

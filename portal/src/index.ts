@@ -370,7 +370,7 @@ interface SearchResult {
   speaker: string | null
   party: string | null
   state: string | null
-  /** 'representatives' | 'senate' | 'senate_committee' | a state house; lets the app tell evidence from a speech. */
+  /** 'representatives' | 'senate' | 'senate_committee' | 'house_committee' | 'joint_committee' | a state house; lets the app tell evidence from a speech. */
   chamber: string | null
   /** The members-table id the sync linked the speaker to; null for witnesses and unlinked names. */
   // Corpus ids are text ('11009', 'vic_maryanne_thomas'); numeric ones arrive as numbers or strings.
@@ -3034,6 +3034,11 @@ const CHAMBER_NAMES: Record<string, string> = {
   representatives: 'House of Representatives', senate: 'Senate',
   assembly: 'Legislative Assembly', council: 'Legislative Council',
 }
+// Where a committee-hearing speech was said (the parli.db chamber codes). Kept apart from CHAMBER_NAMES, which names the
+// House a person sits in; a share card for a committee record says "Senate committees", not "senate_committee".
+const COMMITTEE_CHAMBER_NAMES: Record<string, string> = {
+  senate_committee: 'Senate committees', house_committee: 'House committees', joint_committee: 'Joint committees',
+}
 // The /subject/<dir> directories. app.js keeps its own copy for the client-side
 // router and the crumb labels; the two lists have to name the same kinds.
 const DIRECTORY_KINDS: Record<string, string> = {
@@ -4307,7 +4312,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     summary: string | null
   }
   const date = typeof r.metadata.date === 'string' ? r.metadata.date : null
-  const chamber = CHAMBER_NAMES[r.labels.chamber] ?? r.labels.chamber
+  const chamber = CHAMBER_NAMES[r.labels.chamber] ?? COMMITTEE_CHAMBER_NAMES[r.labels.chamber] ?? r.labels.chamber
   const when = date ? ` · ${longDate(date)}` : ''
   if (r.labels.kind === 'division' || DIVISION_SLUG_RE.test(slug)) {
     const ayes = r.metadata.ayes_count, noes = r.metadata.noes_count

@@ -247,6 +247,15 @@ class SpeechTextHygieneTests(unittest.TestCase):
         self.assertEqual(clean_speech_text("The witness answered.", "committee_senate", topic), expected)
         self.assertEqual(clean_speech_text(expected, "committee_senate", topic), expected)
 
+    def test_house_and_joint_committee_text_carries_the_same_topic_context(self):
+        topic = "Standing Committee on Economics - Review of the Reserve Bank of Australia Annual Report 2025"
+        for source in ("committee_house", "committee_joint"):
+            expected = f"[{topic}] The Governor answered."
+            self.assertEqual(clean_speech_text("The Governor answered.", source, topic), expected)
+            self.assertEqual(clean_speech_text(expected, source, topic), expected)
+        # a source that is not a committee gets no prefix
+        self.assertEqual(clean_speech_text("Said in the House.", "openaustralia", topic), "Said in the House.")
+
     def test_unsafe_footer_candidate_and_procedural_text_are_preserved(self):
         table = "Page\n\n89\n\nByron Sports and Community Facility"
         self.assertEqual(clean_speech_text(table), table)

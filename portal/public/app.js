@@ -269,12 +269,14 @@ function committeeHouse(chamber) {
   const c = String(chamber || "").toLowerCase();
   return c.startsWith("senate") ? "Senate" : c.startsWith("house") || c.startsWith("reps") ? "House" : c.startsWith("joint") ? "Joint" : "Parliamentary";
 }
-/** "Lopez — Environment and Communications Legislation Committee - ... 27/05/2026 Estimates …" -> the committee. */
+/** "Lopez — Environment and Communications Legislation Committee - ... — 2026-05-27" -> the committee.
+    The topic is "<committee> - <inquiry or estimates portfolio>" for every committee house (Senate names end in
+    "Committee", House and Joint ones read "Standing Committee on Economics"), so the committee is what precedes " - ". */
 function committeeOf(r) {
   const t = String(r?.title || "");
   const after = t.includes(" — ") ? t.slice(t.indexOf(" — ") + 3) : t;
-  const m = /^(.+?committee)\b/i.exec(after);
-  return (m ? m[1] : after.split(/ - /)[0]).trim().slice(0, 90);
+  const topic = after.split(" — ")[0];
+  return topic.split(/ - /)[0].trim().slice(0, 90);
 }
 const PARLIAMENT_NAMES = {
   federal: "Federal", nsw: "NSW", vic: "Victoria", sa: "South Australia", qld: "Queensland", act: "ACT",
@@ -326,6 +328,8 @@ const TOPIC_REPORT = Object.fromEntries(
 const CHAMBER_NAMES = {
   representatives: "House of Representatives", senate: "Senate",
   assembly: "Legislative Assembly", council: "Legislative Council",
+  // committee hearings (parli.db chamber codes): where a committee speech was said, not a House a member sits in
+  senate_committee: "Senate committees", house_committee: "House committees", joint_committee: "Joint committees",
 };
 
 function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = false, hideSpeaker = false } = {}) {
@@ -6071,6 +6075,7 @@ const DIR_CHUNK = 60;
 // Chamber codes as parli.db records them, in the order the filter lists them.
 const DIR_CHAMBERS = {
   representatives: "House of Representatives", senate: "Senate", senate_committee: "Senate committees",
+  house_committee: "House committees", joint_committee: "Joint committees",
   nsw_la: "NSW Legislative Assembly", nsw_lc: "NSW Legislative Council",
   vic_la: "Victorian Legislative Assembly", vic_lc: "Victorian Legislative Council",
   sa_ha: "SA House of Assembly", sa_lc: "SA Legislative Council",
@@ -11977,8 +11982,7 @@ async function openDocPage(slug, manageFocus) {
     $("doc-topic").hidden = !topic;
     $("doc-topic").classList.toggle("doc-topic-long", String(topic || "").length > 100);
     // One byline, each fact once: party · seat · chamber · date · source.
-    const chamber = doc.labels?.chamber === "senate_committee" ? "Senate committees"
-      : CHAMBER_NAMES[String(doc.labels?.chamber || "").toLowerCase()];
+    const chamber = CHAMBER_NAMES[String(doc.labels?.chamber || "").toLowerCase()];
     const state = doc.labels?.state;
     const stateName = state ? (STATE_NAMES[state] || state) : null;
     const house = isBillText ? 'Bill text' : isResearchRecord ? FILTER_KIND_LABELS[doc.labels.kind] : isGovernmentRelease
@@ -12119,7 +12123,7 @@ function renderDocText(doc) {
   // Keep those words visible as context, outside the spoken paragraph.
   const context = text.match(/^\s*\[([^\]\r\n]+)\][ \t]*/);
   const debate = doc.metadata?.topic || doc.metadata?.debate || titleSubject(doc);
-  if (context && doc.labels?.chamber === "senate_committee" && context[1] === debate) {
+  if (context && isCommitteeChamber(doc.labels?.chamber) && context[1] === debate) {
     paragraph(context[0], "doc-source-context");
     text = text.slice(context[0].length);
   }

@@ -27,7 +27,9 @@ LOG = """\
 2026-09-28 21:37:25 [sa] FAIL(rc=1) in 10s; rows 68982 -> 68982 (+0); log /x/sa.log
 2026-09-28 21:47:12 [releases_nsw_sync] OK in 17s; (no row count); log /x/r.log
 2026-09-28 21:50:13 [tvfy_refresh] OK in 4s; rows 10647 -> 10647 (+0); log /x/tvfy.log
-2026-09-28 21:50:21   committee_senate   newest 2026-06-05  rows 222,965
+2026-09-28 21:50:21   committee_house    newest 2026-09-18  rows 1,200
+2026-09-28 21:50:21   committee_joint    newest 2026-09-17  rows 900
+2026-09-28 21:50:21   committee_senate   newest 2026-09-24  rows 230,000
 2026-09-28 21:50:21   nsw_hansard        newest 2026-09-24  rows 120,500
 2026-09-28 21:50:21   openaustralia      newest 2026-09-17  rows 67,477
 2026-09-28 21:50:21   qld_hansard        newest 2026-09-16  rows 17,723
@@ -199,8 +201,37 @@ class Compute(unittest.TestCase):
         self.assertEqual(limits[2], "Other.")
         self.assertEqual(limits[1],
                          "Federal Hansard is current to 2026-09-17 (no sittings since); NSW Parliament to 2026-09-24; "
-                         "Victoria to 2026-09-24; QLD to 2026-09-16. Senate committee hearings are current to the "
-                         "last estimates round (2026-06-05).")
+                         "Victoria to 2026-09-24; QLD to 2026-09-16. Federal committee hearings (Senate, House and Joint) are "
+                         "current to 2026-09-24.")
+
+    def test_house_and_joint_committee_rows_appear_once_the_box_holds_them_and_are_then_kept_current(self):
+        live = kb(resources=1001)
+        live["kinds"]["speech"] = 801
+        live["sources"].update({"committee_house": 0, "committee_joint": 0})
+        new, _ = run(live=live)
+        self.assertEqual([r["name"] for r in new["sources"]], [r["name"] for r in manifest()["sources"]],
+                         "no docs in the box yet: no row")
+        live["sources"].update({"committee_house": 700, "committee_joint": 400})
+        new, res = run(live=live)
+        self.assertEqual([r["name"] for r in new["sources"]][-2:], ["House committee hearings", "Joint committee hearings"])
+        house = next(r for r in new["sources"] if r["name"] == "House committee hearings")
+        joint = next(r for r in new["sources"] if r["name"] == "Joint committee hearings")
+        self.assertEqual((house["docs"], house["coverage"]), (700, "2025–2026"))
+        self.assertEqual((joint["docs"], joint["coverage"]), (400, "2025–2026"))
+        self.assertIn("sources[House committee hearings]", res["changed_fields"])
+        # next night: the existing rows are updated through SOURCE_ROWS, not duplicated
+        live["sources"]["committee_house"] = 750
+        live["resources"] = 1051                       # the box grew, so the nightly rewrites the row totals
+        again, _ = run(prev=new, live=live)
+        self.assertEqual([r["name"] for r in again["sources"]].count("House committee hearings"), 1)
+        self.assertEqual(next(r for r in again["sources"] if r["name"] == "House committee hearings")["docs"], 750)
+
+    def test_the_committee_line_uses_the_newest_of_the_three_committee_sources(self):
+        old = LOG.replace("committee_senate   newest 2026-09-24", "committee_senate   newest 2026-06-05")
+        line = ucm.federal_line(ucm.parse_daily_log(old), date(2026, 9, 29))
+        self.assertTrue(line.endswith("are current to 2026-09-18."), line)      # the House's date is newer than the Senate's
+        only_senate = "\n".join(l for l in old.splitlines() if "committee_house" not in l and "committee_joint" not in l)
+        self.assertTrue(ucm.federal_line(ucm.parse_daily_log(only_senate), date(2026, 9, 29)).endswith("are current to 2026-06-05."))
 
     def test_removals_and_unclassified_still_sum_to_the_total(self):
         live = kb(resources=1000 + 7 - 3)

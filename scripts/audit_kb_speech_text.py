@@ -24,7 +24,7 @@ import hashlib, html, json, sqlite3
 
 DB = "/home/jake/.cache/autoresearch/parli.db"
 SOURCES = (
-    "committee_senate", "nsw_hansard", "openaustralia", "qld_hansard",
+    "committee_senate", "committee_house", "committee_joint", "nsw_hansard", "openaustralia", "qld_hansard",
     "sa_hansard", "vic_hansard", "zenodo", "act_hansard",
 )
 
@@ -34,7 +34,7 @@ def current_clean(text, source, topic):
     text = text.lstrip(": ").lstrip("—- ").lstrip()
     if source == "nsw_hansard" and topic and text.startswith(topic.upper()):
         text = text[len(topic):].lstrip()
-    if source == "committee_senate" and topic:
+    if source in ("committee_senate", "committee_house", "committee_joint") and topic:
         text = f"[{topic}] {text}"
     return text
 

@@ -125,7 +125,7 @@ def prepare_dedupe(db: sqlite3.Connection, since: str, after: int | None = None)
                        PARTITION BY date, speaker_name, text
                        ORDER BY CASE source
                            WHEN 'zenodo' THEN 0 WHEN 'openaustralia' THEN 1
-                           WHEN 'committee_senate' THEN 2 WHEN 'nsw_hansard' THEN 3
+                           WHEN 'committee_senate' THEN 2 WHEN 'committee_house' THEN 2 WHEN 'committee_joint' THEN 2 WHEN 'nsw_hansard' THEN 3
                            WHEN 'vic_hansard' THEN 4 WHEN 'sa_hansard' THEN 5
                            WHEN 'qld_hansard' THEN 6 ELSE 7 END,
                          speech_id) AS rn
