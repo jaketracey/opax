@@ -49,6 +49,15 @@ export const NEURON_PRICES: Record<string, Price> = {
 export const FALLBACK_PRICE: Price = { input: 127273, output: 400000 }
 
 export const DEFAULT_DAILY_BUDGET = 400_000
+/** The ceiling once the backfill is drained: about $1.65 a day; real steady-state use is far lower. */
+export const DEFAULT_STEADY_BUDGET = 150_000
+
+export type BudgetMode = 'backfill' | 'steady'
+
+/** DAILY_NEURON_BUDGET while low-priority backfill rows remain; STEADY_NEURON_BUDGET once none do. */
+export function effectiveBudget(hasBackfill: boolean, daily: number, steady: number): { mode: BudgetMode; budget: number } {
+  return hasBackfill ? { mode: 'backfill', budget: daily } : { mode: 'steady', budget: steady }
+}
 
 export type NeuronSource = 'reported' | 'computed' | 'estimated'
 

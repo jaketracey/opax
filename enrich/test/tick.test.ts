@@ -434,7 +434,7 @@ test('budget cutoff: a tick with the day already spent processes nothing', async
   const kb = new FakeKb()
   seed(kb)
   const ai = new FakeAi(() => both)
-  const { deps, d1, raw } = makeDeps({ kb, ai, env: { DAILY_NEURON_BUDGET: '100' } })
+  const { deps, d1, raw } = makeDeps({ kb, ai, env: { DAILY_NEURON_BUDGET: '100', STEADY_NEURON_BUDGET: '100' } })
   await queueBoth(d1)
   raw.prepare("INSERT INTO spend (day, model, neurons, calls) VALUES ('2026-09-28', 'm', 100, 1)").run()
   const stats = await runTick(deps)
@@ -447,7 +447,7 @@ test('budget cutoff mid-tick: stops starting new work once the day is spent, and
   const kb = new FakeKb()
   for (let i = 0; i < 6; i += 1) seed(kb, `r${i}`)
   const ai = new FakeAi(() => ({ content: both, neurons: 40 }))
-  const { deps, d1, raw } = makeDeps({ kb, ai, env: { DAILY_NEURON_BUDGET: '100', CONCURRENCY: '1', BATCH_SIZE: '6' } })
+  const { deps, d1, raw } = makeDeps({ kb, ai, env: { DAILY_NEURON_BUDGET: '100', STEADY_NEURON_BUDGET: '100', CONCURRENCY: '1', BATCH_SIZE: '6' } })
   for (let i = 0; i < 6; i += 1) await queueBoth(d1, `r${i}`)
   const stats = await runTick(deps)
   assert.equal(stats.stop, 'budget')
@@ -456,6 +456,41 @@ test('budget cutoff mid-tick: stops starting new work once the day is spent, and
   assert.equal(rows(raw, "SELECT COUNT(*) AS n FROM queue WHERE status = 'pending'")[0].n, 6)
   assert.equal(rows(raw, "SELECT COUNT(*) AS n FROM queue WHERE status = 'claimed'")[0].n, 0)
   assert.ok(stats.neuronsToday >= 100)
+})
+
+test('steady-state budget: once no low-priority backfill rows remain the STEADY cap applies instead of DAILY', async () => {
+  const kb = new FakeKb()
+  seed(kb)
+  const ai = new FakeAi(() => both)
+  const { deps, d1, raw } = makeDeps({ kb, ai, env: { DAILY_NEURON_BUDGET: '1000', STEADY_NEURON_BUDGET: '100' } })
+  await queueBoth(d1) // priority 100: new content, not backfill
+  raw.prepare("INSERT INTO spend (day, model, neurons, calls) VALUES ('2026-09-28', 'm', 100, 1)").run()
+  const steady = await runTick(deps)
+  assert.equal(steady.budgetMode, 'steady')
+  assert.equal(steady.budget, 100)
+  assert.equal(steady.stop, 'budget')
+  assert.equal(ai.calls.length, 0)
+
+  // a backfill row appears (priority 0): the larger DAILY cap is back in force and work resumes
+  await enqueue(d1, [{ rid: 'old', task: 'speech_summary', priority: 0 }], 1)
+  const backfill = await runTick(deps)
+  assert.equal(backfill.budgetMode, 'backfill')
+  assert.equal(backfill.budget, 1000)
+  assert.equal(backfill.stop, null)
+  assert.ok(ai.calls.length >= 1)
+})
+
+test('steady-state budget: a claimed backfill row still counts as backfill; a quarantined or done one does not', async () => {
+  const { d1 } = makeD1()
+  const { hasBackfill } = await import('../src/db.ts')
+  await enqueue(d1, [{ rid: 'b1', task: 'speech_summary', priority: 0 }], 1)
+  assert.equal(await hasBackfill(d1), true)
+  await claimRids(d1, 1, 5, 'tok')
+  assert.equal(await hasBackfill(d1), true, 'claimed is still to do')
+  await finishRows(d1, [{ rid: 'b1', task: 'speech_summary', status: 'quarantined', lastError: 'x' }], 6)
+  assert.equal(await hasBackfill(d1), false)
+  await enqueue(d1, [{ rid: 'n1', task: 'speech_summary', priority: 100 }, { rid: 'r1', task: 'speech_summary', priority: 200 }], 7)
+  assert.equal(await hasBackfill(d1), false, 'new content and requeued rows are not backfill')
 })
 
 // ---------------------------------------------------------------- backpressure and outages

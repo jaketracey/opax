@@ -32,6 +32,14 @@ export interface QueueRow {
 
 export const NEW_CONTENT_PRIORITY = 100
 export const BACKFILL_PRIORITY = 0
+
+/** Any row below new-content priority that is still to do (pending, or claimed by a tick) is backfill. */
+export async function hasBackfill(db: D1Database): Promise<boolean> {
+  const row = await db
+    .prepare(`SELECT 1 AS one FROM queue WHERE status IN ('pending', 'claimed') AND priority < ${NEW_CONTENT_PRIORITY} LIMIT 1`)
+    .first<{ one: number }>()
+  return row !== null
+}
 /** Stale claims older than this are reclaimable (a tick that died mid-flight). */
 export const STALE_CLAIM_MS = 10 * 60 * 1000
 /** Infrastructure failures a row may absorb before it is set aside. */

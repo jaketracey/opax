@@ -1,7 +1,7 @@
 // GET /status: queue counts, spend, cursors, last tick, recent errors. Read-only.
 
-import { budgetView, utcDay } from './budget.ts'
-import { getStates } from './db.ts'
+import { budgetView, effectiveBudget, utcDay } from './budget.ts'
+import { getStates, hasBackfill } from './db.ts'
 import type { Config } from './env.ts'
 
 /** Constant-time comparison of two strings (the bearer token). */
@@ -23,6 +23,7 @@ export function bearerOk(header: string | null, secret: string | undefined): boo
 
 export async function buildStatus(db: D1Database, cfg: Config, now: number): Promise<Record<string, unknown>> {
   const day = utcDay(now)
+  const { mode: budgetMode, budget } = effectiveBudget(await hasBackfill(db), cfg.dailyBudget, cfg.steadyBudget)
   const [byStatus, byOutcome, spendToday, spendRecent, states, errors, quarantined, ready] = await Promise.all([
     db.prepare('SELECT task, status, COUNT(*) AS n FROM queue GROUP BY task, status').all<{ task: string; status: string; n: number }>(),
     db.prepare("SELECT task, outcome, COUNT(*) AS n FROM queue WHERE status = 'done' GROUP BY task, outcome").all<{ task: string; outcome: string | null; n: number }>(),
@@ -64,7 +65,8 @@ export async function buildStatus(db: D1Database, cfg: Config, now: number): Pro
     queue: counts,
     doneOutcomes: outcomes,
     readyToWrite: ready?.n ?? 0,
-    spendToday: { day, ...budgetView(spendToday?.neurons ?? 0, cfg.dailyBudget), calls: spendToday?.calls ?? 0 },
+    budget: { mode: budgetMode, effective: budget, backfill: cfg.dailyBudget, steady: cfg.steadyBudget },
+    spendToday: { day, ...budgetView(spendToday?.neurons ?? 0, budget), calls: spendToday?.calls ?? 0 },
     spendRecent: spendRecent.results,
     cursors,
     state: other,

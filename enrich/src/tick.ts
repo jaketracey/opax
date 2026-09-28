@@ -1,6 +1,6 @@
 // One cron tick: discover, then process a bounded batch of claimed resources.
 
-import { budgetView, utcDay } from './budget.ts'
+import { budgetView, effectiveBudget, utcDay, type BudgetMode } from './budget.ts'
 import { hasTopicLabels, readClassifications } from './classify.ts'
 import {
   MAX_TRANSIENT,
@@ -8,6 +8,7 @@ import {
   claimRids,
   finishRows,
   getState,
+  hasBackfill,
   isSummaryTask,
   logError,
   logRejection,
@@ -60,6 +61,7 @@ export interface TickStats {
   neuronsTick: number
   neuronsToday: number
   budget: number
+  budgetMode: BudgetMode
   stop: string | null
   ms: number
 }
@@ -67,6 +69,8 @@ export interface TickStats {
 /** Shared by the concurrent workers of one tick. */
 interface Ctl {
   stop: string | null
+  /** The day's cap: DAILY while backfill rows remain, STEADY once none do. */
+  budget: number
   spent: number
   neuronsTick: number
   deadline: number
@@ -118,6 +122,7 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
     neuronsTick: 0,
     neuronsToday: 0,
     budget: d.cfg.dailyBudget,
+    budgetMode: 'backfill',
     stop: null,
     ms: 0,
   }
@@ -128,12 +133,15 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
     const spent = await spentOnDay(d.db, day)
     stats.neuronsToday = spent
     // The processing deadline is soft: no new resource is started after it (in-flight ones finish).
-    const ctl: Ctl = { stop: null, spent, neuronsTick: 0, deadline: d.now() + d.cfg.tickSoftMs, consecutiveModelFailures: 0 }
+    const { mode, budget } = effectiveBudget(await hasBackfill(d.db), d.cfg.dailyBudget, d.cfg.steadyBudget)
+    stats.budget = budget
+    stats.budgetMode = mode
+    const ctl: Ctl = { stop: null, budget, spent, neuronsTick: 0, deadline: d.now() + d.cfg.tickSoftMs, consecutiveModelFailures: 0 }
     const kbUntil = Number((await getState(d.db, kbBackoffKey)) ?? 0)
     const aiUntil = Number((await getState(d.db, aiPauseKey)) ?? 0)
     if (aiUntil > t0) ctl.stop = 'ai-paused'
     else if (kbUntil > t0) ctl.stop = 'kb-backoff'
-    else if (budgetView(spent, d.cfg.dailyBudget).exhausted) ctl.stop = 'budget'
+    else if (budgetView(spent, ctl.budget).exhausted) ctl.stop = 'budget'
 
     if (!ctl.stop) {
       await reclaimStale(d.db, t0)
@@ -208,7 +216,7 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
 }
 
 function mayContinue(d: TickDeps, ctl: Ctl): boolean {
-  return !ctl.stop && ctl.spent < d.cfg.dailyBudget && d.now() < ctl.deadline
+  return !ctl.stop && ctl.spent < ctl.budget && d.now() < ctl.deadline
 }
 
 /** A row that hit an infrastructure failure goes back to pending, or is set aside after too many. */
@@ -309,7 +317,7 @@ async function processRid(d: TickDeps, ctl: Ctl, day: string, rid: string, rows:
     onSpend: async (spend) => {
       ctl.spent += spend.neurons
       ctl.neuronsTick += spend.neurons
-      if (ctl.spent >= d.cfg.dailyBudget) ctl.stop ??= 'budget'
+      if (ctl.spent >= ctl.budget) ctl.stop ??= 'budget'
       await addSpend(d.db, day, spend.model, spend.neurons, spend.promptTokens, spend.completionTokens)
     },
   })

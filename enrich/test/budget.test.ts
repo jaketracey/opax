@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { budgetView, neuronsFor, nextUtcMidnight, parseBudget, priceFor, utcDay, FALLBACK_PRICE } from '../src/budget.ts'
+import { effectiveBudget, budgetView, neuronsFor, nextUtcMidnight, parseBudget, priceFor, utcDay, FALLBACK_PRICE } from '../src/budget.ts'
 import { readConfig } from '../src/env.ts'
 
 const qwen = '@cf/qwen/qwen3-30b-a3b-fp8'
@@ -54,6 +54,14 @@ test('only the exact string "live" ever enables writing; batch and concurrency a
   assert.equal(readConfig({ BATCH_SIZE: '500' }).batchSize, 90)
   assert.equal(readConfig({ BATCH_SIZE: '0' }).batchSize, 1)
   assert.equal(readConfig({ CONCURRENCY: '50' }).concurrency, 6)
+})
+
+test('effectiveBudget: DAILY while backfill remains, STEADY after; STEADY_NEURON_BUDGET defaults to 150000', () => {
+  assert.deepEqual(effectiveBudget(true, 400_000, 150_000), { mode: 'backfill', budget: 400_000 })
+  assert.deepEqual(effectiveBudget(false, 400_000, 150_000), { mode: 'steady', budget: 150_000 })
+  assert.equal(readConfig({}).steadyBudget, 150_000)
+  assert.equal(readConfig({ STEADY_NEURON_BUDGET: '20000' }).steadyBudget, 20_000)
+  assert.equal(readConfig({ STEADY_NEURON_BUDGET: 'x' }).steadyBudget, 150_000)
 })
 
 test('UTC day keys and the next reset', () => {

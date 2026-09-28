@@ -1,6 +1,6 @@
 // Bindings, secrets and vars, and the parsed configuration a tick runs with.
 
-import { DEFAULT_DAILY_BUDGET, parseBudget } from './budget.ts'
+import { DEFAULT_DAILY_BUDGET, DEFAULT_STEADY_BUDGET, parseBudget } from './budget.ts'
 
 /** The slice of the Workers AI binding this Worker uses (the real binding, or a test double). */
 export interface AiLike {
@@ -19,6 +19,8 @@ export interface Env {
   PRIMARY_MODEL?: string
   ESCALATION_MODEL?: string
   DAILY_NEURON_BUDGET?: string
+  /** Per-UTC-day cap once no low-priority backfill rows remain (default 150000). */
+  STEADY_NEURON_BUDGET?: string
   BATCH_SIZE?: string
   /** "live" writes to the knowledge box; anything else is a dry run (results recorded in D1 only). */
   WRITE_MODE?: string
@@ -34,6 +36,7 @@ export interface Config {
   primaryModel: string
   escalationModel: string
   dailyBudget: number
+  steadyBudget: number
   batchSize: number
   live: boolean
   concurrency: number
@@ -59,6 +62,7 @@ export function readConfig(env: Partial<Env>): Config {
     primaryModel: env.PRIMARY_MODEL || DEFAULT_PRIMARY_MODEL,
     escalationModel: env.ESCALATION_MODEL || DEFAULT_ESCALATION_MODEL,
     dailyBudget: parseBudget(env.DAILY_NEURON_BUDGET, DEFAULT_DAILY_BUDGET),
+    steadyBudget: parseBudget(env.STEADY_NEURON_BUDGET, DEFAULT_STEADY_BUDGET),
     // At most ~90 rids a claim: the claim UPDATE binds one parameter per rid and D1 allows 100.
     batchSize: clampInt(env.BATCH_SIZE, 30, 1, 90),
     // Workers hold at most six simultaneous outbound connections.
