@@ -42,8 +42,8 @@ def make_pdf(pages: list[list[tuple]]) -> bytes:
         y = 760.0
         ops = ["BT"]
         # running header and footer
-        ops += [f"/F4 12 Tf 1 0 0 1 90 800 Tm (Legislative Assembly for the ACT) Tj",
-                f"/F4 12 Tf 1 0 0 1 430 800 Tm (18 March 2025) Tj",
+        ops += ["/F4 12 Tf 1 0 0 1 90 800 Tm (Legislative Assembly for the ACT) Tj",
+                "/F4 12 Tf 1 0 0 1 430 800 Tm (18 March 2025) Tj",
                 f"/F1 12 Tf 1 0 0 1 289 35 Tm ({100 + len(page_ids)}) Tj"]
         for ln in lines:
             kind = ln[0]

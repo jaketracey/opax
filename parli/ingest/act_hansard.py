@@ -52,7 +52,7 @@ import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from urllib.parse import urljoin
 
@@ -332,12 +332,12 @@ def pdf_lines(pdf_bytes: bytes) -> list[Line]:
 @dataclass
 class Turn:
     idx: int
-    speaker_raw: str            # label as printed: 'MR BARR', 'MR SPEAKER (Mr Parton)'
-    speaker: str                # 'Mr Barr' / 'Mr Speaker (Mr Parton)'
+    speaker_raw: str            # the bold name as printed: 'MR BARR', 'Mr Cocks'
+    speaker: str                # 'Mr Barr' (honorific + recased surname); the chair is 'Mr Speaker', never the member's name
     electorate: str
     topic: str
     text: str
-    time: str = ""              # 'HH:MM' when the label carries one
+    time: str = ""              # 'H:MM' as printed in the label (12-hour clock, no am/pm), if any
     page: int = 0
     is_chair: bool = False
     bare_label: bool = False    # label carried no electorate or time: 'Mr Barr: ...' (question time, interjections)
@@ -368,7 +368,7 @@ LABEL_REST_NOCOLON_RE = re.compile(
     r"^\s*(?:\((?P<paren>[^()]*)\)\s*)?\((?P<time>\d{1,2}[.:]\d{2})\s*(?:am|pm)?\)\s+(?P<body>[A-Z].*)$", re.S)
 # No-bold fallback: an upper-case label at the start of a paragraph.
 UPPER_LABEL_RE = re.compile(
-    rf"^(?P<name>(?:MR|MS|MRS|MISS|DR|PROF|MADAM)\s+[A-Z][A-Z'’\-]+(?:\s+[A-Z][A-Z'’\-]+){{0,3}})"
+    r"^(?P<name>(?:MR|MS|MRS|MISS|DR|PROF|MADAM)\s+[A-Z][A-Z'’\-]+(?:\s+[A-Z][A-Z'’\-]+){0,3})"
     r"(?=\s*(?:\(|:))")
 
 DATE_HEADING_RE = re.compile(
@@ -602,10 +602,11 @@ def parse_turns(lines: list[Line], trace: list | None = None) -> list[Turn]:
             rest = full[len(bold):] if full.startswith(bold) else full
             m = LABEL_REST_RE.match(rest) or LABEL_REST_NOCOLON_RE.match(rest)
             if not m:
-                # a bold name that is not a label after all (e.g. 'Mr Smith and Ms Jones ...')
-                if cur is None:
-                    continue
-                paras.append(_clean_body(full))
+                # a bold name that is not a speaker label ('Ms Cheyne, pursuant to standing order 211,
+                # presented the following papers:'): the record's narration, the start of a new item.
+                # The turn above is already closed and nothing is attributed until the next label.
+                if trace is not None:
+                    trace.append(("narration", full))
                 continue
             disp, key = b.label
             if OFFICE_LABEL_RE.match(bold.strip().rstrip(":")) and not CHAIR_RE.search(disp):
