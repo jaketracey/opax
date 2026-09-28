@@ -33,10 +33,10 @@
     // Neurons per UTC day. DAILY_NEURON_BUDGET applies while low-priority backfill rows (priority < 100) are
     // still pending; once none remain the Worker switches by itself to STEADY_NEURON_BUDGET (about $1.65/day
     // at the default; real steady-state use is far lower). /status shows which one is in force.
-    "DAILY_NEURON_BUDGET": "400000",
+    "DAILY_NEURON_BUDGET": "1500000",
     "STEADY_NEURON_BUDGET": "150000",
     // Resources claimed per one-minute tick (max 90).
-    "BATCH_SIZE": "30",
+    "BATCH_SIZE": "60",
     // "dry" runs the model and records results in D1 but writes NOTHING to the knowledge box.
     // "live" writes. Only the exact string "live" writes.
     "WRITE_MODE": "live",
