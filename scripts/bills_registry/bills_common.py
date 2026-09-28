@@ -25,7 +25,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-DB_PATH = "/home/jake/.cache/autoresearch/parli.db"
+DB_PATH = os.path.expanduser("~/.cache/autoresearch/parli.db")
 DB_RO = f"file:{DB_PATH}?mode=ro"
 CACHE = os.path.expanduser("~/.cache/autoresearch/bills_v2")
 LICENCE = "CC BY-NC-ND 4.0"

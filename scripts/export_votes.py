@@ -50,13 +50,14 @@ this person was among the rebels is not derivable from the vote columns.
 """
 
 import json
+import os
 import re
 import sqlite3
 import sys
 import unicodedata
 from collections import Counter
 
-DB = "file:/home/jake/.cache/autoresearch/parli.db?mode=ro"
+DB = "file:" + os.path.expanduser("~/.cache/autoresearch/parli.db") + "?mode=ro"
 PER_SIDE = 6
 
 # Leading category in three-part motion names ("Motions - Climate Change - ...").

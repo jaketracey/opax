@@ -26,6 +26,16 @@
 #   OPAX_IPEA_SINCE     first IPEA quarter to consider (default: this year)
 #   OPAX_ONLY           comma-separated step names to run (debugging)
 #   OPAX_SYNC_KB=1      enable arag_sync + tvfy_refresh + export_votes
+#   OPAX_ALLOW_FAIL     comma-separated steps whose failure is logged but does not
+#                       make the run "incomplete" (exit 1). The nightly VM run sets
+#                       sa, whose source is behind a WAF that always refuses us.
+#   OPAX_SYNC_GATE      comma-separated steps that must have succeeded before
+#                       arag_sync pushes to the knowledge box (the push is permanent
+#                       and advances the checkpoint, so it must not run on rows a
+#                       failed link_speakers/classify left half-processed). Empty
+#                       (default) = no gate.
+#   OPAX_REPO           checkout to run in (default: the checkout this script is in)
+#   OPAX_FORCE_KB_SYNC  1 = ignore the MIGRATED_TO_VM marker (never needed; see the cutover rule below)
 #
 # Not installed in crontab by this script. Suggested line (local time, after
 # OpenAustralia has published the previous day's Hansard):
@@ -39,7 +49,7 @@
 set -u
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
-REPO=/home/jake/opax
+REPO="${OPAX_REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 PIPE="$HOME/.cache/autoresearch/pipeline"
 DB="$HOME/.cache/autoresearch/parli.db"
 LOG="$PIPE/daily.log"
@@ -57,6 +67,8 @@ QLD_START="${OPAX_QLD_START:-$SINCE}"
 SA_SINCE="${OPAX_SA_SINCE:-$SINCE}"
 IPEA_SINCE="${OPAX_IPEA_SINCE:-$(date +%Y)}"
 ONLY="${OPAX_ONLY:-}"
+ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
+SYNC_GATE="${OPAX_SYNC_GATE:-}"
 FAILED_STEPS=()
 
 mkdir -p "$PIPE"
@@ -65,6 +77,17 @@ log() { echo "$(ts) $*" | tee -a "$LOG"; }
 
 cd "$REPO" || { log "FATAL: cannot cd $REPO"; exit 1; }
 [ -x "$PY" ] || { log "FATAL: $PY missing (run: uv sync)"; exit 1; }
+
+# The cutover rule (docs/operations/nightly-refresh.md): once the pipeline has moved to the VM,
+# this machine must never push to the knowledge box again, because the push checkpoint
+# (arag_sync_state.json) lives on the VM and two pushers would duplicate resources.
+# scripts/vm/transfer_state.sh --mark-migrated writes the marker this checks.
+if [ "${OPAX_SYNC_KB:-0}" = "1" ] && [ -e "$HOME/.cache/autoresearch/MIGRATED_TO_VM" ] \
+   && [ "${OPAX_FORCE_KB_SYNC:-0}" != "1" ]; then
+  log "REFUSING to run with OPAX_SYNC_KB=1: $HOME/.cache/autoresearch/MIGRATED_TO_VM exists, so the nightly VM owns the knowledge-box push."
+  log "Run without OPAX_SYNC_KB=1 for a local-only refresh, or delete the marker only if the VM has never pushed."
+  exit 3
+fi
 
 exec 9>"$LOCK"
 if ! flock -n 9; then
@@ -114,7 +137,13 @@ run_step() {
     124|137) status="FAIL(timeout ${STEP_TIMEOUT})" ;;
     *)   status="FAIL(rc=$rc)" ;;
   esac
-  if [ "$rc" -ne 0 ]; then FAILED_STEPS+=("$name"); fi
+  if [ "$rc" -ne 0 ]; then
+    if [[ "$ALLOW_FAIL" == *",$name,"* ]]; then
+      status="$status (allowed)"
+    else
+      FAILED_STEPS+=("$name")
+    fi
+  fi
   log "[$name] $status in ${dur}s; $delta; log $PIPE/$name.log"
   return $rc
 }
@@ -169,7 +198,16 @@ if [ "${OPAX_SYNC_KB:-0}" = "1" ]; then
   # ~/.cache/autoresearch/arag_sync_state.json. Refuse to run --full without a
   # sane checkpoint: that would re-push the whole ~550K-document corpus.
   STATE="$HOME/.cache/autoresearch/arag_sync_state.json"
-  if "$PY" - "$STATE" <<'PYEOF'
+  gate_failed=""
+  for g in ${SYNC_GATE//,/ }; do
+    for f in ${FAILED_STEPS[@]+"${FAILED_STEPS[@]}"}; do
+      if [ "$f" = "$g" ]; then gate_failed="$gate_failed $g"; fi
+    done
+  done
+  if [ -n "$gate_failed" ]; then
+    log "[arag_sync] SKIP: gate step(s) failed:$gate_failed; not pushing to the knowledge box"
+    FAILED_STEPS+=("arag_sync(skipped)")
+  elif "$PY" - "$STATE" <<'PYEOF'
 import json, sys
 s = json.load(open(sys.argv[1]))["tables"]
 assert s["speeches"]["after"] > 1_000_000
