@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-28T11:45:14+00:00",
+ "generated_at": "2026-09-28T16:20:01+00:00",
  "count": 2989,
  "meta": {
   "mode": "registry",
@@ -1355,7 +1355,7 @@
    "introduced": "2026-06-24",
    "originating_house": "senate",
    "status": "passed",
-   "status_as_of": "2026-09-17",
+   "status_as_of": "2026-09-28",
    "sponsor": null,
    "sponsor_party": null,
    "portfolio": "Industry, Science and Resources",
