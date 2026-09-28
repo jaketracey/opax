@@ -604,6 +604,8 @@ TOP_RECIPIENTS = int(sys.argv[2]) if len(sys.argv) > 2 else 3800
 CAP_RECIPIENTS = int(sys.argv[3]) if len(sys.argv) > 3 else 6000
 FORCE_ABNS = [a for a in sys.argv[4].split(",")] if len(sys.argv) > 4 and sys.argv[4] else []
 TOP_PROGRAMS = int(sys.argv[5]) if len(sys.argv) > 5 else 500
+# program ids the hand-written notes (grants/program-notes.json) name: always listed, whatever their rank
+FORCE_PROGRAMS = {a for a in sys.argv[6].split(",") if a} if len(sys.argv) > 6 else set()
 GRANTS_PER_DETAIL = 40
 DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 
@@ -998,7 +1000,10 @@ for g in grants:
     if g["fy"]:
         p["fy"].add(g["fy"])
 programs = []
-listed_programs = sorted(prog.items(), key=lambda kv: -kv[1]["t"])[:TOP_PROGRAMS]
+ranked_programs = sorted(prog.items(), key=lambda kv: -kv[1]["t"])
+# A re-rank must never drop a program the notes describe (portal/test/program-notes.test.mjs requires each of
+# them in programs[]): the top TOP_PROGRAMS, then any noted program that ranks below them.
+listed_programs = ranked_programs[:TOP_PROGRAMS] + [kv for kv in ranked_programs[TOP_PROGRAMS:] if kv[0] in FORCE_PROGRAMS]
 for key, p in listed_programs:
     fys = sorted(p["fy"], key=fy_key)
     programs.append({"id": key, "n": program_name(p["names"]) or key, "ag": p["ag"].most_common(1)[0][0],
@@ -1180,15 +1185,28 @@ def write_outputs(data: dict, out: Path, jur: str) -> dict:
     }
 
 
+def noted_program_ids(out_dir: Path, jur: str) -> list[str]:
+    """Program ids grants/program-notes.json has a hand-written note for in this jurisdiction (none if no file)."""
+    p = out_dir / "grants" / "program-notes.json"
+    if not p.is_file():
+        return []
+    try:
+        notes = json.loads(p.read_text(encoding="utf-8")).get("programs", {}).get(jur, {})
+    except (OSError, ValueError):
+        return []
+    return sorted(notes) if isinstance(notes, dict) else []
+
+
 def run_remote(host: str | None, jur: str, top: int, cap: int, force_abns: list[str], programs: int,
-               local_db: str | None = None) -> dict | None:
+               local_db: str | None = None, force_programs: list[str] | None = None) -> dict | None:
     """Run the stdlib-only program on the DB host (ssh), or, with host=None, in a local python3.
 
     Locally the database is `local_db` (exported to the child as OPAX_DB), else $OPAX_DB,
     else ~/.cache/autoresearch/parli.db: the same rule the program itself applies.
     """
     current = current_seats_from_roster(ROOT / "portal" / "public" / "parliamentarians.json")
-    argv = ["python3" if host else sys.executable, "-", jur, str(top), str(cap), ",".join(force_abns), str(programs)]
+    argv = ["python3" if host else sys.executable, "-", jur, str(top), str(cap), ",".join(force_abns), str(programs),
+            ",".join(force_programs or [])]
     if host:
         cmd, env = ["ssh", host, *argv], None
     else:
@@ -1233,14 +1251,15 @@ def main() -> int:
     local = args.local or bool(args.db) or bool(os.environ.get("OPAX_DB"))
     host = None if local else args.host
     local_db = os.path.expanduser(args.db) if args.db else None
-    data = run_remote(host, args.jurisdiction, args.top, args.cap, force_abns, args.programs, local_db)
+    force_programs = noted_program_ids(Path(args.out_dir), args.jurisdiction)
+    data = run_remote(host, args.jurisdiction, args.top, args.cap, force_abns, args.programs, local_db, force_programs)
     if data is None:
         return 1
     out = Path(args.out_dir)
     w = write_outputs(data, out, args.jurisdiction)
     if w["index_size"] > INDEX_SIZE_LIMIT and args.programs > 300:
         print(f"index is {w['index_size']/1024:.0f} KB with {args.programs} programs; re-running with 300")
-        data = run_remote(host, args.jurisdiction, args.top, args.cap, force_abns, 300, local_db)
+        data = run_remote(host, args.jurisdiction, args.top, args.cap, force_abns, 300, local_db, force_programs)
         if data is None:
             return 1
         w = write_outputs(data, out, args.jurisdiction)

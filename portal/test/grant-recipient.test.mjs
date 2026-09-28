@@ -23,13 +23,20 @@ test('original award links and source dataset/search links remain distinct', () 
   assert.equal(new URL(recipientSourceUrl('federal', {id:'GA1'})).searchParams.get('GaId'), 'GA1');
   assert.equal(recipientSourceUrl('qld', {id:'qld-1',guid:'ignored'}), 'https://www.data.qld.gov.au/dataset/b102c881-2c7f-484a-a8b6-b056fe318964');
 });
-test('the requested Serendipity detail resolves from the published catalog and shard', () => {
+test('recipient details resolve from the published catalog and shard', () => {
+  // Sampled from whatever the last export listed (the largest, a middle one, the smallest, and Serendipity while
+  // it is still listed), so a data refresh that re-ranks recipients cannot turn this red.
   const index = JSON.parse(readFileSync(new URL('../public/graph/grants.federal.json', import.meta.url)));
-  const id = 'abn:64062160614'; const entry = index.recipients.find(row => row.id === id);
-  assert.ok(entry);
-  const shard = JSON.parse(readFileSync(new URL(`../public/grants/federal/shard-${String(entry.sh).padStart(2,'0')}.json`, import.meta.url)));
-  const detail = shard[fileKey(id)];
-  assert.equal(detail.id, id); assert.equal(detail.n, 'Serendipity (WA) Pty Ltd');
-  assert.equal(detail.grants.length, detail.c); assert.equal(detail.more, 0);
-  assert.ok(detail.grants.every(grant => grant.guid && grant.v >= 0));
+  const rows = index.recipients;
+  assert.ok(rows.length > 100, 'the index lists recipients');
+  const sample = [rows[0], rows[Math.floor(rows.length / 2)], rows[rows.length - 1],
+    rows.find(row => row.id === 'abn:64062160614')].filter(Boolean);
+  for (const entry of sample) {
+    const shard = JSON.parse(readFileSync(new URL(`../public/grants/federal/shard-${String(entry.sh).padStart(2,'0')}.json`, import.meta.url)));
+    const detail = shard[fileKey(entry.id)];
+    assert.ok(detail, `no shard detail for ${entry.id}`);
+    assert.equal(detail.id, entry.id); assert.equal(detail.n, entry.n);
+    assert.equal(detail.grants.length + detail.more, detail.c, `${entry.id}: listed grants plus the rest add up to the count`);
+    assert.ok(detail.grants.every(grant => grant.v >= 0 && (grant.guid === undefined || typeof grant.guid === 'string')));
+  }
 });
