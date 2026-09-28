@@ -198,10 +198,11 @@ run_step link_speakers "SELECT COUNT(*) FROM speeches WHERE person_id IS NOT NUL
 # docs/COMMITTEE-WITNESSES.md: link_speakers surname-links witnesses to members ("Ms Hall" -> Jill Hall), so
 # after new committee rows arrive, `fetch` (the hearing's attendance list) and `resolve` (witnesses are never
 # members; full names, positions) must run before those rows reach the knowledge box. They read committee rows
-# only, so they run only when the committees step added some (estimates rounds), and the KB push waits for them
-# (OPAX_SYNC_GATE). `resolve` also queues KB patches for rows already pushed; draining that queue is
-# scripts/arag_patch_speakers.py, not part of the nightly.
-if [ "${STEP_DELTA[committees]:-0}" != "0" ]; then
+# only, so they run only when the committees step added some or (Proof -> Final) changed some in place, which
+# it reports as a COMMITTEES_CHANGED line in its log, and the KB push waits for them (OPAX_SYNC_GATE). `resolve`
+# also queues KB patches for rows already pushed; draining that queue is scripts/arag_patch_speakers.py, not
+# part of the nightly.
+if [ "${STEP_DELTA[committees]:-0}" != "0" ] || grep -q '^COMMITTEES_CHANGED ' "$PIPE/committees.log" 2>/dev/null; then
   run_step committee_fetch "" \
     "$PY" -m parli.ingest.committee_witnesses fetch --db "$DB"
   run_step committee_resolve "" \

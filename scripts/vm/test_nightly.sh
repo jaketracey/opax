@@ -366,6 +366,7 @@ if [ "${1:-}" = "-" ]; then
   esac
 fi
 if [ "${1:-}" = "-m" ]; then
+  [ "$2" = parli.ingest.committee_hearings ] && [ -n "${COMMITTEES_CHANGED:-}" ] && echo "COMMITTEES_CHANGED rows_updated=$COMMITTEES_CHANGED rows_removed=0"
   for f in ${FAIL_STEPS:-}; do [ "$2" = "parli.ingest.$f" ] && exit ${FAIL_RC:-1}; done
 else
   for f in ${FAIL_STEPS:-}; do [ "${1:-}" = "scripts/$f" ] && exit ${FAIL_RC:-1}; done
@@ -450,6 +451,11 @@ check "in the order link_speakers, fetch, resolve, arag_sync" bash -c "
 new_refresh_sandbox r19b
 OPAX_SYNC_KB=1 refresh
 check "no new committee rows: neither runs" bash -c "! grep -q 'committee_witnesses' '$RS_CALLS'"
+new_refresh_sandbox r19d
+COMMITTEES_CHANGED=4 OPAX_SYNC_KB=1 OPAX_SYNC_GATE=link_speakers,classify,committee_fetch,committee_resolve refresh
+check "rows changed in place (Proof -> Final) with none added: fetch and resolve still run before the push" bash -c "
+  n() { grep -n \"\$1\" '$RS_CALLS' | head -1 | cut -d: -f1; }
+  [ -n \"\$(n 'committee_witnesses fetch')\" ] && [ \"\$(n 'committee_witnesses resolve')\" -lt \"\$(n parli.ingest.arag_sync)\" ]"
 new_refresh_sandbox r19c
 COMMITTEE_ADDS=3 OPAX_SYNC_KB=1 OPAX_SYNC_GATE=link_speakers,classify,committee_fetch,committee_resolve FAIL_STEPS="committee_witnesses" refresh
 check "a failing resolve holds the KB push back" bash -c "! grep -q 'parli.ingest.arag_sync' '$RS_CALLS'"
