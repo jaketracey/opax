@@ -473,6 +473,26 @@ check "a failed GrantConnect fetch is a failed step" test "$RRC" -eq 1
 check "and ext_apply is skipped, so the register is never touched by a half load" bash -c "grep -q '\[grants_apply\] SKIP' '$HOME/.cache/autoresearch/pipeline/daily.log' && ! grep -q 'ext_apply.py grants' '$RS_CALLS'"
 check "the nightly went on to the votes and the derived steps" bash -c "grep -q 'votes_state vic' '$RS_CALLS' && grep -q 'link_speakers' '$RS_CALLS'"
 
+echo "== 20b. daily_refresh.sh: ACT Hansard members and days before linking and indexing, the KB patch after the push"
+new_refresh_sandbox r20d
+OPAX_SYNC_KB=1 refresh
+check "exit 0" test "$RRC" -eq 0
+check "act_members, act, then link_speakers; act before the full-text sync" bash -c "
+  n() { grep -n \"\$1\" '$RS_CALLS' | head -1 | cut -d: -f1; }
+  [ \"\$(n 'act_hansard --members')\" -lt \"\$(n 'act_hansard --start')\" ] && [ \"\$(n 'act_hansard --start')\" -lt \"\$(n parli.ingest.link_speakers)\" ] && [ \"\$(n 'act_hansard --start')\" -lt \"\$(n scripts/fts_sync.py)\" ]"
+check "the window is the daily one by default, OPAX_ACT_START overrides it" bash -c "grep 'act_hansard --start' '$RS_CALLS' | grep -qE 'start [0-9]{4}-[0-9]{2}-[0-9]{2}\$'"
+check "act_kb_patch runs after arag_sync" bash -c "a=\$(grep -n 'parli.ingest.arag_sync' '$RS_CALLS' | head -1 | cut -d: -f1); b=\$(grep -n 'act_hansard --patch-kb' '$RS_CALLS' | head -1 | cut -d: -f1); [ -n \"\$a\" ] && [ -n \"\$b\" ] && [ \"\$a\" -lt \"\$b\" ]"
+new_refresh_sandbox r20e
+OPAX_ACT_START=2024-10-19 refresh
+check "OPAX_ACT_START=2024-10-19 is passed to the loader (the one-off backfill)" grep -q 'act_hansard --start 2024-10-19' "$RS_CALLS"
+check "no KB patch without OPAX_SYNC_KB" bash -c "! grep -q 'act_hansard --patch-kb' '$RS_CALLS'"
+new_refresh_sandbox r20f
+FAIL_STEPS=act_hansard refresh
+check "a failing ACT loader is a failed step by default (the run is incomplete)" test "$RRC" -eq 1
+new_refresh_sandbox r20g
+OPAX_ALLOW_FAIL=act_members,act FAIL_STEPS=act_hansard refresh
+check "and listed in OPAX_ALLOW_FAIL it is logged but the run stays complete (the nightly lists act_members)" test "$RRC" -eq 0
+
 # --- weekly_refresh.sh itself -------------------------------------------------------------------------------
 new_weekly_sandbox() {
   new_refresh_sandbox "$1"

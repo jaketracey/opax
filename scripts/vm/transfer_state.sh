@@ -20,7 +20,7 @@
 #   hansard/modern/                   1.3GB of downloaded Hansard JSONL (fed_download skips days it has)
 #   bills_v2/                         1.1GB of cached ParlInfo pages (bills_fetch is cache-first; without
 #                                     it the first run re-fetches thousands of pages at 0.7 req/s)
-#   ipea/  qld_parliament/  nsw_hansard/  sa_hansard/  tvfy/     fetcher caches and progress files
+#   ipea/  qld_parliament/  nsw_hansard/  sa_hansard/  act_hansard/  tvfy/     fetcher caches and progress files
 #   bill_speech_briefs.json           (+ .checked.json) if present locally; it normally lives on the Mac,
 #                                     so also: scp ~/.cache/autoresearch/bill_speech_briefs.json <vm>:.cache/autoresearch/
 #   periodic inputs (scripts/weekly_refresh.sh; docs/operations/periodic-refresh.md section 5; sent by `all` and
@@ -62,7 +62,7 @@ set -euo pipefail
 CACHE="$HOME/.cache/autoresearch"
 DB="$CACHE/parli.db"
 STATE_FILES=(arag_sync_state.json arag_speech_text_repair_state.json)
-CACHE_DIRS=(hansard/modern bills_v2 ipea qld_parliament nsw_hansard sa_hansard tvfy)
+CACHE_DIRS=(hansard/modern bills_v2 ipea qld_parliament nsw_hansard sa_hansard act_hansard tvfy)
 BRIEF_FILES=(bill_speech_briefs.json bill_speech_briefs.checked.json)
 PERIODIC_FILES=(abr/abr_names.sqlite abr/matches.json)   # 3.3GB + 2MB: the ABN name index the loaders read via --abr-dir
 PERIODIC_DIRS=(ext_money qld_contracts federal_lobbyists conduct_interests fits votes_state mp_interests ministerial_diaries donations)

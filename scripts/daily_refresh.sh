@@ -23,6 +23,8 @@
 #   OPAX_SA_SINCE       per-source start dates (default: DAYS_BACK ago) --
 #                       set these for a one-off backfill, e.g.
 #                       OPAX_STEP_TIMEOUT=12h OPAX_NSW_START=2024-11-22 scripts/daily_refresh.sh
+#   OPAX_ACT_START      ACT Assembly Hansard window start (default: DAYS_BACK ago; the one-off 11th Assembly
+#                       backfill is docs/DATA-ACT-HANSARD.md: OPAX_ACT_START=2024-10-19)
 #   OPAX_IPEA_SINCE     first IPEA quarter to consider (default: this year)
 #   OPAX_ONLY           comma-separated step names to run (debugging)
 #   OPAX_SYNC_KB=1      enable arag_sync + tvfy_refresh + export_votes
@@ -67,6 +69,7 @@ NSW_START="${OPAX_NSW_START:-$SINCE}"
 VIC_SINCE="${OPAX_VIC_SINCE:-$SINCE}"
 QLD_START="${OPAX_QLD_START:-$SINCE}"
 SA_SINCE="${OPAX_SA_SINCE:-$SINCE}"
+ACT_START="${OPAX_ACT_START:-$SINCE}"
 IPEA_SINCE="${OPAX_IPEA_SINCE:-$(date +%Y)}"
 ONLY="${OPAX_ONLY:-}"
 ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
@@ -132,6 +135,13 @@ run_step nsw "SELECT COUNT(*) FROM speeches WHERE source='nsw_hansard'" \
   "$PY" -m parli.ingest.nsw_hansard --start "$NSW_START"
 run_step sa "SELECT COUNT(*) FROM speeches WHERE source='sa_hansard'" \
   "$PY" -m parli.ingest.sa_hansard --since "$SA_SINCE"
+# ACT Legislative Assembly (docs/DATA-ACT-HANSARD.md): the sitting members first (one request; a redesigned page must not
+# fail the night, so act_members is in the nightly's allow-fail list), then the sitting-day PDFs of the window.
+# Both come before link_speakers (surname linking) and fts_sync (indexing). Proofs are swapped for Finals later.
+run_step act_members "SELECT COUNT(*) FROM members WHERE state='act'" \
+  "$PY" -m parli.ingest.act_hansard --members
+run_step act "SELECT COUNT(*) FROM speeches WHERE source='act_hansard'" \
+  "$PY" -m parli.ingest.act_hansard --start "$ACT_START"
 
 # The full-text index is brought up to date once, after every loader, instead of each loader rebuilding
 # all 1.3M speeches at its end (scripts/fts_sync.py). Nothing later in this script reads it.
@@ -224,6 +234,9 @@ PYEOF
   then
     run_step arag_sync "" \
       "$PY" -m parli.ingest.arag_sync --tables speeches --full
+    # ACT turns that changed after they were pushed (proof -> final): text-only PATCH, deletes of removed turns
+    run_step act_kb_patch "SELECT COUNT(*) FROM act_hansard_kb_queue WHERE done_at IS NULL" \
+      "$PY" -m parli.ingest.act_hansard --patch-kb
   else
     log "[arag_sync] SKIP: $STATE missing or implausible; refusing --full without a checkpoint"
   fi

@@ -37,7 +37,7 @@
 #   OPAX_REPO             checkout (default: the one this script lives in)
 #   OPAX_BRANCH           branch to publish to (default main)
 #   OPAX_STATUS_BRANCH    branch the run status is force-pushed to (default nightly-status)
-#   OPAX_ALLOW_FAIL       refresh steps allowed to fail (default sa)
+#   OPAX_ALLOW_FAIL       refresh steps allowed to fail (default sa,act_members)
 #   OPAX_SYNC_GATE        steps that must pass before the KB push (default link_speakers,classify,committee_fetch,committee_resolve)
 #   OPAX_DAILY_REFRESH    refresh script (default scripts/daily_refresh.sh)
 #   OPAX_SETTLE_SECONDS   wait for KB counters to stop moving before reading them (default 60)
@@ -236,7 +236,7 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ] || [ "${OPAX_NIGHTLY_SKIP_DAILY:-0}
 else
   REFRESH="${OPAX_DAILY_REFRESH:-$REPO/scripts/daily_refresh.sh}"
   log "running $REFRESH (KB sync on)"
-  OPAX_SYNC_KB=1 OPAX_ENSURE_INDEXES=1 OPAX_ALLOW_FAIL="${OPAX_ALLOW_FAIL:-sa}" OPAX_SYNC_GATE="${OPAX_SYNC_GATE:-link_speakers,classify,committee_fetch,committee_resolve}" \
+  OPAX_SYNC_KB=1 OPAX_ENSURE_INDEXES=1 OPAX_ALLOW_FAIL="${OPAX_ALLOW_FAIL:-sa,act_members}" OPAX_SYNC_GATE="${OPAX_SYNC_GATE:-link_speakers,classify,committee_fetch,committee_resolve}" \
     run "$REFRESH"
   rc=$?
   # daily_refresh.sh exits 0 without doing anything when its own lock is held (and logs that), so prove that it

@@ -16,10 +16,12 @@ The nightly only brings new records in and publishes them.
       └─ scripts/vm/nightly.sh   (flock; log ~/.cache/autoresearch/pipeline/nightly-<date>.log)
    1  sync ~/opax with origin/main (drops any half-written data from a dead run)
    2  scripts/daily_refresh.sh with OPAX_SYNC_KB=1     ~1-2 h
-        Hansards (federal, NSW, VIC, QLD, committees), AusTender (legacy + the full OCDS feed), IPEA, bills,
+        Hansards (federal, NSW, VIC, QLD, ACT, committees), AusTender (legacy + the full OCDS feed), IPEA, bills,
         NSW/QLD/VIC/Treasury/PM releases, GrantConnect awards (staged, reconciled by ext_apply), NSW/VIC state
         divisions → parli.db; new speeches, releases, divisions and awards → the knowledge box (KB);
-        votes.json; bill files. `sa` always fails (source WAF) and is allowed to.
+        votes.json; bill files. `sa` always fails (source WAF) and is allowed to; so is `act_members` (the Assembly's
+        members page may be redesigned without failing the night). ACT proofs are swapped for Finals by the same
+        step, and `act_kb_patch` PATCHes the changed text into the KB after the push.
   2b  scripts/weekly_refresh.sh weekly [monthly]      only on Sundays (Sydney); the first Sunday adds monthly
         Registers that change weekly (FRL Acts, state donations, lobbyists, FITS, QLD interests, NSW diaries,
         ACNC/ATO, ABN-linked suppliers), then their static exports; monthly: QLD contracts and diaries, IPEA,
