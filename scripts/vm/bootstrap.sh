@@ -35,6 +35,9 @@
 #   --disable          disable it again
 #   --check            report what is and is not in place; change nothing
 #   --container        for testing in a container: skip swap, timezone, ssh, fail2ban, systemctl
+#   --fail2ban-ignore IPS   addresses fail2ban must never ban (space or comma separated). Put your own
+#                      here if the security group only admits you: a few wrong keys offered by an
+#                      ssh agent would otherwise ban the one address that can reach the machine.
 #   --skip-ssh --skip-fail2ban --skip-swap --skip-upgrades --skip-python   skip one step
 set -euo pipefail
 
@@ -45,6 +48,7 @@ UV_VERSION="0.11.2"
 TZ_NAME="Australia/Sydney"
 TARGET_USER="${SUDO_USER:-$(id -un)}"
 ENABLE=0; DISABLE=0; CHECK=0; CONTAINER=0
+F2B_IGNORE=""
 SKIP_SSH=0; SKIP_F2B=0; SKIP_SWAP=0; SKIP_UPGRADES=0; SKIP_PYTHON=0
 
 while [ $# -gt 0 ]; do
@@ -57,6 +61,7 @@ while [ $# -gt 0 ]; do
     --disable) DISABLE=1; shift ;;
     --check) CHECK=1; shift ;;
     --container) CONTAINER=1; SKIP_SSH=1; SKIP_F2B=1; SKIP_SWAP=1; shift ;;
+    --fail2ban-ignore) F2B_IGNORE=${2//,/ }; shift 2 ;;
     --skip-ssh) SKIP_SSH=1; shift ;;
     --skip-fail2ban) SKIP_F2B=1; shift ;;
     --skip-swap) SKIP_SWAP=1; shift ;;
@@ -201,7 +206,6 @@ PasswordAuthentication no
 KbdInteractiveAuthentication no
 PermitRootLogin no
 PubkeyAuthentication yes
-MaxAuthTries 4
 SSHEOF
     if $SUDO sshd -t; then $SUDO systemctl reload ssh 2>/dev/null || $SUDO systemctl reload sshd; note "sshd reloaded"; else
       $SUDO rm -f /etc/ssh/sshd_config.d/00-opax-hardening.conf; echo "sshd -t failed; hardening file removed" >&2; fi
@@ -213,13 +217,14 @@ fi
 # ---- 6. fail2ban -----------------------------------------------------------------------------------------------------------
 if [ "$SKIP_F2B" -eq 0 ]; then
   say "fail2ban (sshd)"
-  $SUDO tee /etc/fail2ban/jail.d/opax.local >/dev/null <<'F2BEOF'
+  $SUDO tee /etc/fail2ban/jail.d/opax.local >/dev/null <<F2BEOF
 [sshd]
 enabled  = true
 backend  = systemd
-maxretry = 5
+maxretry = 10
 findtime = 10m
-bantime  = 1h
+bantime  = 30m
+ignoreip = 127.0.0.1/8 ::1 $F2B_IGNORE
 F2BEOF
   $SUDO systemctl enable --now fail2ban >/dev/null 2>&1 || true
   $SUDO systemctl restart fail2ban || true
