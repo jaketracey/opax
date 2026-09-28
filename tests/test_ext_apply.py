@@ -218,6 +218,25 @@ class DonationTests(ApplyBase):
         with self.assertRaises(ea.ExtApplyError):
             self.apply("donations", only_sources=["qld_ecq"])
 
+    def test_a_stage_directory_of_one_file_per_source(self):
+        """qld.sqlite + vic.sqlite side by side (the weekly layout): each source is planned against its own file."""
+        live = self.con()
+        insert(live, "ext_donations", [dict(don_row(i, source="vic_vec"), jurisdiction="vic") for i in range(10)])
+        live.close()
+        self.stage_rows([don_row(i) for i in range(9)] + [don_row(70)])                 # qld: one new, one withdrawn
+        vic = self.dir / "vic.sqlite"
+        c = sqlite3.connect(str(vic))
+        c.executescript(money_state_donations.DDL)
+        insert(c, "ext_donations", [dict(don_row(i, source="vic_vec"), jurisdiction="vic") for i in range(3)])   # truncated
+        c.close()
+        rep = ea.apply_profile("donations", self.live, [self.stage, vic], archive_dir=self.archive,
+                               only_sources=["qld_ecq", "vic_vec"])
+        self.assertEqual(rep["sources"]["qld_ecq"]["status"], "applied")
+        self.assertEqual(rep["sources"]["vic_vec"]["status"], "refused")
+        self.assertEqual(rep["exit"], ea.EXIT_REFUSED)
+        self.assertEqual(self.con().execute("SELECT COUNT(*) FROM ext_donations WHERE source='vic_vec'").fetchone()[0], 10)
+        self.assertEqual(self.con().execute("SELECT COUNT(*) FROM ext_donations WHERE source_record_id='qld_ecq-70'").fetchone()[0], 1)
+
     def test_two_stage_files_carrying_one_source_are_ambiguous(self):
         self.stage_rows([don_row(i) for i in range(10)])
         second = self.dir / "stage2.sqlite"
