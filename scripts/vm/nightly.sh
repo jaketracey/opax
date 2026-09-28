@@ -193,7 +193,7 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ]; then
 else
   REFRESH="${OPAX_DAILY_REFRESH:-$REPO/scripts/daily_refresh.sh}"
   log "running $REFRESH (KB sync on)"
-  OPAX_SYNC_KB=1 OPAX_ALLOW_FAIL="${OPAX_ALLOW_FAIL:-sa}" OPAX_SYNC_GATE="${OPAX_SYNC_GATE:-link_speakers,classify}" \
+  OPAX_SYNC_KB=1 OPAX_ENSURE_INDEXES=1 OPAX_ALLOW_FAIL="${OPAX_ALLOW_FAIL:-sa}" OPAX_SYNC_GATE="${OPAX_SYNC_GATE:-link_speakers,classify}" \
     run "$REFRESH"
   rc=$?
   # daily_refresh.sh exits 0 without doing anything when its own lock is held, so prove

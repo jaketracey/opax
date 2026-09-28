@@ -368,6 +368,17 @@ touch "$HOME/.cache/autoresearch/MIGRATED_TO_VM"
 OPAX_SYNC_KB=1 OPAX_FORCE_KB_SYNC=1 refresh
 check "the explicit override works" grep -q 'parli.ingest.arag_sync' "$RS_CALLS"
 
+
+echo "== 17. daily_refresh.sh: OPAX_ENSURE_INDEXES=1 runs the index step first; off by default"
+new_refresh_sandbox r17
+mkdir -p "$RS/repo/scripts"; : > "$RS/repo/scripts/ensure_db_indexes.py"
+refresh
+check "not run by default (the desktop is untouched)" bash -c "! grep -q ensure_db_indexes '$RS_CALLS'"
+new_refresh_sandbox r17b
+: > "$RS/repo/scripts/ensure_db_indexes.py"
+OPAX_ENSURE_INDEXES=1 refresh
+check "runs the index step when asked" grep -q 'scripts/ensure_db_indexes.py' "$RS_CALLS"
+check "and before the first fetch" bash -c "[ \"\$(head -1 '$RS_CALLS')\" = 'scripts/ensure_db_indexes.py' ]"
 echo
 echo "passed $PASS, failed $FAILN"
 [ "$FAILN" -eq 0 ]

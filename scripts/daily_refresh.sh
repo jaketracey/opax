@@ -34,6 +34,8 @@
 #                       and advances the checkpoint, so it must not run on rows a
 #                       failed link_speakers/classify left half-processed). Empty
 #                       (default) = no gate.
+#   OPAX_ENSURE_INDEXES 1 = first create the speeches(source, date) index if it is missing (the nightly VM
+#                       needs it: without it every row count is a full scan of 29 GB on network disk)
 #   OPAX_REPO           checkout to run in (default: the checkout this script is in)
 #   OPAX_FORCE_KB_SYNC  1 = ignore the MIGRATED_TO_VM marker (never needed; see the cutover rule below)
 #
@@ -149,6 +151,11 @@ run_step() {
 }
 
 log "===== daily refresh start (since=$SINCE, timeout/step=$STEP_TIMEOUT, host=$(hostname)) ====="
+
+# --- one-off database housekeeping (the nightly VM sets this; see scripts/ensure_db_indexes.py) -----
+if [ "${OPAX_ENSURE_INDEXES:-0}" = "1" ]; then
+  run_step db_indexes "" "$PY" scripts/ensure_db_indexes.py
+fi
 
 # --- federal Hansard: JSONL from OpenAustralia, then load into speeches -------
 run_step fed_download "" \
