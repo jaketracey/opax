@@ -1,0 +1,137 @@
+# Deploy the portal Worker to production.
+#
+# Runs ONLY when dispatched (Actions > Deploy > Run workflow, or `gh workflow run deploy.yml`).
+# The nightly refresh VM dispatches it after it pushes the night's data to main
+# (scripts/vm/nightly.sh). It is deliberately NOT triggered by push, so a human's own
+# `npm run deploy` from a laptop works exactly as before, and never by pull_request:
+# this repository is public and the job holds the Cloudflare deploy token.
+#
+# Secrets (Settings > Secrets and variables > Actions):
+#   CLOUDFLARE_API_TOKEN    Workers Scripts:Edit (+ Workers KV / D1 / R2 as the bindings need)
+#   CLOUDFLARE_ACCOUNT_ID   459714503d7cbe9d0b7875e62526628b
+#
+# Deploys with `npm run deploy` (build + asset stamping + wrangler deploy), never a bare
+# `wrangler deploy`, which would ship an unstamped index.html against immutable caching.
+# Stamps that change after the deploy are committed back to main.
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      skip_tests:
+        description: "Skip the test suite (emergency only: a data refresh is blocked by a red test)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: write   # push the restamped assets back to main
+  issues: write     # open an issue if the deploy fails
+
+jobs:
+  deploy:
+    name: Build, test, deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: portal
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 50
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: portal/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Build search, social, grants map, analytics and voice bundles
+        run: |
+          npm run build:search
+          npm run build:social
+          npm run build:grants-map
+          npm run build:analytics
+          npm run build:voice
+
+      - name: Test
+        if: ${{ !inputs.skip_tests }}
+        run: node --test test/*.test.mjs
+
+      - name: Types
+        run: npx wrangler types && npx tsc --noEmit
+
+      - name: Deploy
+        run: npm run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Commit restamped assets back to main
+        working-directory: .
+        run: |
+          set -euo pipefail
+          # The build rewrites this file's line endings; it is never a real change.
+          git checkout -- portal/public/grants-map-LICENSE.txt 2>/dev/null || true
+          # Content-hash stamps in the entry pages, and the analytics bundles. NOT voice.js or
+          # chunks/: esbuild bakes the absolute checkout path into their hashes, so a CI build
+          # never matches what was committed and committing it would only add churn.
+          stamped=$(git diff --name-only | grep -E '^portal/public/([^/]+\.html|analytics\.js|events\.js|ga\.js|gtm\.js)$' || true)
+          other=$(git diff --name-only | grep -vxF -f <(printf '%s\n' "$stamped") || true)
+          if [ -n "$other" ]; then
+            echo "::notice::tracked files changed by the build and not committed: $(echo "$other" | tr '\n' ' ')"
+          fi
+          if [ -z "$stamped" ]; then
+            echo "Stamps unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          echo "$stamped" | xargs git add --
+          git commit -m "Restamp assets after deploy [skip ci]"
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            echo "push rejected (attempt $attempt); rebasing onto origin/main"
+            git pull --rebase --autostash origin main
+            sleep $((attempt * 5))
+          done
+          echo "::error::could not push the restamp commit"
+          exit 1
+
+      - name: Summary
+        if: success()
+        working-directory: .
+        run: |
+          {
+            echo "### Deployed"
+            echo "- commit: \`$(git rev-parse --short HEAD)\` (${GITHUB_SHA::7} at checkout)"
+            echo "- corpus version: \`$(python3 -c 'import json; print(json.load(open("portal/public/corpus.json"))["version"])')\`"
+            echo "- CACHE_EPOCH: \`$(grep -m1 -o '"CACHE_EPOCH": "[^"]*"' portal/wrangler.jsonc)\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open an issue if the deploy failed
+        if: failure()
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Deploy failed $(date -u +%F)"
+          url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          existing=$(gh issue list --state open --search "\"$title\" in:title" --json number,title \
+                       --jq "[.[] | select(.title == \"$title\")][0].number // empty") || existing=""
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Failed again: $url"
+          else
+            gh issue create --title "$title" \
+              --body "The production deploy workflow failed: $url. Data on main is unaffected; fix and re-run the workflow. Runbook: docs/operations/nightly-refresh.md"
+          fi
