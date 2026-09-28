@@ -10,9 +10,13 @@ exactly as parli.ingest.arag_sync.map_speech would push them, and PATCHes the
 resource by slug. Texts are never sent. A slug the box does not hold yet is
 marked `missing`: the bulk sync will create it with the corrected fields.
 
-WARNING (2026-09-29): a field patch (any reason that does not start with "text:") replaces the resource's
-classifications wholesale, so it drops the `topic` labels the enrichment Worker wrote after the push. Text changes to
-already-pushed rows go through parli.ingest.kb_text_patch (send only the body), not through this script.
+A field patch READ-MERGE-WRITES the classifications (2026-09-29). The box replaces `usermetadata.classifications`
+wholesale, and the enrichment Worker writes `topic` labels there after the push (enrich/src/write.ts), so sending the
+row's own list would drop them. Instead, immediately before the write, the script reads the resource's current
+classifications, replaces only the labelsets a speaker patch owns (OWNED_LABELSETS: `party`, `speaker_type`), keeps every
+other label (topic, kind, source, state, chamber, decade, ...) as read, refuses the write when the read has no `kind`
+label or when a label it does not own would be dropped, reads back after the PATCH and re-sends once if a label went
+missing. Text patches ("text:..." reasons) send the body only and read nothing.
 
 Runs on the database host, in the background, resumable:
 
@@ -57,21 +61,46 @@ def now_iso():
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def patch_one(kb: KbClient, row: sqlite3.Row, reason: str | None = None) -> tuple[str, str | None]:
-    doc = map_speech(row)
-    body = {k: doc[k] for k in ("title", "origin", "usermetadata", "extra")}
-    # A text repair (parli.ingest.text_hygiene) sends the cleaned body as well;
-    # everything else leaves the text alone.
-    if reason and reason.startswith("text:"):
-        # Text repairs must preserve labels and other enrichment written since
-        # the source database was last synced.
-        body = {"texts": doc["texts"]}
-    slug = doc["slug"]
+OWNED_LABELSETS = frozenset({"party", "speaker_type"})     # what a speaker patch may rewrite; every other label is kept
+
+
+def read_classifications(resource) -> list[dict]:
+    """The classifications a resource carries, as {labelset, label} (a cancelled one keeps its flag): the port of
+    enrich/src/classify.ts readClassifications."""
+    raw = ((resource or {}).get("usermetadata") or {}).get("classifications") if isinstance(resource, dict) else None
+    out = []
+    for c in raw if isinstance(raw, list) else []:
+        if not isinstance(c, dict) or not isinstance(c.get("labelset"), str) or not isinstance(c.get("label"), str):
+            continue
+        if not c["labelset"] or not c["label"]:
+            continue
+        entry = {"labelset": c["labelset"], "label": c["label"]}
+        if c.get("cancelled_by_user") is True:
+            entry["cancelled_by_user"] = True
+        out.append(entry)
+    return out
+
+
+def merge_owned(existing: list[dict], new_labels: list[dict]) -> list[dict]:
+    """Every existing classification outside OWNED_LABELSETS, then the owned ones the row now has."""
+    return [c for c in existing if c["labelset"] not in OWNED_LABELSETS] + \
+           [{"labelset": c["labelset"], "label": str(c["label"])} for c in new_labels
+            if c.get("labelset") in OWNED_LABELSETS and c.get("label") not in (None, "", "None")]
+
+
+def dropped_non_owned(before: list[dict], after: list[dict]) -> list[dict]:
+    """Labels in `before`, outside OWNED_LABELSETS, that `after` does not have (enrich/src/classify.ts
+    droppedNonTopicLabels, with the owned labelsets in place of `topic`)."""
+    have = {(c["labelset"], c["label"]) for c in after}
+    return [c for c in before if c["labelset"] not in OWNED_LABELSETS and (c["labelset"], c["label"]) not in have]
+
+
+def _with_retry(call):
+    """('ok', value) | ('missing', None) | ('failed', why), retrying rate limits, 5xx and network errors."""
     backoff = 2.0
     for attempt in range(5):
         try:
-            kb.patch_resource_by_slug(slug, body)
-            return "patched", None
+            return "ok", call()
         except AragError as exc:
             if exc.status == 404:
                 return "missing", None
@@ -87,6 +116,48 @@ def patch_one(kb: KbClient, row: sqlite3.Row, reason: str | None = None) -> tupl
                 continue
             return "failed", str(exc)[:200]
     return "failed", "gave up"
+
+
+def patch_one(kb: KbClient, row: sqlite3.Row, reason: str | None = None) -> tuple[str, str | None]:
+    doc = map_speech(row)
+    slug = doc["slug"]
+    if reason and reason.startswith("text:"):
+        # Text repairs send the cleaned body and nothing else, so labels and other enrichment written since the source
+        # database was last synced are preserved.
+        status, err = _with_retry(lambda: kb.patch_resource_by_slug(slug, {"texts": doc["texts"]}))
+        return ("patched", None) if status == "ok" else (status, err)
+
+    # A speaker patch: read the classifications now, replace only the labelsets it owns, write, read back.
+    status, basic = _with_retry(lambda: kb.get_resource_by_slug(slug, show="basic"))
+    if status != "ok":
+        return status, basic
+    before = read_classifications(basic)
+    # Every OPAX resource carries a kind label; without one the read is suspect (partial response, wrong shape)
+    # and a write could wipe the real list.
+    if not any(c["labelset"] == "kind" for c in before):
+        return "failed", "refusing to write: the resource read back with no kind classification"
+    merged = merge_owned(before, doc["usermetadata"]["classifications"])
+    lost = dropped_non_owned(before, merged)
+    if lost:
+        return "failed", "refusing to write: the list would drop " + ", ".join(f"{c['labelset']}/{c['label']}" for c in lost)
+    body = {"title": doc["title"], "origin": doc["origin"], "extra": doc["extra"], "usermetadata": {"classifications": merged}}
+    status, err = _with_retry(lambda: kb.patch_resource_by_slug(slug, body))
+    if status != "ok":
+        return status, err
+    # Read back; re-send once if a label outside the ones we own went missing.
+    status, after = _with_retry(lambda: kb.get_resource_by_slug(slug, show="basic"))
+    if status != "ok":
+        return "failed", f"patched, but the read-back failed: {after}"
+    missing = dropped_non_owned(before, read_classifications(after))
+    if missing:
+        status, err = _with_retry(lambda: kb.patch_resource_by_slug(slug, {"usermetadata": {"classifications": merged}}))
+        if status != "ok":
+            return "failed", f"labels went missing after the patch and the re-send failed: {err}"
+        status, after = _with_retry(lambda: kb.get_resource_by_slug(slug, show="basic"))
+        missing = dropped_non_owned(before, read_classifications(after)) if status == "ok" else missing
+        if missing:
+            return "failed", "labels still missing after a re-send: " + ", ".join(f"{c['labelset']}/{c['label']}" for c in missing)
+    return "patched", None
 
 
 def main() -> int:

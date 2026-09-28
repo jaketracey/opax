@@ -311,7 +311,7 @@ with `OPAX_SYNC_KB=1`, the knowledge-box text patched, and turns a Final drops d
 step adds rows, `daily_refresh.sh` runs `committee_witnesses fetch` and `resolve` right after `link_speakers` and before the
 knowledge-box push, and the push waits for them (`OPAX_SYNC_GATE`). `resolve` links House and Joint members by the Parliamentary
 Handbook id in the transcript, never by surname. Draining the speaker-field patch queue (`scripts/arag_patch_speakers.py`) is
-not part of the nightly, and must not be run over enriched resources (it drops the Worker's topic labels).
+not part of the nightly; it read-merge-writes the classifications, so the Worker's topic labels survive it.
 
 ## Recovery
 

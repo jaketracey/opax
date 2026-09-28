@@ -118,10 +118,23 @@ The committee step sends its queue at the end of its run when `OPAX_SYNC_KB=1` (
 `--adopt-legacy` also checks hearings stored by the older ingest (they have no hearing row) against the current transcript,
 comparing text after unescaping and stripping the old speaker prefix, so unchanged rows are not touched.
 
-**Gap to know.** The speaker-field patch in `arag_patch_speakers.py` (any queue reason other than `text:`) replaces the
-resource's whole `usermetadata.classifications` list, which drops the `topic` labels the enrichment Worker writes. It was
-written before the Worker. Do not run it over enriched resources until it reads and merges the classifications. The nightly
-does not run it; the committee text patches do not use it.
+**The speaker-field patch keeps the enrichment Worker's labels (fixed 2026-09-29).** The box replaces
+`usermetadata.classifications` wholesale, and the Worker writes `topic` labels there after the push, so the old
+`arag_patch_speakers.py` field patch (title, collaborators, the row's own label list, extra metadata) would have dropped every
+topic label it touched (on the canary resource below it would have removed `indigenous-affairs` and `integrity-democracy`).
+It now reads the resource's classifications immediately before the write, replaces only the labelsets a speaker patch owns
+(`party`, `speaker_type`), keeps every other label as read (topic, kind, source, state, chamber, decade, anything else,
+cancelled flags included), refuses the write if the read has no `kind` label or if a label it does not own would be dropped,
+reads back after the PATCH and re-sends once if a label went missing (a second miss fails the row). That is the Worker's own
+write discipline (enrich/src/write.ts, classify.ts), ported. It costs three requests per resource instead of one, so the
+script runs at about a third of its old rate. Text patches ("text:" reasons) send the body only and read nothing. Committee
+text changes (Proof -> Final) do not use this script at all: they go through `kb_text_patch`, above.
+
+Canary, the one real write made for this fix: `speech-918813` (Senator Waters, Senate estimates, 8 October 2025; two topic
+labels). The desktop row and the box agreed on title, collaborators, `extra.metadata`, party and `speaker_type`, so the patch was
+a true no-op on every field. Before and after: the same nine classifications (chamber, decade, kind, party Greens, source,
+speaker_type member, state, topic indigenous-affairs, topic integrity-democracy), same title, origin and extra, same resource
+id, checked immediately and eight seconds later. What the old patch would have sent lacked both topic labels.
 
 ### Measured on real ParlInfo pages (2026-09-29)
 
@@ -188,8 +201,7 @@ or the surname links come back.
   transcript's surname; the entry says so.
 - Chair turns stay out of the knowledge box (the corpus-wide "presiding officer" exclusion in `arag_sync`), including the
   chair's questions in House and Joint hearings, which are a large share of those transcripts.
-- The speaker-field patch in `arag_patch_speakers.py` clobbers topic labels (see above).
 - A Final that renames a speaker on an already-pushed row updates the database row and the text in the box, but not the
-  box's speaker fields (that would need the field patch, see above).
+  box's speaker fields (the field patch can send them now that it preserves the topic labels, but the refresh does not queue one).
 - House and joint hearings before the 48th Parliament (1 July 2025) are not ingested: about 135-225k further resources for
   the 47th, and 74,631 fragments from 1993 to 2019.
