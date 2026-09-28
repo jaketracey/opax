@@ -15,6 +15,11 @@ Each index below answers one family of them from the index alone:
                                               after --since)
   idx_speeches_hearing_id    (hearing_id)     the committee loader's "which hearings are already in?"
   (partial, hearing_id IS NOT NULL)
+  idx_speeches_party_timeline (state, person_id, date, party_canonical)
+                                              export_bills.py's PartyTimeline (every federal speech's
+                                              person, date and party, grouped and ordered), answered
+                                              in order from the index instead of a full scan and sort
+  (arag_sync's dedupe pass and the loaders also use idx_speeches_date; see parli/ingest/dedup.py)
 
 Building each is one full scan plus a sort (about 4 minutes each on gp3, once) and adds tens of MB. They
 are additive: no query returns different rows. daily_refresh.sh runs this when OPAX_ENSURE_INDEXES=1,
@@ -31,6 +36,7 @@ INDEXES = [
     ("speeches", "idx_speeches_source_date", "source, date", None),
     ("speeches", "idx_speeches_date", "date", None),
     ("speeches", "idx_speeches_hearing_id", "hearing_id", "hearing_id IS NOT NULL"),
+    ("speeches", "idx_speeches_party_timeline", "state, person_id, date, party_canonical", None),
 ]
 
 

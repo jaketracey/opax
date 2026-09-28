@@ -7,8 +7,21 @@ Reads topic keywords from the DB, matches against speech text, and inserts
 results into speech_topics with relevance scores.
 
 Covers all sources: federal Hansard, state parliaments, committee hearings, etc.
+
+A speech that matches no topic never gets a speech_topics row, so "unclassified" (no row) includes every
+old speech that simply matches nothing. Re-reading all of those every run (their text, ~3.5 KB each) is
+what this used to do: 34 seconds on the desktop's NVMe, a large part of a night on a network disk, for
+the same empty result. By default a run now looks only at speeches newer than the newest classified one
+(minus a margin for unmatched rows near the tail); --full restores the old whole-table pass, which is what
+you want after the topic keywords change. The per-source coverage report at the end is a join per source
+over the whole table; it is opt-in (--report).
+
+    python3 classify_state_speeches.py                # new speeches only
+    python3 classify_state_speeches.py --full         # every speech with no topic row (after editing keywords)
+    python3 classify_state_speeches.py --report       # also print classified/total per source
 """
 
+import argparse
 import re
 import sqlite3
 import time
@@ -74,7 +87,17 @@ def classify_speech(text_lower, word_count, topics):
     return results
 
 
+# ids below (newest classified speech - MARGIN) that have no topic row are left alone
+DEFAULT_MARGIN = 100_000
+
+
 def main():
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--full", action="store_true", help="also re-examine old speeches that have no topic row")
+    ap.add_argument("--margin", type=int, default=DEFAULT_MARGIN,
+                    help=f"speech ids below (newest classified - margin) are skipped unless --full (default {DEFAULT_MARGIN:,})")
+    ap.add_argument("--report", action="store_true", help="print classified/total per source at the end (slow)")
+    args = ap.parse_args()
     db = get_db()
 
     # Load topics
@@ -84,14 +107,19 @@ def main():
         print(f"  [{tid}] {tdef['name']}: {len(tdef['keywords'])} keywords")
 
     # Get all unclassified speech IDs upfront, then process in batches
-    print("Fetching unclassified speech IDs...")
+    floor = 0
+    if not args.full:
+        newest = db.execute("SELECT COALESCE(MAX(speech_id), 0) FROM speech_topics").fetchone()[0]
+        floor = max(0, newest - args.margin)
+    print("Fetching unclassified speech IDs"
+          + (f" (speech_id > {floor:,}; --full for all)..." if floor else " (all)..."))
     unclassified_ids = [row[0] for row in db.execute("""
         SELECT s.speech_id FROM speeches s
-        WHERE NOT EXISTS (
+        WHERE s.speech_id > ? AND NOT EXISTS (
             SELECT 1 FROM speech_topics st WHERE st.speech_id = s.speech_id
         )
         ORDER BY s.speech_id
-    """).fetchall()]
+    """, (floor,)).fetchall()]
     total = len(unclassified_ids)
     print(f"Fetched {total} unclassified speech IDs.")
 
@@ -161,6 +189,10 @@ def main():
         ).fetchone()[0]
         if cnt > 0:
             print(f"  {tdef['name']:25s}: {cnt:6d}")
+
+    if not args.report:
+        print("\n(per-source coverage report skipped; --report prints it)")
+        return
 
     # Summary by source
     print("\n=== Classified speeches by source ===")

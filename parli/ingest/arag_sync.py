@@ -100,11 +100,20 @@ DEDUPE_PREDICATES = (
 )
 
 
-def prepare_dedupe(db: sqlite3.Connection, since: str) -> None:
+def prepare_dedupe(db: sqlite3.Connection, since: str, after: int | None = None) -> None:
     """Materialize the zenodo sitting dates and the exact-duplicate exclusion
     set (window function over rows that would otherwise migrate, keeping the
-    highest-priority source / lowest speech_id per (date, speaker, text))."""
+    highest-priority source / lowest speech_id per (date, speaker, text)).
+
+    `after` is the push checkpoint: only rows with a larger speech_id are about to be pushed, and a
+    row's exclusion depends only on the rows sharing its date (the partition is date, speaker, text),
+    so the window function runs over the dates that hold such rows instead of the whole table. On
+    the whole table it partitions and sorts every speech's text (1.3M rows, 4.6 GB): two minutes on
+    the desktop's NVMe, a night's worth of temp-file I/O on a network disk. Leave `after` unset (the
+    repair path, --full) for every date."""
     t0 = time.time()
+    only_new_dates = (f"date IN (SELECT DISTINCT date FROM speeches WHERE speech_id > {int(after)}) AND "
+                      if after else "")
     db.execute("CREATE TEMP TABLE IF NOT EXISTS zenodo_dates AS "
                "SELECT DISTINCT date FROM speeches WHERE source='zenodo'")
     db.execute(f"""
@@ -120,7 +129,7 @@ def prepare_dedupe(db: sqlite3.Connection, since: str) -> None:
                            WHEN 'qld_hansard' THEN 6 ELSE 7 END,
                          speech_id) AS rn
             FROM speeches
-            WHERE date >= {since!r} AND LENGTH(text) >= {MIN_SPEECH_CHARS}
+            WHERE {only_new_dates}date >= {since!r} AND LENGTH(text) >= {MIN_SPEECH_CHARS}
               AND source != 'wragge_xml'
               AND NOT (source='openaustralia' AND COALESCE(chamber,'')='representatives'
                        AND date IN (SELECT date FROM temp.zenodo_dates))
@@ -664,7 +673,10 @@ def main() -> None:
     db = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
     if "speeches" in args.tables:
-        prepare_dedupe(db, args.since)
+        # a normal push only needs exclusions for rows past the checkpoint; the repair pass walks old rows
+        new_only = not args.repair_speech_text and not args.retry_failed
+        checkpoint = load_state()["tables"].get("speeches", {}).get("after", 0) if new_only else None
+        prepare_dedupe(db, args.since, checkpoint)
     kb = None if args.dry_run else KbClient(cfg)
 
     if args.repair_speech_text:

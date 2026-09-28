@@ -123,6 +123,67 @@ class LazySeen(unittest.TestCase):
         self.assertFalse(key_of("B", "2026-09-10", text_hash, "recent speech two") in lazy)
 
 
+class ArgaSyncDedupe(unittest.TestCase):
+    """prepare_dedupe over only the dates that hold new rows excludes exactly the same new rows."""
+
+    @classmethod
+    def setUpClass(cls):
+        from parli.ingest import arag_sync
+        cls.arag = arag_sync
+
+    def make(self):
+        db = sqlite3.connect(":memory:")
+        db.row_factory = sqlite3.Row
+        db.executescript("""
+            CREATE TABLE speeches(speech_id INTEGER PRIMARY KEY, speaker_name TEXT, topic TEXT, text TEXT,
+                                  date TEXT, source TEXT, chamber TEXT);
+        """)
+        body = "x" * 300
+        rows = [
+            # already pushed (ids 1-6): a committee transcript, then its duplicate from another source
+            ("Senator A", "T", body + "one", "2026-06-05", "committee_senate", "senate"),
+            ("Senator A", "T", body + "one", "2026-06-05", "committee_senate", "senate"),   # dup of 1 (old)
+            ("B", "T", body + "two", "2026-06-06", "nsw_hansard", ""),
+            ("B", "T", body + "three", "2026-06-06", "vic_hansard", ""),
+            ("C", "T", body + "four", "2026-06-07", "zenodo", "representatives"),
+            ("C", "T", body + "five", "2026-06-07", "openaustralia", "senate"),
+            # new since the checkpoint (ids 7+)
+            ("B", "T", body + "two", "2026-06-06", "nsw_hansard", ""),       # dup of an OLD row 3 -> excluded
+            ("D", "T", body + "six", "2026-09-10", "nsw_hansard", ""),
+            ("D", "T", body + "six", "2026-09-10", "vic_hansard", ""),       # same (date, speaker, text), lower priority
+            ("E", "T", body + "seven", "2026-09-11", "qld_hansard", ""),
+            ("E", "T", body + "seven", "2026-09-11", "qld_hansard", ""),     # exact dup within the new rows
+            ("F", "T", body + "eight", "2026-09-12", "openaustralia", "representatives"),
+        ]
+        db.executemany("INSERT INTO speeches(speaker_name, topic, text, date, source, chamber) VALUES (?,?,?,?,?,?)", rows)
+        return db
+
+    def excluded(self, db, after):
+        db.execute("DROP TABLE IF EXISTS temp.dedupe_excluded")
+        db.execute("DROP TABLE IF EXISTS temp.zenodo_dates")
+        self.arag.prepare_dedupe(db, "1993-03-13", after)
+        return {r[0] for r in db.execute("SELECT speech_id FROM temp.dedupe_excluded")}
+
+    def test_new_rows_get_the_same_exclusions_either_way(self):
+        db = self.make()
+        checkpoint = 6
+        full = self.excluded(db, None)
+        windowed = self.excluded(db, checkpoint)
+        new_full = {i for i in full if i > checkpoint}
+        new_windowed = {i for i in windowed if i > checkpoint}
+        self.assertEqual(new_windowed, new_full)
+        self.assertEqual(new_full, {7, 9, 11}, "the old-row duplicate, the lower-priority source, the repeated row")
+
+    def test_the_window_really_is_narrower(self):
+        db = self.make()
+        self.assertLess(len(self.excluded(db, 6)), len(self.excluded(db, None)),
+                        "the old committee duplicate (id 2) is outside the dates that hold new rows")
+
+    def test_a_zero_checkpoint_means_every_date(self):
+        db = self.make()
+        self.assertEqual(self.excluded(db, 0), self.excluded(db, None))
+
+
 class FtsGate(unittest.TestCase):
     def test_rebuild_is_off_unless_asked(self):
         import os
