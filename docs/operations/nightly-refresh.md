@@ -40,12 +40,12 @@ The nightly only brings new records in and publishes them.
    ▼  ExecStopPost (also after a failure or the 6 h limit): poweroff-if-idle.sh
       apply security updates, then `systemctl poweroff` unless ~/.config/opax/hold exists or
       someone is logged in / connected over ssh
-08:00 Sydney   EventBridge Scheduler "opax-refresh-stop-backstop" stops the instance if still up
+10:30 Sydney   EventBridge Scheduler "opax-refresh-stop-backstop" stops the instance if still up
 
 the push (corpus.json changed) ──► .github/workflows/deploy.yml
       npm ci · build:search/social/grants-map/analytics/voice · node --test (Node 24)
       wrangler types + tsc · `npm run deploy` · commit restamped assets back with [skip ci]
-09:30 Sydney   .github/workflows/refresh-watchdog.yml reads https://opax.com.au/corpus.json and the
+11:00 Sydney   .github/workflows/refresh-watchdog.yml reads https://opax.com.au/corpus.json and the
                nightly-status branch; a red run (GitHub emails the owner) means the chain broke
 ```
 
@@ -72,7 +72,7 @@ There is no cache-warm step (deliberately).
 | Cost model | on for the refresh (1–2 h) only; the disk (about 40 GB used) is kept while it is stopped |
 | Access | SSH key `~/.ssh/opax-refresh.pem` (on the Mac and the desktop), user `ubuntu`, security group SSH only from the home IP |
 | Public IP | **changes at every stop/start**: `scripts/vm/ec2.sh ip` (or `aws ec2 describe-instances --region ap-southeast-2 --instance-ids i-0d725823966c827b9 --query 'Reservations[0].Instances[0].PublicIpAddress' --output text`) |
-| Schedules | EventBridge Scheduler `opax-refresh-start` (03:15 Australia/Sydney) and `opax-refresh-stop-backstop` (08:00), role `opax-refresh-scheduler` (may only start/stop this instance). Created disabled: enable them after the first successful manual nightly |
+| Schedules | EventBridge Scheduler `opax-refresh-start` (03:15 Australia/Sydney) and `opax-refresh-stop-backstop` (10:30), role `opax-refresh-scheduler` (may only start/stop this instance). Created disabled: enable them after the first successful manual nightly |
 | Shared account | the AWS account holds unrelated instances. Nothing here touches any resource other than the opax-refresh ones; `scripts/vm/ec2.sh` only names this instance |
 
 **Disk is the tight resource** (58 GB): `parli.db` is 29 GB, the caches 3 GB, the Python environment 1.5 GB, the
@@ -94,7 +94,7 @@ scripts/vm/ec2.sh stop                  # or just stop it
 * `~/.config/opax/skip-nightly`: the boot-time run is skipped (the machine still powers off afterwards unless held).
 * Any interactive login, or any established connection on port 22 (ssh, scp, rsync), also stops the power-off, so an
   ssh session started while a nightly is running keeps the machine up when it ends. **Remember to log out** or
-  the instance stays on until the 08:00 backstop.
+  the instance stays on until the 10:30 backstop.
 
 ## Where everything lives
 
@@ -282,7 +282,7 @@ end (in `status.json`, so the watchdog can email) and keeps publishing whatever 
 - Push race with a human: `git rebase origin/main` and retry, five times. A refused push (deploy key, network) leaves the
   commit local and it goes out on the next run.
 - The power-off always happens (unless held), even if the run crashed or hit the 6 hour limit, so a hung run cannot leave a
-  paid instance on all day. The 08:00 EventBridge backstop is the second guard.
+  paid instance on all day. The 10:30 EventBridge backstop is the second guard.
 
 **`corpus.json`** is written by `scripts/update_corpus_manifest.py` from three sources only: the live KB
 (`counters()['resources']` and one `POST /catalog` per `kind` and `source` label), the last block of
@@ -312,7 +312,7 @@ commit only `portal/public/*.html` and the analytics bundles: `voice.js` and `ch
 absolute checkout path into their hashes, so a CI build never matches the committed one. The `skip_tests` input is an
 emergency escape hatch. It always uses `npm run deploy`, never a bare `wrangler deploy`.
 
-**Watchdog** (`.github/workflows/refresh-watchdog.yml`): daily 09:30 Sydney (23:30 UTC). Fails if the live `corpus.json`'s
+**Watchdog** (`.github/workflows/refresh-watchdog.yml`): daily 11:00 Sydney (01:00 UTC; 12:00 in daylight saving). Fails if the live `corpus.json`'s
 `refresh.checked_at` is older than 20 hours (a healthy night leaves it a few hours old, a missed night about 28), if the
 status branch cannot be read or its last run is older than 30 hours, or if the last run's status is not `ok`. Run it by
 hand from the Actions tab to test.
@@ -331,9 +331,9 @@ power-off after them is the reboot, so a new kernel takes effect at the next sta
 | Pre-commit test gate | search catalog build + 679 tests | ~4 min (each extra attribution run adds ~1.5 min) |
 
 A first-Sunday night is therefore about 20 + 40 + 40 + 5 min plus a push of up to 2 h: worst case ~4 h 10 min, which is why the
-unit limit is 6 h (`TimeoutStartSec=6h`) and the EventBridge stop backstop wants moving from 08:00 to about 10:30 (a run that
-starts at 03:15 and uses the whole limit ends at 09:15). The freshness watchdog (09:30) reads `corpus.json`'s `checked_at`, which
-the nightly stamps near the end of the run: a Sunday run that ends after 09:30 would look stale to it. Runs measured with the
+unit limit is 6 h (`TimeoutStartSec=6h`) and the EventBridge stop backstop is at 10:30 (moved from 08:00 on 2026-09-29; a run that
+starts at 03:15 and uses the whole limit ends at 09:15). The freshness watchdog (11:00) reads `corpus.json`'s `checked_at`, which
+the nightly stamps near the end of the run: a Sunday run that ends after 11:00 would look stale to it. Runs measured with the
 loaders competing for the disk and CPU with a backfill were up to twice as slow.
 
 ## Why the refresh is written for a small, slow disk

@@ -9,14 +9,14 @@
 # A red run of this workflow is the alert: GitHub emails the repository owner when a scheduled
 # workflow fails. Runbook: docs/operations/nightly-refresh.md.
 #
-# It runs at 09:30 Sydney standard time (10:30 in daylight saving), some hours after the nightly
+# It runs at 11:00 Sydney standard time (12:00 in daylight saving), some hours after the nightly
 # normally finishes. A healthy night leaves checked_at a few hours old; a missed night leaves it
 # about 28 hours old, so 20 hours separates the two with room either way.
 name: Refresh watchdog
 
 on:
   schedule:
-    - cron: "30 23 * * *"
+    - cron: "0 1 * * *"
   workflow_dispatch:
     inputs:
       max_age_hours:
