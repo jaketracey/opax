@@ -70,6 +70,7 @@ SA_SINCE="${OPAX_SA_SINCE:-$SINCE}"
 IPEA_SINCE="${OPAX_IPEA_SINCE:-$(date +%Y)}"
 ONLY="${OPAX_ONLY:-}"
 ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
+STALE_OK=",grants_apply,"   # exit 3 from ext_apply = the fetched window was empty or shrunken: rows kept, not a failure
 SYNC_GATE="${OPAX_SYNC_GATE:-}"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with weekly_refresh.sh)
@@ -272,6 +273,7 @@ for src, mx, n in db.execute("SELECT source, MAX(date), COUNT(*) FROM speeches G
     print(f"{src:18s} newest {mx}  rows {n:,}")
 PYEOF
 log "===== daily refresh end ====="
+[ "${#STALE_STEPS[@]}" -eq 0 ] || log "Stale daily refresh: source refused to change the register: ${STALE_STEPS[*]}"
 if [ "${#FAILED_STEPS[@]}" -gt 0 ]; then
   log "Incomplete refresh: failed steps ${FAILED_STEPS[*]}"
   exit 1

@@ -141,20 +141,22 @@ import json, sys
 mode = sys.argv[1]
 p = "portal/public/speakers.json"
 d = json.load(open(p))
-if mode in ("ok", "failsteps", "crash"):
+if mode in ("ok", "failsteps", "crash", "stale"):
     d.append({"id": len(d), "name": f"Speaker {len(d)}"})
 elif mode == "shrink":
     d = d[:10]
-if mode != "none":
+if mode not in ("none", "locked"):
     open(p, "w").write(json.dumps(d) + "\n")
 PYEOF
 [ "${FAKE_WEEKLY_MODE:-ok}" = crash ] && exit 137
+if [ "${FAKE_WEEKLY_MODE:-ok}" = locked ]; then echo "$(date '+%F %T') another weekly refresh is still running (lock held); exiting" >> "$PIPE/weekly.log"; exit 0; fi
 [ "${FAKE_WEEKLY_MODE:-ok}" = noblock ] && exit 0
 {
   echo "$(date '+%F %T') ===== weekly refresh start (groups: $*; timeout/step=3h, host=fake) ====="
   echo "$(date '+%F %T') [x_speakers] OK in 2s; (no row count); log /x"
   [ "${FAKE_WEEKLY_MODE:-ok}" = failsteps ] && echo "$(date '+%F %T') [x_fits] FAIL(rc=1) in 1s; (no row count); log /x"
   echo "$(date '+%F %T') ===== weekly refresh end ====="
+  [ "${FAKE_WEEKLY_MODE:-ok}" = stale ] && echo "$(date '+%F %T') Stale weekly refresh: source refused to change the register: fits_fetch"
   [ "${FAKE_WEEKLY_MODE:-ok}" = failsteps ] && echo "$(date '+%F %T') Incomplete weekly refresh: failed steps x_fits"
 } >> "$PIPE/weekly.log"
 [ "${FAKE_WEEKLY_MODE:-ok}" = failsteps ] && exit 1
@@ -364,9 +366,9 @@ if [ "${1:-}" = "-" ]; then
   esac
 fi
 if [ "${1:-}" = "-m" ]; then
-  for f in ${FAIL_STEPS:-}; do [ "$2" = "parli.ingest.$f" ] && exit 1; done
+  for f in ${FAIL_STEPS:-}; do [ "$2" = "parli.ingest.$f" ] && exit ${FAIL_RC:-1}; done
 else
-  for f in ${FAIL_STEPS:-}; do [ "${1:-}" = "scripts/$f" ] && exit 1; done
+  for f in ${FAIL_STEPS:-}; do [ "${1:-}" = "scripts/$f" ] && exit ${FAIL_RC:-1}; done
 fi
 exit 0
 PYSTUB
@@ -567,6 +569,23 @@ new_sandbox s24e
 OPAX_FORCE_GROUPS="weekly" OPAX_NIGHTLY_SKIP_PERIODIC=1 FAKE_WEEKLY_MODE=ok nightly
 check "OPAX_NIGHTLY_SKIP_PERIODIC=1 switches them off" test ! -e "$HOME/weekly.args"
 
+echo "== 26. an exit status of 3 (the source refused to change the register) is stale, not failed"
+new_weekly_sandbox w22f
+FAIL_RC=3 FAIL_STEPS="fits_register" weekly weekly
+check "exit 0" test "$WRC" -eq 0
+check "logged STALE and listed on the Stale line" bash -c "grep -q '\[fits_fetch\] STALE(rc=3' '$HOME/.cache/autoresearch/pipeline/weekly.log' && grep -q 'Stale weekly refresh: .*fits_fetch' '$HOME/.cache/autoresearch/pipeline/weekly.log'"
+check "and not as an incomplete run" bash -c "! grep -q 'Incomplete weekly refresh' '$HOME/.cache/autoresearch/pipeline/weekly.log'"
+new_weekly_sandbox w22g
+FAIL_RC=3 FAIL_STEPS="export_speakers.py" weekly weekly
+check "exit 3 from a step that is not a register loader is still a failure" test "$WRC" -eq 1
+new_refresh_sandbox r22
+FAIL_RC=3 FAIL_STEPS="grantconnect" refresh
+check "daily: an exit 3 from the GrantConnect fetch is a failure (only the apply step's refusal is stale)" test "$RRC" -eq 1
+new_sandbox s22n
+FAKE_MODE=ok OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=stale nightly
+check "a stale source: the night is ok (exit 0)" test "$NRC" -eq 0
+check "but the status carries a warning naming it" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and any(\"fits_fetch\" in w for w in s[\"warnings\"]), s'"
+
 echo "== 25. nightly: a periodic group that fails validation, fails its tests, or never completes is put back; the rest goes out"
 new_sandbox s25
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=shrink nightly
@@ -582,6 +601,10 @@ new_sandbox s25c
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=crash nightly
 check "a run that never reaches its end block: exit 1, its files are put back" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==100'"
 check "status says it did not complete" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'weekly_refresh.sh (weekly) did not complete'"
+new_sandbox s25c2
+printf '2026-09-20 05:00:00 ===== weekly refresh start (groups: weekly)\n2026-09-20 05:40:00 ===== weekly refresh end =====\n' > "$HOME/.cache/autoresearch/pipeline/weekly.log"
+OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=locked nightly
+check "a periodic run that only found its lock held is not mistaken for last week's complete block" bash -c "[ '$NRC' -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'weekly_refresh.sh (weekly) did not complete'"
 new_sandbox s25d
 mkdir -p "$REPO/portal/node_modules" "$REPO/portal/test"
 OPAX_FORCE_GROUPS=weekly FAKE_WEEKLY_MODE=ok FAKE_NODE_RED_WHILE_CHANGED=portal/public/speakers.json nightly

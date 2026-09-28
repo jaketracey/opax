@@ -7,9 +7,11 @@ in this change and the weekly/monthly groups `scripts/vm/nightly.sh` will run. T
 and cadence reasoning are in the inventory (`periodic-refresh-inventory.md`, session scratchpad); this file
 is what each command is *now*.
 
-Timings marked **measured** were taken on 2026-09-29 from the desktop (residential IP) against a scratch
-copy of the tables, never the live database. Everything else is from the 21 Sep 2026 receipts or the
-`docs/DATA-*.md` files and is marked **est.** Nothing here has been run on the VM: measure there first.
+Timings marked **measured** were taken on 2026-09-29, first from the desktop (residential IP) against a scratch
+copy of the tables, then on the EC2 nightly VM (**VM**, rehearsal below). Everything else is from the 21 Sep 2026
+receipts or the `docs/DATA-*.md` files and is marked **est.** The wiring is `scripts/weekly_refresh.sh` (weekly and
+monthly groups, run by `scripts/vm/nightly.sh` on Sundays / the first Sunday) plus the daily additions in
+`scripts/daily_refresh.sh`; `docs/operations/nightly-refresh.md` says how they fit into the night.
 
 ## 1. Setup every step assumes
 
@@ -139,10 +141,14 @@ program id in `grants.federal.json` `programs[]`; the `grants` group enforces th
 drops one is reverted, not deployed red. Other tests read `graph/money.json`, `money.qld.json`, `suppliers.json`,
 `pay.json`, `parliamentarians.json`; a data-only commit can still fail the deploy job's `node --test`.
 
-## 4. Hosts to add to `scripts/vm/probe_sources.py`
+## 4. Hosts in `scripts/vm/probe_sources.py`
 
-All should answer from the AWS address before the groups are enabled. Sources marked (WAF?) are the likeliest
-to refuse a datacenter IP.
+All are in the probe now (30 probes, same host, path shape and User-Agent as each loader). **VM, 2026-09-29, from the
+AWS address: every one answers** (PM transcripts, QLD statements, VIC Premier, Treasury, AusTender full-feed UA,
+GrantConnect, legislation.gov.au, ECQ, VEC, TEC, federal/NSW/QLD/VIC/WA lobbyists, the SA lobbyist API, FITS, QLD
+members register PDF, NSW and QLD diaries, ACNC/ATO on data.gov.au, QLD open data, Wikidata, the Handbook API,
+GitHub raw) except the SA lobbyist *site*, which Cloudflare blocks (its API works and is what the loader reads).
+Sources marked (WAF?) were the likeliest to refuse a datacenter IP.
 
 ```
 pmtranscripts.pmc.gov.au        statements.qld.gov.au        www.premier.vic.gov.au       ministers.treasury.gov.au
@@ -159,17 +165,21 @@ The KB endpoint from `ARAG_*` is contacted only under `--apply`.
 
 ## 5. VM prerequisites
 
-- **Python venv** (`.venv`): `requests`, `beautifulsoup4` + `lxml`, `openpyxl` (GrantConnect XLSX, QLD contracts),
-  `pdfplumber` (diaries), `pdfminer.six`. All are already in `pyproject.toml`; nothing new was added.
-- **git** (for `keep_if_unchanged` and `validate_data`). **No Node needed** for anything in this file.
+- **Python venv** (`.venv`): `requests`, `beautifulsoup4` + **`lxml`**, `openpyxl` (GrantConnect XLSX, QLD contracts),
+  `pdfplumber` (diaries), `pdfminer.six`. `lxml` was **not** in `pyproject.toml`/`uv.lock` (the desktop had it by accident):
+  the VM rehearsal failed the VIC and TAS donation loaders on `bs4.FeatureNotFound: ... lxml`, and it is now declared.
+  An existing VM venv needs `uv sync --frozen` (bootstrap does it) or `uv pip install lxml==6.1.3`.
+- **git** (for `keep_if_unchanged` and `validate_data`). **No Node needed by these commands**; the nightly's pre-commit
+  test gate uses Node 24 + `portal/node_modules`, which `scripts/vm/bootstrap.sh` installs.
   The `sqlite3` CLI is not needed by these commands (`refresh_releases` reads with Python).
 - **`.env`** with the ARAG_* values, for `refresh_releases.py --apply` only.
-- **Inputs to transfer once** (`scripts/vm/transfer_state.sh` copies none of these today):
-  `~/.cache/autoresearch/abr/abr_names.sqlite` (3.3 GB; `contract_suppliers`, `grant_recipients`, `donor_entities`);
-  `~/.cache/autoresearch/ext_money/diaries` (110 MB; avoids ~65 min of cold PDF downloads);
-  `~/.cache/autoresearch/qld_contracts/` (394 MB; 926 cached files); optionally `ext_money/grantconnect` and
-  `ext_money/state_donations` (small; they are re-downloadable). Stage files measured: FITS 4 MB, QLD donations
-  9 MB, federal lobbyists 1.5 MB, a 45-day GrantConnect window under 1 MB.
+- **Inputs to transfer once**: `scripts/vm/transfer_state.sh --only periodic` (run on the desktop; safe on a VM that
+  already ran a nightly) sends `~/.cache/autoresearch/abr/abr_names.sqlite` (3.3 GB; `contract_suppliers`,
+  `grant_recipients`, `donor_entities`), `ext_money/` (diary PDFs 110 MB: avoids ~65 min of cold downloads; lobbyist,
+  donation, IPEA and GrantConnect caches), `qld_contracts/` (394 MB; 926 cached files), `federal_lobbyists/`, `fits/`,
+  `votes_state/`, `mp_interests/`, `ministerial_diaries/`, `donations/`, `conduct_interests/`. Everything except the
+  ABR index is only a cache (a missing file is re-downloaded). Stage files measured: FITS 4 MB, QLD donations 9 MB,
+  federal lobbyists 1.5 MB, a 45-day GrantConnect window under 1 MB.
 - **Disk:** `~/.cache/opax/archive` grows by the superseded rows of each applied source (FITS was 1.1 MB for a
   month of movement); `$PIPE/stage` is recreated each run.
 - **Time:** the weekly group's loaders add about 30-40 min (est.); the exports are unmeasured on the VM (each

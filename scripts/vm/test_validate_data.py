@@ -28,7 +28,7 @@ spec.loader.exec_module(vd)
 
 P = "portal/public"
 GROUPS = ["money", "grants", "suppliers", "access", "expenses", "interests", "fits", "speakers", "people", "pay",
-          "discovery"]
+          "discovery", "taxcharity"]
 N = 20  # size of the small arrays; 80% of it is 16, 90% is 18, 95% is 19
 
 
@@ -77,6 +77,13 @@ def fixture() -> dict:
                           "names": objs(N), "people": objs(N)}
     f[f"{P}/discovery.json"] = {"signals": rows(N), "coverage": {"a": 1}, "methodology": ["m"] * N,
                                 "generated_at": "2026-09-21T00:00:00+00:00", "export_seconds": 1.2}
+    tc = f"{P}/entities/tax-charity"
+    f[f"{tc}/index.json"] = {"meta": {"caveats": {"ais": "a"}, "sources": {"ais": {}},
+                                        "counts": {"abns_written": 1000, "charity": 800, "ais": 700, "ato": 300,
+                                                   "register_rows": 5000}}}
+    f[f"{tc}/names.json"] = {"by_name": objs(N)}
+    for i in range(100):
+        f[f"{tc}/{i:02d}.json"] = {f"{i:02d}0000000{i:02d}": {"a": [], "c": {"n": "x"}}}
     return f
 
 
@@ -384,6 +391,44 @@ class SpeakersTests(Base):
         self.assertTrue(self.errs("speakers"))
         self.write(f"{P}/speakers.json", b'"text"')
         self.assertFails("speakers", "not an array, object or count")
+
+
+class TaxCharityTests(Base):
+    TC = f"{P}/entities/tax-charity"
+
+    def test_counts_held_to_ninety_percent(self):
+        self.edit(f"{self.TC}/index.json", lambda d: d["meta"]["counts"].update(abns_written=900))
+        self.assertOk("taxcharity")
+        self.edit(f"{self.TC}/index.json", lambda d: d["meta"]["counts"].update(abns_written=899))
+        self.assertFails("taxcharity", "abns_written fell from 1,000 to 899")
+
+    def test_zero_count_fails(self):
+        self.edit(f"{self.TC}/index.json", lambda d: d["meta"]["counts"].update(ato=0))
+        self.assertFails("taxcharity", "counts.ato is empty")
+
+    def test_missing_caveats_fails(self):
+        self.edit(f"{self.TC}/index.json", lambda d: d["meta"].pop("caveats"))
+        self.assertFails("taxcharity", "lacks 'meta.caveats'")
+
+    def test_names_file_must_keep_its_names(self):
+        self.edit(f"{self.TC}/names.json", lambda d: truncate(d, "by_name", 17))
+        self.assertFails("taxcharity", "by_name fell from 20 to 17")
+
+    def test_shard_files_below_ninety_percent_fail(self):
+        for i in range(10, 20):
+            (self.root / self.TC / f"{i:02d}.json").unlink()
+        self.assertOk("taxcharity")   # exactly 90% of HEAD's shards is still fine
+        (self.root / self.TC / "20.json").unlink()
+        self.assertFails("taxcharity", "file count fell from 100 to 89")
+
+    def test_changed_shard_that_does_not_parse_fails(self):
+        self.write(f"{self.TC}/42.json", b"{oops")
+        self.assertFails("taxcharity", "unreadable")
+
+    def test_index_and_names_are_not_counted_as_shards(self):
+        for i in range(100):
+            (self.root / self.TC / f"{i:02d}.json").unlink()
+        self.assertFails("taxcharity", "has no files matching")
 
 
 class InterestsTests(Base):

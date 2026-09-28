@@ -9,6 +9,7 @@ dependencies = [
     # Fetching and parsing the record
     "requests>=2.32.0",
     "beautifulsoup4>=4.12.0",
+    "lxml>=5.2.0",   # the parser bs4 is asked for by name ("lxml"): ext_common, money_diaries, money_lobbyists
     "pdfminer.six>=20221105",
     "pdfplumber>=0.11.0",
     "pypdfium2>=4.30.0",

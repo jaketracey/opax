@@ -88,10 +88,12 @@ log() { echo "$(ts) [nightly] $*" | tee -a "$LOGFILE"; }
 run() { "$@" 2>&1 | tee -a "$LOGFILE"; return "${PIPESTATUS[0]}"; }
 
 FAILURES=()
+WARNINGS=()
 COMMIT_SHA=""
 DEPLOY="not pushed"
 RESULT_SUMMARY=""
 fail() { FAILURES+=("$*"); log "FAIL: $*"; }
+warn() { WARNINGS+=("$*"); log "WARN: $*"; }
 
 # ---- lock ------------------------------------------------------------------------
 exec 8>"$LOCKFILE"
@@ -138,12 +140,13 @@ publish_status() {
 
 write_status() {
   local status=$1
-  "$PY" - "$LASTFILE" "$status" "$TODAY" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${FAILURES[@]+"${FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
+  "$PY" - "$LASTFILE" "$status" "$TODAY" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
 import json, sys, datetime
-path, status, day, started, sha, deploy, summary, *failures = sys.argv[1:]
+path, status, day, started, sha, deploy, summary, nwarn, *rest = sys.argv[1:]
+warnings, failures = rest[:int(nwarn)], rest[int(nwarn):]
 json.dump({"date": day, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-           "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures},
+           "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "warnings": warnings},
           open(path, "w"), indent=1)
 PYEOF
 }
@@ -202,6 +205,26 @@ if ! sync_repo; then fail "could not sync the checkout with origin/$BRANCH"; fin
 mapfile -t DATA_PATHS < <(all_data_paths | while read -r p; do [ -n "$(git ls-tree --name-only HEAD -- "$p" 2>/dev/null)" ] && echo "$p"; done)
 log "checkout at $(git rev-parse --short HEAD): $(git log -1 --format=%s | cut -c1-90)"
 
+# the last line matching $2 inside the LAST run block of a step log ($1 = daily.log or weekly.log): the logs only
+# ever grow, and last night's "Stale ..." line must not be reported again tonight
+last_run_line() {
+  awk '/===== (daily|weekly) refresh start/ { buf = "" } { buf = buf $0 "\n" } END { printf "%s", buf }' "$1" 2>/dev/null \
+    | grep -E "$2" | tail -1
+}
+
+# did the run whose log is $1 ("daily" or "weekly" in $2) start after this nightly did and reach its end line?
+# (a refresh that finds its lock held only logs that and exits 0; last week's complete block must not count)
+run_completed() {
+  local startline t
+  startline=$(grep -E "===== $2 refresh start" "$1" 2>/dev/null | tail -1)
+  [ -n "$startline" ] || return 1
+  t=$(date -d "${startline:0:19}" +%s 2>/dev/null) || return 1
+  [ "$t" -ge "$(stat -c %Y "$MARK")" ] || return 1
+  awk -v name="$2" '$0 ~ "===== " name " refresh start" { seen = 1; complete = 0 }
+       $0 ~ "===== " name " refresh end" && seen { complete = 1 }
+       END { exit !(seen && complete) }' "$1"
+}
+
 # git helpers for putting a group of data files back to what HEAD has
 revert() { git checkout -q HEAD -- "$@"; git clean -fdq -- "$@" 2>/dev/null || true; }
 revert_group() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; revert "${paths[@]}"; }
@@ -216,15 +239,9 @@ else
   OPAX_SYNC_KB=1 OPAX_ENSURE_INDEXES=1 OPAX_ALLOW_FAIL="${OPAX_ALLOW_FAIL:-sa}" OPAX_SYNC_GATE="${OPAX_SYNC_GATE:-link_speakers,classify,committee_fetch,committee_resolve}" \
     run "$REFRESH"
   rc=$?
-  # daily_refresh.sh exits 0 without doing anything when its own lock is held, so prove
-  # that it wrote a complete block after we started.
-  refresh_completed() {
-    [ "$DAILY_LOG" -nt "$MARK" ] || return 1
-    awk '/===== daily refresh start/ { seen=1; complete=0 }
-         /===== daily refresh end/ && seen { complete=1 }
-         END { exit !(seen && complete) }' "$DAILY_LOG"
-  }
-  if ! refresh_completed; then
+  # daily_refresh.sh exits 0 without doing anything when its own lock is held (and logs that), so prove that it
+  # wrote a complete block that STARTED after we did.
+  if ! run_completed "$DAILY_LOG" daily; then
     fail "daily_refresh.sh did not complete a run (rc=$rc); nothing was published"
     finish
   fi
@@ -232,6 +249,8 @@ else
     failed_steps=$(grep -E 'Incomplete refresh: failed steps' "$DAILY_LOG" | tail -1 | sed 's/.*failed steps //')
     fail "daily_refresh.sh reported failed steps: ${failed_steps:-unknown} (rc=$rc); the rest was still published"
   fi
+  stale=$(last_run_line "$DAILY_LOG" 'Stale daily refresh:' | sed 's/.*register: //')
+  [ -z "$stale" ] || warn "a source refused to change its register tonight (kept the last good rows): $stale"
 fi
 
 # ---- 2b. the periodic groups: weekly (Sundays, Sydney) and monthly (the first Sunday) ------------------
@@ -253,9 +272,7 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
     # shellcheck disable=SC2086  # $groups is a word list on purpose
     OPAX_SYNC_KB="${OPAX_PERIODIC_SYNC_KB:-1}" OPAX_ALLOW_FAIL="${OPAX_PERIODIC_ALLOW_FAIL:-}" run "$PERIODIC" $groups
     prc=$?
-    if ! awk '/===== weekly refresh start/ { seen=1; complete=0 }
-              /===== weekly refresh end/ && seen { complete=1 }
-              END { exit !(seen && complete) }' "$WEEKLY_LOG" 2>/dev/null || [ ! "$WEEKLY_LOG" -nt "$MARK" ]; then
+    if ! run_completed "$WEEKLY_LOG" weekly; then
       # it never got to the end (lock held, killed, crashed): trust none of the periodic files it may have touched
       for g in "${DATA_GROUPS[@]}"; do
         case $g in bills|votes|corpus|wrangler) continue ;; esac
@@ -266,6 +283,8 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC
       failed_steps=$(grep -E 'Incomplete weekly refresh: failed steps' "$WEEKLY_LOG" | tail -1 | sed 's/.*failed steps //')
       fail "weekly_refresh.sh ($groups) reported failed steps: ${failed_steps:-unknown} (rc=$prc); the rest was still published"
     fi
+    stale=$(last_run_line "$WEEKLY_LOG" 'Stale weekly refresh:' | sed 's/.*register: //')
+    [ -z "$stale" ] || warn "a source refused to change its register tonight (kept the last good rows): $stale"
   fi
 fi
 

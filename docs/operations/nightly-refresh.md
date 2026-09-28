@@ -16,16 +16,25 @@ The nightly only brings new records in and publishes them.
       └─ scripts/vm/nightly.sh   (flock; log ~/.cache/autoresearch/pipeline/nightly-<date>.log)
    1  sync ~/opax with origin/main (drops any half-written data from a dead run)
    2  scripts/daily_refresh.sh with OPAX_SYNC_KB=1     ~1-2 h
-        Hansards (federal, NSW, VIC, QLD, committees), AusTender, IPEA, bills, NSW releases
-        → parli.db; new speeches + NSW releases → the knowledge box (KB); votes.json;
-        bill files. `sa` always fails (source WAF) and is allowed to.
+        Hansards (federal, NSW, VIC, QLD, committees), AusTender (legacy + the full OCDS feed), IPEA, bills,
+        NSW/QLD/VIC/Treasury/PM releases, GrantConnect awards (staged, reconciled by ext_apply), NSW/VIC state
+        divisions → parli.db; new speeches, releases, divisions and awards → the knowledge box (KB);
+        votes.json; bill files. `sa` always fails (source WAF) and is allowed to.
+  2b  scripts/weekly_refresh.sh weekly [monthly]      only on Sundays (Sydney); the first Sunday adds monthly
+        Registers that change weekly (FRL Acts, state donations, lobbyists, FITS, QLD interests, NSW diaries,
+        ACNC/ATO, ABN-linked suppliers), then their static exports; monthly: QLD contracts and diaries, IPEA,
+        state rosters, grant recipients, and the big exports (suppliers, grants, discovery, pay, expenses).
+        Every export goes through keep_if_unchanged, so a night on which nothing moved commits nothing.
    3  bills: export_bills.py --fill-briefs, then verify_bill_briefs.py (no brief lost vs HEAD)
-   4  validate_data.py: bills, votes.json (a failing group is reverted to HEAD, the rest goes on)
+   4  validate_data.py: bills, votes.json, and every periodic group whose files changed (a failing group is
+      reverted to HEAD, the rest goes on); then the portal test suite (search catalog rebuilt first, as the
+      deploy job does) against the new files: if it is red the changed groups are put back one at a time
+      until it is green, so a data commit cannot block the deploy
    5  update_corpus_manifest.py: corpus.json from the LIVE KB counts + daily.log; checked_at stamped
    6  bump_cache_epoch.py → CACHE_EPOCH "<date>-nightly" in both places, only if the KB changed
    7  git commit (data files only) as "OPAX nightly"; git push to main over SSH (deploy key),
       rebase-and-retry on a race
-   8  force-push {status, failures} to the `nightly-status` branch (one parentless commit)
+   8  force-push {status, failures, warnings} to the `nightly-status` branch (one parentless commit)
    ▼  ExecStopPost (also after a failure or the 4 h limit): poweroff-if-idle.sh
       apply security updates, then `systemctl poweroff` unless ~/.config/opax/hold exists or
       someone is logged in / connected over ssh
@@ -44,8 +53,12 @@ old, and always when anything else is being pushed. That makes every nightly com
 no new data therefore still makes a small commit and a deploy. Running the nightly again the same night
 changes nothing.
 
-**Only data files are ever committed:** `portal/public/bills/*`, `portal/public/votes.json`,
-`portal/public/corpus.json`, `portal/wrangler.jsonc` (the two `CACHE_EPOCH` values). Nothing else.
+**Only data files are ever committed:** the paths in `scripts/vm/data_groups.sh` and nothing else: `portal/public/bills/*`,
+`votes.json`, `corpus.json`, `portal/wrangler.jsonc` (the two `CACHE_EPOCH` values), and the periodic groups' exports
+(`graph/money*.json`, `graph/grants.federal.json` + `grants/federal/`, `suppliers*`, `agencies*`, `access.json`,
+`expenses.json`, `interests/`, `fits.json`, `speakers.json`, `parliamentarians.json`, `pay.json`, `discovery.json`,
+`entities/tax-charity/`). Adding an exported file means adding its path to one group there (the path must already be in
+`HEAD`) and, if it needs sanity checks, a `check_<group>` in `validate_data.py`.
 
 There is no cache-warm step (deliberately).
 
@@ -197,7 +210,11 @@ A source that is blocked for good will make the watchdog red every day; add its 
 ~/opax/scripts/vm/nightly.sh                              # the real thing (takes the lock)
 sudo systemctl start opax-nightly.service                 # same, through systemd, including the power-off afterwards
 OPAX_NIGHTLY_NO_PUSH=1 ~/opax/scripts/vm/nightly.sh       # everything but push and the status
-OPAX_NIGHTLY_SKIP_REFRESH=1 ~/opax/scripts/vm/nightly.sh  # only the publish half (after a fix)
+OPAX_NIGHTLY_SKIP_REFRESH=1 ~/opax/scripts/vm/nightly.sh  # only the publish half (after a fix; skips the periodic groups too)
+OPAX_FORCE_GROUPS="weekly monthly" ~/opax/scripts/vm/nightly.sh   # run the periodic groups tonight whatever the day
+OPAX_TODAY=2026-10-04 ~/opax/scripts/vm/nightly.sh        # pretend it is that (Sydney) date: Sunday 4th = weekly + monthly
+~/opax/scripts/weekly_refresh.sh weekly                   # just the periodic loaders/exports, no publishing
+OPAX_ONLY=fits_fetch,fits_apply,x_fits ~/opax/scripts/weekly_refresh.sh weekly   # debugging single periodic steps
 OPAX_ONLY=nsw,vic scripts/daily_refresh.sh                # debugging one step (add OPAX_SYNC_KB=1 only on the VM)
 gh workflow run deploy.yml --ref main                     # from anywhere with gh: deploy without a refresh
 ```
@@ -219,6 +236,29 @@ Individual pieces (all run from `~/opax`, all read-only unless noted):
 | `scripts/vm/ec2.sh ip \| status \| start \| stop \| ssh \| release` | (laptop) find, start, stop, log in to the instance |
 
 ## How each piece behaves
+
+**Periodic groups** (`scripts/weekly_refresh.sh`, contract in `docs/operations/periodic-refresh.md`). `nightly.sh` picks
+the groups from the Sydney date: every Sunday runs `weekly`, and the first Sunday of the month (day 1-7) also runs
+`monthly`; `OPAX_FORCE_GROUPS` overrides the calendar and `OPAX_TODAY` pretends a date. They run right after
+`daily_refresh.sh` (KB patches on: `OPAX_PERIODIC_SYNC_KB=0` turns that off for a rehearsal). Loaders that replace a whole
+register write into a scratch file under `$PIPE/stage` and `scripts/ext_apply.py` reconciles them into `parli.db` (refuses an
+empty or shrunken load, keeps row ids and reviewed labels, archives what it replaced under `~/.cache/opax/archive`).
+Exports write to a temp file and `scripts/vm/keep_if_unchanged.py` installs it only when it differs from HEAD by more
+than its timestamps. After the run the nightly validates each group whose files changed (`validate_data.py`) and reverts
+just that group when the check fails; it also puts every periodic file back to HEAD if `weekly_refresh.sh` never reached
+its end line (killed, lock held). A loader that exits 3 ("the source refused to change the register") is logged STALE, keeps
+the last good rows, and shows up as a `warnings` entry in `status.json`, not as a failure. Time: see "How long it takes".
+
+**Portal test gate.** The deploy job runs the whole portal suite before it ships, and the suite reads the generated files
+(grant shards, money graph, suppliers, pay ...). So after validation the nightly rebuilds the search catalog (`npm run
+build:search`, ~50 s) and runs `node --test test/*.test.mjs` (679 tests, ~55 s on the VM) against the new data. If it is
+red, the changed groups are put back to HEAD one at a time (periodic groups first, then votes, then bills), re-running
+after each, until it is green; those groups are not published tonight and the status names them. If the suite is red even
+with everything reverted, it is red on `main` itself: nothing but `corpus.json` is published and the deploy job will report
+it. Needs Node 24 and `portal/node_modules` (bootstrap installs them; `npm ci` is re-run when `package-lock.json` changes);
+without them the gate is skipped with a warning. `OPAX_TEST_GATE=0` turns it off. Two tests used to pin generated data
+(`grant-recipient.test.mjs` a single recipient, `program-notes.test.mjs` the top-500 ranking): the first samples the export
+now and `export_grants.py` always lists the programs `program-notes.json` describes.
 
 **Failure policy.** The data steps fail soft; the nightly reports everything that went wrong at the
 end (in `status.json`, so the watchdog can email) and keeps publishing whatever is still good.

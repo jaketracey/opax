@@ -13,7 +13,8 @@
 # ranking behind the cadences is the inventory it cites. Everything here is fail-soft in the same way as
 # daily_refresh.sh: a step that fails is logged (FAIL) and the rest still run; the exit status is 1 if any step
 # that is not in OPAX_ALLOW_FAIL failed. An exit status of 3 from a loader step means "the source refused to
-# shrink our register": the rows on disk are the last good ones (see periodic-refresh.md section 6).
+# shrink our register": the rows on disk are the last good ones (see periodic-refresh.md section 6); that is
+# logged STALE, listed on a "Stale weekly refresh:" line, and is not a failure.
 #
 # The registers that used to be replaced wholesale (DELETE the source, INSERT what came back) are loaded into
 # a scratch file under $PIPE/stage and reconciled into parli.db by scripts/ext_apply.py, which refuses an empty or
@@ -40,6 +41,9 @@ PY="$REPO/.venv/bin/python"
 STEP_TIMEOUT="${OPAX_STEP_TIMEOUT:-3h}"
 ONLY="${OPAX_ONLY:-}"
 ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
+# exit 3 from these means the source refused to change the register (empty or shrunken upstream): the last good
+# rows are kept, so it is reported as stale, not failed (periodic-refresh.md, exit codes)
+STALE_OK=",donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with daily_refresh.sh)
 . "$REPO/scripts/lib/refresh_lib.sh"
@@ -174,6 +178,7 @@ run_step x_taxcharity "" "$EXPORT" dir portal/public/entities/tax-charity -- \
   "$PY" scripts/export_tax_charity.py --db "$DB" --portal portal/public
 
 log "===== weekly refresh end ====="
+[ "${#STALE_STEPS[@]}" -eq 0 ] || log "Stale weekly refresh: source refused to change the register: ${STALE_STEPS[*]}"
 if [ "${#FAILED_STEPS[@]}" -gt 0 ]; then
   log "Incomplete weekly refresh: failed steps ${FAILED_STEPS[*]}"
   exit 1
