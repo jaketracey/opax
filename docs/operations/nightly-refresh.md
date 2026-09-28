@@ -30,8 +30,8 @@ The nightly only brings new records in and publishes them.
    3  bills: export_bills.py --fill-briefs, then verify_bill_briefs.py (no brief lost vs HEAD)
    4  validate_data.py: bills, votes.json, and every periodic group whose files changed (a failing group is
       reverted to HEAD, the rest goes on); then the portal test suite (search catalog rebuilt first, as the
-      deploy job does) against the new files: if it is red the changed groups are put back one at a time
-      until it is green, so a data commit cannot block the deploy
+      deploy job does) against the new files: if it is red, the group to blame is found by putting each changed
+      group back to HEAD on its own; only that one is held back, so a data commit cannot block the deploy
    5  update_corpus_manifest.py: corpus.json from the LIVE KB counts + daily.log; checked_at stamped
    6  bump_cache_epoch.py → CACHE_EPOCH "<date>-nightly" in both places, only if the KB changed
    7  git commit (data files only) as "OPAX nightly"; git push to main over SSH (deploy key),
@@ -252,19 +252,26 @@ its end line (killed, lock held). A loader that exits 3 ("the source refused to 
 the last good rows, and shows up as a `warnings` entry in `status.json`, not as a failure. Time: see "How long it takes".
 
 **Portal test gate.** The deploy job runs the whole portal suite before it ships, and the suite reads the generated files
-(grant shards, money graph, suppliers, pay ...). So after validation the nightly rebuilds the search catalog (`npm run
-build:search`, ~50 s) and runs `node --test test/*.test.mjs` (679 tests, ~55 s on the VM) against the new data. If it is
-red, the changed groups are put back to HEAD one at a time (periodic groups first, then votes, then bills), re-running
-after each, until it is green; those groups are not published tonight and the status names them. If the suite is red even
-with everything reverted, it is red on `main` itself: nothing but `corpus.json` is published and the deploy job will report
-it. Needs Node 24 and `portal/node_modules` (bootstrap installs them; `npm ci` is re-run when `package-lock.json` changes);
-without them the gate is skipped with a warning. `OPAX_TEST_GATE=0` turns it off. Two tests used to pin generated data
-(`grant-recipient.test.mjs` a single recipient, `program-notes.test.mjs` the top-500 ranking): the first samples the export
-now and `export_grants.py` always lists the programs `program-notes.json` describes.
+(grant shards, money graph, suppliers, pay, parliamentarians ...). So after validation the nightly rebuilds the search
+catalog (`npm run build:search`, ~50 s) and runs `node --test test/*.test.mjs` (679 tests, ~55 s on the VM; ~4 min in all)
+against the new data. If it is red, every changed group is backed up, then each is put back to HEAD on its own and the
+suite re-run: the first group whose revert turns it green is the culprit and stays out of tonight's commit; the others are
+restored from the backup. If no single group does it (two together), they are put back cumulatively until green; if it is red
+even with everything reverted, it is red on `main` itself: nothing but `corpus.json` is published and the deploy job will
+report it. The status names the group. Needs Node 24 and `portal/node_modules` (bootstrap installs them; `npm ci` is re-run
+when `package-lock.json` changes); without them the gate is skipped with a warning. `OPAX_TEST_GATE=0` turns it off. It found
+its first real coupling in the VM rehearsal: `export_parliamentarians.py` on its own drops every person's `representation`
+(added by `enrich_profile_jurisdictions.py`), which turned `grants-research.test.mjs` red; the weekly `x_people` step now runs
+`scripts/vm/export_people.sh` (export + enrichment). Two tests used to pin generated data (`grant-recipient.test.mjs` a single
+recipient, `program-notes.test.mjs` the top-500 ranking): the first samples the export now and `export_grants.py` always lists
+the programs `program-notes.json` describes.
 
 **Failure policy.** The data steps fail soft; the nightly reports everything that went wrong at the
 end (in `status.json`, so the watchdog can email) and keeps publishing whatever is still good.
 - A refresh step that fails (other than `sa`) is recorded and the run continues.
+- The KB push (`arag_sync`) is capped at `OPAX_PUSH_TIMEOUT` (default 2 h) so a big catch-up push (the KB takes ~12-30k
+  resources an hour) cannot use up the unit's limit and stop the night before it commits and deploys. A push cut by that limit
+  is logged PARTIAL, resumes from its checkpoint next run and reaches `status.json` as a warning, not a failure.
 - `link_speakers` or `classify` failing **blocks the KB push** (`OPAX_SYNC_GATE`): the push is permanent
   and moves the checkpoint, so it must not run on half-processed rows. It resumes next night.
 - Bills that lost a brief, or fail validation, are reverted to HEAD; `votes.json` and the manifest still go.
@@ -313,6 +320,21 @@ hand from the Actions tab to test.
 **Security updates** are applied by `poweroff-if-idle.sh` once per night (`apt-get update` then `unattended-upgrade`, 25 minute
 limit) because the machine is off when the usual background timers would fire; those timers are switched off. The
 power-off after them is the reboot, so a new kernel takes effect at the next start.
+
+## How long it takes (measured on the VM)
+
+| Night | Steps | Time |
+| --- | --- | --- |
+| Every night | daily refresh (Hansards, bills 9 min, votes, links, KB push when new rows) | ~17 min on a quiet night (2026-09-29 real run); a large push adds up to `OPAX_PUSH_TIMEOUT` (2 h) |
+| Sunday: weekly | loaders 30 min (lobbyists 22 min, `frl_acts` 3 min, ABN-linked `contract_suppliers` 7 min, ACNC/ATO 1 min once loaded) + exports 8 min (`x_speakers` and `x_people` a speeches scan each, ~3 min) | ~40 min |
+| First Sunday: monthly, on top | `qld_contracts` 7 min, `diaries_qld` 10-13 min, IPEA 2 min, `speaker_hygiene` 11 min (a full `speeches` read), `grant_recipients` 4 min, exports 5 min | ~40 min |
+| Pre-commit test gate | search catalog build + 679 tests | ~4 min (each extra attribution run adds ~1.5 min) |
+
+A first-Sunday night is therefore about 20 + 40 + 40 + 5 min plus a push of up to 2 h: worst case ~4 h 10 min, which is why the
+unit limit is 6 h (`TimeoutStartSec=6h`) and the EventBridge stop backstop wants moving from 08:00 to about 10:30 (a run that
+starts at 03:15 and uses the whole limit ends at 09:15). The freshness watchdog (09:30) reads `corpus.json`'s `checked_at`, which
+the nightly stamps near the end of the run: a Sunday run that ends after 09:30 would look stale to it. Runs measured with the
+loaders competing for the disk and CPU with a backfill were up to twice as slow.
 
 ## Why the refresh is written for a small, slow disk
 
@@ -409,7 +431,7 @@ accepting the gap and listing it in `source_limitations`. Re-run `scripts/vm/pro
 
 ```
 # unit tests (Python 3.10+, run in the pipeline venv or with `requests` installed)
-python3 -m unittest scripts/test_update_corpus_manifest.py scripts/test_export_briefs.py scripts/test_export_drafts.py
+python3 -m unittest scripts/test_update_corpus_manifest.py scripts/test_export_briefs.py scripts/test_export_drafts.py scripts/vm/test_validate_data.py scripts/vm/test_keep_if_unchanged.py
 
 # end-to-end scripts in a throwaway Ubuntu 24.04 (no network, no GitHub, no real KB)
 docker run --rm -v "$PWD":/src:ro ubuntu:24.04 bash -c \
@@ -426,12 +448,19 @@ status branch), an idempotent rerun, failed steps, lost briefs, a refresh that n
 still stamps, `NO_PUSH`, a failing manifest step, a refused push that heals on the next run (with and without a human commit
 in between), `run-nightly.sh` and its skip file, `poweroff-if-idle.sh` (idle, hold, login, ssh connection, updates that
 take long enough for someone to log in, failing updates), and the `daily_refresh.sh` allow-fail, KB-push gate and
-cutover-marker behaviour. The unit itself was also run under real systemd in a container (ok, failing, held, skipped and hung
+cutover-marker behaviour, the new daily steps (releases, AusTender, GrantConnect, state votes, ACT, committee gate), the
+weekly/monthly group script (order, staging, exit 3 = stale, failures), `export_step.sh`, the group calendar and forcing, and
+the pre-commit gate (validation revert per group, red suite blamed on one group, never-completed run, lock held, node missing,
+partial push): 186 checks, run on the VM itself (`OPAX_TEST_SRC=~/checkout bash scripts/vm/test_nightly.sh` with the venv on
+`PATH`). The unit itself was also run under real systemd in a container (ok, failing, held, skipped and hung
 runs, with a shortened time limit).
 
 ## Not covered by the nightly
 
-The daily refresh covers Hansards, NSW releases, bills, AusTender rows, IPEA and votes. A fuller refresh (grants,
-the AusTender supplier register rebuild, donations, lobbyists, bill texts, QLD/VIC/Treasury releases, the money
-maps and the static projections built from them) is still a manual job; see
-`docs/operations/2026-09-21-corpus-refresh.md`. The manifest's hand-kept sections describe those and are left alone.
+The daily refresh covers Hansards (federal, NSW, VIC, QLD, ACT, committees), bills, releases, AusTender, GrantConnect awards,
+IPEA and votes; the Sunday and first-Sunday groups cover state donations, lobbyist registers, FITS, interests, diaries,
+ABN-linked suppliers and grants, ACNC/ATO, contracts and the exports built from them. Still manual: the federal AEC donation
+reload (`donations.py` deletes every source's rows unless `--no-clear`; see `docs/operations/periodic-refresh.md`), the MLCI
+grant research, bill texts and other one-off research builds, and any source that needs a browser or a licence gate. The
+manifest's hand-kept sections describe those and are left alone. `docs/operations/2026-09-21-corpus-refresh.md` is the
+last full manual refresh.

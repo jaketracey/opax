@@ -182,10 +182,10 @@ The KB endpoint from `ARAG_*` is contacted only under `--apply`.
   federal lobbyists 1.5 MB, a 45-day GrantConnect window under 1 MB.
 - **Disk:** `~/.cache/opax/archive` grows by the superseded rows of each applied source (FITS was 1.1 MB for a
   month of movement); `$PIPE/stage` is recreated each run.
-- **Time:** the weekly group's loaders add about 30-40 min (est.); the exports are unmeasured on the VM (each
-  `speeches` scan is ~3.5 min on gp3). Measure once with
-  `OPAX_NIGHTLY_NO_PUSH=1 scripts/vm/nightly.sh` on a maintenance boot once the weekly and monthly groups are
-  wired in (forcing a group on a given night is the pipeline agent's to define).
+- **Time (measured on the VM, 2026-09-29, first full run):** weekly ~40 min (loaders 30: lobbyists 22 min, `frl_acts` 3 min,
+  `contract_suppliers` 7 min, ACNC/ATO 53 s for a first full load; exports 8 min, two of them a `speeches` scan of ~3 min);
+  monthly ~40 min more (`qld_contracts` 7 min, `diaries_qld` 10-13 min, IPEA 2 min, `speaker_hygiene` 11 min, `grant_recipients`
+  4 min, exports 5 min). See "How long it takes" in nightly-refresh.md.
 
 ## 6. When a step exits 3, and re-baselining
 
@@ -203,11 +203,14 @@ The KB endpoint from `ARAG_*` is contacted only under `--apply`.
   them on an unchanged or amended row and carries them to new rows only when every earlier row of that donor
   agrees on one label. Run `money_classify` after `donations` to label the rest.
 
-## 7. Not proven
+## 7. Proven, and not
 
-The dry run (2026-09-29) exercised FITS, the federal lobbyist register, QLD donations and a 45-day GrantConnect
-window through fetch → truncated stage refused → dry-run → apply → idempotent re-run, and PM/QLD/Treasury
-releases through fetch + audit publish. Covered by unit tests only, not by a real upstream: the roster and
-QLD-contracts guards, the IPEA link and empty-quarter skip, `--new-only` diaries against real PDFs, TAS, VIC
-donations, the other five lobbyist registers, and `refresh_releases --apply` (only the KB safety check was run,
-read-only). No export was timed on the VM.
+The VM rehearsal (2026-09-29) ran both groups end to end against the real database with pushes off: every loader and export
+ran (donations, lobbyists, FITS, QLD interests, NSW/QLD diaries, ABN-linked suppliers and grant recipients, ACNC/ATO, FRL
+Acts, QLD contracts, IPEA, rosters, speaker hygiene; sixteen exports), the nightly validated eleven groups, the portal
+gate ran green and a commit was pushed to a local bare origin. It found: `lxml` missing from the lock (fixed); the bare
+`export_parliamentarians.py` losing `representation` (fixed by `scripts/vm/export_people.sh`); and that the ACNC/ATO tables
+had never been loaded into the VM's copy of the database (the first `--check-updated` did the full load). Not exercised on
+the VM: the `--apply` paths that write to the knowledge box for releases, division documents and GrantConnect awards
+(`refresh_releases --apply`, `votes_ingest`, `publish_recent_grants`); they are create-only and run for the first time in the
+first real nightly after this lands.
