@@ -109,7 +109,10 @@ PROFILES: dict[str, Profile] = {
     ),
     "grants": Profile(
         "grants",
-        (TableSpec("ext_grants", identity=("source", "ga_id"), identity_unique=True, window_col="publish_date"),),
+        # `window` names the fetch window a row came from (loader bookkeeping, not source data): the same award
+        # fetched in a differently split window is not a change
+        (TableSpec("ext_grants", ignore=("id", "ingested_at", "window"), identity=("source", "ga_id"),
+                   identity_unique=True, window_col="publish_date"),),
         expected_sources=("grantconnect",),
     ),
 }

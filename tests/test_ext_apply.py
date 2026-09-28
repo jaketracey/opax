@@ -374,6 +374,20 @@ class GrantWindowTests(ApplyBase):
         self.assertNotIn("GA9", after)
         self.assertIn("GA-NEW", after)
 
+    def test_the_fetch_window_label_is_not_a_change(self):
+        """The same awards fetched under a different window split are unchanged rows, not 'amended' ones."""
+        live = self.con()
+        live.executescript(grantconnect.DDL)
+        insert(live, "ext_grants", [dict(self.grant(f"GA{i}", "2026-08-20"), window="2026-08-01..2026-08-31") for i in range(6)])
+        live.close()
+        st = self.con(self.stage)
+        st.executescript(grantconnect.DDL)
+        insert(st, "ext_grants", [dict(self.grant(f"GA{i}", "2026-08-20"), window="2026-08-15..2026-08-31") for i in range(6)])
+        st.close()
+        rep = self.apply("grants", since="2026-08-01")
+        self.assertEqual(rep["sources"]["grantconnect"]["status"], "unchanged")
+        self.assertEqual(rep["sources"]["grantconnect"]["tables"]["ext_grants"]["unchanged_ids"], 6)
+
     def test_windowed_profile_needs_since(self):
         live = self.con()
         live.executescript(grantconnect.DDL)
