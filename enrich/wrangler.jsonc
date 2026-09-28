@@ -1,0 +1,40 @@
+{
+  // opax-enrich: a standalone Worker that enriches the OPAX knowledge box with Workers AI
+  // (speech briefs, topic labels, press-release briefs). It replaces the subscription
+  // Codex/Claude workers. Runs on a one-minute cron; only GET /status is served.
+  "name": "opax-enrich",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": true,
+  "preview_urls": false,
+
+  "ai": { "binding": "AI" },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "opax-enrich", "database_id": "e2ab05fc-97e7-453d-934f-74491de0e57e", "migrations_dir": "migrations" }
+  ],
+
+  "triggers": { "crons": ["* * * * *"] },
+
+  "observability": { "enabled": true, "logs": { "head_sampling_rate": 1 } },
+
+  // Secrets (never committed): wrangler secret put ARAG_KB_ID / ARAG_KB_TOKEN / ENRICH_ADMIN_TOKEN
+  "secrets": { "required": ["ARAG_KB_ID", "ARAG_KB_TOKEN", "ENRICH_ADMIN_TOKEN"] },
+
+  "vars": {
+    "ARAG_ZONE": "aws-ap-southeast-2-1",
+    // Models: the primary does the work, the escalation model gets a record only after
+    // the primary's output was rejected twice by the validator.
+    "PRIMARY_MODEL": "@cf/qwen/qwen3-30b-a3b-fp8",
+    "ESCALATION_MODEL": "@cf/openai/gpt-oss-120b",
+    // Neurons per UTC day; processing stops when reached. 400000 for the backfill
+    // (about $4.40/day above the free 10,000); lower to "10000" (the free tier) afterwards.
+    "DAILY_NEURON_BUDGET": "400000",
+    // Resources claimed per one-minute tick (max 90).
+    "BATCH_SIZE": "30",
+    // "dry" runs the model and records results in D1 but writes NOTHING to the knowledge box.
+    // "live" writes. Only the exact string "live" writes.
+    "WRITE_MODE": "dry",
+    // First discovery run starts here (the queue de-duplicates on (rid, task)).
+    "DISCOVERY_START": "2026-09-20T00:00:00Z"
+  }
+}
