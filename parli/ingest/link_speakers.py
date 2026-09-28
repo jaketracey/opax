@@ -65,6 +65,9 @@ PROCEDURAL_NAMES = {
     "the chair", "madam president", "mr president",
     "madam deputy president", "the temporary chair",
     "acting deputy speaker",
+    # ACT Legislative Assembly chair labels (parli.ingest.act_hansard)
+    "madam assistant speaker", "mr assistant speaker", "assistant speaker",
+    "the assistant speaker",
 }
 
 
@@ -574,7 +577,7 @@ def normalize_state_speaker_name(raw: str, state: str) -> str | None:
     name = STRIP_SUFFIXES.sub(" ", name)
 
     # Also strip "Reverend", "Professor" etc. not in the main regex
-    name = re.sub(r'\b(Reverend|Professor|Adj Prof|Prof)\b\.?', ' ', name, flags=re.IGNORECASE)
+    name = re.sub(r'\b(Reverend|Professor|Adj Prof|Prof|Miss)\b\.?', ' ', name, flags=re.IGNORECASE)
 
     # Clean up
     name = MULTI_SPACE.sub(" ", name).strip()

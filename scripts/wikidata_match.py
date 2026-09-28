@@ -23,12 +23,12 @@ drop=set(json.load(open(f"{SCR}/wikidata_drop.json"))) if os.path.exists(f"{SCR}
 rlog=json.load(open(f"{SCR}/recrop_log.json")) if os.path.exists(f"{SCR}/recrop_log.json") else {}
 group_img={m["img"] for n,m in old.items() if rlog.get(f"wd-{m['qid']}")=="group"}   # dropped group shots, by file
 todo=[p for p in people if pm.get(p["name"].lower()) not in files and p["name"] not in drop]
-STATE={"nsw_la","nsw_lc","vic_la","vic_lc","qld_la","sa_ha","sa_lc"}
+STATE={"nsw_la","nsw_lc","vic_la","vic_lc","qld_la","sa_ha","sa_lc","act_la"}
 def chambers(p):
     ch=set(p.get("chambers") or [])
     if "senate_committee" in ch: ch|={"representatives","senate"}
     return ch-{"senate_committee"}
-POS={"nsw_la":"Q19202748","nsw_lc":"Q18810377","vic_la":"Q18534408","vic_lc":"Q19185341","qld_la":"Q18526194","sa_ha":"Q18220900","sa_lc":"Q18662245","representatives":"Q18912794","senate":"Q6814428"}
+POS={"nsw_la":"Q19202748","nsw_lc":"Q18810377","vic_la":"Q18534408","vic_lc":"Q19185341","qld_la":"Q18526194","sa_ha":"Q18220900","sa_lc":"Q18662245","act_la":"Q6814365","representatives":"Q18912794","senate":"Q6814428"}
 UA={"User-Agent":"OPAX research (opax.com.au; jake.tracey@noice.work)"}
 def sparql(q):
     for i in range(3):

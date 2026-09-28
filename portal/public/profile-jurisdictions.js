@@ -1,5 +1,5 @@
 const parliaments = {federal:'Federal',nsw:'New South Wales',vic:'Victoria',qld:'Queensland',sa:'South Australia',wa:'Western Australia',tas:'Tasmania',act:'ACT',nt:'Northern Territory'};
-const houses = {representatives:'House of Representatives',senate:'Senate',assembly:'Legislative Assembly',council:'Legislative Council',nsw_la:'Legislative Assembly',nsw_lc:'Legislative Council',vic_la:'Legislative Assembly',vic_lc:'Legislative Council',qld_la:'Legislative Assembly',sa_ha:'House of Assembly',sa_lc:'Legislative Council'};
+const houses = {representatives:'House of Representatives',senate:'Senate',assembly:'Legislative Assembly',council:'Legislative Council',nsw_la:'Legislative Assembly',nsw_lc:'Legislative Council',vic_la:'Legislative Assembly',vic_lc:'Legislative Council',qld_la:'Legislative Assembly',sa_ha:'House of Assembly',sa_lc:'Legislative Council',act_la:'Legislative Assembly'};
 export function profileJurisdictions(person) {
   const jurisdictions = [...new Set(person?.states || [])].map(id=>({id,label:parliaments[id]||id}));
   const chambers = [...new Set((person?.chambers || []).filter(c=>!c.includes('committee')))].map(c=>houses[c]||c.replaceAll('_',' '));

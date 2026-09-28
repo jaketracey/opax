@@ -14,7 +14,7 @@ export const TITLE_MAX = 65
 /** A bill title keeps the masthead only up to this length (see billTitle). */
 export const BILL_TITLE_MAX = 70
 
-const LOWER_HOUSES = new Set(['representatives', 'nsw_la', 'vic_la', 'qld_la', 'sa_ha'])
+const LOWER_HOUSES = new Set(['representatives', 'nsw_la', 'vic_la', 'qld_la', 'sa_ha', 'act_la'])
 const COUNCILS = new Set(['nsw_lc', 'vic_lc', 'sa_lc'])
 const STATE_TAGS: Record<string, string> = {
   NSW: 'NSW', 'NEW SOUTH WALES': 'NSW', VIC: 'Vic', VICTORIA: 'Vic', QLD: 'Qld', QUEENSLAND: 'Qld',

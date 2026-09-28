@@ -477,7 +477,7 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   if ((selected === 'all' || CATALOG_KINDS.has(selected)) && catalogTokens(url.searchParams.get('q')).length > 16) return json({ error: 'Use up to 16 search words, or narrow the record type to documents.' }, 400)
   const check = new URL(url)
   if (CATALOG_KINDS.has(selected)) check.searchParams.set('kind', 'speech')
-  const extendedStates = new Set(['tas', 'wa', 'nt', 'act'])
+  const extendedStates = new Set(['tas', 'wa', 'nt'])
   if (extendedStates.has(check.searchParams.get('state') || '')) check.searchParams.delete('state')
   const bad = validateSearchQuery(check)
   if (bad) return bad
@@ -3028,7 +3028,7 @@ const SITE_DESCRIPTION =
 
 const STATE_NAMES: Record<string, string> = {
   federal: 'federal parliament', nsw: 'NSW parliament', vic: 'Victorian parliament',
-  qld: 'Queensland parliament', sa: 'South Australian parliament',
+  qld: 'Queensland parliament', sa: 'South Australian parliament', act: 'ACT parliament',
 }
 const CHAMBER_NAMES: Record<string, string> = {
   representatives: 'House of Representatives', senate: 'Senate',
@@ -4834,7 +4834,7 @@ const MIN_YEAR = 1900
 const MAX_YEAR = 2100
 
 const KINDS = new Set(['speech', 'legal', 'division', 'bill', 'bill_text', 'press_release', 'grant_invitation', 'grant_award', 'election_baseline', 'parliamentary_profile', 'research_report', 'all'])
-const STATES = new Set(['federal', 'nsw', 'vic', 'sa', 'qld'])
+const STATES = new Set(['federal', 'nsw', 'vic', 'sa', 'qld', 'act'])
 const MODES = new Set(['hybrid', 'semantic', 'keyword'])
 // Party labels are the KB's own facet values (served by /api/parties) and grow
 // with the corpus, so this is a shape check rather than a value enum: it keeps

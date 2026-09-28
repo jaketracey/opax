@@ -89,6 +89,51 @@ class ParseLog(unittest.TestCase):
         self.assertFalse(ucm.parse_daily_log("")["complete"])
 
 
+class ActSource(unittest.TestCase):
+    """ACT Legislative Assembly Hansard joins the manifest by itself, then updates like any row."""
+
+    def manifest(self):
+        m = manifest()
+        m["sources"].insert(1, {"name": "QLD Parliament", "docs": 17000, "coverage": "2024–2026"})
+        return m
+
+    def live(self, docs):
+        live = kb(resources=1000 + docs)
+        live["kinds"]["speech"] = 800 + docs
+        live["sources"]["act_hansard"] = docs
+        return live
+
+    def test_first_push_adds_the_row_after_qld_with_the_years_it_covers(self):
+        log = ucm.parse_daily_log(LOG.replace("2026-09-28 21:50:21   qld_hansard",
+                                              "2026-09-28 21:50:21   act_hansard        newest 2026-09-17  rows 900\n"
+                                              "2026-09-28 21:50:21   qld_hansard"))
+        new, res = run(prev=self.manifest(), live=self.live(600), log=log)
+        names = [s["name"] for s in new["sources"]]
+        self.assertEqual(names[names.index("QLD Parliament") + 1], "ACT Legislative Assembly")
+        row = new["sources"][names.index("ACT Legislative Assembly")]
+        self.assertEqual((row["docs"], row["coverage"]), (600, "2024–2026"))
+        self.assertIn("sources[ACT Legislative Assembly]", res["changed_fields"])
+        line = [x for x in new["refresh"]["source_limitations"] if x.startswith(ucm.FED_LINE)][0]
+        self.assertIn("QLD to 2026-09-16; ACT to 2026-09-17.", line)
+
+    def test_second_run_updates_docs_and_coverage_and_never_duplicates(self):
+        log = ucm.parse_daily_log(LOG)
+        first, _ = run(prev=self.manifest(), live=self.live(600), log=log)
+        again, _ = run(prev=first, live=self.live(750), log=log)
+        rows = [s for s in again["sources"] if s["name"] == "ACT Legislative Assembly"]
+        self.assertEqual([r["docs"] for r in rows], [750])
+
+    def test_nothing_is_added_while_the_box_holds_no_act_speeches(self):
+        new, _ = run(prev=self.manifest(), live=self.live(0))
+        self.assertNotIn("ACT Legislative Assembly", [s["name"] for s in new["sources"]])
+
+    def test_raw_updates_carry_the_act_step(self):
+        log = ucm.parse_daily_log(LOG.replace("2026-09-28 21:24:01 [vic]", "2026-09-28 21:26:00 [act] OK in 30s; rows 0 -> 219 (+219); log /x/act.log\n"
+                                              "2026-09-28 21:24:01 [vic]"))
+        new, _ = run(prev=self.manifest(), live=self.live(600), log=log)
+        self.assertEqual(new["refresh"]["raw_source_updates"]["act_speeches"], 219)
+
+
 class Compute(unittest.TestCase):
     def test_no_change_in_the_box_writes_nothing(self):
         new, res = run()
@@ -227,7 +272,8 @@ class CommittedManifest(unittest.TestCase):
 
     def test_every_mapped_source_row_exists(self):
         names = {s["name"] for s in self.corpus["sources"]}
-        self.assertEqual(set(ucm.SOURCE_ROWS) - names, set())
+        # rows in NEW_SOURCE_ROWS are added by the script itself once the box holds them
+        self.assertEqual(set(ucm.SOURCE_ROWS) - set(ucm.NEW_SOURCE_ROWS) - names, set())
 
     def test_breakdown_sums_and_kinds_are_all_known(self):
         self.assertEqual(sum(self.corpus["expected_resources_breakdown"].values()),

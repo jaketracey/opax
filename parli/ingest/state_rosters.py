@@ -56,6 +56,10 @@ POSITIONS = {
     ("vic", "vic_lc"): "Q19185341",
     ("nsw", "nsw_la"): "Q19202748",
     ("nsw", "nsw_lc"): "Q18810377",
+    # Wikidata's ACT roster is patchy (many terms lack district and party, the 2024 intake is
+    # incomplete): `python -m parli.ingest.act_hansard --members` seeds the sitting MLAs from the
+    # Assembly's own list, and this fills first names for older members where Wikidata has them.
+    ("act", "act_la"): "Q6814365",
 }
 
 # Wikidata party labels -> the corpus's canonical labels (parli.ingest.speech_hygiene).
@@ -268,7 +272,7 @@ def resolve(db: sqlite3.Connection, dry_run: bool) -> None:
         "COUNT(s.speech_id) AS n, MIN(s.date) AS d0, MAX(s.date) AS d1 "
         "FROM members m JOIN speeches s ON s.person_id = m.person_id "
         "WHERE NOT (m.person_id GLOB '[0-9]*') AND m.full_name NOT LIKE '% %' AND m.full_name != '' "
-        "AND m.state IN ('qld', 'sa', 'vic', 'nsw') GROUP BY m.person_id").fetchall()
+        "AND m.state IN ('qld', 'sa', 'vic', 'nsw', 'act') GROUP BY m.person_id").fetchall()
     stats = Counter()
     matched: list[tuple] = []     # (stub row, roster row, how)
     unmatched: list[tuple] = []
@@ -323,7 +327,7 @@ def resolve(db: sqlite3.Connection, dry_run: bool) -> None:
             by_norm[(r["state"], norm(r["full_name"]))].add(r["full_name"])
     recased: list[tuple] = []
     for m in db.execute("SELECT person_id, full_name, state FROM members WHERE NOT (person_id GLOB '[0-9]*') "
-                        "AND full_name LIKE '% %' AND state IN ('qld', 'sa', 'vic', 'nsw')"):
+                        "AND full_name LIKE '% %' AND state IN ('qld', 'sa', 'vic', 'nsw', 'act')"):
         names = by_norm.get((m["state"], norm(m["full_name"])), set())
         if len(names) == 1 and next(iter(names)) != m["full_name"]:
             recased.append((m["person_id"], m["full_name"], next(iter(names))))

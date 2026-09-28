@@ -78,7 +78,7 @@ const PARTY_MAP = {
 }
 
 // Mirror of app.js STATE_NAMES for the source meta line.
-const STATE_NAMES = { federal: 'Federal', nsw: 'NSW', vic: 'VIC', sa: 'SA', qld: 'QLD' }
+const STATE_NAMES = { federal: 'Federal', nsw: 'NSW', vic: 'VIC', sa: 'SA', qld: 'QLD', act: 'ACT' }
 
 // Mirror of app.js fmtDate.
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']

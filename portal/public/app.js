@@ -257,7 +257,7 @@ function partyAskName(label) {
   return /\b(party|alliance|network|democrats|coalition)$/i.test(name) ? `the ${name}` : name;
 }
 
-const STATE_NAMES = { federal: "Federal", nsw: "NSW", vic: "VIC", sa: "SA", qld: "QLD" };
+const STATE_NAMES = { federal: "Federal", nsw: "NSW", vic: "VIC", sa: "SA", qld: "QLD", act: "ACT" };
 
 /* Committee transcripts name witnesses as the transcript does, usually a
    surname behind an honorific ("Ms Lopez"), and the sync links no member to
@@ -277,7 +277,7 @@ function committeeOf(r) {
   return (m ? m[1] : after.split(/ - /)[0]).trim().slice(0, 90);
 }
 const PARLIAMENT_NAMES = {
-  federal: "Federal", nsw: "NSW", vic: "Victoria", sa: "South Australia", qld: "Queensland",
+  federal: "Federal", nsw: "NSW", vic: "Victoria", sa: "South Australia", qld: "Queensland", act: "ACT",
 };
 // The 21-topic enrichment taxonomy (scripts/arag_enrich.py TOPICS is
 // canonical): slug → display name. Slugs are the ARAG label values.
@@ -5502,6 +5502,7 @@ function topicParliamentCoverage() {
     vic: /^Victorian Parliament$/,
     sa: /^SA Parliament$/,
     qld: /^QLD Parliament$/,
+    act: /^ACT Legislative Assembly$/,
   };
   const spans = {};
   for (const [state, re] of Object.entries(matchers)) {
@@ -5860,7 +5861,7 @@ async function openTopicPage(slug, manageFocus) {
       .filter(([state]) => PARLIAMENT_NAMES[state])
       .map(([state, stateCount, stateShare]) => [PARLIAMENT_NAMES[state], stateShare, stateCount, state]);
     const coverage = topicParliamentCoverage();
-    const order = ["federal", "nsw", "vic", "sa", "qld"];
+    const order = ["federal", "nsw", "vic", "sa", "qld", "act"];
     const years = order.filter((state) => coverage[state])
       .map((state) => `${PARLIAMENT_NAMES[state]} ${coverage[state]}`).join(" · ");
     asideBlocks.push(`<section class="topic-aside-block">${barList(rows, {
@@ -6073,7 +6074,7 @@ const DIR_CHAMBERS = {
   nsw_la: "NSW Legislative Assembly", nsw_lc: "NSW Legislative Council",
   vic_la: "Victorian Legislative Assembly", vic_lc: "Victorian Legislative Council",
   sa_ha: "SA House of Assembly", sa_lc: "SA Legislative Council",
-  qld_la: "Queensland Legislative Assembly",
+  qld_la: "Queensland Legislative Assembly", act_la: "ACT Legislative Assembly",
 };
 
 // The money map's cluster hues (mirror of ledger.js GROUP_COLOURS and
@@ -13823,7 +13824,7 @@ async function renderEvidenceStats() {
 
 const STATS_PARLIAMENTS = [
   ["federal", "Federal Parliament"], ["nsw", "NSW Parliament"], ["vic", "Victorian Parliament"],
-  ["qld", "Queensland Parliament"], ["sa", "South Australian Parliament"],
+  ["qld", "Queensland Parliament"], ["sa", "South Australian Parliament"], ["act", "ACT Legislative Assembly"],
 ];
 const STATS_KINDS = [["speech", "Speeches"], ["division", "Recorded divisions"], ["bill", "Bills"], ["press_release", "Government transcripts and releases"], ["legal", "Legislation"], ["grant_invitation", "Grant invitations"], ["grant_award", "Grant award records"], ["election_baseline", "Election baselines"], ["parliamentary_profile", "Recorded representation"], ["research_report", "Research source notes"]];
 

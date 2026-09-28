@@ -61,6 +61,7 @@ def normalize_speaker(raw: str) -> str | None:
       sa_hansard       'Mr TEAGUE' / 'The Hon. K.A. HILDYARD'
       wragge_xml       'Mr PRICE' / 'Mrs ELIZABETH GRACE'
       qld_hansard      'Ms FENTIMAN' / 'Hon. SJ HINCHLIFFE'
+      act_hansard      'Ms Castley' / 'Mr Deputy Speaker' (honorific + surname, surname title-cased)
       openaustralia    'Susan Templeman' (already clean)
 
     Returns None for office/procedural labels ('SPEAKER', 'The Chair', 'UNKNOWN',

@@ -3,7 +3,7 @@ const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;',
 const count = value => Number(value).toLocaleString('en-AU');
 const cash = value => Number(value).toLocaleString('en-AU', {style:'currency', currency:'AUD', maximumFractionDigits:0});
 const date = value => new Date(String(value).slice(0,10) + 'T12:00:00').toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'});
-const jur = value => ({federal:'Federal',nsw:'New South Wales',vic:'Victoria',qld:'Queensland',sa:'South Australia'}[value] || value);
+const jur = value => ({federal:'Federal',nsw:'New South Wales',vic:'Victoria',qld:'Queensland',sa:'South Australia',act:'ACT'}[value] || value);
 const href = (kind, name) => `/subject/${kind}/${encodeURIComponent(name)}`;
 const read = async url => { const response = await fetch(url); if (!response.ok) throw Error('Data unavailable'); return response.json(); };
 export function newest(items, key, limit) {

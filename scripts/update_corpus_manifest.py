@@ -57,7 +57,7 @@ KINDS = [
 # labelset "source" values the manifest reports on.
 SOURCES = [
     "zenodo", "nsw_hansard", "committee_senate", "vic_hansard", "sa_hansard", "openaustralia",
-    "qld_hansard", "pmtranscripts", "nsw", "qld", "vic", "treasury",
+    "qld_hansard", "act_hansard", "pmtranscripts", "nsw", "qld", "vic", "treasury",
 ]
 # sources[].name -> which live total it is. Only rows whose docs equal a whole
 # kind or source total are here; rows that report a slice (GrantConnect awards
@@ -71,6 +71,7 @@ SOURCE_ROWS = {
     "SA Parliament": ("source", "sa_hansard"),
     "Federal Hansard: Senate + recent House (openaustralia)": ("source", "openaustralia"),
     "QLD Parliament": ("source", "qld_hansard"),
+    "ACT Legislative Assembly": ("source", "act_hansard"),
     "Recorded divisions (TheyVoteForYou + state Hansard)": ("kind", "division"),
     "Prime Minister transcripts and releases (PM&C)": ("source", "pmtranscripts"),
     "NSW Government ministerial releases": ("source", "nsw"),
@@ -89,10 +90,16 @@ RAW_STEPS = [
     ("nsw", "nsw_speeches"),
     ("vic", "vic_speeches"),
     ("qld", "qld_speeches"),
+    ("act", "act_speeches"),
     ("releases_nsw", "nsw_releases"),
     ("austender", "austender_contracts"),
     ("tvfy_refresh", "new_federal_divisions"),
 ]
+# Sources that join the manifest the first time the box holds any of them, instead of being
+# hand-added: name -> (source label, first year). Move the first year back when a backfill
+# reaches further (docs/DATA-ACT-HANSARD.md).
+NEW_SOURCE_ROWS = {"ACT Legislative Assembly": ("act_hansard", "2024")}
+INSERT_AFTER = "QLD Parliament"
 DRAFT_STATUS = "exposure_draft"
 FED_LINE = "Federal Hansard is current to"
 NO_SITTINGS_AFTER_DAYS = 5
@@ -213,8 +220,9 @@ def federal_line(log: dict, run_date: date) -> str | None:
     fed_step = log["steps"].get("fed_load")
     if fed_step and fed_step["delta"] == 0 and (run_date - date.fromisoformat(fed)).days >= NO_SITTINGS_AFTER_DAYS:
         quiet = " (no sittings since)"
+    act = f"; ACT to {n['act_hansard']}" if n.get("act_hansard") else ""
     return (f"{FED_LINE} {fed}{quiet}; NSW Parliament to {n['nsw_hansard']}; Victoria to {n['vic_hansard']}; "
-            f"QLD to {n['qld_hansard']}. Senate committee hearings are current to the last estimates round "
+            f"QLD to {n['qld_hansard']}{act}. Senate committee hearings are current to the last estimates round "
             f"({n['committee_senate']}).")
 
 
@@ -291,6 +299,16 @@ def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | Non
             if spec[0] == "source" and spec[1] in log.get("newest", {}):
                 put(row, "coverage", extend_coverage(row.get("coverage", ""), log["newest"][spec[1]]),
                     f"sources[{row['name']}].coverage")
+
+        sources = new.setdefault("sources", [])
+        for name, (label, first_year) in NEW_SOURCE_ROWS.items():
+            docs = kb["sources"].get(label)
+            if docs and not any(r.get("name") == name for r in sources):
+                last_year = int(log.get("newest", {}).get(label, str(run_date))[:4])
+                idx = next((i for i, r in enumerate(sources) if r.get("name") == INSERT_AFTER), len(sources) - 1)
+                sources.insert(idx + 1, {"name": name, "docs": int(docs),
+                                         "coverage": first_year if last_year <= int(first_year) else f"{first_year}–{last_year}"})
+                changed_fields.append(f"sources[{name}]")
 
         if log.get("complete"):
             raw = {key: log["steps"][step]["delta"] for step, key in RAW_STEPS

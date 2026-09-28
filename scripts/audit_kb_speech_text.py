@@ -25,7 +25,7 @@ import hashlib, html, json, sqlite3
 DB = "/home/jake/.cache/autoresearch/parli.db"
 SOURCES = (
     "committee_senate", "nsw_hansard", "openaustralia", "qld_hansard",
-    "sa_hansard", "vic_hansard", "zenodo",
+    "sa_hansard", "vic_hansard", "zenodo", "act_hansard",
 )
 
 def current_clean(text, source, topic):
