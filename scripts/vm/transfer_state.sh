@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-# scripts/vm/transfer_state.sh -- move the pipeline's state from the desktop to the Oracle VM.
+# scripts/vm/transfer_state.sh -- move the pipeline's state from the desktop to the refresh VM.
 # Run ON THE DESKTOP (WSL), as the user that owns ~/.cache/autoresearch.
 #
-#   scripts/vm/transfer_state.sh --dest ubuntu@203.0.113.7                  # everything, first time
-#   scripts/vm/transfer_state.sh --dest ubuntu@203.0.113.7 --mode delta     # top-up (block-delta of the DB)
-#   scripts/vm/transfer_state.sh --dest ubuntu@203.0.113.7 --only caches    # just the small caches
-#   scripts/vm/transfer_state.sh --mark-migrated                            # the cutover marker, see below
-#   SSH_OPTS="-i ~/.ssh/oracle.key" scripts/vm/transfer_state.sh --dest ...
+#   scripts/vm/transfer_state.sh --dest ubuntu@<ip>                  # everything, first time
+#   scripts/vm/transfer_state.sh --dest ubuntu@<ip> --mode delta     # top-up (block-delta of the DB)
+#   scripts/vm/transfer_state.sh --dest ubuntu@<ip> --only caches    # just the small caches
+#   scripts/vm/transfer_state.sh --mark-migrated                     # the cutover marker, see below
+#   SSH_OPTS="-i ~/.ssh/opax-refresh.pem" scripts/vm/transfer_state.sh --dest ...
+# The EC2 instance's public IP changes at every stop/start: scripts/vm/ec2.sh ip
 #
 # What moves (everything under ~/.cache/autoresearch on the desktop):
 #   parli.db                          28.9GB SQLite. Checkpointed, checksummed (sha256), zstd-compressed,
@@ -75,7 +76,7 @@ done
 
 if [ "$MARK" -eq 1 ]; then
   [ "$DRY" -eq 1 ] && { echo "would write $CACHE/MIGRATED_TO_VM"; exit 0; }
-  printf 'migrated to the Oracle VM on %s by %s\nDo not run daily_refresh.sh with OPAX_SYNC_KB=1 on this machine: the knowledge-box push checkpoint lives on the VM now.\n' \
+  printf 'migrated to the refresh VM on %s by %s\nDo not run daily_refresh.sh with OPAX_SYNC_KB=1 on this machine: the knowledge-box push checkpoint lives on the VM now.\n' \
     "$(date -Is)" "$(id -un)@$(hostname)" > "$CACHE/MIGRATED_TO_VM"
   echo "wrote $CACHE/MIGRATED_TO_VM; daily_refresh.sh will now refuse OPAX_SYNC_KB=1 on this machine."
   exit 0
@@ -121,12 +122,9 @@ if [ "$ONLY" = all ] || [ "$ONLY" = db ] || [ "$ONLY" = state ]; then
     echo "  pipeline processes running:"; echo "$busy" | sed 's/^/    /'; [ -n "$holders" ] && echo "  pids with parli.db open: $holders"
     [ "$FORCE" -eq 1 ] || die "stop the writers first (nothing may write parli.db or arag_sync_state.json during the transfer); --force to override"
   fi
-  need_gb=$(( $(stat -c %s "$DB") / 1073741824 ))
   if [ "$MODE" = full ] && [ "$DRY" -eq 0 ]; then
     free_local=$(df -Pk "$(dirname "$WORK")" | awk 'NR==2 {print int($4/1048576)}')
     [ "$free_local" -gt 15 ] || die "only ${free_local}GB free for the staged snapshot in $(dirname "$WORK"); use --work on a bigger disk"
-    free_vm=$(vm "df -Pk ~ | awk 'NR==2 {print int(\$4/1048576)}'")
-    [ "$free_vm" -gt $(( need_gb + 20 )) ] || die "only ${free_vm}GB free on the VM; need about $(( need_gb + 20 ))GB (raw DB + compressed copy)"
   fi
 fi
 vm 'mkdir -p ~/.cache/autoresearch/pipeline ~/transfer'
@@ -146,6 +144,11 @@ if [ "$ONLY" = all ] || [ "$ONLY" = db ]; then
     run zstd -T0 -3 --rsyncable -q -f "$DB" -o "$WORK/parli.db.zst"
     [ "$DRY" -eq 1 ] || [ "$(stat -c '%s %Y' "$DB")" = "$before" ] || die "parli.db changed while it was being copied: something wrote to it. Nothing was sent; rerun once quiet."
     echo "$sha" > "$WORK/parli.db.sha256"
+    if [ "$DRY" -eq 0 ]; then
+      raw_gb=$(( $(stat -c %s "$DB") / 1073741824 + 1 )); zst_gb=$(( $(stat -c %s "$WORK/parli.db.zst") / 1073741824 + 1 ))
+      free_vm=$(vm "df -Pk ~ | awk 'NR==2 {print int(\$4/1048576)}'")
+      [ "$free_vm" -gt $(( raw_gb + zst_gb + 3 )) ] || die "the VM has ${free_vm}GB free; it needs the ${zst_gb}GB compressed file and the ${raw_gb}GB database at once (+3GB). Nothing was sent."
+    fi
     echo "  sending $( [ "$DRY" -eq 1 ] || du -h "$WORK/parli.db.zst" | cut -f1 ) (resumable)..."
     if [ "$DRY" -eq 1 ]; then echo "  [local] rsync --partial --append-verify $WORK/parli.db.zst $WORK/parli.db.sha256 $DEST:~/transfer/"; else
       retry rsync_to --append-verify "$WORK/parli.db.zst" "$WORK/parli.db.sha256" "$DEST:transfer/" || die "rsync kept failing"

@@ -6,10 +6,9 @@
 #     'apt-get update -qq && apt-get install -y -qq git python3 python3-requests util-linux >/dev/null && bash /src/scripts/vm/test_nightly.sh'
 #
 # Nothing here touches the network, the real knowledge box, GitHub or the real repo:
-# a throwaway HOME, a bare git repo as "origin", a fake daily_refresh.sh, a fake `gh`
-# that records its calls, and a knowledge-box snapshot JSON. Each scenario builds a
-# fresh sandbox and asserts on what reached origin, what gh was asked to do, and the
-# script's exit status.
+# a throwaway HOME, a bare git repo as "origin", a fake daily_refresh.sh and a knowledge-box
+# snapshot JSON. Each scenario builds a fresh sandbox and asserts on what reached origin
+# (main and the nightly-status branch) and on the script's exit status.
 set -uo pipefail
 
 SRC="${OPAX_TEST_SRC:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
@@ -36,7 +35,7 @@ new_sandbox() {
   ORIGIN="$SB/origin.git"; git init -q --bare "$ORIGIN"
   local seed="$SB/seed"; mkdir -p "$seed"
   # the files the nightly reads, from the real tree
-  for f in scripts/vm/nightly.sh scripts/vm/validate_data.py scripts/vm/scrub_log.py scripts/export_bills.py \
+  for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/export_bills.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
            parli/__init__.py parli/arag.py portal/wrangler.jsonc portal/public/corpus.json; do
     mkdir -p "$seed/$(dirname "$f")"; cp "$SRC/$f" "$seed/$f"
@@ -65,7 +64,7 @@ PYEOF
   : > "$HOME/.cache/autoresearch/parli.db"
   echo '{"tables":{"speeches":{"after":1323635,"pushed":600482,"failed":{}}}}' > "$HOME/.cache/autoresearch/arag_sync_state.json"
   printf 'ARAG_ZONE=aws-ap-southeast-2-1\nARAG_KB_ID=kb-test\nARAG_KB_TOKEN=tokentokentoken\nOPENAUSTRALIA_API_KEY=SECRETVALUE123456\n' > "$REPO/.env"
-  printf 'GH_TOKEN=ghp_faketokenfaketokenfaketoken123456\nOPAX_MIN_FREE_GB=0\nOPAX_SETTLE_SECONDS=0\n' > "$HOME/.config/opax/nightly.env"
+  printf 'OPAX_MIN_FREE_GB=0\nOPAX_SETTLE_SECONDS=0\n' > "$HOME/.config/opax/nightly.env"
   # the brief cache the Mac copy provides: every seeded speech has a brief
   python3 - <<PYEOF
 import json
@@ -81,20 +80,8 @@ kinds = dict(c["refresh"]["resource_counts"]); kinds["speech"] += growth
 json.dump({"resources": c["expected_resources"] + growth, "kinds": kinds, "sources": {}}, open(out, "w"))
 PYEOF
   export OPAX_KB_SNAPSHOT="$SB/kb.json"
-  # fake gh + fake refresh
-  mkdir -p "$SB/bin" "$SB/capture"; export GH_LOG="$SB/gh.log" GH_CAPTURE="$SB/capture"; : > "$GH_LOG"
-  cat > "$SB/bin/gh" <<'GHEOF'
-#!/usr/bin/env bash
-echo "gh $*" >> "$GH_LOG"
-case "$1 $2" in
-  "issue list") ;;                               # no existing issue
-  "issue create"|"issue comment")
-    for ((i=1;i<=$#;i++)); do if [ "${!i}" = "--body-file" ]; then j=$((i+1)); cp "${!j}" "$GH_CAPTURE/issue-body.md"; fi; done
-    echo "https://github.com/x/y/issues/1" ;;
-esac
-exit 0
-GHEOF
-  chmod +x "$SB/bin/gh"
+  # fake refresh
+  mkdir -p "$SB/bin"
   cat > "$SB/fake_refresh.sh" <<'FREOF'
 #!/usr/bin/env bash
 # stands in for scripts/daily_refresh.sh: writes a daily.log block and rewrites the data files
@@ -150,45 +137,48 @@ FREOF
 nightly() { (cd "$REPO" && bash scripts/vm/nightly.sh >"$SB/nightly.out" 2>&1); NRC=$?; }
 origin_show() { git --git-dir="$ORIGIN" show "main:$1"; }
 origin_log()  { git --git-dir="$ORIGIN" log --format=%s main; }
-gh_calls()    { grep -c "$1" "$GH_LOG" || true; }
 
 # --- scenarios -------------------------------------------------------------------------------
-echo "== 1. happy night: refresh ok, box grew, everything published and the deploy dispatched"
+status_json() { git --git-dir="$ORIGIN" show "nightly-status:status.json"; }
+status_is()   { status_json | python3 -c "import json,sys; s=json.load(sys.stdin); assert s['status']=='$1', s"; }
+
+echo "== 1. happy night: refresh ok, box grew, everything pushed (the push starts the deploy) and the status published"
 new_sandbox s1
 FAKE_MODE=ok nightly
 check "exit 0" test "$NRC" -eq 0
 check "a nightly commit reached origin" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh $TODAY: '"
 check "commit subject names the growth" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q 'speech +50'"
 check "corpus.json carries the new total" bash -c "git --git-dir='$ORIGIN' show main:portal/public/corpus.json | python3 -c 'import json,sys; c=json.load(sys.stdin); assert c[\"expected_resources\"]==$BASE_TOTAL+50 and c[\"version\"]==\"$TODAY\" and c[\"collected_speeches\"]==$BASE_SPEECH+50'"
+check "corpus.json is in the pushed commit (that is what triggers deploy.yml)" bash -c "git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -qx portal/public/corpus.json"
 check "CACHE_EPOCH bumped in both places" bash -c "[ \$(git --git-dir='$ORIGIN' show main:portal/wrangler.jsonc | grep -c '\"CACHE_EPOCH\": \"$TODAY-nightly\"') -eq 2 ]"
 check "bills went through with briefs restored" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status_as_of\"]==\"2026-09-28\" and d[\"speeches\"][0][\"brief\"]==\"Brief 1-0\"'"
 check "votes.json published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"'"
 check "only data files changed" bash -c "[ -z \"\$(git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -vE '^portal/(public/(bills/|votes.json|corpus.json)|wrangler.jsonc)')\" ]"
-check "deploy workflow dispatched once" test "$(gh_calls 'workflow run deploy.yml --repo jaketracey/opax --ref main')" -eq 1
-check "no issue opened" test "$(gh_calls 'issue create')" -eq 0
-check "status file says ok" grep -q '"status": "ok"' "$HOME/.cache/autoresearch/pipeline/nightly-last.json"
+check "status branch published, says ok" status_is ok
+check "status says the deploy is started by the push" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'started by the push'"
+check "status branch is a single parentless commit holding only status.json" bash -c "[ \$(git --git-dir='$ORIGIN' rev-list --count nightly-status) -eq 1 ] && [ \"\$(git --git-dir='$ORIGIN' ls-tree --name-only nightly-status)\" = status.json ]"
+check "local status file says ok" grep -q '"status": "ok"' "$HOME/.cache/autoresearch/pipeline/nightly-last.json"
 check "log file written" test -s "$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log"
 
-echo "== 2. rerun straight away: nothing changed, so nothing committed and no second deploy"
+echo "== 2. rerun straight away: checked_at is fresh and nothing else moved, so nothing is committed"
 before=$(git --git-dir="$ORIGIN" rev-parse main)
 FAKE_MODE=ok nightly
 check "exit 0" test "$NRC" -eq 0
-check "origin untouched" test "$(git --git-dir="$ORIGIN" rev-parse main)" = "$before"
-check "no second dispatch" test "$(gh_calls 'workflow run')" -eq 1
+check "main untouched" test "$(git --git-dir="$ORIGIN" rev-parse main)" = "$before"
 check "says nothing to publish" grep -q 'no data changes tonight' "$SB/nightly.out"
+check "status refreshed, still one commit on the status branch" bash -c "[ \$(git --git-dir='$ORIGIN' rev-list --count nightly-status) -eq 1 ]"
 
-echo "== 3. refresh reports failed steps: still publishes, opens the failure issue, exits 1"
+echo "== 3. refresh reports failed steps: still pushes, publishes status 'failed' with the reason, exits 1"
 new_sandbox s3
 FAKE_MODE=failsteps nightly
 check "exit 1" test "$NRC" -eq 1
-check "data still published" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh'"
-check "issue opened with the dated title" bash -c "grep -q 'issue create.*--title Nightly refresh failed $TODAY' '$GH_LOG'"
-check "issue names the failed step" grep -q 'failed steps: nsw' "$GH_CAPTURE/issue-body.md"
-check "the API key is masked in the issue" bash -c "! grep -q SECRETVALUE123456 '$GH_CAPTURE/issue-body.md' && grep -q 'key=\\*\\*\\*' '$GH_CAPTURE/issue-body.md'"
-check "the GH token is not in the log" bash -c "! grep -q ghp_faketoken '$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log'"
-check "deploy still dispatched" test "$(gh_calls 'workflow run')" -eq 1
+check "data still pushed" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh'"
+check "status branch says failed" status_is failed
+check "status names the failed step" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'failed steps: nsw'"
+check "the API key is nowhere in the published status" bash -c "! git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q SECRETVALUE123456"
+check "the key is not in main's new commit either" bash -c "! git --git-dir='$ORIGIN' show main | grep -q SECRETVALUE123456"
 
-echo "== 4. a bill loses its brief: bills reverted, the rest publishes, issue opened"
+echo "== 4. a bill loses its brief: bills reverted, the rest pushes, status failed"
 new_sandbox s4
 python3 - <<PYEOF
 import json, os, time
@@ -201,59 +191,69 @@ FAKE_MODE=ok nightly
 check "exit 1" test "$NRC" -eq 1
 check "bill files were not published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t2.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"speeches\"][0][\"brief\"]==\"Brief 2-0\" and d[\"status_as_of\"]==\"2026-09-01\"'"
 check "votes and corpus still published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"' && git --git-dir='$ORIGIN' show main:portal/public/corpus.json | grep -q '$TODAY'"
-check "issue mentions the lost briefs" grep -q 'briefs lost' "$GH_CAPTURE/issue-body.md"
+check "status says the briefs were lost" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'briefs lost'"
 
-echo "== 5. the refresh never ran: nothing published, issue opened"
+echo "== 5. the refresh never ran: nothing pushed to main, status failed"
 new_sandbox s5
 FAKE_MODE=noblock nightly
 check "exit 1" test "$NRC" -eq 1
-check "origin untouched" test "$(git --git-dir="$ORIGIN" log --format=%s main | head -1)" = seed
-check "no deploy" test "$(gh_calls 'workflow run')" -eq 0
-check "issue opened" test "$(gh_calls 'issue create')" -eq 1
+check "main untouched" test "$(git --git-dir="$ORIGIN" log --format=%s main | head -1)" = seed
+check "status failed and says why" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'did not complete a run'"
 
 echo "== 6. someone pushes to origin while the nightly runs: rebase and retry"
 new_sandbox s6
 FAKE_MODE=race nightly
 check "exit 0" test "$NRC" -eq 0
-check "human commit and nightly commit both on origin" bash -c "git --git-dir='$ORIGIN' log --format=%s main | grep -q 'a human commit' && git --git-dir='$ORIGIN' log --format=%s main | grep -q '^Nightly refresh'"
-check "deploy dispatched" test "$(gh_calls 'workflow run')" -eq 1
+check "human commit and nightly commit both on main" bash -c "git --git-dir='$ORIGIN' log --format=%s main | grep -q 'a human commit' && git --git-dir='$ORIGIN' log --format=%s main | grep -q '^Nightly refresh'"
 
-echo "== 7. no token: publishes, cannot deploy or file an issue, still says so"
-new_sandbox s7
-sed -i '/GH_TOKEN/d' "$HOME/.config/opax/nightly.env"
-FAKE_MODE=ok nightly
-check "exit 1 (deploy could not be dispatched)" test "$NRC" -eq 1
-check "no gh calls at all" test ! -s "$GH_LOG"
-check "failure recorded in the log" grep -q 'cannot dispatch deploy.yml' "$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log"
+echo "== 7. a quiet night (nothing new anywhere) still leaves a fresh checked_at, so the watchdog sees a live chain"
+KB_GROWTH=0 new_sandbox s7
+FAKE_MODE=ok nightly            # night 1: bills and votes change (the fake refresh), the box does not grow
+git --git-dir="$ORIGIN" show main:portal/public/corpus.json | python3 -c 'import json,sys; c=json.load(sys.stdin); print(c["refresh"]["checked_at"])' > "$SB/stamp1"
+before=$(git --git-dir="$ORIGIN" rev-parse main)
+sleep 2
+OPAX_STAMP_AFTER_HOURS=0 FAKE_MODE=ok nightly   # a day later, as far as the stamp is concerned
+check "exit 0" test "$NRC" -eq 0
+check "a second commit was made" test "$(git --git-dir="$ORIGIN" rev-parse main)" != "$before"
+check "it changes corpus.json and nothing else" bash -c "[ \"\$(git --git-dir='$ORIGIN' diff --name-only main~1 main)\" = portal/public/corpus.json ]"
+check "checked_at moved" bash -c "[ \"\$(git --git-dir='$ORIGIN' show main:portal/public/corpus.json | python3 -c 'import json,sys; print(json.load(sys.stdin)[\"refresh\"][\"checked_at\"])')\" != \"\$(cat '$SB/stamp1')\" ]"
+check "CACHE_EPOCH not bumped again (the box did not change)" bash -c "git --git-dir='$ORIGIN' show main:portal/wrangler.jsonc | grep -c '\"CACHE_EPOCH\"' >/dev/null && ! git --git-dir='$ORIGIN' diff main~1 main -- portal/wrangler.jsonc | grep -q CACHE_EPOCH"
 
-echo "== 8. NO_PUSH: commits locally, never touches origin or gh"
+echo "== 8. NO_PUSH: commits locally, never touches origin and publishes no status"
 new_sandbox s8
 OPAX_NIGHTLY_NO_PUSH=1 FAKE_MODE=ok nightly
 check "exit 0" test "$NRC" -eq 0
 check "origin untouched" test "$(git --git-dir="$ORIGIN" log --format=%s main | head -1)" = seed
 check "local commit made" bash -c "git -C '$REPO' log --format=%s | head -1 | grep -q '^Nightly refresh'"
-check "no gh calls" test ! -s "$GH_LOG"
+check "no status branch" bash -c "! git --git-dir='$ORIGIN' rev-parse --verify -q nightly-status"
 
-echo "== 12. the push is refused, then works: the local commit survives and goes out on the next run"
-new_sandbox s12
+echo "== 9. the manifest step fails: bills still pushed, but with no corpus.json change the deploy would not start, so it says so"
+new_sandbox s9
+OPAX_KB_SNAPSHOT=/nonexistent/kb.json FAKE_MODE=ok nightly
+check "exit 1" test "$NRC" -eq 1
+check "bills and votes pushed" bash -c "git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q '\"new\"'"
+check "corpus.json untouched" bash -c "! git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -q corpus.json"
+check "status lists both problems" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'update_corpus_manifest.py failed' && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'deploy workflow did not start'"
+
+echo "== 10. the push is refused, then works: the local commit survives and goes out on the next run"
+new_sandbox s10
 export OPAX_PUSH_SLEEP_UNIT=0
 printf '#!/bin/sh\necho "remote: push refused by test hook" >&2\nexit 1\n' > "$ORIGIN/hooks/pre-receive"; chmod +x "$ORIGIN/hooks/pre-receive"
 FAKE_MODE=ok nightly
 check "exit 1" test "$NRC" -eq 1
-check "origin untouched" test "$(git --git-dir="$ORIGIN" log --format=%s main | head -1)" = seed
+check "main untouched" test "$(git --git-dir="$ORIGIN" log --format=%s main | head -1)" = seed
 check "commit kept locally" bash -c "git -C '$REPO' log --format=%s | head -1 | grep -q '^Nightly refresh'"
-check "no deploy dispatched" test "$(gh_calls 'workflow run')" -eq 0
-check "issue opened" test "$(gh_calls 'issue create')" -eq 1
+check "the failed night is recorded locally" grep -q '"status": "failed"' "$HOME/.cache/autoresearch/pipeline/nightly-last.json"
 rm -f "$ORIGIN/hooks/pre-receive"
 FAKE_MODE=ok nightly
 check "second run exits 0" test "$NRC" -eq 0
 check "the earlier commit reached origin" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh'"
 check "and exactly one nightly commit exists" test "$(git --git-dir="$ORIGIN" log --format=%s main | grep -c '^Nightly refresh')" -eq 1
-check "deploy dispatched now" test "$(gh_calls 'workflow run')" -eq 1
+check "status is ok again" status_is ok
 unset OPAX_PUSH_SLEEP_UNIT
 
-echo "== 13. origin moved on while a local commit was unpushed: rebase it, no duplicate"
-new_sandbox s13
+echo "== 11. origin moved on while a local commit was unpushed: rebase it, no duplicate"
+new_sandbox s11
 export OPAX_PUSH_SLEEP_UNIT=0
 printf '#!/bin/sh\nexit 1\n' > "$ORIGIN/hooks/pre-receive"; chmod +x "$ORIGIN/hooks/pre-receive"
 FAKE_MODE=ok nightly
@@ -264,6 +264,40 @@ check "exit 0" test "$NRC" -eq 0
 check "human commit and the nightly commit both on origin" bash -c "git --git-dir='$ORIGIN' log --format=%s main | grep -q 'a human commit' && git --git-dir='$ORIGIN' log --format=%s main | grep -q '^Nightly refresh'"
 check "still exactly one nightly commit" test "$(git --git-dir="$ORIGIN" log --format=%s main | grep -c '^Nightly refresh')" -eq 1
 unset OPAX_PUSH_SLEEP_UNIT
+
+echo "== 12. run-nightly.sh (what systemd runs): skip-nightly skips the run"
+new_sandbox s12
+run_nightly() { (cd "$REPO" && bash scripts/vm/run-nightly.sh >"$SB/run.out" 2>&1); NRC=$?; }
+touch "$HOME/.config/opax/skip-nightly"
+FAKE_MODE=ok run_nightly
+check "exit 0" test "$NRC" -eq 0
+check "said it was skipping" grep -q 'skip-nightly exists' "$SB/run.out"
+check "nothing ran: main untouched, no status" bash -c "[ \"\$(git --git-dir='$ORIGIN' log --format=%s main | head -1)\" = seed ] && ! git --git-dir='$ORIGIN' rev-parse --verify -q nightly-status"
+rm -f "$HOME/.config/opax/skip-nightly"
+FAKE_MODE=ok run_nightly
+check "without the file it runs the nightly" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh'"
+
+echo "== 13. poweroff-if-idle.sh: updates then power off when idle; stays up for hold, a login or an ssh connection"
+new_sandbox s13
+PO="$REPO/scripts/vm/poweroff-if-idle.sh"
+export OPAX_POWEROFF_CMD="touch $SB/powered-off" OPAX_UPGRADE_CMD="touch $SB/upgraded" OPAX_APT_UPDATE_CMD="touch $SB/apt-updated"
+export OPAX_WHO_CMD="true" OPAX_SS_CMD="true"
+po() { rm -f "$SB/powered-off" "$SB/upgraded" "$SB/apt-updated"; SERVICE_RESULT=success bash "$PO" "$(id -un)" "$HOME" >"$SB/po.out" 2>&1; }
+po
+check "idle: package lists refreshed, updates applied, powered off" bash -c "[ -e '$SB/apt-updated' ] && [ -e '$SB/upgraded' ] && [ -e '$SB/powered-off' ]"
+touch "$HOME/.config/opax/hold"; po
+check "hold file: nothing done, machine stays up" bash -c "[ ! -e '$SB/powered-off' ] && [ ! -e '$SB/upgraded' ] && grep -q 'hold exists' '$SB/po.out'"
+rm -f "$HOME/.config/opax/hold"
+OPAX_WHO_CMD="echo ubuntu pts/0 2026-09-29 03:20 (203.0.113.9)" po
+check "an interactive login: stays up" bash -c "[ ! -e '$SB/powered-off' ] && grep -q 'interactive login' '$SB/po.out'"
+OPAX_SS_CMD="echo ESTAB 0 0 172.31.33.114:22 203.0.113.9:51234" po
+check "an established ssh connection (scp/rsync too): stays up" bash -c "[ ! -e '$SB/powered-off' ] && grep -q 'established ssh connection' '$SB/po.out'"
+OPAX_UPGRADE_CMD="touch $HOME/.config/opax/hold" po
+check "someone holds the machine during the updates: stays up after them" bash -c "[ ! -e '$SB/powered-off' ] && grep -q 'staying up after the updates' '$SB/po.out'"
+rm -f "$HOME/.config/opax/hold"
+OPAX_UPGRADE_CMD="false" po
+check "a failing update does not stop the power-off" test -e "$SB/powered-off"
+unset OPAX_POWEROFF_CMD OPAX_UPGRADE_CMD OPAX_APT_UPDATE_CMD OPAX_WHO_CMD OPAX_SS_CMD
 
 # --- daily_refresh.sh itself: allowed failures and the KB-push gate --------------------------------------
 new_refresh_sandbox() {
@@ -291,7 +325,7 @@ PYSTUB
 }
 refresh() { (cd "$RS" && "$RS/repo/scripts/daily_refresh.sh" >"$RS/out.txt" 2>&1); RRC=$?; }
 
-echo "== 9. daily_refresh.sh: a failing sa step makes the run incomplete unless it is allowed"
+echo "== 14. daily_refresh.sh: a failing sa step makes the run incomplete unless it is allowed"
 new_refresh_sandbox r9
 FAIL_STEPS=sa_hansard refresh
 check "exit 1 without OPAX_ALLOW_FAIL" test "$RRC" -eq 1
@@ -302,7 +336,7 @@ check "exit 0 with OPAX_ALLOW_FAIL=sa" test "$RRC" -eq 0
 check "the failure is still logged, marked allowed" grep -q '\[sa\] FAIL(rc=1) (allowed)' "$HOME/.cache/autoresearch/pipeline/daily.log"
 check "REPO comes from the script's own location" grep -q "since=" "$HOME/.cache/autoresearch/pipeline/daily.log"
 
-echo "== 10. daily_refresh.sh: the KB push waits for OPAX_SYNC_GATE steps"
+echo "== 15. daily_refresh.sh: the KB push waits for OPAX_SYNC_GATE steps"
 new_refresh_sandbox r10
 OPAX_SYNC_KB=1 OPAX_ALLOW_FAIL=sa OPAX_SYNC_GATE=link_speakers,classify FAIL_STEPS="sa_hansard link_speakers" refresh
 check "exit 1" test "$RRC" -eq 1
@@ -317,7 +351,7 @@ new_refresh_sandbox r10c
 OPAX_SYNC_KB=1 FAIL_STEPS="link_speakers" refresh
 check "without a gate the push still runs (the old behaviour)" grep -q 'parli.ingest.arag_sync' "$RS_CALLS"
 
-echo "== 11. daily_refresh.sh: the cutover marker keeps the desktop off the knowledge box"
+echo "== 16. daily_refresh.sh: the cutover marker keeps the desktop off the knowledge box"
 new_refresh_sandbox r11
 touch "$HOME/.cache/autoresearch/MIGRATED_TO_VM"
 OPAX_SYNC_KB=1 refresh

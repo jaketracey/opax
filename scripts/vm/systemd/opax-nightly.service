@@ -1,23 +1,32 @@
 # Installed by scripts/vm/bootstrap.sh (placeholders filled in). Do not edit the installed
 # copy by hand: change this template and re-run bootstrap.
+#
+# The machine is off most of the day. A scheduler (EventBridge, 03:15 Sydney) starts it; this
+# unit runs at every boot, does the nightly, and the machine powers itself off afterwards
+# (ExecStopPost, so also after a failure or the time limit) unless ~/.config/opax/hold exists
+# or someone is logged in. ~/.config/opax/skip-nightly skips the run.
 [Unit]
-Description=OPAX nightly corpus refresh, publish and deploy
+Description=OPAX nightly corpus refresh, publish, then power off
 Documentation=https://github.com/jaketracey/opax/blob/main/docs/operations/nightly-refresh.md
-After=network-online.target
+After=network-online.target time-sync.target
 Wants=network-online.target
 
 [Service]
 Type=oneshot
 User=@USER@
 WorkingDirectory=@REPO@
-ExecStart=@REPO@/scripts/vm/nightly.sh
-# A refresh is ~1-2 h on a normal night; a first run after a long gap can be much longer.
-TimeoutStartSec=10h
+ExecStart=@REPO@/scripts/vm/run-nightly.sh
+# `+` = run as root even though User= is set (it needs to update packages and power off)
+ExecStopPost=+@REPO@/scripts/vm/poweroff-if-idle.sh @USER@ @HOME@
+# Cost guard: a hung run is killed after 4 hours and the machine still powers off (ExecStopPost
+# runs after a timeout too). For a Type=oneshot unit it is TimeoutStartSec that bites:
+# systemd ignores RuntimeMaxSec on oneshot services.
+TimeoutStartSec=4h
+# ExecStopPost runs the security updates (25 min limit) and needs longer than the default 90 s
+TimeoutStopSec=45min
 KillMode=control-group
 Nice=10
-IOSchedulingClass=best-effort
-IOSchedulingPriority=6
-# nightly.sh writes its own dated log; this is only for crashes before it starts.
-StandardOutput=journal
-StandardError=journal
 SyslogIdentifier=opax-nightly
+
+[Install]
+WantedBy=multi-user.target

@@ -102,6 +102,22 @@ class Compute(unittest.TestCase):
         want["refresh"]["checked_at"] = "2026-09-29T03:40:00+00:00"
         self.assertEqual(new, want)
 
+    def test_stamp_after_hours_stamps_only_a_stale_manifest(self):
+        # the fixture manifest was checked 2026-09-21; NOW is 2026-09-29 03:40
+        new, res = run(stamp_after_hours=12)
+        self.assertEqual(res["changed_fields"], ["checked_at"])
+        self.assertEqual(new["refresh"]["checked_at"], "2026-09-29T03:40:00+00:00")
+        fresh = manifest()
+        fresh["refresh"]["checked_at"] = "2026-09-29T00:00:00+00:00"   # 3h40m ago
+        new2, res2 = run(prev=fresh, stamp_after_hours=12)
+        self.assertFalse(res2["changed"])
+        self.assertEqual(new2, fresh)
+        fresh["refresh"]["checked_at"] = "2026-09-28T03:40:00+00:00"   # exactly a day ago
+        self.assertTrue(run(prev=fresh, stamp_after_hours=12)[1]["changed"])
+        broken = manifest()
+        broken["refresh"]["checked_at"] = "not a date"
+        self.assertTrue(run(prev=broken, stamp_after_hours=12)[1]["changed"])
+
     def test_growth_updates_the_whole_manifest_and_the_breakdown_sums(self):
         live = kb(resources=1130)
         live["kinds"].update({"speech": 900, "press_release": 190})

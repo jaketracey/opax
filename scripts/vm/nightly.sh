@@ -2,40 +2,49 @@
 # scripts/vm/nightly.sh -- the whole nightly OPAX refresh, unattended.
 #
 #   refresh  ->  bills briefs  ->  validate  ->  corpus manifest  ->  cache epoch
-#            ->  commit data files  ->  push to main  ->  dispatch the deploy workflow
+#            ->  commit data files  ->  push to main  ->  publish the run's status
 #
-# Runs on the Oracle VM from a systemd timer (scripts/vm/systemd/), and by hand:
+# Runs on the refresh VM from systemd at boot (scripts/vm/run-nightly.sh, see
+# scripts/vm/systemd/), and by hand:
 #
-#   scripts/vm/nightly.sh                      # the real thing
-#   OPAX_NIGHTLY_NO_PUSH=1 scripts/vm/nightly.sh   # do everything but push/dispatch/issue
+#   scripts/vm/nightly.sh                          # the real thing
+#   OPAX_NIGHTLY_NO_PUSH=1 scripts/vm/nightly.sh   # do everything but push and publish the status
 #
-# Safe to run twice: it takes a lock, every fetch is incremental, the KB push resumes
-# from its checkpoint, and a run that finds nothing changed commits nothing. A previous
-# run's leftovers (an unpushed commit, half-written data files) are cleaned or rebased
-# at the start.
+# The deploy is not started from here: .github/workflows/deploy.yml runs on any push to main
+# that changes portal/public/corpus.json, and every nightly commit does (the manifest's
+# refresh.checked_at is stamped each night). Alerts are not sent from here either:
+# .github/workflows/refresh-watchdog.yml reads the published corpus.json and the status this
+# script publishes to the `nightly-status` branch, and fails (so GitHub emails) when the
+# chain has not run, or the last run reported problems.
 #
-# Secrets: ~/.opax/.env style files, never printed. ~/opax/.env (ARAG_*, TVFY_API_KEY,
-# OPENAUSTRALIA_API_KEY, ...) is read by the Python steps; ~/.config/opax/nightly.env
-# holds GH_TOKEN (and optional OPAX_* overrides) and is sourced here.
+# Safe to run twice: it takes a lock, every fetch is incremental, the KB push resumes from
+# its checkpoint, and a run that finds nothing to change (and a fresh checked_at stamp)
+# commits nothing. A previous run's leftovers (an unpushed commit, half-written data files)
+# are cleaned or rebased at the start.
 #
-# Failure policy: the data steps fail soft. A step that fails is recorded and the run
-# carries on with whatever is still good (a bad bills export is reverted to HEAD while
-# votes and the manifest still publish). At the end, if anything failed, a GitHub issue
-# "Nightly refresh failed <date>" is opened (or commented on) with a secret-scrubbed log
-# tail, and the script exits 1. Only two things stop the run outright: the repo cannot
-# be synced, or the refresh did not actually run.
+# Credentials: git pushes over SSH with the machine's deploy key (~/.ssh/opax_deploy, mapped to
+# github.com in ~/.ssh/config); there is no GitHub token on the machine. ~/opax/.env holds the
+# KB, OpenAustralia and TVFY keys, read by the Python steps; ~/.config/opax/nightly.env may
+# hold OPAX_* overrides and is sourced here. Nothing secret is ever printed or published.
+#
+# Failure policy: the data steps fail soft. A step that fails is recorded and the run carries
+# on with whatever is still good (a bad bills export is reverted to HEAD while votes and the
+# manifest still publish). At the end the script publishes {status, failures} to the
+# nightly-status branch and exits 1 if anything failed. Only two things stop the run outright:
+# the repo cannot be synced, or the refresh did not actually run.
 #
 # Tunables (env, or in nightly.env):
 #   OPAX_REPO             checkout (default: the one this script lives in)
-#   OPAX_GH_REPO          owner/name for gh (default jaketracey/opax)
 #   OPAX_BRANCH           branch to publish to (default main)
-#   OPAX_WORKFLOW         workflow file to dispatch (default deploy.yml)
+#   OPAX_STATUS_BRANCH    branch the run status is force-pushed to (default nightly-status)
 #   OPAX_ALLOW_FAIL       refresh steps allowed to fail (default sa)
 #   OPAX_SYNC_GATE        steps that must pass before the KB push (default link_speakers,classify)
 #   OPAX_DAILY_REFRESH    refresh script (default scripts/daily_refresh.sh)
 #   OPAX_SETTLE_SECONDS   wait for KB counters to stop moving before reading them (default 60)
+#   OPAX_STAMP_AFTER_HOURS  refresh corpus.json's checked_at when older than this (default 12)
+#   OPAX_MIN_FREE_GB      refuse to start with less free disk than this (default 5)
 #   OPAX_PUSH_SLEEP_UNIT  seconds multiplied by the attempt number between push retries (default 5)
-#   OPAX_NIGHTLY_NO_PUSH  1 = commit locally only: no push, no deploy, no issue
+#   OPAX_NIGHTLY_NO_PUSH  1 = commit locally only: no push, no status publication
 #   OPAX_NIGHTLY_SKIP_REFRESH  1 = skip daily_refresh.sh (rerun the publish half only)
 #   OPAX_BOT_NAME / OPAX_BOT_EMAIL   commit identity
 
@@ -43,12 +52,11 @@ set -uo pipefail
 
 REPO="${OPAX_REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 ENV_FILE="${OPAX_NIGHTLY_ENV:-$HOME/.config/opax/nightly.env}"
-# nightly.env may set GH_TOKEN and any OPAX_* override below, so it is read first
+# nightly.env may set any OPAX_* override below, so it is read first
 # shellcheck source=/dev/null
 if [ -f "$ENV_FILE" ]; then set -a; . "$ENV_FILE"; set +a; fi
-GH_REPO="${OPAX_GH_REPO:-jaketracey/opax}"
 BRANCH="${OPAX_BRANCH:-main}"
-WORKFLOW="${OPAX_WORKFLOW:-deploy.yml}"
+STATUS_BRANCH="${OPAX_STATUS_BRANCH:-nightly-status}"
 PIPE="$HOME/.cache/autoresearch/pipeline"
 TODAY=$(TZ=Australia/Sydney date +%F)
 STARTED_AT=$(date -u +%FT%TZ)
@@ -57,7 +65,7 @@ LASTFILE="$PIPE/nightly-last.json"
 LOCKFILE="$PIPE/nightly.lock"
 DAILY_LOG="$PIPE/daily.log"
 DATA_PATHS=(portal/public/bills portal/public/votes.json portal/public/corpus.json portal/wrangler.jsonc)
-MIN_FREE_GB="${OPAX_MIN_FREE_GB:-15}"
+MIN_FREE_GB="${OPAX_MIN_FREE_GB:-5}"
 
 mkdir -p "$PIPE"
 MARK="$PIPE/.nightly-start.$$"
@@ -69,7 +77,7 @@ run() { "$@" 2>&1 | tee -a "$LOGFILE"; return "${PIPESTATUS[0]}"; }
 
 FAILURES=()
 COMMIT_SHA=""
-DEPLOY="not dispatched"
+DEPLOY="not pushed"
 RESULT_SUMMARY=""
 fail() { FAILURES+=("$*"); log "FAIL: $*"; }
 
@@ -91,47 +99,27 @@ export GIT_TERMINAL_PROMPT=0
 PY="$REPO/.venv/bin/python"
 cd "$REPO" || { fail "cannot cd $REPO"; exit 1; }
 
-# git over HTTPS authenticates with GH_TOKEN through gh's credential helper (a no-op
-# when the remote is SSH). The first -c clears any helper the machine has configured.
-gitp() { git -c credential.helper= -c 'credential.helper=!gh auth git-credential' "$@"; }
+# Fetching works over HTTPS (the repository is public); pushing goes over SSH with the deploy
+# key. BatchMode makes a missing or refused key fail at once instead of waiting for a prompt,
+# and every network git call has a time limit so a stalled connection cannot eat the night.
+export GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -o BatchMode=yes -o ConnectTimeout=20}"
+gitn() { timeout "${OPAX_GIT_TIMEOUT:-300}" git "$@"; }
 
-# ---- issue + status on the way out ----------------------------------------------------
-scrub() { "$PY" "$REPO/scripts/vm/scrub_log.py" "$REPO/.env" "$ENV_FILE"; }
-
-open_issue() {
-  if [ "${OPAX_NIGHTLY_NO_PUSH:-0}" = 1 ]; then log "NO_PUSH set: not opening an issue"; return 0; fi
-  if [ -z "${GH_TOKEN:-}" ] || ! command -v gh >/dev/null 2>&1; then
-    log "no GH_TOKEN or no gh: cannot open the failure issue (see $LOGFILE)"; return 0
-  fi
-  local title="Nightly refresh failed $TODAY" body number f
-  body=$(mktemp)
-  {
-    echo "The nightly refresh on the OPAX VM finished with problems."
-    echo
-    echo "**What failed**"
-    for f in "${FAILURES[@]}"; do echo "- $f"; done
-    echo
-    echo "Data that passed its checks was still published (commit: ${COMMIT_SHA:-none}; deploy: $DEPLOY)."
-    echo "How to look and recover: \`docs/operations/nightly-refresh.md\`. Full log on the VM: \`~/.cache/autoresearch/pipeline/nightly-$TODAY.log\`."
-    echo
-    echo "<details><summary>Log tail (secrets masked)</summary>"
-    echo
-    echo '```'
-    awk '/===== nightly start/ {buf=""} {buf = buf $0 "\n"} END {printf "%s", buf}' "$LOGFILE" \
-      | tail -n 100 | cut -c1-400 | scrub | head -c 50000
-    echo '```'
-    echo "</details>"
-  } > "$body"
-  number=$(gh issue list --repo "$GH_REPO" --state open --search "\"$title\" in:title" --json number,title \
-             --jq "[.[] | select(.title == \"$title\")][0].number // empty" 2>>"$LOGFILE") || number=""
-  if [ -n "$number" ]; then
-    gh issue comment "$number" --repo "$GH_REPO" --body-file "$body" >>"$LOGFILE" 2>&1 \
-      && log "commented on issue #$number" || log "could not comment on issue #$number"
+# Publish the run's outcome where the freshness watchdog can read it without any credential:
+# a single parentless commit, force-pushed to the status branch, so main's history gets no
+# nightly noise and the branch never grows. Only short messages this script wrote go in it.
+publish_status() {
+  [ "${OPAX_NIGHTLY_NO_PUSH:-0}" = 1 ] && return 0
+  [ -s "$LASTFILE" ] || return 0
+  local blob tree commit
+  blob=$(git hash-object -w "$LASTFILE") || return 0
+  tree=$(printf '100644 blob %s\tstatus.json\n' "$blob" | git mktree) || return 0
+  commit=$(git commit-tree "$tree" -m "nightly status $TODAY") || return 0
+  if gitn push -q -f origin "$commit:refs/heads/$STATUS_BRANCH" >>"$LOGFILE" 2>&1; then
+    log "published status to origin/$STATUS_BRANCH"
   else
-    gh issue create --repo "$GH_REPO" --title "$title" --body-file "$body" >>"$LOGFILE" 2>&1 \
-      && log "opened issue '$title'" || log "could not open the failure issue"
+    log "WARN: could not publish the status to origin/$STATUS_BRANCH"
   fi
-  rm -f "$body"
 }
 
 write_status() {
@@ -153,10 +141,11 @@ finish() {
     rc=1
     log "===== nightly end: FAILED (${#FAILURES[@]} problem(s)) ====="
     write_status failed
-    open_issue
+    publish_status
   else
     log "===== nightly end: OK ${RESULT_SUMMARY:+($RESULT_SUMMARY)} ====="
     write_status ok
+    publish_status
   fi
   exit "$rc"
 }
@@ -165,7 +154,7 @@ trap 'if [ "$?" -ne 0 ] && [ "${#FAILURES[@]}" -eq 0 ]; then fail "nightly.sh di
 # ---- preflight -------------------------------------------------------------------------
 [ -x "$PY" ] || { fail "$PY missing: run scripts/vm/bootstrap.sh"; finish; }
 [ -f "$REPO/.env" ] || { fail "$REPO/.env missing (ARAG_*, TVFY_API_KEY, OPENAUSTRALIA_API_KEY)"; finish; }
-[ -f "$HOME/.cache/autoresearch/parli.db" ] || { fail "parli.db missing: run scripts/vm/transfer_state.sh from the desktop"; finish; }
+[ -f "$HOME/.cache/autoresearch/parli.db" ] || { fail "parli.db missing: the database was not transferred (see docs/operations/nightly-refresh.md)"; finish; }
 [ -f "$HOME/.cache/autoresearch/arag_sync_state.json" ] || { fail "arag_sync_state.json missing: the KB push checkpoint was not transferred"; finish; }
 # parli.db.get_db() switches to PostgreSQL when DATABASE_URL is set; the pipeline is SQLite-only
 if [ -n "${DATABASE_URL:-}" ] || grep -Eq '^[[:space:]]*(export[[:space:]]+)?DATABASE_URL=' "$REPO/.env" "$ENV_FILE" 2>/dev/null; then
@@ -173,12 +162,11 @@ if [ -n "${DATABASE_URL:-}" ] || grep -Eq '^[[:space:]]*(export[[:space:]]+)?DAT
 fi
 find "$PIPE" -maxdepth 1 -name 'nightly-20*.log' -mtime +90 -delete 2>/dev/null || true
 avail_gb=$(df -Pk "$HOME/.cache" | awk 'NR==2 {print int($4/1024/1024)}')
-if [ "${avail_gb:-0}" -lt "$MIN_FREE_GB" ]; then fail "only ${avail_gb:-0}GB free on the data disk (need ${MIN_FREE_GB}GB for the WAL and caches)"; finish; fi
-[ -n "${GH_TOKEN:-}" ] || log "WARN: GH_TOKEN not set: cannot push, dispatch the deploy or open issues"
+if [ "${avail_gb:-0}" -lt "$MIN_FREE_GB" ]; then fail "only ${avail_gb:-0}GB free on the data disk (need ${MIN_FREE_GB}GB for the WAL and caches; the disk is small: see the runbook)"; finish; fi
 
 # ---- 1. sync the checkout ---------------------------------------------------------------
 sync_repo() {
-  gitp fetch --quiet origin "$BRANCH" || return 1
+  gitn fetch --quiet origin "$BRANCH" || return 1
   git checkout -q "$BRANCH" 2>/dev/null || git checkout -q -B "$BRANCH" "origin/$BRANCH" || return 1
   # leftovers of a run that died half way: only the data paths are ever touched by the nightly
   git checkout -q HEAD -- "${DATA_PATHS[@]}" || return 1
@@ -250,9 +238,14 @@ done
 
 # ---- 5. corpus manifest + cache epoch ---------------------------------------------------------------------
 RESULT_JSON=$(mktemp)
-log "updating portal/public/corpus.json from the live knowledge box"
+# corpus.json is what starts the deploy (deploy.yml runs on pushes that change it). So it must change
+# whenever anything else is about to be pushed, and at least once a day even when nothing else moved:
+# that daily stamp is also what the watchdog reads to know the whole chain is alive.
+stamp_args=(--stamp-after-hours "${OPAX_STAMP_AFTER_HOURS:-12}")
+if [ -n "$(git status --porcelain -- portal/public/bills portal/public/votes.json)" ]; then stamp_args=(--always-stamp); fi
+log "updating portal/public/corpus.json from the live knowledge box (${stamp_args[*]})"
 "$PY" scripts/update_corpus_manifest.py --daily-log "$DAILY_LOG" --settle "${OPAX_SETTLE_SECONDS:-60}" \
-    --result-json "$RESULT_JSON" 2>&1 | tee -a "$LOGFILE"
+    "${stamp_args[@]}" --result-json "$RESULT_JSON" 2>&1 | tee -a "$LOGFILE"
 mrc=${PIPESTATUS[0]}
 KB_CHANGED=false
 if [ "$mrc" -ne 0 ]; then
@@ -289,7 +282,7 @@ if git diff --cached --quiet; then
   if [ -n "$(git log "origin/$BRANCH..HEAD" --oneline 2>/dev/null)" ]; then
     log "nothing new to commit, but an earlier nightly commit is unpushed: pushing it"
   else
-    log "no data changes tonight: nothing to commit, push or deploy"
+    log "no data changes tonight (and checked_at is fresh): nothing to commit, push or deploy"
     DEPLOY="not needed (no changes)"
     finish
   fi
@@ -310,43 +303,33 @@ else
 fi
 COMMIT_SHA=$(git rev-parse --short HEAD)
 
-# ---- 7. push, then dispatch the deploy ---------------------------------------------------------------------------
+# ---- 7. push (the push starts the deploy) --------------------------------------------------------------------
 if [ "${OPAX_NIGHTLY_NO_PUSH:-0}" = 1 ]; then
-  log "OPAX_NIGHTLY_NO_PUSH=1: committed $COMMIT_SHA locally; not pushing or deploying"
+  log "OPAX_NIGHTLY_NO_PUSH=1: committed $COMMIT_SHA locally; not pushing"
   DEPLOY="skipped (NO_PUSH)"
   finish
 fi
+BASE_BEFORE=$(git rev-parse "origin/$BRANCH")
 pushed=false
 for attempt in 1 2 3 4 5; do
-  if run gitp push -q origin "HEAD:$BRANCH"; then pushed=true; break; fi
+  if run gitn push -q origin "HEAD:$BRANCH"; then pushed=true; break; fi
   log "push rejected (attempt $attempt): rebasing onto origin/$BRANCH and retrying"
-  gitp fetch --quiet origin "$BRANCH" || true
+  gitn fetch --quiet origin "$BRANCH" || true
   if ! git rebase -q "origin/$BRANCH" 2>&1 | tee -a "$LOGFILE"; then git rebase --abort 2>/dev/null; break; fi
   sleep $((attempt * ${OPAX_PUSH_SLEEP_UNIT:-5}))
 done
 if [ "$pushed" != true ]; then
-  fail "could not push $COMMIT_SHA to origin/$BRANCH; it stays committed locally and is retried on the next run"
-  DEPLOY="not dispatched (push failed)"
+  fail "could not push $COMMIT_SHA to origin/$BRANCH (deploy key? network?); it stays committed locally and is retried on the next run"
+  DEPLOY="not pushed"
   finish
 fi
 COMMIT_SHA=$(git rev-parse --short HEAD)
 log "pushed $COMMIT_SHA to origin/$BRANCH"
-
-if [ -z "${GH_TOKEN:-}" ] || ! command -v gh >/dev/null 2>&1; then
-  fail "pushed, but cannot dispatch $WORKFLOW without GH_TOKEN and gh: run the deploy workflow by hand"
-  DEPLOY="not dispatched (no token)"
-  finish
-fi
-dispatched=false
-for attempt in 1 2 3; do
-  if run gh workflow run "$WORKFLOW" --repo "$GH_REPO" --ref "$BRANCH"; then dispatched=true; break; fi
-  sleep $((attempt * 10))
-done
-if [ "$dispatched" = true ]; then
-  DEPLOY="dispatched $WORKFLOW"
-  log "dispatched $WORKFLOW on $BRANCH"
+# deploy.yml runs on pushes that change corpus.json; say whether this one will
+if git diff --quiet "$BASE_BEFORE" HEAD -- portal/public/corpus.json; then
+  DEPLOY="NOT started: this push did not change corpus.json (data is on $BRANCH but not deployed)"
+  fail "pushed $COMMIT_SHA but corpus.json did not change, so the deploy workflow did not start; run it by hand (Actions > Deploy > Run workflow)"
 else
-  fail "pushed $COMMIT_SHA but could not dispatch $WORKFLOW: run it by hand (Actions > Deploy > Run workflow)"
-  DEPLOY="not dispatched (gh failed)"
+  DEPLOY="started by the push (deploy.yml, corpus.json changed)"
 fi
 finish

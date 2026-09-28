@@ -22,7 +22,10 @@ What changes, and when
   "Federal Hansard is current to" line, and refresh.checked_at.
   The box did not change: only the bill-derived and newest-release fields, and
   only if they moved. A night on which nothing moved writes nothing, so it makes
-  no commit and no deploy. --always-stamp writes refresh.checked_at regardless.
+  no commit and no deploy. --always-stamp writes refresh.checked_at regardless;
+  --stamp-after-hours N writes it when the existing stamp is older than N hours (the nightly
+  uses 12, so every night leaves a fresh stamp that the freshness watchdog can see, while a
+  second run on the same night changes nothing).
 
 Never touched: models, inclusion, known_defects, enrichment, grants_research,
 structured_sources, enrichment_queued and the other hand-kept fields.
@@ -223,9 +226,20 @@ def extend_coverage(coverage: str, newest: str) -> str:
     return f"{m[1]}–{newest[:4]}"
 
 
+def stamp_is_stale(checked_at: str | None, now: datetime, hours: float) -> bool:
+    """True if the manifest's refresh.checked_at is missing, unreadable or older than `hours`."""
+    try:
+        then = datetime.fromisoformat(str(checked_at))
+    except ValueError:
+        return True
+    if then.tzinfo is None:
+        then = then.replace(tzinfo=timezone.utc)
+    return now - then >= timedelta(hours=hours)
+
+
 def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | None,
             run_date: date, now: datetime, *, always_stamp: bool = False,
-            allow_shrink: bool = False) -> tuple[dict, dict]:
+            allow_shrink: bool = False, stamp_after_hours: float | None = None) -> tuple[dict, dict]:
     """Return (new manifest, result). Pure: no I/O."""
     new = copy.deepcopy(prev)
     refresh = new.setdefault("refresh", {})
@@ -301,7 +315,8 @@ def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | Non
     if nsw_release:
         put(refresh, "latest_nsw_release", nsw_release, "latest_nsw_release")
 
-    if changed_fields or always_stamp:
+    if (changed_fields or always_stamp
+            or (stamp_after_hours is not None and stamp_is_stale(refresh.get("checked_at"), now, stamp_after_hours))):
         refresh["checked_at"] = now.replace(microsecond=0).isoformat()
         changed_fields.append("checked_at")
 
@@ -332,6 +347,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--date", help="version date, YYYY-MM-DD (default: today in Australia/Sydney)")
     ap.add_argument("--dry-run", action="store_true", help="print the diff, write nothing")
     ap.add_argument("--always-stamp", action="store_true", help="write refresh.checked_at even if nothing else moved")
+    ap.add_argument("--stamp-after-hours", type=float, default=None, metavar="N",
+                    help="also write refresh.checked_at when the existing stamp is older than N hours")
     ap.add_argument("--allow-shrink", action="store_true", help="accept a box with >1%% fewer resources than the manifest")
     ap.add_argument("--kb-snapshot", default=os.environ.get("OPAX_KB_SNAPSHOT"),
                     help="read the box's numbers from this JSON instead of the network (env OPAX_KB_SNAPSHOT)")
@@ -366,7 +383,8 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         new, result = compute(prev, kb, log, bills, latest_nsw_release(args.db), run_date, now,
-                              always_stamp=args.always_stamp, allow_shrink=args.allow_shrink)
+                              always_stamp=args.always_stamp, allow_shrink=args.allow_shrink,
+                              stamp_after_hours=args.stamp_after_hours)
     except Refused as e:
         print(f"REFUSED: {e}", file=sys.stderr)
         if args.result_json:
