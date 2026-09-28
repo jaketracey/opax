@@ -19,7 +19,7 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from parli.ingest import money_diaries, money_ipea, money_state_donations, qld_contracts, state_rosters  # noqa: E402
+from parli.ingest import money_classify, money_diaries, money_ipea, money_state_donations, qld_contracts, state_rosters  # noqa: E402
 from parli.ingest.ext_common import ExtWriter  # noqa: E402
 from parli.ingest.replace_guard import ExtGuardError  # noqa: E402
 
@@ -128,6 +128,39 @@ class QldContractsGuardTests(unittest.TestCase):
             con = sqlite3.connect(db)
             self.assertEqual(con.execute("SELECT COUNT(*) FROM ext_state_contracts").fetchone()[0], 0)
             con.close()
+
+
+class ClassifyBackendTests(unittest.TestCase):
+    """money_classify used to ssh to the desktop unless --db was given; OPAX_DB / --db-local now keep it local."""
+
+    def run_main(self, argv, env):
+        seen = {}
+
+        def fake_run(db_path, host, dry_run, report):
+            seen.update(db=db_path, host=host)
+            return {"stats": {"keyword_total": 0, "individual": 0, "aec_match": 0, "unidentified": 0, "remaining_rows": 0,
+                              "remaining_names": 0, "aec_match_by_industry": {}}, "changed": 0, "source_dist": [], "industry_dist": []}
+
+        with mock.patch.object(money_classify, "run", fake_run), mock.patch.object(sys, "argv", ["money_classify.py", *argv]), \
+                mock.patch.dict("os.environ", env, clear=False), quiet():
+            if "OPAX_DB" not in env:
+                import os
+                os.environ.pop("OPAX_DB", None)
+            money_classify.main()
+        return seen
+
+    def test_opax_db_env_is_local(self):
+        seen = self.run_main([], {"OPAX_DB": "/srv/vm/parli.db"})
+        self.assertEqual((seen["db"], seen["host"]), ("/srv/vm/parli.db", None))
+
+    def test_no_env_is_still_the_desktop(self):
+        seen = self.run_main([], {})
+        self.assertEqual(seen["host"], "desktop")
+
+    def test_explicit_db_and_db_local(self):
+        self.assertEqual(self.run_main(["--db", "/tmp/x.sqlite"], {"OPAX_DB": "/srv/vm/parli.db"})["db"], "/tmp/x.sqlite")
+        seen = self.run_main(["--db-local"], {"OPAX_DB": "/srv/vm/parli.db"})
+        self.assertEqual((seen["db"], seen["host"]), ("/srv/vm/parli.db", None))
 
 
 class DonationLoaderGuardTests(unittest.TestCase):

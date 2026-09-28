@@ -21,7 +21,9 @@ classify_donations_llm does puts ~2,700 names at ~27 Haiku calls).
 
 The script runs where parli.db lives: over ssh by default (stdlib only on the
 far side, the keyword table travels base64-encoded in argv), or against a
-local file with --db. The legacy `donations` table is only ever read.
+local file with --db, --db-local, or OPAX_DB in the environment (the nightly VM
+sets it, so an unattended run never ssh-es to the desktop). The legacy
+`donations` table is only ever read.
 
 Usage:
     python -m parli.ingest.money_classify              # classify on desktop:parli.db
@@ -38,7 +40,7 @@ import subprocess
 import sys
 
 from parli.ingest.classify_donations import INDUSTRY_KEYWORDS
-from parli.ingest.ext_common import DEFAULT_DB_HOST, DEFAULT_REMOTE_DB, log
+from parli.ingest.ext_common import DEFAULT_DB_HOST, DEFAULT_REMOTE_DB, default_local_db, env_db_path, log
 
 PLACEHOLDERS = ["0", "1", "2", "3", "-", "--", "n/a", "N/A"]
 
@@ -128,16 +130,19 @@ def run(db_path: str, host: str | None, dry_run: bool, report: int) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Industry classification pass over ext_donations")
-    ap.add_argument("--db", default=None, help="local SQLite file instead of the remote parli.db")
+    ap.add_argument("--db", default=None, help="local SQLite file instead of the remote parli.db (default: $OPAX_DB when set)")
+    ap.add_argument("--db-local", "--local", dest="db_local", action="store_true",
+                    help="the local parli.db ($OPAX_DB, else ~/.cache/autoresearch/parli.db); never ssh")
     ap.add_argument("--host", default=DEFAULT_DB_HOST)
     ap.add_argument("--remote-db", default=DEFAULT_REMOTE_DB)
     ap.add_argument("--dry-run", action="store_true", help="run every tier inside a transaction, then roll back")
     ap.add_argument("--report", type=int, nargs="?", const=40, default=0,
                     help="print the top N still-unclassified donors (LLM-pass candidates); default 40")
     args = ap.parse_args()
-    target = f"sqlite:{args.db}" if args.db else f"ssh:{args.host}:{args.remote_db}"
+    db = args.db or (default_local_db() if args.db_local else env_db_path())
+    target = f"sqlite:{db}" if db else f"ssh:{args.host}:{args.remote_db}"
     log(f"ext_donations classification pass -> {target}{' (dry-run)' if args.dry_run else ''}")
-    res = run(args.db or args.remote_db, None if args.db else args.host, args.dry_run, args.report)
+    res = run(db or args.remote_db, None if db else args.host, args.dry_run, args.report)
     st = res["stats"]
     log(f"  keyword: {st['keyword_total']:,}  individual: {st['individual']:,}  aec_match: {st['aec_match']:,}  "
         f"unidentified: {st['unidentified']:,}  -> changed {res['changed']:,}; "
