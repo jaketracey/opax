@@ -1,0 +1,97 @@
+# Checks, once a day, that the nightly refresh chain actually worked end to end:
+# the VM ran, pushed to main, and the deploy went out.
+#
+# It reads two public things and needs no secrets:
+#   * https://opax.com.au/corpus.json: refresh.checked_at is stamped by every nightly commit and
+#     only reaches the site through a successful deploy, so its age covers VM + push + deploy;
+#   * the `nightly-status` branch, where nightly.sh publishes {status, failures, finished} after
+#     every run (a single force-pushed commit; main's history gets nothing).
+# A red run of this workflow is the alert: GitHub emails the repository owner when a scheduled
+# workflow fails. Runbook: docs/operations/nightly-refresh.md.
+#
+# It runs at 09:30 Sydney standard time (10:30 in daylight saving), some hours after the nightly
+# normally finishes. A healthy night leaves checked_at a few hours old; a missed night leaves it
+# about 28 hours old, so 20 hours separates the two with room either way.
+name: Refresh watchdog
+
+on:
+  schedule:
+    - cron: "30 23 * * *"
+  workflow_dispatch:
+    inputs:
+      max_age_hours:
+        description: "Fail if corpus.json's refresh.checked_at is older than this many hours"
+        default: "20"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Is the nightly refresh alive?
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      MAX_AGE_HOURS: ${{ inputs.max_age_hours || '20' }}
+      SITE: https://opax.com.au
+      STATUS_URL: https://raw.githubusercontent.com/${{ github.repository }}/nightly-status/status.json
+    steps:
+      - name: Check freshness and the last run's status
+        run: |
+          python3 - <<'PY'
+          import json, os, sys, time, urllib.request
+          from datetime import datetime, timezone
+
+          max_age = float(os.environ["MAX_AGE_HOURS"])
+          now = datetime.now(timezone.utc)
+          problems, notes = [], []
+
+          def fetch(url):
+              req = urllib.request.Request(f"{url}{'&' if '?' in url else '?'}wd={int(time.time())}",
+                                           headers={"Cache-Control": "no-cache", "User-Agent": "opax-refresh-watchdog"})
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  return json.load(r)
+
+          def age_hours(stamp):
+              then = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+              if then.tzinfo is None:
+                  then = then.replace(tzinfo=timezone.utc)
+              return (now - then).total_seconds() / 3600
+
+          # 1. the published manifest: VM ran, pushed, deploy succeeded
+          try:
+              corpus = fetch(f"{os.environ['SITE']}/corpus.json")
+              checked = corpus["refresh"]["checked_at"]
+              age = age_hours(checked)
+              notes.append(f"corpus.json version {corpus.get('version')}, refresh.checked_at {checked} ({age:.1f} h ago)")
+              if age > max_age:
+                  problems.append(f"the live corpus.json was last stamped {age:.1f} h ago (limit {max_age:g} h): "
+                                  "the nightly did not run or push, or the deploy did not go out")
+          except Exception as e:  # noqa: BLE001
+              problems.append(f"cannot read {os.environ['SITE']}/corpus.json: {e}")
+
+          # 2. what the last nightly run said about itself
+          try:
+              status = fetch(os.environ["STATUS_URL"])
+              finished = status.get("finished", "")
+              notes.append(f"nightly status: {status.get('status')} for {status.get('date')}, finished {finished}, "
+                           f"commit {status.get('commit')}, deploy: {status.get('deploy')}")
+              if finished and age_hours(finished) > max_age + 10:
+                  problems.append(f"the nightly's last status is {age_hours(finished):.1f} h old: it has not finished a run since")
+              if status.get("status") != "ok":
+                  for f in status.get("failures") or ["(no detail)"]:
+                      problems.append(f"last nightly run ({status.get('date')}): {f}")
+          except Exception as e:  # noqa: BLE001
+              problems.append(f"cannot read the nightly status ({os.environ['STATUS_URL']}): {e}")
+
+          for n in notes:
+              print(n)
+          if problems:
+              print()
+              for p in problems:
+                  print(f"::error::{p}")
+              print("\nSee docs/operations/nightly-refresh.md (Recovery). The VM's log: "
+                    "~/.cache/autoresearch/pipeline/nightly-<date>.log")
+              sys.exit(1)
+          print("OK: the nightly refresh chain is alive.")
+          PY

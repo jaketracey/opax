@@ -1,13 +1,21 @@
 # Deploy the portal Worker to production.
 #
-# Runs ONLY when dispatched (Actions > Deploy > Run workflow, or `gh workflow run deploy.yml`).
-# The nightly refresh VM dispatches it after it pushes the night's data to main
-# (scripts/vm/nightly.sh). It is deliberately NOT triggered by push, so a human's own
-# `npm run deploy` from a laptop works exactly as before, and never by pull_request:
-# this repository is public and the job holds the Cloudflare deploy token.
+# Starts when:
+#   * a push to main changes portal/public/corpus.json. Only the nightly refresh does that
+#     (scripts/vm/nightly.sh stamps refresh.checked_at every night, so every nightly commit
+#     carries it), so the nightly's push is what deploys its data; or
+#   * someone runs it by hand (Actions > Deploy > Run workflow, or `gh workflow run deploy.yml`).
+# It is deliberately NOT triggered by other pushes, so a human's own `npm run deploy` from a
+# laptop works exactly as before, and never by pull_request: this repository is public and the
+# job holds the Cloudflare deploy token. A human commit that touches corpus.json (a manual
+# refresh) does deploy; that is wanted.
+#
+# The restamp commit this job pushes back does not touch corpus.json and carries [skip ci], so
+# it cannot start another run.
 #
 # Secrets (Settings > Secrets and variables > Actions):
-#   CLOUDFLARE_API_TOKEN    Workers Scripts:Edit (+ Workers KV / D1 / R2 as the bindings need)
+#   CLOUDFLARE_API_TOKEN    Workers Scripts / Routes / KV / R2 / Tail / Observability write,
+#                           Account Settings read
 #   CLOUDFLARE_ACCOUNT_ID   459714503d7cbe9d0b7875e62526628b
 #
 # Deploys with `npm run deploy` (build + asset stamping + wrangler deploy), never a bare
@@ -16,6 +24,10 @@
 name: Deploy
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - portal/public/corpus.json
   workflow_dispatch:
     inputs:
       skip_tests:
@@ -34,6 +46,8 @@ permissions:
 jobs:
   deploy:
     name: Build, test, deploy
+    # belt and braces: the bot's own restamp push must never start another run
+    if: ${{ github.event_name != 'push' || github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     defaults:
