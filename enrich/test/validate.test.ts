@@ -72,6 +72,18 @@ test('non-ASCII punctuation is rejected (dashes), curly quotes are normalised fi
   assert.deepEqual(check(source, normaliseTypography('Argued that the Government’s program should be funded in the electorate by the minister.')), [])
 })
 
+test('typography normalisation: dashes, ellipses and hyphens become plain ASCII; validation still runs afterwards', () => {
+  assert.equal(normaliseTypography('report No. 66 of Portfolio Committee No. 5 \u2013 Justice and Communities'), 'report No. 66 of Portfolio Committee No. 5 - Justice and Communities')
+  assert.equal(normaliseTypography('Disputed Claim of Privilege\u2014Resources Regulator'), 'Disputed Claim of Privilege - Resources Regulator')
+  assert.equal(normaliseTypography('from 1998\u20132000 and 1998 \u2014 2000'), 'from 1998-2000 and 1998-2000')
+  assert.equal(normaliseTypography('wait\u2026 then'), 'wait... then')
+  assert.equal(normaliseTypography('non\u2011binding'), 'non-binding')
+  // a range that the record does not support still fails the figure check once normalised
+  const source = 'The funding runs from 2026 to 2027 for all schools in the region, the minister said.'
+  const problems = check(source, normaliseTypography('Reported that funding would run during 2026\u201327 to support the program for schools in the region.'))
+  assert.ok(problems.includes('figure 27 is not present in the supplied text'))
+})
+
 test('banned openers are rejected', () => {
   const source = 'The minister spoke about the new hospital being built in the region this year.'
   for (const opener of ['In this speech the member argued', 'This speech argued', 'The speaker says the', 'This release announced', 'Summary: the new hospital']) {

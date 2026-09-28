@@ -146,21 +146,29 @@ test('the cursor does not advance when enqueuing fails', async () => {
   assert.equal(await getState(d1, 'cursor:speech'), null)
 })
 
-test('a slow discovery does not eat the processing budget of the tick (bug seen on the first remote tick)', async () => {
+test('discovery runs after processing, so a slow or hung catalog can never delay or eat the model work (bug seen on the first remote tick)', async () => {
   const kb = new FakeKb()
   seed(kb, 'r1')
-  kb.catalogRows = [{ kind: 'speech', rid: 'r1', created: '2026-09-28T11:48:20.000000' }]
+  kb.catalogRows = [{ kind: 'speech', rid: 'newer', created: '2026-09-28T11:48:20.000000' }]
+  const events: string[] = []
   let clock = Date.parse('2026-09-28T12:00:00Z')
   const realCatalog = kb.catalog.bind(kb)
   kb.catalog = async (...args: Parameters<FakeKb['catalog']>) => {
+    events.push('catalog')
     clock += 50_000 // the catalog and the D1 inserts took 50 s of wall time
     return realCatalog(...args)
   }
-  const ai = new FakeAi(() => both)
-  const { deps } = makeDeps({ kb, ai, now: () => clock })
+  const ai = new FakeAi(() => {
+    events.push('ai')
+    return both
+  })
+  const { deps, d1 } = makeDeps({ kb, ai, now: () => clock })
+  await queueBoth(d1, 'r1')
   const stats = await runTick(deps)
-  assert.equal(ai.calls.length, 1, 'processing still ran after a 100 s discovery')
   assert.equal(stats.dry, 2)
+  assert.deepEqual([events[0], events.includes('catalog')], ['ai', true])
+  assert.ok(events.indexOf('ai') < events.indexOf('catalog'))
+  assert.equal(stats.discovered.speech, 2, 'and discovery still ran')
 })
 
 test('discovery honours its time box: stops paging, marks the walk partial, resumes next tick', async () => {
@@ -309,6 +317,7 @@ test('a rejected brief is retried once on the primary with the complaint, then e
   assert.ok(retry.includes('figure 2003 is not present in the supplied text'))
   assert.ok(retry.includes('The previous attempt failed these checks'))
   assert.ok(!retry.includes('TAXONOMY'), 'a summary-only retry does not resend the taxonomy')
+  assert.ok(ai.userPrompts()[0].includes('The only valid topic values are exactly: gambling | financial-services'), 'the slug list sits beside the output shape')
   const q = Object.fromEntries(rows(raw, 'SELECT * FROM queue').map((r) => [r.task, r]))
   assert.equal(q.speech_summary.status, 'done')
   assert.equal(q.speech_summary.model, '@cf/openai/gpt-oss-120b')

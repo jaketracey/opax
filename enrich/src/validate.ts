@@ -22,17 +22,25 @@ export const MIN_WORDS = 8
 export const MAX_WORDS = 80
 
 const CURLY: Array<[RegExp, string]> = [
-  [/[‘’]/g, "'"],
-  [/[“”]/g, '"'],
-  [/ /g, ' '],
+  [/[\u2018\u2019]/g, "'"],
+  [/[\u201c\u201d]/g, '"'],
+  [/\u00a0/g, ' '],
+  [/[\u2010\u2011\u2012]/g, '-'],
+  [/\u2026/g, '...'],
+  // A numeric range keeps a bare hyphen; any other dash becomes a spaced hyphen.
+  [/(\d)\s*[\u2013\u2014]\s*(\d)/g, '$1-$2'],
+  [/\s*[\u2013\u2014]\s*/g, ' - '],
 ]
 
 /**
- * Typography only: curly quotes to straight quotes and no-break spaces to
- * spaces. The Python validator rejects these and lets the model rewrite; small
- * models emit "Government’s" constantly, and a retry costs neurons. Dashes and
- * other non-ASCII marks are NOT rewritten (a dash can change a year range's
- * meaning); they still fail validation and go back for a rewrite.
+ * Typography only: curly quotes, dashes, ellipses and no-break spaces become their
+ * plain-ASCII forms. The Python validator rejects these and lets the model rewrite;
+ * small models copy "Portfolio Committee No. 5 \u2013 Justice" and "Government\u2019s" from
+ * the record constantly (5 of the first 50 rejections in the 2026-09-28 dry run were
+ * this alone, two quarantined). The check runs AFTER this rewrite, so a changed year
+ * range ("2026\u201327" becomes "2026-27") still fails the figure check if 27 is not in
+ * the text. Other non-ASCII characters (accented letters in names) are left alone, as
+ * in the Python validator, which only rejects the six typographic marks above.
  */
 export function normaliseTypography(s: string): string {
   let out = s

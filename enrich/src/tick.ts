@@ -121,31 +121,10 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
   const token = d.newToken()
 
   try {
-    // 1. Discovery: cheap, and independent of the model budget.
-    try {
-      const found = await discover({
-        db: d.db,
-        kb: d.kb,
-        now: t0,
-        startIso: d.cfg.discoveryStart,
-        maxPages: d.cfg.discoveryMaxPages,
-        overlapS: d.cfg.discoveryOverlapS,
-        maxMs: d.cfg.discoveryMaxMs,
-        clock: d.now,
-      })
-      stats.discovered = found.enqueued
-      stats.discoveryPartial = found.partial
-      stats.discoveryErrors = found.errors
-      for (const e of found.errors) await logError(d.db, t0, 'discovery', e)
-    } catch (err) {
-      stats.discoveryErrors.push(errText(err))
-      await logError(d.db, t0, 'discovery', errText(err))
-    }
-
-    // 2. Should we process at all?
+    // 1. Should we process at all?
     const spent = await spentOnDay(d.db, day)
     stats.neuronsToday = spent
-    // The processing deadline runs from here, not from the start of the tick: a slow discovery must not eat it.
+    // The processing deadline is soft: no new resource is started after it (in-flight ones finish).
     const ctl: Ctl = { stop: null, spent, neuronsTick: 0, deadline: d.now() + d.cfg.tickSoftMs, consecutiveModelFailures: 0 }
     const kbUntil = Number((await getState(d.db, kbBackoffKey)) ?? 0)
     const aiUntil = Number((await getState(d.db, aiPauseKey)) ?? 0)
@@ -156,10 +135,10 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
     if (!ctl.stop) {
       await reclaimStale(d.db, t0)
 
-      // 3. Live mode first delivers results already read (dry-run results, or writes that met backpressure).
+      // 2. Live mode first delivers results already read (dry-run results, or writes that met backpressure).
       if (d.cfg.live) await flush(d, ctl, stats)
 
-      // 4. Claim and process.
+      // 3. Claim and process.
       if (!ctl.stop) {
         const rows = await claimRids(d.db, d.cfg.batchSize, d.now(), token)
         stats.claimed = rows.length
@@ -183,6 +162,29 @@ export async function runTick(d: TickDeps): Promise<TickStats> {
     stats.stop = ctl.stop
     stats.neuronsTick = ctl.neuronsTick
     stats.neuronsToday = ctl.spent
+
+    // 4. Discovery runs AFTER processing so that a slow or timed-out catalog can never eat the
+    //    tick's model time (seen on the first remote tick). Rows found here are claimed next tick.
+    //    It is cheap, and independent of the model budget and of KB write backoff.
+    try {
+      const found = await discover({
+        db: d.db,
+        kb: d.kb,
+        now: d.now(),
+        startIso: d.cfg.discoveryStart,
+        maxPages: d.cfg.discoveryMaxPages,
+        overlapS: d.cfg.discoveryOverlapS,
+        maxMs: d.cfg.discoveryMaxMs,
+        clock: d.now,
+      })
+      stats.discovered = found.enqueued
+      stats.discoveryPartial = found.partial
+      stats.discoveryErrors = found.errors
+      for (const e of found.errors) await logError(d.db, d.now(), 'discovery', e)
+    } catch (err) {
+      stats.discoveryErrors.push(errText(err))
+      await logError(d.db, d.now(), 'discovery', errText(err))
+    }
   } finally {
     // Anything this tick still holds (never started, or cut off) goes back to pending.
     try {

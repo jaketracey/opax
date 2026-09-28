@@ -37,16 +37,20 @@ const SUMMARY_INSTRUCTIONS =
   "Preserve at most three useful concrete positions, figures, bill names, people, organisations, programs, or places. " +
   "Use neutral verbs and include only directly supported claims. Every figure in the brief must appear in the supplied text. " +
   "Never start with 'In this speech', 'This speech', 'This release', or 'The speaker says'. " +
-  "Summarise rather than quote, use plain ASCII punctuation (straight quotes and hyphens only), and stay below 600 characters."
+  "Summarise rather than quote, use plain ASCII punctuation (straight quotes and hyphens only), and stay below 600 characters. " +
+  "Keep to a single sentence of at most 75 words, even for motions, divisions and procedural steps: leave detail out rather than run on or add sentences."
 
 // Ported word for word from label_prompt(), with "every rid" made singular.
 const TOPIC_INSTRUCTIONS =
   "Classify the Australian parliamentary speech below for OPAX. " +
-  "Choose zero to three topic slugs from the taxonomy, based on the actual speech text rather than its title. " +
+  "Choose zero to three topic slugs from the taxonomy, based on the actual speech text rather than its title. Use only the slugs listed in the taxonomy, spelled exactly as written; never invent a label. " +
   "A topic must be a substantive subject of the speech: do not label incidental mentions, quoted remarks, passing examples, parliamentary insults or personal attacks. " +
   "General economic projections do not qualify as tax-budget unless the speech substantively discusses taxation, a budget, deficits or fiscal policy. " +
   "General employment figures do not qualify as unions-workplace unless the speech substantively discusses industrial relations, unions, wages, safety or employment conditions. " +
   "Be conservative and use [] for procedural, tribute, condolence, thin text, or any uncertain match."
+
+/** "a | b | c": the exact slugs, repeated beside the output shape (qwen3 invented "law" and "government" without it). */
+export const slugList = (): string => TOPICS.map(([slug]) => slug).join(' | ')
 
 export const taxonomyBlock = (): string => TOPICS.map(([slug, description]) => `- ${slug}: ${description}`).join('\n')
 
@@ -66,7 +70,7 @@ export function buildUserPrompt(record: PromptRecord, tasks: readonly Task[], co
   if (wantSummary) parts.push(`${wantTopics ? 'TASK 1 - "summary". ' : ''}${SUMMARY_INSTRUCTIONS}`)
   if (wantTopics) parts.push(`${wantSummary ? 'TASK 2 - "topics". ' : ''}${TOPIC_INSTRUCTIONS}`)
   parts.push(`Return only this JSON object, with no other text: ${shape}`)
-  if (wantTopics) parts.push(`TAXONOMY\n${taxonomyBlock()}`)
+  if (wantTopics) parts.push(`TAXONOMY\n${taxonomyBlock()}\n\nThe only valid topic values are exactly: ${slugList()}. Anything else is invalid; use [] when none fits.`)
   parts.push(`RECORD\n${recordJson(record)}`)
   let prompt = parts.join('\n\n')
   if (complaints.length) {
