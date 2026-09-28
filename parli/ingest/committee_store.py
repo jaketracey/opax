@@ -6,6 +6,7 @@ parli.ingest.committee_store -- the tables the committee-hearing ingest keeps be
                            changed. The Proof -> Final refresh reads it to decide what to fetch again.
   ext_committee_fragments  one row per stored fragment with the hash of what it says, so a refresh can tell in one
                            comparison whether a re-fetched fragment changed.
+  committee_kb_queue       rows whose text changed, or that a Final dropped, waiting to be sent to the knowledge box.
 
 Both are small (a few thousand rows) and never touched by other steps.
 """
@@ -15,6 +16,12 @@ from __future__ import annotations
 import gzip
 import sqlite3
 from pathlib import Path
+
+from parli.ingest.kb_text_patch import QUEUE_DDL as KB_QUEUE_DDL
+
+# Rows of an already-pushed hearing whose text changed (Proof -> Final) or that the Final no longer contains, waiting
+# for the knowledge box: parli.ingest.kb_text_patch sends them (the ACT Hansard loader queues the same way).
+KB_QUEUE = "committee_kb_queue"
 
 # the `source` values of committee rows, as an SQL list. Queries say `source IN (...)`, not `source LIKE 'committee%'`:
 # LIKE cannot use the (source, date) index, so on the 29 GB table it reads every row.
@@ -64,7 +71,7 @@ SPEECH_COLUMNS = (
 
 
 def ensure_tables(db: sqlite3.Connection) -> None:
-    db.executescript(HEARINGS_DDL)
+    db.executescript(HEARINGS_DDL + KB_QUEUE_DDL.format(table=KB_QUEUE))
 
 
 def ensure_speech_columns(db: sqlite3.Connection, say=print) -> list[str]:

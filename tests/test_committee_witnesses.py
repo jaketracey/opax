@@ -157,18 +157,6 @@ def test_older_rows_keep_the_honorific_rule(path):
     assert (h["speaker_type"], h["person_id"], h["speaker_name_clean"], h["witness_position"]) == ("witness", None, "Margaret Hall", "Deputy Secretary")
 
 
-def test_a_queued_text_update_survives_the_speaker_patch_resolve_queues(path):
-    sid = add(path, BASE, "Mr KENNEDY", "member", phid="267506")
-    conn = sqlite3.connect(path)
-    conn.execute("INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?, 'text:proof_to_final', 'pending', 'x')",
-                 (f"speech-{sid}",))
-    conn.commit()
-    conn.close()
-    cw.cmd_resolve(path, dry_run=False)
-    conn = sqlite3.connect(path)
-    assert conn.execute("SELECT reason, status FROM ext_kb_patch_queue WHERE slug = ?", (f"speech-{sid}",)).fetchone() == ("text:proof_to_final", "pending")
-
-
 def test_resolve_reads_committee_rows_by_source_not_by_a_like_scan(path):
     """`source LIKE 'committee%'` cannot use the (source, date) index and reads the whole 29 GB table."""
     import inspect

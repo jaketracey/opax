@@ -307,7 +307,7 @@ desktop; once a month is plenty.
 last 45 days on ParlInfo (Senate estimates, references, legislation and select committees, House, Joint), syncs the new
 ones, and fetches again any hearing still at Proof status once a week for 60 days (`OPAX_COMMITTEES_SINCE` /
 `OPAX_COMMITTEES_DAYS` change the window; a Proof transcript that the Final replaces has its rows updated in place, and,
-with `OPAX_SYNC_KB=1`, the knowledge-box text patched). `link_speakers` skips committee rows it must not surname-link. When the
+with `OPAX_SYNC_KB=1`, the knowledge-box text patched, and turns a Final drops deleted, through the same queue loop the ACT Hansard loader uses). `link_speakers` skips committee rows it must not surname-link. When the
 step adds rows, `daily_refresh.sh` runs `committee_witnesses fetch` and `resolve` right after `link_speakers` and before the
 knowledge-box push, and the push waits for them (`OPAX_SYNC_GATE`). `resolve` links House and Joint members by the Parliamentary
 Handbook id in the transcript, never by surname. Draining the speaker-field patch queue (`scripts/arag_patch_speakers.py`) is

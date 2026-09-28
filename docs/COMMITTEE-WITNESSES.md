@@ -103,18 +103,25 @@ undo `resolve`. That was a latent bug: `link_speakers` runs every night and `res
 fragments that failed is retried daily), all pages from ParlInfo, not the cache. A fragment whose content hash changed has its
 turns matched to the stored rows (same speaker and text; then the same speaker and the closest text, at least 60% alike; then
 near-identical text under a corrected label) and the row is **updated in place**, so speech ids and the knowledge box's
-`speech-<id>` slugs do not move; turns the Final adds are inserted; stored rows the Final no longer has are left alone
-(counted as `orphaned` in the log). Each changed row is queued in `ext_kb_patch_queue` with reason `text:proof_to_final`; a
-text patch sends `{"texts": ...}` only, so labels and summaries the enrichment Worker has written survive. The committee step
-sends them at the end of its run when `OPAX_SYNC_KB=1` (the nightly), otherwise they wait in the queue for
-`scripts/arag_patch_speakers.py`. `python -m parli.ingest.committee_hearings --adopt-legacy` also checks hearings stored by the
-older ingest (they have no hearing row) against the current transcript, comparing text after unescaping and stripping the old
-speaker prefix, so unchanged rows are not touched.
+`speech-<id>` slugs do not move; turns the Final adds are inserted as new rows (the ordinary push sends them). A stored row the
+Final no longer contains is **deleted** if this ingest wrote it (`parser_version` 2), unless that would remove more than 40% of
+the fragment's rows (then nothing is deleted and the log says `DELETE REFUSED`: a bad parse, not an edit); rows the older ingest
+wrote are never deleted (counted as `orphaned`).
+
+The knowledge box is kept in step by the same mechanism as the ACT Hansard loader (docs/DATA-ACT-HANSARD.md), now one shared
+loop, `parli.ingest.kb_text_patch.send_queued`: a changed row is queued in `committee_kb_queue` as `patch`, a deleted one as
+`delete`. For a row at or below the push checkpoint (`arag_sync_state.json`, so the box holds it) a `patch` sends `{"texts": ...}`
+only, so labels and summaries the enrichment Worker has written survive, and creates the resource if it was never pushed but
+now qualifies; a row above the checkpoint needs nothing (the next push carries the new text); a `delete` removes the resource.
+The committee step sends its queue at the end of its run when `OPAX_SYNC_KB=1` (the nightly; `--no-patch-kb` skips it);
+`python -m parli.ingest.committee_hearings --patch-kb` sends what is waiting and exits (needs ARAG_KB_ID / ARAG_KB_TOKEN).
+`--adopt-legacy` also checks hearings stored by the older ingest (they have no hearing row) against the current transcript,
+comparing text after unescaping and stripping the old speaker prefix, so unchanged rows are not touched.
 
 **Gap to know.** The speaker-field patch in `arag_patch_speakers.py` (any queue reason other than `text:`) replaces the
 resource's whole `usermetadata.classifications` list, which drops the `topic` labels the enrichment Worker writes. It was
 written before the Worker. Do not run it over enriched resources until it reads and merges the classifications. The nightly
-does not run it.
+does not run it; the committee text patches do not use it.
 
 ### Measured on real ParlInfo pages (2026-09-29)
 
@@ -183,6 +190,6 @@ or the surname links come back.
   chair's questions in House and Joint hearings, which are a large share of those transcripts.
 - The speaker-field patch in `arag_patch_speakers.py` clobbers topic labels (see above).
 - A Final that renames a speaker on an already-pushed row updates the database row and the text in the box, but not the
-  box's speaker fields (that would need the field patch).
+  box's speaker fields (that would need the field patch, see above).
 - House and joint hearings before the 48th Parliament (1 July 2025) are not ingested: about 135-225k further resources for
   the 47th, and 74,631 fragments from 1993 to 2019.

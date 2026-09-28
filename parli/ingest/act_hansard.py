@@ -1184,62 +1184,13 @@ def patch_kb(db: sqlite3.Connection, kb=None, *, limit: int = 500, dry_run: bool
     """Send the queued proof->final changes to the knowledge box.
 
     arag_sync pushes each speech once, by speech_id above a checkpoint, and its own repair path
-    only rewrites text_clean rules; nothing re-sends a row whose text changed in place. This does:
-      patch   row above the checkpoint: nothing to do (the next push carries the new text);
-              row at or below it: PATCH the text field only (labels, origin, summaries untouched);
-              a 404 means it was never pushed (it was under 200 characters as a proof): create it
-              if the Final's text now qualifies.
-      delete  DELETE the resource (a 404 counts as done)."""
-    from parli.ingest import arag_sync as sync
+    only rewrites text_clean rules; nothing re-sends a row whose text changed in place. The send loop
+    (PATCH the text of rows the box holds, create a row that now qualifies, DELETE removed turns) is
+    parli.ingest.kb_text_patch.send_queued, shared with the committee-hearing ingest."""
+    from parli.ingest import kb_text_patch
 
-    if checkpoint is None:
-        state = sync.load_state()
-        checkpoint = int(state.get("tables", {}).get("speeches", {}).get("after", 0))
-    rows = db.execute("SELECT * FROM act_hansard_kb_queue WHERE done_at IS NULL ORDER BY speech_id LIMIT ?",
-                      (limit,)).fetchall()
-    out = collections.Counter()
-    for q in rows:
-        sid, op = q["speech_id"], q["op"]
-        slug = f"speech-{sid}"
-        status, err = "done", None
-        try:
-            if op == "delete":
-                if not dry_run and sid <= checkpoint:
-                    kb.delete_resource_by_slug(slug)
-                status = "deleted" if sid <= checkpoint else "not-pushed"
-            else:
-                srow = db.execute("SELECT * FROM speeches WHERE speech_id=?", (sid,)).fetchone()
-                if srow is None:
-                    status = "gone"
-                elif sid > checkpoint:
-                    status = "not-pushed"
-                elif not dry_run:
-                    try:
-                        kb.patch_resource_by_slug(slug, {"texts": sync._texts(sync.map_speech(srow)["texts"]["body"]["body"])})
-                        status = "patched"
-                    except sync.AragError as e:
-                        if e.status != 404:
-                            raise
-                        eligible = db.execute(
-                            "SELECT 1 FROM speeches WHERE speech_id=? AND LENGTH(text) >= ? AND date >= ? "
-                            + sync.JUNK_PREDICATES, (sid, sync.MIN_SPEECH_CHARS, sync.DEFAULT_SINCE)).fetchone()
-                        if eligible:
-                            kb.create_resource(sync.map_speech(srow))
-                            status = "created"
-                        else:
-                            status = "not-in-corpus"
-                else:
-                    status = "would-patch"
-        except Exception as e:  # noqa: BLE001 - record and carry on
-            status, err = "failed", f"{type(e).__name__}: {e}"[:300]
-        out[status] += 1
-        if not dry_run and status != "failed":
-            db.execute("UPDATE act_hansard_kb_queue SET done_at=?, error=NULL WHERE speech_id=?", (now_iso(), sid))
-        elif err:
-            db.execute("UPDATE act_hansard_kb_queue SET error=? WHERE speech_id=?", (err, sid))
-    db.commit()
-    print(f"ACT KB patch: {dict(out)} (checkpoint speech_id {checkpoint})")
-    return dict(out)
+    return kb_text_patch.send_queued(db, kb, "act_hansard_kb_queue", label="ACT", limit=limit, dry_run=dry_run,
+                                     checkpoint=checkpoint)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

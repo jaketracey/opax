@@ -139,6 +139,9 @@ under 200 characters and never pushed) creates the resource if the Final's text 
 the resources of removed turns. Rows above the checkpoint are marked done: the next push sends the new
 text. Failures stay queued with the error.
 
+The send loop is `parli.ingest.kb_text_patch.send_queued`; `act_hansard.patch_kb` is a wrapper around it, and the
+committee-hearing ingest (`docs/COMMITTEE-WITNESSES.md`, queue `committee_kb_queue`) uses the same loop.
+
 Known gaps (recorded, not fixed): the resource `title` (speaker — topic — date) is not PATCHed, so a
 topic correction in the Final leaves the box's title stale; a PATCHed text leaves the Worker's
 generated summary/topic labels (`opax-enrich`) describing the proof; bump `CACHE_EPOCH` after a large

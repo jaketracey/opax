@@ -11,8 +11,8 @@ resource by slug. Texts are never sent. A slug the box does not hold yet is
 marked `missing`: the bulk sync will create it with the corrected fields.
 
 WARNING (2026-09-29): a field patch (any reason that does not start with "text:") replaces the resource's
-classifications wholesale, so it drops the `topic` labels the enrichment Worker wrote after the push. Text patches
-("text:..." reasons, from the committee-hearing refresh) send the body only and are safe. See parli/ingest/kb_patch.py.
+classifications wholesale, so it drops the `topic` labels the enrichment Worker wrote after the push. Text changes to
+already-pushed rows go through parli.ingest.kb_text_patch (send only the body), not through this script.
 
 Runs on the database host, in the background, resumable:
 
@@ -39,7 +39,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
-from parli.ingest import kb_patch
 from parli.ingest.arag_sync import _texts, map_speech
 
 stop = False
@@ -59,8 +58,35 @@ def now_iso():
 
 
 def patch_one(kb: KbClient, row: sqlite3.Row, reason: str | None = None) -> tuple[str, str | None]:
-    """PATCH one queued resource (parli.ingest.kb_patch.patch_one; the body is built with this module's map_speech)."""
-    return kb_patch.patch_one(kb, row, reason, mapper=map_speech)
+    doc = map_speech(row)
+    body = {k: doc[k] for k in ("title", "origin", "usermetadata", "extra")}
+    # A text repair (parli.ingest.text_hygiene) sends the cleaned body as well;
+    # everything else leaves the text alone.
+    if reason and reason.startswith("text:"):
+        # Text repairs must preserve labels and other enrichment written since
+        # the source database was last synced.
+        body = {"texts": doc["texts"]}
+    slug = doc["slug"]
+    backoff = 2.0
+    for attempt in range(5):
+        try:
+            kb.patch_resource_by_slug(slug, body)
+            return "patched", None
+        except AragError as exc:
+            if exc.status == 404:
+                return "missing", None
+            if exc.status in (429, 500, 502, 503, 504) and attempt < 4:
+                time.sleep(backoff)
+                backoff = min(backoff * 2, 60)
+                continue
+            return "failed", f"{exc.status}: {exc.detail[:200]}"
+        except Exception as exc:  # network
+            if attempt < 4:
+                time.sleep(backoff)
+                backoff = min(backoff * 2, 60)
+                continue
+            return "failed", str(exc)[:200]
+    return "failed", "gave up"
 
 
 def main() -> int:

@@ -585,12 +585,9 @@ def cmd_resolve(db_path: str, dry_run: bool, pushed_upto: int | None | str = "au
                     party_updates)
     cur.executemany(
         "INSERT OR REPLACE INTO ext_committee_relinks VALUES (?,?,?,?,?,?,?,?)", relinks)
-    # a queued text update (Proof -> Final) must survive: the speaker-field patch it would be replaced by never sends text
     cur.executemany(
         "INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?, ?, 'pending', ?) "
-        "ON CONFLICT(slug) DO UPDATE SET status = 'pending', queued_at = excluded.queued_at, "
-        "reason = CASE WHEN ext_kb_patch_queue.status = 'pending' AND ext_kb_patch_queue.reason LIKE 'text:%' "
-        "THEN ext_kb_patch_queue.reason ELSE excluded.reason END",
+        "ON CONFLICT(slug) DO UPDATE SET status = 'pending', reason = excluded.reason, queued_at = excluded.queued_at",
         [(f"speech-{u[6]}", u[5], stamp) for u in queued])
     cur.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
                 ("speeches", SOURCE, len(updates), 0, stamp, ", ".join(f"{k}={v}" for k, v in sorted(stats.items()))))

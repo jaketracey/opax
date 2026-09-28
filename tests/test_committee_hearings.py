@@ -218,7 +218,7 @@ def test_syncing_again_adds_nothing_and_does_not_duplicate(db, cache):
     assert len(rows(db)) == 8
     h = db.execute("SELECT refresh_count, last_changed FROM ext_committee_hearings WHERE hearing_base = ?", (BASE,)).fetchone()
     assert h["refresh_count"] == 1 and h["last_changed"] is None
-    assert db.execute("SELECT COUNT(*) FROM ext_kb_patch_queue").fetchone()[0] == 0
+    assert db.execute("SELECT COUNT(*) FROM committee_kb_queue").fetchone()[0] == 0
 
 
 def test_a_fragment_that_cannot_be_fetched_marks_the_hearing_incomplete_and_it_is_retried(db, cache):
@@ -248,8 +248,8 @@ def test_a_final_transcript_that_edits_a_turn_updates_that_row_in_place_and_queu
     assert len(changed) == 1 and "very consequential time" in after[changed[0]]
     row = db.execute("SELECT word_count, text_clean, text_clean_rules FROM speeches WHERE speech_id = ?", (changed[0],)).fetchone()
     assert row["word_count"] == len(after[changed[0]].split()) and row["text_clean"] is None and row["text_clean_rules"] is None
-    q = db.execute("SELECT slug, reason, status FROM ext_kb_patch_queue").fetchall()
-    assert [(x["slug"], x["reason"], x["status"]) for x in q] == [(f"speech-{changed[0]}", "text:proof_to_final", "pending")]
+    q = db.execute("SELECT speech_id, op, reason, done_at FROM committee_kb_queue").fetchall()
+    assert [(x["speech_id"], x["op"], x["reason"], x["done_at"]) for x in q] == [(changed[0], "patch", "proof_to_final", None)]
     h = db.execute("SELECT status, final_seen, last_changed, refresh_count FROM ext_committee_hearings WHERE hearing_base = ?", (BASE,)).fetchone()
     assert h["status"] == "Final" and h["final_seen"] and h["last_changed"] and h["refresh_count"] == 1
 
@@ -268,7 +268,7 @@ def test_a_final_that_only_changes_status_updates_the_status_and_nothing_else(db
     r = sync(db, cache, hearing_pages("Final"), refresh=True)
     assert (r.updated, r.inserted, r.status_changed) == (0, 0, True)
     assert db.execute("SELECT status FROM ext_committee_hearings").fetchone()[0] == "Final"
-    assert db.execute("SELECT COUNT(*) FROM ext_kb_patch_queue").fetchone()[0] == 0
+    assert db.execute("SELECT COUNT(*) FROM committee_kb_queue").fetchone()[0] == 0
 
 
 def test_a_turn_the_final_adds_is_inserted_as_a_new_row_and_the_others_are_untouched(db, cache):
@@ -294,12 +294,28 @@ def test_a_corrected_speaker_label_relabels_the_row_and_clears_what_resolve_had_
     assert [(x["speaker_name"], x["handbook_id"], x["speaker_name_clean"], x["person_id"]) for x in row] == [("Mr KENNEDEY", "999999", None, None)]
 
 
-def test_a_stored_row_the_final_no_longer_contains_is_left_alone(db, cache):
+def _without(page: str, label_text: str) -> str:
+    return re.sub(r'<p class="HPS-Normal"[^>]*>(?:(?!</p>).)*?' + label_text + r'.*?</p>', "", page, count=1, flags=re.S)
+
+
+def test_a_turn_the_final_drops_is_deleted_here_and_queued_for_the_box(db, cache):
     sync(db, cache, hearing_pages("Proof"))
-    dropped = fixture("fragment_house.html")
-    dropped = re.sub(r'<p class="HPS-Normal"[^>]*>(?:(?!</p>).)*?Mr GREGG:.*?</p>', "", dropped, flags=re.S)
-    r = sync(db, cache, hearing_pages("Final", dropped), refresh=True)
-    assert r.orphaned == 1 and r.updated == 0 and len(rows(db)) == 8
+    gregg = db.execute("SELECT speech_id FROM speeches WHERE speaker_name = 'Mr GREGG'").fetchone()[0]
+    r = sync(db, cache, hearing_pages("Final", _without(fixture("fragment_house.html"), "Mr GREGG:")), refresh=True)
+    assert (r.orphaned, r.deleted, r.updated, r.delete_refused) == (1, 1, 0, 0)
+    assert len(rows(db)) == 7 and not db.execute("SELECT 1 FROM speeches WHERE speech_id = ?", (gregg,)).fetchone()
+    q = db.execute("SELECT speech_id, op, reason FROM committee_kb_queue").fetchall()
+    assert [(x["speech_id"], x["op"], x["reason"]) for x in q] == [(gregg, "delete", "turn absent from the Final")]
+
+
+def test_a_reparse_that_would_drop_most_of_a_fragment_deletes_nothing(db, cache):
+    sync(db, cache, hearing_pages("Proof"))
+    stump = fixture("fragment_house.html")
+    for name in ("Mr GREGG:", "Mr KENNEDY:", "Mr Hauser", "Ms Bullock"):
+        stump = _without(stump, name) if name != "Ms Bullock" else re.sub(r'<p class="HPS-Normal"[^>]*>(?:(?!</p>).)*?Ms Bullock.*?</p>', "", stump, flags=re.S)
+    r = sync(db, cache, hearing_pages("Final", stump), refresh=True)
+    assert r.delete_refused == 1 and r.deleted == 0 and len(rows(db)) == 8
+    assert db.execute("SELECT COUNT(*) FROM committee_kb_queue").fetchone()[0] == 0
 
 
 def test_stored_rows_from_the_older_ingest_are_adopted_not_duplicated(db, cache):
@@ -315,11 +331,19 @@ def test_stored_rows_from_the_older_ingest_are_adopted_not_duplicated(db, cache)
     assert len(rows(db)) == 8
     seen = ch.build_dedup_index(db)
     r = ch.sync_hearing(FakeHttp(hearing_pages("Final")), db, cache, house_hearing(), seen, refresh=True)
-    assert (r.inserted, r.updated, r.orphaned) == (0, 0, 0)          # same words, different formatting: nothing to change
+    assert (r.inserted, r.updated, r.orphaned, r.deleted) == (0, 0, 0, 0)          # same words, different formatting: nothing to change
     assert db.execute("SELECT parser_version FROM ext_committee_hearings").fetchone()[0] == 1
     edited = fixture("fragment_house.html").replace("consequential time", "very consequential time")
     r2 = ch.sync_hearing(FakeHttp(hearing_pages("Final", edited)), db, cache, house_hearing(), seen, refresh=True)
     assert (r2.inserted, r2.updated) == (0, 1) and len(rows(db)) == 8
+    # a legacy row the current transcript does not contain is left alone: the older parser's rows are never deleted
+    db.execute("INSERT INTO speeches (speaker_name, chamber, date, topic, text, word_count, source, state, hearing_type, hearing_id) "
+               "VALUES ('UNKNOWN','house_committee','2026-09-18','t','In Attendance Ms A, Mr B, and the officials of several agencies',9,'committee_house','federal','committee',?)",
+               (BASE + "/0001",))
+    db.commit()
+    edited_again = fixture("fragment_house.html").replace("consequential time", "highly consequential time")
+    r3 = ch.sync_hearing(FakeHttp(hearing_pages("Final", edited_again)), db, cache, house_hearing(), seen, refresh=True)
+    assert (r3.orphaned, r3.deleted) == (1, 0) and len(rows(db)) == 9
 
 
 # ---- matching stored rows to a re-parse ------------------------------------------------------------------------------

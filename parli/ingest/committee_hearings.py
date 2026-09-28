@@ -17,8 +17,10 @@ Data source: parlinfo.aph.gov.au (the Firefox user agent below is required: the 
               seen; each re-fetched fragment is compared by content hash and, when it changed, its turns are matched to
               the stored rows (same speaker and text, then the closest text) and updated IN PLACE, so the speech ids
               (and the knowledge box's `speech-<id>` slugs) do not change. Turns the Final adds are inserted as new rows.
-              The knowledge-box copy of a changed row is updated by a text-only PATCH, queued in
-              `ext_kb_patch_queue` with reason 'text:proof_to_final' (sent at the end of the run when OPAX_SYNC_KB=1).
+              The knowledge-box copy is kept in step through parli.ingest.kb_text_patch (the ACT Hansard loader's queue):
+              a changed row is queued in `committee_kb_queue` as a text-only PATCH, a row the Final no longer contains
+              (deleted here too) as a DELETE, both only for rows the box already holds (speech_id <= the push checkpoint);
+              the run sends them at its end when OPAX_SYNC_KB=1, or `--patch-kb` sends them later.
 
 Who is speaking is decided later by parli.ingest.committee_witnesses.
 
@@ -49,8 +51,9 @@ from urllib.parse import quote, unquote
 
 import requests
 
+from parli.ingest import kb_text_patch
 from parli.ingest.committee_store import (
-    PARSER_VERSION, ensure_speech_columns, ensure_tables, read_cached_page, write_cached_page,
+    KB_QUEUE, PARSER_VERSION, ensure_speech_columns, ensure_tables, read_cached_page, write_cached_page,
 )
 from parli.ingest.committee_transcript import (  # noqa: F401  (re-exported: other code imports these from here)
     CHAMBER_MAP, COMMITTEE_SOURCES, DATASET_MAP, DATASETS, HearingMetadata, SpeechRecord, fragment_hash,
@@ -85,7 +88,8 @@ REFRESH_EVERY_DAYS = 7      # ... at most this often
 RETRY_INCOMPLETE_EVERY_DAYS = 1
 LISTING_PAGE_SIZE = 100
 
-REFRESH_REASON = "text:proof_to_final"
+QUEUE_REASON = "proof_to_final"
+MAX_SHRINK = 0.4            # a re-parse that would drop more than this share of a fragment's stored rows is refused
 
 HTML_TAG_RE = re.compile(r"<[^>]+>")
 MULTI_SPACE_RE = re.compile(r"[ \t]+")
@@ -558,6 +562,9 @@ class SyncResult:
     updated: int = 0                 # rows whose text (and possibly label) changed in place
     relabelled: int = 0              # of those, rows whose speaker label changed too
     orphaned: int = 0                # stored rows the re-parse no longer contains
+    deleted: int = 0                 # of those, rows removed (hearings this ingest wrote): the Final dropped them
+    delete_refused: int = 0          # fragments where the drop looked like a bad parse, so nothing was deleted
+    queued: int = 0                  # rows queued for the knowledge box (patch or delete)
     unchanged_fragments: int = 0
     fragments_expected: int = 0
     fragments_ok: int = 0
@@ -566,11 +573,10 @@ class SyncResult:
     status_changed: bool = False
     is_new: bool = False
     skipped: str | None = None
-    queued: list[str] = field(default_factory=list)
 
     @property
     def changed(self) -> bool:
-        return bool(self.inserted or self.updated or self.status_changed)
+        return bool(self.inserted or self.updated or self.deleted or self.status_changed)
 
 
 def _write_witness_lists(db: sqlite3.Connection, base: str, witnesses: list[tuple[str, object]], stamp: str) -> None:
@@ -628,6 +634,8 @@ def sync_hearing(http: RateLimitedSession, db: sqlite3.Connection, cache: Fragme
              hearing.status, len(frags), 1 if legacy else PARSER_VERSION, stamp))
         _commit_with_retry(db)
     load_stored = not res.is_new or legacy or bool(frag_rows)
+    # hearings this ingest wrote (2) can lose rows the Final drops; rows the older ingest wrote (1) are never deleted
+    parser_version = (row["parser_version"] if row is not None else (1 if legacy else PARSER_VERSION)) or 1
 
     speech_cols = {r[1] for r in db.execute("PRAGMA table_info(speeches)")}
     carry: SpeechRecord | None = None
@@ -653,9 +661,10 @@ def sync_hearing(http: RateLimitedSession, db: sqlite3.Connection, cache: Fragme
 
         stored = _load_stored(db, hearing, frag) if load_stored else []
         new_turns: list[SpeechRecord] = []
+        orphans: list[dict] = []
         for s, t in align(stored, turns):
             if t is None:
-                res.orphaned += 1
+                orphans.append(s)
                 continue
             if s is None:
                 new_turns.append(t)
@@ -668,29 +677,37 @@ def sync_hearing(http: RateLimitedSession, db: sqlite3.Connection, cache: Fragme
             seen.add(f"{t.speaker_name}|{t.date}|{text_hash(t.text)}")
             res.updated += 1
             res.relabelled += 0 if same_label else 1
-            res.queued.append(f"speech-{s['speech_id']}")
+            if not same_text:
+                kb_text_patch.queue(db, KB_QUEUE, s["speech_id"], "patch", QUEUE_REASON, stamp)
+                res.queued += 1
+        res.orphaned += len(orphans)
+        if orphans and parser_version >= 2:
+            # A row of a hearing this ingest wrote that its own re-parse no longer contains: the Final dropped the turn.
+            # Delete it and tell the box. A drop of more than MAX_SHRINK of the fragment is a bad parse, not an edit.
+            if len(stored) >= 5 and len(orphans) > MAX_SHRINK * len(stored):
+                res.delete_refused += 1
+            else:
+                for o in orphans:
+                    db.execute("DELETE FROM speeches WHERE speech_id = ?", (o["speech_id"],))
+                    kb_text_patch.queue(db, KB_QUEUE, o["speech_id"], "delete", "turn absent from the " + (hearing.status or "re-fetched"), stamp)
+                    res.deleted += 1
+                    res.queued += 1
         res.inserted += save_speeches(db, new_turns, seen)
         db.execute("INSERT OR REPLACE INTO ext_committee_fragments VALUES (?,?,?,?,?)", (base, frag, h, len(turns), stamp))
         _commit_with_retry(db)
 
     # who the witnesses are: the lists printed in the fragments (estimates fragments have none: `committee_witnesses fetch`
     # reads their In Attendance blocks, and must re-read them when the transcript changed)
-    if witnesses and (res.inserted or res.updated or res.is_new):
+    if witnesses and (res.inserted or res.updated or res.deleted or res.is_new):
         _write_witness_lists(db, base, witnesses, stamp)
-    elif not witnesses and (res.inserted or res.updated) and hearing.dataset == "estimate":
+    elif not witnesses and (res.inserted or res.updated or res.deleted) and hearing.dataset == "estimate":
         db.execute("DELETE FROM ext_committee_attendance WHERE hearing_base = ?", (base,))
-
-    if res.queued:
-        db.executemany(
-            "INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?, ?, 'pending', ?) "
-            "ON CONFLICT(slug) DO UPDATE SET status = 'pending', reason = excluded.reason, queued_at = excluded.queued_at",
-            [(slug, REFRESH_REASON, stamp) for slug in res.queued])
 
     prev_status = row["status"] if row is not None else None
     res.status_changed = (not res.is_new) and hearing.status != prev_status
     complete = not res.failed_fragments
     content = hearing_hash(frag_hashes) if complete else None
-    changed_now = bool(res.inserted or res.updated or res.status_changed) and not res.is_new
+    changed_now = bool(res.inserted or res.updated or res.deleted or res.status_changed) and not res.is_new
     db.execute(
         "UPDATE ext_committee_hearings SET committee_name = ?, inquiry_title = ?, hearing_date = ?, category = ?, status = ?, "
         "fragments_expected = ?, fragments_ok = ?, turns_stored = ?, content_hash = ?, last_checked = ?, "
@@ -757,22 +774,20 @@ def refresh_candidates(db: sqlite3.Connection, now: datetime | None = None, days
 # Knowledge-box text patches
 # ---------------------------------------------------------------------------
 
-def patch_knowledge_box(db: sqlite3.Connection, slugs: list[str]) -> None:
-    """Send the queued text updates to the box (only when the run is allowed to touch it: OPAX_SYNC_KB=1)."""
-    if not slugs:
-        return
-    try:
-        from parli.arag import AragConfig, KbClient, load_dotenv
-        from parli.ingest.kb_patch import drain_text_patches
-    except ImportError as e:            # pragma: no cover
-        log(f"  cannot patch the knowledge box: {e}")
-        return
+def send_kb_queue(db: sqlite3.Connection, *, limit: int = 5000, dry_run: bool = False) -> dict:
+    """Send the queued text patches / deletes to the knowledge box (kb_text_patch.send_queued). Without box credentials
+    the queue simply waits."""
+    pending = db.execute(f"SELECT COUNT(*) FROM {KB_QUEUE} WHERE done_at IS NULL").fetchone()[0]
+    if not pending:
+        return {}
+    from parli.arag import AragConfig, KbClient, load_dotenv
     load_dotenv()
     cfg = AragConfig.from_env()
-    if not cfg.kb_configured:
-        log(f"  {len(slugs)} text updates stay queued in ext_kb_patch_queue: ARAG_KB_ID / ARAG_KB_TOKEN not set")
-        return
-    drain_text_patches(db, KbClient(cfg), slugs=slugs, say=log)
+    if not cfg.kb_configured and not dry_run:
+        log(f"  {pending} changes stay queued in {KB_QUEUE}: ARAG_KB_ID / ARAG_KB_TOKEN not set")
+        return {}
+    return kb_text_patch.send_queued(db, KbClient(cfg) if not dry_run else None, KB_QUEUE, label="committee", limit=limit,
+                                     dry_run=dry_run)
 
 
 # ---------------------------------------------------------------------------
@@ -799,9 +814,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--adopt-legacy", action="store_true",
                         help="Also sync hearings stored by the older ingest (no ext_committee_hearings row), comparing "
                              "their rows with the current transcript. Off in the nightly.")
-    parser.add_argument("--patch-kb", dest="patch_kb", action="store_true", default=None,
-                        help="Send text updates of already-pushed rows to the knowledge box (default: on when OPAX_SYNC_KB=1).")
-    parser.add_argument("--no-patch-kb", dest="patch_kb", action="store_false")
+    parser.add_argument("--patch-kb", action="store_true",
+                        help="Send the queued PATCH/DELETEs to the knowledge box, then exit (like act_hansard --patch-kb).")
+    parser.add_argument("--patch-limit", type=int, default=5000)
+    parser.add_argument("--no-patch-kb", action="store_true",
+                        help="Do not send this run's queue at its end even when OPAX_SYNC_KB=1.")
     parser.add_argument("--dry-run", action="store_true", help="Discover and list what would be synced; fetch and write nothing.")
     parser.add_argument("--db", default=None, help="SQLite database (default: the corpus DB / OPAX_DB).")
     parser.add_argument("--cache-dir", default=None, help="Raw page cache (default: $OPAX_ATTENDANCE_CACHE).")
@@ -833,6 +850,9 @@ def main(argv: list[str] | None = None) -> int:
     db.execute("PRAGMA busy_timeout = 300000")
     ensure_schema(db)
     db.row_factory = sqlite3.Row
+    if args.patch_kb:
+        send_kb_queue(db, limit=args.patch_limit, dry_run=args.dry_run)
+        return 0
     seen = build_dedup_index(db)
     cache = FragmentCache(args.cache_dir)
     http = RateLimitedSession()
@@ -842,8 +862,7 @@ def main(argv: list[str] | None = None) -> int:
         log(f"  {len(known)} hearings already ingested (since {since})")
 
     exit_code = 0
-    total_ins = total_upd = 0
-    touched: list[str] = []
+    total_ins = total_upd = total_del = 0
     try:
         # --- discovery
         hearings: list[HearingMetadata]
@@ -900,13 +919,15 @@ def main(argv: list[str] | None = None) -> int:
                     continue
                 total_ins += r.inserted
                 total_upd += r.updated
-                touched.extend(r.queued)
+                total_del += r.deleted
                 bits = [f"{r.fragments_ok}/{r.fragments_expected} fragments", f"status {r.status or '?'}",
                         f"+{r.inserted} rows"]
                 if not r.is_new:
                     bits += [f"{r.updated} updated ({r.relabelled} relabelled)", f"{r.unchanged_fragments} fragments unchanged"]
                 if r.orphaned:
-                    bits.append(f"{r.orphaned} stored rows not in the transcript now")
+                    bits.append(f"{r.orphaned} stored rows not in the transcript now ({r.deleted} deleted)")
+                if r.delete_refused:
+                    bits.append(f"DELETE REFUSED in {r.delete_refused} fragments (more than {int(MAX_SHRINK * 100)}% of the rows would go)")
                 if r.failed_fragments:
                     bits.append("FAILED " + ",".join(r.failed_fragments))
                 log("  " + ", ".join(bits))
@@ -916,18 +937,17 @@ def main(argv: list[str] | None = None) -> int:
     finally:
         _commit_with_retry(db)
 
-    do_patch = args.patch_kb if args.patch_kb is not None else os.environ.get("OPAX_SYNC_KB") == "1"
-    if touched:
-        if do_patch:
-            patch_knowledge_box(db, touched)
+    pending = db.execute(f"SELECT COUNT(*) FROM {KB_QUEUE} WHERE done_at IS NULL").fetchone()[0]
+    if pending:
+        if os.environ.get("OPAX_SYNC_KB") == "1" and not args.no_patch_kb:
+            send_kb_queue(db, limit=args.patch_limit)
         else:
-            log(f"  {len(touched)} text updates queued in ext_kb_patch_queue (reason {REFRESH_REASON}); "
-                "send them with scripts/arag_patch_speakers.py or rerun with OPAX_SYNC_KB=1")
+            log(f"  {pending} changes queued in {KB_QUEUE}; `--patch-kb` (or a run with OPAX_SYNC_KB=1) sends them")
 
     log(f"\n{'=' * 60}")
-    log(f"Ingestion complete: {total_ins} speeches inserted, {total_upd} updated in place; {http.requests} requests")
-    if total_upd:
-        log(f"COMMITTEES_CHANGED rows_updated={total_upd}")
+    log(f"Ingestion complete: {total_ins} speeches inserted, {total_upd} updated in place, {total_del} removed; {http.requests} requests")
+    if total_upd or total_del:
+        log(f"COMMITTEES_CHANGED rows_updated={total_upd} rows_removed={total_del}")
     total_committee = db.execute(
         "SELECT COUNT(*) FROM speeches WHERE source IN (%s)" % ",".join("?" * len(COMMITTEE_SOURCES)), COMMITTEE_SOURCES).fetchone()[0]
     log(f"Total committee speeches in DB: {total_committee}")
