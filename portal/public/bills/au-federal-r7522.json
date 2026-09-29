@@ -234,7 +234,7 @@
     },
     "LNP": {
      "ayes": 0,
-     "noes": 9
+     "noes": 10
     },
     "Labor": {
      "ayes": 79,
@@ -246,7 +246,7 @@
     },
     "Nationals": {
      "ayes": 0,
-     "noes": 9
+     "noes": 8
     }
    },
    "party_coverage": {
@@ -296,7 +296,7 @@
    },
    "party_coverage": {
     "dated": 59,
-    "member": 1
+    "earliest": 1
    },
    "paired": 0,
    "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/18"

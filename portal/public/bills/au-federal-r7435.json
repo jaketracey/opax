@@ -205,10 +205,6 @@
      "ayes": 0,
      "noes": 2
     },
-    "LNP": {
-     "ayes": 0,
-     "noes": 1
-    },
     "Labor": {
      "ayes": 0,
      "noes": 23
@@ -216,6 +212,10 @@
     "Liberal": {
      "ayes": 0,
      "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
     },
     "One Nation": {
      "ayes": 4,
@@ -255,7 +255,7 @@
      "noes": 2
     },
     "LNP": {
-     "ayes": 2,
+     "ayes": 1,
      "noes": 0
     },
     "Labor": {
@@ -264,6 +264,10 @@
     },
     "Liberal": {
      "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
      "noes": 0
     },
     "One Nation": {
@@ -305,7 +309,7 @@
     },
     "LNP": {
      "ayes": 0,
-     "noes": 2
+     "noes": 1
     },
     "Labor": {
      "ayes": 22,
@@ -314,6 +318,10 @@
     "Liberal": {
      "ayes": 0,
      "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
     },
     "One Nation": {
      "ayes": 0,

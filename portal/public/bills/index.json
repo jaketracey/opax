@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-28T16:20:01+00:00",
+ "generated_at": "2026-09-29T17:29:38+00:00",
  "count": 2989,
  "meta": {
   "mode": "registry",
@@ -7,8 +7,8 @@
   "party_basis_note": "A division's party splits read each voter's party at the division's own date, from the party recorded against that person's speeches. party_coverage on each division counts the votes that rest on an observation on or before the day (dated), on that person's earliest recorded party (earliest), on the members table (member), or on nothing at all (unknown).",
   "party_coverage": {
    "dated": 736532,
-   "member": 27034,
-   "earliest": 81308
+   "earliest": 81336,
+   "member": 27006
   },
   "speech_cap": 24,
   "match_rule": "bill_links",
@@ -280,7 +280,7 @@
    "summary_version": null,
    "divisions": 0,
    "speeches": 0,
-   "acts": 0
+   "acts": 1
   },
   {
    "key": "au-federal-ed-online-safety-digital-duty-of-care-2026",
@@ -793,7 +793,7 @@
    "summary_version": 1,
    "divisions": 0,
    "speeches": 0,
-   "acts": 0
+   "acts": 1
   },
   {
    "key": "au-federal-r7527",
@@ -926,7 +926,7 @@
    "summary_version": null,
    "divisions": 0,
    "speeches": 2,
-   "acts": 0
+   "acts": 1
   },
   {
    "key": "au-federal-r7513",
@@ -1040,7 +1040,7 @@
    "summary_version": 8,
    "divisions": 0,
    "speeches": 3,
-   "acts": 0
+   "acts": 1
   },
   {
    "key": "au-federal-r7518",
@@ -1059,7 +1059,7 @@
    "summary_version": 1,
    "divisions": 0,
    "speeches": 3,
-   "acts": 0
+   "acts": 1
   },
   {
    "key": "au-federal-r7517",
@@ -1173,7 +1173,7 @@
    "summary_version": 1,
    "divisions": 1,
    "speeches": 0,
-   "acts": 0
+   "acts": 1
   },
   {
    "key": "au-federal-r7506",
@@ -1287,7 +1287,7 @@
    "summary_version": 1,
    "divisions": 0,
    "speeches": 2,
-   "acts": 0
+   "acts": 1
   },
   {
    "key": "au-federal-r7498",
@@ -1724,7 +1724,7 @@
    "summary_version": null,
    "divisions": 1,
    "speeches": 4,
-   "acts": 0
+   "acts": 1
   },
   {
    "key": "au-federal-r7486",
@@ -2636,7 +2636,7 @@
    "summary_version": 1,
    "divisions": 3,
    "speeches": 4,
-   "acts": 0
+   "acts": 1
   },
   {
    "key": "au-federal-r7438",

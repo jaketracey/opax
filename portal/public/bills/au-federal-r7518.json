@@ -169,5 +169,11 @@
    "brief": "Supported the Biosecurity Amendment (Improving Operational Efficiency) Bill 2026, which would enable digital Australia travel declarations, establish procedural fairness for approved arrangements and correct a drafting issue, while maintaining biosecurity standards; the bill passed its second reading and was reported without amendment."
   }
  ],
- "acts": []
+ "acts": [
+  {
+   "title": "Biosecurity Amendment (Improving Operational Efficiency) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00084",
+   "assent_date": "2026-09-15"
+  }
+ ]
 }

@@ -247,5 +247,11 @@
    "brief": "Supported the Regulatory Reform Omnibus Bill 2026 while moving an amendment seeking measurable regulatory reduction targets, senior accountability, faster decisions, stronger impact assessment and greater funding for the National Productivity Fund; in summing up, the government said its agenda would reduce regulatory burden by $10.2 billion annually, amend 25 acts and improve 18 agencies, but the amendment question remained unresolved."
   }
  ],
- "acts": []
+ "acts": [
+  {
+   "title": "Regulatory Reform Omnibus Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00087",
+   "assent_date": "2026-09-18"
+  }
+ ]
 }

@@ -171,5 +171,11 @@
    "brief": "Supported the Wine and Other Legislation Amendment Bill 2026, arguing that it would strengthen protections for grape growers by supporting a mandatory code, improving Wine Australia surveys and enabling targeted agricultural survey mailings. Reported government support for the bill and opposition to a second reading amendment concerning volumetric alcohol taxation."
   }
  ],
- "acts": []
+ "acts": [
+  {
+   "title": "Wine and Other Legislation Amendment Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00085",
+   "assent_date": "2026-09-15"
+  }
+ ]
 }
