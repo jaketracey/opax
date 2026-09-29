@@ -100,8 +100,10 @@ BY_ELECTIONS = {"federal": [
 ]}
 # Party spellings the roster and the election results use for the same party.
 PARTY_ALIASES = {"A.L.P.": "Labor", "ALP": "Labor", "LP": "Liberal", "NAT": "Nationals", "NP": "Nationals",
-                 "CLP": "Country Liberal Party", "Queensland Greens": "Greens", "The Greens": "Greens",
-                 "Australian Greens": "Greens", "KAP": "Katter's Australian Party"}
+                 "Nats": "Nationals", "CLP": "Country Liberal Party", "Queensland Greens": "Greens", "The Greens": "Greens",
+                 "Australian Greens": "Greens", "KAP": "Katter's Australian Party", "CA": "Centre Alliance",
+                 "NXT": "Nick Xenophon Team", "PUP": "Palmer United Party", "UAP": "United Australia Party",
+                 "PHON": "One Nation"}
 PROGRAM_GRANTS_MAX = 600
 PROGRAM_RECIPIENTS_MAX = 60
 SEAT_BLOCS = ("gov", "opp", "cross", "unknown")
@@ -212,11 +214,31 @@ def pretty_name(name):
     return f"{parts[0].title()} {parts[-1].title()}"
 
 
-def seat_holder(seat, day, seat_members, margins, current_seats=None):
+def seat_holder(seat, day, seat_members, margins, current_seats=None, seat_periods=None):
     """[name, party] of the member holding a federal seat on day, or None.
 
-    The roster's service dates are unreliable for a tenth of the seats, so the
-    recorded election winner (the electorates table: 2019 and 2022, with the
+    The party is the member's party ON THAT DAY. seat_periods (seat, lowercased
+    -> [[start, end | None, name, party], ...]) are the parliamentary service
+    records' dated party periods from the portal's electorates release
+    (seat_periods_from_release): a member who changed party is filed under the
+    party they belonged to on the grant date, not the one they belong to now
+    (Joyce: Nationals to 27 Nov 2025, then One Nation; Gee: Nationals to 23 Dec
+    2022, then independent). Between two periods:
+      * a gap closed by a general election (in ELECTIONS) is the campaign after
+        a dissolution, and the last member holds the seat until polling day, as
+        the election-winner rule below has always done;
+      * a gap closed by anything else (a by-election) is a vacancy after a death,
+        a resignation or a disqualification, and nobody holds the seat;
+      * a period that ends the day before the next begins is a party change
+        overnight, not a vacancy.
+    Where the release decides, the name and the party label of the older rule
+    below are kept when it names the same person in the same bloc (LNP members
+    sit as Liberals or Nationals in the records, as the LNP on the roster), so
+    only a changed member or bloc changes what the page shows; a name is spelled
+    as the roster spells it where the roster has that member.
+
+    Where the release has no period for the day, the older layered rule stands:
+    the recorded election winner (the electorates table: 2019 and 2022, with the
     candidate at index 4 of each margins row) decides the term after each of
     those elections, with BY_ELECTIONS applied; from the last listed federal
     election on, current_seats (the portal's current roster) decides; before
@@ -229,28 +251,69 @@ def seat_holder(seat, day, seat_members, margins, current_seats=None):
     roster = holder_at(seat_members.get(seat) if seat_members else None, day)
     roster_out = [roster[0], canonical_party(roster[1])] if roster else None
     elections = ELECTIONS["federal"]
-    if day >= elections[-1]:
-        cur = (current_seats or {}).get(seat)
-        return [cur[0], canonical_party(cur[1])] if cur else roster_out
-    term = None
-    for e in elections:
-        if e <= day:
-            term = e
-    if term:
-        latest = None
-        for s, d, name, party in BY_ELECTIONS["federal"]:
-            if s == seat and term <= d <= day and (latest is None or d > latest[0]):
-                latest = (d, name, party)
-        if latest:
-            return [latest[1], canonical_party(latest[2])]
-        row = (margins or {}).get(seat, {}).get(term[:4])
-        if row and len(row) > 4 and row[4]:
-            surname = row[4].replace(",", " ").split()[-1].lower()
-            roster_name = roster[0].lower() if roster else ""
-            if roster and (surname in roster_name.replace("-", " ").split() or roster_name.endswith(surname)):
-                return roster_out
-            return [pretty_name(row[4]), canonical_party(row[1])]
-    return roster_out
+
+    def older():
+        if day >= elections[-1]:
+            cur = (current_seats or {}).get(seat)
+            return [cur[0], canonical_party(cur[1])] if cur else roster_out
+        term = None
+        for e in elections:
+            if e <= day:
+                term = e
+        if term:
+            latest = None
+            for s, d, name, party in BY_ELECTIONS["federal"]:
+                if s == seat and term <= d <= day and (latest is None or d > latest[0]):
+                    latest = (d, name, party)
+            if latest:
+                return [latest[1], canonical_party(latest[2])]
+            row = (margins or {}).get(seat, {}).get(term[:4])
+            if row and len(row) > 4 and row[4]:
+                surname = row[4].replace(",", " ").split()[-1].lower()
+                roster_name = roster[0].lower() if roster else ""
+                if roster and (surname in roster_name.replace("-", " ").split() or roster_name.endswith(surname)):
+                    return roster_out
+                return [pretty_name(row[4]), canonical_party(row[1])]
+        return roster_out
+
+    periods = (seat_periods or {}).get(seat.lower())
+    if not periods:
+        return older()
+
+    def surname(n):
+        parts = (n or "").replace(",", " ").replace("-", " ").split()
+        return parts[-1].lower() if parts else ""
+
+    def next_day(d):
+        return date.fromordinal(date.fromisoformat(d).toordinal() + 1).isoformat()
+
+    starts = {r[0] for r in periods}
+    hit = None
+    for r in periods:
+        if r[0] <= day and (r[1] is None or day < r[1] or (day == r[1] and next_day(r[1]) in starts)):
+            hit = r
+            break
+    if hit is None:
+        ended = [r for r in periods if r[1] and r[1] <= day]
+        later = [r for r in periods if r[0] > day]
+        if not ended or not later:
+            return older()   # before the first period on record, or after the last one ended
+        prev = max(ended, key=lambda r: r[1])
+        nxt = min(later, key=lambda r: r[0])
+        if nxt[0] not in elections:
+            return None      # a vacancy until a by-election
+        hit = prev           # the campaign after a dissolution: the last member stands for the seat
+    name, party = hit[2], canonical_party(hit[3])
+    old = older()
+    if old and surname(old[0]) == surname(name):
+        if old[1] == party or (BLOCS.get(old[1]) and BLOCS.get(old[1]) == BLOCS.get(party)):
+            return old
+        return [old[0], party]
+    spelled = next((m[0] for m in (seat_members or {}).get(seat, []) if surname(m[0]) == surname(name)), None)
+    cur = (current_seats or {}).get(seat)
+    if not spelled and cur and surname(cur[0]) == surname(name):
+        spelled = cur[0]
+    return [spelled or pretty_name(name), party]
 
 
 def margin_type_for(margins, day, elections):
@@ -314,7 +377,8 @@ def build_program_file(pid, key, jur, gs, ctx):
     ctx: recips (rid -> {canonical_name, kind, donor_entity_id}), seat_members
     (seat -> [[name, party, entered, left], ...]), margins (seat -> {year:
     [pct, party, type, state, candidate]}), current_seats (seat -> [name,
-    party], optional), blocs, government, elections (the file's own
+    party], optional), seat_periods (lowercased seat -> dated party periods,
+    optional; see seat_holder), blocs, government, elections (the file's own
     jurisdiction, for the election timing; seat holders always follow the
     federal calendar), agency_label (callable), generated (iso timestamp).
     Federal-only fields (pbs, seats, margins, bloc, mt, a, approval timing,
@@ -326,6 +390,7 @@ def build_program_file(pid, key, jur, gs, ctx):
     seat_members = ctx["seat_members"]
     margins = ctx["margins"]
     current_seats = ctx.get("current_seats")
+    seat_periods = ctx.get("seat_periods")
     blocs, government, elections = ctx["blocs"], ctx["government"], ctx["elections"]
     label = ctx["agency_label"]
 
@@ -388,7 +453,7 @@ def build_program_file(pid, key, jur, gs, ctx):
         if g.get("adhoc"):
             adhoc += v
         el = g.get("el")
-        holder = seat_holder(el, day, seat_members, margins, current_seats) if el else None
+        holder = seat_holder(el, day, seat_members, margins, current_seats, seat_periods) if el else None
         holder_out = holder
         bloc = mt = None
         if federal:
@@ -586,7 +651,52 @@ def current_seats_from_roster(path: Path) -> dict:
     return {seat: [name, party] for seat, (_, name, party) in sorted(best.items())}
 
 
-def remote_program(current_seats: dict | None = None) -> str:
+def seat_periods_from_release(public: Path) -> dict:
+    """Lowercased seat -> [[start, end | None, name, party], ...] for every federal House seat,
+    from the portal's electorates release (electorates/manifest.json -> index -> detail files):
+    the parliamentary service records' dated party periods, which split a member's term
+    where they changed party. A Speaker's term (no party in the records) takes the member's
+    party once out of the Chair, else the one before. Periods ending before 2010 are left out
+    (the grants start in 2011). {} when the release is missing, and seat_holder then falls
+    back to its older rules."""
+    manifest_path = public / "electorates" / "manifest.json"
+    if not manifest_path.exists():
+        return {}
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    index = json.loads((public / manifest["index_url"].lstrip("/")).read_text(encoding="utf-8"))
+    out: dict = {}
+    for e in index.get("electorates", []):
+        if e.get("jurisdiction") != "federal" or e.get("chamber") != "representatives" or not e.get("detail_url"):
+            continue
+        path = public / e["detail_url"].lstrip("/")
+        if not path.exists():
+            continue
+        d = json.loads(path.read_text(encoding="utf-8"))
+        people = d.get("people") or {}
+        terms = sorted(d.get("terms") or [], key=lambda t: iso_day(t.get("start")) or "")
+        rows = []
+        for i, t in enumerate(terms):
+            name = (people.get(t.get("person_id")) or {}).get("name")
+            periods = [[iso_day(p.get("start")), iso_day(p.get("end")), p.get("party")] for p in t.get("party_periods") or []]
+            if not periods and t.get("source_party_label") == "SPK":
+                # A Speaker's term carries no party. The member's party once out of the Chair
+                # (Slipper left the Liberals when he took it) else the one before (a sitting Speaker).
+                same = [u for u in terms if u.get("person_id") == t.get("person_id") and u.get("party_periods")]
+                after = [u for u in same if (iso_day(u.get("start")) or "") >= (iso_day(t.get("end")) or "9999")]
+                before = [u for u in same if (iso_day(u.get("end")) or "9999") <= (iso_day(t.get("start")) or "")]
+                src = after[0]["party_periods"][0] if after else (before[-1]["party_periods"][-1] if before else None)
+                if src:
+                    periods = [[iso_day(t.get("start")), iso_day(t.get("end")), src.get("party")]]
+            for start, end, party in periods:
+                if not start or not name or (end and end < "2010-01-01"):
+                    continue
+                rows.append([start, end, name, party])
+        if rows:
+            out[d["name"].lower()] = sorted(rows, key=lambda r: r[0])
+    return dict(sorted(out.items()))
+
+
+def remote_program(current_seats: dict | None = None, seat_periods: dict | None = None) -> str:
     """The stdlib-only program streamed to the DB host: shared rules + REMOTE_BODY."""
     head = ["from __future__ import annotations",
             "import json, os, re, sqlite3, sys, zlib",
@@ -596,6 +706,7 @@ def remote_program(current_seats: dict | None = None) -> str:
     for name in SHARED_CONSTANTS:
         head.append(f"{name} = {globals()[name]!r}")
     head.append(f"CURRENT_SEATS = {current_seats or {}!r}")
+    head.append(f"SEAT_PERIODS = {seat_periods or {}!r}")
     return "\n".join(head) + "\n\n" + "\n\n".join(inspect.getsource(f) for f in SHARED_FUNCTIONS) + "\n" + REMOTE_BODY
 
 REMOTE_BODY = r'''
@@ -1047,6 +1158,7 @@ for r in q("SELECT electorate_name, state, year, margin_pct, winning_party, seat
 # program files (one per listed program) and the index row extras
 generated = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 program_ctx = {"recips": recips, "seat_members": seat_members, "margins": margins, "current_seats": CURRENT_SEATS,
+               "seat_periods": SEAT_PERIODS,
                "blocs": BLOCS, "government": GOVERNMENT[JUR], "elections": ELECTIONS[JUR], "agency_label": agency_label,
                "generated": generated}
 programs_out = {}
@@ -1205,13 +1317,14 @@ def run_remote(host: str | None, jur: str, top: int, cap: int, force_abns: list[
     else ~/.cache/autoresearch/parli.db: the same rule the program itself applies.
     """
     current = current_seats_from_roster(ROOT / "portal" / "public" / "parliamentarians.json")
+    periods = seat_periods_from_release(ROOT / "portal" / "public")
     argv = ["python3" if host else sys.executable, "-", jur, str(top), str(cap), ",".join(force_abns), str(programs),
             ",".join(force_programs or [])]
     if host:
         cmd, env = ["ssh", host, *argv], None
     else:
         cmd, env = argv, dict(os.environ, **({"OPAX_DB": local_db} if local_db else {}))
-    proc = subprocess.run(cmd, input=remote_program(current), capture_output=True, text=True, timeout=3600, env=env)
+    proc = subprocess.run(cmd, input=remote_program(current, periods), capture_output=True, text=True, timeout=3600, env=env)
     if proc.returncode != 0:
         sys.stderr.write(proc.stderr[-4000:])
         return None

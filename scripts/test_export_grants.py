@@ -149,6 +149,178 @@ class SeatHolderTests(unittest.TestCase):
         self.assertIsNone(self.hold("Kennedy", None))
 
 
+# The electorates release's dated party periods (seat_periods_from_release), as the
+# service records write them: a term split where the member changed party.
+PERIODS = {
+    # Joyce: disqualified 27 Oct 2017, re-elected at the 2 Dec 2017 by-election; Nationals to
+    # 27 Nov 2025, independent for eleven days, One Nation from 8 Dec 2025.
+    "new england": [["2013-09-07", "2017-10-27", "Barnaby Joyce", "Nationals"], ["2017-12-02", "2025-11-27", "Barnaby Joyce", "Nationals"],
+                    ["2025-11-27", "2025-12-08", "Barnaby Joyce", "Independent"], ["2025-12-08", None, "Barnaby Joyce", "One Nation"]],
+    # Calare: John Cobb retired at the 2016 dissolution (9 May); Gee from polling day, 2 Jul 2016.
+    "calare": [["2007-11-24", "2016-05-09", "John Cobb", "Nationals"], ["2016-07-02", "2022-12-23", "Andrew Gee", "Nationals"],
+               ["2022-12-23", None, "Andrew Gee", "Independent"]],
+    # Capricornia: the records put the LNP member in the Nationals party room; the roster says LNP.
+    "capricornia": [["2013-09-07", None, "Michelle Landry", "Nationals"]],
+    # Flinders: the roster's dates for Hunt are wrong (it has his successor from 2019); the records are right.
+    "flinders": [["2001-11-10", "2022-04-11", "Gregory Andrew Hunt", "Liberal"], ["2022-05-21", None, "Zoe McKenzie", "Liberal"]],
+    # Goodenough: the records end the Liberal period on 31 Dec 2024 and start the independent one on 1 Jan 2025.
+    "moore": [["2013-09-07", "2024-12-31", "Ian Goodenough", "Liberal"], ["2025-01-01", "2025-05-03", "Ian Goodenough", "Independent"],
+              ["2025-05-03", None, "Tom French", "Labor"]],
+    # Dunkley: vacant from Peta Murphy's death on 15 Dec 2023 to the 2 Mar 2024 by-election.
+    "dunkley": [["2019-05-18", "2023-12-15", "Peta Jane Murphy", "Labor"], ["2024-03-02", None, "Jodie Belyea", "Labor"]],
+    "mcpherson": [["2019-05-18", "2025-05-03", "Karen Andrews", "LNP"], ["2025-05-03", None, "Leon Rebello", "LNP"]],
+    # Katter: Nationals from 1993, independent from July 2001, his own party from 2011.
+    "kennedy": [["1993-03-13", "2001-07-09", "Robert Carl Katter", "Nats"], ["2001-07-09", "2011-09-27", "Robert Carl Katter", "Independent"],
+                ["2011-09-27", None, "Robert Carl Katter", "Katter's Australian Party"]],
+}
+# The roster as the members table has it: one row per member, today's party.
+PARTY_SEATS = dict(SEATS, **{
+    "New England": [["Barnaby Joyce", "One Nation", "2017-12-02", None]],
+    "Calare": [["Andrew Gee", "Independent", "2016-07-02", None]],
+    "Capricornia": [["Michelle Landry", "LNP", "2013-09-07", None]],
+    "Flinders": [["Greg Hunt", "Liberal", "2001-11-10", "2019-01-01"], ["Zoe McKenzie", "Liberal", "2019-01-01", None]],
+    "Moore": [["Ian Goodenough", "Independent", "2013-09-07", "2025-05-03"], ["Tom French", "Labor", "2025-05-03", None]],
+})
+PARTY_MARGINS = dict(MARGINS, **{
+    "New England": {"2019": [15.7, "NP", "safe", "nsw", "Barnaby JOYCE"], "2022": [16.4, "NP", "safe", "nsw", "Barnaby JOYCE"]},
+    "Calare": {"2019": [13.3, "NP", "safe", "nsw", "Andrew GEE"], "2022": [12.3, "NP", "safe", "nsw", "Andrew GEE"]},
+    "Moore": {"2019": [11.6, "Liberal", "safe", "wa", "Ian GOODENOUGH"], "2022": [0.7, "Liberal", "marginal", "wa", "Ian GOODENOUGH"]},
+})
+
+
+class PartyOnTheDayTests(unittest.TestCase):
+    """A member who changed party is filed under the party they held on the grant date."""
+
+    def hold(self, seat, day, periods=PERIODS):
+        return eg.seat_holder(seat, day, PARTY_SEATS, PARTY_MARGINS, CURRENT, periods)
+
+    def bloc(self, seat, day):
+        h = self.hold(seat, day)
+        return eg.bloc_for(h[1] if h else None, day, eg.BLOCS, FED_GOV) if h else "unknown"
+
+    def test_the_roster_alone_files_joyce_under_one_nation(self):
+        # The defect this layer fixes: without the release, the 2019 winner is the roster's member,
+        # so the roster's party (today's) is returned for a 2021 grant.
+        self.assertEqual(self.hold("New England", "2021-06-01", periods=None), ["Barnaby Joyce", "One Nation"])
+
+    def test_joyce_bbrf_2020_22_is_coalition(self):
+        for day in ("2020-11-02", "2021-06-01", "2022-03-25"):
+            self.assertEqual(self.hold("New England", day), ["Barnaby Joyce", "Nationals"], day)
+            self.assertEqual(self.bloc("New England", day), "gov", day)          # the Coalition governed until 23 May 2022
+        self.assertEqual(self.bloc("New England", "2023-06-01"), "opp")           # Nationals under Labor
+        self.assertEqual(self.hold("New England", "2025-12-01"), ["Barnaby Joyce", "Independent"])
+        self.assertEqual(self.hold("New England", "2026-03-01"), ["Barnaby Joyce", "One Nation"])
+        self.assertEqual(self.bloc("New England", "2026-03-01"), "cross")
+        self.assertIsNone(self.hold("New England", "2017-11-15"), "disqualified: vacant until the by-election")
+
+    def test_gee_changes_party_on_23_december_2022(self):
+        self.assertEqual(self.hold("Calare", "2021-03-01"), ["Andrew Gee", "Nationals"])
+        self.assertEqual(self.bloc("Calare", "2021-03-01"), "gov")
+        self.assertEqual(self.bloc("Calare", "2022-06-01"), "opp")
+        self.assertEqual(self.hold("Calare", "2022-12-22"), ["Andrew Gee", "Nationals"])
+        self.assertEqual(self.hold("Calare", "2022-12-23"), ["Andrew Gee", "Independent"])
+        self.assertEqual(self.bloc("Calare", "2023-03-01"), "cross")
+
+    def test_goodenough_liberal_until_2025(self):
+        self.assertEqual(self.hold("Moore", "2024-02-21"), ["Ian Goodenough", "Liberal"])   # the PCIP Alkimos grant
+        self.assertEqual(self.bloc("Moore", "2024-02-21"), "opp")
+        self.assertEqual(self.hold("Moore", "2024-12-31"), ["Ian Goodenough", "Liberal"], "a next-day change is not a vacancy")
+        self.assertEqual(self.hold("Moore", "2025-02-01"), ["Ian Goodenough", "Independent"])
+        self.assertEqual(self.hold("Moore", "2025-06-01"), ["Tom French", "Labor"])
+
+    def test_vacancy_holds_nothing(self):
+        self.assertEqual(self.hold("Dunkley", "2023-12-14"), ["Peta Murphy", "Labor"])   # no roster row: prettified
+        self.assertIsNone(self.hold("Dunkley", "2024-01-10"))
+        self.assertEqual(self.hold("Dunkley", "2024-04-01"), ["Jodie Belyea", "Labor"])
+
+    def test_names_keep_the_roster_spelling_and_parties_are_canonical(self):
+        self.assertEqual(self.hold("Kennedy", "2000-06-01"), ["Bob Katter", "Nationals"])     # "Nats"; roster spelling kept
+        self.assertEqual(self.hold("Kennedy", "2021-02-12"), ["Bob Katter", "Katter's Australian Party"])
+        self.assertEqual(self.hold("Mcpherson", "2021-02-12"), ["Karen Andrews", "LNP"])     # the grants' spelling of McPherson
+        self.assertEqual(eg.canonical_party("Nats"), "Nationals")
+        self.assertEqual(eg.canonical_party("CA"), "Centre Alliance")
+
+    def test_the_campaign_after_a_dissolution_stays_with_the_last_member(self):
+        self.assertEqual(self.hold("Calare", "2016-06-15"), ["John Cobb", "Nationals"])   # retired, but the seat is his until polling day
+        self.assertEqual(self.bloc("Calare", "2016-06-15"), "gov")
+        self.assertEqual(self.hold("Calare", "2016-07-02"), ["Andrew Gee", "Nationals"])
+
+    def test_same_person_same_bloc_keeps_the_label_the_page_had(self):
+        self.assertEqual(self.hold("Capricornia", "2021-01-01"), ["Michelle Landry", "LNP"])
+        self.assertEqual(self.hold("New England", "2021-06-01"), ["Barnaby Joyce", "Nationals"])   # One Nation -> Nationals: bloc changes
+
+    def test_a_wrong_roster_member_gives_way_to_the_records_in_the_roster_spelling(self):
+        self.assertEqual(self.hold("Flinders", "2019-03-21"), ["Greg Hunt", "Liberal"])
+
+    def test_no_period_for_the_day_falls_back_to_the_older_rules(self):
+        self.assertEqual(self.hold("Bass", "2020-06-01"), ["Bridget Archer", "Liberal"])
+        self.assertEqual(self.hold("Aston", "2023-04-01"), ["Mary Doyle", "Labor"])
+
+    def test_program_file_files_joyce_bbrf_grants_as_coalition(self):
+        c = dict(ctx(), seat_members=PARTY_SEATS, margins=PARTY_MARGINS, seat_periods=PERIODS)
+        gs = [grant(id="GA10", v=5000000.0, s="2021-06-01", el="New England", elst="nsw", fy="2020-21"),
+              grant(id="GA11", v=2376000.0, s="2022-03-25", el="New England", elst="nsw", fy="2021-22"),
+              grant(id="GA12", v=1938911.0, s="2021-12-01", el="Calare", elst="nsw", fy="2021-22"),
+              grant(id="GA13", v=100.0, s="2023-03-01", el="Calare", elst="nsw", fy="2022-23")]
+        pf = eg.build_program_file("GO4504", "go4504", "federal", gs, c)
+        self.assertEqual(pf["seats"], {"gov": [9314911, 3], "opp": [0, 0], "cross": [100, 1], "unknown": [0, 0]})
+        ne = next(e for e in pf["electorates"] if e["n"] == "New England")
+        self.assertEqual(ne["holders"], [["Barnaby Joyce", "Nationals", 7376000]])
+        self.assertEqual((ne["gov"], ne["cross"]), (7376000, 0))
+        by_id = {g["id"]: g for g in pf["grants"]}
+        self.assertEqual((by_id["GA10"]["holder"], by_id["GA10"]["bloc"]), (["Barnaby Joyce", "Nationals"], "gov"))
+        self.assertEqual((by_id["GA13"]["holder"], by_id["GA13"]["bloc"]), (["Andrew Gee", "Independent"], "cross"))
+        self.assertEqual(eg.program_index_extras(pf, "federal")["gov"], 9314911)
+        old = eg.build_program_file("GO4504", "go4504", "federal", gs, dict(c, seat_periods=None))
+        self.assertEqual(old["seats"]["gov"], [0, 0], "without the release every one of these was crossbench")
+
+    def test_seat_periods_from_release(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            pub = Path(tmp)
+            (pub / "electorates" / "r").mkdir(parents=True)
+            (pub / "electorates" / "manifest.json").write_text(json.dumps({"index_url": "/electorates/r/index.json"}))
+            (pub / "electorates" / "r" / "index.json").write_text(json.dumps({"electorates": [
+                {"jurisdiction": "federal", "chamber": "representatives", "detail_url": "/electorates/r/casey.json"},
+                {"jurisdiction": "federal", "chamber": "representatives", "detail_url": "/electorates/r/fisher.json"},
+                {"jurisdiction": "federal", "chamber": "representatives", "detail_url": "/electorates/r/ne.json"},
+                {"jurisdiction": "nsw", "chamber": "assembly", "detail_url": "/electorates/r/state.json"},
+                {"jurisdiction": "federal", "chamber": "representatives", "detail_url": "/electorates/r/missing.json"}]}))
+            (pub / "electorates" / "r" / "ne.json").write_text(json.dumps({"name": "New England",
+                "people": {"p1": {"name": "Barnaby Joyce"}, "p0": {"name": "Ian Sinclair"}},
+                "terms": [{"person_id": "p1", "party_periods": [{"party": "One Nation", "start": "2025-12-08", "end": None},
+                                                                {"party": "Nationals", "start": "2017-12-02", "end": "2025-11-27"}]},
+                          {"person_id": "p0", "party_periods": [{"party": "Nationals", "start": "1963-11-30", "end": "1998-10-03"}]}]}))
+            # Speakers: Tony Smith (Liberal before and after the Chair); Peter Slipper, who left the Liberals when he took it.
+            (pub / "electorates" / "r" / "casey.json").write_text(json.dumps({"name": "Casey", "people": {"s": {"name": "ANTHONY SMITH"}}, "terms": [
+                {"person_id": "s", "start": "2001-11-10", "end": "2015-08-10", "party_periods": [{"party": "Liberal", "start": "2001-11-10", "end": "2015-08-10"}], "source_party_label": "LIB"},
+                {"person_id": "s", "start": "2015-08-10", "end": "2021-11-23", "party_periods": [], "source_party_label": "SPK"},
+                {"person_id": "s", "start": "2021-11-23", "end": "2022-05-21", "party_periods": [{"party": "Liberal", "start": "2021-11-23", "end": "2022-05-21"}], "source_party_label": "LIB"}]}))
+            (pub / "electorates" / "r" / "fisher.json").write_text(json.dumps({"name": "Fisher", "people": {"p": {"name": "Peter Slipper"}}, "terms": [
+                {"person_id": "p", "start": "1993-03-13", "end": "2011-11-24", "party_periods": [{"party": "Liberal", "start": "1993-03-13", "end": "2011-11-24"}], "source_party_label": "LIB"},
+                {"person_id": "p", "start": "2011-11-24", "end": "2012-10-09", "party_periods": [], "source_party_label": "SPK"},
+                {"person_id": "p", "start": "2012-10-09", "end": "2013-09-07", "party_periods": [{"party": "Independent", "start": "2012-10-09", "end": "2013-09-07"}], "source_party_label": "IND"}]}))
+            periods = eg.seat_periods_from_release(pub)
+            self.assertEqual(periods["casey"], [["2001-11-10", "2015-08-10", "ANTHONY SMITH", "Liberal"], ["2015-08-10", "2021-11-23", "ANTHONY SMITH", "Liberal"],
+                                                ["2021-11-23", "2022-05-21", "ANTHONY SMITH", "Liberal"]])
+            self.assertEqual(periods["fisher"][1], ["2011-11-24", "2012-10-09", "Peter Slipper", "Independent"])
+            self.assertEqual(eg.seat_holder("Casey", "2019-06-01", {}, {}, {}, periods), ["Anthony Smith", "Liberal"], "a Speaker's seat is not vacant")
+            del periods["casey"], periods["fisher"]
+            self.assertEqual(periods, {"new england": [
+                ["2017-12-02", "2025-11-27", "Barnaby Joyce", "Nationals"], ["2025-12-08", None, "Barnaby Joyce", "One Nation"]]})
+            self.assertEqual(eg.seat_periods_from_release(pub / "nowhere"), {})
+        real = eg.seat_periods_from_release(eg.ROOT / "portal" / "public")
+        if real:   # the release is in the repo; guard for a checkout without portal data
+            self.assertIn("new england", real)
+            self.assertEqual(eg.seat_holder("New England", "2021-06-01", {}, {}, {}, real), ["Barnaby Joyce", "Nationals"])
+            self.assertEqual(eg.seat_holder("Calare", "2023-03-01", {}, {}, {}, real)[1], "Independent")
+            self.assertEqual(eg.seat_holder("Moore", "2024-02-21", {}, {}, {}, real)[1], "Liberal")
+            self.assertEqual(eg.seat_holder("Casey", "2019-06-01", {}, {}, {}, real)[1], "Liberal")      # Speaker Tony Smith
+            self.assertEqual(eg.BLOCS[eg.seat_holder("Fisher", "2022-03-01", {}, {}, {}, real)[1]], "Coalition")   # Speaker Andrew Wallace
+            self.assertEqual(eg.seat_holder("Oxley", "2024-03-01", {}, {}, {}, real)[1], "Labor")        # Speaker Milton Dick
+            self.assertIsNone(eg.seat_holder("Perth", "2018-06-01", {}, {}, {}, real), "vacant: resignation to the by-election")
+            self.assertEqual(eg.seat_holder("Calare", "2016-06-15", {}, {}, {}, real)[0:2], ["John Cobb", "Nationals"])
+
+
 class BlocTests(unittest.TestCase):
     def test_government_of_the_day(self):
         self.assertEqual(eg.bloc_for("Liberal", "2019-02-12", eg.BLOCS, FED_GOV), "gov")
@@ -367,11 +539,13 @@ class WriteOutputsTests(unittest.TestCase):
 
 class RemoteProgramTests(unittest.TestCase):
     def test_streamed_program_carries_the_shared_rules_and_compiles(self):
-        src = eg.remote_program({"Bass": ["Jess Teesdale", "Labor"]})
+        src = eg.remote_program({"Bass": ["Jess Teesdale", "Labor"]}, {"calare": [["2016-07-02", "2022-12-23", "Andrew Gee", "Nationals"]]})
         compile(src, "remote", "exec")
         compile(eg.remote_program(), "remote", "exec")
         for name in ("def build_program_file(", "def seat_holder(", "ELECTIONS = ", "GOVERNMENT = ", "BY_ELECTIONS = ",
-                     "CURRENT_SEATS = {'Bass': ['Jess Teesdale', 'Labor']}", "programs_out", "go_by_name"):
+                     "CURRENT_SEATS = {'Bass': ['Jess Teesdale', 'Labor']}",
+                     "SEAT_PERIODS = {'calare': [['2016-07-02', '2022-12-23', 'Andrew Gee', 'Nationals']]}",
+                     '"seat_periods": SEAT_PERIODS', "programs_out", "go_by_name"):
             self.assertIn(name, src)
 
     def test_current_seats_from_roster(self):

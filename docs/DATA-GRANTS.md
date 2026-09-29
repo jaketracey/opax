@@ -187,8 +187,22 @@ Rules.
   an unknown date gives holder null, bloc "unknown", margin null and timing "unknown".
   A source value that is not a date (a run of hash marks in one QLD line, "unknown" in a
   few roster rows) reads as no date.
-- The holder is the member of the House for the seat on the grant date, layered because
-  the roster's service dates are wrong for about a tenth of the seats (Bass has Ross Hart
+- The holder is the member of the House for the seat on the grant date, with the party they
+  belonged to on that date (fixed 2026-09-29). First layer: the portal's electorates release
+  (`seat_periods_from_release`), whose parliamentary service records split a term where the
+  member changed party (Joyce: Nationals to 27 Nov 2025, then One Nation; Gee: Nationals to
+  23 Dec 2022, then independent; Goodenough: Liberal to 31 Dec 2024; Broadbent: Liberal to
+  14 Nov 2023). A Speaker's term (no party in the records) takes the member's party once
+  out of the Chair, else the one before. A gap between periods closed by a general election
+  is the campaign after a dissolution and stays with the last member; a gap closed by
+  anything else is a vacancy and holds nobody (Perth, May to July 2018; Dunkley, Dec 2023 to
+  Mar 2024). Where the older layers below name the same person in the same bloc their name
+  and label are kept (the records put LNP members in the Liberal or Nationals party room).
+  Before this layer the export gave every grant the roster's current party, filing Joyce's
+  2017-22 grants under One Nation and moving 45 programs' "to government seats" share (see
+  the commit for the before and after). Where the release has no period for the day, the
+  older layers stand, built because the roster's service dates are wrong for about a tenth
+  of the seats (Bass has Ross Hart
   sitting until 2026 and Bridget Archer since 1907; the 2025 intake has no dates at
   all): from 18 May 2019 to 2 May 2025 the recorded general-election winner
   (`electorates`, 2019 and 2022 rows, `winning_candidate`) holds the seat for the term,
