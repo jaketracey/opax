@@ -263,7 +263,7 @@ class PartyOnTheDayTests(unittest.TestCase):
               grant(id="GA12", v=1938911.0, s="2021-12-01", el="Calare", elst="nsw", fy="2021-22"),
               grant(id="GA13", v=100.0, s="2023-03-01", el="Calare", elst="nsw", fy="2022-23")]
         pf = eg.build_program_file("GO4504", "go4504", "federal", gs, c)
-        self.assertEqual(pf["seats"], {"gov": [9314911, 3], "opp": [0, 0], "cross": [100, 1], "unknown": [0, 0]})
+        self.assertEqual(pf["seats"], {"gov": [9314911, 3], "opp": [0, 0], "cross": [100, 1], "vacant": [0, 0], "unknown": [0, 0]})
         ne = next(e for e in pf["electorates"] if e["n"] == "New England")
         self.assertEqual(ne["holders"], [["Barnaby Joyce", "Nationals", 7376000]])
         self.assertEqual((ne["gov"], ne["cross"]), (7376000, 0))
@@ -273,6 +273,36 @@ class PartyOnTheDayTests(unittest.TestCase):
         self.assertEqual(eg.program_index_extras(pf, "federal")["gov"], 9314911)
         old = eg.build_program_file("GO4504", "go4504", "federal", gs, dict(c, seat_periods=None))
         self.assertEqual(old["seats"]["gov"], [0, 0], "without the release every one of these was crossbench")
+
+    def test_vacant_seat_dollars_leave_the_government_share(self):
+        # Dunkley was vacant from 15 Dec 2023 to the 2 Mar 2024 by-election: that grant is nobody's.
+        c = dict(ctx(), seat_members=PARTY_SEATS, margins=PARTY_MARGINS, seat_periods=PERIODS)
+        gs = [grant(id="GA20", v=900.0, s="2024-01-10", el="Dunkley", elst="vic", fy="2023-24"),
+              grant(id="GA21", v=100.0, s="2024-04-01", el="Dunkley", elst="vic", fy="2023-24"),     # Belyea, Labor, government
+              grant(id="GA22", v=300.0, s="2023-03-01", el="Calare", elst="nsw", fy="2022-23")]      # Gee, independent
+        pf = eg.build_program_file("GO9", "go9", "federal", gs, c)
+        self.assertEqual(pf["seats"], {"gov": [100, 1], "opp": [0, 0], "cross": [300, 1], "vacant": [900, 1], "unknown": [0, 0]})
+        self.assertEqual(pf["el_known"], [1300, 3], "a vacant seat's grant is still mapped to its electorate")
+        by_id = {g["id"]: g for g in pf["grants"]}
+        self.assertEqual((by_id["GA20"]["holder"], by_id["GA20"]["bloc"]), (None, "vacant"))
+        dunkley = next(e for e in pf["electorates"] if e["n"] == "Dunkley")
+        self.assertEqual((dunkley["gov"], dunkley["vacant"], dunkley["t"]), (100, 900, 1000))
+        extras = eg.program_index_extras(pf, "federal")
+        self.assertEqual((extras["gov"], extras["held"], extras["elk"]), (100, 400, 1300))
+        self.assertEqual(round(extras["gov"] / extras["held"], 2), 0.25, "100 of the 400 held-seat dollars, not 100 of 1,300")
+
+    def test_a_program_whose_only_seat_was_vacant_has_no_government_share(self):
+        # The Pawsey case: every mapped dollar in Perth between Hammond's resignation and the by-election.
+        periods = dict(PERIODS, perth=[["2016-07-02", "2018-05-10", "Tim Hammond", "Labor"], ["2018-07-28", None, "Patrick Gorman", "Labor"]])
+        c = dict(ctx(), seat_members=PARTY_SEATS, margins=PARTY_MARGINS, seat_periods=periods)
+        pf = eg.build_program_file("GOP", "gop", "federal", [grant(id="GA30", v=70000000.0, s="2018-06-01", el="Perth", elst="wa", fy="2017-18")], c)
+        self.assertEqual(pf["seats"]["vacant"], [70000000, 1])
+        self.assertEqual(pf["seats"]["gov"], [0, 0])
+        extras = eg.program_index_extras(pf, "federal")
+        self.assertEqual(extras["held"], 0, "nothing held, so no share to show (the page shows none rather than 0%)")
+        self.assertTrue(eg.seat_vacant("Perth", "2018-06-01", periods))
+        self.assertFalse(eg.seat_vacant("Perth", "2018-08-01", periods))
+        self.assertFalse(eg.seat_vacant("Calare", "2016-06-15", PERIODS), "the campaign after a dissolution is not a vacancy")
 
     def test_seat_periods_from_release(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -427,7 +457,7 @@ class ProgramFileTests(unittest.TestCase):
         # seats: Kennedy is crossbench (KAP); Dickson 2022-02 Liberal under the Coalition = gov;
         # Grayndler 2023 Labor under Labor = gov; Melbourne 2021 Greens = cross but 2025-06 is Witty (Labor) = gov;
         # the undated grant = unknown
-        self.assertEqual(pf["seats"], {"gov": [710, 3], "opp": [0, 0], "cross": [11300050, 2], "unknown": [25, 1]})
+        self.assertEqual(pf["seats"], {"gov": [710, 3], "opp": [0, 0], "cross": [11300050, 2], "vacant": [0, 0], "unknown": [25, 1]})
         self.assertEqual(sum(v[1] for v in pf["seats"].values()), pf["c"])
         # margins: GA34203 pre-May-2019 -> unknown; Dickson 2022-02 -> 2019 row fairly_safe; Grayndler no row -> unknown;
         # Melbourne 2021 -> 2019 safe, 2025 -> 2022 safe
@@ -439,7 +469,7 @@ class ProgramFileTests(unittest.TestCase):
                          {"0_3": [0, 0], "3_6": [11300500, 2], "6_12": [50, 1], "12_24": [0, 0], "over_24": [200, 1], "unknown": [35, 2]})
         self.assertEqual([e["n"] for e in pf["electorates"]], ["Kennedy", "Dickson", "Grayndler", "Melbourne"])
         kennedy = pf["electorates"][0]
-        self.assertEqual(kennedy, {"n": "Kennedy", "st": "qld", "t": 11300000, "c": 1, "gov": 0, "opp": 0, "cross": 11300000,
+        self.assertEqual(kennedy, {"n": "Kennedy", "st": "qld", "t": 11300000, "c": 1, "gov": 0, "opp": 0, "cross": 11300000, "vacant": 0,
                                    "holders": [["Bob Katter", "Katter's Australian Party", 11300000]]})
         melbourne = pf["electorates"][3]
         self.assertEqual(melbourne["holders"], [["Adam Bandt", "Greens", 50], ["Sarah Witty", "Labor", 10]])
@@ -457,7 +487,7 @@ class ProgramFileTests(unittest.TestCase):
                          (None, None, None, None, "unknown", None))
         self.assertEqual((pf["grants_total"], pf["grants_listed"], pf["generated"]), (6, 6, "2026-09-13T00:00:00Z"))
         self.assertEqual(eg.program_index_extras(pf, "federal"),
-                         {"key": "go3141", "cnc": 11300500, "selk": 11300700, "gov": 710, "elk": 11300760, "marg": 0})
+                         {"key": "go3141", "cnc": 11300500, "selk": 11300700, "gov": 710, "elk": 11300760, "marg": 0, "held": 11300760})
 
     def test_electorate_holders_collapse_one_member_with_two_party_spellings(self):
         gs = [grant(id="GA1", v=300.0, s="2020-01-01", el="Bass", elst="tas"),    # winner term: Bridget Archer, Liberal

@@ -5,7 +5,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import {
-  resolveProgramId, withToldSeats,
+  resolveProgramId, withToldSeats, heldDollars,
   APPROVAL_BUCKETS, MARGIN_BUCKETS, SEAT_BLOCS, TIMING_BUCKETS, bucketRows,
   buildCSV, donorBlocs, donorSummary, filterElectorates, filterPrograms, filterRecipients, fmtMoney,
   fileKey, formatABN, fyShort, fyStart, govBlocAt, govShare, grantConnectUrl, grantDate, latestMargin,
@@ -286,4 +286,17 @@ test('a program told by seat keeps its own figures and gains the party block', (
   assert.equal(p.el_known, file.el_known)
   assert.equal(withToldSeats(file, null), file, 'a program not told by seat is left alone')
   assert.equal(withToldSeats(file, { ...told, mapped: [0, 0] }), file)
+})
+
+test('vacant-seat dollars leave the government share, and no held-seat dollars means no share', () => {
+  assert.deepEqual(SEAT_BLOCS.map(([k]) => k), ['gov', 'opp', 'cross', 'vacant', 'unknown'])
+  // Disability Employment's shape: most mapped dollars in Perth while it was vacant (May to July 2018).
+  assert.equal(programShares({ gov: 100, held: 400, elk: 1300 }).gov, 0.25)
+  assert.equal(programShares({ gov: 0, held: 0, elk: 70000000 }).gov, null, 'Pawsey: its only seat was vacant, so no figure, not 0%')
+  assert.equal(programShares({ gov: 5, elk: 10 }).gov, 0.5, 'an index without `held` keeps the old denominator')
+  assert.equal(programShares({ elk: 10 }).gov, null)
+  assert.equal(heldDollars({ gov: [100, 1], opp: [0, 0], cross: [300, 1], vacant: [900, 1], unknown: [5, 1] }), 400)
+  assert.equal(heldDollars(null), 0)
+  const rows = bucketRows({ gov: [100, 1], opp: [0, 0], cross: [300, 1], vacant: [900, 1], unknown: [0, 0] }, SEAT_BLOCS)
+  assert.equal(rows.find(r => r.key === 'vacant').label, 'Vacant seat')
 })

@@ -370,3 +370,14 @@ test('a program or a month on the grants page shares its own card, never the pag
  assert.deepEqual(instagramTags({kind:'program'}),['#auspol','#australianpolitics','#grants','#publicmoney','#opax']);
  assert.deepEqual(instagramTags({kind:'largest'}),['#auspol','#australianpolitics','#grants','#publicmoney','#opax']);
 });
+test('a clean recipient link keeps its colon in the share image path the preflight compares',()=>{
+ const url='https://opax.com.au/money/grants/federal/recipient/abn:18374210672?award=GA123';
+ const grant={...post,kind:'grant',url,text:`$4m grant to redevelop Windsor Park.\n\n${url}`};
+ for(const channel of ['x','bluesky','facebook','instagram']){
+  const c=publicationCopy(grant,channel);
+  assert.equal(new URL(c.image).pathname,'/og/money/grants/federal/recipient/abn:18374210672.jpg');
+  assert.equal(new URL(c.image).searchParams.get('award'),'GA123');
+  assert.equal(new URL(c.link).pathname,'/money/grants/federal/recipient/abn:18374210672');
+ }
+ assert.match(publicationCopy(grant,'x').text,/recipient\/abn:18374210672\?award=GA123/);
+});

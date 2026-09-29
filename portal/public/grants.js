@@ -139,12 +139,26 @@ export function shareOf (num, den) {
   return den > 0 ? (num || 0) / den : null
 }
 
-/** The closed non-competitive share of recorded dollars and, federally, the share of mapped dollars in government-held seats. */
+/**
+ * The closed non-competitive share of recorded dollars and, federally, the
+ * share of the dollars in seats with a member on the grant date that went to
+ * government-held seats. A vacant seat is nobody's, so its dollars leave the
+ * denominator like unmapped dollars (`held`, since 30 Sep 2026; an older index
+ * without it falls back to `elk`); a program with no held-seat dollars has no
+ * share at all, never 0%.
+ */
 export function programShares (row) {
+  const held = row.held != null ? row.held : row.elk
   return {
     cnc: shareOf(row.cnc, row.selk),
-    gov: row.gov == null || row.elk == null ? null : shareOf(row.gov, row.elk),
+    gov: row.gov == null || held == null ? null : shareOf(row.gov, held),
   }
+}
+
+/** Dollars in seats with a member on the grant date, from a program file's seat split. */
+export function heldDollars (seats) {
+  if (!seats) return 0
+  return ['gov', 'opp', 'cross'].reduce((sum, k) => sum + ((seats[k] || [0])[0] || 0), 0)
 }
 
 /** Index programs[] rows by name, for the recipient file's program list; only rows with a file (a key) count. */
@@ -179,7 +193,7 @@ export function grantConnectUrl (guid) {
 
 // Fixed orderings for the program file's [dollars, count] buckets; the labels are the UI text.
 export const SEAT_BLOCS = [
-  ['gov', 'Government-held seats'], ['opp', 'Opposition-held seats'], ['cross', 'Crossbench seats'], ['unknown', 'Seat unknown'],
+  ['gov', 'Government-held seats'], ['opp', 'Opposition-held seats'], ['cross', 'Crossbench seats'], ['vacant', 'Vacant seat'], ['unknown', 'Seat unknown'],
 ]
 export const MARGIN_BUCKETS = [
   ['marginal', 'Marginal (under 6%)'], ['fairly_safe', 'Fairly safe (6 to 10%)'], ['safe', 'Safe (over 10%)'], ['unknown', 'Margin unknown'],
@@ -1671,7 +1685,7 @@ export function mountGrants (container, opts = {}) {
     const cncD = p.sel && p.sel['Closed Non-Competitive'] ? p.sel['Closed Non-Competitive'][0] : 0
     const cncShare = shareOf(cncD, selKnown)
     const elKnown = p.el_known ? p.el_known[0] : 0
-    const govShareOfMapped = p.seats ? shareOf(p.seats.gov ? p.seats.gov[0] : 0, elKnown) : null
+    const govShareOfMapped = p.seats ? shareOf(p.seats.gov ? p.seats.gov[0] : 0, heldDollars(p.seats)) : null
     const tiles = el('div', 'gr-tiles')
     tiles.append(
       tile(fmtMoney(p.t), `awarded in ${NUM.format(p.c)} ${noun}`),
@@ -1679,7 +1693,7 @@ export function mountGrants (container, opts = {}) {
     )
     if (p.dt > 0) tiles.append(tile(pct(shareOf(p.dt, p.t) || 0), `to recipients in the donor registers (${fmtMoney(p.dt)})`))
     if (cncShare != null) tiles.append(tile(pct(cncShare), `closed non-competitive, of the ${pct(shareOf(selKnown, p.t) || 0)} with a selection process recorded`))
-    if (govShareOfMapped != null) tiles.append(tile(pct(govShareOfMapped), 'to seats held by the government of the day, of the dollars mapped to an electorate'))
+    if (govShareOfMapped != null) tiles.append(tile(pct(govShareOfMapped), 'to seats held by the government of the day, of the dollars in seats with a member on the grant date'))
     if (p.t > 0) tiles.append(tile(pct(shareOf(elKnown, p.t) || 0), 'of the dollars are mapped to an electorate'))
     td.appendChild(tiles)
     // A reader arriving from a local story wants their seat, which sits below
@@ -1743,7 +1757,7 @@ export function mountGrants (container, opts = {}) {
     if (p.seats) {
       left.appendChild(el('p', 'gr-kicker', 'Who held the seat on the grant date'))
       left.appendChild(splitBar(bucketRows(p.seats, SEAT_BLOCS), 'Seat held by'))
-      left.appendChild(el('p', 'gr-caption', 'Government, opposition and crossbench are read at the grant date, not today, from the member\'s party that day.'))
+      left.appendChild(el('p', 'gr-caption', 'Government, opposition and crossbench are read at the grant date, not today, from the member\'s party that day. A seat vacant on the grant date (between a resignation or death and the by-election) is nobody\'s and is left out of the government share.'))
     }
     // The figures the daily edition posts: the party holding each seat on the grant date against the House on those dates.
     if (p.told) {
@@ -1839,6 +1853,7 @@ export function mountGrants (container, opts = {}) {
             if (e.gov > 0) parts.push(`govt ${fmtMoney(e.gov)}`)
             if (e.opp > 0) parts.push(`opp ${fmtMoney(e.opp)}`)
             if (e.cross > 0) parts.push(`cross ${fmtMoney(e.cross)}`)
+            if (e.vacant > 0) parts.push(`vacant ${fmtMoney(e.vacant)}`)
             split.appendChild(el('span', 'gr-share', parts.join(' · ')))
           }
           row.appendChild(split)
@@ -1933,7 +1948,7 @@ export function mountGrants (container, opts = {}) {
               if (g.bloc && g.bloc !== 'unknown') flags.push(g.bloc === 'gov' ? 'government' : g.bloc === 'opp' ? 'opposition' : 'crossbench')
               if (g.mt) flags.push(g.mt.replace(/_/g, ' '))
               if (flags.length) holder.appendChild(el('small', null, flags.join(' · ')))
-            } else holder.appendChild(el('span', 'gr-muted', '—'))
+            } else holder.appendChild(el('span', 'gr-muted', g.bloc === 'vacant' ? 'Vacant seat' : '—'))
             row.appendChild(holder)
           }
           tb.appendChild(row)

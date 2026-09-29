@@ -303,7 +303,8 @@ test('an operator can name one award and it is composed from the source shard', 
   const src = { asset: async p => assets[p] ?? null, personTopics: async () => [], recent: async () => [] };
   const post = await grantPostFor('2026-09-12', src, 'grant:GA34203@abn:97694995462');
   assert.equal(post.subject, 'grant:GA34203');
-  assert.equal(post.url, 'https://opax.com.au/money/grants/federal/recipient/abn%3A97694995462?award=GA34203');
+  assert.equal(post.url, 'https://opax.com.au/money/grants/federal/recipient/abn:97694995462?award=GA34203', 'a clean recipient id in the link, no %3A');
+  assert.equal(new URL(post.url).pathname, '/money/grants/federal/recipient/abn:97694995462');
   assert.match(post.text, /^\$11\.3m grant to construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld\./);
   assert.match(post.text, /Recipient: Qantas Foundation Memorial Trust\. Agreement from 12 Feb 2019 \(award value, not payments\)\./);
   assert.ok(xLength(post.text) <= X_LIMIT);

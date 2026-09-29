@@ -106,7 +106,7 @@ PARTY_ALIASES = {"A.L.P.": "Labor", "ALP": "Labor", "LP": "Liberal", "NAT": "Nat
                  "PHON": "One Nation"}
 PROGRAM_GRANTS_MAX = 600
 PROGRAM_RECIPIENTS_MAX = 60
-SEAT_BLOCS = ("gov", "opp", "cross", "unknown")
+SEAT_BLOCS = ("gov", "opp", "cross", "vacant", "unknown")
 MARGIN_TYPES = ("marginal", "fairly_safe", "safe", "unknown")
 APPROVAL_BUCKETS = ("before_approval", "0_30", "31_90", "91_365", "over_365")
 ELECTION_BUCKETS = ("0_3", "3_6", "6_12", "12_24", "over_24", "unknown")
@@ -214,6 +214,40 @@ def pretty_name(name):
     return f"{parts[0].title()} {parts[-1].title()}"
 
 
+def release_holder(seat, day, seat_periods):
+    """What the electorates release says about a seat on a day: ("hit", [start, end, name,
+    party]) when a member held it, ("vacant", None) when nobody did (a gap closed by
+    anything but a general election: a death, resignation or disqualification before its
+    by-election), ("none", None) when the release has nothing to say (no periods for the
+    seat, or a day before the first period or after the last one ended). A period's end is
+    exclusive except where the next begins the day after (a party change overnight); a gap
+    closed by a general election is the campaign after a dissolution and stays with the
+    last member."""
+    periods = (seat_periods or {}).get((seat or "").lower())
+    if not periods or not day:
+        return "none", None
+
+    def next_day(d):
+        return date.fromordinal(date.fromisoformat(d).toordinal() + 1).isoformat()
+
+    starts = {r[0] for r in periods}
+    for r in periods:
+        if r[0] <= day and (r[1] is None or day < r[1] or (day == r[1] and next_day(r[1]) in starts)):
+            return "hit", r
+    ended = [r for r in periods if r[1] and r[1] <= day]
+    later = [r for r in periods if r[0] > day]
+    if not ended or not later:
+        return "none", None
+    if min(later, key=lambda r: r[0])[0] not in ELECTIONS["federal"]:
+        return "vacant", None
+    return "hit", max(ended, key=lambda r: r[1])
+
+
+def seat_vacant(seat, day, seat_periods):
+    """True when the release shows the seat vacant on the day (see release_holder)."""
+    return release_holder(seat, day, seat_periods)[0] == "vacant"
+
+
 def seat_holder(seat, day, seat_members, margins, current_seats=None, seat_periods=None):
     """[name, party] of the member holding a federal seat on day, or None.
 
@@ -223,7 +257,7 @@ def seat_holder(seat, day, seat_members, margins, current_seats=None, seat_perio
     (seat_periods_from_release): a member who changed party is filed under the
     party they belonged to on the grant date, not the one they belong to now
     (Joyce: Nationals to 27 Nov 2025, then One Nation; Gee: Nationals to 23 Dec
-    2022, then independent). Between two periods:
+    2022, then independent). Between two periods (release_holder):
       * a gap closed by a general election (in ELECTIONS) is the campaign after
         a dissolution, and the last member holds the seat until polling day, as
         the election-winner rule below has always done;
@@ -276,33 +310,16 @@ def seat_holder(seat, day, seat_members, margins, current_seats=None, seat_perio
                 return [pretty_name(row[4]), canonical_party(row[1])]
         return roster_out
 
-    periods = (seat_periods or {}).get(seat.lower())
-    if not periods:
+    kind, hit = release_holder(seat, day, seat_periods)
+    if kind == "vacant":
+        return None
+    if kind != "hit":
         return older()
 
     def surname(n):
         parts = (n or "").replace(",", " ").replace("-", " ").split()
         return parts[-1].lower() if parts else ""
 
-    def next_day(d):
-        return date.fromordinal(date.fromisoformat(d).toordinal() + 1).isoformat()
-
-    starts = {r[0] for r in periods}
-    hit = None
-    for r in periods:
-        if r[0] <= day and (r[1] is None or day < r[1] or (day == r[1] and next_day(r[1]) in starts)):
-            hit = r
-            break
-    if hit is None:
-        ended = [r for r in periods if r[1] and r[1] <= day]
-        later = [r for r in periods if r[0] > day]
-        if not ended or not later:
-            return older()   # before the first period on record, or after the last one ended
-        prev = max(ended, key=lambda r: r[1])
-        nxt = min(later, key=lambda r: r[0])
-        if nxt[0] not in elections:
-            return None      # a vacancy until a by-election
-        hit = prev           # the campaign after a dissolution: the last member stands for the seat
     name, party = hit[2], canonical_party(hit[3])
     old = older()
     if old and surname(old[0]) == surname(name):
@@ -416,7 +433,7 @@ def build_program_file(pid, key, jur, gs, ctx):
     approval_known = pair()
     ab = {k: pair() for k in APPROVAL_BUCKETS}
     mte = {k: pair() for k in ELECTION_BUCKETS}
-    el_rows = defaultdict(lambda: {"t": 0.0, "c": 0, "gov": 0.0, "opp": 0.0, "cross": 0.0,
+    el_rows = defaultdict(lambda: {"t": 0.0, "c": 0, "gov": 0.0, "opp": 0.0, "cross": 0.0, "vacant": 0.0,
                                    "st": Counter(), "holders": Counter()})
     recipients = {}
     donor_rids = set()
@@ -457,7 +474,10 @@ def build_program_file(pid, key, jur, gs, ctx):
         holder_out = holder
         bloc = mt = None
         if federal:
-            bloc = bloc_for(holder[1], day, blocs, government) if (el and holder) else "unknown"
+            # A vacant seat is nobody's: its dollars are neither government nor anyone else's, and the
+            # "to government seats" share leaves them out of its denominator (index `held`).
+            bloc = (bloc_for(holder[1], day, blocs, government) if (el and holder)
+                    else "vacant" if (el and seat_vacant(el, day, seat_periods)) else "unknown")
             mt = margin_type_for(margins.get(el), day, elections) if el else None
             add(seats[bloc], v)
             add(margin_mix[mt or "unknown"], v)
@@ -474,7 +494,7 @@ def build_program_file(pid, key, jur, gs, ctx):
             e["c"] += 1
             if g.get("elst"):
                 e["st"][g["elst"]] += 1
-            if federal and bloc in ("gov", "opp", "cross"):
+            if federal and bloc in ("gov", "opp", "cross", "vacant"):
                 e[bloc] += v
             if holder:
                 e["holders"][(holder[0], holder[1])] += v
@@ -493,7 +513,7 @@ def build_program_file(pid, key, jur, gs, ctx):
             st = next((v[3] for v in m.values() if len(v) > 3 and v[3]), None)
         row = {"n": name, "st": st, "t": round(e["t"]), "c": e["c"]}
         if federal:
-            row.update({"gov": round(e["gov"]), "opp": round(e["opp"]), "cross": round(e["cross"])})
+            row.update({"gov": round(e["gov"]), "opp": round(e["opp"]), "cross": round(e["cross"]), "vacant": round(e["vacant"])})
         # one row per member: the roster and the election results can spell the
         # same member's party differently (Nationals vs Liberal for an LNP seat)
         by_member = {}
@@ -546,7 +566,11 @@ def program_index_extras(pf, jur):
     """The fields a programs[] index row gains from its program file."""
     out = {"key": pf["key"], "cnc": pf["sel"].get("Closed Non-Competitive", [0, 0])[0], "selk": pf["sel_known"][0]}
     if jur == "federal":
-        out.update({"gov": pf["seats"]["gov"][0], "elk": pf["el_known"][0], "marg": pf["margins"]["marginal"][0]})
+        seats = pf["seats"]
+        # held: dollars in seats with a member on the grant date, the denominator of "to government seats"
+        # (vacant seats and seats with no member on record are left out, like unmapped dollars)
+        out.update({"gov": seats["gov"][0], "elk": pf["el_known"][0], "marg": pf["margins"]["marginal"][0],
+                    "held": seats["gov"][0] + seats["opp"][0] + seats["cross"][0]})
     return out
 
 
@@ -625,7 +649,8 @@ def clean_row(row, cols):
     return out
 
 
-SHARED_FUNCTIONS = (iso_day, program_key, government_at, bloc_for, holder_at, canonical_party, pretty_name, seat_holder,
+SHARED_FUNCTIONS = (iso_day, program_key, government_at, bloc_for, holder_at, canonical_party, pretty_name, release_holder,
+                    seat_vacant, seat_holder,
                     margin_type_for, months_to_election_bucket, approval_bucket, build_program_file, fy_key,
                     program_index_extras, program_name, unmangle, clean_row)
 SHARED_CONSTANTS = ("ELECTIONS", "BLOCS", "GOVERNMENT", "BY_ELECTIONS", "PARTY_ALIASES", "PROGRAM_GRANTS_MAX",

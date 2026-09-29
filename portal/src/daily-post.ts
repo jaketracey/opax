@@ -656,9 +656,18 @@ export function selectionLine(sel: string | null | undefined): string {
   return `Selection: ${s.toLowerCase()}.`
 }
 
+/**
+ * A recipient id as a path segment that reads cleanly in a post: "abn:83140439239", not
+ * "abn%3A83140439239". A colon is legal in a path segment, the route decodes either form,
+ * and the share card answers with the path as requested, so the publisher's check still matches.
+ */
+export function recipientSegment(id: string): string {
+  return encodeURIComponent(id).replace(/%3A/gi, ':')
+}
+
 /** The edition for one award record: the same words whether the rotation or an operator chose it. */
 async function grantEdition(date: string, grant: GrantPublicationRecord, context: GrantContext): Promise<DailyPost> {
-  const url = `${ORIGIN}/money/grants/federal/recipient/${encodeURIComponent(grant.recipientId)}?award=${encodeURIComponent(grant.id)}`
+  const url = `${ORIGIN}/money/grants/federal/recipient/${recipientSegment(grant.recipientId)}?award=${encodeURIComponent(grant.id)}`
   const recipientLine = `Recipient: ${clip(shortRecipient(grant.recipient), 60)}. Agreement from ${formatDate(grant.start)} (award value, not payments).`
   const selection = selectionLine(context.award?.sel)
   // How it was chosen outranks the tail of the purpose: the hook gives way (to no less than 80 characters) so it fits.
