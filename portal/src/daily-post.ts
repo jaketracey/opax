@@ -7,8 +7,25 @@
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { photosFor, photoFor, validStory, type PhotoCatalogue, type StorySlide, type StoryPhoto } from './story'
 
-export const DAILY_POST_KINDS = ['politician', 'bill', 'grant', 'topic'] as const
+export const DAILY_POST_KINDS = ['politician', 'bill', 'grant', 'topic', 'program', 'largest'] as const
 export type DailyPostKind = typeof DAILY_POST_KINDS[number]
+
+/**
+ * The week, Sunday first (the Melbourne calendar day). Three of seven days are
+ * public money: a program told by seat on Monday, one award on Wednesday, the
+ * month's largest awards on Friday (once a month; the other Fridays fall back
+ * to an award). The rest are bills, a member and a topic.
+ */
+export const WEEK: readonly DailyPostKind[] = ['bill', 'program', 'politician', 'grant', 'bill', 'largest', 'topic']
+/** Where a kind with nothing to say hands over, in order. */
+const FALLBACK: Record<DailyPostKind, DailyPostKind[]> = {
+  politician: ['bill', 'topic', 'grant', 'program', 'largest'],
+  bill: ['politician', 'topic', 'grant', 'program', 'largest'],
+  grant: ['program', 'topic', 'bill', 'politician', 'largest'],
+  topic: ['politician', 'bill', 'grant', 'program', 'largest'],
+  program: ['grant', 'topic', 'bill', 'politician', 'largest'],
+  largest: ['grant', 'topic', 'bill', 'politician', 'program'],
+}
 
 export interface DailyPost {
   date: string
@@ -57,12 +74,27 @@ export function melbourneDate(at: number | Date = Date.now()): string {
   }).format(at)
 }
 
-/** Rotates through the kinds one per calendar day. */
+/** The kind for a calendar day, by weekday (see WEEK). */
 export function kindFor(date: string): DailyPostKind {
   const [y, m, d] = date.split('-').map(Number)
-  const day = Math.floor(Date.UTC(y, m - 1, d) / 86400000)
-  const n = DAILY_POST_KINDS.length
-  return DAILY_POST_KINDS[((day % n) + n) % n]
+  return WEEK[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]
+}
+
+/** Days since 1970-01-01 for a YYYY-MM-DD date. */
+function dayNumber(date: string): number {
+  const [y, m, d] = date.split('-').map(Number)
+  return Math.floor(Date.UTC(y, m - 1, d) / 86400000)
+}
+
+/**
+ * Which government's programs a program edition draws from: the two alternate
+ * week by week (weeks start on Monday), so the run is balanced by construction
+ * rather than by whichever list is longer. A program awarded under both is in
+ * both lists.
+ */
+export function programEraFor(date: string): 'Coalition' | 'Labor' {
+  const week = Math.floor((dayNumber(date) + 3) / 7)
+  return week % 2 === 0 ? 'Coalition' : 'Labor'
 }
 
 /** FNV-1a; deterministic so a preview for a date matches the real post. */
@@ -587,16 +619,58 @@ async function grantPost(date: string, sources: DailyPostSources, exclude: strin
 
 interface GrantContext { sources: DailyPostSources; graph: GrantsGraph | null; recipient: ShardRecipient | null; award: ShardAward | null }
 
+/** GrantConnect's stock openings; what follows is the record's own wording. */
+const PURPOSE_OPENERS = [
+  /^the (?:project|activity|grant) will (?:deliver|provide|support|fund)\s+/i,
+  /^this (?:project|activity|grant) will (?:deliver|provide|support|fund)\s+/i,
+  /^the (?:purpose of (?:the|this) (?:project|grant|activity) is|project is|activity is)\s+/i,
+  // "The project will redevelop Windsor Park": the verb stays, as "to redevelop".
+  /^(?:the|this) (?:project|activity|grant) will\s+(?=[a-z])/i,
+]
+const PURPOSE_VERBS = /^(construct|build|deliver|upgrade|install|develop|support|provide|redevelop|replace|refurbish|establish|expand|improve|design|purchase|undertake|create|restore|renew|extend|enhance|implement|conduct|assist|enable|strengthen|reduce|promote|repair|rebuild|relocate)\s+(?!for\b|of\b)/i
+
+/** The purpose's first sentence without GrantConnect's "The project will deliver" opening. */
+export function purposePhrase(text: string | null | undefined): string {
+  let t = String(text ?? '').replace(/\s+/g, ' ').trim()
+  for (const re of PURPOSE_OPENERS) t = t.replace(re, '')
+  t = t.split(/(?<=\.)\s+(?=[A-Z])/)[0] ?? t
+  return t.replace(/\.$/, '').trim()
+}
+
+/** "$10m grant for the redevelopment of the Kogarah War Memorial Pool": the amount, then the record's words. */
+export function grantHook(amount: number, purpose: string | null | undefined): string {
+  const money = shortMoney(amount)
+  const p = purposePhrase(purpose)
+  if (!p) return `${money} grant`
+  if (/^to\s/i.test(p)) return `${money} grant ${p}`
+  if (PURPOSE_VERBS.test(p)) return `${money} grant to ${p[0].toLowerCase()}${p.slice(1)}`
+  if (/^(the|a|an)\s/i.test(p) || /^[a-z]/.test(p)) return `${money} grant for ${p[0].toLowerCase()}${p.slice(1)}`
+  return `${money} grant: ${p}`
+}
+
+/** How the award was chosen, in words, from GrantConnect's selection process field. */
+export function selectionLine(sel: string | null | undefined): string {
+  const s = (sel ?? '').trim()
+  if (!s) return ''
+  if (/closed/i.test(s) && /non-?competitive/i.test(s)) return 'No open round: closed, non-competitive.'
+  return `Selection: ${s.toLowerCase()}.`
+}
+
 /** The edition for one award record: the same words whether the rotation or an operator chose it. */
 async function grantEdition(date: string, grant: GrantPublicationRecord, context: GrantContext): Promise<DailyPost> {
   const url = `${ORIGIN}/money/grants/federal/recipient/${encodeURIComponent(grant.recipientId)}?award=${encodeURIComponent(grant.id)}`
-  const amount = formatMoney(grant.amount)
+  const recipientLine = `Recipient: ${clip(shortRecipient(grant.recipient), 60)}. Agreement from ${formatDate(grant.start)} (award value, not payments).`
+  const selection = selectionLine(context.award?.sel)
+  // How it was chosen outranks the tail of the purpose: the hook gives way (to no less than 80 characters) so it fits.
+  const hookRoom = selection ? Math.max(80, X_LIMIT - xLength([recipientLine, selection, url].join('\n\n')) - 3) : 140
+  const hook = `${clip(grantHook(grant.amount, grant.purpose), Math.min(140, hookRoom))}.`.replace(/…\.$/, '…')
   const post: DailyPost = { date, kind: 'grant', subject: `grant:${grant.id}`, title: `${grant.id}: ${grant.recipient}`, url,
-    text: fit([`${amount} grant award: ${clip(grant.purpose, 125)}`, `Start: ${formatDate(grant.start)}. Award value, not payments.`], [clip(grant.recipient, 65)], url),
-    caption: [`${amount} in published grant funding for ${grant.recipient}.`, grant.purpose,
+    text: fit([hook, recipientLine], [selection, grant.program ? `Program: ${clip(grant.program, 70)}.` : ''], url),
+    caption: [`Follow the grant: ${formatMoney(grant.amount)} in published grant funding for ${grant.recipient}.`, grant.purpose,
       [grant.program ? `Program: ${grant.program}` : '', grant.agency ? `Agency: ${grant.agency}` : '', `Agreement starts: ${formatDate(grant.start)}`, `Award: ${grant.id}`].filter(Boolean).join('\n'),
+      selectionLine(context.award?.sel),
       'What is the funding intended to deliver? Read the award and its original GrantConnect record.',
-      'This is a published award value, not evidence of payments received.', url].join('\n\n') }
+      'This is a published award value, not evidence of payments received.', url].filter(Boolean).join('\n\n') }
   const story = await grantSlides(grant, context)
   return told(post, story.slides, story.photos)
 }
@@ -654,6 +728,225 @@ export async function grantPostFor(date: string, sources: DailyPostSources, subj
   return grantEdition(date, { id: award.id, recipientId, recipient: recipient.n, amount: award.v, start: award.s as string, purpose,
     agency: award.ag, program: award.pr, category: award.cat, sourceUrl: `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(award.guid)}` },
     { sources, graph, recipient: entry, award })
+}
+
+// ---------------------------------------------------------------- programs by seat
+
+/** Labor, the Coalition and the crossbench: every seat figure names all three, in this order. */
+const GROUPS = ['Labor', 'Coalition', 'Crossbench'] as const
+type Group = typeof GROUPS[number]
+const GROUP_WORDS: Record<Group, string> = { Labor: 'Labor', Coalition: 'Coalition', Crossbench: 'crossbench' }
+
+/** One program as scripts/build_social_catalog.mjs writes it to /social/programs.json. */
+export interface ProgramRecord {
+  id: string; key: string; n: string; ag?: string | null; t: number; c: number; r?: number | null; y0?: string | null; y1?: string | null
+  sel: [string, number, number][]; selKnown: [number, number]; adhoc?: number
+  mapped: [number, number]; groups: Record<Group, [number, number]>; seatShare: Record<Group, number>; governed: Record<string, number>
+  /** The whole percentages the post and the program page both print (largest remainder, computed at build). */
+  split: { group: Group; d: number; c: number; pct: number; seatPct: number }[]
+  era: 'Coalition' | 'Labor' | 'both'; first: string; last: string; seatCount: number
+  seats: { n: string; st?: string | null; t: number; c: number; holders: [string | null, string | null, number][] }[]
+  recipients: [string, string, string, number, number][]
+  timing?: Record<string, [number, number]> | null
+}
+
+/** Whole percentages that add up to exactly 100 (largest remainder), so a reader's sum checks out. */
+export function wholePercents(values: number[]): number[] {
+  const total = values.reduce((s, v) => s + v, 0)
+  if (!total) return values.map(() => 0)
+  const raw = values.map(v => v / total * 100)
+  const out = raw.map(Math.floor)
+  let left = 100 - out.reduce((s, v) => s + v, 0)
+  const order = raw.map((v, i) => [v - Math.floor(v), i] as [number, number]).sort((a, b) => b[0] - a[0] || a[1] - b[1])
+  for (const [, i] of order) { if (left <= 0) break; out[i]++; left-- }
+  return out
+}
+
+const yearsText = (y0?: string | null, y1?: string | null): string => y0 && y1 && y0 !== y1 ? `${y0} to ${y1}` : (y0 || y1 || '')
+const STATES: Record<string, string> = { nsw: 'NSW', vic: 'Vic', qld: 'Qld', wa: 'WA', sa: 'SA', tas: 'Tas', act: 'ACT', nt: 'NT' }
+const partyWord = (p: string | null | undefined): string => prettyParty(p ?? '') || 'party not recorded'
+/** "Tony Smith" from the release's "Anthony Stephen Smith": first and last name only, the record's spelling. */
+function shortPerson(name: string | null | undefined): string {
+  const parts = String(name ?? '').trim().split(/\s+/).filter(Boolean)
+  return parts.length > 2 ? `${parts[0]} ${parts[parts.length - 1]}` : parts.join(' ')
+}
+
+/** The program page, where the same figures sit under "By the party holding the seat". */
+export function programUrl(key: string): string {
+  return `${ORIGIN}/money/grants?jur=federal&program=${encodeURIComponent(key)}`
+}
+
+/**
+ * The groups with the share of the placed dollars and of the House, in the
+ * fixed order, exactly as the build wrote them for the program page; null when
+ * the record does not carry all three (the edition then does not run).
+ */
+export function programSplit(p: ProgramRecord): ProgramRecord['split'] | null {
+  const rows = GROUPS.map(g => p.split?.find(s => s?.group === g))
+  if (rows.some(r => !r || !Number.isInteger(r.pct) || !Number.isInteger(r.seatPct))) return null
+  if (rows.reduce((s, r) => s + r!.pct, 0) !== 100) return null
+  return rows as ProgramRecord['split']
+}
+
+function governedLine(p: ProgramRecord): string {
+  const entries = Object.entries(p.governed ?? {}).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1])
+  if (!entries.length) return ''
+  const name = (bloc: string) => bloc === 'Coalition' ? 'the Coalition' : bloc
+  if (entries.length === 1) return `Awarded while ${name(entries[0][0])} was in government.`
+  return `Awarded under both governments: ${entries.map(([b, v]) => `${name(b)} ${shortMoney(v)}`).join(', ')}.`
+}
+
+async function programPost(date: string, sources: DailyPostSources, exclude: string[]): Promise<DailyPost | null> {
+  const data = await sources.asset('/social/programs.json').catch(() => null) as { programs?: ProgramRecord[] } | null
+  const era = programEraFor(date)
+  const programs = (data?.programs ?? []).filter(p => p && p.key && p.n && Number.isFinite(p.t) && p.t > 0 && p.mapped?.[0] > 0 &&
+    programSplit(p) && (p.era === era || p.era === 'both')).sort((a, b) => a.key.localeCompare(b.key))
+  // An exhausted era hands the day to another kind rather than to the other government's list.
+  const p = seededPick(programs, `program:${date}`, x => `program:${x.id}`, exclude)
+  if (!p) return null
+  return programEdition(date, p, sources)
+}
+
+async function programEdition(date: string, p: ProgramRecord, sources: DailyPostSources): Promise<DailyPost> {
+  const url = programUrl(p.key)
+  const years = yearsText(p.y0, p.y1)
+  const split = programSplit(p)!
+  const placed = Math.round(p.mapped[0] / p.t * 100)
+  const byParty = split.map((s, i) => i === 0 ? `${GROUP_WORDS[s.group]} ${s.pct}% (${s.seatPct}% of seats)` : `${GROUP_WORDS[s.group]} ${s.pct}% (${s.seatPct}%)`).join(', ')
+  const partyLine = `By party holding the seat (${placed}% of dollars mapped): ${byParty}.`
+  const selTotal = p.selKnown?.[0] ?? 0
+  const cnc = p.sel.find(([k]) => /closed/i.test(k) && /non-?competitive/i.test(k))
+  const cncPct = cnc && selTotal ? Math.round(cnc[1] / selTotal * 100) : null
+  const selectionKnown = selTotal >= p.t * 0.5
+  // Shares of the dollars with a selection process recorded (all of them, so the whole percentages add to 100); a process under half a per cent is not a bar.
+  const selPcts = wholePercents(p.sel.map(([, v]) => v))
+  const selRows = p.sel.map(([label], i) => ({ label, pct: selPcts[i] })).filter(r => r.pct > 0).slice(0, 3)
+  const selection = selectionKnown && cncPct !== null && cncPct >= 50
+    ? (cncPct === 100 ? 'All chosen without an open round.' : `${cncPct}% chosen without an open round.`)
+    : ''
+  // The head is the hook and the split; the name gives way before a number does.
+  const budget = X_LIMIT - xLength([partyLine, url].join('\n\n')) - 2
+  const hookFor = (name: string) => `Where did ${shortMoney(p.t)} go? ${formatNumber(p.c)} grants, ${name}${years ? `, ${years}` : ''}.`
+  let name = p.n
+  while ([...hookFor(name)].length > budget && name.length > 20) name = clip(p.n, [...name].length - 4)
+  const text = fit([hookFor(name), partyLine], [selection], url)
+  const seatRows = p.seats.slice(0, 5).map(s => {
+    const who = s.holders.slice(0, 2).map(([person, party]) => `${shortPerson(person) || 'Member not recorded'} (${partyWord(party)})`).join('; ')
+    const surnames = s.holders.slice(0, 2).map(([person, party]) => `${String(person ?? '').trim().split(/\s+/).pop() || 'Member not recorded'} (${partyWord(party)})`).join(', ')
+    return { seat: `${s.n}${s.st && STATES[s.st] ? ` (${STATES[s.st]})` : ''}`, name: s.n, state: s.st && STATES[s.st] ? STATES[s.st] : '', who, surnames, amount: s.t, count: s.c }
+  })
+  const caption = [
+    `Where did the money go? ${p.n}: ${formatMoney(p.t)} in ${formatNumber(p.c)} grants${p.r ? ` to ${formatNumber(p.r)} recipients` : ''}${years ? `, financial years ${years}` : ''}.${p.ag ? ` ${p.ag}.` : ''}`,
+    selectionKnown && selRows.length ? `How it was chosen: ${selRows.map(r => `${r.label.toLowerCase()} ${r.pct}%`).join(', ')} of the dollars with a selection process recorded.` : '',
+    `By the party holding the seat on each grant's date (${placed}% of the dollars can be placed in a seat):\n${split.map(s => `• ${s.group === 'Crossbench' ? 'Crossbench' : s.group}-held seats: ${s.pct}% of the dollars; ${s.seatPct}% of House seats at the time`).join('\n')}`,
+    governedLine(p),
+    seatRows.length ? `The seats with the most:\n${seatRows.map(r => `• ${r.seat}, ${r.who}: ${shortMoney(r.amount)}`).join('\n')}` : '',
+    'Seats come from each award\'s delivery or recipient postcode, so they are approximate near boundaries. The party is the seat holder\'s on the grant date. The share of seats is each group\'s share of the House on those dates, weighted by value. Award values, not payments.',
+    url,
+  ].filter(Boolean).join('\n\n')
+  const post: DailyPost = { date, kind: 'program', subject: `program:${p.id}`, title: p.n, url, text, caption }
+  const photos: StoryPhotos = { catalogue: await photoCatalogue(sources), used: [] }
+  const ids = photosFor(photos.catalogue, `program:${p.id}`, 'program')
+  const cover: StorySlide = { type: 'cover', kicker: 'Where did the money go?', title: clip(p.n, 64),
+    line: `${shortMoney(p.t)} in ${formatNumber(p.c)} grants${years ? `, ${years}` : ''}`, photo: takePhoto(photos, ids, 0),
+    alt: `Where did the money go? ${p.n}: ${formatMoney(p.t)} in ${formatNumber(p.c)} grants${years ? `, ${years}` : ''}.` }
+  const number: StorySlide = { type: 'number', kicker: 'The program', title: 'What the record says', value: shortMoney(p.t),
+    label: `in ${formatNumber(p.c)} grants${p.r ? ` to ${formatNumber(p.r)} recipients` : ''}`,
+    lines: [years ? `Financial years ${years}` : '', governedLine(p)].filter(Boolean),
+    alt: `The program: ${formatMoney(p.t)} in ${formatNumber(p.c)} grants${p.r ? ` to ${formatNumber(p.r)} recipients` : ''}${years ? `, financial years ${years}` : ''}. ${governedLine(p)}`.trim() }
+  const chosen: StorySlide | null = selectionKnown && selRows.length ? { type: 'bars', kicker: 'How it was chosen',
+    title: cncPct === 100 ? 'No open round for any award' : cncPct !== null && cncPct >= 50 ? 'Mostly without an open round' : sentenceCase(p.sel[0][0].toLowerCase()),
+    lines: [], items: selRows.map(r => ({ label: sentenceCase(r.label.toLowerCase()), pct: r.pct })),
+    note: selTotal >= p.t ? 'As recorded on GrantConnect for every award in the program.' : `Of the ${Math.round(selTotal / p.t * 100)}% of the dollars with a selection process recorded on GrantConnect.`,
+    alt: `How it was chosen: ${selRows.map(r => `${r.label.toLowerCase()} ${r.pct} per cent`).join(', ')} of the dollars with a selection process recorded.` } : null
+  const seats: StorySlide = { type: 'bars', kicker: 'Whose seats', title: 'By the party holding the seat',
+    lines: [`Of the ${shortMoney(p.mapped[0])} OPAX can place in a seat (${placed}% of the dollars), by the member's party on the grant date.`],
+    items: split.map(s => ({ label: `${s.group}-held · ${s.seatPct}% of seats`, pct: s.pct })),
+    note: 'Share of seats: the House on the grant dates, weighted by value. Seats from award postcodes, approximate near boundaries.',
+    alt: `By the party holding the seat on the grant date: ${split.map(s => `${s.group}-held seats ${s.pct} per cent of the placed dollars, ${s.seatPct} per cent of seats`).join('; ')}.` }
+  const ledger: StorySlide | null = seatRows.length >= 3 ? { type: 'ledger', kicker: 'The seats', title: `The ${dayWords(seatRows.length).toLowerCase()} seats with the most`, lines: [],
+    // The first column is narrow: the state there, the seat and its members (surnames, every holder) beside it.
+    rows: seatRows.map(r => ({ c1: r.state, c2: clip(`${r.name} · ${r.surnames}`, 64), amount: shortMoney(r.amount) })),
+    total: { label: `${formatNumber(p.seatCount)} seats in all`, amount: shortMoney(p.mapped[0]) },
+    alt: `The seats with the most: ${seatRows.map(r => `${r.seat}, ${r.who}, ${shortMoney(r.amount)}`).join('; ')}.` } : null
+  const timing = p.timing ?? null
+  const buckets: [string, string][] = [['0_3', 'Under 3 months'], ['3_6', '3 to 6 months'], ['6_12', '6 to 12 months'], ['12_24', '1 to 2 years'], ['over_24', 'Over 2 years']]
+  const timed = timing ? buckets.map(([k]) => timing[k]?.[0] ?? 0) : []
+  const timedTotal = timed.reduce((s, v) => s + v, 0)
+  const timingPcts = wholePercents(timed)
+  const when: StorySlide | null = timing && timedTotal >= p.t * 0.5 ? { type: 'bars', kicker: 'How close to an election', title: 'Time to the next federal election',
+    lines: [], items: buckets.map(([, label], i) => ({ label, pct: timingPcts[i] })),
+    note: 'Agreement start to the next federal election. Agreements after 3 May 2025 have none yet.',
+    alt: `Time from agreement start to the next federal election: ${buckets.map(([, label], i) => `${label.toLowerCase()} ${timingPcts[i]} per cent`).join(', ')}.` } : null
+  const recipients: StorySlide | null = p.recipients.length >= 3 ? { type: 'ledger', kicker: 'Who received it', title: 'The largest recipients', lines: [],
+    rows: p.recipients.slice(0, 4).map(([, n, , v, c]) => ({ c1: `${formatNumber(c)} award${c === 1 ? '' : 's'}`, c2: clip(shortRecipient(n), 60), amount: shortMoney(v) })),
+    alt: `The largest recipients: ${p.recipients.slice(0, 4).map(([, n, , v]) => `${n} ${shortMoney(v)}`).join('; ')}.` } : null
+  const source = sourceSlide('Check it', 'Every figure links to its record',
+    ['GrantConnect awards, Department of Finance, CC BY 3.0 AU', 'Party on the grant date: parliamentary service records and AEC results', 'Award values, not payments'],
+    'opax.com.au/money/grants', `federal → program ${p.id}`, `Check it: ${p.n} on opax.com.au/money/grants. Every figure links to its record.`)
+  // The seat split comes straight after the number: it is the edition's point, and the story frames take the first bars slide.
+  return told(post, [cover, number, seats, chosen, ledger, when, recipients, source], photos)
+}
+
+// ---------------------------------------------------------------- the month's largest awards
+
+/** One row of /social/grants-largest.json. */
+export interface LargestAward {
+  id: string; recipientId: string; recipient: string; amount: number; start: string; purpose: string
+  program?: string | null; agency?: string | null; selection?: string | null; more?: number; sourceUrl: string
+}
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+export const monthName = (month: string): string => { const [y, m] = month.split('-').map(Number); return `${MONTH_NAMES[m - 1]} ${y}` }
+export function largestUrl(month: string): string {
+  return `${ORIGIN}/money/grants?jur=federal&largest=${encodeURIComponent(month)}`
+}
+/** A purpose worth printing, else the program's name: "Funding agreement" tells a reader nothing. */
+function awardWords(a: LargestAward): string {
+  const p = purposePhrase(a.purpose)
+  return p.length >= 25 && p.toLowerCase() !== (a.program ?? '').toLowerCase() ? p : (a.program || p)
+}
+
+async function largestPost(date: string, sources: DailyPostSources, exclude: string[]): Promise<DailyPost | null> {
+  const data = await sources.asset('/social/grants-largest.json').catch(() => null) as { latest?: string | null; months?: Record<string, LargestAward[]> } | null
+  const month = data?.latest
+  if (!month || !/^\d{4}-\d{2}$/.test(month) || month >= date.slice(0, 7) || exclude.includes(`largest:${month}`)) return null
+  const awards = (data?.months?.[month] ?? []).filter(a => a && /^GA\d+/.test(a.id) && /^abn:\d{11}$/.test(a.recipientId) && Number.isFinite(a.amount) && a.amount > 0).slice(0, 5)
+  if (awards.length < 3) return null
+  const url = largestUrl(month)
+  const label = monthName(month)
+  const head = `Where did the money go in ${label}? The largest grant agreements that started that month:`
+  // Five lines if they fit, never fewer than three; names give way before a line is dropped below three.
+  const lines = (n: number, width: number) => awards.slice(0, n).map(a => `${shortMoney(a.amount)} · ${clip(shortRecipient(a.recipient), width)}`).join('\n')
+  const fits = (n: number, width: number) => xLength([head, lines(n, width), url].join('\n\n')) <= X_LIMIT
+  let n = awards.length, width = 48
+  while (n > 3 && !fits(n, width)) n--
+  while (width > 24 && !fits(n, width)) width -= 4
+  const text = fit([head, lines(n, width)], [], url)
+  const caption = [
+    `Where did the money go in ${label}? The largest grant agreements that started that month, one line per recipient:`,
+    awards.map((a, i) => `${i + 1}. ${formatMoney(a.amount)} to ${a.recipient}${a.more ? ` (and ${a.more} more award${a.more === 1 ? '' : 's'} that month)` : ''}\n${clip(awardWords(a), 160)}\n${[a.program !== awardWords(a) ? a.program : '', a.selection ? a.selection.toLowerCase() : ''].filter(Boolean).join(' · ')}`.trim()).join('\n\n'),
+    'Agreement start dates as published on GrantConnect, not announcement dates. Award values, not payments.',
+    url,
+  ].join('\n\n')
+  const post: DailyPost = { date, kind: 'largest', subject: `largest:${month}`, title: `${label}'s largest grants`, url, text, caption }
+  const photos: StoryPhotos = { catalogue: await photoCatalogue(sources), used: [] }
+  const ids = photosFor(photos.catalogue, `largest:${month}`, 'largest')
+  const short = MONTH_NAMES[Number(month.slice(5)) - 1]
+  const cover: StorySlide = { type: 'cover', kicker: `Grants · ${label}`, title: `Where did the money go in ${short}?`,
+    line: `The largest grant agreements that started in ${label}, as published on GrantConnect.`, photo: takePhoto(photos, ids, 0),
+    alt: `Where did the money go in ${label}? The largest grant agreements that started that month.` }
+  const ledger: StorySlide = { type: 'ledger', kicker: `The ${dayWords(awards.length).toLowerCase()} largest`, title: `${short}'s biggest grants`, lines: [],
+    rows: awards.map((a, i) => ({ c1: `No. ${i + 1}`, c2: clip(shortRecipient(a.recipient), 60), amount: shortMoney(a.amount) })),
+    note: 'One row per recipient: its largest award that month.',
+    alt: `The largest grants of ${label}: ${awards.map((a, i) => `number ${i + 1}, ${a.recipient}, ${shortMoney(a.amount)}`).join('; ')}.` }
+  const details: StorySlide[] = awards.slice(0, 3).map((a, i) => ({ type: 'number', kicker: `No. ${i + 1}${a.program ? ` · ${clip(a.program, 34)}` : ''}`,
+    title: clip(shortRecipient(a.recipient), 60), value: shortMoney(a.amount), label: `Agreement from ${formatDate(a.start)} · Award ${a.id}`,
+    lines: [clip(awardWords(a), 120), selectionLine(a.selection)].filter(Boolean),
+    alt: `Number ${i + 1}: ${formatMoney(a.amount)} to ${a.recipient}. ${awardWords(a)}. ${selectionLine(a.selection)} Agreement from ${formatDate(a.start)}, award ${a.id}.`.replace(/\s+/g, ' ').trim() }))
+  const source = sourceSlide('Check it', 'Every award links to its record',
+    ['GrantConnect awards, Department of Finance, CC BY 3.0 AU', 'Agreement start dates, not announcement dates', 'Award values, not payments'],
+    'opax.com.au/money/grants', `federal → largest → ${month}`, `Check it: the largest grants of ${label} at opax.com.au/money/grants.`)
+  return told(post, [cover, ledger, ...details, source], photos)
 }
 
 interface Report {
@@ -714,7 +1007,7 @@ async function topicPost(date: string, sources: DailyPostSources, exclude: strin
 }
 
 const COMPOSERS: Record<DailyPostKind, (date: string, sources: DailyPostSources, exclude: string[]) => Promise<DailyPost | null>> = {
-  politician: politicianPost, bill: billPost, grant: grantPost, topic: topicPost,
+  politician: politicianPost, bill: billPost, grant: grantPost, topic: topicPost, program: programPost, largest: largestPost,
 }
 
 /** Composes the post for a date; falls back through the other kinds if one has nothing to say. */
@@ -722,7 +1015,7 @@ export async function composeDailyPost(date: string, sources: DailyPostSources, 
   // A named subject is an operator's choice: only the grant form exists so far.
   if (subject) return subject.startsWith('grant:') ? grantPostFor(date, sources, subject) : null
   const recent = await sources.recent()
-  const order = [kind, ...DAILY_POST_KINDS.filter(k => k !== kind)]
+  const order = [kind, ...FALLBACK[kind]]
   for (const k of order) {
     const post = await COMPOSERS[k](date, sources, recent)
     if (post) return post

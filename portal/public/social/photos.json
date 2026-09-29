@@ -125,6 +125,14 @@
    "parliament-house-flagpole",
    "parliament-house-front"
   ],
-  "grant": []
+  "grant": [],
+  "program": [
+   "parliament-house-front",
+   "parliament-house-forecourt"
+  ],
+  "largest": [
+   "parliament-house-forecourt",
+   "parliament-house-front"
+  ]
  }
 }

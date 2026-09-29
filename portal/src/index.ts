@@ -3015,11 +3015,13 @@ function ogImageFor(canonical: string): string {
   const out = new URL(`${SITE_ORIGIN}/og${u.pathname}.png`)
   const q = u.searchParams.get('q')
   if (q) out.searchParams.set('q', q)
-  const award = u.searchParams.get('award')
-  if (award) out.searchParams.set('award', award)
+  // The same list as CARD_QUERY, spelled out so this function stands alone (test/grant-social-card.test.mjs runs it in isolation).
+  for (const k of ['award', 'jur', 'program', 'largest']) { const v = u.searchParams.get(k); if (v) out.searchParams.set(k, v) }
   out.searchParams.set('v', OG_VERSION)
   return out.toString()
 }
+/** Query parameters that name a page's subject, and so its card: an award, and on the grants page a program or a month. */
+const CARD_QUERY = ['award', 'jur', 'program', 'largest'] as const
 const SITE_TITLE = 'OPAX: ask what Australian politicians actually said'
 const SITE_DESCRIPTION =
   'Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.'
@@ -3657,6 +3659,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       // to the standalone recipient profile as the canonical record.
       const jurisdiction = url.searchParams.get('jur'), recipientId = url.searchParams.get('open')
       if (route.page === 'money/grants' && !url.searchParams.has('program') && (jurisdiction === 'federal' || jurisdiction === 'qld') && recipientId && GRANT_RECIPIENT_ID_RE.test(recipientId)) return grantRecipientMeta(jurisdiction, recipientId, url, env)
+      if (route.page === 'money/grants' && jurisdiction === 'federal' && url.searchParams.get('program')) return grantProgramMeta(url.searchParams.get('program') as string, url, env)
+      if (route.page === 'money/grants' && jurisdiction === 'federal' && url.searchParams.get('largest')) return grantLargestMeta(url.searchParams.get('largest') as string, url, env)
       const researchSearch = route.page === 'ask' && url.searchParams.get('view') === 'search'
       const page = STATIC_PAGES[researchSearch ? 'search' : route.page]
       const q = url.searchParams.get('q')?.trim()
@@ -4084,6 +4088,57 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
       mainEntity: { '@type': 'Thing', name: recipient.n, ...(id.startsWith('abn:') ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: id.slice(4) } } : {}) } },
     prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`, 'Grant recipient'),
     card: { kicker: 'Grant recipient', title: recipient.n, lines: [`${money(recipient.t)} in ${basis}`, `${num(recipient.c)} ${countBasis}`, caveat] } }
+}
+
+/** The figures the daily edition posts about a program, when it has been told by seat (scripts/build_social_catalog.mjs). */
+interface SocialProgram { key: string; n: string; t: number; c: number; y0?: string | null; y1?: string | null; mapped: [number, number]; groups: Record<string, [number, number]>; seatShare: Record<string, number> }
+const PROGRAM_KEY_RE = /^[a-z0-9][a-z0-9-]{0,79}$/
+const MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/
+const MONTH_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+/** /money/grants?jur=federal&program=<key>: one program's file, opened in the grants explorer. */
+async function grantProgramMeta(raw: string, url: URL, env: Env): Promise<PageMeta> {
+  const key = raw.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+  const canonical = `${SITE_ORIGIN}/money/grants?jur=federal&program=${encodeURIComponent(key)}`
+  const program = PROGRAM_KEY_RE.test(key)
+    ? await assetJson<{ id: string; n: string; ag?: string; t: number; c: number; r?: number; y0?: string; y1?: string }>(env, `/grants/federal/programs/${key}.json`).catch(() => null) : null
+  if (!program || typeof program.n !== 'string' || !Number.isFinite(program.t)) {
+    return { title: 'Grant program not found · OPAX', description: STATIC_PAGES['money/grants'].description, canonical, ogType: 'website', status: 404, jsonLd: null, prerender: null, card: null }
+  }
+  const social = await assetJson<{ programs?: SocialProgram[] }>(env, '/social/programs.json').catch(() => null)
+  const told = social?.programs?.find(p => p.key === key) ?? null
+  const years = program.y0 && program.y1 && program.y0 !== program.y1 ? `${program.y0} to ${program.y1}` : (program.y0 || program.y1 || '')
+  const facts = `${program.n}: ${money(program.t)} in ${num(program.c)} published Commonwealth grant awards${program.r ? ` to ${num(program.r)} recipients` : ''}${years ? `, financial years ${years}` : ''}.`
+  let split = ''
+  if (told && told.mapped?.[0] > 0) {
+    const pct = (g: string) => Math.round((told.groups?.[g]?.[0] ?? 0) / told.mapped[0] * 100)
+    const seats = (g: string) => Math.round((told.seatShare?.[g] ?? 0) * 100)
+    split = `By who held the seat: Labor ${pct('Labor')}% (${seats('Labor')}% of seats) · Coalition ${pct('Coalition')}% (${seats('Coalition')}%) · crossbench ${pct('Crossbench')}% (${seats('Crossbench')}%)`
+  }
+  const description = withTail(facts, 'Where the money went: recipients, selection process, electorates and the members who held them.')
+  return { title: `${clip(program.n, 80)} · Grant program · OPAX`, description, canonical, ogType: 'article', status: 200,
+    jsonLd: { '@context': 'https://schema.org', '@type': 'Dataset', name: program.n, description: facts, url: canonical, creator: publisher, license: 'https://creativecommons.org/licenses/by/3.0/au/' },
+    prerender: prerenderBlock(program.n, `${facts} Award values, not payments.`, 'Grant program'),
+    card: { kicker: told ? 'Where did the money go?' : 'Grant program', title: program.n,
+      lines: [years ? `${num(program.c)} grants, ${years}` : `${num(program.c)} grants`, split || (program.ag ?? 'Published award values, not payments.')],
+      stat: { value: money(program.t), label: 'published grant awards' } } }
+}
+
+/** /money/grants?jur=federal&largest=YYYY-MM: the month's largest awards, one per recipient. */
+async function grantLargestMeta(month: string, url: URL, env: Env): Promise<PageMeta> {
+  const canonical = `${SITE_ORIGIN}/money/grants?jur=federal&largest=${encodeURIComponent(month)}`
+  const data = MONTH_RE.test(month) ? await assetJson<{ months?: Record<string, { recipient: string; amount: number }[]> }>(env, '/social/grants-largest.json').catch(() => null) : null
+  const rows = data?.months?.[month] ?? []
+  if (!rows.length) return { title: 'Month not found · OPAX', description: STATIC_PAGES['money/grants'].description, canonical, ogType: 'website', status: 404, jsonLd: null, prerender: null, card: null }
+  const label = `${MONTH_LONG[Number(month.slice(5)) - 1]} ${month.slice(0, 4)}`
+  const top = rows[0]
+  const facts = `The largest grant agreements that started in ${label}, one per recipient, as published on GrantConnect: ${rows.slice(0, 3).map(r => `${r.recipient} ${money(r.amount)}`).join(', ')}.`
+  return { title: `The largest grants of ${label} · OPAX`, description: clip(facts), canonical, ogType: 'article', status: 200,
+    jsonLd: { '@context': 'https://schema.org', '@type': 'Dataset', name: `The largest grants of ${label}`, description: facts, url: canonical, creator: publisher, license: 'https://creativecommons.org/licenses/by/3.0/au/' },
+    prerender: prerenderBlock(`The largest grants of ${label}`, `${facts} Award values, not payments.`, 'Grants'),
+    card: { kicker: `Grants · ${label}`, title: `Where did the money go in ${MONTH_LONG[Number(month.slice(5)) - 1]}?`,
+      lines: [`No. 1: ${clip(top.recipient, 70)}`, `The largest agreements that started in ${label}`],
+      stat: { value: money(top.amount), label: 'the largest award' } } }
 }
 
 interface AgencyRow {
@@ -4637,11 +4692,13 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
   const pagePath = m[1].replace(/\/+$/, '') || '/home'
   const q = url.searchParams.get('q')?.trim() ?? ''
   const award = url.searchParams.get('award') ?? ''
+  const cardQuery = CARD_QUERY.filter(k => url.searchParams.get(k)).map(k => [k, url.searchParams.get(k) as string] as [string, string])
+  const cardSubject = url.searchParams.get('program') ?? url.searchParams.get('largest') ?? ''
   const format = ogFormat(url.searchParams.get('format'))
   const portrait = format === 'portrait'
   const variants = new URLSearchParams()
   if (q) variants.set('q', q)
-  if (award) variants.set('award', award)
+  for (const [k, v] of cardQuery) variants.set(k, v)
   if (portrait) variants.set('format', format)
   const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
   if (!cacheBypass(request, url)) {
@@ -4658,7 +4715,7 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
     } else {
       const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
       if (q) pageUrl.searchParams.set('q', q)
-      if (award) pageUrl.searchParams.set('award', award)
+      for (const [k, v] of cardQuery) pageUrl.searchParams.set(k, v)
       const route = matchSeoRoute(pageUrl)
       if (route) {
         const meta = await buildMeta(route, pageUrl, request, env, ctx)
@@ -4674,6 +4731,7 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
         'content-length': String(png.byteLength),
         'x-opax-og': pagePath,
         ...(award ? { 'x-opax-award': award } : {}),
+        ...(cardSubject ? { 'x-opax-card': cardSubject } : {}),
         ...(portrait ? { 'x-opax-format': format } : {}),
       },
     })

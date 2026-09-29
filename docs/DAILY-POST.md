@@ -31,6 +31,69 @@ minutes finish an Instagram container that is still processing. They do not rese
 successful posts. A container still pending after the third check needs operator
 review; the following day is a new edition.
 
+## The week and the grant kinds (branch `social/grants-formats`, not yet live)
+
+The rotation is planned by Melbourne weekday (`WEEK` in `src/daily-post.ts`), so three
+days of seven are public money and no kind runs two days running:
+
+| Sun | Mon | Tue | Wed | Thu | Fri | Sat |
+|---|---|---|---|---|---|---|
+| bill | program | politician | grant | bill | largest | topic |
+
+A kind with nothing to say hands over through its own `FALLBACK` list: `program` to an
+award, `largest` (which posts once a month) to an award, then topics, bills and members.
+
+- **`program`: "Where did the money go?"** One place-based grant program: its total, how
+  the awards were chosen, and its dollars by the party holding the seat on each grant's
+  date against the share of House seats each group held on those dates, then the seats
+  with the most, time to the next election and the largest recipients. Link:
+  `/money/grants?jur=federal&program=<key>`, whose program view shows the same figures
+  ("By the party holding the seat") and a program-specific share card (`x-opax-card`).
+  Labor, the Coalition and the crossbench always appear together, in that order, in the
+  same words whichever government awarded the money. The two governments' programs
+  alternate week by week (`programEraFor`); when one government's list is exhausted the
+  day goes to another kind, never to the other list.
+- **`grant`: "Follow the grant"** (the existing award kind). The X text now leads with the
+  amount and the record's own purpose ("$10m grant for the redevelopment of the Kogarah
+  War Memorial Pool") without GrantConnect's "The project will deliver" opening, then the
+  recipient, and the selection process when the award's detail page records it ("No open
+  round: closed, non-competitive.").
+- **`largest`: the month's largest grants.** The largest awards to organisations whose
+  agreements started in the latest complete month, one per recipient. A month is complete
+  21 days after its last day (the publication deadline). No seats: the largest awards go
+  to national bodies whose postcode is a head office. Link:
+  `/money/grants?jur=federal&largest=YYYY-MM` (`public/grants-largest.js`).
+
+`npm run build:social` writes the files these read, from files the site already
+publishes (`scripts/build_social_catalog.mjs`, pure functions in
+`scripts/social_grants_lib.mjs`, tests in `test/social-grants-catalog.test.mjs`):
+
+- `social/programs.json`: every program told by seat. Eligible: a federal program whose
+  file lists every award, whose top GrantConnect category is place-based (Regional
+  Development, Recreation and Sport, Infrastructure, Local Government, Rural Development,
+  Community Safety, Heritage, Commemorative), with at least $20m, half its dollars placed
+  in a seat, eight seats, no seat above half, and mostly local recipients. Service
+  programs are excluded on purpose: their awards map to a provider's head office, so a
+  seat split would say where charities and health bodies are registered (Emergency Relief
+  would read 97% Labor seats for that reason alone). Eight programs qualify as of the
+  21 Sep 2026 export: five awarded mostly under the Coalition, three under Labor.
+- The party on a grant's date comes from the electorates release: parliamentary service
+  records with dated party periods (Gee: Nationals to 23 Dec 2022, then independent;
+  Joyce: Nationals to Nov 2025), the AEC winner where the records have no entry, and no
+  holder while a seat is vacant. The program files' own `holder`/`bloc` fields read the
+  roster's current party instead, which files Joyce's 2020-22 grants under One Nation;
+  the program view uses the corrected figures for the programs in this file.
+- The share of seats is each group's share of the House on each grant's date, weighted by
+  the grant's value. Percentages are whole numbers that add up to 100 (largest
+  remainder), computed once in the build so the post and the page cannot disagree.
+- `social/grants-largest.json`: twelve complete months, ten recipients each, from every
+  listed recipient's 40 largest awards and every listed program's 600 largest. A large
+  award to a recipient with 40 larger ones, in a program outside the top 500, would be
+  missed; the page says what the list is drawn from.
+
+The grants export is monthly (first Sunday), so these files move once a month; a "this
+week" format would need a weekly export of recent awards.
+
 ## Carousels
 
 Since 14 September 2026 the edition is also told as a carousel: a run of three to
@@ -160,7 +223,7 @@ through to another, never silently repeats an excluded subject.
 
 - Preview: `/api/daily-post/preview?date=YYYY-MM-DD` (no posting; returns frozen
   copy when available and per-platform captions/image URLs).
-- Optional `&kind=bill`, `politician` or `topic` previews that category.
+- Optional `&kind=bill`, `politician`, `topic`, `grant`, `program` or `largest` previews that category.
 - Operator run: `POST /api/daily-post/run` with `Authorization: Bearer $DAILY_POST_OPERATOR_SECRET`
   and a JSON body `{date, kind?, subject?, channels?, dry_run?}` composes a chosen edition
   under the given journal date (default today) and delivers it to the named channels
@@ -173,7 +236,7 @@ through to another, never silently repeats an excluded subject.
   no credentials or raw provider error bodies).
 - Logs: `npx wrangler tail --env=''`; look for `daily-post`.
 - Tests: `node --test test/daily-post.test.mjs test/social-publication.test.mjs
-  test/bill-social-card.test.mjs test/og-story.test.mjs` from portal/.
+  test/bill-social-card.test.mjs test/og-story.test.mjs test/social-grants-catalog.test.mjs` from portal/.
 
 `posted` requires a provider post ID. A timeout or malformed success after a write
 becomes `review_required`; do not retry it without reading the platform's actual

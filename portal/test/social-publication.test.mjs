@@ -358,3 +358,15 @@ test('the bio link opens the latest edition with bio UTMs, home without one',asy
  h.sqlite.prepare('INSERT INTO social_editions(date,subject,post_json,created_at) VALUES(?,?,?,?)').run('2026-08-13',post.subject,JSON.stringify({...post,url:'https://evil.example/x'}),'x');
  r=await todayRedirect(h.env,new URL('https://opax.com.au/today'),'2026-08-13');assert.equal(new URL(r.headers.get('location')).origin,'https://opax.com.au');
 });
+test('a program or a month on the grants page shares its own card, never the page\'s generic one',()=>{
+ const program={...post,kind:'program',url:'https://opax.com.au/money/grants?jur=federal&program=go6047'};
+ for(const channel of ['x','bluesky','facebook','instagram']){
+  const image=new URL(publicationCopy(program,channel).image);
+  assert.equal(image.pathname,'/og/money/grants.jpg');assert.equal(image.searchParams.get('program'),'go6047');assert.equal(image.searchParams.get('jur'),'federal');
+  assert.equal(new URL(publicationCopy(program,channel).link).searchParams.get('program'),'go6047');
+ }
+ const month=new URL(publicationCopy({...post,kind:'largest',url:'https://opax.com.au/money/grants?jur=federal&largest=2026-08'},'instagram').image);
+ assert.equal(month.searchParams.get('largest'),'2026-08');assert.equal(month.searchParams.get('format'),'portrait');
+ assert.deepEqual(instagramTags({kind:'program'}),['#auspol','#australianpolitics','#grants','#publicmoney','#opax']);
+ assert.deepEqual(instagramTags({kind:'largest'}),['#auspol','#australianpolitics','#grants','#publicmoney','#opax']);
+});

@@ -1270,7 +1270,7 @@ async function openMoneyRecords(kind, params) {
   $('money-records-title').textContent = grants ? 'Government grants' : 'Political receipts';
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
-    const mod = await import(grants ? '/grants.js?v=program-links-20260923' : '/ledger.js?v=shareable-receipts-20260913');
+    const mod = await import(grants ? '/grants.js?v=told-seats-20260929' : '/ledger.js?v=shareable-receipts-20260913');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1310,6 +1310,26 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
     });
   } catch {
     if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">These recipient records could not load. <a href="'+esc(location.pathname)+'">Try again</a> or <a href="/money/grants">browse government grants</a>.</p>';
+  }
+}
+async function openLargestGrants(month, manageFocus) {
+  const generation = ++moneyRecordsGeneration;
+  moneyRecordsHandle?.destroy(); moneyRecordsHandle = null;
+  $('money-records-title').hidden = true;
+  const body = $('money-records-body');
+  try {
+    const mod = await import('/grants-largest.js?v=largest-20260929b');
+    if (generation !== moneyRecordsGeneration) return;
+    moneyRecordsHandle = mod.mountLargestGrants(body, { month,
+      onTitle(title) {
+        if (generation !== moneyRecordsGeneration) return;
+        document.title = `${title} · OPAX`;
+        syncPathMeta();
+        if (manageFocus) body.querySelector('h1')?.focus();
+      },
+    });
+  } catch {
+    if (generation === moneyRecordsGeneration) body.innerHTML = '<p role="alert">This list could not load. <a href="/money/grants">Browse government grants</a>.</p>';
   }
 }
 let moneyMapGeneration = 0;
@@ -1767,6 +1787,11 @@ function route() {
       document.title = 'Grant recipient · OPAX';
       setCrumbs([{ label: 'Money', href: '/money' }, { label: 'Government grants', href: '/money/grants' }, { label: 'Recipient' }]);
       openGrantRecipient(jurisdiction, id, manageFocus);
+    } else if (segs[1] === 'grants' && /^\d{4}-\d{2}$/.test(params.get('largest') || '')) {
+      // /money/grants?jur=federal&largest=2026-08: the month's largest awards (the daily edition links here).
+      document.title = 'Largest grants · OPAX';
+      setCrumbs([{ label: 'Money', href: '/money' }, { label: 'Government grants', href: '/money/grants?jur=federal' }, { label: 'Largest grants' }]);
+      openLargestGrants(params.get('largest'), manageFocus);
     } else {
       const title = segs[1] === 'grants' ? 'Government grants' : 'Political receipts';
       document.title = `${title} · OPAX`;
@@ -8210,7 +8235,7 @@ const GAMES = {
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=shareable-receipts-20260913", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=program-links-20260923", mount: "mountGrants" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=told-seats-20260929", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js", mount: "mountThenVsNow" },

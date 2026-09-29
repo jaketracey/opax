@@ -5,7 +5,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import {
-  resolveProgramId,
+  resolveProgramId, withToldSeats, withToldRows,
   APPROVAL_BUCKETS, MARGIN_BUCKETS, SEAT_BLOCS, TIMING_BUCKETS, bucketRows,
   buildCSV, donorBlocs, donorSummary, filterElectorates, filterPrograms, filterRecipients, fmtMoney,
   fileKey, formatABN, fyShort, fyStart, govBlocAt, govShare, grantConnectUrl, grantDate, latestMargin,
@@ -274,4 +274,28 @@ test('a program link opens its file whatever the casing of its id', () => {
   assert.equal(resolveProgramId(programs, 'go9999'), null)
   assert.equal(resolveProgramId(programs, ''), null)
   assert.equal(resolveProgramId(undefined, 'GO6047'), null)
+})
+
+test('a program told by seat shows the daily edition\'s figures in place of the roster-party ones', () => {
+  const file = { id: 'GO3202', key: 'go3202', t: 1000, el_known: [800, 8], seats: { gov: [100, 1], opp: [100, 1], cross: [600, 6], unknown: [200, 2] },
+    grants: [{ id: 'GA1', v: 600, el: 'New England', holder: ['Barnaby Joyce', 'One Nation'], bloc: 'cross' }, { id: 'GA2', v: 50, el: 'Dunkley', holder: ['Peta Murphy', 'Labor'], bloc: 'gov' }, { id: 'GA3', v: 5 }],
+    electorates: [{ n: 'New England', st: 'nsw', t: 600, c: 6, gov: 0, opp: 0, cross: 600, holders: [['Barnaby Joyce', 'One Nation', 600]] }] }
+  const told = { key: 'go3202', mapped: [700, 7], blocSplit: { gov: [650, 6], opp: [50, 1], cross: [0, 0] },
+    split: [{ group: 'Labor', d: 50, c: 1, pct: 7, seatPct: 45 }, { group: 'Coalition', d: 650, c: 6, pct: 93, seatPct: 51 }, { group: 'Crossbench', d: 0, c: 0, pct: 0, seatPct: 4 }],
+    seats: [{ n: 'New England', st: 'nsw', t: 600, c: 6, gov: 600, opp: 0, cross: 0, holders: [['Barnaby Joyce', 'Nationals', 600]] }],
+    grants: { GA1: ['Barnaby Joyce', 'Nationals', 'gov'], GA2: null } }
+  const p = withToldSeats(file, told)
+  assert.equal(p.told, told)
+  assert.deepEqual(p.el_known, [700, 7])
+  assert.deepEqual(p.seats, { gov: [650, 6], opp: [50, 1], cross: [0, 0] })
+  assert.equal(p.electorates[0].holders[0][1], 'Nationals', 'the member\'s party on the grant date, not today\'s')
+  assert.equal(p.electorates[0].gov, 600)
+  assert.equal(p.t, 1000, 'the program\'s own totals stay')
+  assert.deepEqual([p.grants[0].holder, p.grants[0].bloc], [['Barnaby Joyce', 'Nationals'], 'gov'])
+  assert.deepEqual([p.grants[1].holder, p.grants[1].bloc], [null, 'unknown'], 'a seat nobody held that day')
+  assert.equal(p.grants[2], file.grants[2], 'an award with no seat is untouched')
+  const rows = withToldRows([{ id: 'GO3202', key: 'go3202', gov: 1, elk: 2 }, { id: 'GO1', key: 'go1', gov: 3, elk: 4 }], { programs: [told] })
+  assert.deepEqual(rows.map(r => [r.gov, r.elk]), [[650, 700], [3, 4]])
+  assert.equal(withToldSeats(file, null), file, 'a program not told by seat is left alone')
+  assert.equal(withToldSeats(file, { ...told, mapped: [0, 0] }), file)
 })

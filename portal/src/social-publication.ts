@@ -49,8 +49,8 @@ export function publicationCopy(post: DailyPost, channel: Channel): { text: stri
   link.searchParams.set('utm_campaign', 'daily_record')
   link.searchParams.set('utm_content', post.date)
   const image = new URL(`https://opax.com.au/og${new URL(post.url).pathname}.jpg`)
-  const award = new URL(post.url).searchParams.get('award')
-  if (award) image.searchParams.set('award', award)
+  // The parameters that name the page's subject name its card too (og.ts draws one per award, program and month).
+  for (const [k, v] of cardParams(post.url)) image.searchParams.set(k, v)
   image.searchParams.set('v', OG_VERSION)
   // Instagram's feed and grid are portrait; the landscape card is cropped there.
   if (channel === 'instagram') image.searchParams.set('format', 'portrait')
@@ -72,6 +72,13 @@ export function publicationCopy(post: DailyPost, channel: Channel): { text: stri
   return { text, link: link.toString(), image: image.toString(), ...(slides ? { slides } : {}), ...(frames ? { frames } : {}) }
 }
 
+/** The query parameters that pick a page's share card: an award on a recipient page, a program or a month on the grants page. */
+export const CARD_PARAMS = ['award', 'jur', 'program', 'largest'] as const
+export function cardParams(pageUrl: string): [string, string][] {
+  const params = new URL(pageUrl).searchParams
+  return CARD_PARAMS.filter(k => params.get(k)).map(k => [k, params.get(k) as string])
+}
+
 /**
  * #auspol is the tag Australian politics runs on across X, Bluesky (the Aus
  * politics feeds pick it up), Instagram and Threads; the old tags
@@ -84,6 +91,8 @@ const KIND_TAGS: Record<DailyPostKind, string[]> = {
   bill: ['#legislation', '#parliament'],
   topic: ['#publicpolicy'],
   grant: ['#grants', '#publicmoney'],
+  program: ['#grants', '#publicmoney'],
+  largest: ['#grants', '#publicmoney'],
 }
 export function instagramTags(post: Pick<DailyPost, 'kind'>): string[] {
   return [AUSPOL, '#australianpolitics', ...(KIND_TAGS[post.kind] ?? []), '#opax']
@@ -241,6 +250,9 @@ export async function runSocialPublication(env: SocialEnv, options: {
           if (!res.ok || (target === copy.image && (!res.headers.get('content-type')?.startsWith('image/jpeg') || res.headers.get('x-opax-og') !== new URL(post.url).pathname))) throw new Error('Source page or matching image unavailable')
           const award = new URL(post.url).searchParams.get('award')
           if (target === copy.image && award && res.headers.get('x-opax-award') !== award) throw new Error('Grant award image mismatch')
+          // A program or month card must be that program's or month's, never the grants page's generic card.
+          const subject = new URL(post.url).searchParams.get('program') ?? new URL(post.url).searchParams.get('largest')
+          if (target === copy.image && subject && res.headers.get('x-opax-card') !== subject) throw new Error('Grant card image mismatch')
           // A portrait request answered with a landscape card (an older Worker, a fallback) must not reach Instagram.
           if (target === copy.image && new URL(copy.image).searchParams.get('format') === 'portrait' && res.headers.get('x-opax-format') !== 'portrait') throw new Error('Portrait image unavailable')
         }

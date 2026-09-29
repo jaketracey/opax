@@ -7,8 +7,9 @@ const dailyPost = await import('data:text/javascript;base64,' + Buffer.from(buil
 const {
   kindFor, seededPick, fit, xLength, prettySponsor, prettyParty, formatDate, joinList,
   composeDailyPost, oauth1Header, X_LIMIT, clip, grantPostFor, shortMoney, dayWords, creditParagraph,
+  WEEK, programEraFor, grantHook, purposePhrase, selectionLine, wholePercents, programUrl, largestUrl, programSplit,
 } = dailyPost;
-const { validStory } = await import('../src/story.ts');
+const { validStory, storyFrames } = await import('../src/story.ts');
 
 const roster = { people: [
   { name: 'Anthony Albanese', speeches: 5408, current: true, party_now: 'Labor', first: 1998, representation: [{ jurisdiction: 'federal', chamber: 'representatives', electorate: 'Grayndler', state: 'NSW' }] },
@@ -84,11 +85,75 @@ function sources(recent = [], { photos = true, extras = true } = {}) {
   };
 }
 
-test('kinds rotate one per day and the same date always maps to the same kind', () => {
-  const kinds = ['2026-09-10', '2026-09-11', '2026-09-12', '2026-09-13', '2026-09-14'].map(kindFor);
-  assert.deepEqual(new Set(kinds.slice(0, 4)).size, 4);
-  assert.equal(kinds[4], kinds[0]);
-  assert.equal(kindFor('2026-09-10'), kindFor('2026-09-10'));
+// Two programs as scripts/build_social_catalog.mjs writes them, one per government, with the same shape.
+const bbrf = {
+  id: 'GO3202', key: 'go3202', n: 'Building Better Regions Fund', ag: 'Department of Infrastructure, Transport, Regional Development and Communications',
+  t: 180322835, c: 104, r: 98, y0: '2020-21', y1: '2021-22', sel: [['Open Competitive', 180322835, 104]], selKnown: [180322835, 104],
+  mapped: [113600000, 70], groups: { Labor: [11360000, 8], Coalition: [94288000, 56], Crossbench: [7952000, 6] },
+  seatShare: { Labor: 0.452, Coalition: 0.508, Crossbench: 0.04 },
+  split: [{ group: 'Labor', d: 11360000, c: 8, pct: 10, seatPct: 45 }, { group: 'Coalition', d: 94288000, c: 56, pct: 83, seatPct: 51 }, { group: 'Crossbench', d: 7952000, c: 6, pct: 7, seatPct: 4 }],
+  blocSplit: { gov: [94288000, 56], opp: [11360000, 8], cross: [7952000, 6] }, governed: { Coalition: 180322835 }, era: 'Coalition',
+  first: '2020-07-30', last: '2022-03-25', seatCount: 23,
+  seats: [
+    { n: 'New England', st: 'nsw', t: 20000000, c: 6, holders: [['Barnaby Thomas Gerard Joyce', 'Nationals', 20000000]] },
+    { n: 'Calare', st: 'nsw', t: 15000000, c: 4, holders: [['Andrew Gee', 'Nationals', 15000000]] },
+    { n: 'Kennedy', st: 'qld', t: 7952000, c: 6, holders: [['Bob Katter', "Katter's Australian Party", 7952000]] },
+    { n: 'Hunter', st: 'nsw', t: 6000000, c: 3, holders: [['Joel Fitzgibbon', 'Labor', 6000000]] },
+    { n: 'Braddon', st: 'tas', t: 5000000, c: 2, holders: [['Gavin Pearce', 'Liberal', 5000000]] },
+  ],
+  recipients: [['abn:11111111111', 'Armidale Regional Council', 'council', 9000000, 3], ['abn:22222222222', 'Orange City Council', 'council', 8000000, 2], ['abn:33333333333', 'Burdekin Shire Council', 'council', 6000000, 1]],
+  timing: { '0_3': [0, 0], '3_6': [10000000, 5], '6_12': [60000000, 30], '12_24': [110322835, 69], over_24: [0, 0], unknown: [0, 0] },
+};
+const pcip = {
+  id: 'GO6047', key: 'go6047', n: 'Priority Community Infrastructure Program', ag: 'Department of Infrastructure, Transport, Regional Development, Communications and the Arts',
+  t: 834651285, c: 91, r: 80, y0: '2023-24', y1: '2024-25', sel: [['Closed Non-Competitive', 834651285, 91]], selKnown: [834651285, 91],
+  mapped: [792951285, 84], groups: { Labor: [499559310, 57], Coalition: [229955873, 23], Crossbench: [63436102, 4] },
+  seatShare: { Labor: 0.51, Coalition: 0.37, Crossbench: 0.12 },
+  split: [{ group: 'Labor', d: 499559310, c: 57, pct: 63, seatPct: 51 }, { group: 'Coalition', d: 229955873, c: 23, pct: 29, seatPct: 37 }, { group: 'Crossbench', d: 63436102, c: 4, pct: 8, seatPct: 12 }],
+  blocSplit: { gov: [499559310, 57], opp: [229955873, 23], cross: [63436102, 4] }, governed: { Labor: 834651285 }, era: 'Labor',
+  first: '2023-07-13', last: '2024-10-17', seatCount: 46,
+  seats: [
+    { n: 'Lingiari', st: 'nt', t: 58600001, c: 10, holders: [['Marion Scrymgour', 'Labor', 58600001]] },
+    { n: 'Braddon', st: 'tas', t: 55125270, c: 5, holders: [['Gavin Pearce', 'Liberal', 55125270]] },
+    { n: 'Kennedy', st: 'qld', t: 40313514, c: 2, holders: [['Bob Katter', "Katter's Australian Party", 40313514]] },
+    { n: 'Hasluck', st: 'wa', t: 36900000, c: 3, holders: [['Tania Lawrence', 'Labor', 36900000]] },
+    { n: 'Moore', st: 'wa', t: 25000000, c: 1, holders: [['Ian Goodenough', 'Liberal', 25000000]] },
+  ],
+  recipients: [['abn:15292645165', 'Torres Strait Island Regional Council', 'council', 40000000, 1], ['abn:68565723484', 'Department of Planning Lands and Heritage', 'government', 30000000, 1], ['abn:45863481471', 'Alice Springs Town Council', 'council', 29000000, 3]],
+  timing: { '0_3': [0, 0], '3_6': [0, 0], '6_12': [415037501, 38], '12_24': [419613784, 53], over_24: [0, 0], unknown: [0, 0] },
+};
+const largestFile = { asOf: '2026-09-21', latest: '2026-08', months: {
+  '2026-08': [
+    { id: 'GA576946', recipientId: 'abn:75081455754', recipient: 'Australian Rail Track Corporation', amount: 150000000, start: '2026-08-07', purpose: 'This grant will provide $150 million in Australian Government funding to the Replacement of Sleepers - Maroona to Portland Project.', program: 'Network Investment Program (NIP) Australian Rail Track Corporation', agency: 'Department of Infrastructure', selection: 'Demand Driven', more: 2, sourceUrl: 'https://www.grants.gov.au/Ga/Show/a' },
+    { id: 'GA576925', recipientId: 'abn:99695958804', recipient: 'Critical Metals for Critical Industries CRC Limited', amount: 58300000, start: '2026-08-06', purpose: 'CRITICAL METALS FOR CRITICAL INDUSTRIES CRC', program: 'Cooperative Research Centres Programme', agency: 'Department of Industry, Science and Resources', selection: 'Open Competitive', more: 0, sourceUrl: 'https://www.grants.gov.au/Ga/Show/b' },
+    { id: 'GA577403', recipientId: 'abn:94641582121', recipient: 'Australian Associated Press Ltd', amount: 40700000, start: '2026-08-14', purpose: 'Support for the Australian Associated Press', program: 'Supporting the Australian Associated Press', agency: 'Department of Infrastructure', selection: 'Closed Non-Competitive', more: 0, sourceUrl: 'https://www.grants.gov.au/Ga/Show/c' },
+    { id: 'GA577786', recipientId: 'abn:74410330756', recipient: 'Department of Health & Human Services', amount: 26992417, start: '2026-08-20', purpose: 'Funding agreement', program: 'National Program', agency: 'Organ and Tissue Authority', selection: 'Closed Non-Competitive', more: 0, sourceUrl: 'https://www.grants.gov.au/Ga/Show/d' },
+  ],
+} };
+/** A source set with the program and largest-awards files beside the base records. */
+function moneySources(base, { programs = [bbrf, pcip], largest = largestFile } = {}) {
+  return { ...base, async asset(path) {
+    if (path === '/social/programs.json') return { programs };
+    if (path === '/social/grants-largest.json') return largest;
+    return base.asset(path);
+  } };
+}
+
+test('the week is planned by weekday: three days of public money, four of bills, a member and a topic', () => {
+  // 4 October 2026 is a Sunday.
+  const week = ['2026-10-04', '2026-10-05', '2026-10-06', '2026-10-07', '2026-10-08', '2026-10-09', '2026-10-10'].map(kindFor);
+  assert.deepEqual(week, ['bill', 'program', 'politician', 'grant', 'bill', 'largest', 'topic']);
+  assert.deepEqual(week, [...WEEK]);
+  assert.equal(kindFor('2026-10-11'), 'bill', 'the next Sunday starts the week again');
+  assert.equal(kindFor('2026-10-05'), kindFor('2026-10-05'));
+  for (let i = 1; i < week.length; i++) assert.notEqual(week[i], week[i - 1], 'no kind runs two days in a row');
+});
+
+test('program editions alternate between the two governments week by week', () => {
+  const mondays = ['2026-10-05', '2026-10-12', '2026-10-19', '2026-10-26'].map(programEraFor);
+  assert.deepEqual(new Set(mondays), new Set(['Coalition', 'Labor']));
+  for (let i = 1; i < mondays.length; i++) assert.notEqual(mondays[i], mondays[i - 1]);
+  assert.equal(programEraFor('2026-10-05'), programEraFor('2026-10-11'), 'Monday to Sunday is one week');
 });
 
 test('seeded picks are deterministic and step past recently featured subjects', () => {
@@ -194,7 +259,8 @@ test('grant editions keep the award amount, purpose, start date and exact recipi
   const post = await composeDailyPost('2026-09-14',src,'grant');
   assert.equal(post.subject,'grant:GA123');
   assert.equal(new URL(post.url).searchParams.get('award'),'GA123');
-  assert.match(post.text,/\$4,000,000/); assert.match(post.text,/Award value, not payments/);
+  assert.match(post.text,/^\$4m grant to redevelop Windsor Park/); assert.match(post.text,/award value, not payments/);
+  assert.match(post.text,/Recipient: City of Greater Geelong\. Agreement from 27 Aug 2026/);
   assert.match(post.caption,/City of Greater Geelong/); assert.match(post.caption,/27 Aug 2026/);
   assert.match(post.caption,/netball courts/); assert.ok(xLength(post.text)<=280);
   assert.equal(await composeDailyPost('2027-09-14',src,'grant'),null,'stale start dates are not offered as recent grants');
@@ -238,7 +304,8 @@ test('an operator can name one award and it is composed from the source shard', 
   const post = await grantPostFor('2026-09-12', src, 'grant:GA34203@abn:97694995462');
   assert.equal(post.subject, 'grant:GA34203');
   assert.equal(post.url, 'https://opax.com.au/money/grants/federal/recipient/abn%3A97694995462?award=GA34203');
-  assert.match(post.text, /^\$11,300,000 grant award: Construct an airpark roof/);
+  assert.match(post.text, /^\$11\.3m grant to construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld\./);
+  assert.match(post.text, /Recipient: Qantas Foundation Memorial Trust\. Agreement from 12 Feb 2019 \(award value, not payments\)\./);
   assert.ok(xLength(post.text) <= X_LIMIT);
   assert.match(post.caption, /Program: Building Better Regions Fund/);
   assert.equal(await grantPostFor('2026-09-12', src, 'grant:GA1@abn:97694995462'), null, 'no GrantConnect record, no post');
@@ -249,17 +316,21 @@ test('an operator can name one award and it is composed from the source shard', 
 const types = post => post.slides?.map(s => s.type) ?? null;
 
 test('every kind tells a valid story from the same records, and X stays exactly as it was', async () => {
-  for (const kind of ['politician', 'bill', 'grant', 'topic']) {
-    const src = kind === 'grant' ? grantSources() : sources([], {});
-    const bare = kind === 'grant' ? grantSources({ photos: false, extras: false }) : sources([], { photos: false, extras: false });
-    const post = await composeDailyPost('2026-09-14', src, kind);
-    const plain = await composeDailyPost('2026-09-14', bare, kind);
+  for (const kind of ['politician', 'bill', 'grant', 'topic', 'program', 'largest']) {
+    const date = kind === 'program' || kind === 'largest' ? '2026-10-05' : '2026-09-14';
+    const src = kind === 'grant' ? grantSources() : moneySources(sources([], {}));
+    const bare = kind === 'grant' ? grantSources({ photos: false, extras: false }) : moneySources(sources([], { photos: false, extras: false }));
+    const post = await composeDailyPost(date, src, kind);
+    const plain = await composeDailyPost(date, bare, kind);
     assert.equal(post.kind, kind);
     assert.ok(validStory(post.slides), `${kind}: ${JSON.stringify(types(post))}`);
     assert.equal(post.slides[0].type, 'cover');
     assert.equal(post.slides.at(-1).type, 'source');
     assert.ok(post.slides.every(s => s.alt && s.alt.length > 10), 'every slide has alt text');
-    assert.equal(post.text, plain.text, `${kind}: text is unchanged by the story`);
+    // The award's selection process comes from its shard, so a grant edition without one has one line fewer.
+    // An award's optional lines (its selection process, its program) depend on the shard; its hook and recipient do not.
+    const head = text => kind === 'grant' ? text.split('\n\n').slice(0, 2).join('\n\n') : text;
+    assert.equal(head(post.text), head(plain.text), `${kind}: text is unchanged by the story`);
     assert.ok(xLength(post.text) <= X_LIMIT);
   }
 });
@@ -302,7 +373,9 @@ test('the grant story carries the selection, the same recipient and the electora
 test('the operator award is told from its shard too', async () => {
   const post = await grantPostFor('2026-09-12', grantSources(), 'grant:GA34203@abn:97694995462');
   assert.deepEqual(types(post), ['cover', 'number', 'picture', 'bars', 'ledger', 'number', 'source']);
-  assert.match(post.text, /^\$11,300,000 grant award: Construct an airpark roof/);
+  assert.match(post.text, /^\$11\.3m grant to construct an airpark roof/);
+  assert.match(post.text, /\n\nNo open round: closed, non-competitive\.\n\n/, 'the shard\'s selection process leads the optional lines');
+  assert.match(post.caption, /No open round: closed, non-competitive\./);
 });
 
 test('a bill with a division and dates gets a timeline and the division; one without has neither', async () => {
@@ -383,4 +456,122 @@ test('short money, day words and the credit paragraph', () => {
   assert.equal(creditParagraph([kgbo, kgbo]), 'Photos: Kgbo, CC BY-SA 4.0, via Wikimedia Commons.');
   assert.equal(creditParagraph([kgbo, { credit: 'Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons' }]), 'Photo: Kgbo, CC BY-SA 4.0, via Wikimedia Commons. Photo: JJ Harrison, CC BY-SA 3.0, via Wikimedia Commons.');
   assert.equal(creditParagraph([]), '');
+});
+
+test('the grant hook is the amount and the record\'s own words, without GrantConnect\'s stock opening', () => {
+  assert.equal(grantHook(10000000, 'The project will deliver the redevelopment of the Kogarah War Memorial Pool, commonly known as the Carss Park Pool. Works will include a new ancillary building.'),
+    '$10m grant for the redevelopment of the Kogarah War Memorial Pool, commonly known as the Carss Park Pool');
+  assert.equal(grantHook(11300000, 'Construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld'),
+    '$11.3m grant to construct an airpark roof over four aircraft at the Qantas Founders Museum, Longreach, Qld');
+  assert.equal(grantHook(25000000, 'The project is to design and construct the Devonport Indoor Sports Centre.'), '$25m grant to design and construct the Devonport Indoor Sports Centre');
+  assert.equal(grantHook(6000000, 'The project will deliver upgrades to the Marrickville Golf Club.'), '$6m grant for upgrades to the Marrickville Golf Club');
+  assert.equal(grantHook(40700000, 'Support for the Australian Associated Press'), '$40.7m grant: Support for the Australian Associated Press', 'a noun "support for" is not a verb');
+  assert.equal(grantHook(58300000, 'CRITICAL METALS FOR CRITICAL INDUSTRIES CRC'), '$58.3m grant: CRITICAL METALS FOR CRITICAL INDUSTRIES CRC');
+  assert.equal(grantHook(5000, ''), '$5,000 grant');
+  assert.equal(purposePhrase('This grant will provide $150 million to the Replacement of Sleepers. It forms part of a program.'), '$150 million to the Replacement of Sleepers');
+  assert.equal(selectionLine('Closed Non-Competitive'), 'No open round: closed, non-competitive.');
+  assert.equal(selectionLine('Open Competitive'), 'Selection: open competitive.');
+  assert.equal(selectionLine(null), '');
+});
+
+test('whole percentages always add up to 100', () => {
+  assert.deepEqual(wholePercents([1, 1, 1]), [34, 33, 33]);
+  assert.deepEqual(wholePercents([63.4, 28.7, 7.9]), [63, 29, 8]);
+  assert.deepEqual(wholePercents([0, 0, 0]), [0, 0, 0]);
+  for (const v of [[0.1, 0.2, 0.7], [5, 5, 90], [33.33, 33.33, 33.34], [1, 2, 3, 4, 5, 6, 7]]) assert.equal(wholePercents(v).reduce((a, b) => a + b, 0), 100);
+});
+
+test('a program edition names all three groups, in the same order, against their share of the seats', async () => {
+  const date = ['2026-10-05', '2026-10-12'].find(d => programEraFor(d) === 'Coalition');
+  const post = await composeDailyPost(date, moneySources(sources()), 'program');
+  assert.equal(post.kind, 'program');
+  assert.equal(post.subject, 'program:GO3202');
+  assert.equal(post.url, programUrl('go3202'));
+  assert.equal(post.url, 'https://opax.com.au/money/grants?jur=federal&program=go3202');
+  assert.match(post.text, /^Where did \$180\.3m go\? 104 grants, Building Better Regions Fund, 2020-21 to 2021-22\./);
+  assert.match(post.text, /\n\nBy party holding the seat \(63% of dollars mapped\): Labor 10% \(45% of seats\), Coalition 83% \(51%\), crossbench 7% \(4%\)\.\n\n/);
+  assert.ok(xLength(post.text) <= X_LIMIT, xLength(post.text));
+  assert.ok(post.text.endsWith(post.url));
+  assert.doesNotMatch(post.text + post.caption, /pork|rort|corrupt|scandal|rigged/i, 'OPAX never characterises; the reader draws the conclusion');
+  assert.match(post.caption, /• Labor-held seats: 10% of the dollars; 45% of House seats at the time\n• Coalition-held seats: 83% of the dollars; 51% of House seats at the time\n• Crossbench-held seats: 7% of the dollars; 4% of House seats at the time/);
+  assert.match(post.caption, /Awarded while the Coalition was in government\./);
+  assert.match(post.caption, /• New England \(NSW\), Barnaby Joyce \(Nationals\): \$20m/, 'the member\'s party on the grant date, first and last name');
+  assert.match(post.caption, /approximate near boundaries/);
+  assert.deepEqual(types(post), ['cover', 'number', 'bars', 'bars', 'ledger', 'bars', 'ledger', 'source']);
+  const [cover, , seats, chosen, ledger, when, recipients, source] = post.slides;
+  assert.equal(cover.kicker, 'Where did the money go?');
+  assert.equal(cover.line, '$180.3m in 104 grants, 2020-21 to 2021-22');
+  assert.equal(chosen.title, 'Open competitive');
+  assert.deepEqual(seats.items, [{ label: 'Labor-held · 45% of seats', pct: 10 }, { label: 'Coalition-held · 51% of seats', pct: 83 }, { label: 'Crossbench-held · 4% of seats', pct: 7 }]);
+  assert.equal(ledger.rows[0].c1, 'NSW');
+  assert.equal(ledger.rows[0].c2, 'New England · Joyce (Nationals)');
+  assert.equal(ledger.total.label, '23 seats in all');
+  assert.equal(when.items.reduce((a, i) => a + i.pct, 0), 100);
+  assert.equal(recipients.rows[0].c1, '3 awards');
+  assert.match(source.path, /program GO3202/);
+  assert.deepEqual(storyFrames(post.slides), [1, 2, 3, 5, 8], 'the story tray shows the cover, the total, the seat split, the seats and the source');
+});
+
+test('both governments\' programs are told in exactly the same words', async () => {
+  const [a, b] = ['2026-10-05', '2026-10-12'];
+  const one = await composeDailyPost(a, moneySources(sources()), 'program');
+  const two = await composeDailyPost(b, moneySources(sources()), 'program');
+  assert.deepEqual(new Set([one.subject, two.subject]), new Set(['program:GO3202', 'program:GO6047']), 'one week each');
+  const shape = post => post.text.replace(post.url, 'URL').replace(post.title, 'NAME').replace(/\$[\d.,]+[mbn]*|\d[\d.,-]*( to [\d-]+)?%?/g, '#');
+  assert.equal(shape(one).replace(/\n\n(All|#) chosen without an open round\./, ''), shape(two).replace(/\n\n(All|#) chosen without an open round\./, ''));
+  const captionShape = post => post.caption.replace(/the Coalition|Labor(?=,| was)/g, 'GOVERNMENT').split('\n\n').map(p => p.split(/[:.(]/)[0]).slice(2, 4);
+  assert.deepEqual(captionShape(one), captionShape(two));
+  assert.match((one.subject === 'program:GO6047' ? one : two).text, /\n\nAll chosen without an open round\.\n\n/, 'the selection line fits when the program has one');
+});
+
+test('an exhausted government hands the day to another kind, never to the other government\'s list', async () => {
+  const date = ['2026-10-05', '2026-10-12'].find(d => programEraFor(d) === 'Coalition');
+  const src = moneySources({ ...grantSources(), recent: async () => ['program:GO3202'] });
+  const post = await composeDailyPost(date, src, 'program');
+  assert.notEqual(post.kind, 'program');
+  assert.equal(post.kind, 'grant', 'program falls back to an award first');
+});
+
+test('a program whose percentages do not add up is not posted', async () => {
+  const broken = { ...bbrf, split: bbrf.split.map((s, i) => i ? s : { ...s, pct: s.pct + 1 }) };
+  assert.equal(programSplit(broken), null);
+  const date = ['2026-10-05', '2026-10-12'].find(d => programEraFor(d) === 'Coalition');
+  const post = await composeDailyPost(date, moneySources(grantSources(), { programs: [broken, pcip] }), 'program');
+  assert.notEqual(post.kind, 'program');
+});
+
+test('the largest-awards edition lists the complete month, one line per recipient, and links to that month', async () => {
+  const post = await composeDailyPost('2026-10-09', moneySources(sources()), 'largest');
+  assert.equal(post.kind, 'largest');
+  assert.equal(post.subject, 'largest:2026-08');
+  assert.equal(post.url, largestUrl('2026-08'));
+  assert.equal(post.url, 'https://opax.com.au/money/grants?jur=federal&largest=2026-08');
+  assert.match(post.text, /^Where did the money go in August 2026\? The largest grant agreements that started that month:\n\n\$150m · Australian Rail Track Corporation\n\$58\.3m · Critical Metals for Critical Industries CRC…\n\$40\.7m · Australian Associated Press Ltd/);
+  assert.ok(xLength(post.text) <= X_LIMIT);
+  assert.match(post.caption, /1\. \$150,000,000 to Australian Rail Track Corporation \(and 2 more awards that month\)/);
+  assert.match(post.caption, /\$150 million in Australian Government funding to the Replacement of Sleepers/);
+  assert.match(post.caption, /4\. \$26,992,417 to Department of Health & Human Services\nNational Program/, 'a stock purpose gives way to the program name');
+  assert.match(post.caption, /not announcement dates\. Award values, not payments\./);
+  assert.doesNotMatch(post.caption, /electorate|seat|Labor|Coalition/i, 'the largest list carries no seats: head offices are not where the money lands');
+  assert.deepEqual(types(post), ['cover', 'ledger', 'number', 'number', 'number', 'source']);
+  assert.equal(post.slides[1].rows.length, 4);
+  assert.match(post.slides[4].lines[1], /No open round/);
+  assert.equal(post.slides[2].lines[0], '$150 million in Australian Government funding to the Replacement of Sleepers - Maroona to Portland Project');
+  assert.equal(post.slides[2].label, 'Agreement from 7 Aug 2026 · Award GA576946');
+  assert.equal((await composeDailyPost('2026-10-09', moneySources({ ...grantSources(), recent: async () => ['largest:2026-08'] }), 'largest')).kind, 'grant', 'a month already posted hands the day to an award');
+  assert.notEqual((await composeDailyPost('2026-08-28', moneySources(grantSources()), 'largest')).kind, 'largest', 'a month is never posted before it is over');
+  const thin = { ...largestFile, months: { '2026-08': largestFile.months['2026-08'].slice(0, 2) } };
+  assert.notEqual((await composeDailyPost('2026-10-09', moneySources(grantSources(), { largest: thin }), 'largest')).kind, 'largest', 'fewer than three is not a list');
+});
+
+test('a long purpose gives way so an award chosen without an open round says so on X', async () => {
+  const desc = 'The project will deliver the design and construction of four new parks for Fairfield, with inclusive, age-appropriate equipment, informal recreation areas, and public amenities, where applicable.';
+  const assets = {
+    '/graph/grants.federal.json': { recipients: [{ id: 'abn:83140439239', n: 'Fairfield City Council', t: 9500000, c: 1, sh: 5 }] },
+    '/grants/federal/shard-05.json': { 'abn-83140439239': { grants: [{ id: 'GA576235', v: 9500000, desc, s: '2026-07-30', guid: 'g', pr: 'Major and Local Community Infrastructure Program', sel: 'Closed Non-Competitive', el: 'Fowler' }] } },
+  };
+  const post = await grantPostFor('2026-09-30', { asset: async p => assets[p] ?? null, personTopics: async () => [], recent: async () => [] }, 'grant:GA576235@abn:83140439239');
+  assert.match(post.text, /^\$9\.5m grant for the design and construction of four new parks for Fairfield/);
+  assert.match(post.text, /\n\nNo open round: closed, non-competitive\.\n\n/);
+  assert.ok(xLength(post.text) <= X_LIMIT, xLength(post.text));
 });

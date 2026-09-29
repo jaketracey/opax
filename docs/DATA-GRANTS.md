@@ -309,6 +309,14 @@ All from the worktree on the Mac unless noted. `uv run` fails here; use `.venv`.
 
 ## 5. Open items
 
+- Seat holder party (found 2026-09-29): `seat_holder` returns the roster's party whenever the
+  recorded winner is the roster's member, so a member who changed party is filed under the
+  later party for every grant (Joyce's 2020-22 Building Better Regions Fund awards under One
+  Nation and "cross"; Gee's and Goodenough's under Independent). About 21% of one BBRF round's
+  placed dollars move bloc. The daily edition's `social/programs.json` reads dated party periods
+  from the electorates release instead (docs/DAILY-POST.md), and the program view uses those
+  figures for the programs in it; the export itself still needs the same fix.
+
 - Detail-page coverage: 18% of federal dollars had a fetched page at first export; the
   harvester needs about five days for the whole register. Re-run recipients + export as
   it progresses; the electorate view for the Commonwealth is thin until then.

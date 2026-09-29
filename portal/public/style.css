@@ -5444,6 +5444,14 @@ h3, #panel-methods h3, #panel-expenses h3 {
   .bill-text-source { font-size: .9375rem; line-height: 1.8; }
 }
 .grant-recipient-page .grant-recipient-award-value { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-block: .3rem .7rem; }
+/* /money/grants?jur=federal&largest=YYYY-MM (grants-largest.js): one numbered entry per recipient. */
+.grants-largest-list { margin: 1.5rem 0; padding-left: 1.75rem; }
+.grants-largest-list > li { padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.grants-largest-list > li::marker { color: var(--bronze-ink); font: 600 1rem var(--sans); }
+.grants-largest-list h2 { margin: .1rem 0 .35rem; font-size: 1.15rem; overflow-wrap: anywhere; }
+.grants-largest-list p { margin: .25rem 0; overflow-wrap: anywhere; }
+.grants-largest-amount { font: 700 1.5rem/1.2 var(--sans); font-variant-numeric: tabular-nums; }
+.grants-largest-meta { color: var(--ink-soft); font-size: .8125rem; }
 #featured-award { margin-block: 1.5rem 2rem; padding: 1.5rem; background: var(--paper-sunken); border-left: 3px solid var(--bronze); }
 
 /* ==== the docked assistant (the conversation, in the corner) ==============
