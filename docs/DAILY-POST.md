@@ -31,7 +31,7 @@ minutes finish an Instagram container that is still processing. They do not rese
 successful posts. A container still pending after the third check needs operator
 review; the following day is a new edition.
 
-## The week and the grant kinds (branch `social/grants-formats`, not yet live)
+## The week and the grant kinds (live from 30 Sep 2026)
 
 The rotation is planned by Melbourne weekday (`WEEK` in `src/daily-post.ts`), so three
 days of seven are public money and no kind runs two days running:
@@ -77,14 +77,14 @@ publishes (`scripts/build_social_catalog.mjs`, pure functions in
   seat split would say where charities and health bodies are registered (Emergency Relief
   would read 97% Labor seats for that reason alone). Eight programs qualify as of the
   21 Sep 2026 export: five awarded mostly under the Coalition, three under Labor.
-- The party on a grant's date comes from the electorates release: parliamentary service
-  records with dated party periods (Gee: Nationals to 23 Dec 2022, then independent;
-  Joyce: Nationals to Nov 2025), the AEC winner where the records have no entry, and no
-  holder while a seat is vacant. The program files' own `holder`/`bloc` fields read the
-  roster's current party instead, which files Joyce's 2020-22 grants under One Nation;
-  the program view uses the corrected figures for the programs in this file.
+- The member and their party on a grant's date are the program file's own (`holder`, `bloc`:
+  export_grants.py reads dated party periods from the electorates release, fixed 29 Sep 2026),
+  so the post and the program page read one set of figures; the program view adds the
+  three-group block from this file.
 - The share of seats is each group's share of the House on each grant's date, weighted by
-  the grant's value. Percentages are whole numbers that add up to 100 (largest
+  the grant's value, counted from the electorates release by the same rules as the export
+  (a Speaker holds the seat; the campaign after a dissolution stays with the last member; a
+  vacancy holds nobody). Percentages are whole numbers that add up to 100 (largest
   remainder), computed once in the build so the post and the page cannot disagree.
 - `social/grants-largest.json`: twelve complete months, ten recipients each, from every
   listed recipient's 40 largest awards and every listed program's 600 largest. A large

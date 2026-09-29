@@ -75,7 +75,7 @@ writeFileSync(root + 'social/programs.json', JSON.stringify({
   basis: [
     'Award values as published on GrantConnect, not payments.',
     "Seats come from each award's delivery or recipient postcode, so they are approximate where a postcode straddles a boundary.",
-    'The party is the seat holder\'s on the grant date (agreement start, else approval), from parliamentary service records with dated party changes, and the AEC result where the records have no entry. Labor and the Coalition are the grants file\'s blocs; every other party and every independent is the crossbench.',
+    'The party is the seat holder\'s on the grant date (agreement start, else approval), as the program file records it (export_grants.py: parliamentary service records with dated party changes). Labor and the Coalition are the grants file\'s blocs; every other party and every independent is the crossbench.',
     'The share of seats is the share of House seats each group held on each grant\'s date, weighted by the grant\'s value.',
   ],
   programs,
@@ -84,7 +84,7 @@ const eras = programs.reduce((acc, p) => ({ ...acc, [p.era]: (acc[p.era] ?? 0) +
 console.log(`Social programs: ${programs.length} told by seat (${Object.entries(eras).map(([k, v]) => `${k} ${v}`).join(', ')}); skipped ${Object.entries(skipped).map(([k, v]) => `${v} ${k}`).join(', ')}`);
 
 // ---------------------------------------------------------------- largest
-const largest = largestByMonth([...awards.values()], asOf, seats);
+const largest = largestByMonth([...awards.values()], asOf);
 const months = Object.keys(largest).sort();
 writeFileSync(root + 'social/grants-largest.json', JSON.stringify({
   asOf,

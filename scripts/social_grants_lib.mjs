@@ -1,8 +1,10 @@
 // Pure functions behind the grants files the daily edition reads (build_social_catalog.mjs
 // writes them; portal/test/social-grants-catalog.test.mjs pins them). Every figure is read
-// from files the site already publishes: the GrantConnect program files and recipient shards,
-// and the electorates release (AEC results plus parliamentary service records with dated
-// party periods). Nothing here is estimated or inferred beyond what those files say.
+// from files the site already publishes: the GrantConnect program files (whose seat holders
+// and blocs export_grants.py reads, since 29 Sep 2026, from the member's party on the grant
+// date) and recipient shards, and the electorates release (AEC results plus parliamentary
+// service records with dated party periods), which gives the House on a day for the
+// share-of-seats baseline. Nothing here is estimated or inferred beyond what those files say.
 
 /** Party spellings the electorates release and the grants files use for the same party. */
 const PARTY_CANON = [
@@ -63,13 +65,22 @@ export function seatTimelines (details) {
   for (const d of details) {
     if (d?.jurisdiction !== 'federal' || d?.chamber !== 'representatives' || !d.name) continue
     const people = d.people ?? {}
+    const terms = [...(d.terms ?? [])].sort((a, b) => String(a.start ?? '').localeCompare(String(b.start ?? '')))
     const periods = []
-    for (const t of d.terms ?? []) {
-      for (const p of t.party_periods ?? []) {
-        if (!p?.start) continue
-        periods.push({ start: p.start, end: p.end ?? null, party: canonParty(p.party), person: people[t.person_id]?.name ?? null })
+    for (const t of terms) {
+      let own = (t.party_periods ?? []).filter(p => p?.start)
+      if (!own.length && t.source_party_label === 'SPK') {
+        // A Speaker's term carries no party: the member's party once out of the Chair, else the one before
+        // (the same rule as export_grants.py seat_periods_from_release).
+        const same = terms.filter(u => u.person_id === t.person_id && (u.party_periods ?? []).length)
+        const after = same.filter(u => String(u.start ?? '') >= String(t.end ?? '9999'))
+        const before = same.filter(u => String(u.end ?? '9999') <= String(t.start ?? ''))
+        const src = after.length ? after[0].party_periods[0] : before.length ? before.at(-1).party_periods.at(-1) : null
+        if (src) own = [{ start: t.start, end: t.end ?? null, party: src.party }]
       }
+      for (const p of own) periods.push({ start: p.start, end: p.end ?? null, party: canonParty(p.party), person: people[t.person_id]?.name ?? null })
     }
+    periods.sort((a, b) => a.start.localeCompare(b.start))
     const contests = []
     for (const e of d.elections ?? []) {
       const day = e.election?.poll_date
@@ -84,29 +95,39 @@ export function seatTimelines (details) {
 }
 export const seatKey = (name) => String(name ?? '').trim().toLowerCase()
 
+const nextDay = (iso) => new Date(Date.parse(`${iso}T00:00:00Z`) + 86400000).toISOString().slice(0, 10)
+
 /**
- * The member holding a seat on a day and their party that day, or null.
- * A service-record period covering the day decides. Where none does, the
- * latest AEC winner on or before the day holds it, unless a service period
- * ended after that election and before the day (a vacancy: a resignation or a
- * death with the by-election still to come).
+ * The member holding a seat on a day and their party that day, or null, by the
+ * same rules as export_grants.py seat_holder: a service-record period covering
+ * the day decides (a period ending the day before the next begins covers its
+ * end day); a gap closed by a general election (`elections`) is the campaign
+ * after a dissolution and stays with the last member; any other gap is a
+ * vacancy. Before the first period or after the last, the latest AEC winner.
  */
-export function holderOn (seat, day) {
+export function holderOn (seat, day, elections = []) {
   if (!seat || !day) return null
-  const hit = seat.periods.find(p => p.start <= day && (!p.end || day < p.end))
+  const starts = new Set(seat.periods.map(p => p.start))
+  const hit = seat.periods.find(p => p.start <= day && (!p.end || day < p.end || (day === p.end && starts.has(nextDay(p.end)))))
   if (hit) return { person: hit.person, party: hit.party }
+  const ended = seat.periods.filter(p => p.end && p.end <= day)
+  const later = seat.periods.filter(p => p.start > day)
+  if (ended.length && later.length) {
+    const next = later.reduce((a, b) => (b.start < a.start ? b : a))
+    if (!elections.includes(next.start)) return null
+    const prev = ended.reduce((a, b) => (b.end > a.end ? b : a))
+    return { person: prev.person, party: prev.party }
+  }
   const won = seat.contests.filter(c => c.day <= day).at(-1)
-  if (!won) return null
-  const vacated = seat.periods.some(p => p.end && p.end > won.day && p.end <= day)
-  return vacated ? null : { person: won.person, party: won.party }
+  return won ? { person: won.person, party: won.party } : null
 }
 
 /** The share of House seats each group held on a day; null when the record covers too few seats to say. */
-export function houseShares (seats, day, blocs, minSeats = 140) {
+export function houseShares (seats, day, blocs, minSeats = 140, elections = []) {
   const counts = { Labor: 0, Coalition: 0, Crossbench: 0 }
   let n = 0
   for (const seat of seats.values()) {
-    const h = holderOn(seat, day)
+    const h = holderOn(seat, day, elections)
     const g = h && partyGroup(h.party, blocs)
     if (!g) continue
     counts[g]++
@@ -130,20 +151,22 @@ const HEAD_OFFICE_KINDS = new Set(['university', 'government', 'undisclosed', 'i
 
 /**
  * One program's money by the party holding the seat on each grant's date,
- * against the share of House seats each group held on those dates. Only a
- * program whose file lists every award can be summed from its grants; the
- * rest return null.
+ * against the share of House seats each group held on those dates. The member,
+ * their party and the government / opposition / crossbench side on the grant
+ * date are the program file's own (export_grants.py: dated party periods), so
+ * the post and the program page read one set of figures; this adds the
+ * three-group split and the House baseline. Only a program whose file lists
+ * every award can be summed from its grants; the rest return null.
  */
 export function programSeatSplit (program, seats, meta, { memo = new Map() } = {}) {
   if (!program || !Array.isArray(program.grants) || program.grants_listed !== program.grants_total) return null
   const blocs = meta?.blocs ?? {}
+  const elections = meta?.elections ?? []
   const groups = Object.fromEntries(PARTY_GROUPS.map(g => [g, [0, 0]]))
   const blocSplit = { gov: [0, 0], opp: [0, 0], cross: [0, 0] }
   const expected = Object.fromEntries(PARTY_GROUPS.map(g => [g, 0]))
   const governed = {}
   const bySeat = new Map()
-  // Every award with a seat: the member and party on its date and the side they sat on, or null when nobody held it.
-  const byGrant = {}
   let mapped = 0, mappedCount = 0, first = '', last = ''
   for (const g of program.grants) {
     const v = Number(g.v)
@@ -152,25 +175,23 @@ export function programSeatSplit (program, seats, meta, { memo = new Map() } = {
     if (!day) continue
     const gov = governmentOn(day, meta?.government)
     if (gov) governed[gov] = (governed[gov] ?? 0) + v
-    const seat = g.el ? seats.get(seatKey(g.el)) : null
-    const holder = seat ? holderOn(seat, day) : null
+    const holder = g.el && Array.isArray(g.holder) && g.holder[1] ? { person: g.holder[0] ?? null, party: g.holder[1] } : null
     const group = holder ? partyGroup(holder.party, blocs) : null
-    if (g.id && g.el) byGrant[g.id] = null
     if (!group) continue
-    if (!memo.has(day)) memo.set(day, houseShares(seats, day, blocs))
-    const house = memo.get(day)
+    const key = `${day}`
+    if (!memo.has(key)) memo.set(key, houseShares(seats, day, blocs, 140, elections))
+    const house = memo.get(key)
     if (!house) continue
     groups[group][0] += v
     groups[group][1] += 1
-    const side = group === 'Crossbench' ? 'cross' : !gov ? null : group === gov ? 'gov' : 'opp'
+    const side = ['gov', 'opp', 'cross'].includes(g.bloc) ? g.bloc : null
     if (side) { blocSplit[side][0] += v; blocSplit[side][1] += 1 }
-    if (g.id) byGrant[g.id] = [holder.person, holder.party, side]
     for (const k of PARTY_GROUPS) expected[k] += v * house.shares[k]
     mapped += v
     mappedCount++
     if (!first || day < first) first = day
     if (!last || day > last) last = day
-    const row = bySeat.get(seat.name) ?? { n: seat.name, st: g.elst ?? null, t: 0, c: 0, gov: 0, opp: 0, cross: 0, holders: new Map() }
+    const row = bySeat.get(g.el) ?? { n: g.el, st: g.elst ?? null, t: 0, c: 0, gov: 0, opp: 0, cross: 0, holders: new Map() }
     row.t += v
     row.c += 1
     if (side) row[side] += v
@@ -178,7 +199,7 @@ export function programSeatSplit (program, seats, meta, { memo = new Map() } = {
     const h = row.holders.get(hk) ?? { person: holder.person, party: holder.party, t: 0 }
     h.t += v
     row.holders.set(hk, h)
-    bySeat.set(seat.name, row)
+    bySeat.set(g.el, row)
   }
   if (!mapped) return null
   const seatsOut = [...bySeat.values()].sort((a, b) => b.t - a.t || a.n.localeCompare(b.n)).map(r => ({
@@ -194,7 +215,6 @@ export function programSeatSplit (program, seats, meta, { memo = new Map() } = {
     first, last,
     seatCount: seatsOut.length,
     seats: seatsOut,
-    byGrant,
   }
 }
 
@@ -236,9 +256,7 @@ export function programRecord (program, split) {
     split: splitPercents(split),
     blocSplit: split.blocSplit,
     era: programEra(split.governed), first: split.first, last: split.last, seatCount: split.seatCount,
-    // Every seat, so the program page's electorate table can show the same holders the post does.
-    seats: split.seats,
-    grants: split.byGrant,
+    seats: split.seats.slice(0, 8),
     recipients: (program.recipients ?? []).slice(0, 5).map(r => [r[0], r[1], r[2], r[3], r[4]]),
     timing: program.timing?.months_to_election ?? null,
   }
@@ -263,7 +281,7 @@ export function monthComplete (month, asOf, days = 21) {
  * month, one row per recipient (its largest award that month, with a count of
  * the rest). `awards` rows: {id, v, s, rid, rn, k, pr, ag, desc|n, sel, el, elst, guid}.
  */
-export function largestByMonth (awards, asOf, seats, { months = 12, perMonth = 10 } = {}) {
+export function largestByMonth (awards, asOf, { months = 12, perMonth = 10 } = {}) {
   const byMonth = new Map()
   for (const g of awards) {
     if (!/^GA\d+(?:-A\d+)?$/.test(g.id ?? '') || !/^abn:\d{11}$/.test(g.rid ?? '') || !g.guid) continue
@@ -284,18 +302,13 @@ export function largestByMonth (awards, asOf, seats, { months = 12, perMonth = 1
   const keys = [...byMonth.keys()].filter(m => monthComplete(m, asOf)).sort().reverse().slice(0, months)
   for (const month of keys) {
     const rows = [...byMonth.get(month).values()].sort((a, b) => b.best.v - a.best.v || a.best.id.localeCompare(b.best.id)).slice(0, perMonth)
-    out[month] = rows.map(({ best: g, more }) => {
-      const seat = g.el ? seats?.get(seatKey(g.el)) : null
-      const holder = seat ? holderOn(seat, g.s) : null
-      return {
-        id: g.id, recipientId: g.rid, recipient: g.rn, amount: g.v, start: g.s,
-        purpose: String(g.desc || g.n || '').replace(/\s+/g, ' ').trim(),
-        program: g.pr ?? null, agency: g.ag ?? null, selection: g.sel ?? null,
-        electorate: seat ? seat.name : (g.el ?? null), state: g.elst ?? null,
-        holder: holder ? [holder.person, holder.party] : null, more,
-        sourceUrl: `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(g.guid)}`,
-      }
-    })
+    // No seat or member: the largest awards go to national bodies whose postcode is a head office.
+    out[month] = rows.map(({ best: g, more }) => ({
+      id: g.id, recipientId: g.rid, recipient: g.rn, amount: g.v, start: g.s,
+      purpose: String(g.desc || g.n || '').replace(/\s+/g, ' ').trim(),
+      program: g.pr ?? null, agency: g.ag ?? null, selection: g.sel ?? null, more,
+      sourceUrl: `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(g.guid)}`,
+    }))
   }
   return out
 }

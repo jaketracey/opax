@@ -27,6 +27,13 @@ const details = [
   detail('Dunkley', [['Peta Murphy', [['Labor', '2019-05-18', '2023-12-15']]], ['Jodie Belyea', [['Labor', '2024-03-02', null]]]], [['2022-05-21', 'Labor', 'Peta Murphy']]),
   detail('Fisher', [], [['2019-05-18', 'Liberal National Party of Queensland', 'Andrew Wallace'], ['2025-05-03', 'Labor', 'Someone Else']]),
   detail('Grayndler', [['Anthony Albanese', [['Labor', '1996-03-02', null]]]]),
+  // Casey: Tony Smith in the Chair 2015-21 (a term with no party in the records).
+  { jurisdiction: 'federal', chamber: 'representatives', name: 'Casey', people: { s: { name: 'Anthony Smith' } }, elections: [], contests: [], terms: [
+    { person_id: 's', start: '2001-11-10', end: '2015-08-10', party_periods: [{ party: 'Liberal', start: '2001-11-10', end: '2015-08-10' }], source_party_label: 'LIB' },
+    { person_id: 's', start: '2015-08-10', end: '2021-11-23', party_periods: [], source_party_label: 'SPK' },
+    { person_id: 's', start: '2021-11-23', end: '2022-05-21', party_periods: [{ party: 'Liberal', start: '2021-11-23', end: '2022-05-21' }], source_party_label: 'LIB' }] },
+  // Chisholm: Anna Burke retired at the 2016 dissolution; Julia Banks from polling day.
+  detail('Chisholm', [['Anna Burke', [['Labor', '1998-10-03', '2016-05-09']]], ['Julia Banks', [['Liberal', '2016-07-02', '2018-11-27']]]]),
   { jurisdiction: 'nsw', chamber: 'assembly', name: 'Not Federal', terms: [], elections: [] },
 ];
 const seats = seatTimelines(details);
@@ -61,12 +68,15 @@ test('the seat holder\'s party is the one they belonged to on the day, not the o
   assert.deepEqual(holderOn(seats.get('fisher'), '2021-01-01'), { person: 'Andrew Wallace', party: 'LNP' }, 'the AEC result fills a seat with no service record');
   assert.equal(holderOn(seats.get('fisher'), '2025-06-01').party, 'Labor');
   assert.equal(holderOn(seats.get('fisher'), '2018-01-01'), null, 'before the first result on record');
+  assert.deepEqual(holderOn(seats.get('casey'), '2019-06-01'), { person: 'Anthony Smith', party: 'Liberal' }, 'a Speaker holds the seat');
+  assert.deepEqual(holderOn(seats.get('chisholm'), '2016-06-15', ['2016-07-02']), { person: 'Anna Burke', party: 'Labor' }, 'the campaign after a dissolution stays with the last member');
+  assert.equal(holderOn(seats.get('chisholm'), '2016-06-15'), null, 'without the election list the gap reads as a vacancy');
 });
 
 test('the House on a day is counted from the same records, and too few seats says nothing', () => {
   const day = houseShares(seats, '2021-03-01', blocs, 1);
-  assert.equal(day.n, 5);
-  assert.deepEqual(day.shares, { Labor: 2 / 5, Coalition: 3 / 5, Crossbench: 0 });
+  assert.equal(day.n, 6);
+  assert.deepEqual(day.shares, { Labor: 2 / 6, Coalition: 4 / 6, Crossbench: 0 });
   assert.equal(houseShares(seats, '2021-03-01', blocs), null, 'the default floor wants a whole House');
 });
 
@@ -78,34 +88,31 @@ const program = (grants, extra = {}) => ({
   recipients: grants.map((g, i) => [`abn:${String(i).padStart(11, '0')}`, `Council ${i}`, 'council', g.v, 1]), ...extra,
 });
 
-test('a program\'s dollars are split by the party holding the seat on each grant\'s date, against the House that day', () => {
+test('a program\'s dollars are split by the program file\'s own holder on each grant\'s date, against the House that day', () => {
+  // holder and bloc as export_grants.py writes them (the member's party on the grant date).
   const p = program([
-    { v: 100, el: 'Calare', elst: 'nsw', s: '2021-03-01' },       // Nationals then: Coalition, government
-    { v: 300, el: 'Calare', elst: 'nsw', s: '2023-03-01' },       // Independent then: crossbench
-    { v: 200, el: 'New England', elst: 'nsw', s: '2021-06-01' },  // Nationals then, One Nation now
-    { v: 400, el: 'Grayndler', elst: 'nsw', a: '2021-06-01' },    // approval date when there is no start
-    { v: 50, el: 'Dunkley', elst: 'vic', s: '2024-01-10' },       // vacant: not placed
-    { v: 70, el: 'Nowhere', s: '2021-06-01' },                    // unknown seat: not placed
-    { v: 30, s: '2021-06-01' },                                   // no seat: not placed
+    { id: 'GA1', v: 100, el: 'Calare', elst: 'nsw', s: '2021-03-01', holder: ['Andrew Gee', 'Nationals'], bloc: 'gov' },
+    { id: 'GA2', v: 300, el: 'Calare', elst: 'nsw', s: '2023-03-01', holder: ['Andrew Gee', 'Independent'], bloc: 'cross' },
+    { id: 'GA3', v: 200, el: 'New England', elst: 'nsw', s: '2021-06-01', holder: ['Barnaby Joyce', 'Nationals'], bloc: 'gov' },
+    { id: 'GA4', v: 400, el: 'Grayndler', elst: 'nsw', a: '2021-06-01', holder: ['Anthony Albanese', 'Labor'], bloc: 'opp' },   // approval date when there is no start
+    { id: 'GA5', v: 50, el: 'Dunkley', elst: 'vic', s: '2024-01-10', holder: null, bloc: 'unknown' },                         // vacant: not placed
+    { id: 'GA6', v: 30, s: '2021-06-01', holder: null, bloc: 'unknown' },                                                     // no seat: not placed
   ]);
-  const memo = new Map();
-  const split = programSeatSplit(p, seats, meta, { memo, minSeats: 1 });
-  // houseShares' default floor is a whole House; this fixture has five seats, so the split has nothing to weigh.
-  assert.equal(split, null);
-  const small = new Map([...seats]);
-  const split5 = programSeatSplit(p, small, meta, { memo: new Map([['2021-03-01', houseShares(seats, '2021-03-01', blocs, 1)], ['2023-03-01', houseShares(seats, '2023-03-01', blocs, 1)], ['2021-06-01', houseShares(seats, '2021-06-01', blocs, 1)]]) });
-  assert.deepEqual(split5.mapped, [1000, 4]);
-  assert.deepEqual(split5.groups, { Labor: [400, 1], Coalition: [300, 2], Crossbench: [300, 1] });
-  assert.deepEqual(split5.blocSplit, { gov: [300, 2], opp: [400, 1], cross: [300, 1] }, 'government and opposition read on each grant\'s date');
-  assert.deepEqual(split5.governed, { Coalition: 800, Labor: 350 }, 'dollars by the government of the day, placed or not (a vacant seat\'s grant still has a government)');
-  assert.equal(split5.seats[0].n, 'Calare');
-  assert.deepEqual(split5.seats[0].holders, [['Andrew Gee', 'Independent', 300], ['Andrew Gee', 'Nationals', 100]]);
-  assert.equal(split5.seats.find(s => s.n === 'New England').holders[0][1], 'Nationals');
-  const record = programRecord(p, split5);
+  assert.equal(programSeatSplit(p, seats, meta), null, 'the fixture\'s six seats are not a whole House, so there is nothing to weigh against');
+  const memo = new Map(['2021-03-01', '2023-03-01', '2021-06-01'].map(d => [d, houseShares(seats, d, blocs, 1)]));
+  const split = programSeatSplit(p, seats, meta, { memo });
+  assert.deepEqual(split.mapped, [1000, 4]);
+  assert.deepEqual(split.groups, { Labor: [400, 1], Coalition: [300, 2], Crossbench: [300, 1] });
+  assert.deepEqual(split.blocSplit, { gov: [300, 2], opp: [400, 1], cross: [300, 1] }, 'the file\'s own government / opposition / crossbench');
+  assert.deepEqual(split.governed, { Coalition: 730, Labor: 350 }, 'dollars by the government of the day, placed or not');
+  assert.equal(split.seats[0].n, 'Calare');
+  assert.deepEqual(split.seats[0].holders, [['Andrew Gee', 'Independent', 300], ['Andrew Gee', 'Nationals', 100]]);
+  assert.equal(split.seats.find(s => s.n === 'New England').holders[0][1], 'Nationals');
+  const record = programRecord(p, split);
   assert.deepEqual(record.split.map(s => s.pct), [40, 30, 30]);
   assert.equal(record.split.reduce((s, r) => s + r.pct, 0), 100);
   assert.equal(record.split.reduce((s, r) => s + r.seatPct, 0), 100);
-  assert.equal(record.era, 'both', 'no government awarded 70% of it');
+  assert.equal(record.era, 'both', 'the Coalition awarded 68% of it (730 of 1,080), under the 70% line');
   assert.equal(programSeatSplit({ ...p, grants_listed: 3 }, seats, meta), null, 'a program file that lists only some awards cannot be summed');
 });
 
@@ -140,10 +147,11 @@ test('a month is listed once its publication deadline has passed, one row per re
     g('GA6', 'abn:00000000004', 700, '2026-08-05', { guid: null }),
     g('GA7', 'abn:00000000005', 50, '2026-09-01'),
     g('GA8', 'abn:00000000006', 60, '2026-07-31'),
-  ], '2026-09-21', seats);
+  ], '2026-09-21');
   assert.deepEqual(Object.keys(months), ['2026-08', '2026-07'], 'September is not over its deadline yet');
   assert.deepEqual(months['2026-08'].map(r => [r.id, r.amount, r.more]), [['GA2', 300, 1], ['GA3', 200, 0]], 'people, name-only recipients and awards without a record are left out');
   assert.equal(months['2026-08'][0].sourceUrl, 'https://www.grants.gov.au/Ga/Show/g-GA2');
   assert.equal(months['2026-08'][1].selection, 'Open Competitive');
+  assert.ok(!('electorate' in months['2026-08'][1]) && !('holder' in months['2026-08'][1]), 'no seats in the largest list');
   assert.deepEqual(wholePercents([2, 1, 1]), [50, 25, 25]);
 });

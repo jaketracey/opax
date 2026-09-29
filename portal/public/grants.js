@@ -194,39 +194,15 @@ export const APPROVAL_BUCKETS = [
 ]
 
 /**
- * A program as the daily edition tells it (/social/programs.json): its seat
- * figures read the party each seat's member belonged to on the grant date from
- * dated service records, where the program file reads the roster's party.
- * Returns the program file with those figures in place of its own seat fields,
- * plus `told` for the party block; the program file unchanged when the program
- * was not told by seat.
+ * A program as the daily edition tells it (/social/programs.json): the program
+ * file with `told` attached for the "By the party holding the seat" block. The
+ * file's own seat figures stand (the export reads each member's party on the
+ * grant date); `told` adds the three-group split and the House baseline. The
+ * program file unchanged when the program was not told by seat.
  */
 export function withToldSeats (p, told) {
   if (!p || !told || !told.mapped || !(told.mapped[0] > 0) || !Array.isArray(told.split)) return p
-  const b = told.blocSplit || {}
-  return {
-    ...p,
-    told,
-    el_known: told.mapped,
-    seats: { gov: b.gov || [0, 0], opp: b.opp || [0, 0], cross: b.cross || [0, 0] },
-    electorates: (told.seats || []).map((e) => ({ n: e.n, st: e.st, t: e.t, c: e.c, gov: e.gov, opp: e.opp, cross: e.cross, holders: e.holders })),
-    // Each award's member and side on its date; an award whose seat nobody held that day shows none.
-    grants: (p.grants || []).map((g) => {
-      if (!told.grants || !(g.id in told.grants)) return g
-      const h = told.grants[g.id]
-      return h ? { ...g, holder: [h[0], h[1]], bloc: h[2] || 'unknown' } : { ...g, holder: null, bloc: 'unknown' }
-    }),
-  }
-}
-
-/** The programs list's "to government seats" share for the programs told by seat, from the same figures. */
-export function withToldRows (programs, told) {
-  if (!Array.isArray(programs) || !told || !Array.isArray(told.programs)) return programs
-  const byKey = new Map(told.programs.map((t) => [t.key, t]))
-  return programs.map((r) => {
-    const t = byKey.get(r.key || programKey(r.id))
-    return t && t.blocSplit && t.mapped ? { ...r, gov: t.blocSplit.gov[0], elk: t.mapped[0] } : r
-  })
+  return { ...p, told }
 }
 
 /**
@@ -1767,9 +1743,7 @@ export function mountGrants (container, opts = {}) {
     if (p.seats) {
       left.appendChild(el('p', 'gr-kicker', 'Who held the seat on the grant date'))
       left.appendChild(splitBar(bucketRows(p.seats, SEAT_BLOCS), 'Seat held by'))
-      left.appendChild(el('p', 'gr-caption', p.told
-        ? 'Government, opposition and crossbench are read at the grant date, not today, from the member\'s party that day.'
-        : 'Government, opposition and crossbench are read at the grant date, not today.'))
+      left.appendChild(el('p', 'gr-caption', 'Government, opposition and crossbench are read at the grant date, not today, from the member\'s party that day.'))
     }
     // The figures the daily edition posts: the party holding each seat on the grant date against the House on those dates.
     if (p.told) {
@@ -1778,7 +1752,7 @@ export function mountGrants (container, opts = {}) {
       const rows = t.split.map((r) => ({ key: r.group, label: `${r.group}-held seats`, d: r.d, c: r.c, share: r.pct / 100 }))
       left.appendChild(splitBar(rows, 'By the party holding the seat on the grant date'))
       left.appendChild(el('p', 'gr-caption', `Share of House seats on the grant dates, weighted by value: ${t.split.map((r) => `${r.group} ${r.seatPct}%`).join(', ')}. ` +
-        `${fmtMoney(t.mapped[0])} (${pct(shareOf(t.mapped[0], p.t) || 0)} of the dollars) can be placed in a seat. The party is the member's on the grant date, from parliamentary service records with dated party changes and AEC results; ` +
+        `${fmtMoney(t.mapped[0])} (${pct(shareOf(t.mapped[0], p.t) || 0)} of the dollars) is mapped to a seat with a member on the grant date. The party is the member's that day, from parliamentary service records with dated party changes; ` +
         'Labor and the Coalition as blocs, every other party and independent as the crossbench. Seats come from award postcodes and are approximate near boundaries.'))
     }
     if (p.margins) {
@@ -2248,8 +2222,6 @@ export function mountGrants (container, opts = {}) {
     tableEl.hidden = true
     try {
       const d = await fetchIndex(state.jur)
-      if (token !== loadSeq) return
-      if (state.jur === 'federal') d.programs = withToldRows(d.programs, await loadToldFile())
       if (token !== loadSeq) return
       data = d
       if (state.program) state.program = resolveProgramId(data.programs, state.program) || state.program
