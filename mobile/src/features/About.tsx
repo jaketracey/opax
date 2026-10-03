@@ -131,6 +131,25 @@ export default function About() {
                       label: 'Snapshot version',
                       value: formatDate(coverage.version),
                     },
+                    ...(record?.data.asAt
+                      ? [
+                          {
+                            label: 'Coverage checked',
+                            value: new Date(record.data.asAt).toLocaleString(
+                              'en-AU',
+                              {
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric',
+                                hour: 'numeric',
+                                minute: '2-digit',
+                                timeZoneName: 'short',
+                              },
+                            ),
+                            testID: 'about-checked-at',
+                          },
+                        ]
+                      : []),
                   ]}
                 />
                 <Text variant="fine">

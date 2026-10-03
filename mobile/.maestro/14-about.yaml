@@ -19,6 +19,11 @@ name: 14 About, coverage, original sources, privacy and font notices
 - takeScreenshot: ${EVIDENCE}/14-coverage
 - scrollUntilVisible:
     element:
+      id: about-checked-at
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/14-checked-at
+- scrollUntilVisible:
+    element:
       id: about-coverage-as-at
     timeout: 90000
 - assertVisible: As at .* Source.*OPAX collection.*
