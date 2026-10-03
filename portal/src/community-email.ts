@@ -10,7 +10,7 @@ export function signInEmail(link:string,code?:string) {
   link,button:'Sign in to Opax',
   note:'This link expires in <strong>15 minutes</strong> and can only be used once. Keep it private.',
   reason:'If you didn’t request this email, you can safely ignore it.',
-  text:`Sign in to Opax\n\nUse this secure link to sign in to your Opax community account:\n\n${link}\n\n${code?`Your Opax app sign-in code: ${code}\nEnter it in the app within 15 minutes. Never share this code. The link signs you in through your browser, not the app. Using the link also uses up this code.\n\n`:''}This link expires in 15 minutes and can only be used once. Keep it private.\n\nIf you did not request this email, you can safely ignore it.\n\nThe public record belongs to everyone.\nOpen Parliamentary Accountability Exchange\n${origin}\nAccount privacy: ${origin}/community?view=privacy`})
+  text:`Sign in to Opax\n\n${code?`Your Opax app sign-in code: ${code}\nEnter it in the app within 15 minutes. Never share this code. The link signs you in through your browser, not the app. Using the link also uses up this code.\n\nSign in through your browser:\n\n${link}\n\n`:`Use this secure link to sign in to your Opax community account:\n\n${link}\n\n`}This link expires in 15 minutes and can only be used once. Keep it private.\n\nIf you did not request this email, you can safely ignore it.\n\nThe public record belongs to everyone.\nOpen Parliamentary Accountability Exchange\n${origin}\nAccount privacy: ${origin}/community?view=privacy`})
 }
 
 export function replyEmail(data:{origin:string,author:string,title:string,body:string,threadId:string,replyId:string,unsubscribeUrl:string}) {

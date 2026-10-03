@@ -16,13 +16,16 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
   const token=randomToken(),hash=await digest(token),t=now()
   const challengeId=client==='ios'?randomToken():null,code=client==='ios'?randomSignInCode():undefined
   const codeMac=challengeId&&code?macHex(await signInCodeMac(env,challengeId,code)):null
-  if(client==='ios')await env.COMMUNITY_DB.batch([
-   env.COMMUNITY_DB.prepare("UPDATE login_links SET superseded_at=?,expires_at=? WHERE email=? AND client='ios' AND used_at IS NULL AND superseded_at IS NULL").bind(t,t,email),
-   env.COMMUNITY_DB.prepare('INSERT INTO login_links(token_hash,email,expires_at,created_at,client,challenge_id,code_mac) VALUES (?,?,?,?,?,?,?)').bind(hash,email,t+900,t,client,challengeId,codeMac)
-  ])
+  if(client==='ios')await env.COMMUNITY_DB.prepare('INSERT INTO login_links(token_hash,email,expires_at,created_at,client,challenge_id,code_mac) VALUES (?,?,?,?,?,?,?)').bind(hash,email,t+900,t,client,challengeId,codeMac).run()
   else await env.COMMUNITY_DB.prepare('INSERT INTO login_links(token_hash,email,expires_at,used_at,created_at) VALUES (?,?,?,NULL,?)').bind(hash,email,t+900,t).run()
   const link=env.COMMUNITY_ORIGIN+'/community?view=signin#token='+token
   try{const delivery=await env.COMMUNITY_EMAIL.send({from:{email:env.COMMUNITY_EMAIL_FROM,name:'Opax'},to:email,...signInEmail(link,code)});console.log(JSON.stringify({event:'community_email_accepted',message_id:delivery?.messageId}))}catch{await env.COMMUNITY_DB.prepare('DELETE FROM login_links WHERE token_hash=?').bind(hash).run();throw new CommunityError(503,'We could not send your sign-in email. Please try again shortly.')}
+  // Only accepted delivery replaces older native proofs. Row order breaks same-second
+  // ties and prevents an earlier, delayed send from invalidating a newer request.
+  if(client==='ios'){
+   const acceptedAt=now()
+   await env.COMMUNITY_DB.prepare("UPDATE login_links SET superseded_at=?,expires_at=? WHERE email=? AND client='ios' AND used_at IS NULL AND superseded_at IS NULL AND rowid<(SELECT rowid FROM login_links WHERE token_hash=?)").bind(acceptedAt,acceptedAt,email,hash).run()
+  }
   await env.COMMUNITY_DB.batch([env.COMMUNITY_DB.prepare('DELETE FROM login_links WHERE expires_at<?').bind(t-86400),env.COMMUNITY_DB.prepare('DELETE FROM member_sessions WHERE expires_at<?').bind(t),env.COMMUNITY_DB.prepare('DELETE FROM community_limits WHERE expires_at<?').bind(t-86400)])
   return json({sent:true,message:'Check your email for a sign-in link. It expires in 15 minutes.',...(challengeId?{challenge_id:challengeId}:{})})
  }
