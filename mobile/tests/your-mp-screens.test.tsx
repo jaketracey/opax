@@ -239,3 +239,14 @@ test('permitted portrait renders with its source-provided credit and licence', a
   expect(text(r)).toContain('CC0');
   await act(async () => r.unmount());
 });
+
+test('a crossed electorate detail is rejected before names or figures render', async () => {
+  const other = index.electorates.find((s) => s.name === 'Brisbane')!;
+  mock.electorateFor.mockResolvedValue(
+    result(c.electorateFor(c.decodeElectorate(pinned(other.detail_url)))),
+  );
+  const r = await render(<Electorate />);
+  expect(text(r)).not.toContain('Brisbane');
+  expect(text(r)).toContain('does not match the selected seat');
+  await act(async () => r.unmount());
+});

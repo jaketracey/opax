@@ -72,6 +72,11 @@ function ElectorateScreen({ id }: { id: string }) {
           'This electorate is not in the release.',
         );
       const v = await catalogs.electorateFor(seat.detail_url);
+      if (v.data.identity.data?.id !== id)
+        throw new ApiError(
+          'invalid-data',
+          'The electorate record does not match the selected seat. Try again.',
+        );
       return { d, v: v.data };
     })()
       .then(({ d, v }) => {

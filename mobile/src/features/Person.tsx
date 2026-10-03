@@ -43,6 +43,7 @@ import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import {
   uncoveredProfile,
   hasParliamentaryMembership,
+  votingMetaFor,
   type ProfileView,
 } from './your-mp/model';
 function Disclosure({
@@ -321,19 +322,7 @@ function ProfileScreen({ slug }: { slug: string }) {
                     (jur, i) => (
                       <AsAtLine
                         key={i}
-                        votes={{
-                          content_changed_at: b.votes.asAt,
-                          latest_division_date: v.latestDivisionDate,
-                          latest_division_date_by_jurisdiction:
-                            Object.fromEntries(
-                              Object.entries(
-                                v.latestDivisionDateByJurisdiction,
-                              ).filter(
-                                (entry): entry is [string, string] =>
-                                  typeof entry[1] === 'string',
-                              ),
-                            ),
-                        }}
+                        votes={votingMetaFor(b.votes)}
                         jurisdiction={jur}
                         citation={b.votes.sources
                           .map((s) => s.label)

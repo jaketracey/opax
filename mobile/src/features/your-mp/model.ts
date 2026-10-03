@@ -135,3 +135,16 @@ export function hasParliamentaryMembership(
       chamberName(r.chamber, r.jurisdiction),
   );
 }
+
+/** Never use another jurisdiction's global latest division date. */
+export function votingMetaFor(block: ProfileView['blocks']['votes']) {
+  return {
+    content_changed_at: block.asAt,
+    latest_division_date: null,
+    latest_division_date_by_jurisdiction: Object.fromEntries(
+      Object.entries(block.data?.latestDivisionDateByJurisdiction ?? {}).filter(
+        (entry): entry is [string, string] => typeof entry[1] === 'string',
+      ),
+    ),
+  };
+}

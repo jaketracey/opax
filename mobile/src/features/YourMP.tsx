@@ -31,6 +31,7 @@ import { RepresentativeRows } from './your-mp/RepresentativeRows';
 import { loadChoice, saveChoice } from './your-mp/choice-store';
 import {
   matchingSeats,
+  votingMetaFor,
   type Directory,
   type SeatChoice,
   type YourMPView,
@@ -331,12 +332,18 @@ export default function YourMP() {
                       <EmptyState message="None of their recorded divisions was a vote on a bill itself." />
                     ) : null}
                     <Text>{v.method}</Text>
-                    <AsAtLine
-                      votes={{
-                        content_changed_at: memberProfile.blocks.votes.asAt,
-                        latest_division_date: v.latestDivisionDate,
-                      }}
-                    />
+                    {v.jurisdictions.map((jur) => (
+                      <Group key={jur} gap={4}>
+                        <Text variant="fine">
+                          {jurisdictionName(jur) ?? 'Jurisdiction not recorded'}{' '}
+                          voting record
+                        </Text>
+                        <AsAtLine
+                          votes={votingMetaFor(memberProfile.blocks.votes)}
+                          jurisdiction={jur}
+                        />
+                      </Group>
+                    ))}
                   </Group>
                 )}
               </RecordBlock>
