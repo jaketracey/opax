@@ -2,6 +2,12 @@ import {CommunityError} from './community-core'
 
 const encoder=new TextEncoder()
 
+export function requireSignInCodeSecret(env:Env):string {
+ const secret=env.COMMUNITY_CODE_MAC_SECRET
+ if(typeof secret!=='string'||secret.trim().length<32)throw new CommunityError(503,'This action could not be completed. Please try again shortly.')
+ return secret
+}
+
 /** Uniform over all 100,000,000 eight-digit strings, including leading zeroes. */
 export function randomSignInCode():string {
  const sample=new Uint32Array(1),range=100_000_000
@@ -11,8 +17,7 @@ export function randomSignInCode():string {
 }
 
 export async function signInCodeMac(env:Env,challengeId:string,code:string):Promise<Uint8Array> {
- if(!env.COMMUNITY_CODE_MAC_SECRET)throw new CommunityError(503,'Code sign-in is unavailable. Please try again shortly.')
- const key=await crypto.subtle.importKey('raw',encoder.encode(env.COMMUNITY_CODE_MAC_SECRET),{name:'HMAC',hash:'SHA-256'},false,['sign'])
+ const key=await crypto.subtle.importKey('raw',encoder.encode(requireSignInCodeSecret(env)),{name:'HMAC',hash:'SHA-256'},false,['sign'])
  // Domain separation and an unambiguous encoding bind the code to this challenge.
  return new Uint8Array(await crypto.subtle.sign('HMAC',key,encoder.encode(JSON.stringify(['opax-signin-code-v1',challengeId,code]))))
 }

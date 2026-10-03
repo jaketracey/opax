@@ -22,9 +22,9 @@ const timestamp=()=>Math.floor(Date.now()/1000);
 const limitHash=async(key,seconds)=>digest(key+':'+Math.floor(timestamp()/seconds));
 const wrongCode=code=>code==='00000000'?'00000001':'00000000';
 
-function fixture(t){
+function fixture(t,{nativeSchema=true}={}){
  const db=new DatabaseSync(':memory:');
- for(const file of readdirSync(new URL('../migrations/',import.meta.url)).filter(name=>name.endsWith('.sql')).sort())db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
+ for(const file of readdirSync(new URL('../migrations/',import.meta.url)).filter(name=>name.endsWith('.sql')&&(nativeSchema||name!=='0011_native_signin.sql')).sort())db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
  t.after(()=>db.close());
  const outbox=[],trace=[];
  const statement=(sql,args=[])=>({
@@ -147,6 +147,7 @@ test('failed delivery deletes the native proof and missing MAC secret fails clos
  const f=fixture(t);delete f.env.COMMUNITY_CODE_MAC_SECRET;
  assert.equal((await f.call('auth/request',{email:'reader@example.com',client:'ios'})).status,503);
  assert.equal(f.outbox.length,0);assert.equal(f.db.prepare('SELECT count(*) n FROM login_links').get().n,0);
+ assert.equal(f.db.prepare('SELECT count(*) n FROM community_limits').get().n,0);
  await f.issue('browser@example.com',null);
  f.env.COMMUNITY_CODE_MAC_SECRET=TEST_KEY;f.env.COMMUNITY_EMAIL.send=async()=>{throw Error('stub failure')};
  assert.equal((await f.call('auth/request',{email:'reader@example.com',client:'ios'})).status,503);
@@ -323,7 +324,7 @@ test('a different challenge or email code and a different MAC key cannot redeem 
  // Prove challenge binding even if two emails happen to receive the same numeric code.
  f.db.prepare('UPDATE login_links SET code_mac=? WHERE challenge_id=?').run(f.proofRow(a).code_mac,b.challenge_id);
  await failure(await f.consume(b,a.code));
- f.env.COMMUNITY_CODE_MAC_SECRET='different-test-only-key';await failure(await f.consume(a));
+ f.env.COMMUNITY_CODE_MAC_SECRET='different-test-only-key-00000000000000000000';await failure(await f.consume(a));
  assert.equal(f.db.prepare('SELECT count(*) n FROM member_sessions').get().n,0);
 });
 
@@ -339,17 +340,66 @@ test('Origin remains mandatory on native and cookie mutations, including logout'
  assert.equal(f.db.prepare('SELECT count(*) n FROM member_sessions').get().n,1);
 });
 
-test('additive migration preserves legacy proofs/sessions and supports the compatibility commit inserts',async t=>{
- const db=new DatabaseSync(':memory:');t.after(()=>db.close());
- for(const file of ['0001_community.sql','0002_free_community.sql'])db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
- db.prepare('INSERT INTO members(id,email,created_at) VALUES (?,?,?)').run('legacy','legacy@example.com',1);
- db.prepare('INSERT INTO login_links VALUES (?,?,?,NULL,?)').run('legacy-proof','legacy@example.com',1000,1);
- db.prepare('INSERT INTO member_sessions VALUES (?,?,?,?)').run('legacy-session','legacy',1000,1);
- db.exec(readFileSync(new URL('../migrations/0011_native_signin.sql',import.meta.url),'utf8'));
- assert.equal(db.prepare('SELECT client FROM login_links').get().client,'web');assert.equal(db.prepare('SELECT client FROM member_sessions').get().client,'web');
- db.prepare('INSERT INTO login_links(token_hash,email,expires_at,used_at,created_at) VALUES (?,?,?,NULL,?)').run('compatibility-proof','legacy@example.com',2000,2);
- db.prepare('INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at) VALUES (?,?,?,?)').run('compatibility-session','legacy',2000,2);
- assert.equal(db.prepare('SELECT count(*) n FROM login_links').get().n,2);assert.equal(db.prepare('SELECT count(*) n FROM member_sessions').get().n,2);
+for(const nativeSchema of [false,true])test(`real web route flow works on the ${nativeSchema?'post':'pre'}-0011 schema`,async t=>{
+ const f=fixture(t,{nativeSchema});delete f.env.COMMUNITY_CODE_MAC_SECRET;
+ const first=await f.issue('browser@example.com',null),second=await f.issue('browser@example.com',null);
+ for(const proof of [first,second]){
+  const response=await f.call('auth/consume',{token:proof.token});assert.equal(response.status,200);
+  const cookie=response.headers.get('set-cookie');assert.match(cookie,/^__Host-opax_session=[\w-]{43}; Path=\/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000$/);
+  const status=await communityRoute(new Request('https://opax.test/api/community/status',{headers:{cookie:cookie.split(';')[0]}}),f.env);
+  assert.equal((await status.json()).member.email,proof.email);
+  assert.equal((await f.call('auth/consume',{token:proof.token})).status,400);
+ }
+ assert.equal(f.db.prepare('SELECT count(*) n FROM member_sessions').get().n,2);
+ const session=f.db.prepare('SELECT * FROM member_sessions').get();
+ assert.equal(session.client,nativeSchema?'web':undefined);
+ const pending=await f.issue('pending@example.com',null);f.env.COMMUNITY_EMAIL.send=async()=>{throw Error('stub failure')};
+ assert.equal((await f.call('auth/request',{email:pending.email})).status,503);
+ assert.equal((await f.call('auth/consume',{token:pending.token})).status,200);
+});
+
+test('migration preserves web proofs and sessions created by the real pre-0011 route',async t=>{
+ const f=fixture(t,{nativeSchema:false}),signed=await f.issue('signed@example.com',null),pending=await f.issue('pending@example.com',null);
+ const response=await f.call('auth/consume',{token:signed.token});assert.equal(response.status,200);
+ const cookie=response.headers.get('set-cookie').split(';')[0];
+ f.db.exec(readFileSync(new URL('../migrations/0011_native_signin.sql',import.meta.url),'utf8'));
+ assert.equal(f.db.prepare('SELECT client FROM login_links').get().client,'web');assert.equal(f.db.prepare('SELECT client FROM member_sessions').get().client,'web');
+ const status=await communityRoute(new Request('https://opax.test/api/community/status',{headers:{cookie}}),f.env);
+ assert.equal((await status.json()).member.email,signed.email);
+ assert.equal((await f.call('auth/consume',{token:pending.token})).status,200);
+ const fresh=await f.issue('fresh@example.com',null);assert.equal((await f.call('auth/consume',{token:fresh.token})).status,200);
+ assert.equal(f.db.prepare('SELECT count(*) n FROM login_links').get().n,3);assert.equal(f.db.prepare('SELECT count(*) n FROM member_sessions').get().n,3);
+});
+
+for(const nativeSchema of [false,true])test(`missing or short native secret spends no quota on the ${nativeSchema?'post':'pre'}-0011 schema`,async t=>{
+ const f=fixture(t,{nativeSchema});
+ for(const secret of [undefined,'','x'.repeat(31),' '.repeat(32)]){
+  f.env.COMMUNITY_CODE_MAC_SECRET=secret;
+  for(const path of ['auth/request','auth/consume-code']){
+   const response=await f.call(path,{email:'reader@example.com',client:'ios',challenge_id:'x'.repeat(43),code:'12345678'});
+   assert.equal(response.status,503);assert.deepEqual(await response.json(),{error:'This action could not be completed. Please try again shortly.'});assert.equal(response.headers.get('set-cookie'),null);
+  }
+ }
+ assert.equal(f.db.prepare('SELECT count(*) n FROM community_limits').get().n,0);
+ assert.equal(f.db.prepare('SELECT count(*) n FROM login_links').get().n,0);assert.equal(f.outbox.length,0);
+ for(let i=0;i<5;i++)await f.issue('reader@example.com',null);
+});
+
+test('missing or partial native columns fail before quota or proof creation',async t=>{
+ const f=fixture(t,{nativeSchema:false});
+ // Check every partial migration state, including missing session client after all proof columns exist.
+ const columns=[['login_links',"client TEXT NOT NULL DEFAULT 'web'"],['login_links','challenge_id TEXT'],['login_links','code_mac TEXT'],['login_links','attempts INTEGER NOT NULL DEFAULT 0'],['login_links','superseded_at INTEGER']];
+ for(let i=0;i<=columns.length;i++){
+  for(const path of ['auth/request','auth/consume-code']){
+   const response=await f.call(path,{email:'reader@example.com',client:'ios',challenge_id:'x'.repeat(43),code:'12345678'});
+   assert.equal(response.status,503);assert.deepEqual(await response.json(),{error:'This action could not be completed. Please try again shortly.'});
+  }
+  assert.equal(f.db.prepare('SELECT count(*) n FROM community_limits').get().n,0);
+  assert.equal(f.db.prepare('SELECT count(*) n FROM login_links').get().n,0);assert.equal(f.outbox.length,0);
+  if(i<columns.length)f.db.exec('ALTER TABLE '+columns[i][0]+' ADD COLUMN '+columns[i][1]);
+ }
+ f.db.exec("ALTER TABLE member_sessions ADD COLUMN client TEXT NOT NULL DEFAULT 'web'");
+ const p=await f.issue();assert.equal((await f.consume(p)).status,200);
 });
 
 test('real Worker and local D1 enforce the concurrent email cap, MAC comparison and one-winner redemption',async()=>{

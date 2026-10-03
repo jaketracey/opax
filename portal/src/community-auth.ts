@@ -1,6 +1,6 @@
 import {body,CommunityError,digest,json,limit,member,now,randomToken,sameOrigin,text} from './community-core'
 import {signInEmail} from './community-email'
-import {macHex,matchesSignInCode,randomSignInCode,signInCodeMac} from './community-signin-code'
+import {macHex,matchesSignInCode,randomSignInCode,requireSignInCodeSecret,signInCodeMac} from './community-signin-code'
 const COOKIE='__Host-opax_session'
 const CODE_FAILURE='This code could not be used. Request a new sign-in email or use its link.'
 export async function authRoute(req:Request,env:Env,path:string):Promise<Response|null>{
@@ -9,6 +9,7 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
   if(data.client!==undefined&&data.client!=='ios')throw new CommunityError(400,'Use client "ios" for code sign-in.')
   const client=data.client==='ios'?'ios':'web'
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new CommunityError(400,'Enter a valid email address.')
+  if(client==='ios')await requireNativeSignIn(env)
   await limit(env,'login-ip:'+(req.headers.get('cf-connecting-ip')||'local'),15,3600)
   // Both new and existing accounts take the same path and receive the same response.
   await limit(env,'login-email:'+email,5,3600)
@@ -16,7 +17,7 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
   const challengeId=client==='ios'?randomToken():null,code=client==='ios'?randomSignInCode():undefined
   const codeMac=challengeId&&code?macHex(await signInCodeMac(env,challengeId,code)):null
   if(client==='ios')await env.COMMUNITY_DB.batch([
-   env.COMMUNITY_DB.prepare("UPDATE login_links SET superseded_at=? WHERE email=? AND client='ios' AND used_at IS NULL AND superseded_at IS NULL").bind(t,email),
+   env.COMMUNITY_DB.prepare("UPDATE login_links SET superseded_at=?,expires_at=? WHERE email=? AND client='ios' AND used_at IS NULL AND superseded_at IS NULL").bind(t,t,email),
    env.COMMUNITY_DB.prepare('INSERT INTO login_links(token_hash,email,expires_at,created_at,client,challenge_id,code_mac) VALUES (?,?,?,?,?,?,?)').bind(hash,email,t+900,t,client,challengeId,codeMac)
   ])
   else await env.COMMUNITY_DB.prepare('INSERT INTO login_links(token_hash,email,expires_at,used_at,created_at) VALUES (?,?,?,NULL,?)').bind(hash,email,t+900,t).run()
@@ -28,12 +29,13 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
  if(path==='/api/community/auth/consume'&&req.method==='POST'){
   sameOrigin(req,env);await limit(env,'consume:'+(req.headers.get('cf-connecting-ip')||'local'),30,900)
   const data=await body(req),token=text(data.token,43,43,'Sign-in token');if(!/^[\w-]{43}$/.test(token))throw new CommunityError(400,'This link is not valid.')
-  const t=now(),link=await env.COMMUNITY_DB.prepare('UPDATE login_links SET used_at=? WHERE token_hash=? AND used_at IS NULL AND superseded_at IS NULL AND expires_at>? RETURNING email').bind(t,await digest(token),t).first<{email:string}>()
+  const t=now(),link=await env.COMMUNITY_DB.prepare('UPDATE login_links SET used_at=? WHERE token_hash=? AND used_at IS NULL AND expires_at>? RETURNING email').bind(t,await digest(token),t).first<{email:string}>()
   if(!link)throw new CommunityError(400,'This link has expired or was already used. Request a new one.')
   return issueSession(env,link.email,t,'web')
  }
  if(path==='/api/community/auth/consume-code'&&req.method==='POST'){
   sameOrigin(req,env)
+  await requireNativeSignIn(env)
   try{
    // Malformed input also spends IP quota; it cannot become a cheaper guessing path.
    let data:Record<string,unknown>={}
@@ -64,6 +66,16 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
 async function issueSession(env:Env,email:string,t:number,client:'web'|'ios'):Promise<Response> {
  await env.COMMUNITY_DB.prepare('INSERT INTO members(id,email,created_at) VALUES (?,?,?) ON CONFLICT(email) DO NOTHING').bind(crypto.randomUUID(),email,t).run()
  const m=await env.COMMUNITY_DB.prepare('SELECT id,disabled FROM members WHERE email=?').bind(email).first<{id:string,disabled:number}>();if(!m||m.disabled)throw new CommunityError(403,'This account is unavailable.')
- const session=randomToken();await env.COMMUNITY_DB.prepare('INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at,client) VALUES (?,?,?,?,?)').bind(await digest(session),m.id,t+30*86400,t,client).run()
+ const session=randomToken(),hash=await digest(session)
+ if(client==='ios')await env.COMMUNITY_DB.prepare("INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at,client) VALUES (?,?,?,?,'ios')").bind(hash,m.id,t+30*86400,t).run()
+ else await env.COMMUNITY_DB.prepare('INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at) VALUES (?,?,?,?)').bind(hash,m.id,t+30*86400,t).run()
  return json({signed_in:true},200,{'set-cookie':`${COOKIE}=${session}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${30*86400}`})
+}
+
+async function requireNativeSignIn(env:Env):Promise<void> {
+ try{
+  requireSignInCodeSecret(env)
+  // Validate every native column without reading rows or spending shared quota.
+  await env.COMMUNITY_DB.prepare('SELECT l.client,l.challenge_id,l.code_mac,l.attempts,l.superseded_at,s.client FROM login_links l,member_sessions s LIMIT 0').first()
+ }catch{throw new CommunityError(503,'This action could not be completed. Please try again shortly.')}
 }
