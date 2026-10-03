@@ -25,6 +25,7 @@ import {
   errorMessage,
 } from '../design/primitives';
 import { RecordRow } from './RecordRow';
+import { Excerpt } from './search/Excerpt';
 import { isOffline } from './CatalogState';
 import { groupSuggestions, kindLabel, searchKinds } from './search/model';
 import { openSearchPerson, openSuggestedPerson } from './search/navigation';
@@ -59,16 +60,17 @@ export default function Search() {
   }
   useEffect(() => {
     let active = true;
+    const token = ++sourceRequest.current;
     void catalogs
       .suggestionSources()
       .then((data) => {
-        if (active) setSources(data);
+        if (active && token === sourceRequest.current) setSources(data);
       })
       .catch((e) => {
-        if (active) setSourceError(e);
+        if (active && token === sourceRequest.current) setSourceError(e);
       })
       .finally(() => {
-        if (active) setRefreshing(false);
+        if (active && token === sourceRequest.current) setRefreshing(false);
       });
     return () => {
       active = false;
@@ -273,7 +275,7 @@ export default function Search() {
                   <RecordRow
                     key={b.key}
                     title={b.title}
-                    detail={b.status}
+                    detail={b.status.replaceAll('_', ' ')}
                     onPress={() =>
                       router.push({
                         pathname: '/recent-bill/[key]',
@@ -292,6 +294,11 @@ export default function Search() {
         <Section
           title={`Results for “${result?.data.query ?? query.trim()}” · ${kindLabel(kind)}`}
         >
+          {kind === 'pay' ? (
+            <Text variant="metadata" testID="search-pay-caveat">
+              These are entitlements set by instrument, not payslips.
+            </Text>
+          ) : null}
           {busy && !result ? (
             <LoadingState
               label={`Searching ${kindLabel(kind).toLowerCase()}`}
@@ -327,7 +334,6 @@ export default function Search() {
                       {row.personSlug ? (
                         <PersonRow
                           name={row.title}
-                          detail={row.snippet}
                           testID={`search-result-${row.personSlug}`}
                           onPress={() =>
                             void open(() => openSearchPerson(row.personSlug!))
@@ -336,9 +342,7 @@ export default function Search() {
                       ) : (
                         <Text variant="strong">{row.title}</Text>
                       )}
-                      {!row.personSlug && row.snippet ? (
-                        <Text>{row.snippet}</Text>
-                      ) : null}
+                      <Excerpt snippet={row.snippet} />
                       {row.url ? (
                         <SourceLink
                           citation={row.source || 'Original source'}

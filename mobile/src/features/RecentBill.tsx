@@ -58,7 +58,10 @@ export default function RecentBill() {
                 </Heading>
                 <KeyValueList
                   items={[
-                    { label: 'Status', value: bill.status },
+                    {
+                      label: 'Status',
+                      value: bill.status.replaceAll('_', ' '),
+                    },
                     ...(bill.introduced
                       ? [
                           {

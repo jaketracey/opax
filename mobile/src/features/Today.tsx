@@ -76,7 +76,6 @@ export default function Today() {
                     bill.introduced
                       ? `Introduced ${formatDate(bill.introduced, 'short')}`
                       : null,
-                    bill.status,
                   ]
                     .filter(Boolean)
                     .join(' · ')}
