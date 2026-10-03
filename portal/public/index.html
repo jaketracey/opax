@@ -1481,8 +1481,9 @@
 
     <!-- ============================ PRIVACY ============================ -->
     <!-- Every claim here is checked against the code and docs listed in
-         docs/PRIVACY.md. Each <mark class="privacy-confirm"> is a fact or a
-         decision still waiting on the maintainer: none may ship as is. -->
+         docs/PRIVACY.md. Facts and decisions the repository cannot settle
+         are marked placeholders; scripts/check_privacy_placeholders.mjs fails
+         `npm run check` and the deploy scripts while any remain. -->
     <section id="panel-privacy" class="panel" hidden aria-labelledby="privacy-title">
       <p class="kicker">Privacy</p>
       <h1 id="privacy-title">What OPAX collects and who receives it</h1>
@@ -1499,10 +1500,11 @@
         <li>Reading the record needs no account, on the website or in the app.</li>
         <li>Every request reaches OPAX's servers with your IP address, which is used to limit
         request rates and refuse abusive traffic.</li>
-        <li>The website counts visits with Google Analytics and PostHog. The words you type and
-        the answers you get are never sent to either. The app has no analytics.</li>
-        <li>Questions and searches go to the services that search the record and write answers,
-        without your IP address or account details.</li>
+        <li>The website counts visits with Google Analytics and PostHog. They receive your IP
+        address and details of your browser, but never the words you type or the answers you get.
+        The app has no analytics.</li>
+        <li>Questions, searches of the record's documents and search summaries go to the services
+        that search the record and write answers. OPAX adds no account details to them.</li>
         <li>An account holds your email address and whatever you choose to write or save. Your
         email address is never shown to other members.</li>
         <li>Voice is optional. Your voice goes to ElevenLabs, a third-party AI provider, only
@@ -1531,27 +1533,45 @@
       request your browser makes reaches Cloudflare's network with your IP address, as a request
       to any website does.</p>
       <p>OPAX uses the address to limit how often one address can ask questions (20 a minute),
-      ask for suggested follow-up questions (20 a minute), search (120 a minute) and draw share
-      images (60 a minute). Cloudflare counts these per address over 60-second windows. OPAX also
-      refuses some requests from networks that run automated scraping.</p>
+      ask for suggested follow-up questions and search summaries (20 a minute), search (120 a
+      minute) and draw share images (60 a minute). Cloudflare counts these per address over
+      60-second windows. OPAX also refuses some requests from networks that run automated
+      scraping.</p>
       <p>Sign-in, account and voice requests have limits of their own. For these, OPAX stores a
       counter under a SHA-256 hash of the address and the time window, not under the address
       itself. Expired counters are deleted during later sign-in requests, a day or more after
       their window ends.</p>
-      <p>OPAX's server writes logs of its requests and errors to Cloudflare Workers Logs.
-      <mark class="privacy-confirm" data-confirm="P5">[To confirm: how long these logs are kept
-      (Cloudflare documents 3 days on the Free plan and 7 days on Workers Paid), and whether they
-      include IP addresses and full request addresses, which for a search include the search
-      words.]</mark> <mark class="privacy-confirm" data-confirm="P6">[To confirm:
-      how long Cloudflare's security and traffic analytics for opax.com.au keep IP
+      <p>OPAX's server logs each request in Cloudflare Workers Logs. A log entry records the
+      address requested, which for a search includes the search words.
+      <mark class="privacy-confirm" data-confirm="P5">[To confirm: how long these logs are kept on
+      OPAX's plan (Cloudflare documents 3 days on Workers Free and 7 days on Workers Paid), and
+      whether they record IP addresses.]</mark> <mark class="privacy-confirm" data-confirm="P6">[To
+      confirm: how long Cloudflare's security and traffic analytics for opax.com.au keep IP
       addresses.]</mark></p>
 
       <h3 id="privacy-questions">Questions and searches</h3>
-      <p>When you ask a question or search, OPAX sends the words you typed to Progress Agentic
-      RAG, the service that holds the record and finds the passages that match. To write an
-      answer or a search summary, the question and those passages then go to a language model
-      through OpenRouter. Follow-up questions in a conversation carry its earlier turns with
-      them. OPAX sends no IP address, account detail or other identifier with any of these.
+      <p>Where the words you type go depends on what you are doing.</p>
+      <ul class="about-list">
+        <li><strong>Searches of OPAX's catalogs</strong>, such as people, parties, donors,
+        contracts, grants, declared interests, pay and expenses, are looked up on OPAX's own
+        server. The search words go to no other service.</li>
+        <li><strong>Searches of the record's documents</strong>, including the standard search
+        of everything and searches of bill text, also send the search words and filters to
+        Progress Agentic RAG, the service that holds the record and finds the passages that
+        match.</li>
+        <li><strong>Search summaries.</strong> Unless you have turned summaries off, a search for
+        words also asks for a short summary of the records it found, even when it searched only
+        the catalogs. The search words, filters and those records go through Progress to a
+        language model reached through OpenRouter.</li>
+        <li><strong>Questions</strong> on the Ask page and in a conversation go to Progress, which
+        finds passages, then with those passages to the language model through OpenRouter.
+        Follow-up questions carry the conversation's earlier turns with them.</li>
+      </ul>
+      <p>Searches made by the voice assistant and by research tools follow the same paths. OPAX's
+      code adds no account details or other identifier to these requests. Progress can still
+      receive your IP address with them: Cloudflare, which runs OPAX's server, documents that it
+      adds the visitor's IP address to requests the server makes to services outside Cloudflare,
+      and Progress is outside it. OpenRouter is called by Progress, not by OPAX's server.
       <mark class="privacy-confirm" data-confirm="P8">[To confirm: how long Progress keeps query
       text in its logs.]</mark> <mark class="privacy-confirm" data-confirm="P9">[To confirm: the
       model provider OpenRouter routes to (DeepSeek, per the current configuration), and whether
@@ -1561,12 +1581,16 @@
       The copies are filed by the question, not by who asked it.</p>
 
       <h3>Stored in your browser</h3>
-      <p>The website keeps a few things in your browser's own storage, which is not sent to OPAX:
-      up to 20 of your recent conversations with OPAX, so that you can return to them; the kind
-      of question you last chose in the question builder; whether you closed a search summary;
-      and, for the open tab only, how you were reading a search and the question you took into a
-      conversation. Clearing this site's data in
-      your browser removes them.</p>
+      <p>The website keeps a few preferences only in your browser: the kind of question you last
+      chose in the question builder, whether you turned search summaries off and, for the open
+      tab only, how you were reading a search and the question you took into a conversation.</p>
+      <p>It also keeps up to 20 of your recent conversations with OPAX in your browser, so that
+      you can return to them. If you sign in on the website, they are copied to your account as
+      well, including conversations saved before you signed in; see
+      <a href="#privacy-accounts">Community accounts</a>.</p>
+      <p>What the website keeps in your browser stays until you clear this site's data. Clearing
+      it does not remove the copies in your account. The analytics cookies are described
+      next.</p>
 
       <h3 id="privacy-analytics">Analytics on the website</h3>
       <p>The website uses Google Analytics, loaded through Google Tag Manager, and PostHog to
@@ -1577,18 +1601,31 @@
       question text, search words, answers, page titles, postcodes or error messages. Campaign
       tags in a link are kept only as a plain source, medium and campaign name; other tags and
       advertising click identifiers are dropped.</p>
+      <p>With each event, both services also receive details your browser shares, such as your
+      browser and its version, operating system, device type, screen and window size, language
+      and time zone. PostHog also receives the domain of the site that linked you to OPAX, but
+      not the rest of its address.</p>
       <p>Each service stores an anonymous identifier in your browser so that a returning browser
       and a visit can be counted. Google Analytics sets cookies whose names begin with
-      <code>_ga</code>. PostHog keeps its identifier in a cookie and in local storage. Neither
-      builds a profile of you: PostHog's person profiles, session recording and surveys are off,
-      and Google signals and advertising personalisation are off.</p>
+      <code>_ga</code>, which Google documents as lasting two years. PostHog keeps its identifier
+      in a cookie that lasts a year and in local storage, which stays until you clear it.
+      Neither builds a profile of you: PostHog's person profiles, session recording and surveys
+      are off, and Google signals and advertising personalisation are off.</p>
+      <p>PostHog's cookie also records the full address you first arrived at, including any
+      search words in it. Like every cookie for opax.com.au, it travels with your requests to
+      OPAX's server, which does not use it and does not pass it on. OPAX removes that address
+      from the events PostHog receives.</p>
       <p>Your browser sends Google Analytics events straight to Google, so Google receives your
-      IP address. PostHog events pass through OPAX's server, which hands your IP address to
-      PostHog in the United States so that it can estimate your location.
-      <mark class="privacy-confirm" data-confirm="P7">[To confirm: whether the PostHog project
-      discards IP addresses after that lookup.]</mark></p>
-      <p>If your browser sends a Do Not Track signal, neither service receives anything.
-      Analytics run only on opax.com.au, and community pages load none at all.</p>
+      IP address. PostHog events pass through OPAX's server, which forwards your IP address to
+      PostHog's ingestion service in the United States, so that PostHog places visits by your
+      location rather than by the server's.
+      <mark class="privacy-confirm" data-confirm="P7">[To confirm: what the PostHog project does
+      with the IP address after that, and whether it keeps it.]</mark> Both services keep the
+      events they receive. <mark class="privacy-confirm" data-confirm="P16">[To confirm: how long
+      Google Analytics and PostHog keep event data under OPAX's settings and plans.]</mark></p>
+      <p>If your browser sends a Do Not Track signal, neither service receives anything, though
+      PostHog may still store its identifier in your browser. Analytics run only on opax.com.au,
+      and community pages load none at all.</p>
       <p>The grants map loads its map tiles from OpenStreetMap's servers, which receive your IP
       address.</p>
 
@@ -1596,7 +1633,7 @@
       <p>The app needs no account to read. It has no analytics, no advertising and no tracking,
       and sends no device identifier. The seat you choose, the records it keeps for offline
       reading and your voice consent stay on your phone. Its searches look up OPAX's own
-      catalogs of people, declared interests, pay and expenses on OPAX's servers, and are not
+      catalogs of people, declared interests, pay and expenses on OPAX's server, and are not
       sent to Progress or to a language model. Its requests reach OPAX's servers with your
       phone's IP address, under the same limits and logs as the website. Pages the app opens on
       opax.com.au are the website, and the website sections above apply to them.</p>
@@ -1615,8 +1652,9 @@
         reading lists, which are private until you share them; saved discussions, which only you
         see; follows, likes and blocks; and messages to other members.</li>
         <li><strong>Saved conversations with OPAX.</strong> While you are signed in on the
-        website, up to 50 of your conversations are copied to your account so that they appear
-        on your other devices. Only you can see them.</li>
+        website, your conversations are copied to your account so that they appear on your other
+        devices, including any that browser saved before you signed in. An account holds up to
+        50. Only you can see them.</li>
         <li><strong>Your settings</strong>: who can message you, and whether you receive reply
         emails.</li>
       </ul>
@@ -1669,9 +1707,12 @@
       <mark class="privacy-confirm" data-confirm="P11">[To confirm: the language model is
       Google's Gemini 3.5 Flash Lite, run through ElevenLabs, as configured on 9 September
       2026.]</mark> Anything you type during a call goes the same way. OPAX gives ElevenLabs a
-      random identifier for the call and the call's time limit. It does not give ElevenLabs your
-      email address or account details. When the assistant looks something up, its search runs
-      through OPAX's own search, which uses Progress Agentic RAG as described above.</p>
+      random identifier for the call and the call's time limit; its code does not give
+      ElevenLabs your email address or account details. ElevenLabs can receive your IP address
+      with the connection, because Cloudflare adds the visitor's IP address to requests that
+      OPAX's server makes to services outside Cloudflare. When the assistant looks something up,
+      its search runs through OPAX's own search, as described under
+      <a href="#privacy-questions">Questions and searches</a>.</p>
       <h3>What is kept</h3>
       <p>Audio recording is turned off in OPAX's ElevenLabs settings, and ElevenLabs is set to
       delete the text of each conversation after one day.
@@ -1688,15 +1729,18 @@
       members also share a monthly budget of 40,000 seconds, and no more than two calls can run
       at once. The call records above are how OPAX counts all three.</p>
       <p>Starting a call reserves your remaining time, or what is left of the month's budget if
-      that is less. Cancelling before the call connects returns the time. A call that ends
-      normally is charged for the seconds it ran. If OPAX cannot confirm how a call ended, for
-      example after a dropped connection, the whole reservation stays charged. A few accounts
-      approved by OPAX can make repeated calls of up to 10 minutes each.</p>
+      that is less. Cancelling the reservation before OPAX starts connecting the call returns
+      the time, and a reservation that is never used expires without charge. Once OPAX starts
+      connecting the call, the time can stay charged if OPAX cannot confirm that no call ran or
+      how it ended, for example when the connection to ElevenLabs fails partway or drops. A call
+      that ends normally is charged for the seconds it ran. A few accounts approved by OPAX can
+      make repeated calls of up to 10 minutes each.</p>
 
       <h2 id="privacy-deletion">Deleting your account</h2>
       <p>On the website, open <a href="/community?view=delete-account">Delete your account</a>
       from your account page. In the app, choose Delete account under Account. OPAX emails you a
-      fresh code, and entering it deletes the account at once. Deletion cannot be undone. If you
+      fresh code, and entering it removes the account from OPAX's live database at once.
+      Deletion cannot be undone. If you
       cannot sign in, write to the address under <a href="#privacy-contact">Questions and
       requests</a>.</p>
       <h3>What is deleted</h3>
@@ -1726,9 +1770,15 @@
         not changed, even where it quotes you.</li>
         <li><strong>Rate-limit counters</strong> for IP addresses stay until they expire.</li>
         <li><strong>Emails already sent</strong> cannot be recalled.</li>
+        <li><strong>Recovery history.</strong> Cloudflare keeps a rolling history of OPAX's
+        database so that it can be restored to an earlier point if something goes wrong. It is
+        always on, and your deleted data stays in it until it ages out.
+        <mark class="privacy-confirm" data-confirm="P15">[To confirm: how long that history lasts
+        on OPAX's plan (Cloudflare documents 7 days on Workers Free and 30 days on Workers Paid),
+        and whether any other backup or export of the community database exists.]</mark></li>
       </ul>
-      <p>OPAX's database keeps no record of your email address after deletion. Signing up again with it
-      creates a new account, with a fresh 10 minutes of voice. The browser you delete from
+      <p>After deletion, OPAX's live database keeps no record of your email address. Signing up
+      again with it creates a new account, with a fresh 10 minutes of voice. The browser you delete from
       clears its saved conversations; other browsers keep their copies until you clear this
       site's data there. The public record is not affected.</p>
 
@@ -1738,18 +1788,25 @@
         email, and handles every request with your IP address.
         <mark class="privacy-confirm" data-confirm="P13">[To confirm: the region where OPAX's
         community database is stored.]</mark></li>
-        <li><strong>Progress Agentic RAG</strong> receives question and search text, including
-        searches made by the voice assistant and by research tools. OPAX's knowledge box is in
-        its AWS Sydney zone.</li>
-        <li><strong>OpenRouter</strong>, and the model provider it routes to, receives questions
-        with the passages found for them, to write answers and summaries.</li>
+        <li><strong>Progress Agentic RAG</strong> receives questions, searches of the record's
+        documents and the inputs to search summaries, as set out under
+        <a href="#privacy-questions">Questions and searches</a>, including those made by the
+        voice assistant and by research tools. It can receive your IP address with them. OPAX's
+        knowledge box is in its AWS Sydney zone.</li>
+        <li><strong>OpenRouter</strong>, and the model provider it routes to, receives from
+        Progress the questions, search words and passages needed to write answers and
+        summaries.</li>
         <li><strong>ElevenLabs</strong> receives voice audio, messages typed during a call and
-        the call's random identifier. <mark class="privacy-confirm" data-confirm="P12">[To
-        confirm: where ElevenLabs processes and stores this data.]</mark></li>
+        the call's random identifier, and can receive your IP address with the connection. The
+        language model it runs for the assistant, named under
+        <a href="#voice">Talking to OPAX by voice</a>, receives the words of the conversation
+        through ElevenLabs. <mark class="privacy-confirm" data-confirm="P12">[To confirm: where
+        ElevenLabs processes and stores this data.]</mark></li>
         <li><strong>Google</strong>, through Analytics and Tag Manager, receives page addresses,
-        the events listed above and your IP address, on the website only.</li>
-        <li><strong>PostHog</strong> receives the same events and your IP address, on the website
-        only, in the United States.</li>
+        the events and browser details listed above and your IP address, on the website
+        only.</li>
+        <li><strong>PostHog</strong> receives the same events and browser details, and your IP
+        address forwarded by OPAX's server, on the website only, in the United States.</li>
         <li><strong>OpenStreetMap</strong> receives your IP address when the grants map loads its
         tiles.</li>
       </ul>
