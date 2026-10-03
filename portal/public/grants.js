@@ -1402,9 +1402,8 @@ export function mountGrants (container, opts = {}) {
     const tb = el('tbody')
     for (const g of d.grants) {
       const row = el('tr')
-      const v = el('td', 'gr-num', fmtMoney(g.v))
-      v.title = AUD_FULL.format(g.v || 0)
-      row.appendChild(v)
+      // One award's own value: to the dollar, not abbreviated.
+      row.appendChild(el('td', 'gr-num', AUD_FULL.format(g.v || 0)))
       const what = el('td')
       const url = state.jur === 'federal'
         ? (g.guid ? `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(g.guid)}`
@@ -1925,9 +1924,7 @@ export function mountGrants (container, opts = {}) {
           who.appendChild(recipientRef(g.rid, g.rn || g.rid || '—'))
           if (g.k) who.appendChild(el('small', null, kindLabel(g.k)))
           row.appendChild(who)
-          const v = el('td', 'gr-num', fmtMoney(g.v))
-          v.title = AUD_FULL.format(g.v || 0)
-          row.appendChild(v)
+          row.appendChild(el('td', 'gr-num', AUD_FULL.format(g.v || 0)))
           const when = el('td', 'gr-num', grantDate(g) || (g.fy ? fyShort(g.fy) : '—'))
           if (g.a && g.s && g.a !== g.s) when.title = `approved ${g.a}, started ${g.s}`
           row.appendChild(when)

@@ -33,7 +33,7 @@ const blocs = { Liberal: 'Coalition', Nationals: 'Coalition', LNP: 'Coalition', 
 test('formatting helpers', () => {
   assert.equal(fmtMoney(1_250_000_000), '$1.25B')
   assert.equal(fmtMoney(3_400_000), '$3.4M')
-  assert.equal(fmtMoney(12_500), '$13K')
+  assert.equal(fmtMoney(12_500), '$12.5K')
   assert.equal(fmtMoney(0), '$0')
   assert.equal(fyStart('2023-24'), 2023)
   assert.equal(fyShort('2023-24'), '23–24')

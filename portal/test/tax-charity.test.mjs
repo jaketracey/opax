@@ -80,7 +80,7 @@ test('a charity block shows size, PBI/HPC, revenue, the government share and whe
   assert.match(f, /Large charity · Health Promotion Charity \(HPC\) · registered 1 Apr 2015/);
   assert.match(f, /ACNC name: WA Primary Health Alliance Limited/);
   assert.match(f, /\$237\.1M revenue \(year to 30 Jun 2024\), of which \$228\.9M \(97%\) from government/);
-  assert.match(f, /\$1K donations and bequests/);
+  assert.match(f, /\$1\.0K donations and bequests/);
   assert.match(f, /AIS 2023: \$199\.1M revenue, \$193\.4M \(97%\) from government/);
   assert.match(html, /https:\/\/www\.acnc\.gov\.au\/charity\/charities\?search=11602416697/);
   // attribution: publisher, licence and a link to the record, per source
@@ -107,8 +107,8 @@ test('the ATO row reports the published figures neutrally, with the ATO caveat a
   assert.match(html, /<a href="https:\/\/data\.gov\.au\/data\/dataset\/corporate-transparency\/resource\/r24"[^>]*>ATO Corporate Tax Transparency 2023-24/);
   assert.match(text(html), /\(CC BY 3\.0 AU\)/);
   assert.match(html, /<a href="https:\/\/www\.ato\.gov\.au\/report-of-entity-tax-information"[^>]*>ATO guidance/);
-  // earlier years in a table
-  assert.match(html, /<th scope="row">2022-23<\/th><td>[^]*\$50\.00B/);
+  // earlier years in a table, each filed figure to the dollar
+  assert.match(html, /<th scope="row">2022-23<\/th><td>\$50,000,000,000<\/td><td>\$2,500,000,000<\/td><td>\$700,000,000<\/td>/);
   assert.doesNotMatch(html, /Registered charity|ACNC Charity Register/);
 });
 
@@ -118,7 +118,7 @@ test('a blank ATO amount reads as blank (zero or less), never as $0', () => {
   assert.match(f, /Total income \$150\.0M · taxable income blank · tax payable blank/);
   assert.match(html, /title="The ATO leaves a field blank when the amount is zero or less"/);
   assert.doesNotMatch(f, /\$0\b/);
-  assert.match(html, /<td>[^<]*<span[^>]*>\$5\.0M<\/span><\/td><td><span class="tc-blank"/);   // earlier year: taxable shown, tax payable blank
+  assert.match(html, /<td>\$5,000,000<\/td><td><span class="tc-blank"/);   // earlier year: taxable shown, tax payable blank
 });
 
 test('a PRRT-only listing is described as such', () => {

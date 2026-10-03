@@ -143,7 +143,7 @@ for (const node of sim.nodes) {
 }
 assert.ok(spread > 200, `layout spread out (max radius ${spread.toFixed(0)})`)
 assert.equal(formatMoney(1_234_567), '$1.2M')
-assert.equal(formatMoney(45_600), '$46K')
+assert.equal(formatMoney(45_600), '$45.6K')
 
 // The grants layer: separate public-money sources, grant flows out to donors that the
 // grant register resolves to the same entity, each donor carrying its own

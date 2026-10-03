@@ -118,10 +118,15 @@ function fmtMoney(value) {
   const n = Number(value) || 0;
   const sign = n < 0 ? "-" : "";
   const a = Math.abs(n);
-  if (a >= 999.95e6) return `${sign}$${(a / 1e9).toFixed(2)}B`;
-  if (a >= 999.5e3) return `${sign}$${(a / 1e6).toFixed(1)}M`;
-  if (a >= 999.5) return `${sign}$${Math.round(a / 1e3)}K`;
-  return `${sign}$${Math.round(a)}`;
+  if (a >= 999.95e6) return `${sign}$${(Math.round(a / 1e7) / 100).toFixed(2)}B`;
+  if (a >= 999.95e3) return `${sign}$${(Math.round(a / 1e5) / 10).toFixed(1)}M`;
+  if (a >= 999.995) return `${sign}$${(Math.round(a / 100) / 10).toFixed(1)}K`;
+  const cents = Math.round(a * 100) / 100;
+  return `${sign}$${Number.isInteger(cents) ? cents : cents.toFixed(2)}`;
+}
+/** To the dollar, for a record's own figure in a table: "$6,260". */
+function fmtDollars(value) {
+  return `$${Math.round(Number(value) || 0).toLocaleString("en-AU")}`;
 }
 
 // Party identity: dot + short text label, always redundant with text (never color alone).
@@ -4226,8 +4231,8 @@ function payNameKey(name) {
   return String(name || "").normalize("NFKD").replace(/[^\x00-\x7f]/g, "").toLowerCase()
     .replace(/[^a-z' -]/g, " ").replace(/\s+/g, " ").trim();
 }
-/** A salary to the dollar: fmtMoney's "$507K" suits a chart label, not a rate of pay. */
-const payMoney = (n) => `$${Math.round(Number(n) || 0).toLocaleString("en-AU")}`;
+/** A salary to the dollar: fmtMoney's "$507.0K" suits a chart label, not a rate of pay. */
+const payMoney = fmtDollars;
 const payYear = (start) => `${start}–${String(start + 1).slice(2)}`;
 const payAsPost = (post) => post === "Senator" ? "a senator" : post === "Member of Parliament" ? "a member of parliament" : post;
 
@@ -4666,7 +4671,7 @@ function partyReceiptsHTML(rows, registerURL) {
   }).join("");
   const table = `<div class="visually-hidden"><table><caption>Receipts on the return</caption>
     <thead><tr><th scope="col">Year</th><th scope="col">Receipts</th><th scope="col">Itemised donations</th><th scope="col">Itemised other receipts</th><th scope="col">Not itemised</th></tr></thead>
-    <tbody>${series.map((r) => `<tr><th scope="row">${esc(r.year)}</th>${[r.receipts, r.donations, r.other, r.notItemised].map((v) => `<td>${esc(fmtMoney(v))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    <tbody>${series.map((r) => `<tr><th scope="row">${esc(r.year)}</th>${[r.receipts, r.donations, r.other, r.notItemised].map((v) => `<td>${esc(fmtDollars(v))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
   return `<section class="party-receipts" aria-labelledby="party-receipts-heading">
     <h3 class="subject-section-title" id="party-receipts-heading">Receipts on the return</h3>
     <div class="receipts-legend" aria-label="Receipt categories">

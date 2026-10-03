@@ -5,9 +5,14 @@ import { runInNewContext } from 'node:vm';
 import { MONTHS, shortDate, shortMoney } from '../public/format.js';
 
 const MONEY = [
-  [0, '$0'], [950, '$950'], [999.4, '$999'], [999.5, '$1K'], [4537, '$5K'], [24400, '$24K'], [507000, '$507K'],
-  [999499, '$999K'], [999800, '$1.0M'], [2.3e6, '$2.3M'], [24.4e6, '$24.4M'], [211.6e6, '$211.6M'],
+  [0, '$0'], [950, '$950'], [950.5, '$950.50'], [999.4, '$999.40'], [999.996, '$1.0K'],
+  // The cases the review found: thousands keep their decimal (State Street's
+  // 2021-22 tax payable, Richmond Fellowship's 2024 donations).
+  [6260, '$6.3K'], [4490, '$4.5K'], [4537, '$4.5K'], [24400, '$24.4K'], [410100, '$410.1K'], [507000, '$507.0K'],
+  [999940, '$999.9K'], [999960, '$1.0M'], [2.3e6, '$2.3M'], [24.4e6, '$24.4M'], [211.6e6, '$211.6M'],
   [999.94e6, '$999.9M'], [999.96e6, '$1.00B'], [2.345e9, '$2.35B'], [198.68e9, '$198.68B'],
+  // Halves round up, as Intl did: toFixed alone reads 6.05 as 6.0499...
+  [6.05e6, '$6.1M'], [1.005e9, '$1.01B'], [6250, '$6.3K'],
   [-2.5e6, '-$2.5M'], ['1250000', '$1.3M'], [null, '$0'], [undefined, '$0'], [Number.NaN, '$0'],
 ];
 const DATES = [
@@ -16,8 +21,56 @@ const DATES = [
   ['2026-13-01', '2026-13-01'], ['2026-09', '2026-09'], ['Not recorded', 'Not recorded'], ['', ''], [null, ''], [undefined, ''],
 ];
 
-test('short money is one style: two decimals of a billion, one of a million, whole thousands and dollars', () => {
+test('short money is one style: two decimals of a billion, one of a million or a thousand, exact below that', () => {
   for (const [value, expected] of MONEY) assert.equal(shortMoney(value), expected, String(value));
+});
+
+// The short forms the site used before format.js (8f1305e3), each with the sizes
+// it was shown at. No figure may come out coarser than it did.
+const compactIntl = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', notation: 'compact', maximumFractionDigits: 1 });
+const BEFORE = {
+  // app.js fmtMoney and its copies in grants.js, wordsdollars.js, home-spotlight.js and the Worker
+  fmtMoney: [(n) => n >= 1e9 ? `$${(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${n}`, Infinity],
+  // tax-charity, suppliers, agencies, grants research, money journeys, map research
+  intlCompact: [(n) => compactIntl.format(n), Infinity],
+  // the contracts view
+  discovery: [(n) => { const u = n >= 1e9 ? [1e9, 'bn'] : n >= 1e6 ? [1e6, 'm'] : n >= 1e3 ? [1e3, 'k'] : [1, '']; return `$${(n / u[0]).toLocaleString('en-AU', { maximumFractionDigits: u[0] === 1 ? 0 : 1 })}${u[1]}`; }, Infinity],
+  // the money map
+  moneyMap: [(n) => n >= 1e9 ? `$${(n / 1e9).toFixed(1)}b` : n >= 1e6 ? `$${(n / 1e6).toFixed(1)}m` : n >= 1e3 ? `$${Math.round(n / 1e3)}k` : `$${Math.round(n)}`, Infinity],
+  // the time machine, which only ever shows one industry's donations in a year
+  timeMachine: [(n) => n >= 1e6 ? '$' + (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M' : n >= 1e3 ? '$' + Math.round(n / 1e3) + 'K' : '$' + Math.round(n), 1e9],
+};
+const UNIT = { '': 1, k: 1e3, K: 1e3, m: 1e6, M: 1e6, b: 1e9, bn: 1e9, B: 1e9, T: 1e12 };
+/** The step between neighbouring figures a short form can show: "$6.3K" is 100, "$6K" 1,000. */
+function step(text) {
+  const m = /^-?\$([\d,]+)(?:\.(\d+))?(bn|[kKmMbBT])?$/.exec(text);
+  assert.ok(m, text);
+  return { step: UNIT[m[3] || ''] * 10 ** -(m[2]?.length || 0), malformed: Boolean(m[3]) && Number(m[1].replace(/,/g, '')) >= 1000 };
+}
+
+test('no short figure is coarser than the form its page showed before', () => {
+  const values = [6260, 4490, 4537, 410100, 999.5, 999960, 1.5e9];
+  for (let e = 0; e <= 12; e += 0.01) values.push(Math.round(10 ** e * 100) / 100, Math.round(10 ** e * 1.2345));
+  let compared = 0;
+  for (const [name, [before, upTo]] of Object.entries(BEFORE)) {
+    for (const value of values.filter((v) => v < upTo)) {
+      const old = step(before(value));
+      // "$1000K": the old rounding spilled past its unit; its successor is "$1.0M".
+      if (old.malformed) continue;
+      const now = step(shortMoney(value));
+      assert.ok(now.step <= old.step + 1e-9, `${name}: ${value} was ${before(value)}, now ${shortMoney(value)}`);
+      compared++;
+    }
+  }
+  assert.ok(compared > 10000, String(compared));
+});
+
+test('a table of filed figures shows each one to the dollar, not abbreviated', async () => {
+  const T = await import('../public/tax-charity.js');
+  const meta = { sources: { ato: { title: 'ATO Corporate Tax Transparency', licence: 'CC BY 3.0 AU' } } };
+  const html = T.taxCharityHTML({ t: [{ y: '2022-23', inc: 812345678, tax: 50120, pay: 6260 }, { y: '2021-22', inc: 790000000, tax: 48000, pay: 6260 }] }, meta, { abn: '55555555555' });
+  assert.match(html, /<th scope="row">2021-22<\/th><td>\$790,000,000<\/td><td>\$48,000<\/td><td>\$6,260<\/td>/);
+  assert.doesNotMatch(html.slice(html.indexOf('<table')), /\$6\.3K/);
 });
 
 test('short dates use three-letter months, never the en-AU "Sept", "June" or "July"', () => {

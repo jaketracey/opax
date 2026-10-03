@@ -30,6 +30,8 @@ export const shardOf = (abn) => String(abn).slice(-2);
 const EXACT = new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
 /** "$1.40B", with the exact dollars in the tooltip. */
 const money = (value) => `<span title="${esc(EXACT.format(value))}">${esc(shortMoney(value))}</span>`;
+/** A year's filed figure in the table, to the dollar. */
+const dollars = (value) => esc(EXACT.format(value));
 const day = (iso) => {
   if (!/^\d{4}-\d{2}-\d{2}/.test(iso || "")) return "";
   return shortDate(iso);
@@ -128,7 +130,7 @@ function atoRows(rec, meta) {
   const latestNote = t.y !== meta?.sources?.ato?.latest_year && meta?.sources?.ato?.latest_year ? `<span class="tc-sub">The latest year listed under this ABN. The ${esc(meta.sources.ato.latest_year)} report has no entry under it.</span>` : "";
   const older = years.slice(1);
   const table = older.length ? `<details class="tc-more"><summary>Earlier years</summary><table class="tc-table"><thead><tr><th scope="col">Income year</th><th scope="col">Total income</th><th scope="col">Taxable income</th><th scope="col">Tax payable</th></tr></thead><tbody>${older.map((r) =>
-    `<tr><th scope="row">${esc(r.y)}</th><td>${r.inc != null ? money(r.inc) : blank}</td><td>${r.tax != null ? money(r.tax) : blank}</td><td>${r.pay != null ? money(r.pay) : blank}</td></tr>`).join("")}</tbody></table></details>` : "";
+    `<tr><th scope="row">${esc(r.y)}</th><td>${r.inc != null ? dollars(r.inc) : blank}</td><td>${r.tax != null ? dollars(r.tax) : blank}</td><td>${r.pay != null ? dollars(r.pay) : blank}</td></tr>`).join("")}</tbody></table></details>` : "";
   return [[`ATO ${esc(t.y)}`, `${text}${rec.tn ? `<span class="tc-sub">ATO name: ${esc(rec.tn)}</span>` : ""}${latestNote}${table}`, src]];
 }
 

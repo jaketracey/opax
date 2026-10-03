@@ -68,7 +68,7 @@ test('concentration bars use percentage points and reconcile an explicit other g
   assert.deepEqual(widths, [41.01, 30, 28.99]);
   assert.ok(Math.abs(widths.reduce((a, b) => a + b) - 100) < 1e-9);
   assert.match(html, /Other 5 suppliers/);
-  assert.match(html, /\$410K/);
+  assert.match(html, /\$410\.1K/);
   assert.match(html, /41(?:\.0)?%/);
 });
 
