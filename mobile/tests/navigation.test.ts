@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { Alert } from 'react-native';
-import { canonicalUrl, sourceUrl } from '../src/navigation/external';
+import { canonicalUrl, sourceUrl, openOnWeb } from '../src/navigation/external';
 import { shareRecord } from '../src/navigation/share';
 import { isE2E, webOrigin } from '../src/design/environment';
 import { partyIdentity } from '../src/design/party';
@@ -258,4 +258,17 @@ describe('workbench exclusion', () => {
         blocked(blockList(variant), '/repo/mobile/src/app/workbench.tsx'),
       ).toBe(false);
   });
+});
+
+test('the temporary privacy link preserves its reviewed query in the e2e destination', async () => {
+  const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+  await openOnWeb('/community?view=privacy', 'Privacy policy');
+  expect(alert).toHaveBeenCalledWith(
+    'Opens on opax.com.au: Privacy policy',
+    `${webOrigin}/community?view=privacy`,
+  );
+  expect(canonicalUrl('/community?view=privacy')).toBe(
+    `${webOrigin}/community`,
+  );
+  alert.mockRestore();
 });

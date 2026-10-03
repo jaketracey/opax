@@ -170,7 +170,12 @@ export async function openSource(url: string, label: string): Promise<void> {
 export async function openOnWeb(path: string, label: string): Promise<void> {
   let url: string;
   try {
-    url = canonicalUrl(path);
+    // The temporary privacy page is selected by this exact, reviewed query.
+    // Share URLs keep dropping queries; no other query navigation is added.
+    url =
+      path === '/community?view=privacy'
+        ? `${canonicalUrl('/community')}?view=privacy`
+        : canonicalUrl(path);
   } catch {
     Alert.alert('opax.com.au', 'This page could not be opened.');
     return;

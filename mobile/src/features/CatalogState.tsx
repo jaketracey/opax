@@ -72,7 +72,7 @@ export function CatalogState<T>({
       )}
       <AsAtLine
         asOf={block.asAt}
-        citation={block.sources.map((s) => s.label)}
+        citation={[...new Set(block.sources.map((s) => s.label))]}
         savedAt={block.stale ? block.savedAt : null}
         testID={`${testID}-as-at`}
       />
