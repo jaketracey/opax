@@ -490,6 +490,33 @@ test('Your MP register disclosure is lazy and renders plain category/change labe
   expect(text(r)).toContain('Gifts · deleted');
   expect(text(r)).not.toContain('real_estate');
   expect(text(r)).not.toContain('addition');
+  const toggle = () =>
+    r.root
+      .findAllByType(Button)
+      .find((n) => n.props.testID === 'your-register-toggle')!
+      .props.onPress();
+  await act(async () => toggle());
+  let finish!: (value: Awaited<ReturnType<typeof mock.profileFor>>) => void;
+  const pending = new Promise<Awaited<ReturnType<typeof mock.profileFor>>>(
+    (resolve) => {
+      finish = resolve;
+    },
+  );
+  mock.profileFor.mockReturnValueOnce(pending);
+  await act(async () => toggle());
+  expect(text(r)).not.toContain('No register file is held');
+  expect(
+    r.root.findAll((n) => n.props.testID === 'your-register-missing'),
+  ).toHaveLength(0);
+  await act(async () =>
+    finish(
+      c.profileFor(seat.representatives[0]!.person_id, {
+        ...catalogs,
+        interest: c.decodeInterest(pinned('/interests/10368.json')),
+      }),
+    ),
+  );
+  expect(text(r)).toContain('Gifts · added');
   await act(async () => r.unmount());
 });
 
