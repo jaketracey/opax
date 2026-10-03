@@ -4,6 +4,10 @@ import { resolve } from 'node:path';
 
 type Variant = 'development' | 'e2e' | 'production';
 const variant = (process.env.OPAX_VARIANT ?? 'development') as Variant;
+const buildNumber = process.env.OPAX_BUILD_NUMBER ?? '1';
+if (!/^[1-9][0-9]*$/.test(buildNumber)) {
+  throw new Error('OPAX_BUILD_NUMBER must be a positive integer');
+}
 if (!['development', 'e2e', 'production'].includes(variant)) {
   throw new Error('OPAX_VARIANT must be development, e2e or production');
 }
@@ -47,7 +51,7 @@ const config: ExpoConfig = {
   orientation: 'default',
   ios: {
     bundleIdentifier: 'au.com.opax.app',
-    buildNumber: '1',
+    buildNumber,
     supportsTablet: false,
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
@@ -68,7 +72,7 @@ const config: ExpoConfig = {
     },
   },
   plugins: [
-    'expo-router',
+    ['expo-router', { sitemap: variant !== 'production' }],
     ['expo-build-properties', { ios: { deploymentTarget: '18.4' } }],
     './plugins/withNetworkPolicy.js',
   ],
@@ -76,7 +80,7 @@ const config: ExpoConfig = {
     variant,
     apiOrigin: origin,
     appVersion: '0.1.0',
-    appBuild: '1',
+    appBuild: buildNumber,
     fontAcknowledgements: ['Merriweather', 'PublicSans'].map((name) => ({
       name,
       notice: readFileSync(

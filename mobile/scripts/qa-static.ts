@@ -43,6 +43,11 @@ for (const variant of ['production', 'e2e']) {
 }
 assert.equal(release.extra.apiOrigin, 'https://opax.com.au');
 assert.equal(
+  release.extra.router.sitemap,
+  false,
+  'Production debugging sitemap is disabled',
+);
+assert.equal(
   e2e.extra.apiOrigin,
   `http://127.0.0.1:${process.env.OPAX_FIXTURE_PORT ?? 8910}`,
 );
@@ -56,7 +61,7 @@ for (const app of [release, e2e]) {
   assert.equal(app.name, 'OPAX');
   assert.equal(app.version, '0.1.0');
   assert.equal(app.ios.bundleIdentifier, 'au.com.opax.app');
-  assert.equal(app.ios.buildNumber, '1');
+  assert.equal(app.ios.buildNumber, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert(!app.ios.infoPlist.NSMicrophoneUsageDescription);
   assert.equal(app.updates.enabled, false);
   assert(
@@ -147,7 +152,7 @@ const appIndex = process.argv.indexOf('--app');
 const productionIndex = process.argv.indexOf('--production-bundle');
 if (productionIndex !== -1) {
   const bundles = walk(process.argv[productionIndex + 1]!).filter((path) =>
-    /\.(?:hbc|js)$/.test(path),
+    /\.(?:hbc|js|jsbundle)$/.test(path),
   );
   assert(bundles.length, 'Production JS bundle missing');
   for (const path of bundles) {
@@ -193,7 +198,7 @@ if (appIndex !== -1) {
   );
   assert.equal(plist.CFBundleIdentifier, 'au.com.opax.app');
   assert.equal(plist.CFBundleShortVersionString, '0.1.0');
-  assert.equal(plist.CFBundleVersion, '1');
+  assert.equal(plist.CFBundleVersion, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert.equal(plist.MinimumOSVersion, '18.4');
   assert(!plist.NSMicrophoneUsageDescription);
   assert.equal(plist.NSAppTransportSecurity.NSAllowsArbitraryLoads, false);

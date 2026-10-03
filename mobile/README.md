@@ -3,7 +3,8 @@
 Expo SDK 57 / React Native 0.86, strict TypeScript, expo-router. iOS 18.4 is
 the minimum. Light mode only; Android is possible later and is not built here.
 App identity: OPAX, `au.com.opax.app`, version `0.1.0`, build `1`.
-No signing, Apple account, push, analytics, crash reporter or microphone permission.
+No push, analytics, crash reporter or microphone permission. Production release
+tooling uses locally supplied Apple credentials; none are part of the app config.
 
 ## Install and develop
 
@@ -75,6 +76,19 @@ bases are replaced with `navigation.invalid` by the production-only Babel plugin
 the app's only network origin still comes from the reviewed build configuration.
 
 ## Seams for later lanes
+
+For a signed local archive/IPA and the separate internal TestFlight workflow,
+see [iOS release instructions](../docs/IOS-RELEASE.md). Run
+`scripts/release-ios.sh --build-number 1` from a clean
+committed worktree; it exports locally without upload. `OPAX_BUILD_NUMBER` selects
+the native and embedded build number. Release hooks may also be set in ignored
+`private/local.env`. Privacy verification permits the team ID only in validated
+Apple signing metadata and rejects private values in app content. The orchestrator owns upload of
+the exact full commit approved by QA.
+Release runs reinstall locked dependencies and refuse Expo `.env*` inputs.
+The build gate receives a credential-free wrapper; upload checks the verified
+IPA hash and uses those bytes directly. QA includes the offline tooling and
+attack regression tests.
 
 - Routes live in `src/app/`; feature UI in `src/features/`. The four tabs are
   Today, Your MP, Bills and Search. Add a stack route carrying identifiers only.
@@ -153,7 +167,7 @@ advisories are individually classified in the same baseline. Never run
 
 Today, Your MP and Bills are plain placeholders. Search and the core profile
 are deliberately minimal. Full feature screens, licensed postcode lookup,
-portrait rights, sign-in, voice, universal links and signing belong to later work.
+portrait rights, sign-in, voice and universal links belong to later work.
 
 ## P0 catalog adapters (data only)
 
