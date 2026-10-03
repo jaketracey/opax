@@ -5292,8 +5292,10 @@ a.bill-division-q:hover { color: var(--bronze-ink); }
 .el-service li > span { margin-left:.6rem; font-size:.85rem; }
 .el-demographics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.5rem; }
 .el-demographics dt { font-size:.8rem; }
-.el-demographics dd { margin:.3rem 0 0; font-size:1.7rem; font-variant-numeric:tabular-nums; }
-.el-demographics small { display:block; font-size:.7rem; }
+/* The figures take the record's serif, like every other headline figure (.tile b,
+   .stat-figure): Public Sans's tabular digits, set this large, read as a code font. */
+.el-demographics dd { margin:.3rem 0 0; font:700 1.7rem/1.15 var(--serif); font-variant-numeric:tabular-nums; }
+.el-demographics small { display:block; margin-top:.25rem; font:400 .7rem/1.4 var(--sans); }
 .el-section > ul { padding-left:1.2rem; }
 .el-section > ul li { margin:.65rem 0; }
 .el-id { overflow-wrap:anywhere; font-size:.75rem; }
