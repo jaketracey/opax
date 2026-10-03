@@ -41,6 +41,24 @@ export function programRecord(jur, row, agencies=[]) {
   extra:{slug:`grant-program-${jur}-${key}`,record_id:id,aliases:[id,key,agency].filter(Boolean).join(' '),from:year(row.y0),to:year(row.y1),state:jur,source:'Grant program profile',dateLabel:period(row.y0,row.y1)}
  };
 }
+
+// Register names include formal given names and APH index typos. Resolve with
+// the export's identity/alias index before writing a person-page address.
+// Keep jurisdictions separate: Robert Katter is in both federal and QLD registers.
+export function interestPerson(register, id, people, names) {
+ const key = name => String(name || '').trim().toLowerCase().replaceAll('’', "'");
+ const federalId = register.jurisdiction === 'federal' && /^\d+$/.test(id);
+ const eligible = people.filter(p => p.states?.includes(register.jurisdiction));
+ const consistent = p => !federalId || !p.pid || p.pid === id;
+ const exact = eligible.find(p => key(p.name) === key(register.name) && consistent(p));
+ if(exact) return exact;
+ const aliases = eligible.filter(p => names[key(p.name)] === id && consistent(p));
+ const candidates = aliases.length ? aliases : federalId ? eligible.filter(p => p.pid === id) : [];
+ // Prefer the full-name profile to a surname-only Hansard print of the same ID.
+ return candidates.find(p => p.current && p.name.includes(' '))
+   || candidates.find(p => p.name.includes(' ')) || candidates[0] || null;
+}
+
 async function main() {
  const roster = await read('parliamentarians.json');
  for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${p.speeches.toLocaleString()} indexed speeches.${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:p.name,from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:period(p.first,p.last)});
@@ -78,11 +96,16 @@ async function main() {
   const b=await read('bills/'+file), summary=b.summary;
   add('bill:'+b.key,'bill',b.short_title||b.title,'/bill/'+encodeURIComponent(b.key),[b.status?.replaceAll('_',' '),b.portfolio,summary?.sentences?.join(' '),summary?.affected].filter(Boolean).join('. '),{aliases:[b.title,...(b.aliases||[])].join(' '),date:b.introduced,state:b.jurisdiction,parties:[b.sponsor_party||''],speakers:[b.sponsor||''],source:summary?'Bill register · automated summary':'Bill register'});
  }
+ const interestIndex = await read('interests/index.json');
  for(const file of await files('interests')) {
   if(['index.json','ties-by-donor.json','recent.json'].includes(file))continue;
   const p=await read('interests/'+file);
+  const person=interestPerson(p,file.slice(0,-5),roster.people,interestIndex._by_name);
+  // If the directory has no matching profile, the published register is the
+  // record's destination. Do not invent a profile or borrow a different jurisdiction's name.
+  const href=person ? personHref(person.name) : p.source_url;
   for(const [category,b] of Object.entries(p.buckets||{})) for(const [i,item] of (b.items||[]).entries()) {
-   add(`interest:${file}:${category}:${i}`,'interest',`${p.name} — ${category.replaceAll('_',' ')}`,personHref(p.name),`${item.description}. ${item.holder||''}. ${item.kind||''}.`,{date:item.date||null,from:year(item.date||p.as_at),to:year(item.date||p.as_at),dateLabel:item.date?undefined:(p.as_at?'Register as at '+p.as_at:undefined),state:p.jurisdiction,speakers:[p.name],parties:[roster.people.find(x=>x.name===p.name)?.party_now||roster.people.find(x=>x.name===p.name)?.party||''],source:'Register of interests',url:p.source_url});
+   add(`interest:${file}:${category}:${i}`,'interest',`${p.name} — ${category.replaceAll('_',' ')}`,href,`${item.description}. ${item.holder||''}. ${item.kind||''}.`,{aliases:person?.name||'',date:item.date||null,from:year(item.date||p.as_at),to:year(item.date||p.as_at),dateLabel:item.date?undefined:(p.as_at?'Register as at '+p.as_at:undefined),state:p.jurisdiction,speakers:[...new Set([p.name,person?.name].filter(Boolean))],parties:[person?.party_now||person?.party||''],source:'Register of interests',url:p.source_url});
   }
  }
  const recent=await read('interests/recent.json');
