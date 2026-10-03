@@ -1,6 +1,6 @@
 import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Image } from 'react-native';
+import { Image, RefreshControl } from 'react-native';
 import { catalogs as runtime } from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
@@ -162,6 +162,21 @@ test('chooser saves identifiers only after an explicit seat selection', async ()
       .findAllByType(PersonRow)
       .some((n) => n.props.name === 'Anthony Albanese'),
   ).toBe(true);
+  await act(async () => r.unmount());
+});
+test('refresh completes while no seat has been chosen', async () => {
+  (loadChoice as jest.Mock).mockResolvedValue(null);
+  const r = await render(<YourMP />);
+  const control = () =>
+    r.root.find((n) => n.props.testID === 'your-mp-screen').props
+      .refreshControl as ReactElement<{
+      refreshing: boolean;
+      onRefresh: () => void;
+    }>;
+  expect(control().type).toBe(RefreshControl);
+  await act(async () => control().props.onRefresh());
+  expect(control().props.refreshing).toBe(false);
+  expect(text(r)).toContain('Your choice is saved on this iPhone only');
   await act(async () => r.unmount());
 });
 test('electorate preserves Census vintage and renders candidates as plain public-record text', async () => {

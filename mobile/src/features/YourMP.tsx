@@ -65,6 +65,9 @@ export default function YourMP() {
           setError(errorMessage(e));
           setReady(true);
         }
+      })
+      .finally(() => {
+        if (active) setBusy(false);
       });
     return () => {
       active = false;
