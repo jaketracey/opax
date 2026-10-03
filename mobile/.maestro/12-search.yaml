@@ -10,11 +10,12 @@ name: 12 Local suggestions and the four catalog search kinds
 - inputText: Anthony Albanese
 - scrollUntilVisible:
     element:
-      id: search-suggestions-people
+      id: search-suggestion-person-.*
     timeout: 90000
-    visibilityPercentage: 1
+    centerElement: true
 - takeScreenshot: ${EVIDENCE}/12-suggestions
-- assertVisible: Anthony Albanese.*
+- assertVisible:
+    id: search-suggestion-person-.*
 - scrollUntilVisible:
     element:
       id: search-submit
@@ -31,11 +32,13 @@ name: 12 Local suggestions and the four catalog search kinds
 - takeScreenshot: ${EVIDENCE}/12-people
 - scrollUntilVisible:
     element:
-      id: search-kind-interest
+      id: search-kind-menu
     timeout: 90000
     direction: UP
 - tapOn:
-    id: search-kind-interest
+    id: search-kind-menu
+- takeScreenshot: ${EVIDENCE}/12-kind-menu
+- tapOn: Declared interests
 - scrollUntilVisible:
     element:
       id: search-submit
@@ -51,11 +54,12 @@ name: 12 Local suggestions and the four catalog search kinds
 - takeScreenshot: ${EVIDENCE}/12-interests
 - scrollUntilVisible:
     element:
-      id: search-kind-pay
+      id: search-kind-menu
     timeout: 90000
     direction: UP
 - tapOn:
-    id: search-kind-pay
+    id: search-kind-menu
+- tapOn: Pay
 - scrollUntilVisible:
     element:
       id: search-submit
@@ -78,11 +82,12 @@ name: 12 Local suggestions and the four catalog search kinds
 - tapOn: Hide matching record
 - scrollUntilVisible:
     element:
-      id: search-kind-expense
+      id: search-kind-menu
     timeout: 90000
     direction: UP
 - tapOn:
-    id: search-kind-expense
+    id: search-kind-menu
+- tapOn: Expenses
 - scrollUntilVisible:
     element:
       id: search-submit

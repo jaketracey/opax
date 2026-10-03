@@ -18,7 +18,6 @@ import {
   RowList,
   Screen,
   Section,
-  SegmentedControl,
   SourceLink,
   StaleNotice,
   Text,
@@ -26,8 +25,9 @@ import {
 } from '../design/primitives';
 import { RecordRow } from './RecordRow';
 import { Excerpt } from './search/Excerpt';
+import { KindPicker } from './search/KindPicker';
 import { isOffline } from './CatalogState';
-import { groupSuggestions, kindLabel, searchKinds } from './search/model';
+import { groupSuggestions, kindLabel } from './search/model';
 import { openSearchPerson, openSuggestedPerson } from './search/navigation';
 import { openOnWeb } from '../navigation/external';
 
@@ -112,6 +112,12 @@ export default function Search() {
     ? suggestionsFor(query, sources.roster, sources.electorates, sources.bills)
     : null;
   const showSuggestions = query.trim().length >= 2 && !submitted;
+  const sourcesStale =
+    sources && Object.values(sources.provenance).some((block) => block.stale);
+  const noSuggestions =
+    showSuggestions &&
+    suggestions &&
+    groupSuggestions(suggestions).every((group) => group.rows.length === 0);
   const resultRows = result?.data.results ?? [];
   const metadata = (group: keyof Sources['provenance']) =>
     sources ? (
@@ -154,12 +160,7 @@ export default function Search() {
           returnKeyType="search"
           autoCorrect={false}
         />
-        <SegmentedControl
-          segments={searchKinds}
-          value={kind}
-          onChange={(value) => change(query, value)}
-          testID="search-kinds"
-        />
+        <KindPicker value={kind} onChange={(value) => change(query, value)} />
         <Button
           label={`Search ${kindLabel(kind).toLowerCase()}`}
           variant="primary"
@@ -183,56 +184,62 @@ export default function Search() {
       ) : null}
       {!submitted ? (
         <>
-          <Section title={showSuggestions ? 'Suggestions' : 'Browse'}>
-            <Button
-              label="Refresh suggestions"
-              size="compact"
-              testID="search-refresh"
-              onPress={() => void loadSources(true)}
-              loading={refreshing}
-            />
-            {sourceError ? (
-              <Group>
-                {isOffline(sourceError) && !sources ? (
-                  <OfflineBanner cached={false} />
-                ) : null}
-                <ErrorState
-                  message={errorMessage(sourceError)}
-                  onRetry={() => void loadSources(true)}
-                  testID="search-suggestions-error"
+          {!showSuggestions ||
+          sourceError ||
+          !sources ||
+          sourcesStale ||
+          noSuggestions ? (
+            <Section title={showSuggestions ? undefined : 'Browse'}>
+              {!showSuggestions ? (
+                <Button
+                  label="Refresh suggestions"
+                  size="compact"
+                  testID="search-refresh"
+                  onPress={() => void loadSources(true)}
+                  loading={refreshing}
                 />
-              </Group>
-            ) : null}
-            {!sources && !sourceError ? (
-              <LoadingState
-                label="Loading suggestions"
-                testID="search-suggestions-loading"
-              />
-            ) : null}
-            {sources &&
-            Object.values(sources.provenance).some((b) => b.stale) ? (
-              <OfflineBanner testID="search-suggestions-offline" />
-            ) : null}
-            {showSuggestions &&
-            suggestions &&
-            groupSuggestions(suggestions).every(
-              (group) => group.rows.length === 0,
-            ) ? (
-              <EmptyState
-                message={`No suggestions for “${query.trim()}”. Search the available catalogs using the selected kind.`}
-                testID="search-suggestions-empty"
-              />
-            ) : null}
-            {!showSuggestions ? (
-              <>
-                <OpaxWebLink label="Parliamentarians" path="/subject/person" />
-                <OpaxWebLink label="Electorates" path="/subject/electorate" />
-                <Text variant="fine">
-                  Bill searches use the saved bill titles in Bills.
-                </Text>
-              </>
-            ) : null}
-          </Section>
+              ) : null}
+              {sourceError ? (
+                <Group>
+                  {isOffline(sourceError) && !sources ? (
+                    <OfflineBanner cached={false} />
+                  ) : null}
+                  <ErrorState
+                    message={errorMessage(sourceError)}
+                    onRetry={() => void loadSources(true)}
+                    testID="search-suggestions-error"
+                  />
+                </Group>
+              ) : null}
+              {!sources && !sourceError ? (
+                <LoadingState
+                  label="Loading suggestions"
+                  testID="search-suggestions-loading"
+                />
+              ) : null}
+              {sourcesStale ? (
+                <OfflineBanner testID="search-suggestions-offline" />
+              ) : null}
+              {noSuggestions ? (
+                <EmptyState
+                  message={`No suggestions for “${query.trim()}”. Search the available catalogs using the selected kind.`}
+                  testID="search-suggestions-empty"
+                />
+              ) : null}
+              {!showSuggestions ? (
+                <>
+                  <OpaxWebLink
+                    label="Parliamentarians"
+                    path="/subject/person"
+                  />
+                  <OpaxWebLink label="Electorates" path="/subject/electorate" />
+                  <Text variant="fine">
+                    Bill searches use the saved bill titles in Bills.
+                  </Text>
+                </>
+              ) : null}
+            </Section>
+          ) : null}
           {showSuggestions && suggestions?.people.length ? (
             <Section title="People" testID="search-suggestions-people">
               <RowList>
@@ -286,6 +293,17 @@ export default function Search() {
                 ))}
               </RowList>
               {metadata('bills')}
+            </Section>
+          ) : null}
+          {showSuggestions ? (
+            <Section>
+              <Button
+                label="Refresh suggestions"
+                size="compact"
+                testID="search-refresh"
+                onPress={() => void loadSources(true)}
+                loading={refreshing}
+              />
             </Section>
           ) : null}
         </>
