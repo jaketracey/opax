@@ -82,23 +82,30 @@ The chat composer's microphone button imports `/voice.js` the first time it is p
 | Route | Auth | Origin check | Body | Success | Refusals |
 | --- | --- | --- | --- | --- | --- |
 | `GET /api/voice/status` | Cookie optional | None | None | 200 status JSON | 503 if community disabled (`voice.ts:243`) |
-| `POST /api/voice/start` | Cookie required | Exact match (`voice.ts:249`) | JSON, at most 2,000 bytes | 201 reservation | 403 origin; 401 signed out; 415, 413; 429 rate limit; 409 call open; 403 allowance used; 429 capacity or budget; 503 not configured (`voice.ts:251-266`) |
-| `GET /api/voice/connect?session_id=` | Cookie required | Exact match | WebSocket upgrade | 101 | 426 no upgrade; 400 bad ID; 409 used or expired; 503 with the reservation released or retained (below) (`voice.ts:169-228`) |
+| `POST /api/voice/start` | Cookie required | Exact match (`voice.ts:249`) | JSON, at most 2,000 bytes | 201 reservation | 403 origin; 401 signed out; 415, 413; 429 rate limit; 409 call open; 403 allowance used; 429 capacity or budget; 503 not configured; generic 503 that can leave a `reserved` row (below) (`voice.ts:251-266`) |
+| `GET /api/voice/connect?session_id=` | Cookie required | Exact match | WebSocket upgrade | 101 | 426 no upgrade; 400 bad ID; 409 used or expired; 503 that can leave the row `reserved`, `connecting`, `active` or cancelled (below) (`voice.ts:169-228`) |
 | `POST /api/voice/finish` | Cookie required | Exact match | `{session_id}`, at most 1,000 bytes | 200 status JSON | 401, 403, 400 (`voice.ts:272-279`) |
 | `POST /api/voice/tools/<name>` | Provider secret | None | JSON, at most 8,000 bytes | 200 tool result | 401, 403, 429, 503 (`voice.ts:233-242`) |
 
-**A 503 from `connect` does not tell the client whether time was used.**
+**A 503 from `start` or `connect` does not tell the client what happened to the reservation.** Depending on where it failed, the row can be left `reserved`, `connecting` or `active`, or cancelled. Every "released" outcome below assumes the cleanup itself succeeded. If `releaseUnusedSession()` throws (`voice.ts:60-62`), or `response.body.cancel()` throws before it on the no-socket path (`voice.ts:206`), the generic handler returns 503 and the row stays `connecting` (`voice.ts:281-284`).
 
-| Cause | Reservation | Where |
-| --- | --- | --- |
-| Signed URL fetch failed or timed out | Released; message says "Your time has not been used." | `voice.ts:177-183` |
-| Provider returned an unexpected URL | Released | `voice.ts:184-189` |
-| Provider answered the upgrade without a WebSocket | Released ("The voice provider is busy") | `voice.ts:205-206` |
-| Upstream upgrade threw or timed out | **Retained**: the generic handler returns 503 without releasing it | `voice.ts:200-204`, `:281-284` |
-| The `active` write to D1 failed | **Retained**: both sockets close and 503 is returned without releasing it | `voice.ts:209-215` |
-| Anything else after the claim | **Retained** (generic 503) | `voice.ts:281-284` |
+| Failure point | Row left behind | Charge | How it clears | Where |
+| --- | --- | --- | --- | --- |
+| `start`: D1 error during the reservation write, a lost response after it committed, or any error building the response | Possibly `reserved`; the client never learns its `session_id` | None | Expires after 60 seconds as `cancelled`, charged 0 | `voice.ts:256-266`, `:22`, `:5` |
+| `connect` refused before the claim: 503 voice not configured, 426 no upgrade header, 400 bad ID | `reserved` (unclaimed) | None | The client can cancel it with `finish`, or it expires after 60 seconds | `voice.ts:269`, `:170-171`, `:272-276` |
+| `connect`: D1 error during the claim | `reserved` or `connecting`, unknown | None, or the full reservation if claimed | `reserved` as above; `connecting` as below | `voice.ts:172`, `:51` |
+| Signed URL fetch failed or timed out | `cancelled` if release succeeded; message "Your time has not been used." | None | At once | `voice.ts:177-183` |
+| Provider returned an unexpected URL | `cancelled` if release succeeded | None | At once | `voice.ts:184-189` |
+| Provider answered the upgrade without a WebSocket | `cancelled` if both the body cancel and the release succeeded ("The voice provider is busy") | None | At once | `voice.ts:205-206` |
+| Any of those three releases failed, or the conversation-ID write failed | `connecting` | Full reservation | Expires as `expired` at claim time + `reserved_seconds` + 30, still fully charged | `voice.ts:181`, `:185-188`, `:194`, `:206`, `:25` |
+| Upstream upgrade threw or timed out | `connecting` | Full reservation | As above | `voice.ts:200-204`, `:281-284` |
+| The `active` write failed, or its response was lost | `connecting`, or `active` if the write committed | Full reservation | Expires as `expired`, fully charged: a `connecting` row at claim time + `reserved_seconds` + 30, an `active` row at start time + `reserved_seconds` + 30 | `voice.ts:209-215`, `:51` |
+| Error after the `active` write, before the 101 (socket setup or accept) | `active` | Full reservation | Expires as `expired`, fully charged, unless the relay later confirms a clean provider close | `voice.ts:216-227`, `:159-165` |
 
-A retained reservation stays `connecting` until `started_at + reserved_seconds + 30` (`voice.ts:51`). It then becomes `expired` and stays fully charged (`voice.ts:25`). `finish` cannot release it, because it only cancels `reserved` rows (`voice.ts:272-279`). Until it expires, status shows an `active_session`, and `start` returns 409 for that member (`portal/migrations/0003_voice.sql:16-17`, `voice.ts:45`).
+**How the client recovers.**
+- A `reserved` row costs nothing. `finish` can cancel it when the client knows its `session_id` (`voice.ts:272-276`).
+- `finish` cannot release `connecting` or `active` rows, because it only cancels `reserved` ones.
+- While any of these rows is open, status shows an `active_session` with its `state` and `expires_at`, and `start` returns 409 for that member (`portal/migrations/0003_voice.sql:16-17`, `voice.ts:45`). The longest wait is `reserved_seconds + 30`, at most 630 seconds.
 
 The only refund signal is human-readable message text, and a WebSocket client usually cannot read the body of a refused upgrade. The allowance shown after any failure must therefore come from a fresh `GET /api/voice/status`, never from the HTTP status alone.
 
@@ -316,14 +323,15 @@ A `client` label on `member_sessions` is useful for listing and revoking app ses
 3. **Scope.** The credential is attached only to an allow-list of paths on the configured origin: voice `status`, `start`, `connect` and `finish`; community `status`, `auth/*`; and account deletion.
 4. **Redirects.** Redirects on authenticated requests are refused in the task delegate. The Worker never redirects `/api/*` (`portal/src/canonical-origin.ts:7-8`), so a redirect there is an error.
 5. **Logs.** `Cookie`, `X-Opax-Session` and `signed_url` values are redacted from logs, crash reports and analytics.
-6. **Expiry.** On 401, the token is deleted and the app shows signed out. Sign-out calls `auth/logout`, so the server session row is deleted too.
+6. **Expiry.** An expired or revoked credential does not make status fail: voice status returns 200 with `signed_in:false` (`portal/src/voice.ts:65`, `:244-247`), and protected routes return 401 (`portal/src/community-core.ts:27`). On either signal the token is deleted and the app shows signed out. Sign-out calls `auth/logout`, so the server session row is deleted too.
 
 ### Code sign-in contract
 
 The existing link proof is a 256-bit random token stored as a hash and redeemed by one atomic conditional update (`portal/src/community-core.ts:3`, `portal/src/community-auth.ts:11-12`, `:21`). A code is far weaker on its own: six digits are about 19.9 bits and eight digits about 26.6 bits. So the new route needs these controls:
 
 1. **Request.** `POST /api/community/auth/request {email, client:"ios"}` is native mode.
-   - Web mode (no `client`) is unchanged, including its Origin requirement and limits of 15 an hour per IP and 5 an hour per email (`portal/src/community-auth.ts:6-10`).
+   - Web mode (no `client`) is unchanged, including its Origin requirement (`portal/src/community-auth.ts:6`).
+   - Native mode keeps the issuance limits: 15 requests an hour per IP and 5 an hour per email. It uses the **same** `login-ip:` and `login-email:` limit keys as web mode (`portal/src/community-auth.ts:8-10`), so alternating modes never adds quota. Email-delivery failure deletes the new proof, as today (`portal/src/community-auth.ts:14`).
    - In native mode the response is `{sent:true, challenge_id}` whether or not an account exists, as today's response is the same for new and existing accounts (`portal/src/community-auth.ts:9`).
 2. **One proof, two forms.** Each request creates one proof row holding:
    - the link token's hash, as now;
@@ -331,18 +339,23 @@ The existing link proof is a 256-bit random token stored as a hash and redeemed 
    - an eight-digit code from `crypto.getRandomValues` with rejection sampling, so no digit is more likely than another.
 3. **Protected storage.** The code is stored only as an HMAC-SHA-256 keyed with a new Worker secret and bound to `challenge_id`. A plain hash of eight digits can be reversed by enumeration if the table leaks; a keyed MAC cannot without the key.
 4. **Supersession.** A new request for the same email and client invalidates that email's earlier unused proofs.
-5. **Verification.** `POST /api/community/auth/consume-code {challenge_id, code}`:
-   1. one atomic `UPDATE … SET attempts = attempts + 1 … WHERE` unused, unexpired and `attempts < 5`, `RETURNING` the MAC. No row means failure;
-   2. a constant-time comparison;
-   3. on a match, one conditional update sets `used_at` where it is still null, so only one request can win.
+5. **Verification.** `POST /api/community/auth/consume-code {challenge_id, code}` runs these steps in order. Every admission step is a single atomic increment-and-check, completed before any comparison:
+   1. **Look up the challenge.** This gives its bound, normalised email; the request never supplies one. An unknown, used, superseded or expired challenge fails only after step 2, so it still costs IP quota.
+   2. **IP admission.** Increment and check the `consume:` IP key shared with link consumption: 30 per 15 minutes (`portal/src/community-auth.ts:19`). This uses the existing `limit()` pattern, an `INSERT … ON CONFLICT DO UPDATE SET hits=hits+1 RETURNING hits` in one statement (`portal/src/community-core.ts:16-19`).
+   3. **Email-wide admission.** Increment and check a counter keyed by a digest of the challenge's email, in the same one-statement form: at most **10 attempts per fixed 24-hour window**.
+      - Every attempt counts, right or wrong, so admission is decided before the result is known.
+      - The key is the email, not the challenge, so supersession and reissue never reset it.
+      - D1 runs each statement atomically, so concurrent requests each receive a distinct count, and at most 10 per window reach the comparison however many arrive at once.
+   4. **Per-challenge admission.** One atomic `UPDATE … SET attempts = attempts + 1 … WHERE` unused, unexpired and `attempts < 5`, `RETURNING` the MAC. No row means failure.
+   5. **Comparison.** Constant-time, of the MAC of the submitted code against the stored MAC.
+   6. **Redemption.** On a match, one conditional update sets `used_at` where it is still null, so only one request can win.
 
    Then the member and session are created as `auth/consume` does (`portal/src/community-auth.ts:21-26`). Redeeming the code consumes the emailed link too, and the link consumes the code.
-6. **Throttles.**
-   - Five attempts per challenge.
-   - A per-IP verification limit like consume's 30 per 15 minutes (`portal/src/community-auth.ts:19`).
-   - An aggregate cap of 10 failed codes per email per 24 hours. After it, code entry is locked for that email while the link still works.
+6. **Bound.** At most five comparisons per challenge and ten per email per window. With fixed windows an attacker can make up to 20 attempts across a window edge, but no more than 3,650 a year against one address.
 
-   With eight digits and this cap, a sustained attacker gets at most 3,650 guesses a year against one address, about a 0.004% chance. Six digits would give about 0.37%.
+   Eight digits are 26.58 bits, so the yearly success chance is at most 3,650 / 10^8, about 0.00365%. Six digits would allow about 0.37%.
+
+   After the email cap, code entry is locked for that address until the window ends, while the emailed link still works. An attacker can trigger that lock deliberately; the link is the fallback.
 7. **One answer for every failure.** Wrong, expired, used, superseded, locked and unknown challenges all return the same message.
 8. **Expiry and revocation.** A proof expires after 15 minutes, as the link does. Deleting an account revokes that email's outstanding proofs.
 9. **Tests before implementation:**
@@ -351,6 +364,10 @@ The existing link proof is a 256-bit random token stored as a hash and redeemed 
    - link then code, and code then link;
    - a challenge used with another email's code;
    - attempt counting under concurrency;
+   - races across an old and a new challenge for one email: attempts on both draw from the same ten;
+   - the aggregate-cap boundary: of 20 parallel attempts, the correct code among them, at most 10 reach comparison, and an 11th attempt is refused even with the right code;
+   - supersession or a fresh request after the cap does not reopen code entry before the window ends;
+   - native and web requests share the issuance quota;
    - identical responses for existing and unknown addresses.
 
 ### Account deletion
@@ -375,18 +392,89 @@ The existing link proof is a 256-bit random token stored as a hash and redeemed 
 5. **Retention exceptions.** Only where a law requires it or for a specific stated purpose, and disclosed in the deletion flow and on the privacy page.
 6. **Flow.** Fresh verification (a new code, which Apple allows), then deletion, a statement of how long it takes, and a confirmation when done. Any live call is ended first.
 
-**Deletion-safe voice accounting (required).** The monthly budget is `SUM(charged_seconds)` over `voice_sessions` rows since the month start. The call-slot limit is a `COUNT` of open rows (`portal/src/voice.ts:38-39`).
+**Deletion-safe voice accounting (required).** Three facts from the source set the constraints:
+- **The monthly budget** is `SUM(charged_seconds)` over every `voice_sessions` row created since the UTC month start **minus 720 seconds** (`monthStart − 600 − 60 − 60`). That window counts a reservation made in the last 12 minutes of a month, which can still be running, against the new month as well (`portal/src/voice.ts:31-32`, `:38`, `:47`). The existing boundary test asserts this (`portal/test/voice.test.mjs:71-76`).
+- **The global call-slot limit** is a `COUNT` of rows in `reserved`, `connecting` or `active` (`portal/src/voice.ts:39`). The per-member lock is a `NOT EXISTS` plus a partial unique index on `member_id` (`portal/src/voice.ts:45`, `portal/migrations/0003_voice.sql:16-17`). All of these are checked in one atomic `INSERT … SELECT`.
+- **`member_id` is `NOT NULL REFERENCES members(id)`** with no delete action (`portal/migrations/0003_voice.sql:6`), and D1 enforces foreign keys. Today a member who has any voice row cannot be deleted at all; the delete fails with a foreign-key error.
 
-Deleting a member's rows therefore does more than reset their personal allowance:
+Deleting the voice rows to get around that would do more than reset a personal allowance:
 - deleting a 600-second charge from a spent month gives the whole application 600 seconds back;
 - deleting an open row frees a call slot while its relay keeps running. A database delete does not close a socket held by another Worker invocation (`portal/src/voice.ts:110-167`).
 
-Repeated delete-and-sign-up would bypass the application's monthly ceiling, not just the per-email allowance. The provider's credit ceiling is a separate limit and does not restore that guarantee.
+Repeated delete-and-sign-up would then bypass the application's monthly ceiling. The provider's credit ceiling is a separate limit and does not restore that guarantee. Keeping a member reference and moving only monthly charges into an aggregate would not help either: open rows would still reference the member and block the delete.
 
-The deletion route must:
-- keep application usage and open reservations countable after the member is gone. Either replace the member link on voice rows with a non-identifying deleted marker, or move monthly charges into a de-identified aggregate that the reservation query reads. The current schema cannot simply null the link, because `member_id` is `NOT NULL REFERENCES members(id)` (`portal/migrations/0003_voice.sql:6`);
-- never delete or release a `reserved`, `connecting` or `active` reservation. It ends as now, by confirmed provider close or by conservative expiry (`portal/src/voice.ts:20-26`, `:55-58`). Revoking the member's sessions stops new calls. A call still running loses its tools once the member row is gone (`portal/src/voice.ts:238`) and ends at its deadline;
-- treat the personal lifetime allowance separately from those aggregates. Whether a returning email gets a fresh 600 seconds is question 2.
+#### Migration contract: `0011_voice_deletion_safe`
+
+This is a proposal for a later Worker lane, written as a contract, not code. **Needs Jake's OK to deploy.**
+
+**Schema after the migration:**
+
+| Item | Today | After |
+| --- | --- | --- |
+| `voice_sessions.member_id` | `TEXT NOT NULL REFERENCES members(id)` | `TEXT` (nullable) `REFERENCES members(id) ON DELETE SET NULL` |
+| Other `voice_sessions` columns | `id`, `state`, `reserved_seconds`, `charged_seconds`, `created_at`, `expires_at`, `started_at`, `closed_at`, `conversation_id` | Unchanged: same names, types, `CHECK` constraints and `UNIQUE(conversation_id)` |
+| `voice_one_active_member` | `UNIQUE (member_id) WHERE state IN ('reserved','connecting','active')` | `UNIQUE (member_id) WHERE member_id IS NOT NULL AND state IN ('reserved','connecting','active')`. SQLite already treats NULLs as distinct in a unique index; the added condition states that orphaned open rows never collide |
+| `voice_member_history`, `voice_month_budget`, `voice_expiry` | As in `0003_voice.sql:18-20` | Recreated unchanged |
+| `voice_access` | `member_id` primary key, references `members(id)` | Unchanged. The deletion batch deletes the member's row explicitly |
+
+**Steps.** SQLite cannot change a column's nullability or foreign-key action in place, so the table is rebuilt:
+1. `PRAGMA defer_foreign_keys = on`, which is Cloudflare's documented way to restructure tables in a D1 migration.
+2. Create `voice_sessions_next` with the definition above.
+3. Copy every row, naming all ten columns explicitly.
+4. Drop `voice_sessions` and rename `voice_sessions_next` to `voice_sessions`. No table references `voice_sessions`, so the drop cascades nothing.
+5. Recreate the four indexes.
+6. `PRAGMA defer_foreign_keys = off`; `PRAGMA foreign_key_check` must return no rows.
+
+**Rollout.**
+1. Deploy `VOICE_ENABLED=false`. Existing calls stay bounded by their deadlines (`docs/VOICE-ASSISTANT.md:40`).
+2. Wait until no row is `reserved`, `connecting` or `active`. That is at most 630 seconds after the last start.
+3. Apply the migration.
+4. Deploy the code changes below and re-enable voice.
+
+Today's code is compatible with the rebuilt table, because it never writes a NULL `member_id`, so a delay between steps 3 and 4 is safe.
+
+**Statements, with what each does for a deleted member's rows:**
+
+| Statement | Change | Effect on a deleted member's rows |
+| --- | --- | --- |
+| Reservation `INSERT … SELECT` (`voice.ts:33-47`) | None. It must stay one atomic statement, with the 720-second window unchanged | The personal `SUM` ignores rows whose `member_id` is NULL. The global monthly `SUM` and open-row `COUNT` still include them |
+| Per-member lock (`voice.ts:45`) | None; the index gains `member_id IS NOT NULL` | Orphaned rows never block a member's own lock, but still hold a global slot |
+| Claim (`voice.ts:51`) | None | `member_id=?` never matches NULL, so an unclaimed reservation becomes unclaimable. It expires after 60 seconds as `cancelled`, charged 0 (`voice.ts:22`) |
+| Active write, conversation-ID writes, reconcile, release and expiry (`voice.ts:22`, `:25`, `:57`, `:61`, `:194`, `:210`, `:218`) | None; they match by `id` and `state` | An orphaned call still closes and reconciles through its own relay, or expires fully charged |
+| Tool authorisation (`voice.ts:238`) | None | Its join to `members` finds nothing, so the orphaned call's tools return 403 until it ends |
+| Status and `finish` (`voice.ts:66-69`, `:276`) | None | Not reachable for a deleted member |
+| `expireVoiceSessions` (`voice.ts:20-26`) | **Add one statement:** set `conversation_id` to NULL where `member_id IS NULL`, the state is `closed`, `cancelled` or `expired`, and `closed_at ≤ now − 86400` | Provider conversation IDs on orphaned rows are dropped once the documented one-day transcript retention has passed, never on open rows |
+| **New: deletion batch** | One D1 `batch()`, which is one transaction. Delete the member's sessions, sign-in proofs, MCP keys, `voice_access` row and content rows (scope above), then the `members` row | The foreign-key action sets `member_id` to NULL on every voice row in the same transaction. `state`, `reserved_seconds`, `charged_seconds`, `created_at`, `expires_at` and `started_at` are untouched. No reservation is cancelled, released or deleted |
+
+**Type changes.**
+- `Session.member_id` becomes `string | null` (`portal/src/voice.ts:10-13`). Every reader must handle NULL. None returns it to a client today: status returns only `id`, `expires_at` and `state` (`portal/src/voice.ts:73`).
+- The migration lists in the unit fixture and the Worker integration test gain `0011` (`portal/test/voice.test.mjs:21`, `:254`).
+
+**Tests that must pass before deployment.** All run with foreign keys enforced: Node's built-in SQLite enables them by default, and Miniflare's D1 enforces them.
+1. **Migration fidelity.**
+   - Every row and column is identical before and after.
+   - `PRAGMA foreign_key_list` shows `SET NULL`, and `member_id` is nullable.
+   - The four indexes exist, and `foreign_key_check` is empty.
+2. **Both global slots occupied during deletion.**
+   - Members A and B each hold an `active` call; delete A with the full batch.
+   - A's row keeps `active`, its reservation and its charge, with `member_id` NULL.
+   - Member C's reservation is refused, because the count is still 2. A's tools return 403.
+   - When A's relay reconciles by `id`, the row closes at the elapsed charge. Only then can C reserve.
+3. **A call crossing UTC midnight at month end.**
+   - With a monthly budget of 800 seconds, A reserves 600 seconds at 10 seconds before the boundary and connects at 5 seconds before.
+   - A is deleted at 2 seconds after the boundary.
+   - B reserving at 5 seconds after the boundary gets 200 seconds: A's charge still counts in the new month.
+   - Window edge: a row created at month start minus 720 seconds counts in the new month; one created at minus 721 does not.
+4. **Repeated delete-and-sign-up.** With a 1,200-second budget, two cycles of sign up, a 600-second call and deletion leave the budget spent. A third new member is refused.
+5. **Unclaimed reservation at deletion.** The claim fails, and the row expires as `cancelled` with no charge.
+6. **Several orphaned open rows.** They coexist without a unique-index collision.
+7. **Batch atomicity.** A failing statement leaves the member and every voice row unchanged.
+8. **Conversation-ID cleanup.** It clears only orphaned, closed rows older than one day.
+9. **Same email signs up again while an orphaned call runs.** The new member gets a personal allowance as question 2 decides. The orphaned call still holds its slot and its budget.
+
+**Evidence.** A hardware-free run of tests 1 to 7 passed on 3 October 2026. It used Node 26.10's built-in SQLite with foreign keys on, the repository's migrations 0001 to 0004, and the reservation, claim, reconcile, expiry and tool statements read unchanged from `portal/src/voice.ts`. It also confirmed that the current schema refuses the delete. It is evidence for this contract, not product code.
+
+The personal lifetime allowance stays separate from these aggregates. Whether a returning email gets a fresh 600 seconds is question 2.
 
 ### Worker changes
 
@@ -396,7 +484,7 @@ For the recommended cookie contract. Each item **needs Jake's OK to deploy**. No
 2. **Code exchange.** `auth/consume-code` with atomic attempts, one-winner redemption and shared link/code consumption. It returns the session cookie as `auth/consume` does, and labels the session `client:"ios"` through a migration. **Needs Jake's OK to deploy.**
 3. **Code secret.** A new Worker secret for the code MAC, with separate values for production and staging. **Needs Jake's OK to deploy.**
 4. **Account deletion.** A route for cookie sessions with Origin and fresh verification, linked from the web account page too, with the scope above. **Needs Jake's OK to deploy.**
-5. **Deletion-safe voice accounting.** A migration and query change so deletion cannot refund the monthly budget or free open slots. **Needs Jake's OK to deploy.**
+5. **Deletion-safe voice accounting.** Migration `0011_voice_deletion_safe`, the added cleanup statement, the deletion batch and the `Session` type change, with the nine tests in the contract above. Deletion cannot refund the monthly budget or free open slots. **Needs Jake's OK to deploy.**
 6. **Budget signal.** The 429 from start gains `reason: "budget" | "capacity"`, and status gains `budget_open`. Both clients can then say "Voice is closed for this month" (`portal/src/voice.ts:258-262`, `:64-74`). **Needs Jake's OK to deploy.**
 7. **Optional refund signal.** Error bodies from `connect` gain `released: true | false`. This helps HTTP clients only; WebSocket clients still read status (section 1). **Needs Jake's OK to deploy.**
 8. **Optional usage split.** A `client` column on `voice_sessions` so app and web minutes can be reported apart. **Needs Jake's OK to deploy.**
@@ -507,7 +595,12 @@ The audio and socket work is the same in either architecture, so write it once a
    - Encode by codec:
      - `pcm` as 16-bit **little-endian**, serialised explicitly;
      - `ulaw` as 8-bit G.711 µ-law, matching the SDK's encoder table and its round-then-encode rule (`dist/platform/web/rawAudioProcessor.generated.js:11-46`, `:115-117`).
-   - **Chunk policy (new, not web parity).** Send exactly 25 ms per message at the negotiated rate. At 16 kHz that is 400 samples: 800 PCM bytes, or 400 µ-law bytes. The web SDK's chunks vary, for example 32 ms (section 1). Fixed chunks match the web's sample values, not its chunk boundaries. Base64 uses the standard alphabet with padding, inside `{"user_audio_chunk": …}`.
+   - **Chunk policy (new, not web parity).** An average of 25 ms per message at the negotiated rate, kept exact over time by a fractional-sample accumulator.
+     - Chunk `k` (counting from 0) holds `floor((k+1)·rate/40) − floor(k·rate/40)` samples, computed in integer arithmetic so there is no rounding drift. Every 40 chunks hold exactly one second of audio.
+     - At 8,000, 16,000, 24,000 and 48,000 Hz every chunk is exactly 25 ms: 200, 400, 600 and 1,200 samples. At 16 kHz that is 800 PCM bytes, or 400 µ-law bytes.
+     - At 22,050 Hz, 25 ms is 551.25 samples, so chunks repeat 551, 551, 551 and 552. At 44,100 Hz, 25 ms is 1,102.5 samples, so chunks alternate 1,102 and 1,103.
+     - The web SDK's chunks vary, for example 32 ms (section 1). This policy matches the web's sample values, not its chunk boundaries.
+     - Base64 uses the standard alphabet with padding, inside `{"user_audio_chunk": …}`.
    - While muted, send zero-valued chunks as the SDK does (`dist/platform/web/rawAudioProcessor.generated.js:100-102`), so the provider's turn-taking timing matches the web. Also set `isVoiceProcessingInputMuted`.
    - **Backpressure.** The send queue is bounded, for example two seconds of audio. If the socket cannot keep up past that bound, end the call with a network error rather than buffering without limit.
 5. **Playback.**
@@ -679,8 +772,12 @@ Each row is a fixture scenario selected by its session token, or an injected dep
 | Budget closed | start 429 `reason:"budget"` (after Worker change 6) | "Closed for this month" state |
 | At capacity | start 429 `reason:"capacity"` | "Busy, try again shortly" |
 | Call open elsewhere | status `active_session`; start 409 | Explain; poll status before enabling Start |
+| Start 503 after the row was written | 503 with only the generic error, so no `session_id`; status shows `active_session` in state `reserved` for up to 60 s, then none, with nothing charged (clock control) | Wait for status to clear; never show time as used |
+| Connect refused before the claim | 503, 426 or 400; status shows the `reserved` row | Call `finish` with the known `session_id`, then refresh status |
 | Connect 503, released | 503; status then shows no open session and the same remaining time | "Couldn't connect; no time used", taken from status |
-| Connect 503, retained | 503; status shows `active_session` in state `connecting` until `expires_at`, then none, with the full reservation charged (clock control) | Show that the last call is still closing and when it will clear. Enable Start only after status clears. Show the charged allowance from status, never from the 503 |
+| Connect 503, release failed | 503 (generic); status shows `connecting` until `expires_at`, then none, with the full reservation charged | Same as a retained `connecting` row |
+| Connect 503, retained `connecting` | 503; status shows `active_session` in state `connecting` until `expires_at`, then none, with the full reservation charged (clock control) | Show that the last call is still closing and when it will clear. Enable Start only after status clears. Show the charged allowance from status, never from the 503 |
+| Connect 503, retained `active` | 503 after the `active` write; status shows state `active` until `expires_at`, then `expired`, fully charged | Same as above; the state label does not change the message |
 | Replayed connect | Upgrade 409 for a `signed_url` already used | Never reopen an old `signed_url`; it is single-use (`portal/src/voice.ts:172-173`) |
 
 **How a call ends**
@@ -706,7 +803,7 @@ A dropped call cannot be resumed. The reservation and the provider signature are
 | Bad code | Wrong, expired, reused, superseded or locked code: one generic failure | One message; offer a new code |
 | Parallel redemption | Two verifications of one code at once: exactly one session | End signed in once, with no duplicate session |
 | Link before code | The emailed link is redeemed first; the code then fails generically | Offer a new code |
-| Session expired or revoked | 401 on status or start, as after "sign out everywhere" on the web | Delete the token; show signed out |
+| Session expired or revoked | As after "sign out everywhere" on the web: voice status returns **200** with `signed_in:false` (`portal/src/voice.ts:65`, `:244-247`), community status returns `member:null` (`portal/src/community.ts:12-14`), and `start` returns **401** (`portal/src/community-core.ts:27`) | Clear the stored credential when status reports signed out, as well as on any 401; show signed out; never retry with the old token |
 | Wrong credentials | Cookie without Origin, or wrong Origin: 403. Under the header design, mixed or invalid credentials are refused | Treat as signed out; never retry with other credentials |
 | Delete while idle | Fresh verification, then deletion | Signed out; status `signed_in:false` |
 | Delete during a call | The app ends the call before deleting. A fixture variant deletes server-side mid-call: tools return 403 and the call runs to its deadline | Signed out after the call. The fixture asserts the monthly budget and slot counts were not refunded |
@@ -741,7 +838,11 @@ Unit and Maestro tests can therefore drive every transition without the micropho
   - PCM16 with the SDK's clamping and scaling, the `Int16Array` truncation, and explicit little-endian bytes.
   - µ-law with the SDK's round-then-encode rule, compared with its table for every 16-bit input.
   - Standard base64 with padding.
-  - The native 25 ms chunk policy: 400 samples at 16 kHz, with partial chunks carried over. It is not web chunk parity.
+  - The chunk policy, at every accepted rate, with partial chunks carried over. It is not web chunk parity.
+    - 16 kHz gives exactly 400 samples per chunk.
+    - 22,050 Hz repeats 551, 551, 551 and 552.
+    - 44,100 Hz alternates 1,102 and 1,103.
+    - Over any 40 consecutive chunks the total is exactly the sample rate, with no drift after an hour of simulated input.
 - **Resampler.**
   - 48, 44.1 and 24 kHz sine tones to 16 kHz.
   - Output length within one sample per chunk.
@@ -772,7 +873,7 @@ Unit and Maestro tests can therefore drive every transition without the micropho
   - It is attached only on allow-listed paths.
   - Redirects on authenticated requests are refused.
   - Credential headers and `signed_url` are redacted in log output.
-  - A 401 clears the token.
+  - A 401, or a 200 status with `signed_in:false`, clears the token.
 - **State machine.**
   - Every state from idle to ended, including cancellation at each step.
   - A reservation made before cancellation is released through `finish`.
