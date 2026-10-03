@@ -4,12 +4,16 @@ cd "$(dirname "$0")/.."
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer EXPO_NO_TELEMETRY=1 MAESTRO_CLI_NO_ANALYTICS=true MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true
 UDID=${1:?Usage: scripts/e2e.sh udid [01 02 03 04]}; shift
 source scripts/qa-env.sh
+source scripts/qa-java.sh
+configure_java
+export PATH="$HOME/.maestro/bin:$PATH"
 allow_simulator "$UDID"
 PORT=${OPAX_FIXTURE_PORT:-8910}
 SIZE=${OPAX_CONTENT_SIZE:-large}
 RUN=${OPAX_QA_RUN:-$(date -u +%Y%m%dT%H%M%SZ)-${UDID:0:8}-$SIZE}
 OUT="$PWD/private/qa/$RUN"
 mkdir -p "$OUT/screenshots" "$OUT/maestro"
+java -version > "$OUT/java.log" 2>&1
 APP=${OPAX_QA_APP:-$PWD/build/e2e/DerivedData/Build/Products/Release-iphonesimulator/OPAX.app}
 test -f "$APP/main.jsbundle" || { echo "Run scripts/build-e2e.sh first" >&2; exit 1; }
 OPAX_FIXTURE_PORT="$PORT" ./node_modules/.bin/tsx scripts/qa-static.ts --app "$APP" > "$OUT/app-scan.log" 2>&1
@@ -62,10 +66,6 @@ if [ -n "${OPAX_PASTE_LOCK:-}" ]; then
 else
   echo "No pasteboard lock configured; skipping lock." >&2
 fi
-for candidate in "$HOME"/.sdkman/candidates/java/21* "$HOME"/.sdkman/candidates/java/17*; do
-  if [ -x "$candidate/bin/java" ]; then export JAVA_HOME="$candidate"; break; fi
-done
-export PATH="${JAVA_HOME:?Java 17+ required}/bin:$HOME/.maestro/bin:$PATH"
 FLOWS=()
 OFFLINE=${OPAX_VERIFY_OFFLINE:-0}
 if [ "$#" = 0 ]; then set -- 01 02 03 04; fi

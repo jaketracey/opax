@@ -30,6 +30,7 @@ const bucket = (url: string) =>
 export class CatalogCache {
   private queue: Promise<unknown> = Promise.resolve();
   private index?: CacheIndexEntry[];
+  private indexLoad?: Promise<CacheIndexEntry[]>;
   constructor(
     private store: CacheStore,
     private maxBytes = 12 * 1024 * 1024,
@@ -38,8 +39,12 @@ export class CatalogCache {
     private searchMaxEntries = 8,
   ) {}
   private async loadIndex() {
-    this.index ??= await this.store.readIndex().catch(() => []);
-    return this.index;
+    if (this.index) return this.index;
+    this.indexLoad ??= this.store
+      .readIndex()
+      .catch(() => [])
+      .then((index) => (this.index = index));
+    return this.indexLoad;
   }
   async get(url: string): Promise<CacheEntry | undefined> {
     await this.queue;
@@ -53,14 +58,19 @@ export class CatalogCache {
       const index = await this.loadIndex();
       const current = await this.store.read(entry.url).catch(() => undefined);
       if (current) {
-        const olderDate =
-          current.asOf &&
-          entry.asOf &&
-          Date.parse(entry.asOf) < Date.parse(current.asOf);
+        const currentDate = Date.parse(current.asOf ?? '');
+        const incomingDate = Date.parse(entry.asOf ?? '');
+        const olderDate = incomingDate < currentDate;
+        const newerDate = incomingDate > currentDate;
+        // The incoming validation time is this request's observation of now.
+        // Future stored times are untrusted after a wall-clock rollback.
+        const trustedValidation = current.validatedAt <= entry.validatedAt;
         if (
           olderDate ||
           (condition &&
-            (condition.requestStartedAt < current.validatedAt ||
+            ((!newerDate &&
+              trustedValidation &&
+              condition.requestStartedAt < current.validatedAt) ||
               ('revalidatedETag' in condition &&
                 (!condition.revalidatedETag ||
                   current.etag !== condition.revalidatedETag))))
@@ -106,4 +116,4 @@ export class CatalogCache {
   }
 }
 export const isFresh = (entry: CacheEntry, now: number) =>
-  now < entry.expiresAt;
+  entry.validatedAt <= now && now < entry.expiresAt;

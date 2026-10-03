@@ -499,3 +499,110 @@ test('repeated cache reads use one metadata load and only the requested body', a
   expect(indexReads).toHaveBeenCalledTimes(1);
   expect(bodyReads.mock.calls).toEqual([['a'], ['a']]);
 });
+
+test('clock moving forward then back refetches and retains a newer as-at', async () => {
+  let time = 1000;
+  const ahead = time + 30 * 86400 * 1000;
+  const transport = jest
+    .fn()
+    .mockResolvedValueOnce(
+      new Response(JSON.stringify({ generated: '2026-09-01' }), {
+        headers: { etag: 'v1', 'cache-control': 'max-age=60' },
+      }),
+    )
+    .mockResolvedValue(
+      response(200, { etag: 'v2', 'cache-control': 'max-age=60' }),
+    );
+  const { client, cache } = setup(transport, () => time);
+  time = ahead;
+  await client.get('/parliamentarians.json', decode);
+  time = 1000;
+  const entry = await cache.get(`${origin}/parliamentarians.json`);
+  expect(isFresh(entry!, time)).toBe(false);
+  const refreshed = await client.get('/parliamentarians.json', decode);
+  expect(transport).toHaveBeenCalledTimes(2);
+  expect(refreshed).toMatchObject({
+    asOf: '2026-09-04',
+    stale: false,
+    savedAt: time,
+  });
+  expect((await cache.get(`${origin}/parliamentarians.json`))?.etag).toBe('v2');
+});
+
+test('a strictly newer as-at wins even if its request started before trusted validation', async () => {
+  const store = new MemoryStore();
+  const cache = new CatalogCache(store);
+  const entry: CacheEntry = {
+    url: 'a',
+    body: 'old',
+    asOf: '2026-09-01',
+    savedAt: 20,
+    validatedAt: 20,
+    expiresAt: 30,
+  };
+  await cache.put(entry);
+  expect(
+    (
+      await cache.put(
+        { ...entry, body: 'new', asOf: '2026-09-04', validatedAt: 25 },
+        { requestStartedAt: 10 },
+      )
+    ).body,
+  ).toBe('new');
+});
+
+test('a future stored validation cannot block same-date online validation after clock rollback', async () => {
+  const store = new MemoryStore();
+  const cache = new CatalogCache(store);
+  const entry: CacheEntry = {
+    url: 'a',
+    body: 'old',
+    asOf: '2026-09-01',
+    savedAt: 3000,
+    validatedAt: 3000,
+    expiresAt: 4000,
+  };
+  await cache.put(entry);
+  expect(
+    (
+      await cache.put(
+        { ...entry, body: 'new', validatedAt: 1000 },
+        { requestStartedAt: 900 },
+      )
+    ).body,
+  ).toBe('new');
+});
+
+test('concurrent first reads and a write share one pending index load without losing the write', async () => {
+  const store = new MemoryStore();
+  let release!: (index: CacheIndexEntry[]) => void;
+  const indexReads = jest.spyOn(store, 'readIndex').mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+  );
+  const cache = new CatalogCache(store);
+  const reads = [
+    cache.get('missing-a'),
+    cache.get('missing-b'),
+    cache.get('new'),
+  ];
+  await Promise.resolve();
+  const entry: CacheEntry = {
+    url: 'new',
+    body: 'new',
+    asOf: null,
+    savedAt: 1,
+    validatedAt: 1,
+    expiresAt: 2,
+  };
+  const write = cache.put(entry);
+  await Promise.resolve();
+  expect(indexReads).toHaveBeenCalledTimes(1);
+  release([]);
+  await Promise.all([...reads, write]);
+  expect(await cache.get('new')).toEqual(entry);
+  expect(store.index.map((item) => item.url)).toEqual(['new']);
+  expect(indexReads).toHaveBeenCalledTimes(1);
+});

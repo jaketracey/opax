@@ -13,7 +13,10 @@ module.exports = defineConfig([
     ],
   },
   {
-    files: ['src/**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}'],
+    files: [
+      'src/**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}',
+      'modules/**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}',
+    ],
     plugins: {
       opax: { rules: { transport: require('./scripts/transport-rule') } },
     },

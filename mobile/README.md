@@ -39,6 +39,11 @@ OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <simulato
 Copy `.qa.local.env.example` to the ignored `.qa.local.env` for optional host
 configuration. Scripts source it before running. Never commit actual paths or IDs.
 
+Before any simulator boot, app install, fixture startup or pasteboard lock, the
+runner selects a working Java 17+ installation. It tries inherited `JAVA_HOME`,
+sdkman installations, macOS `java_home -v 17+`, then Java on `PATH`, skipping
+invalid or older candidates. The selected version is saved in `java.log`.
+
 | Variable             | Local purpose                                                                         | When blank                                     |
 | -------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------- |
 | `OPAX_BUILD_GATE`    | Executable shell script wrapping builds, invoked with lane name and command arguments | Run the command directly, with a notice        |
@@ -146,11 +151,33 @@ Remote Image URIs must directly call the imported `remoteImageURI` helper in
 `src/api/image-policy.ts`: only `/photos/<catalog-id>.webp` on the configured
 origin is allowed. Local `require()` images are allowed. Photo-map decoding and
 fixture portrait pins belong to the catalog/portrait lanes; do not widen the image
-policy for arbitrary URLs. JS and TS source extensions are all scanned. Raw fetch,
-XHR, WebSocket, EventSource, computed global access, file-system downloads and
-WebView transports fail lint and static checks. Unknown routes throw **before** cache lookup or networking. Redirects and
-cross-origin requests fail closed. Transport belongs exclusively to the API
+policy for arbitrary URLs. On every JSX tag, `source` is reserved for images; use
+`citation` for text labels. Font maps may use computed family names, but every
+value must be a bundled literal `require()` asset. JS and TS source extensions are
+all scanned. Raw fetch, XHR, WebSocket, EventSource, computed global access,
+file-system downloads and WebView transports fail lint and static checks. Unknown
+routes throw **before** cache lookup or networking. Redirects and cross-origin
+requests fail closed. Transport belongs exclusively to the API
 client; ESLint and the static AST scan enforce this.
+
+Both source gates scan JS/TS in `src/` and `modules/`. `modules/*/scripts/` is Node
+tooling, exempt from app transport and origin rules but still scanned for secrets.
+App and module source cannot import that tooling, including via re-exports or
+dynamic imports. Native access is granted only to exact (file, module name) pairs
+in `scripts/native-review-policy.js`;
+dynamic loader names, native proxies and React Native deep imports are rejected.
+The static gate also scans module Swift, Objective-C and C sources for networking
+APIs. The reviewed voice core has explicit file/API exceptions; the share metadata
+module has none.
+New bridges, native networking files or API families require review and a list
+update rather than a directory-wide exemption.
+
+These static gates target ordinary application code, including image and asset
+loaders. They are not a complete defense against deliberate evasion such as
+aliasing globals or methods, dynamic execution, or hiding image props in spreads
+and `createElement`. The measured connection audit is the runtime backstop for
+those cases. Its sampling limitations still apply: an unobserved connection is
+not proof that no connection occurred.
 
 Voice/community will use separate scoped clients after their lane approval;
 never widen this read-only client for them. E2E source buttons show the real

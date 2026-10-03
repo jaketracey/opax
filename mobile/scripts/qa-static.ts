@@ -2,7 +2,12 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import assert from 'node:assert/strict';
-import { scanSource, sourceExtensions, secretPattern } from './source-boundary';
+import { scanSource } from './source-boundary';
+import { scanSecrets } from './secret-boundary';
+import { boundaryFiles } from './boundary-files';
+import { scanSwift } from './swift-boundary';
+import { scanNative } from './native-boundary';
+import { assertNoFixtureOrigin } from './release-bundle-policy';
 function config(variant: string) {
   return JSON.parse(
     execFileSync(
@@ -122,9 +127,8 @@ function walk(root: string, skipGenerated = false): string[] {
 const sourceRoot = process.argv.includes('--source-root')
   ? process.argv[process.argv.indexOf('--source-root') + 1]!
   : 'src';
-for (const path of walk(sourceRoot).filter((path) =>
-  sourceExtensions.test(path),
-)) {
+const boundary = boundaryFiles(sourceRoot);
+for (const path of boundary.javascript) {
   const content = readFileSync(path, 'utf8');
   assert(
     !/https?:\/\/(?:127\.0\.0\.1|localhost|opax\.com\.au)/.test(content),
@@ -136,18 +140,31 @@ for (const path of walk(sourceRoot).filter((path) =>
     `Transport boundary: ${path}`,
   );
 }
+for (const path of boundary.swift)
+  assert.deepEqual(
+    scanSwift(path, readFileSync(path, 'utf8')),
+    [],
+    `Swift transport boundary: ${path}`,
+  );
+for (const path of boundary.native)
+  assert.deepEqual(
+    scanNative(readFileSync(path, 'utf8')),
+    [],
+    `Objective-C/C transport boundary: ${path}`,
+  );
 // Scan all text-bearing tracked contributor files, including JS, JSON, shell,
 // fixture manifests, documentation and dotfiles. Ignore only generated/local data.
-for (const path of walk('.', true).filter(
+const contributorFiles = walk('.', true).filter(
   (path) =>
     !/(?:^|\/)(?:node_modules|ios|android|build|private|coverage|\.expo|\.git)(?:\/|$)/.test(
       path,
     ) && !path.endsWith('.qa.local.env'),
-)) {
-  const body = readFileSync(path);
-  if (!body.includes(0))
-    assert(!secretPattern.test(body.toString()), `Possible secret: ${path}`);
-}
+);
+assert.deepEqual(
+  scanSecrets([...contributorFiles, ...boundary.tooling]),
+  [],
+  'Possible secret in contributor or module Node tooling files',
+);
 const appIndex = process.argv.indexOf('--app');
 const productionIndex = process.argv.indexOf('--production-bundle');
 if (productionIndex !== -1) {
@@ -157,20 +174,7 @@ if (productionIndex !== -1) {
   assert(bundles.length, 'Production JS bundle missing');
   for (const path of bundles) {
     const body = readFileSync(path);
-    for (const prefix of [
-      'http://127.0.0.1',
-      'http://localhost',
-      'https://127.0.0.1',
-      'https://localhost',
-    ])
-      assert(
-        !body.includes(Buffer.from(prefix)),
-        `Production bundle has a loopback origin: ${path}`,
-      );
-    assert(
-      !body.includes(Buffer.from(':8910')),
-      'Production bundle contains the fixture port',
-    );
+    assertNoFixtureOrigin(body, process.env.OPAX_FIXTURE_PORT ?? '8910');
   }
   const bodies = bundles.map((path) => readFileSync(path));
   for (const marker of [
