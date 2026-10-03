@@ -2,7 +2,7 @@ import {body,CommunityError,digest,json,limit,member,now,randomToken,sameOrigin,
 import {signInEmail} from './community-email'
 import {macHex,matchesSignInCode,randomSignInCode,requireSignInCodeSecret,signInCodeMac} from './community-signin-code'
 const COOKIE='__Host-opax_session'
-const CODE_FAILURE='This code could not be used. Request a new sign-in email or use its link.'
+const CODE_FAILURE='This code could not be used. Request a new sign-in email or use its link to sign in through your browser.'
 export async function authRoute(req:Request,env:Env,path:string):Promise<Response|null>{
  if(path==='/api/community/auth/request'&&req.method==='POST'){
   sameOrigin(req,env);const data=await body(req);const email=text(data.email,3,254,'Email').toLowerCase()

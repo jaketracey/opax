@@ -73,6 +73,11 @@ test('web issuance is unchanged and native issuance holds one challenge-bound MA
  const native=await f.issue('  Reader@EXAMPLE.com  '),row=f.proofRow(native);
  assert.match(native.challenge_id,/^[\w-]{43}$/);assert.equal(Buffer.from(native.challenge_id,'base64url').length,32);
  assert.match(native.code,/^\d{8}$/);assert.match(native.mail.html,new RegExp(native.code));
+ for(const content of [native.mail.text,native.mail.html]){
+  assert.match(content,/Never share this code/);
+  assert.match(content,/The link signs you in through your browser, not the app/);
+  assert.match(content,/Using the link also uses up this code/);
+ }
  assert.match(native.mail.html,/#token=/);assert.ok(native.mail.html.includes(native.token));
  assert.equal(row.email,'reader@example.com');assert.equal(row.client,'ios');
  assert.equal(row.expires_at-row.created_at,900);assert.equal(row.attempts,0);
@@ -216,8 +221,10 @@ test('email cap holds across concurrent attempts on superseded and current chall
 
 test('twenty requests at the email cap boundary admit only the remaining attempt, including a correct code',async t=>{
  const f=fixture(t),p=await f.issue();await f.seedCounter(f.emailKey(p.email),86400,9);f.trace.length=0;
- const responses=await Promise.all(Array.from({length:20},(_,i)=>f.consume(p,i===10?p.code:wrongCode(p.code),`192.0.2.${i+1}`)));
- assert.ok(responses.filter(r=>r.status===200).length<=1);
+ const responses=await Promise.all(Array.from({length:20},(_,i)=>f.consume(p,p.code,`192.0.2.${i+1}`)));
+ assert.equal(responses.filter(r=>r.status===200).length,1);
+ for(const response of responses.filter(r=>r.status!==200))await failure(response);
+ assert.equal(f.db.prepare('SELECT count(*) n FROM member_sessions').get().n,1);
  assert.equal(f.trace.filter(e=>e.kind==='challenge').length,1);
  assert.equal(f.trace.filter(e=>e.kind==='compare').length,1);
  assert.equal(f.proofRow(p).attempts,1);
@@ -407,7 +414,7 @@ test('real Worker and local D1 enforce the concurrent email cap, MAC comparison 
  const compiled=await build({entryPoints:[new URL('../src/community.ts',import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false});
  const script=compiled.outputFiles[0].text+`\nexport default {fetch(req,env){return communityRoute(req,{...env,COMMUNITY_EMAIL:{async send(mail){const result=await env.EMAIL_STUB.fetch(new Request('https://example.test/mail',{method:'POST',body:JSON.stringify(mail)}));return result.json()}}})}};`;
  const outbox=[];
- const mf=new Miniflare(convertV4MiniflareOptions({port:8909,workers:[{name:'signin',modules:true,script,compatibilityDate:'2026-09-01',d1Databases:{COMMUNITY_DB:'signin-runtime'},bindings:{COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_CODE_MAC_SECRET:TEST_KEY},serviceBindings:{EMAIL_STUB:async req=>{outbox.push(await req.json());return Response.json({messageId:'test'})}},outboundService:()=>{throw Error('Outbound network is forbidden in sign-in tests')}}]}));
+ const mf=new Miniflare(convertV4MiniflareOptions({port:0,workers:[{name:'signin',modules:true,script,compatibilityDate:'2026-09-01',d1Databases:{COMMUNITY_DB:'signin-runtime'},bindings:{COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_CODE_MAC_SECRET:TEST_KEY},serviceBindings:{EMAIL_STUB:async req=>{outbox.push(await req.json());return Response.json({messageId:'test'})}},outboundService:()=>{throw Error('Outbound network is forbidden in sign-in tests')}}]}));
  try{
   const db=await mf.getD1Database('COMMUNITY_DB','signin');
   for(const file of readdirSync(new URL('../migrations/',import.meta.url)).filter(name=>name.endsWith('.sql')).sort())for(const sql of readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8').replace(/^\s*--.*$/gm,'').split(';').map(s=>s.trim()).filter(Boolean))await db.prepare(sql).run();
