@@ -60,22 +60,51 @@ runner selects a working Java 17+ installation. It tries inherited `JAVA_HOME`,
 sdkman installations, macOS `java_home -v 17+`, then Java on `PATH`, skipping
 invalid or older candidates. The selected version is saved in `java.log`.
 
-| Variable             | Local purpose                                                                         | When blank                                     |
-| -------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `OPAX_BUILD_GATE`    | Executable shell script wrapping builds, invoked with lane name and command arguments | Run the command directly, with a notice        |
-| `OPAX_SIM_GATE`      | Shell script booting an allowed simulator, invoked with lane name and UDID            | Boot directly, with a notice                   |
-| `OPAX_PASTE_LOCK`    | Shared directory lock for Maestro input                                               | Skip locking, with a notice                    |
-| `OPAX_CAPACITY_CMD`  | Trusted local shell command checking host capacity                                    | Skip capacity checks, with a notice            |
-| `OPAX_ALLOWED_UDIDS` | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning |
+| Variable                  | Local purpose                                                                         | When blank                                     |
+| ------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `OPAX_BUILD_GATE`         | Executable shell script wrapping builds, invoked with lane name and command arguments | Run the command directly, with a notice        |
+| `OPAX_SIM_GATE`           | Shell script booting an allowed simulator, invoked with lane name and UDID            | Boot directly, with a notice                   |
+| `OPAX_PASTE_LOCK`         | Shared directory lock for Maestro input                                               | Skip locking, with a notice                    |
+| `OPAX_CAPACITY_CMD`       | Trusted local shell command checking host capacity                                    | Skip capacity checks, with a notice            |
+| `OPAX_ALLOWED_UDIDS`      | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning |
+| `OPAX_PASTE_WAIT_SECONDS` | Deadline for the capacity and pasteboard lock waits together                          | 7200                                           |
 
 Configured capacity checks run before builds and devices; a load above 140 waits
 for below 100. The e2e runner starts only its own fixture, installs the Release app
 without Metro, saves Maestro/screenshots/request logs in ignored `private/qa/<run>/`,
-restores text size/appearance, shuts down, then releases the lock on success or
-failure. Never commit QA evidence. `OPAX_QA_RUN` names evidence, `OPAX_QA_APP`
-selects a prepared app. No audio flows. Journey 04 stops the fixture and checks
-saved data without clearing the app. Default runs include 01–04;
-`OPAX_VERIFY_OFFLINE=1` also adds 04 to a selected warm run.
+restores text size/appearance and shuts down on success or failure. Never commit QA evidence.
+`OPAX_QA_RUN` names evidence, `OPAX_QA_APP` selects a prepared app. No audio flows.
+Journey 04 stops the fixture and checks saved data without clearing the app. Default
+runs include 01–04; `OPAX_VERIFY_OFFLINE=1` also adds 04 to a selected warm run.
+
+The pasteboard lock (`scripts/qa-lock.sh`) is shared with other projects, so a run
+never waits on the host while holding it. Before the Maestro flows the runner passes
+the build gate, waits for capacity, and only then takes the lock with `mkdir`. If the
+load has reached 140 by then, it releases the lock and waits again. Maestro then runs
+niced. `OPAX_PASTE_WAIT_SECONDS` covers both waits; every minute `lock.log` names the
+lock, the elapsed time and the holder. The holder writes `owner` inside the lock
+directory (pid, script, worktree name, UTC start, random token) and deletes it before
+`rmdir`, so other projects' plain `mkdir`/`rmdir` keep working. A waiter removes a lock
+only when its owner file names a dead pid, and logs it; a lock with a live pid or no
+owner file is never removed. The lock is released as soon as the flows finish, and on
+any failure. `scripts/test-qa-lock.sh`, part of `npm run qa`, tests this in a scratch
+directory. Never write your own lock wrapper.
+
+Agent command runners stop long foreground commands, which can strand a simulator
+or the lock. **Start e2e and release runs detached and poll them**:
+
+```sh
+mkdir -p private/qa
+OPAX_QA_RUN=<run> nohup scripts/e2e.sh <udid> 01 02 > private/qa/<run>.out 2>&1 &
+```
+
+Its first line is `E2E pid=<pid> status=private/qa/<run>/exit-status` (the path is
+absolute). The status file holds the exit code and appears only after cleanup: lock
+released, fixture stopped, simulator shut down. If the pid is gone with no status file,
+the run was killed: read `lock.log`, then shut the simulator down yourself. Start a
+release the same way, logging under ignored `private/` so the worktree stays clean
+(`nohup scripts/release-ios.sh --build-number N > private/release-N.out 2>&1 &`).
+Poll its pid; success ends with `Verified release evidence:` and writes `release.json`.
 
 The runner samples the selected simulator's app processes with `lsof -a -p <pid> -i`
 every nominal 250ms, writing raw `connection-samples.jsonl` and a measured

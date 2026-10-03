@@ -4,26 +4,26 @@ cd "$(dirname "$0")/.."
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer EXPO_NO_TELEMETRY=1 MAESTRO_CLI_NO_ANALYTICS=true MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true
 UDID=${1:?Usage: scripts/e2e.sh udid [01 02 03 04 05 06]}; shift
 source scripts/qa-env.sh
+source scripts/qa-lock.sh
 source scripts/qa-java.sh
-configure_java
-export PATH="$HOME/.maestro/bin:$PATH"
-allow_simulator "$UDID"
 PORT=${OPAX_FIXTURE_PORT:-8910}
 SIZE=${OPAX_CONTENT_SIZE:-large}
 RUN=${OPAX_QA_RUN:-$(date -u +%Y%m%dT%H%M%SZ)-${UDID:0:8}-$SIZE}
 OUT="$PWD/private/qa/$RUN"
 mkdir -p "$OUT/screenshots" "$OUT/maestro"
-java -version > "$OUT/java.log" 2>&1
-APP=${OPAX_QA_APP:-$PWD/build/e2e/DerivedData/Build/Products/Release-iphonesimulator/OPAX.app}
-test -f "$APP/main.jsbundle" || { echo "Run scripts/build-e2e.sh first" >&2; exit 1; }
-OPAX_FIXTURE_PORT="$PORT" ./node_modules/.bin/tsx scripts/qa-static.ts --app "$APP" > "$OUT/app-scan.log" 2>&1
-scripts/capacity.sh | tee "$OUT/capacity.log"
-# Do not stop or reuse another lane's listener.
-if lsof -nP -iTCP:"$PORT" -sTCP:LISTEN >/dev/null 2>&1; then echo "Fixture port $PORT is occupied" >&2; exit 1; fi
-FIXTURE_PID=; AUDIT_PID=; PASTE_LOCK=0; OWN_DEVICE=0
+# Pollers follow a detached run by this PID and the status file, which holds the
+# exit code once cleanup (lock, fixture, simulator) has finished.
+STATUS_FILE="$OUT/exit-status"
+/bin/rm -f "$STATUS_FILE"
+echo "$$" > "$OUT/pid"
+echo "E2E pid=$$ status=$STATUS_FILE"
+export QA_LOCK_LOG="$OUT/lock.log"
+FIXTURE_PID=; AUDIT_PID=; OWN_DEVICE=0
 cleanup() {
   rc=$?
   trap - EXIT INT TERM
+  # Nothing after Maestro needs the pasteboard: free it before slower teardown.
+  qa_paste_lock_release
   if [ -n "$AUDIT_PID" ]; then kill "$AUDIT_PID" 2>/dev/null || true; wait "$AUDIT_PID" 2>/dev/null || true; fi
   if [ -n "$FIXTURE_PID" ]; then kill "$FIXTURE_PID" 2>/dev/null || true; wait "$FIXTURE_PID" 2>/dev/null || true; fi
   if [ "$OWN_DEVICE" = 1 ]; then
@@ -33,13 +33,23 @@ cleanup() {
     xcrun simctl ui "$UDID" appearance >> "$OUT/restore.log" 2>&1 || true
     xcrun simctl shutdown "$UDID" >> "$OUT/restore.log" 2>&1 || true
   fi
-  if [ "$PASTE_LOCK" = 1 ]; then rmdir "$OPAX_PASTE_LOCK" 2>/dev/null || true; fi
   echo "E2E exit=$rc evidence=$OUT"
+  printf '%s\n' "$rc" > "$STATUS_FILE.tmp" && /bin/mv -f "$STATUS_FILE.tmp" "$STATUS_FILE"
   exit "$rc"
 }
 trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
+configure_java
+export PATH="$HOME/.maestro/bin:$PATH"
+allow_simulator "$UDID"
+java -version > "$OUT/java.log" 2>&1
+APP=${OPAX_QA_APP:-$PWD/build/e2e/DerivedData/Build/Products/Release-iphonesimulator/OPAX.app}
+test -f "$APP/main.jsbundle" || { echo "Run scripts/build-e2e.sh first" >&2; exit 1; }
+OPAX_FIXTURE_PORT="$PORT" ./node_modules/.bin/tsx scripts/qa-static.ts --app "$APP" > "$OUT/app-scan.log" 2>&1
+scripts/capacity.sh | tee "$OUT/capacity.log"
+# Do not stop or reuse another lane's listener.
+if lsof -nP -iTCP:"$PORT" -sTCP:LISTEN >/dev/null 2>&1; then echo "Fixture port $PORT is occupied" >&2; exit 1; fi
 OWN_DEVICE=1; ORIGINAL_SIZE=large; ORIGINAL_APPEARANCE=light
 boot_simulator "$UDID" > "$OUT/simulator.log" 2>&1
 ORIGINAL_SIZE=$(xcrun simctl ui "$UDID" content_size)
@@ -55,17 +65,6 @@ until grep -q OPAX_FIXTURE_READY "$OUT/fixture.log"; do
   [ "$SECONDS" -lt "$deadline" ] || { echo "Fixture did not become ready" >&2; exit 1; }
   sleep 1
 done
-# Maestro inputText may use iOS pasteboard internally. Serialize all input flows.
-if [ -n "${OPAX_PASTE_LOCK:-}" ]; then
-  deadline=$((SECONDS + 600))
-  until mkdir "$OPAX_PASTE_LOCK" 2>/dev/null; do
-    [ "$SECONDS" -lt "$deadline" ] || { echo "Pasteboard lock wait expired" >&2; exit 1; }
-    sleep 5
-  done
-  PASTE_LOCK=1
-else
-  echo "No pasteboard lock configured; skipping lock." >&2
-fi
 FLOWS=()
 OFFLINE=${OPAX_VERIFY_OFFLINE:-0}
 if [ "$#" = 0 ]; then set -- 01 02 03 04; fi
@@ -79,20 +78,27 @@ for flow in "$@"; do
     *) test -f "$flow" || { echo "Unknown flow: $flow" >&2; exit 1; }; FLOWS+=("$flow") ;;
   esac
 done
+# Maestro inputText may use the iOS pasteboard. Serialize all input flows under
+# the shared lock, and never wait on the host while holding it: pass the build
+# gate first, then wait for capacity and the lock (scripts/qa-lock.sh). Maestro
+# then runs niced directly, so a held lock never queues behind other builds.
+build_command true
+qa_paste_lock_acquire || { echo "Pasteboard lock wait expired; see $QA_LOCK_LOG" >&2; exit 1; }
 ./node_modules/.bin/tsx scripts/connection-audit.ts "$UDID" "$OUT" > "$OUT/connection-audit.log" 2>&1 &
 AUDIT_PID=$!
 # Bound native launch calls; warm the installed app before Maestro's clear-state.
 perl -e 'alarm 60; exec @ARGV' xcrun simctl launch "$UDID" au.com.opax.app > "$OUT/launch.log" 2>&1 || true
 perl -e 'alarm 60; exec @ARGV' xcrun simctl terminate "$UDID" au.com.opax.app >> "$OUT/launch.log" 2>&1 || true
 if [ "${#FLOWS[@]}" -gt 0 ]; then
-build_command maestro --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" "${FLOWS[@]}" > "$OUT/maestro.log" 2>&1 || { cat "$OUT/maestro.log" >&2; exit 1; }
+nice -n 10 maestro --device "$UDID" test --test-output-dir "$OUT/maestro" --debug-output "$OUT/maestro" --format junit --output "$OUT/report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" "${FLOWS[@]}" > "$OUT/maestro.log" 2>&1 || { cat "$OUT/maestro.log" >&2; exit 1; }
 ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/maestro"
 fi
 if [ "$OFFLINE" = 1 ]; then
   kill "$FIXTURE_PID"; wait "$FIXTURE_PID" || true; FIXTURE_PID=
-  build_command maestro --device "$UDID" test --test-output-dir "$OUT/offline-maestro" --debug-output "$OUT/offline-maestro" --format junit --output "$OUT/offline-report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" .maestro/04-offline.yaml > "$OUT/offline-maestro.log" 2>&1 || { cat "$OUT/offline-maestro.log" >&2; exit 1; }
+  nice -n 10 maestro --device "$UDID" test --test-output-dir "$OUT/offline-maestro" --debug-output "$OUT/offline-maestro" --format junit --output "$OUT/offline-report.xml" -e EVIDENCE=screenshots -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" .maestro/04-offline.yaml > "$OUT/offline-maestro.log" 2>&1 || { cat "$OUT/offline-maestro.log" >&2; exit 1; }
   ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots" "$OUT/offline-maestro"
 fi
+qa_paste_lock_release
 if grep -Eq 'OUTSIDE_ALLOW_LIST|"allowed":false|opax\.com\.au' "$OUT/fixture.log"; then echo "Fixture request boundary failed" >&2; exit 1; fi
 kill "$AUDIT_PID"
 wait "$AUDIT_PID" || { cat "$OUT/connection-audit.log" >&2; AUDIT_PID=; exit 1; }
