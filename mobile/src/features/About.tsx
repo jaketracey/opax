@@ -321,7 +321,21 @@ export default function About() {
               testID={`about-font-${item.name}`}
             />
             {font === item.name ? (
-              <Text testID={`about-notice-${item.name}`}>{item.notice}</Text>
+              <Group>
+                {item.notice
+                  .split(/\n\s*\n/u)
+                  .filter((paragraph) => paragraph.trim())
+                  .map((paragraph, index) => (
+                    <Text
+                      key={index}
+                      testID={
+                        index === 0 ? `about-notice-${item.name}` : undefined
+                      }
+                    >
+                      {paragraph}
+                    </Text>
+                  ))}
+              </Group>
             ) : null}
           </Group>
         ))}
