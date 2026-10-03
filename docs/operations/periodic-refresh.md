@@ -85,13 +85,14 @@ Runtimes: **measured** unless marked. "Stage" = load into `$STAGE/<file>.sqlite`
 | **Diaries** NSW → `ext_ministerial_meetings` | weekly | `$PY -m parli.ingest.money_diaries --jurisdiction nsw --years "$(date +%Y)" --new-only --db "$DB"` | **est.** ~1 min with the PDF cache warm and `--new-only` | `www.nsw.gov.au` |
 | **Diaries** QLD | monthly | `$PY -m parli.ingest.money_diaries --jurisdiction qld --db "$DB"` | **est.** 1,040 s warm (612 PDFs), ~25 min cold | `cabinet.qld.gov.au` |
 | **IPEA expenses** → `ext_expenses` | monthly (due mid Feb/May/Aug/Nov) | `$PY -m parli.ingest.money_ipea --since "$(date +%Y)q01" --db "$DB"` (links `person_id` because the target has `members`; an empty quarter is skipped) | **est.** 2 s (cached CSV) | `data.gov.au` (CKAN and the resource download) |
+| **Interests, federal** → `ext_interests` | daily (`daily_refresh.sh`) | `$PY -m parli.ingest.conduct_interests_federal refresh --db "$DB"` (shared 100-credit maximum; environment key) | cold base 78 credits before retries, PDFs direct; warm two indexes + changed/unavailable Senate pages | `www.aph.gov.au` via Firecrawl, `interests-register-api-public.aph.gov.au`, `static.aph.gov.au` |
 | **Interests, QLD** → `ext_interests` | weekly | `$PY -m parli.ingest.conduct_interests_qld --fetch --db "$DB"` (`--db` is required to write) | **est.** seconds (one PDF) | `documents.parliament.qld.gov.au` |
 | **QLD contracts** → `ext_state_contracts` | monthly | `$PY -m parli.ingest.qld_contracts --db "$DB"` (refuses to replace with an empty or under-half load; exit 3) | **est.** ~15 min | `www.data.qld.gov.au` and the resource hosts it lists |
 | **State rosters** → `ext_state_roster` | monthly | `$PY -m parli.ingest.state_rosters fetch --db "$DB" && $PY -m parli.ingest.state_rosters resolve --db "$DB"` (`fetch` keeps a position whose fetch is empty/under half, exit 3) | **est.** 109 s | `query.wikidata.org` |
 | **Grant recipients** → `ext_grant_recipients` (+ `_keys`) | monthly | `$PY -m parli.ingest.grant_recipients --db "$DB" --abr-dir "$HOME/.cache/autoresearch/abr"` | **est.** ~1 min on the desktop | none (local ABR index) |
 
 Never automated (see the inventory): federal AEC returns (`donations.py` clears the table), WA/ACT/NT donations
-(research-only), House/Senate interests (WAF / Firecrawl), committee witnesses (event driven), bill text.
+(research-only), committee witnesses (event driven), bill text.
 
 ### `refresh_releases.py` in detail
 
@@ -124,7 +125,7 @@ then the `validate_data.py` group runs; a failing group is reverted as in §1.
 | 4 | state money | `for j in qld vic tas; do $PY scripts/export_state_money.py $j > $TMP/money.$j.json; done` | `graph/money.qld.json`, `money.vic.json`, `money.tas.json` | `money` | `ext_donations` | weekly | not measured (`wa act nt` need `--gated` and must never be written under `portal/public/`) |
 | 5 | access | `$PY scripts/export_access.py portal/public/graph/money.json portal/public/speakers.json > $TMP/access.json` | `access.json` | `access` | `ext_ministerial_meetings`, `ext_lobbyist_clients`; needs #1, #3 | weekly | not measured |
 | 6 | fits | `$PY scripts/export_fits.py --portal portal/public --out $TMP/fits.json` | `fits.json` | `fits` | `ext_fits_*`; needs #2, #3, #4, #5 | weekly | measured: ran in seconds on the scratch copy |
-| 7 | interests | `$PY scripts/export_interests.py --out portal/public/interests` | `interests/` (320 files; `git clean` for removed people) | `interests` | `ext_interests`; needs #3, #5, #6 | weekly | not measured |
+| 7 | interests | `$PY scripts/export_interests.py --out portal/public/interests` | `interests/` (320 files; `git clean` for removed people) | `interests` | `ext_interests`; needs #3, #5, #6 | daily + after weekly QLD/tie updates | not measured |
 | 8 | expenses | `$PY scripts/export_expenses.py > $TMP/expenses.json` | `expenses.json` | `expenses` | `ext_expenses` | monthly (after a new IPEA quarter) | est. seconds |
 | 9 | suppliers + agencies | `$PY scripts/export_suppliers.py --db "$DB" --published-since 2025-07-08 --output portal/public` | `suppliers.json`, `suppliers/`, `agencies.json`, `agencies/` | `suppliers` | `ext_contracts*`, `ext_contract_suppliers`; needs fresh #3 | monthly | not measured |
 | 10 | grants (federal) | `$PY scripts/export_grants.py federal --local` | `graph/grants.federal.json`, `grants/federal/` (**not** `grants/program-notes.json`, **not** `grants/qld/`) | `grants` | `ext_grants`, `ext_grant_recipients*`, `parliamentarians.json` | monthly | not measured |

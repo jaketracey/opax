@@ -1,12 +1,12 @@
 # Registers of members' interests — audit, source survey, parsers, accuracy, load, exposure design
 
-Status 2026-09-04: federal House (48th Parliament), **Senate (73 of 74)** and Queensland
+Historical baseline, 2026-09-04: federal House (48th Parliament), **Senate (73 of 74)** and Queensland
 (58th) registers are parsed and **loaded into new `ext_interests*` tables on `desktop`** and **served on
 person pages** (`portal/public/interests/`, 317 people, export of 2026-09-04).
 The Senate was fetched on 2026-09-04 through the Firecrawl API with the user's approval
-(`scripts/fetch_senate_firecrawl.py`, ~80 credits); one senator (317026 Whitten) has no
-statement page on the site. **Nothing has been pushed to the KB**; every step that costs money or
-touches a third party's terms is marked **GATE (user decision)**.
+(`scripts/fetch_senate_firecrawl.py`, ~80 credits); one senator (317026 Whitten) had no
+usable statement page at that time. **Nothing has been pushed to the KB**; the optional KB publication remains **GATE (user decision)**. Jake approved the
+existing Firecrawl key for automatic refreshes on 3 October 2026.
 
 Recommendation in one paragraph: expose declared interests on person pages **now** from
 `ext_interests` — 246 documents / 8,268 rows, every row linking to the page of the source
@@ -19,6 +19,94 @@ and the register is fetched through Firecrawl at 1 credit a page rather than by 
 browser. Of the other states only TAS and ACT are fetchable, and both publish copier scans (OCR).
 
 ---
+
+## Automatic refresh, 3 October 2026
+
+The pipeline now schedules **House + Senate daily**, followed by
+`export_interests.py`. QLD remains weekly on Sunday, followed by another export
+so the QLD rows and weekly tie-register changes are included. Jake authorised
+this route and the existing key on 3 October; no interests are published to the KB.
+
+The incident had three causes: www.aph.gov.au returns WAF 403s to the honest research
+UA; federal interests were absent from `daily_refresh.sh` and `weekly_refresh.sh`; and
+the House index changed from `table.documents` / static PDFs to
+`table.members-interests__table` / `interests-register-api-public.aph.gov.au` statement
+API links (four static PDF links remain). Both index layouts are supported. The old
+manifest limitation was carried forward every night, rather than produced by a nightly
+federal attempt. QLD already loaded successfully on 29 September (93 members,
+2,454 rows, as at 25 September), but its static export was still dated 4 September.
+
+`conduct_interests_federal refresh` uses one shared Firecrawl budget for both chambers:
+
+- Fetch each index fresh with `/v2/scrape`, `proxy: basic`, `rawHtml`, `waitFor: 3000`,
+  `maxAge: 0`, and `parsers: []`. No browser UA option remains.
+- Fetch API and static House PDFs directly with `OPAX research (opax.com.au)`.
+  Require `%PDF-` bytes. If direct access fails, Firecrawl requests `formats: ["rawBase64"]` alone with
+  `parsers: []`; the original PDF goes through the existing geometric parser.
+  Firecrawl PDF text extraction is deliberately disabled to avoid per-page billing
+  and loss of holder/section/page geometry.
+- Cache House PDFs by revision (API links use the index update date), and Senate
+  pages by senator ID **and index Last updated**. Date-only revisions are checked
+  once after the source day has closed, so a second same-day alteration cannot freeze. Old undated manual caches are fetched
+  again; missing dates never make a permanent cache hit. Missing interests blocks
+  never replace a good page. Indexes are never served from stale local caches.
+- Preserve existing House document IDs across the API migration, including corrected
+  spellings and preferred names. A unique same-Parliament electorate and agreeing
+  canonical given name (including the observed preferred-name/spelling
+  corrections) handles those corrections; it is never a surname-only match.
+  The DB's same-surname **person** matching still requires first-name agreement before
+  consulting dirty tenure flags (Marielle/Dean Smith; Matt/Barry O'Sullivan).
+  The exporter removes obsolete person objects when a corrected name resolves to a
+  member ID; metadata and unrelated files are retained.
+- Reject older House index dates and zero-row/failed parses; load only usable documents.
+  Unavailable documents retain their previous disclosures. Scans keep OCR flags and
+  warnings; `OCR unavailable` warnings now also reach the static export's unread-page
+  caveat. This does not claim that scanned alterations have been extracted accurately.
+- Reserve one credit **before every request**, including failed/unknown responses.
+  The default and maximum per-run cap is **100** (`OPAX_INTERESTS_CREDIT_CAP` can lower
+  it). Only an incomplete Senate render gets one retry (basic proxy, `waitFor: 6000`),
+  still reserving a credit. There is no paid extraction, crawl or proxy escalation. A cold 76-senator run has a base cost of 78 raw-page credits including the two
+  indexes when PDFs are direct, before retries; a quiet cached run costs two, plus unavailable pages
+  retried on each daily run. HTTP 402, absent key, rate limit or transport failure
+  preserves rows. A URL-specific HTTP 5xx preserves that statement and tries the next.
+
+The key is environment-only. On EC2 it lives in `~/opax/.env`, **mode 600**, loaded by
+`daily_refresh.sh` exactly like the existing secrets. The compatibility script
+`fetch_senate_firecrawl.py` delegates to the same bounded path; it no longer reads
+`~/.claude.json` or freezes pages just because a file exists.
+
+Bootstrap installs the native `tesseract-ocr` dependency; it was absent on the VM
+at cutover. The existing parser still flags OCR rows and leaves scanned alterations
+unparsed with explicit warnings.
+
+A per-run receipt at `~/.cache/autoresearch/pipeline/interests-status.json` records
+counts, failures, credits used/reserved/unknown and a safe limitation. Exit 3 is STALE
+in the daily step runner; exports still run. The manifest consumes that receipt every
+night, even when the KB count does not change, replacing the federal preservation line
+with the current reason (including unavailable/out-of-credit Firecrawl). A missing or
+unreadable receipt keeps the old warning. A killed run leaves an interrupted warning.
+
+Cadence evidence: the 3 October indexes have **34 House and 16 Senate statements**
+last updated after 4 September, on 15 and 12 distinct update days respectively. The
+latest Senate dates represent 3–6 changed statements per week; QLD republishes a weekly
+cover date (25 September → 2 October). Federal updates occur on most working days, so **daily** is recommended: it gives
+at most one nightly cycle of detection lag. For this 29-day window, index polling plus
+the 16 changed Senate pages would use at least **74 credits daily versus 24 weekly**,
+before same-day settling checks, unavailable-page retries and the initial cache fill. The extra ~50 credits
+are modest on the existing account; House changes normally cost no credits. These are estimates from latest
+update dates, not a complete history of every intermediate revision. See
+[Firecrawl scrape](https://docs.firecrawl.dev/api-reference/endpoint/scrape) and
+[billing](https://docs.firecrawl.dev/billing) for the raw scrape/PDF billing contract.
+
+```
+# Production invocation (the daily group supplies .env):
+python -m parli.ingest.conduct_interests_federal refresh --db "$OPAX_DB"
+# Offline regression suite; fixtures are recorded source layouts/PDF, HTTP stubs are synthetic:
+python -m unittest tests/test_interests_fetch.py scripts/test_update_corpus_manifest.py
+```
+
+See [the 3 October rehearsal report](operations/interests-refresh-2026-10-03.md)
+for measured source responses, comparisons, five accuracy checks, credits and handoff.
 
 ## Phase 1 — audit of what we have (parli.db on `desktop`)
 
@@ -152,7 +240,7 @@ How the House parser works, in the order things go wrong:
 6. **Identity** — `member_name` via `parli.ingest.speaker_names.normalize_speaker` after
    stripping honorifics per comma segment (`the Hon. Ayres, Tim` → `Tim Ayres`);
    `person_id` matched against `members` by surname + chamber, disambiguated by electorate,
-   then by current membership.
+   then by first-name agreement before current membership when several people share a surname.
 
 QLD: words are bucketed into left/right columns at x = 255 pt; member headers are the only
 bold 11 pt text (`BATES , Rosslyn Mary (Ros) (Mudgeeraba)`, `de BRENNI, …`, `McCALLUM, …` —
@@ -178,7 +266,8 @@ scp parli/ingest/conduct_interests_federal.py *.jsonl desktop:/tmp/opax_interest
 ssh desktop 'cd /tmp/opax_interests && python3 conduct_interests_federal.py load --jsonl house.jsonl --db ~/.cache/autoresearch/parli.db'
 ```
 
-Re-running a load replaces rows per `doc_id` and appends an `ext_ingest_log` line per
+Re-running a changed load replaces rows per `doc_id`; identical statements retain row IDs
+(so the recent-declarations ledger does not churn on quiet nights). A changed load and appends an `ext_ingest_log` line per
 `(chamber, parliament)` source; other sources are never touched. `PARSER_VERSION`
 (`2026-09-02.2`) is stamped on every document.
 
@@ -336,8 +425,8 @@ deletions inline (it does); (3) **OCR rows** would enter the corpus as fact — 
 
 ## Open items and next steps
 
-1. **Senate refresh** — re-run `scripts/fetch_senate_firecrawl.py` after deleting the
-   pages whose index `Last updated` moved (the script skips pages on disk); retry 317026.
+1. **Senate refresh** — automated daily with index-date cache invalidation and a
+   100-credit shared federal cap. Missing statement pages remain explicit limitations.
 1. **Re-match House and QLD against today's `members`** — the table has moved since the
    2026-09-02 load: David Farley (House) and Hatcher / Richmond (QLD) now match, Weir (QLD)
    no longer does. A `load --jsonl` of the cached House and QLD JSONL on desktop re-runs the

@@ -16,7 +16,7 @@ The nightly only brings new records in and publishes them.
       └─ scripts/vm/nightly.sh   (flock; log ~/.cache/autoresearch/pipeline/nightly-<date>.log)
    1  sync ~/opax with origin/main (drops any half-written data from a dead run)
    2  scripts/daily_refresh.sh with OPAX_SYNC_KB=1     ~1-2 h
-        Hansards (federal, NSW, VIC, QLD, ACT, committees), AusTender (legacy + the full OCDS feed), IPEA, bills,
+        Hansards (federal, NSW, VIC, QLD, ACT, committees), federal interests (bounded Firecrawl), AusTender (legacy + the full OCDS feed), IPEA, bills,
         NSW/QLD/VIC/Treasury/PM releases, GrantConnect awards (staged, reconciled by ext_apply), NSW/VIC state
         divisions → parli.db; new speeches, releases, divisions and awards → the knowledge box (KB);
         votes.json; bill files. `sa` always fails (source WAF) and is allowed to; so is `act_members` (the Assembly's
@@ -134,9 +134,63 @@ The repository is **public**: nothing below is ever committed, logged or publish
   | `ARAG_ZONE`, `ARAG_ACCOUNT`, `ARAG_KB_ID`, `ARAG_KB_TOKEN` (`ARAG_NUA_KEY` optional) | arag_sync, words_sync, publish_bills, bill briefs, corpus manifest |
   | `OPENAUSTRALIA_API_KEY` | federal Hansard download |
   | `TVFY_API_KEY` | TheyVoteForYou refresh |
+  | `FIRECRAWL_API_KEY` | Daily House/Senate interests indexes and HTML; PDF fallback only |
 
   Never set `DATABASE_URL` there: `parli.db.get_db()` would switch to PostgreSQL. The nightly refuses to run if it is set.
 * `~/.config/opax/nightly.env` holds only optional `OPAX_*` overrides.
+
+### Federal interests (authorised 3 October 2026)
+
+The daily group runs `interests_federal`, then `x_interests`; Sunday's weekly group
+runs `interests_qld`, then exports again after the weekly tie registers.
+The federal step uses `conduct_interests_federal refresh --db "$DB"`: Firecrawl for
+www.aph.gov.au, the honest research UA for static/API PDFs, and raw-PDF Firecrawl
+fallback. It never impersonates a browser. One shared budget reserves a credit before
+each request: default/maximum **100**, lower with `OPAX_INTERESTS_CREDIT_CAP` in
+`nightly.env`. A cold fetch has a base cost of 78 credits with the current 76-senator index and
+direct PDFs, before retries; quiet cached runs use two index credits plus any still-unavailable pages.
+Senate page caches compare the index's Last updated date, rather than file existence.
+
+Store `FIRECRAWL_API_KEY` in `~/opax/.env`, mode **600**, like the existing credentials.
+Transfer the value by stdin or a mode-600 file; never place it in a command argument,
+shell history, log or git. `daily_refresh.sh` exports `.env` before the step. There is
+no Mac config fallback in production. The key was installed on 3 October using stdin.
+Bootstrap now installs `tesseract-ocr`, needed by the already-installed `pytesseract`;
+that native dependency was absent at cutover and is installed on the instance now.
+Unread scanned alterations keep warnings, OCR rows stay flagged, and unparseable
+statements retain their previous disclosures.
+
+The receipt `~/.cache/autoresearch/pipeline/interests-status.json` has chamber counts,
+failed statement IDs, credits used/reserved/unknown, and safe source limitations. Exit
+3 is a STALE warning, so QLD and exports continue. The manifest reads the latest daily
+receipt every day, independent of KB changes. Missing credentials, exhausted credits,
+blocked/empty responses and interrupted runs explicitly say that disclosures were
+preserved. Missing/unreadable receipts do not clear old limitations.
+
+For an interests-only rehearsal, start with `scripts/vm/ec2.sh start --maintenance`.
+Copy the candidate code to a **scratch checkout**, copy only `members`,
+`ext_interests_documents`, `ext_interests`, and `ext_ingest_log` from the production DB
+opened read-only into a scratch SQLite database, and run only these steps:
+
+```
+# In the scratch checkout, with .env loaded without echoing it:
+python -m parli.ingest.conduct_interests_federal refresh --db /scratch/interests.sqlite \
+  --cache-dir /scratch/cache/federal --status /scratch/interests-status.json \
+  --export-jsonl /scratch/federal.jsonl
+OPAX_INTERESTS_CACHE=/scratch/cache/federal python -m parli.ingest.conduct_interests_qld \
+  --fetch --db /scratch/interests.sqlite --export-jsonl /scratch/qld.jsonl
+OPAX_DB=/scratch/interests.sqlite python scripts/export_interests.py --out /scratch/export \
+  --money ~/opax/portal/public/graph/money.json --access ~/opax/portal/public/access.json \
+  --fits ~/opax/portal/public/fits.json
+```
+
+Do not run a full nightly, commit/push from the instance or deploy for this rehearsal.
+Compare with the committed/published interests tree, retain a receipt and spot checks,
+then `scripts/vm/ec2.sh release`, `scripts/vm/ec2.sh stop`, and confirm `status` is
+`stopped`. Read `opax-refresh-start` with `aws scheduler get-schedule`: it must remain
+ENABLED at `cron(15 3 * * ? *)`, `Australia/Sydney`, targeting only this instance.
+Schedules need no change for this feature. Full results are in
+[the 3 October rehearsal](interests-refresh-2026-10-03.md).
 
 ## First-time setup
 
@@ -435,7 +489,7 @@ python3 -m unittest scripts/test_update_corpus_manifest.py scripts/test_export_b
 
 # end-to-end scripts in a throwaway Ubuntu 24.04 (no network, no GitHub, no real KB)
 docker run --rm -v "$PWD":/src:ro ubuntu:24.04 bash -c \
-  'apt-get update -qq && apt-get install -y -qq git python3 python3-requests util-linux iproute2 >/dev/null && bash /src/scripts/vm/test_nightly.sh'
+  'apt-get update -qq && apt-get install -y -qq git python3 python3-requests util-linux iproute2 sqlite3 >/dev/null && bash /src/scripts/vm/test_nightly.sh'
 docker run --rm -v "$PWD":/src:ro ubuntu:24.04 bash -c \
   'apt-get update -qq && apt-get install -y -qq openssh-server openssh-client rsync zstd sqlite3 procps python3 >/dev/null && bash /src/scripts/vm/test_transfer.sh'
 
