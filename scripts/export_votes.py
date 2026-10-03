@@ -39,8 +39,11 @@ both keys. `_meta` dates the file:
                       output matches the file it replaces (PREVIOUS, the
                       checkout's portal/public/votes.json) byte for byte apart
                       from this value keeps the old value, so an unchanged rerun
-                      writes an identical file. With no previous file, an
-                      unreadable one or one without the field, it is now.
+                      writes an identical file. The old value must be a real UTC
+                      time, not in the future, and the file a regular one of at
+                      most PREVIOUS_MAX_BYTES; otherwise, or with no previous
+                      file, it is now. The previous file is compared, never
+                      parsed, so no content there can stop the export.
   latest_division_date  the newest dated division counted in the totals of a
                       published record (null when none). Federal totals count
                       every aye and no in the legacy tables, so a legacy state
@@ -72,6 +75,7 @@ import json
 import os
 import re
 import sqlite3
+import stat
 import sys
 import unicodedata
 from collections import Counter
@@ -81,10 +85,13 @@ from pathlib import Path
 DB = "file:" + os.path.expanduser("~/.cache/autoresearch/parli.db") + "?mode=ro"
 # The file this export replaces (daily_refresh.sh runs this script from the same checkout).
 PREVIOUS = Path(__file__).resolve().parent.parent / "portal" / "public" / "votes.json"
+PREVIOUS_MAX_BYTES = 20_000_000  # votes.json is about 1.3 MB
 PER_SIDE = 6
 SCHEMA = 1  # _meta.schema: bump when the shape of the file changes
 ISO_DATE = re.compile(r"\d{4}-\d\d-\d\d")
 STAMP = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ")
+STAMP_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+STAMP_SLOT = b'"content_changed_at":"'
 
 # Leading category in three-part motion names ("Motions - Climate Change - ...").
 CATEGORY_STAGE = {
@@ -222,19 +229,48 @@ def dump(out):
     return json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n"
 
 
-def carried_stamp(out, previous):
-    """The previous file's content_changed_at when that file is exactly what this run
-    would write with it, else None: no file, not JSON, no usable _meta, or any other
-    byte changed. Leaves out["_meta"]["content_changed_at"] for the caller to set."""
+def read_previous(path):
+    """The bytes at `path` if it is a regular file of at most PREVIOUS_MAX_BYTES, else None.
+    Opened non-blocking, so a FIFO or device there cannot stall the export."""
     try:
-        raw = Path(previous).read_text(encoding="utf-8")
-        stamp = json.loads(raw)["_meta"]["content_changed_at"]
-    except (OSError, ValueError, TypeError, KeyError):
+        fd = os.open(path, os.O_RDONLY | getattr(os, "O_NONBLOCK", 0))
+    except OSError:
         return None
-    if not isinstance(stamp, str) or not STAMP.fullmatch(stamp):
+    try:
+        st = os.fstat(fd)
+        if not stat.S_ISREG(st.st_mode) or st.st_size > PREVIOUS_MAX_BYTES:
+            return None
+        with os.fdopen(fd, "rb", closefd=False) as f:
+            data = f.read(PREVIOUS_MAX_BYTES + 1)  # +1: a file that grew since fstat is refused too
+    except OSError:
         return None
-    out["_meta"]["content_changed_at"] = stamp
-    return stamp if dump(out) == raw else None
+    finally:
+        os.close(fd)
+    return data if len(data) <= PREVIOUS_MAX_BYTES else None
+
+
+def carried_stamp(out, previous):
+    """The previous file's content_changed_at when that file is byte for byte what this run
+    would write with it, else None. Only the stamp's 20 bytes may differ, and they must
+    hold a real UTC time no later than now. Leaves out["_meta"]["content_changed_at"] for
+    the caller to set."""
+    old = read_previous(previous)
+    if old is None:
+        return None
+    out["_meta"]["content_changed_at"] = "0000-00-00T00:00:00Z"  # the width of every stamp
+    new = dump(out).encode("utf-8")
+    at = new.rfind(STAMP_SLOT) + len(STAMP_SLOT)  # _meta is written last, so this is its stamp
+    end = at + 20
+    if len(old) != len(new) or old[:at] != new[:at] or old[end:] != new[end:]:
+        return None
+    try:
+        stamp = old[at:end].decode("ascii")
+        when = datetime.strptime(stamp, STAMP_FORMAT).replace(tzinfo=timezone.utc)
+    except ValueError:  # non-ASCII bytes, or no such date or time (2026-02-30, 24:00:00, :60)
+        return None
+    if not STAMP.fullmatch(stamp) or when > datetime.now(timezone.utc):
+        return None
+    return stamp
 
 
 def pick_sides(rows, divisions):
@@ -373,7 +409,7 @@ def main():
         "schema": SCHEMA,
     }
     carried = carried_stamp(out, PREVIOUS)
-    out["_meta"]["content_changed_at"] = carried or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    out["_meta"]["content_changed_at"] = carried or datetime.now(timezone.utc).strftime(STAMP_FORMAT)
 
     sys.stdout.write(dump(out))
     people = [e for k, e in out.items() if not k.startswith("_")]

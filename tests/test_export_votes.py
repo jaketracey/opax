@@ -12,8 +12,11 @@ import contextlib
 import importlib.util
 import io
 import json
+import os
+import signal
 import sqlite3
 import tempfile
+import time
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -94,6 +97,10 @@ EXT_VOTES = [
 ]
 FULL = {"members": MEMBERS, "divisions": DIVISIONS, "votes": VOTES,
         "ext_divisions": EXT_DIVISIONS, "ext_votes": EXT_VOTES}
+
+
+class ExportHung(Exception):
+    """Raised by the test deadline; not an OSError (as TimeoutError is), so the export cannot swallow it."""
 
 
 def build_fixture(path, tables=FULL):
@@ -265,6 +272,13 @@ class ExportVotesTests(unittest.TestCase):
         _, _, data, bounds = self.run_export()
         self.assertFresh(data["_meta"]["content_changed_at"], bounds)
 
+    def assertStampedNow(self, previous_bytes, label):
+        with self.subTest(label):
+            self.previous.write_bytes(previous_bytes)
+            raw, _, data, bounds = self.run_export()
+            self.assertFresh(data["_meta"]["content_changed_at"], bounds)
+            self.assertEqual(without_meta(raw, data["_meta"]), GOLDEN.read_text(encoding="utf-8"))
+
     def test_missing_old_format_or_unusable_previous_file_stamps_now(self):
         first, _, _, _ = self.export()
         same = json.loads(restamp(first, OLD_STAMP))
@@ -280,21 +294,80 @@ class ExportVotesTests(unittest.TestCase):
             "same content, ASCII-escaped": json.dumps(same, separators=(",", ":")) + "\n",
         }
         for label, text in cases.items():
-            with self.subTest(label):
-                self.previous.write_text(text, encoding="utf-8")
-                raw, _, data, bounds = self.run_export()
-                self.assertFresh(data["_meta"]["content_changed_at"], bounds)
-                self.assertEqual(without_meta(raw, data["_meta"]), GOLDEN.read_text(encoding="utf-8"))
+            self.assertStampedNow(text.encode("utf-8"), label)
+        self.assertStampedNow(b"\xff\xfe{}", "not UTF-8")
+
+    def test_previous_file_is_compared_as_literal_bytes(self):
+        first, _, _, _ = self.export()
+        canonical = restamp(first, OLD_STAMP).encode("utf-8")
+        self.assertStampedNow(canonical[:-1] + b"\r\n", "CRLF final newline")
+        self.assertStampedNow(canonical[:-1] + b"\r", "CR final newline")
+        self.assertStampedNow(canonical.replace(b"Zo\xc3\xab", b"Zo\\u00eb", 1), "one character escaped")
+        self.assertStampedNow(b"\xef\xbb\xbf" + canonical, "a UTF-8 byte order mark")
+
+    def test_impossible_or_future_stamps_are_not_carried(self):
+        first, _, _, _ = self.export()
+        for stamp in ("2026-02-30T03:04:05Z", "2026-01-02T99:99:99Z", "2026-13-01T00:00:00Z",
+                      "2026-01-02T24:00:00Z", "2026-01-02T23:59:60Z", "2026-00-10T00:00:00Z",
+                      "2026-01- 2T03:04:05Z", "2099-01-01T00:00:00Z"):
+            self.assertEqual(len(stamp), 20)  # same width as a real stamp: only validation can refuse it
+            self.assertStampedNow(restamp(first, stamp).encode("utf-8"), stamp)
+        # and the controls: real times, a leap day among them, are carried
+        for stamp in ("2024-02-29T23:59:59Z", "2000-01-01T00:00:00Z"):
+            with self.subTest(stamp):
+                self.previous.write_bytes(restamp(first, stamp).encode("utf-8"))
+                raw, _, data, _ = self.run_export()
+                self.assertEqual(data["_meta"]["content_changed_at"], stamp)
+                self.assertEqual(raw.encode("utf-8"), self.previous.read_bytes())
+
+    def test_deeply_nested_previous_file_stamps_now(self):
+        self.export()
+        self.assertStampedNow(b"[" * 200_000 + b"]" * 200_000, "200,000 nested arrays")
+        self.assertStampedNow(b'{"_meta":' * 50_000 + b"{}" + b"}" * 50_000, "50,000 nested objects")
+
+    def test_oversized_previous_file_stamps_now(self):
+        first, _, _, _ = self.export()
+        canonical = restamp(first, OLD_STAMP).encode("utf-8")
+        self.addCleanup(setattr, X, "PREVIOUS_MAX_BYTES", X.PREVIOUS_MAX_BYTES)
+        X.PREVIOUS_MAX_BYTES = len(canonical) - 1
+        self.assertStampedNow(canonical, "one byte over the cap")
+        X.PREVIOUS_MAX_BYTES = len(canonical)
+        self.previous.write_bytes(canonical)
+        _, _, data, _ = self.run_export()
+        self.assertEqual(data["_meta"]["content_changed_at"], OLD_STAMP)  # exactly at the cap is read
+
+    def test_non_regular_previous_paths_stamp_now(self):
+        self.export()
         d = Path(self.tmp.name)
-        for label, make in (("missing", lambda p: None),
-                            ("not UTF-8", lambda p: p.write_bytes(b"\xff\xfe{}")),
-                            ("a directory", lambda p: p.mkdir())):
+        makers = [("missing", lambda p: None), ("a directory", lambda p: p.mkdir())]
+        if os.path.exists("/dev/null"):
+            makers.append(("a symlink to a character device", lambda p: p.symlink_to("/dev/null")))
+        if hasattr(os, "mkfifo"):
+            makers.append(("a FIFO with no writer", lambda p: os.mkfifo(p)))
+        for label, make in makers:
             with self.subTest(label):
                 X.PREVIOUS = d / label.replace(" ", "-")
                 make(X.PREVIOUS)
-                _, _, data, bounds = self.run_export()
+                started = time.monotonic()
+                with self.deadline(10):  # a blocking open fails the test instead of hanging the suite
+                    _, _, data, bounds = self.run_export()
+                self.assertLess(time.monotonic() - started, 5)
                 self.assertFresh(data["_meta"]["content_changed_at"], bounds)
 
+    @contextlib.contextmanager
+    def deadline(self, seconds):
+        if not hasattr(signal, "SIGALRM"):
+            yield
+            return
+        def expire(signum, frame):
+            raise ExportHung(f"export still running after {seconds}s")
+        old = signal.signal(signal.SIGALRM, expire)
+        signal.alarm(seconds)
+        try:
+            yield
+        finally:
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, old)
 
 if __name__ == "__main__":
     unittest.main()
