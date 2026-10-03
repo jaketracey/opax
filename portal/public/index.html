@@ -1541,8 +1541,12 @@
       counter under a SHA-256 hash of the address and the time window, not under the address
       itself. Expired counters are deleted during later sign-in requests, a day or more after
       their window ends.</p>
-      <p>OPAX's server logs each request in Cloudflare Workers Logs. A log entry records the
-      address requested, which for a search includes the search words.
+      <p>Requests that OPAX's server handles are logged in Cloudflare Workers Logs. They
+      include page loads, searches, questions, other requests for data the server works out, and
+      analytics events passed on to PostHog. Each log entry records the address requested,
+      which for a search includes the search words. Files the site serves as they are, such as
+      scripts, styles and most published data files, come straight from Cloudflare's network
+      without reaching the server, so they are not in these logs.
       <mark class="privacy-confirm" data-confirm="P5">[To confirm: how long these logs are kept on
       OPAX's plan (Cloudflare documents 3 days on Workers Free and 7 days on Workers Paid), and
       whether they record IP addresses.]</mark> <mark class="privacy-confirm" data-confirm="P6">[To
@@ -1581,16 +1585,23 @@
       The copies are filed by the question, not by who asked it.</p>
 
       <h3>Stored in your browser</h3>
-      <p>The website keeps a few preferences only in your browser: the kind of question you last
-      chose in the question builder, whether you turned search summaries off and, for the open
-      tab only, how you were reading a search and the question you took into a conversation.</p>
-      <p>It also keeps up to 20 of your recent conversations with OPAX in your browser, so that
-      you can return to them. If you sign in on the website, they are copied to your account as
-      well, including conversations saved before you signed in; see
-      <a href="#privacy-accounts">Community accounts</a>.</p>
-      <p>What the website keeps in your browser stays until you clear this site's data. Clearing
-      it does not remove the copies in your account. The analytics cookies are described
-      next.</p>
+      <p>The website keeps a few things in your browser, and they last for different times.</p>
+      <ul class="about-list">
+        <li><strong>Two preferences</strong> stay until you clear this site's data: the kind of
+        question you last chose in the question builder, and that you turned search summaries
+        off. Turning summaries back on removes the second.</li>
+        <li><strong>Two things last only as long as the open tab</strong>: how you were reading a
+        search, and the question and answer you carry from Ask into a conversation. That
+        question and answer is removed as soon as the conversation opens.</li>
+        <li><strong>Your most recent conversations with OPAX</strong>, up to 20, so that you can
+        return to them. Older ones drop off as new ones arrive, sooner if they take up too much
+        space. You can delete a conversation from the conversation list; while you are signed
+        in, that deletes the copy in your account too. If you sign in on the website,
+        conversations are copied to your account, including ones saved before you signed in;
+        see <a href="#privacy-accounts">Community accounts</a>.</li>
+      </ul>
+      <p>Clearing this site's data in your browser removes what the browser holds, but not the
+      copies in your account. The analytics cookies are described next.</p>
 
       <h3 id="privacy-analytics">Analytics on the website</h3>
       <p>The website uses Google Analytics, loaded through Google Tag Manager, and PostHog to
