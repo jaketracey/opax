@@ -20,13 +20,14 @@ const {communityRoute}=await import(pathToFileURL(join(folder,'community.mjs')))
 const browser=await chromium.launch({headless:true,executablePath:process.env.OPAX_BROWSER_EXECUTABLE||undefined,args:['--no-sandbox']});
 let checks=0;
 try{
- for(const width of [390,768,1280]){
+ for(const width of [390,768,1280])for(const {enabled,disabled} of [{enabled:true,disabled:false},{enabled:false,disabled:false},{enabled:true,disabled:true},{enabled:false,disabled:true}]){
   const db=new DatabaseSync(':memory:');for(const file of readdirSync(new URL('../migrations/',import.meta.url)).filter(n=>n.endsWith('.sql')).sort())db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
   const mail=[],token='a'.repeat(43),at=Math.floor(Date.now()/1000),errors=[],outbound=[];
   db.prepare("INSERT INTO members(id,email,display_name,created_at) VALUES ('browser','browser@example.test','Browser reader',?)").run(at);
+  if(disabled)db.exec("UPDATE members SET disabled=1 WHERE id='browser'");
   db.prepare("INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at) VALUES (?,'browser',?,?)").run(createHash('sha256').update(token).digest('hex'),at+3600,at);
   const statement=(sql,args=[])=>({bind(...values){return statement(sql,values)},async first(){return db.prepare(sql).get(...args)||null},async all(){return {results:db.prepare(sql).all(...args)}},async run(){const r=db.prepare(sql).run(...args);return {success:true,meta:{changes:Number(r.changes)}}}});
-  const env={COMMUNITY_DB:{prepare:statement,async batch(stmts){db.exec('BEGIN');try{const result=[];for(const s of stmts)result.push(await s.run());db.exec('COMMIT');return result}catch(e){db.exec('ROLLBACK');throw e}}},COMMUNITY_ENABLED:'true',COMMUNITY_CODE_MAC_SECRET:'test-only-deletion-browser-code-key-000000000000000',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_EMAIL:{async send(m){mail.push(m);return {messageId:'test'}}}};
+  const env={COMMUNITY_DB:{prepare:statement,async batch(stmts){db.exec('BEGIN');try{const result=[];for(const s of stmts)result.push(await s.run());db.exec('COMMIT');return result}catch(e){db.exec('ROLLBACK');throw e}}},COMMUNITY_ENABLED:String(enabled),COMMUNITY_CODE_MAC_SECRET:'test-only-deletion-browser-code-key-000000000000000',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_EMAIL:{async send(m){mail.push(m);return {messageId:'test'}}}};
   const server=createServer(tls,async(req,res)=>{
    try{
     const url=new URL(req.url,env.COMMUNITY_ORIGIN);
@@ -52,7 +53,7 @@ try{
    await page.getByRole('button',{name:'Send a new deletion code',exact:true}).click();await page.locator('#deletion-status').filter({hasText:'Check your email'}).waitFor();assert.equal(mail.length,2);assert.equal(db.prepare('SELECT count(*) n FROM community_deletion_challenges WHERE superseded_at IS NOT NULL').get().n,1);checks++;
    await page.evaluate(()=>localStorage.setItem('opax-chats','private browser cache'));await input.fill(mail.at(-1).text.match(/deletion code: (\d{8})/)[1]);await page.getByRole('button',{name:'Permanently delete my account',exact:true}).click();await page.locator('#community-message').filter({hasText:'Your account and authored content have been deleted'}).waitFor();assert.equal(db.prepare('SELECT count(*) n FROM members').get().n,0);assert.equal(db.prepare('SELECT count(*) n FROM member_sessions').get().n,0);assert.equal(await page.evaluate(()=>localStorage.getItem('opax-chats')),null);checks++;
    await page.getByRole('link',{name:'Sign in',exact:true}).first().waitFor();assert.deepEqual(errors,[]);assert.deepEqual(outbound,[]);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);checks++;
-   console.log(`Chromium ${width}px: deletion code, error/focus, reissue, success/session revocation/cache cleanup, no outbound/overflow passed`);
+   console.log(`Chromium ${width}px (community ${enabled?'on':'off'}, member ${disabled?'disabled':'enabled'}): deletion code, error/focus, reissue, success/session revocation/cache cleanup, no outbound/overflow passed`);
   }finally{await context.close();server.closeAllConnections();await new Promise(resolve=>server.close(resolve));db.close()}
  }
  console.log(`${checks} browser checks passed`);

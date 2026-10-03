@@ -336,3 +336,35 @@ test('deleting the last replier removes an owner-less stub and dependent rows wh
  assert.equal(f.db.prepare("SELECT member_id FROM community_threads WHERE id='live-empty'").get().member_id,'c');
  assert.deepEqual(f.db.prepare('PRAGMA foreign_key_check').all(),[]);
 });
+
+for(const enabled of [true,false])for(const disabled of [false,true])test(`deletion stays available with community ${enabled?'on':'off'} and member ${disabled?'disabled':'enabled'} without granting other writes`,async t=>{
+ const f=fixture(t);await f.login('a');await f.login('b');
+ f.env.COMMUNITY_ENABLED=String(enabled);if(disabled)f.db.exec("UPDATE members SET disabled=1 WHERE id='a'");
+ const peerBefore=f.db.prepare("SELECT * FROM members WHERE id='b'").get();
+ const status=await (await f.call('status',{},'a',{},'GET')).json();assert.equal(status.enabled,enabled);assert.equal(status.can_delete_account,true);if(disabled)assert.equal(status.member,null);
+ for(const path of ['account/deletion-code','account/delete']){
+  assert.equal((await f.call(path,{},'a',{origin:'https://evil.example.test'})).status,403);
+  assert.equal((await f.call(path,{},'a',{cookie:''})).status,401);
+  const session=f.db.prepare('SELECT expires_at FROM member_sessions WHERE member_id=?').get('a');
+  f.db.prepare('UPDATE member_sessions SET expires_at=0 WHERE member_id=?').run('a');
+  assert.equal((await f.call(path)).status,401);f.db.prepare('UPDATE member_sessions SET expires_at=? WHERE member_id=?').run(session.expires_at,'a');
+ }
+ assert.equal(count(f.db,'community_limits'),0);assert.equal(f.outbox.length,0);
+ if(!enabled||disabled){
+  assert.equal((await f.call('profile',{name:'Still moderated',bio:''},'a',{},'PATCH')).status,enabled?401:503);
+  assert.equal((await f.call('members/b/follow',{},'a',{},'PUT')).status,enabled?401:503);
+  assert.equal(count(f.db,'member_follows'),0);
+ }
+ const proof=await f.issue();await generic(await f.del(proof,'b'));assert.equal(count(f.db,'members'),2);
+ const response=await f.del(proof);assert.equal(response.status,200);assert.equal((await response.json()).deleted,true);
+ assert.equal(f.db.prepare("SELECT id FROM members WHERE id='a'").get(),undefined);assert.deepEqual(f.db.prepare("SELECT * FROM members WHERE id='b'").get(),peerBefore);
+ assert.equal(f.db.prepare("SELECT count(*) n FROM member_sessions WHERE member_id='a'").get().n,0);assert.equal(count(f.db,'community_deletion_challenges'),0);
+ assert.equal((await (await f.call('status',{},'a',{},'GET')).json()).can_delete_account,false);assert.equal((await f.del(proof)).status,401);
+ assert.deepEqual(f.db.prepare('PRAGMA foreign_key_check').all(),[]);
+});
+
+test('pausing community and disabling a member after code issuance does not revoke their deletion right',async t=>{
+ const f=fixture(t);await f.login();const proof=await f.issue();
+ f.env.COMMUNITY_ENABLED='false';f.db.exec("UPDATE members SET disabled=1 WHERE id='a'");
+ assert.equal((await f.del(proof)).status,200);assert.equal(count(f.db,'members'),0);
+});

@@ -1,9 +1,17 @@
-import {body,CommunityError,digest,json,limit,now,randomToken,requireMember,sameOrigin,type Member} from './community-core'
+import {body,CommunityError,digest,json,limit,now,randomToken,sameOrigin,type Member} from './community-core'
 import {macHex,matchesSignInCode,randomSignInCode,requireSignInCodeSecret,signInCodeMac} from './community-signin-code'
 
 const FAILURE='This deletion could not be completed. Request a new deletion code and try again.'
 const UNAVAILABLE='This action could not be completed. Please try again shortly.'
 const CODE_LIFETIME=900
+
+/** A valid session grants deletion of its own account even after moderation.
+ * Keep this separate from normal member authentication: no other writes gain access. */
+export async function deletionMember(req:Request,env:Env):Promise<Member|null> {
+ const token=req.headers.get('cookie')?.split(';').map(s=>s.trim()).find(s=>s.startsWith('__Host-opax_session='))?.slice(20)
+ if(!token||!/^[\w-]{43}$/.test(token))return null
+ return env.COMMUNITY_DB.prepare('SELECT m.* FROM members m JOIN member_sessions s ON s.member_id=m.id WHERE s.token_hash=? AND s.expires_at>?').bind(await digest(token),now()).first<Member>()
+}
 
 /** Refuse before quota/email on the post-0011 schema or a partial 0012. */
 async function requireDeletionSchema(env:Env) {
@@ -22,7 +30,8 @@ export async function deletionRoute(req:Request,env:Env,path:string):Promise<Res
  if(!['/api/community/account/deletion-code','/api/community/account/delete'].includes(path))return null
  if(req.method!=='POST')return json({error:'Use POST for account deletion.'},405,{allow:'POST'})
  sameOrigin(req,env)
- const m=await requireMember(req,env)
+ const m=await deletionMember(req,env)
+ if(!m)throw new CommunityError(401,'Sign in to continue.')
  await requireDeletionSchema(env)
  const issuing=path.endsWith('/deletion-code')
  try{
@@ -34,7 +43,7 @@ export async function deletionRoute(req:Request,env:Env,path:string):Promise<Res
    const mac=macHex(await signInCodeMac(env,challengeId,code,m.id))
    const results=await env.COMMUNITY_DB.batch([
     env.COMMUNITY_DB.prepare('UPDATE community_deletion_challenges SET superseded_at=?,expires_at=? WHERE member_id=? AND used_at IS NULL AND superseded_at IS NULL').bind(t,t,m.id),
-    env.COMMUNITY_DB.prepare('INSERT INTO community_deletion_challenges(challenge_id,member_id,code_mac,created_at,expires_at) SELECT ?,id,?,?,? FROM members WHERE id=? AND disabled=0').bind(challengeId,mac,t,t+CODE_LIFETIME,m.id),
+    env.COMMUNITY_DB.prepare('INSERT INTO community_deletion_challenges(challenge_id,member_id,code_mac,created_at,expires_at) SELECT ?,id,?,?,? FROM members WHERE id=?').bind(challengeId,mac,t,t+CODE_LIFETIME,m.id),
     env.COMMUNITY_DB.prepare('DELETE FROM community_deletion_challenges WHERE expires_at<?').bind(t-86400)
    ])
    if(!results[1].meta.changes)throw new CommunityError(400,FAILURE)
@@ -71,7 +80,7 @@ function deletionBatch(env:Env,m:Member,challengeId:string,sessionHash:string,t:
  const emptyStubs='SELECT id FROM community_threads WHERE member_id IS NULL AND NOT EXISTS(SELECT 1 FROM community_replies WHERE thread_id=community_threads.id)'
  return [
   env.COMMUNITY_DB.prepare(`UPDATE community_deletion_challenges SET used_at=?,redemption_token=? WHERE challenge_id=? AND member_id=? AND used_at IS NULL AND superseded_at IS NULL AND expires_at>?
-   AND EXISTS(SELECT 1 FROM members WHERE id=? AND disabled=0) AND EXISTS(SELECT 1 FROM member_sessions WHERE token_hash=? AND member_id=? AND expires_at>?)`).bind(t,winner,challengeId,m.id,t,m.id,sessionHash,m.id,t),
+   AND EXISTS(SELECT 1 FROM members WHERE id=?) AND EXISTS(SELECT 1 FROM member_sessions WHERE token_hash=? AND member_id=? AND expires_at>?)`).bind(t,winner,challengeId,m.id,t,m.id,sessionHash,m.id,t),
   statement('DELETE FROM community_email_outbox WHERE (member_id=? OR reply_id IN (SELECT id FROM community_replies WHERE member_id=?))',[m.id,m.id]),
   statement('DELETE FROM community_email_unsubscribes WHERE member_id=?',[m.id]),
   statement(`DELETE FROM community_notifications WHERE (member_id=? OR actor_id=? OR thread_id IN (SELECT id FROM community_threads WHERE member_id=?) OR target_id IN (SELECT id FROM community_replies WHERE member_id=?))`,[m.id,m.id,m.id,m.id]),

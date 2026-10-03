@@ -1,5 +1,5 @@
 import {authRoute} from './community-auth'
-import {deletionRoute} from './community-deletion'
+import {deletionMember,deletionRoute} from './community-deletion'
 import {socialRoute,socialCounts,notification} from './community-social'
 import {deliverReplyEmails,queueReplyEmail,replyEmailUnsubscribe} from './community-notifications'
 import {body,CommunityError,digest,json,limit,member,now,publicMember,randomToken,requireMember,sameOrigin,sourcePath,text} from './community-core'
@@ -10,13 +10,14 @@ async function route(req:Request,env:Env,ctx?:Pick<ExecutionContext,'waitUntil'>
  const url=new URL(req.url),path=url.pathname,t=now()
  // Unsubscribe is a narrowly scoped token action, including while the community is paused.
  const unsubscribe=await replyEmailUnsubscribe(req,env);if(unsubscribe)return unsubscribe
+ // Account deletion remains available during a pause and after moderation.
+ const deletion=await deletionRoute(req,env,path);if(deletion)return deletion
  if(path==='/api/community/status'&&req.method==='GET'){
   const m=await member(req,env)
-  return json({enabled:String(env.COMMUNITY_ENABLED)==='true',member:m?{...publicMember(m),email:m.email,role:m.role}:null,unread:m&&String(env.COMMUNITY_ENABLED)==='true'?await socialCounts(env,m.id):{messages:0,activity:0},mcp_url:env.COMMUNITY_ORIGIN+'/mcp'})
+  return json({enabled:String(env.COMMUNITY_ENABLED)==='true',member:m?{...publicMember(m),email:m.email,role:m.role}:null,can_delete_account:!!(m||await deletionMember(req,env)),unread:m&&String(env.COMMUNITY_ENABLED)==='true'?await socialCounts(env,m.id):{messages:0,activity:0},mcp_url:env.COMMUNITY_ORIGIN+'/mcp'})
  }
  if(String(env.COMMUNITY_ENABLED)!=='true')throw new CommunityError(503,'The community is being prepared. Please check back soon.')
  const auth=await authRoute(req,env,path);if(auth)return auth
- const deletion=await deletionRoute(req,env,path);if(deletion)return deletion
  const read=req.method==='GET'
  if(!read)sameOrigin(req,env)
  const social=await socialRoute(req,env);if(social)return social
