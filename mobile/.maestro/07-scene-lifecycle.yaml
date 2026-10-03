@@ -35,7 +35,20 @@ name: 07 Scene lifecycle, cold and warm links and native share presentation
 - assertVisible: Anthony Albanese
 - assertVisible: opax.invalid
 - takeScreenshot: ${EVIDENCE}/07-native-share
-- tapOn: Close
+- runFlow:
+    when:
+      visible:
+        id: PopoverDismissRegion
+    commands:
+      # iOS 27 presents a popover with no Close button. The upper quarter is
+      # outside the popover on the assigned phones at the standard text size.
+      - tapOn:
+          point: 50%,25%
+- runFlow:
+    when:
+      visible: Close
+    commands:
+      - tapOn: Close
 - assertVisible: Native share cancelled
 - tapOn: OK
 - assertVisible:
