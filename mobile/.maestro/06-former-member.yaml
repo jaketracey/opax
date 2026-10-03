@@ -1,0 +1,15 @@
+appId: au.com.opax.app
+name: 06 A former member's party is shown as former
+---
+- runFlow:
+    file: 06-open-profile.yaml
+    env:
+      NAME: Julia Gillard
+      SLUG: julia-gillard
+- takeScreenshot: ${EVIDENCE}/06-julia-gillard
+- runFlow:
+    file: 06-open-profile.yaml
+    env:
+      NAME: Linda Burney
+      SLUG: linda-burney
+- takeScreenshot: ${EVIDENCE}/06-linda-burney

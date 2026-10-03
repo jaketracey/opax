@@ -1,0 +1,43 @@
+appId: au.com.opax.app
+name: 05 Design workbench, every component and state
+---
+# No clearState: the workbench needs no data, and offline journey 04 reads
+# the catalog the earlier journeys saved.
+- launchApp
+- assertVisible:
+    id: today-screen
+- tapOn: Account and about
+- scrollUntilVisible:
+    element:
+      id: account-workbench
+- tapOn:
+    id: account-workbench
+- assertVisible:
+    id: wb-top
+# Page through the whole workbench so every component is captured.
+- evalScript: ${output.page = 0}
+- repeat:
+    while:
+      notVisible:
+        id: wb-end
+    commands:
+      - evalScript: ${output.page = output.page + 1}
+      - evalScript: ${output.name = String(output.page).padStart(2, '0')}
+      - takeScreenshot: ${EVIDENCE}/05-workbench-${output.name}
+      - scroll
+- takeScreenshot: ${EVIDENCE}/05-workbench-end
+# The share pattern in e2e: the canonical path, shown locally.
+- scrollUntilVisible:
+    element:
+      id: wb-share
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: wb-share
+- assertVisible: https://opax.invalid/subject/person/anthony-albanese
+- tapOn: OK
+- tapOn: Done
+- scrollUntilVisible:
+    element:
+      id: account-sheet-message
+    direction: UP

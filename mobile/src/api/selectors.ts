@@ -24,7 +24,7 @@ import {
   billSourceLabel,
 } from './bill-transforms';
 import {
-  samePartyLabel,
+  personPartyFor,
   partyReceiptsFor,
   receiptParties,
 } from './party-transforms';
@@ -226,7 +226,7 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
     canonicalPersonId: p.person_id,
     rosterPersonId: p.legacy_person_id ?? row?.pid,
     legacyPersonId: numericPersonId(p.legacy_person_id, row),
-    party: seats[0]?.party ?? row?.party_now ?? row?.party ?? null,
+    ...personPartyFor(seats, row, namedRow),
     seats,
     sources: manifest.sources.filter((s) => p.sources.includes(s.source_id)),
     asOf: seats[0]?.as_of ?? roster.meta.generated,
@@ -380,19 +380,7 @@ export function profileFor(id: PersonId, catalogs: ProfileCatalogs) {
     slug: personSlug(slug),
     interestKey: registerKey ?? null,
     blocks: {
-      identity: block(
-        {
-          ...identity,
-          formerly:
-            namedRow?.party_now &&
-            namedRow.party &&
-            !samePartyLabel(namedRow.party_now, namedRow.party)
-              ? namedRow.party
-              : null,
-        },
-        identity.asOf,
-        sources,
-      ),
+      identity: block(identity, identity.asOf, sources),
       votes: block(
         votes,
         catalogs.votes?.meta?.content_changed_at ?? null,

@@ -11,7 +11,9 @@ name: 04 Read previously saved records with the fixture stopped
     id: search-input
 - eraseText
 - inputText: Anthony Albanese
-- hideKeyboard
+# Return submits and dismisses the keyboard; a swipe can land on the
+# keyboard itself at AX5.
+- pressKey: Enter
 - scrollUntilVisible:
     element:
       id: search-submit
@@ -20,7 +22,9 @@ name: 04 Read previously saved records with the fixture stopped
 - scrollUntilVisible:
     element:
       id: search-cache-state
-- assertVisible: Offline · Saved .*
+- assertVisible: Saved .* It may be out of date\.
+- assertVisible:
+    id: search-offline
 - scrollUntilVisible:
     element:
       id: search-result-anthony-albanese

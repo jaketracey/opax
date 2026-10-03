@@ -1,18 +1,27 @@
 import { useEffect, useState } from 'react';
-import { Alert, Linking } from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
-import { catalogs, isE2E } from '../api/runtime';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { catalogs } from '../api/runtime';
 import type { PersonProfile } from '../api/catalogs';
 import type { RecordResult } from '../api/client';
 import {
-  Button,
-  Divider,
+  AsAtLine,
+  ErrorState,
   Group,
+  Heading,
+  LoadingState,
+  OfflineBanner,
+  OpaxWebLink,
   PartyLabel,
+  Portrait,
   Screen,
+  Section,
+  SourceLink,
+  StaleNotice,
   Text,
+  errorMessage,
 } from '../design/primitives';
-import { date } from './Search';
+import { CHAMBER_NOT_RECORDED, chamberName } from '../design/parliament';
+import { shareHeaderItem } from '../navigation/share';
 export default function Person() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const [record, setRecord] = useState<RecordResult<PersonProfile> | null>(
@@ -31,12 +40,7 @@ export default function Person() {
         }
       })
       .catch((error) => {
-        if (active)
-          setError(
-            error instanceof Error
-              ? error.message
-              : 'The profile could not be loaded. Try again.',
-          );
+        if (active) setError(errorMessage(error));
       });
     return () => {
       active = false;
@@ -48,100 +52,107 @@ export default function Person() {
       /parliamentary|roster|service/i.test(source.label) &&
       !source.url.includes('/subject/'),
   );
-  function openSource() {
-    if (!source) return;
-    // E2E never opens a browser/network host. The local sheet still exposes the real source URL.
-    if (isE2E) {
-      Alert.alert('Source record', `${source.label}\n${source.url}`);
-      return;
-    }
-    Linking.openURL(source.url).catch(() =>
-      Alert.alert('Source record', 'The source link could not be opened.'),
-    );
-  }
+  const webPath = `/subject/person/${slug}`;
   return (
-    <Screen
-      title={profile?.name ?? 'Person'}
-      testID={profile ? 'person-screen' : 'person-pending-screen'}
-    >
-      <Button
-        label="Back to Search"
-        testID="person-back"
-        variant="quiet"
-        onPress={() => router.back()}
+    <>
+      <Stack.Screen
+        options={{
+          // The name is the page's level 1 heading, so the bar does not repeat
+          // it; `title` still names the screen for the back stack.
+          title: profile?.name ?? '',
+          headerTitle: '',
+          unstable_headerRightItems: profile
+            ? () => [shareHeaderItem({ path: webPath, title: profile.name })]
+            : undefined,
+        }}
       />
-      {error ? (
-        <Group>
-          <Text accessibilityRole="alert" testID="person-error">
-            {error}
-          </Text>
-          <Button
-            label="Try again"
-            onPress={() => setRetry((value) => value + 1)}
+      <Screen testID={profile ? 'person-screen' : 'person-pending-screen'}>
+        {error ? (
+          <ErrorState
+            message={error}
+            onRetry={() => setRetry((value) => value + 1)}
+            testID="person-error"
           />
-        </Group>
-      ) : null}
-      {!profile && !error ? (
-        <Text testID="person-loading">Loading the public directory</Text>
-      ) : null}
-      {profile ? (
-        <Group>
-          <PartyLabel party={profile.party} testID="person-party" />
-          <Divider />
-          <Text variant="heading" accessibilityRole="header">
-            Recorded representation
-          </Text>
-          {profile.seats.length ? (
-            profile.seats.map((seat) => (
-              <Group key={seat.electorate_id}>
-                <Text testID="person-electorate">{seat.name}</Text>
-                <Text variant="metadata">
-                  {seat.chamber === 'representatives'
-                    ? 'House of Representatives'
-                    : seat.chamber}{' '}
-                  · {seat.jurisdiction}
-                </Text>
-                <Text variant="fine">
-                  {seat.as_of
-                    ? `As at ${date(seat.as_of)}`
-                    : 'Observation date not recorded'}
-                </Text>
-              </Group>
-            ))
-          ) : (
-            <Text>
-              No current electorate observation is held in this release.
-            </Text>
-          )}
-          <Text variant="fine">
-            {record?.stale ? `Offline · Saved ${date(record.savedAt)}. ` : ''}
-            These are dated public records. Representation may have changed
-            since collection.
-          </Text>
-          {source ? (
-            <Group>
-              <Text variant="fine">Source: {source.label}</Text>
-              <Button
-                label="Open source record"
-                testID="person-source"
-                onPress={openSource}
-              />
-              <Text variant="fine" selectable>
-                {source.url}
+        ) : null}
+        {!profile && !error ? (
+          <LoadingState
+            shape="people"
+            count={1}
+            label="Loading the public directory"
+            testID="person-loading"
+          />
+        ) : null}
+        {profile ? (
+          <Group>
+            {record?.stale ? <OfflineBanner testID="person-offline" /> : null}
+            <Portrait size="profile" />
+            <Heading level={1} testID="person-screen-title">
+              {profile.name}
+            </Heading>
+            <PartyLabel
+              party={profile.party}
+              current={profile.partyCurrent}
+              formerly={profile.formerly}
+              testID="person-party"
+            />
+          </Group>
+        ) : null}
+        {profile ? (
+          <Section title="Recorded representation">
+            {profile.seats.length ? (
+              profile.seats.map((seat) => (
+                <Group key={seat.electorate_id} gap={4}>
+                  <Text variant="strong" testID="person-electorate">
+                    {seat.name}
+                  </Text>
+                  <Text variant="metadata" testID="person-chamber">
+                    {chamberName(seat.chamber, seat.jurisdiction) ??
+                      CHAMBER_NOT_RECORDED}
+                  </Text>
+                  <AsAtLine
+                    asOf={seat.as_of}
+                    citation={profile.sources.map((item) => item.label)}
+                  />
+                </Group>
+              ))
+            ) : (
+              <Text>
+                No current electorate observation is held in this release.
               </Text>
-            </Group>
-          ) : (
+            )}
             <Text variant="fine">
-              No original source link is held for this person.
+              These are dated public records. Representation may have changed
+              since collection.
             </Text>
-          )}
-          <Divider />
-          <Text>
-            The full profile is not built yet. Voting records, interests and pay
-            will follow in later work.
-          </Text>
-        </Group>
-      ) : null}
-    </Screen>
+            {record?.stale ? <StaleNotice savedAt={record.savedAt} /> : null}
+            {source ? (
+              <SourceLink
+                citation={source.label}
+                url={source.url}
+                kind="record"
+                testID="person-source"
+              />
+            ) : (
+              <Text variant="fine">
+                No original source link is held for this person.
+              </Text>
+            )}
+          </Section>
+        ) : null}
+        {profile ? (
+          <Section>
+            <Text>
+              The full profile is not built yet. Voting records, interests and
+              pay will follow in later work.
+            </Text>
+            <OpaxWebLink
+              label="Speeches, topics and mentions"
+              path={webPath}
+              testID="person-web"
+            />
+          </Section>
+        ) : null}
+      </Screen>
+    </>
   );
 }

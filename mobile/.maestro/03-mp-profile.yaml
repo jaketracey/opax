@@ -17,6 +17,9 @@ name: 03 Read a sourced profile
       id: person-electorate
     centerElement: true
 - assertVisible: Grayndler
+# Chamber names, never raw IDs ("federal", "representatives").
+- assertVisible: House of Representatives
+- assertNotVisible: .*· federal.*
 - takeScreenshot: ${EVIDENCE}/03-profile
 - scrollUntilVisible:
     element:
@@ -25,3 +28,14 @@ name: 03 Read a sourced profile
 - assertVisible:
     id: person-source
 - takeScreenshot: ${EVIDENCE}/03-source
+# Sources open in the in-app browser; e2e shows the destination locally.
+- tapOn:
+    id: person-source
+- assertVisible: https://raw.githubusercontent.com/openaustralia/openaustralia-parser/master/data/representatives.csv
+- takeScreenshot: ${EVIDENCE}/03-source-destination
+- tapOn: OK
+# Share uses the canonical web path; e2e carries a non-resolving origin.
+- tapOn: Share Anthony Albanese
+- assertVisible: https://opax.invalid/subject/person/anthony-albanese
+- takeScreenshot: ${EVIDENCE}/03-share
+- tapOn: OK

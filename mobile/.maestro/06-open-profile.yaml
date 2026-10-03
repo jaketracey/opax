@@ -1,0 +1,31 @@
+appId: au.com.opax.app
+name: Open a profile from Search and check its party reads "Formerly Labor"
+---
+# A fresh launch (state kept) starts with an empty field at the top of
+# Search; editing a previous query is unreliable at AX5, where a tap can put
+# the cursor mid-text.
+- launchApp
+- tapOn:
+    id: tab-search
+- scrollUntilVisible:
+    element:
+      id: search-input
+- tapOn:
+    id: search-input
+- inputText: ${NAME}
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: search-result-${SLUG}
+- tapOn:
+    id: search-result-${SLUG}
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: person-party
+    centerElement: true
+- assertVisible: Formerly Labor
+- assertNotVisible: ^Labor$

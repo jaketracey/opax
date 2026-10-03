@@ -175,6 +175,10 @@ if (productionIndex !== -1) {
   for (const path of bundles) {
     const body = readFileSync(path);
     assertNoFixtureOrigin(body, process.env.OPAX_FIXTURE_PORT ?? '8910');
+    assert(
+      !body.includes(Buffer.from('OPAX_DESIGN_WORKBENCH')),
+      'Production bundle contains the design workbench',
+    );
   }
   const bodies = bundles.map((path) => readFileSync(path));
   for (const marker of [
@@ -188,7 +192,7 @@ if (productionIndex !== -1) {
       `Shipped allow-list guard missing: ${marker}`,
     );
   console.log(
-    'PASS production embedded JS: no fixture/loopback origin; shipped route/origin/redirect guards present',
+    'PASS production embedded JS: no fixture/loopback origin or workbench; shipped route/origin/redirect guards present',
   );
 }
 if (appIndex !== -1) {

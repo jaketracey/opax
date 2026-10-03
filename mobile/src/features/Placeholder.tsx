@@ -1,20 +1,17 @@
-import { Divider, Screen, Text } from '../design/primitives';
-export function Placeholder({
-  title,
-  message,
-  id,
-}: {
-  title: string;
-  message: string;
-  id: string;
-}) {
+import { Group, Screen, Section, Text } from '../design/primitives';
+export function Placeholder({ message, id }: { message: string; id: string }) {
   return (
-    <Screen title={title} testID={id}>
-      <Text>{message}</Text>
-      <Divider />
-      <Text variant="fine" testID={`${id}-footer`}>
-        OPAX is independent and non-partisan. It is not a government app.
-      </Text>
+    <Screen testID={id}>
+      <Group>
+        <Text variant="lede" testID={`${id}-message`}>
+          {message}
+        </Text>
+      </Group>
+      <Section>
+        <Text variant="fine" testID={`${id}-footer`}>
+          OPAX is independent and non-partisan. It is not a government app.
+        </Text>
+      </Section>
     </Screen>
   );
 }

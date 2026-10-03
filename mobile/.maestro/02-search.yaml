@@ -11,7 +11,9 @@ name: 02 Search the public people catalog
 - tapOn:
     id: search-input
 - inputText: Anthony Albanese
-- hideKeyboard
+# Return submits and dismisses the keyboard; a swipe can land on the
+# keyboard itself at AX5.
+- pressKey: Enter
 - scrollUntilVisible:
     element:
       id: search-submit

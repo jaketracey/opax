@@ -1,10 +1,12 @@
 appId: au.com.opax.app
-name: 01 Launch and reach every tab
+name: 01 Launch, reach every tab and the navigation-bar sheets
 ---
 - launchApp:
     clearState: true
 - assertVisible:
-    id: today-screen-title
+    id: today-screen
+- assertVisible:
+    id: today-screen-message
 - takeScreenshot: ${EVIDENCE}/01-today
 - scrollUntilVisible:
     element:
@@ -14,16 +16,31 @@ name: 01 Launch and reach every tab
 - tapOn:
     id: tab-your-mp
 - assertVisible:
-    id: your-mp-screen-title
+    id: your-mp-screen-message
 - tapOn:
     id: tab-bills
 - assertVisible:
-    id: bills-screen-title
+    id: bills-screen-message
 - tapOn:
     id: tab-search
 - assertVisible:
-    id: search-screen-title
+    id: search-screen
 - tapOn:
     id: tab-today
 - assertVisible:
-    id: today-screen-title
+    id: today-screen-message
+# Talk and Account and about are navigation-bar buttons on every root screen.
+- tapOn: Talk to OPAX
+- assertVisible:
+    id: talk-sheet-message
+- takeScreenshot: ${EVIDENCE}/01-talk-sheet
+- tapOn: Done
+- assertVisible:
+    id: today-screen-message
+- tapOn: Account and about
+- assertVisible:
+    id: account-sheet-message
+- takeScreenshot: ${EVIDENCE}/01-account-sheet
+- tapOn: Done
+- assertVisible:
+    id: today-screen-message

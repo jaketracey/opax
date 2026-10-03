@@ -1,0 +1,37 @@
+import { Stack } from 'expo-router';
+import { rootHeaderItems, useStackChrome } from '../../../navigation/chrome';
+
+// Each tab owns a native stack. Root screens live in their own group
+// ((today)/index, (your-mp)/your-mp, ...); detail routes in this folder are
+// shared, so a person pushed from Search stays in the Search tab.
+export const unstable_settings = {
+  anchor: 'index',
+  'your-mp': { anchor: 'your-mp' },
+  bills: { anchor: 'bills' },
+  search: { anchor: 'search' },
+};
+
+const roots: Record<string, { name: string; title: string }> = {
+  '(today)': { name: 'index', title: 'Today' },
+  '(your-mp)': { name: 'your-mp', title: 'Your MP' },
+  '(bills)': { name: 'bills', title: 'Bills' },
+  '(search)': { name: 'search', title: 'Search' },
+};
+
+export default function TabStack({ segment }: { segment: string }) {
+  const chrome = useStackChrome();
+  const root = roots[segment] ?? roots['(today)']!;
+  return (
+    <Stack screenOptions={chrome}>
+      <Stack.Screen
+        name={root.name}
+        options={{
+          title: root.title,
+          headerLargeTitleEnabled: true,
+          unstable_headerRightItems: rootHeaderItems,
+        }}
+      />
+      <Stack.Screen name="person/[slug]" options={{ title: '' }} />
+    </Stack>
+  );
+}

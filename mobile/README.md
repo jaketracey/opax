@@ -32,8 +32,8 @@ the shared host's compilation cache. Native build concurrency is capped at four.
 cd mobile
 scripts/qa.sh
 scripts/build-e2e.sh
-scripts/e2e.sh <simulator-udid> 01 02 03 04
-OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <simulator-udid> 01 03
+scripts/e2e.sh <simulator-udid> 01 02 03 04 05 06
+OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <simulator-udid> 03 05 06
 ```
 
 Copy `.qa.local.env.example` to the ignored `.qa.local.env` for optional host
@@ -95,17 +95,35 @@ The build gate receives a credential-free wrapper; upload checks the verified
 IPA hash and uses those bytes directly. QA includes the offline tooling and
 attack regression tests.
 
-- Routes live in `src/app/`; feature UI in `src/features/`. The four tabs are
-  Today, Your MP, Bills and Search. Add a stack route carrying identifiers only.
+- Routes live in `src/app/`; feature UI in `src/features/`. The four native
+  tabs are Today, Your MP, Bills and Search, each its own native stack: root
+  screens in `src/app/(tabs)/(today)/`, `(your-mp)/`, `(bills)/` and
+  `(search)/`; detail routes in `src/app/(tabs)/(today,your-mp,bills,search)/`
+  so they push within the current tab. Routes carry identifiers only.
   `person/[slug]` corresponds to `/subject/person/<slug>` through
   `src/navigation/routes.ts`; universal links and associated domains are deferred.
-  The Talk button opens a sheet from each root screen in the later voice lane; see `src/voice/README.md`.
-- Use `src/design/primitives.tsx` and role tokens in `src/design/tokens.ts`.
-  Fonts are bundled with OFL notices and upstream hashes. The complete notices
+  Talk and Account and about are navigation-bar buttons on root screens that
+  open `src/app/talk.tsx` and `src/app/account.tsx` as sheets (placeholders for
+  the voice and account lanes); see `src/voice/README.md`.
+- Use `src/design/primitives.tsx`; usage notes for every component, token and
+  state are in `src/design/README.md`. Colours go through roles only.
+  Fonts (Merriweather Regular and Bold, Public Sans Regular, SemiBold and
+  Bold) are bundled with OFL notices and upstream hashes. The complete notices
   are embedded in `extra.fontAcknowledgements` for a later About screen.
-  The built-app check verifies these notices. Text scaling is on,
-  has no multiplier cap, uses iOS Dynamic Type ramps, and has no fixed height or
-  line limit. Keep controls at least 44pt, labels wrapping, and sections scrollable.
+  The built-app check verifies these notices. Body text scales without a
+  multiplier cap using iOS Dynamic Type ramps. Word-safe headings and control
+  labels may lower their cap to keep whole words readable (see the design README).
+  Avoid fixed heights or line limits. Keep controls at least 44pt, labels wrapping,
+  and sections scrollable.
+- The design workbench (`src/workbench/`, route `/workbench`) renders every
+  component and state. It exists in development and e2e builds only (Account
+  and about, then Design workbench); `metro.config.js` blocks it from
+  production bundles and `check-release-bundle.sh` verifies its absence.
+- Sharing goes through `src/navigation/share.ts` and the local Swift module
+  `modules/opax-share`, which builds link metadata on the device. Canonical
+  links use `extra.webOrigin` from the build configuration.
+- The app icon (the Australia mark on navy, with dark and tinted variants) is
+  in `assets/icon/`, with its provenance and render commands.
 - Add API contracts/decoders in `src/api/catalogs.ts`, then a reviewed GET path
   in `policy.ts` and a rejection/acceptance test. Use `catalogs` from `runtime.ts`.
   Identity adapters keep canonical IDs and legacy IDs separate. The slug API maps

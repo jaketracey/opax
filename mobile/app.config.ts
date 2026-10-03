@@ -41,6 +41,8 @@ if (
   originURL.hash
 )
   throw new Error('Invalid API origin');
+// E2E canonical links are shown locally and never opened or shared.
+const webOrigin = variant === 'e2e' ? 'https://opax.invalid' : origin;
 const config: ExpoConfig = {
   name: 'OPAX',
   slug: 'opax',
@@ -51,6 +53,11 @@ const config: ExpoConfig = {
   orientation: 'default',
   ios: {
     bundleIdentifier: 'au.com.opax.app',
+    icon: {
+      light: './assets/icon/icon.png',
+      dark: './assets/icon/icon-dark.png',
+      tinted: './assets/icon/icon-tinted.png',
+    },
     buildNumber,
     supportsTablet: false,
     infoPlist: {
@@ -79,6 +86,7 @@ const config: ExpoConfig = {
   extra: {
     variant,
     apiOrigin: origin,
+    webOrigin,
     appVersion: '0.1.0',
     appBuild: buildNumber,
     fontAcknowledgements: ['Merriweather', 'PublicSans'].map((name) => ({

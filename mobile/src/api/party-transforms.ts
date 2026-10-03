@@ -1,5 +1,6 @@
 // samePartyLabel and PARTY_MAP labels ported from portal/public/app.js.
 import { moneyName } from './transforms';
+import type { Roster, SeatObservation } from './catalog-decoders';
 const partyLabels: Record<string, string> = {
   labor: 'ALP',
   liberal: 'LIB',
@@ -23,6 +24,31 @@ export function samePartyLabel(a: string, b: string) {
       ? partyLabels[String(party).toLowerCase()]
       : String(party);
   return label(a) === label(b);
+}
+// Both the directory and full profile use dated seats first. Historical roster
+// affiliations remain visible, but are never labelled as a current party.
+export function personPartyFor(
+  seats: SeatObservation[],
+  row?: Roster['people'][number],
+  affiliationRow?: Roster['people'][number],
+) {
+  const party = seats[0]?.party ?? row?.party_now ?? row?.party ?? null;
+  const partyCurrent =
+    seats[0]?.party != null || (row?.current === true && !!row.party_now);
+  const rosterParty = row?.party ?? null;
+  return {
+    party,
+    partyCurrent,
+    rosterParty,
+    // Former affiliations need a distinct, named roster party_now observation;
+    // a different seat label alone does not establish a party change.
+    formerly:
+      affiliationRow?.party_now &&
+      affiliationRow.party &&
+      !samePartyLabel(affiliationRow.party_now, affiliationRow.party)
+        ? affiliationRow.party
+        : null,
+  };
 }
 // Link-only projection of graph/money.json at the fixture sourceCommit.
 // No figures: profiles need only the register's party labels/aliases. Tests

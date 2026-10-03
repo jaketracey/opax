@@ -9,6 +9,7 @@ import {
   type RosterId,
 } from './ids';
 import { ApiError } from './errors';
+import { personPartyFor } from './party-transforms';
 import type {
   Roster,
   Slugs,
@@ -26,6 +27,10 @@ export interface PersonProfile {
   legacyPersonId?: LegacyPersonId;
   rosterPersonId?: RosterId;
   party: string | null;
+  /** True only for a current seat or an explicitly current roster observation. */
+  partyCurrent: boolean;
+  rosterParty: string | null;
+  formerly: string | null;
   seats: SeatObservation[];
   sources: Source[];
   asOf: string;
@@ -263,7 +268,14 @@ export function joinPerson(
     canonicalPersonId: person?.person_id,
     legacyPersonId: numericPersonId(person?.legacy_person_id, row),
     rosterPersonId: person?.legacy_person_id ?? row?.pid,
-    party: seats[0]?.party ?? row?.party_now ?? row?.party ?? null,
+    ...personPartyFor(
+      seats,
+      row,
+      namedRosterRow(
+        [person?.name ?? name, name, ...(person?.aliases ?? [])],
+        roster,
+      ),
+    ),
     seats,
     sources,
     asOf: seats[0]?.as_of ?? roster.meta.generated,
