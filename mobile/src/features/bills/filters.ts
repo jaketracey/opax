@@ -116,12 +116,18 @@ export function billRowText(bill: BillListRow) {
   const chamber = bill.originating_house
     ? chamberLabel(bill.originating_house)
     : null;
+  // On screen a date never breaks across lines ("25 Jun / 2026"); VoiceOver
+  // reads the long form with ordinary spaces.
+  const date = (value: string, style: 'short' | 'long') =>
+    style === 'short'
+      ? formatDate(value, style).replace(/ /g, '\u00A0')
+      : formatDate(value, style);
   const introduced = (style: 'short' | 'long') =>
     bill.introduced
-      ? `${bill.introducedLabel} ${formatDate(bill.introduced, style)}`
+      ? `${bill.introducedLabel} ${date(bill.introduced, style)}`
       : null;
   const asAt = (style: 'short' | 'long') =>
-    bill.status_as_of ? `as at ${formatDate(bill.status_as_of, style)}` : null;
+    bill.status_as_of ? `as at ${date(bill.status_as_of, style)}` : null;
   const people =
     [bill.sponsor, bill.sponsor_party, bill.portfolio]
       .filter(Boolean)

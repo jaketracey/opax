@@ -178,7 +178,9 @@ function SplitRow({
             {split.label}
           </Text>
         </View>
-        <Text variant="figureInline">{countText(split)}</Text>
+        <Text variant="figureInline" style={stacked ? null : styles.counts}>
+          {countText(split)}
+        </Text>
       </View>
       <View
         accessibilityElementsHidden
@@ -378,6 +380,8 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     gap: spacing.s3,
   },
+  // Side by side, the counts keep their line and the party name wraps.
+  counts: { flexShrink: 0 },
   party: { flexDirection: 'row', alignItems: 'center', gap: spacing.s3 },
   dot: { width: 10, height: 10, borderRadius: 5 },
   bars: { gap: 2 },

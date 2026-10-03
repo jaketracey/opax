@@ -61,10 +61,10 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - assertVisible: https://theyvoteforyou.org.au/divisions/senate/2026-08-19/.*
 - takeScreenshot: ${EVIDENCE}/11-division-source
 - tapOn: OK
+# Near the end of the page an element cannot be centred: scroll to it only.
 - scrollUntilVisible:
     element:
       id: bill-speech-0-brief-label
-    centerElement: true
 - assertVisible: Tony Burke
 - assertVisible: Machine brief
 - takeScreenshot: ${EVIDENCE}/11-speech
@@ -96,12 +96,10 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-consultation
-    centerElement: true
 - assertVisible: Open for consultation from 8 September 2026
 - takeScreenshot: ${EVIDENCE}/11-consultation
 - scrollUntilVisible:
     element:
       id: bill-summary-attribution
-    centerElement: true
 - assertVisible: Written by a model from the exposure draft text; not the record\.
 - takeScreenshot: ${EVIDENCE}/11-exposure-summary

@@ -195,16 +195,16 @@ describe('bill list filters and sort', () => {
     expect(row('au-federal-r6850')).toMatchObject({
       name: 'Commonwealth Electoral Amendment (Cleaning up Political Donations) Bill 2022',
       status: 'Lapsed',
-      where: 'House of Representatives · Introduced 14 Feb 2022',
+      where: 'House of Representatives · Introduced 14\u00A0Feb\u00A02022',
       people: 'Andrew Wilkie · Independent',
     });
     const draft = row('au-federal-ed-online-safety-digital-duty-of-care-2026');
     expect(draft.status).toBe('Exposure draft');
-    expect(draft.where).toBe('Released 8 Sep 2026');
+    expect(draft.where).toBe('Released 8\u00A0Sep\u00A02026');
     expect(draft.people).toBe('Communications');
     expect(draft.label).toContain('Released 8 September 2026');
     const before = row('au-federal-r7549');
-    expect(before.asAt).toBe('as at 17 Sep 2026');
+    expect(before.asAt).toBe('as at 17\u00A0Sep\u00A02026');
     expect(before.label).toContain(
       'Before parliament, as at 17 September 2026',
     );
