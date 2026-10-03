@@ -40,6 +40,19 @@ cleanup() {
 trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
+# Maestro inputText may use iOS pasteboard internally. Serialize all input flows.
+if [ -n "${OPAX_PASTE_LOCK:-}" ]; then
+  deadline=$((SECONDS + ${OPAX_PASTE_WAIT_SECONDS:-3600}))
+  until mkdir "$OPAX_PASTE_LOCK" 2>/dev/null; do
+    [ "$SECONDS" -lt "$deadline" ] || { echo "Pasteboard lock wait expired" >&2; exit 1; }
+    sleep 5
+  done
+  PASTE_LOCK=1
+else
+  echo "No pasteboard lock configured; skipping lock." >&2
+fi
+# Recheck capacity after a potentially long shared-lock wait, before boot.
+scripts/capacity.sh >> "$OUT/capacity.log"
 OWN_DEVICE=1; ORIGINAL_SIZE=large; ORIGINAL_APPEARANCE=light
 boot_simulator "$UDID" > "$OUT/simulator.log" 2>&1
 ORIGINAL_SIZE=$(xcrun simctl ui "$UDID" content_size)
@@ -55,17 +68,6 @@ until grep -q OPAX_FIXTURE_READY "$OUT/fixture.log"; do
   [ "$SECONDS" -lt "$deadline" ] || { echo "Fixture did not become ready" >&2; exit 1; }
   sleep 1
 done
-# Maestro inputText may use iOS pasteboard internally. Serialize all input flows.
-if [ -n "${OPAX_PASTE_LOCK:-}" ]; then
-  deadline=$((SECONDS + 600))
-  until mkdir "$OPAX_PASTE_LOCK" 2>/dev/null; do
-    [ "$SECONDS" -lt "$deadline" ] || { echo "Pasteboard lock wait expired" >&2; exit 1; }
-    sleep 5
-  done
-  PASTE_LOCK=1
-else
-  echo "No pasteboard lock configured; skipping lock." >&2
-fi
 FLOWS=()
 OFFLINE=${OPAX_VERIFY_OFFLINE:-0}
 if [ "$#" = 0 ]; then set -- 01 02 03 04; fi
