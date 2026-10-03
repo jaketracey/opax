@@ -1,15 +1,16 @@
 import {emailBrandMark} from './community-email-mark'
 const escapeHtml = (value:string) => value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]!))
 
-export function signInEmail(link:string) {
+export function signInEmail(link:string,code?:string) {
  const origin=new URL(link).origin
  return communityEmail({origin,subject:'Your sign-in link for Opax',title:'Sign in to the community',
   preheader:'Your secure link to the Opax community. Valid for 15 minutes.',
   intro:'Use this secure link to sign in to your Opax community account. No password needed.',
+  ...(code?{detail:`<p class="email-ink" style="margin:0 0 28px;font-size:18px;line-height:28px;">Your Opax app sign-in code: <strong style="white-space:nowrap;letter-spacing:3px;">${escapeHtml(code)}</strong><br>Enter it in the app within 15 minutes. Using the code or the link signs in once.</p>`}:{}),
   link,button:'Sign in to Opax',
   note:'This link expires in <strong>15 minutes</strong> and can only be used once. Keep it private.',
   reason:'If you didn’t request this email, you can safely ignore it.',
-  text:`Sign in to Opax\n\nUse this secure link to sign in to your Opax community account:\n\n${link}\n\nThis link expires in 15 minutes and can only be used once. Keep it private.\n\nIf you did not request this email, you can safely ignore it.\n\nThe public record belongs to everyone.\nOpen Parliamentary Accountability Exchange\n${origin}\nAccount privacy: ${origin}/community?view=privacy`})
+  text:`Sign in to Opax\n\nUse this secure link to sign in to your Opax community account:\n\n${link}\n\n${code?`Your Opax app sign-in code: ${code}\nEnter it in the app within 15 minutes. Using the code or the link signs in once.\n\n`:''}This link expires in 15 minutes and can only be used once. Keep it private.\n\nIf you did not request this email, you can safely ignore it.\n\nThe public record belongs to everyone.\nOpen Parliamentary Accountability Exchange\n${origin}\nAccount privacy: ${origin}/community?view=privacy`})
 }
 
 export function replyEmail(data:{origin:string,author:string,title:string,body:string,threadId:string,replyId:string,unsubscribeUrl:string}) {
