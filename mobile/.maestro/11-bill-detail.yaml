@@ -68,16 +68,17 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - tapOn:
     id: bill-division-0-splits
 # Party splits by label and count in words, never colour alone.
-- scrollUntilVisible:
-    element:
-      id: bill-division-0-splits-greens
-    timeout: 60000
-- assertVisible: Greens, 9 ayes, no noes
+# In list order: the largest party (Labor) first, then Greens.
 - scrollUntilVisible:
     element:
       id: bill-division-0-splits-labor
     timeout: 60000
 - assertVisible: Labor, no ayes, 21 noes
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-splits-greens
+    timeout: 60000
+- assertVisible: Greens, 9 ayes, no noes
 - takeScreenshot: ${EVIDENCE}/11-party-splits
 # The link is just below the splits: a gentle scroll, so the page is not
 # still coasting (and the link off screen) when the tap lands.
