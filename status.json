@@ -1,0 +1,13 @@
+{
+ "date": "2026-10-04",
+ "status": "ok",
+ "started": "2026-10-03T16:15:38Z",
+ "finished": "2026-10-03T19:47:59Z",
+ "commit": "e76b63b1",
+ "deploy": "started by the push (deploy.yml, corpus.json changed)",
+ "summary": "728,771 resources (+2: press_release +2)",
+ "failures": [],
+ "warnings": [
+  "a source refused to change its register tonight (kept the last good rows): interests_federal"
+ ]
+}
