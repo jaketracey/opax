@@ -16,7 +16,7 @@ export const OG_HEIGHT = 630
 
 /** Bump when the drawing changes: it is folded into every og:image URL so the
  *  social crawlers (which cache by URL, some for weeks) fetch the new card. */
-export const OG_VERSION = '4'
+export const OG_VERSION = '5'
 
 import { STORY_SAFE, STORY_SIZES, type StoryFormat, type StorySlide } from './story'
 
@@ -196,7 +196,7 @@ export function cardTree(card: OgCard): El {
     h(
       'div',
       { style: { marginLeft: 22, fontFamily: SANS, fontSize: 24, fontWeight: 600, letterSpacing: '0.02em', color: SOFT } },
-      'Open Parliamentary Accountability eXchange',
+      'Open Parliamentary Accountability Exchange',
     ),
   )
 
@@ -343,7 +343,7 @@ export function portraitTree(card: OgCard): El {
     h(
       'div',
       { style: { marginLeft: 26, fontFamily: SANS, fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', color: SOFT } },
-      'Open Parliamentary Accountability eXchange',
+      'Open Parliamentary Accountability Exchange',
     ),
   )
 

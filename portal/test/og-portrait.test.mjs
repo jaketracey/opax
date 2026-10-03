@@ -44,7 +44,7 @@ test('a politician card stands the portrait large and centred over a big name an
   assert.ok(walk(tree).some(n => n.props?.style?.background === '#D93025'), 'the party dot');
   assert.ok(walk(tree).some(n => typeof n.props?.children === 'string' && n.props.children.startsWith('Photo: Commonwealth')), 'the Commons credit');
   assert.equal(engraving(tree), undefined, 'a portrait leaves no room for the engraving');
-  for (const fixed of ['Open Parliamentary Accountability eXchange', 'OPAX.COM.AU', 'Parliamentarian']) assert.ok(textNode(tree, fixed), fixed);
+  for (const fixed of ['Open Parliamentary Accountability Exchange', 'OPAX.COM.AU', 'Parliamentarian']) assert.ok(textNode(tree, fixed), fixed);
 });
 
 test('a bill card sets the title big, left, and fills the room with the engraving', () => {
@@ -85,7 +85,7 @@ test('the layout table and the format parser leave the landscape card untouched'
   assert.equal(ogFormat('portrait'), 'portrait');
   const home = cardTree(homeCard());
   assert.equal(home.props.style.width, 1200); assert.equal(home.props.style.height, 630);
-  assert.equal(OG_VERSION, '4', 'the landscape drawing did not change, so crawlers keep their cache');
+  assert.equal(OG_VERSION, '5', 'the masthead now spells the name Exchange, so crawlers fetch the new card');
 });
 
 test('the Worker draws ?format=portrait at 1080x1350, keys the cache on it and says so in a header', async () => {
