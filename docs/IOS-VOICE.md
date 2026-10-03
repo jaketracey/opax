@@ -1,6 +1,6 @@
 # Opax iOS voice assistant
 
-Discovery notes for the voice part of the Opax iOS app, written 3 October 2026 from source code, SDK source and published documentation. They feed the public design doc `docs/IOS-APP.md`.
+Discovery notes for the voice part of the Opax iOS app, written 3 October 2026 from source code, SDK source and published documentation. They feed the public design doc [IOS-APP.md](IOS-APP.md), which records the decisions taken since.
 
 Version 1 of the app is read-only public data plus the voice assistant ("Talk to Opax"). This document covers voice only. Product and UX are in `docs/IOS-UX.md`; data, API and architecture are in `docs/IOS-API-CONTRACT.md`.
 
@@ -9,7 +9,7 @@ No voice session was started while writing this. Nothing called ElevenLabs or an
 ## Summary
 
 - **Access (decided).** Jake approved option A on 3 October 2026. Voice is the only signed-in feature; every other screen is public and works signed out. The app signs in with a one-time code sent by email and offers in-app account deletion. Apple requires deletion because signing in creates an account.
-- **Session:** recommended for v1 is the existing cookie contract with explicit attachment. The app keeps the session token in the Keychain and attaches `Cookie: __Host-opax_session=…` and `Origin: https://opax.com.au` itself, only on voice and account routes. It is as safe as a new `X-Opax-Session` header and needs fewer Worker changes. The final choice is made in the synthesis (section 3).
+- **Session (decided):** the existing cookie contract with explicit attachment. The app keeps the session token in the Keychain and attaches `Cookie: __Host-opax_session=…` and `Origin: https://opax.com.au` itself, only on voice and account routes. It is as safe as a new `X-Opax-Session` header and needs fewer Worker changes. Settled on 3 October 2026 in [IOS-APP.md](IOS-APP.md#settled-session-design).
 - **Transport:** keep the existing same-origin WebSocket relay. Neither official ElevenLabs mobile SDK can use it: both run voice over LiveKit WebRTC, and the React Native SDK throws on a signed URL. The relay needs no change.
 - **Audio:** one Swift voice core. A single `AVAudioEngine` with voice processing (echo cancellation) handles capture and playback, and a `URLSessionWebSocketTask` connects to the relay. Audio travels as base64 chunks in whatever format the provider names at the start of each call: PCM16 or µ-law, at 16 kHz in the repository's fixtures. React Native wraps the core in a local Expo module; SwiftUI calls it directly. Voice favours SwiftUI only slightly.
 - **Worker changes:**
@@ -252,7 +252,7 @@ The provider's own close code is not forwarded (`portal/src/voice.ts:118-160`).
 
 The member opens the voice screen, agrees to the third-party AI consent (section 6), and signs in with an emailed one-time code. Only then can they start a call. They can sign out, and delete their account, in the app.
 
-- **Session.** How the app proves the session to the Worker is compared below. The recommendation for v1 is the existing cookie contract, attached explicitly.
+- **Session.** How the app proves the session to the Worker is compared below. The decision for v1 is the existing cookie contract, attached explicitly.
 - **Sign-in.** A one-time code in the sign-in email, typed into the app, under the security contract below.
   - It works when the email is read on another device.
   - It needs no `apple-app-site-association` file.
@@ -305,9 +305,9 @@ Neither `Cookie`, `Origin` nor `X-Opax-Session` is on `NSURLRequest`'s reserved 
 - **Cookie contract:** new work only where both designs need it: code issuance and exchange, deletion, deletion-safe accounting and the budget signal. The auth core shared by every community route is untouched.
 - **Header design:** the same, plus a header parser in `member()`, a new `sameOrigin()` rule, mixed-credential refusal, header logout, and regression tests on every route that calls those two functions.
 
-**Recommendation: the cookie contract with explicit attachment, for v1.** Its CSRF and theft properties match the header design. It is on Apple's documented manual-cookie path, and it leaves the authentication code every community route depends on unchanged. With one credential type there are no precedence rules to get wrong.
+**Decision (3 October 2026, [IOS-APP.md](IOS-APP.md#settled-session-design)): the cookie contract with explicit attachment, for v1.** Its CSRF and theft properties match the header design. It is on Apple's documented manual-cookie path, and it leaves the authentication code every community route depends on unchanged. With one credential type there are no precedence rules to get wrong.
 
-**Where this differs from the API lane.** The API lane agrees on the cookie session but prefers automatic attachment from an app-owned cookie jar, and falls back to an explicit `Cookie` header only if needed. This document prefers explicit attachment from the start, because it:
+**How the API lane's preference was resolved.** The API lane agreed on the cookie session but preferred automatic attachment from an app-owned cookie jar, with an explicit `Cookie` header only if needed. The synthesis chose explicit attachment from the start, because it:
 - keeps the token in the Keychain rather than the jar's on-disk store;
 - attaches it only to an allow-listed set of routes;
 - does not depend on how Foundation treats the `__Host-` prefix, `Secure` and expiry across relaunches. The API lane lists those as unverified integration gates.
@@ -315,6 +315,7 @@ Neither `Cookie`, `Origin` nor `X-Opax-Session` is on `NSURLRequest`'s reserved 
 Either way, one integration check remains before release. Against a TLS loopback fixture (no real email or voice), confirm on the iOS 18.4 simulator and a device that the `Cookie`, `Origin` and `Sec-WebSocket-Protocol` headers reach the Worker unchanged on the `wss:` upgrade. The cookie keeps `Secure`; the fixture must not drop it to pass over plain HTTP.
 
 Switch to the header design if:
+- the TLS fixture or device check shows the explicit `Cookie` header does not reach the Worker unchanged on the upgrade;
 - the Worker adds browser-only checks to these routes, such as `Sec-Fetch-Site`, which the app would otherwise have to imitate;
 - or app sessions need different powers from web sessions, enforced per request.
 
@@ -377,7 +378,7 @@ The existing link proof is a 256-bit random token stored as a hash and redeemed 
 
 **Scope (default: delete).** Apple's FAQ says deletion includes "user-generated content that's shared with others, such as photos, video, text posts, and reviews", and that "If local laws or regulations require that you maintain some data, let your users know". Today's removal only hides posts (`portal/src/community.ts:45-47`).
 
-1. **Personal data.** The member row (email, display name, bio), sessions, outstanding sign-in proofs, MCP keys, `voice_access`, the email outbox and unsubscribe tokens. Supporter checkout and subscription records go once any billing obligation is settled and the person is told (`portal/migrations/0001_community.sql:14-21`, `0010_reply_email_notifications.sql:5-15`).
+1. **Personal data.** The member row (email, display name, bio), sessions, outstanding sign-in proofs, MCP keys, `voice_access`, the email outbox and unsubscribe tokens. The outbox and unsubscribe tables are in `0010_reply_email_notifications.sql:5-15`. The supporter checkout and subscription tables were dropped by `0002_free_community.sql:2-3`, so nothing remains there.
 2. **Authored content.**
    - Discussions and replies, reading lists and their items, saved chats.
    - Sent direct messages.
@@ -389,7 +390,7 @@ The existing link proof is a 256-bit random token stored as a hash and redeemed 
    - the deleted discussion becomes a stub with no personal data.
 
    This is question 2.
-4. **Provider-held data.** The repository documents provider transcripts as deleted within one day (`docs/VOICE-ASSISTANT.md:20`), and the deletion screen should say so.
+4. **Provider-held data.** The repository documents provider transcripts as deleted within one day (`docs/VOICE-ASSISTANT.md:20`), and the deletion screen should say so once that setting is confirmed live.
    - Deleting them at once by conversation ID would need a provider key permission that is disabled today (`docs/VOICE-ASSISTANT.md:16`).
    - Stored `conversation_id` values link usage rows to provider records. Clear them once the provider's retention window has passed, or keep them only while a provider deletion is pending.
 5. **Retention exceptions.** Only where a law requires it or for a specific stated purpose, and disclosed in the deletion flow and on the privacy page.
@@ -449,7 +450,7 @@ Today's code is compatible with the rebuilt table, because it never writes a NUL
 | Active write, conversation-ID writes, reconcile, release and expiry (`voice.ts:22`, `:25`, `:57`, `:61`, `:194`, `:210`, `:218`) | None; they match by `id` and `state` | An orphaned call still closes and reconciles through its own relay, or expires fully charged |
 | Tool authorisation (`voice.ts:238`) | None | Its join to `members` finds nothing, so the orphaned call's tools return 403 until it ends |
 | Status and `finish` (`voice.ts:66-69`, `:276`) | None | Not reachable for a deleted member |
-| `expireVoiceSessions` (`voice.ts:20-26`) | **Add one statement:** set `conversation_id` to NULL where `member_id IS NULL`, the state is `closed`, `cancelled` or `expired`, and `closed_at ≤ now − 86400` | Provider conversation IDs on orphaned rows are dropped once the documented one-day transcript retention has passed, never on open rows |
+| `expireVoiceSessions` (`voice.ts:20-26`) | **Add one statement:** set `conversation_id` to NULL where `member_id IS NULL`, the state is `closed`, `cancelled` or `expired`, and `closed_at ≤ now − 86400`. **Also add scheduled housekeeping** on the existing five-minute cron (`portal/wrangler.jsonc:30`): run both expiry statements, then this cleanup, whether or not voice is enabled. Expiry must come first: a `connecting` or `active` row left by an interrupted Worker has no `closed_at` until expiry runs, and today expiry runs only on a status, start or finish request (`voice.ts:246`, `:256`, `:277`). Run the housekeeping in its own error handling, because the cron branch returns straight after reply-email delivery (`portal/src/index.ts:5271-5274`) and an email failure must not skip it. Staging has no cron (`portal/wrangler.jsonc:147`), so there it runs only on requests | The one-day clock runs from the stored `closed_at`: the close time of a reconciled call, or the housekeeping run that expired it. In production an orphaned call that never closed is expired, still fully charged, within five minutes after its stored `expires_at`, and its provider conversation ID is dropped within one day and five minutes of its `closed_at`, never on open rows. Until then a deleted member's rows are unlinked from the account but still point to the provider's conversation records |
 | **New: deletion batch** | One D1 `batch()`, which is one transaction. Delete the member's sessions, sign-in proofs, MCP keys, `voice_access` row and content rows (scope above), then the `members` row | The foreign-key action sets `member_id` to NULL on every voice row in the same transaction. `state`, `reserved_seconds`, `charged_seconds`, `created_at`, `expires_at` and `started_at` are untouched. No reservation is cancelled, released or deleted |
 
 **Type changes.**
@@ -475,8 +476,15 @@ Today's code is compatible with the rebuilt table, because it never writes a NUL
 5. **Unclaimed reservation at deletion.** The claim fails. Until expiry runs, the row's full reservation still counts in the global budget, so another member's reservation sees it withheld. After expiry it is `cancelled` with `charged_seconds` 0, and the budget returns.
 6. **Several orphaned open rows.** They coexist without a unique-index collision.
 7. **Batch atomicity.** A failing statement leaves the member and every voice row unchanged.
-8. **Conversation-ID cleanup.** It clears only orphaned, closed rows older than one day.
+8. **Conversation-ID cleanup.** It clears only orphaned rows whose stored `closed_at` is at least one day old, both from request-triggered expiry and from the scheduled housekeeping.
 9. **Same email signs up again while an orphaned call runs.** The new member gets a personal allowance as question 2 decides. The orphaned call still holds its slot and its budget.
+10. **Orphaned call with no later requests.**
+    - Member A holds an `active` call whose relay never reconciles, as after an interrupted Worker, and A is deleted.
+    - No status, start or finish request follows from anyone; only the scheduled handler runs.
+    - Before the row's stored `expires_at`, housekeeping changes nothing.
+    - The first run after `expires_at` marks the row `expired` with its full charge and `closed_at` set to that run's time.
+    - A run less than 86,400 seconds after that `closed_at` keeps the conversation ID; the first run at or after it clears the ID.
+    - Repeated with reply-email delivery made to fail, the housekeeping still runs.
 
 **Evidence.** A hardware-free run of tests 1 to 7 passed on 3 October 2026. It used Node 26.10's built-in SQLite with foreign keys on, the repository's migrations 0001 to 0004, and the reservation, claim, reconcile, expiry and tool statements read unchanged from `portal/src/voice.ts`. It also confirmed that the current schema refuses the delete. It is evidence for this contract, not product code.
 
@@ -484,20 +492,20 @@ The personal lifetime allowance stays separate from these aggregates. Whether a 
 
 ### Worker changes
 
-For the recommended cookie contract. Each item **needs Jake's OK to deploy**. None of them changes the relay (`portal/src/voice.ts:91-228`) or the tools.
+For the chosen cookie contract. Each item **needs Jake's OK to deploy**. The consolidated list, with IDs W1 to W24, is in [IOS-APP.md, section 9](IOS-APP.md#9-worker-changes). None of them changes the relay (`portal/src/voice.ts:91-228`) or the tools.
 
 1. **Native code issuance.** `auth/request` native mode, the challenge, the code, the keyed MAC and supersession, under the contract above. **Needs Jake's OK to deploy.**
 2. **Code exchange.** `auth/consume-code` with atomic attempts, one-winner redemption and shared link/code consumption. It returns the session cookie as `auth/consume` does, and labels the session `client:"ios"` through a migration. **Needs Jake's OK to deploy.**
 3. **Code secret.** A new Worker secret for the code MAC, with separate values for production and staging. **Needs Jake's OK to deploy.**
 4. **Account deletion.** A route for cookie sessions with Origin and fresh verification, linked from the web account page too, with the scope above. **Needs Jake's OK to deploy.**
-5. **Deletion-safe voice accounting.** Migration `0011_voice_deletion_safe`, the added cleanup statement, the deletion batch and the `Session` type change, with the nine tests in the contract above. Deletion cannot refund the monthly budget or free open slots. **Needs Jake's OK to deploy.**
+5. **Deletion-safe voice accounting.** Migration `0011_voice_deletion_safe`, the added cleanup statement, scheduled housekeeping on the five-minute cron that runs expiry before that cleanup, the deletion batch and the `Session` type change, with the ten tests in the contract above. Deletion cannot refund the monthly budget or free open slots. **Needs Jake's OK to deploy.**
 6. **Budget signal.** The 429 from start gains `reason: "budget" | "capacity"`, and status gains `budget_open`. Both clients can then say "Voice is closed for this month" (`portal/src/voice.ts:258-262`, `:64-74`). **Needs Jake's OK to deploy.**
 7. **Optional refund signal.** Error bodies from `connect` gain `released: true | false`. This helps HTTP clients only; WebSocket clients still read status (section 1). **Needs Jake's OK to deploy.**
 8. **Optional usage split.** A `client` column on `voice_sessions` so app and web minutes can be reported apart. **Needs Jake's OK to deploy.**
 9. **Privacy page and voice docs.** Mention the app, the microphone, ElevenLabs and deletion in the privacy view (`portal/public/community.js:196`) and in `docs/VOICE-ASSISTANT.md`. **Needs Jake's OK to deploy.**
 10. **Universal links (later).** An `apple-app-site-association` route for a dedicated app sign-in path, only if links are wanted. **Needs Jake's OK to deploy.**
 
-If the synthesis chooses the header design, add these:
+The synthesis chose the cookie contract, so these header-design changes are not planned. They would be needed only if the session design is revisited:
 - `member()` accepts `X-Opax-Session`;
 - `sameOrigin()` passes only a validated header token on a request with no Cookie;
 - mixed and invalid credentials are refused;
@@ -579,7 +587,7 @@ The audio and socket work is the same in either architecture, so write it once a
 1. **Relay client.**
    - A `URLSessionWebSocketTask` built from a `URLRequest`:
      - the URL is the `signed_url`, validated for scheme, host and path as the web does (`portal/voice/client.js:341-343`);
-     - headers are `Sec-WebSocket-Protocol: convai` plus the session credential: `Cookie` and `Origin` in the recommended design, or `X-Opax-Session` (section 3);
+     - headers are `Sec-WebSocket-Protocol: convai` plus the session credential, `Cookie` and `Origin` (section 3);
      - the task comes from the dedicated authenticated session, with no cookie store.
    - Set `maximumMessageSize` explicitly, for example to 2 MiB. The relay passes provider messages of up to 1,000,000 characters (`portal/src/voice.ts:146`), and Apple does not document the default (reported as 1 MiB).
    - On open, send `{"type":"conversation_initiation_client_data"}` at once; the relay replaces its content.
@@ -987,7 +995,7 @@ Settle the classification before shipping, for example by asking App Review thro
    - Is any data kept for a legal reason that must be disclosed?
    - Should a returning email get a fresh 600 seconds, or should a keyed hash of the email be kept, which is retained personal data that must be disclosed?
 
-   Monthly budget and open-call accounting must survive deletion either way.
+   Monthly budget and open-call accounting must survive deletion either way. Proposed defaults are in [IOS-APP.md, section 11](IOS-APP.md#11-open-decisions), decision 5.
 3. **Budget.** Should the app share the production 40,000-second monthly budget and the two call slots with the web, or get its own budget, key and ceiling?
 4. **Provider settings.** These live in the ElevenLabs dashboard, not this repository, and set the data cost, the codecs the app must handle, the sources UI and the privacy label:
    - the production agent's `user_input_audio_format` and `agent_output_audio_format`;
@@ -998,7 +1006,7 @@ Settle the classification before shipping, for example by asking App Review thro
 7. **Guideline 4.7.** How should the classification be settled before shipping, for example by asking App Review? If 4.7 applies, are the obligations in section 6 acceptable for v1: filtering, reporting with timely responses, blocking, per-instance consent, an index with a universal link, and age restriction?
 8. **Usage split.** May sessions and `voice_sessions` gain a `client` column, so app and web minutes are reported separately?
 9. **First real call.** Who makes the first real-device call on staging, and with which staging account? It needs either a sign-in email or a seeded session like the smoke test's (`portal/test/voice-staging-smoke.mjs:19-35`).
-10. **Session design.** The cookie contract (recommended) or `X-Opax-Session`? This is decided in the synthesis with the API lane.
+10. **Session design.** Decided on 3 October 2026 in [IOS-APP.md](IOS-APP.md#settled-session-design): the cookie contract, attached explicitly.
 
 ## Sources checked
 
