@@ -15,14 +15,14 @@ const {replyEmail}=await import(pathToFileURL(join(folder,'community-email.js'))
 test.after(()=>rmSync(folder,{recursive:true,force:true}));
 function fixture(){
  const db=new DatabaseSync(':memory:');
- for(const file of ['0001_community.sql','0002_free_community.sql','0009_community_social.sql','0010_reply_email_notifications.sql'])db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
+ for(const file of ['0001_community.sql','0002_free_community.sql','0009_community_social.sql','0010_reply_email_notifications.sql','0011_native_signin.sql'])db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
  const statement=(sql,args=[])=>({bind(...values){return statement(sql,values)},async first(){return db.prepare(sql).get(...args)||null},async all(){return {results:db.prepare(sql).all(...args)}},async run(){const r=db.prepare(sql).run(...args);return {success:true,meta:{changes:Number(r.changes)}}}});
  const outbox=[],background=[],cookies={};
  const env={COMMUNITY_DB:{prepare:statement,async batch(stmts){db.exec('BEGIN');try{const result=[];for(const stmt of stmts)result.push(await stmt.run());db.exec('COMMIT');return result}catch(e){db.exec('ROLLBACK');throw e}}},COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_EMAIL_FROM:'hello@login.opax.test',COMMUNITY_EMAIL:{async send(mail){outbox.push(mail);return {messageId:'email-'+outbox.length}}}};
  for(const [id,name] of [['alice','Alice Reader'],['bob','Bob Researcher'],['carol','Carol Observer']]){
   const token=id[0].repeat(43);cookies[id]='__Host-opax_session='+token;
   db.prepare('INSERT INTO members(id,email,display_name,created_at) VALUES (?,?,?,?)').run(id,id+'@example.test',name,1000);
-  db.prepare('INSERT INTO member_sessions VALUES (?,?,?,?)').run(createHash('sha256').update(token).digest('hex'),id,Math.floor(Date.now()/1000)+86400,1000);
+  db.prepare('INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at) VALUES (?,?,?,?)').run(createHash('sha256').update(token).digest('hex'),id,Math.floor(Date.now()/1000)+86400,1000);
  }
  db.prepare('INSERT INTO community_threads(id,member_id,title,body,created_at) VALUES (?,?,?,?,?)').run('housing','alice','A housing discussion','What does the record show?',1000);
  const call=(path,method='GET',data,user='bob',immediate=false)=>communityRoute(new Request('https://opax.test/api/community/'+path,{method,headers:{origin:'https://opax.test',...(user?{cookie:cookies[user]}:{}),...(data?{'content-type':'application/json'}:{})},body:data?JSON.stringify(data):undefined}),env,immediate?{waitUntil:p=>background.push(p)}:undefined);

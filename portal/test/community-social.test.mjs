@@ -13,14 +13,14 @@ const {communityRoute}=await import(pathToFileURL(join(folder,'community.mjs')))
 test.after(()=>rmSync(folder,{recursive:true,force:true}));
 function fixture(){
  const db=new DatabaseSync(':memory:');
- for(const file of ['0001_community.sql','0002_free_community.sql','0009_community_social.sql','0010_reply_email_notifications.sql'])db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
+ for(const file of ['0001_community.sql','0002_free_community.sql','0009_community_social.sql','0010_reply_email_notifications.sql','0011_native_signin.sql'])db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
  const statement=(sql,args=[])=>({bind(...values){return statement(sql,values)},async first(){return db.prepare(sql).get(...args)||null},async all(){return {results:db.prepare(sql).all(...args)}},async run(){const result=db.prepare(sql).run(...args);return {success:true,meta:{changes:Number(result.changes)}}}});
  const env={COMMUNITY_DB:{prepare:statement,async batch(stmts){db.exec('BEGIN');try{const results=[];for(const stmt of stmts)results.push(await stmt.run());db.exec('COMMIT');return results}catch(e){db.exec('ROLLBACK');throw e}}},COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test'};
  const cookies={};
  for(const [id,name] of [['alice','Alice Reader'],['bob','Bob Researcher'],['carol','Carol Observer'],['mod','Moderator']]){
   const token=(id[0]).repeat(43);cookies[id]='__Host-opax_session='+token;
   db.prepare('INSERT INTO members(id,email,display_name,bio,role,created_at) VALUES (?,?,?,?,?,?)').run(id,id+'@example.test',name,id==='bob'?'Housing research':'Public records',id==='mod'?'moderator':'member',1000);
-  db.prepare('INSERT INTO member_sessions VALUES (?,?,?,?)').run(createHash('sha256').update(token).digest('hex'),id,Math.floor(Date.now()/1000)+86400,1000);
+  db.prepare('INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at) VALUES (?,?,?,?)').run(createHash('sha256').update(token).digest('hex'),id,Math.floor(Date.now()/1000)+86400,1000);
  }
  const call=(path,method='GET',data,user='alice',origin='https://opax.test')=>communityRoute(new Request('https://opax.test/api/community/'+path,{method,headers:{origin,...(user?{cookie:cookies[user]}:{}),...(data?{'content-type':'application/json'}:{})},body:data?JSON.stringify(data):undefined}),env);
  const post=(recipient='bob',body='A private research question',client_id=crypto.randomUUID())=>({recipient_id:recipient,body,client_id});

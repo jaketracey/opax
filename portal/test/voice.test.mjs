@@ -18,7 +18,7 @@ const hash=async value=>Buffer.from(await crypto.subtle.digest('SHA-256',new Tex
 
 function fixture(){
   const db=new DatabaseSync(':memory:');
-  for(const name of ['0001_community.sql','0002_free_community.sql','0003_voice.sql','0004_voice_access.sql']) db.exec(readFileSync(new URL('../migrations/'+name,import.meta.url),'utf8'));
+  for(const name of ['0001_community.sql','0002_free_community.sql','0003_voice.sql','0004_voice_access.sql','0011_native_signin.sql']) db.exec(readFileSync(new URL('../migrations/'+name,import.meta.url),'utf8'));
   const statement=(sql,args=[])=>({bind(...values){return statement(sql,values)},async first(){return db.prepare(sql).get(...args)||null},async all(){return {results:db.prepare(sql).all(...args)}},async run(){const result=db.prepare(sql).run(...args);return {success:true,meta:{changes:Number(result.changes)}}}});
   const env={COMMUNITY_DB:{prepare:statement},COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',VOICE_ENABLED:'true',VOICE_AGENT_ID:'agent_test',ELEVENLABS_API_KEY:'server-only-test-key',VOICE_TOOL_SECRET:'t'.repeat(43),VOICE_MONTHLY_SECONDS:'40000',ASSETS:{async fetch(){return Response.json({entities:[],sources:[]})}}};
   const pending=[]; const ctx={waitUntil(p){pending.push(p)}};
@@ -251,7 +251,7 @@ test('real Worker integration preserves SDK protocol, proxy deadline and clean-c
   const mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:'opax',modules:true,script:compiled.outputFiles[0].text,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],d1Databases:{COMMUNITY_DB:'voice-runtime'},outboundService:'provider',bindings:{COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',VOICE_ENABLED:'true',VOICE_AGENT_ID:'agent_test',ELEVENLABS_API_KEY:'test-key',VOICE_TOOL_SECRET:'t'.repeat(43),VOICE_MONTHLY_SECONDS:'40000'}},{name:'provider',modules:true,script:provider,compatibilityDate:'2026-09-01'}]}));
   try{
     const db=await mf.getD1Database('COMMUNITY_DB','opax');
-    for(const name of ['0001_community.sql','0002_free_community.sql','0003_voice.sql','0004_voice_access.sql'])for(const sql of readFileSync(new URL('../migrations/'+name,import.meta.url),'utf8').replace(/^\s*--.*$/gm,'').split(';').map(s=>s.trim()).filter(Boolean))await db.prepare(sql).run();
+    for(const name of ['0001_community.sql','0002_free_community.sql','0003_voice.sql','0004_voice_access.sql','0011_native_signin.sql'])for(const sql of readFileSync(new URL('../migrations/'+name,import.meta.url),'utf8').replace(/^\s*--.*$/gm,'').split(';').map(s=>s.trim()).filter(Boolean))await db.prepare(sql).run();
     const id=crypto.randomUUID(),token='a'.repeat(43),timestamp=Math.floor(Date.now()/1000);
     await db.prepare('INSERT INTO members(id,email,created_at) VALUES(?,?,?)').bind(id,'runtime@example.invalid',timestamp).run();
     await db.prepare('INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at) VALUES(?,?,?,?)').bind(await hash(token),id,timestamp+600,timestamp).run();
