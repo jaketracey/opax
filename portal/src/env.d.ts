@@ -1,5 +1,5 @@
 interface Env {
-  /** HMAC-SHA-256 code-sign-in key. Separate Worker secret in each environment. */
+  /** HMAC-SHA-256 key for sign-in and member-bound deletion codes. Separate Worker secret in each environment. */
   COMMUNITY_CODE_MAC_SECRET?: string
   /** Present only on staging: the existing public API, with secrets kept in its Worker. */
   STAGING_API?: Fetcher;
@@ -54,7 +54,7 @@ interface Env {
 
 declare namespace Cloudflare {
   interface Env {
-    /** HMAC-SHA-256 code-sign-in key. Separate Worker secret in each environment. */
+    /** HMAC-SHA-256 key for sign-in and member-bound deletion codes. Separate Worker secret in each environment. */
     COMMUNITY_CODE_MAC_SECRET?: string
   /** Present only on staging: the existing public API, with secrets kept in its Worker. */
   STAGING_API?: Fetcher;

@@ -24,7 +24,7 @@ const wrongCode=code=>code==='00000000'?'00000001':'00000000';
 
 function fixture(t,{nativeSchema=true}={}){
  const db=new DatabaseSync(':memory:');
- for(const file of readdirSync(new URL('../migrations/',import.meta.url)).filter(name=>name.endsWith('.sql')&&(nativeSchema||name!=='0011_native_signin.sql')).sort())db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
+ for(const file of readdirSync(new URL('../migrations/',import.meta.url)).filter(name=>name.endsWith('.sql')&&(nativeSchema||name<'0011')).sort())db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
  t.after(()=>db.close());
  const outbox=[],trace=[];
  const statement=(sql,args=[])=>({
@@ -485,7 +485,7 @@ test('real Worker and local D1 enforce the concurrent email cap, MAC comparison 
  const mf=new Miniflare(convertV4MiniflareOptions({port:0,workers:[{name:'signin',modules:true,script,compatibilityDate:'2026-09-01',d1Databases:{COMMUNITY_DB:'signin-runtime'},bindings:{COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_CODE_MAC_SECRET:TEST_KEY},serviceBindings:{EMAIL_STUB:async req=>{outbox.push(await req.json());return Response.json({messageId:'test'})}},outboundService:()=>{throw Error('Outbound network is forbidden in sign-in tests')}}]}));
  try{
   const db=await mf.getD1Database('COMMUNITY_DB','signin');
-  for(const file of readdirSync(new URL('../migrations/',import.meta.url)).filter(name=>name.endsWith('.sql')).sort())for(const sql of readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8').replace(/^\s*--.*$/gm,'').split(';').map(s=>s.trim()).filter(Boolean))await db.prepare(sql).run();
+  for(const file of readdirSync(new URL('../migrations/',import.meta.url)).filter(name=>name.endsWith('.sql')).sort())await db.batch(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8').replace(/^\s*--.*$/gm,'').split(';').map(s=>s.trim()).filter(Boolean).map(sql=>db.prepare(sql)));
   const call=(path,data,ip='192.0.2.1')=>mf.dispatchFetch('https://opax.test/api/community/'+path,{method:'POST',headers:{origin:'https://opax.test','content-type':'application/json','cf-connecting-ip':ip},body:JSON.stringify(data)});
   for(let round=0;round<rounds;round++){
    await db.prepare('DELETE FROM community_limits').run();outbox.length=0;

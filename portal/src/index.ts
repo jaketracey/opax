@@ -27,7 +27,7 @@ import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { communityMcp } from './community-mcp'
-import { voiceRoute } from './voice'
+import { expireVoiceSessions, voiceRoute } from './voice'
 import { proxyPostHog } from './posthog'
 import { networkBlock } from './network-block'
 import { handleBillText } from './bill-text'
@@ -5269,7 +5269,9 @@ export default {
   // Cron: one daily edition across connected channels. See docs/DAILY-POST.md.
   async scheduled(controller: ScheduledController, env: Env, _ctx: ExecutionContext): Promise<void> {
     if (controller.cron === REPLY_EMAIL_CRON) {
-      console.log('community-reply-emails', JSON.stringify(await deliverReplyEmails(env)))
+      // Expiry and provider-ID cleanup also run while voice/community are paused.
+      try {await expireVoiceSessions(env)} catch {console.error(JSON.stringify({event:'voice_housekeeping_failed'}))}
+      try {console.log('community-reply-emails', JSON.stringify(await deliverReplyEmails(env)))} catch {console.error(JSON.stringify({event:'community_reply_email_dispatch_failed'}))}
       return
     }
     const result = await runSocialPublication(env, {

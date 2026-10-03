@@ -239,7 +239,7 @@ The provider's own close code is not forwarded (`portal/src/voice.ts:118-160`).
    - `signed_url` is always `wss:` on `COMMUNITY_ORIGIN`, so a local plain-HTTP Worker hands out an unusable `wss://127.0.0.1` URL (`portal/src/voice.ts:264-265`).
    - The first message must be the initiation event within 10 seconds (`portal/src/voice.ts:100`, `:130`).
    - All capture and playback code is Web Audio: AudioWorklets, `getUserMedia` and a Wasm resampler (`portal/voice/build.mjs:13-25`).
-6. **No account deletion.** The community has no self-service account deletion route or page. `portal/src` has no member delete, and the privacy view lists none (`portal/public/community.js:196`). Removing a discussion or reply today only hides it (`portal/src/community.ts:45-47`). This blocks App Review for any app that signs people in (section 6).
+6. **Account deletion at the discovery baseline.** The baseline had no self-service account deletion route or page; W5 now implements the routes and web account flow on `ios/worker-deletion`. At that baseline, `portal/src` had no member delete, and the privacy view listed none (`portal/public/community.js:196`). Removing a discussion or reply today only hides it (`portal/src/community.ts:45-47`). This blocks App Review for any app that signs people in (section 6).
 7. **"Budget closed" cannot be told apart from "busy".** When the monthly budget is spent, start returns the same 429 "at capacity" error as when both slots are taken (`portal/src/voice.ts:258-262`). Status does not expose the budget (`portal/src/voice.ts:64-74`).
 
 ## 3. Who can use voice in the app
@@ -342,7 +342,7 @@ The existing link proof is a 256-bit random token stored as a hash and redeemed 
    - a 256-bit random `challenge_id`, bound to the normalised email and `client`;
    - an eight-digit code from `crypto.getRandomValues` with rejection sampling, so no digit is more likely than another.
 3. **Protected storage.** The code is stored only as an HMAC-SHA-256 keyed with a new Worker secret and bound to `challenge_id`. A plain hash of eight digits can be reversed by enumeration if the table leaks; a keyed MAC cannot without the key.
-4. **Supersession.** A new request for the same email and client invalidates that email's earlier unused proofs.
+4. **Supersession.** Only an accepted native email supersedes earlier unused native proofs for the same normalised email. Insert the new proof before delivery; after successful delivery, invalidate only native rows older than the new row, including same-second requests. A delayed older send cannot invalidate a newer proof. Failed delivery removes the new proof and leaves previous codes and links working. Web links are untouched.
 5. **Verification.** `POST /api/community/auth/consume-code {challenge_id, code}` runs these steps in order. Every admission step is a single atomic increment-and-check, completed before any comparison:
    1. **Look up the challenge.** This gives its bound, normalised email; the request never supplies one. An unknown, used, superseded or expired challenge fails only after step 2, so it still costs IP quota.
    2. **IP admission.** Increment and check the `consume:` IP key shared with link consumption: 30 per 15 minutes (`portal/src/community-auth.ts:19`). This uses the existing `limit()` pattern, an `INSERT … ON CONFLICT DO UPDATE SET hits=hits+1 RETURNING hits` in one statement (`portal/src/community-core.ts:16-19`).
@@ -394,7 +394,7 @@ The existing link proof is a 256-bit random token stored as a hash and redeemed 
    - Deleting them at once by conversation ID would need a provider key permission that is disabled today (`docs/VOICE-ASSISTANT.md:16`).
    - Stored `conversation_id` values link usage rows to provider records. Clear them once the provider's retention window has passed, or keep them only while a provider deletion is pending.
 5. **Retention exceptions.** Only where a law requires it or for a specific stated purpose, and disclosed in the deletion flow and on the privacy page.
-6. **Flow.** Fresh verification (a new code, which Apple allows), then deletion, a statement of how long it takes, and a confirmation when done. Any live call is ended first.
+6. **Flow.** `POST /api/community/account/deletion-code {}` emails a new code for the signed-in member; `POST /api/community/account/delete {challenge_id, code}` verifies it and deletes the account in one batch, returning `{deleted:true,signed_out:true,message}` and expiring the cookie. Both require a cookie session and exact Origin. Deletion completes in that response. Any live call is ended first by the client; server-side deletion can still occur during an orphaned call without freeing its slot. The web account links to `/community?view=delete-account`. The full route contract and table inventory are in [COMMUNITY.md, account deletion](COMMUNITY.md#account-deletion-w5-and-w6-branch-implementation).
 
 **Deletion-safe voice accounting (required).** Three facts from the source set the constraints:
 - **The monthly budget** is `SUM(charged_seconds)` over every `voice_sessions` row created since the UTC month start **minus 720 seconds** (`monthStart − 600 − 60 − 60`). That window counts a reservation made in the last 12 minutes of a month, which can still be running, against the new month as well (`portal/src/voice.ts:31-32`, `:38`, `:47`). The existing boundary test asserts this (`portal/test/voice.test.mjs:71-76`).
@@ -409,7 +409,7 @@ Repeated delete-and-sign-up would then bypass the application's monthly ceiling.
 
 #### Migration contract: `0012_voice_deletion_safe`
 
-This is a proposal for a later Worker lane, written as a contract, not code. **Needs Jake's OK to deploy.**
+Implemented on `ios/worker-deletion`, branch only, in `portal/migrations/0012_voice_deletion_safe.sql` and the Worker. Migration 0011 is `0011_native_signin`. **Needs Jake's OK to deploy.**
 
 **Schema after the migration:**
 
@@ -427,16 +427,17 @@ This is a proposal for a later Worker lane, written as a contract, not code. **N
 3. Copy every row, naming all ten columns explicitly.
 4. Drop `voice_sessions` and rename `voice_sessions_next` to `voice_sessions`. No table references `voice_sessions`, so the drop cascades nothing.
 5. Recreate the four indexes.
-6. `PRAGMA defer_foreign_keys = off`; `PRAGMA foreign_key_check` must return no rows.
+6. `PRAGMA defer_foreign_keys = off`; the migration includes `PRAGMA foreign_key_check`, but `migrations apply` does not print query results. Run `PRAGMA foreign_key_check` as a separate database command after applying, inspect the output and require zero rows.
 
-**Rollout.**
+**Rollout (future authorized operator work only).** Staging first, rehearsing with threads/replies and conversations/messages present. Apply **0011_native_signin before 0012**, following the sign-in compatibility order in COMMUNITY.md. Complete the disable/drain/migrate/release sequence **outside the nightly refresh/deploy window (03:15 Australia/Sydney)**, including its running time. Confirm no nightly is running or can overlap: it deploys `main` with `VOICE_ENABLED=true` and could re-enable voice mid-drain. Do not span that window with voice paused for migration.
+
 1. **Disable.** Deploy `VOICE_ENABLED=false`. New `start` and `connect` requests are then refused before reserving or claiming (`voice.ts:252`, `:268-269`). Existing calls stay bounded by their deadlines (`docs/VOICE-ASSISTANT.md:40`).
 2. **Drain.** Let requests already running on the previous deployment finish. A `start` or `connect` that began before the switch can still reserve, claim or activate a row afterwards.
 3. **Read the stored deadlines.** Take the latest `expires_at` of every open row from the database, not from a formula. Claiming resets it to claim time + `reserved_seconds` + 30, and activation resets it again (`voice.ts:51`, `:210`). A claim at 59 seconds after reservation, followed by up to 10 seconds for the signed URL and 10 for the upstream handshake (`voice.ts:179`, `:200-204`), gives activation at about +79 seconds and expiry at about +709 seconds for a 600-second reservation. D1 latency can add more, so no fixed bound is safe.
 4. **Run expiry.** After that latest deadline has passed, run the two expiry statements of `expireVoiceSessions` with the current time (`voice.ts:22`, `:25`). Waiting alone changes nothing: expiry only runs when status, `start` or `finish` executes it (`voice.ts:246`, `:256`, `:277`), and `start` is refused while voice is disabled.
 5. **Verify.** Check that no row is `reserved`, `connecting` or `active`. If any remains, for example a relay that closed late, repeat steps 3 and 4.
-6. **Apply the migration.**
-7. **Deploy and re-enable.** Deploy the code changes below and re-enable voice.
+6. **Record the restore point, then apply.** Immediately before 0012, record a **D1 Time Travel bookmark** with the environment/database, timestamp and currently applied migration in private operator evidence. There is no down migration. Apply 0012, then run **`PRAGMA foreign_key_check` as a separate database command** and inspect its output; require zero rows. The check inside the migration is silent under `migrations apply`. Verify row/constraint/index preservation and no remaining rebuild tables.
+7. **Merge, deploy and re-enable.** Only after production 0012 and the separate check pass, merge W5/W6 to **`main`, then deploy that merged `main`** with voice still disabled; validate and re-enable voice. Nothing reaches `main` before its required migration is applied in production. Do not ship by deploying this branch: the next nightly would replace it. Staging validation must pass and Jake must authorize the production sequence first.
 
 Today's code is compatible with the rebuilt table, because it never writes a NULL `member_id`, so a delay between steps 6 and 7 is safe.
 
@@ -455,7 +456,7 @@ Today's code is compatible with the rebuilt table, because it never writes a NUL
 
 **Type changes.**
 - `Session.member_id` becomes `string | null` (`portal/src/voice.ts:10-13`). Every reader must handle NULL. None returns it to a client today: status returns only `id`, `expires_at` and `state` (`portal/src/voice.ts:73`).
-- The migration lists in the unit fixture and the Worker integration test gain `0012` (`portal/test/voice.test.mjs:21`, `:254`).
+- The migration lists in the unit fixture and the Worker integration test gain `0012` (and the community schema it uses) (`portal/test/voice.test.mjs:21`, `:254`).
 
 **Tests that must pass before deployment.** All run with foreign keys enforced: Node's built-in SQLite enables them by default, and Miniflare's D1 enforces them.
 1. **Migration fidelity.**
@@ -486,9 +487,20 @@ Today's code is compatible with the rebuilt table, because it never writes a NUL
     - A run less than 86,400 seconds after that `closed_at` keeps the conversation ID; the first run at or after it clears the ID.
     - Repeated with reply-email delivery made to fail, the housekeeping still runs.
 
+
+**W5 implementation decisions for review (decision 5 remains open).**
+- Deletion has its own `community_deletion_challenges` table in 0012, bound to the member ID, with a 15-minute expiry. It reuses the native eight-digit CSPRNG generator, secret, fixed-size constant-time comparator and shared issuance/consumption limits (15/IP/hour, 5/email/hour, 30/IP/15 minutes, 10/email/day, 5/challenge). Its MAC domain is `opax-deletion-code-v1` and includes the member ID; it has no link token and cannot sign in. Reissue supersedes deletion proofs only, in the insertion batch before email delivery. A failed email removes its new proof, leaving older deletion proofs superseded and requiring another request. This deletion-purpose rule stays separate from the approved native sign-in rule, which supersedes only after accepted delivery and preserves earlier codes and web links on a failed send. Malformed, wrong, expired, reused, superseded, other-member and over-limit proofs return one generic 400. Missing session is 401, wrong/missing Origin 403, unavailable schema/secret/email/database 503, other methods 405.
+- The deletion batch conditionally redeems the proof, rechecking the exact session hash, expiry, member existence and supersession. Deletion alone remains available while `COMMUNITY_ENABLED=false` or the member is disabled, with an unexpired, unrevoked cookie and exact Origin. This implements the orchestrator's App Review 5.1.1(v) policy; moderation and sign-in restrictions on other operations stay unchanged. The status response adds `can_delete_account` so the web account/deletion UI remains reachable for such sessions, without returning a disabled member as normally signed in. A random redemption marker guards every scope statement in that batch. A losing request makes no scope changes; a SQL failure rolls back redemption and all deletions (admission counters remain spent). Sign-in session issuance now checks the still-present redeemed login proof in its own batch, preventing a concurrent deletion from being followed by account resurrection from an old proof. This remains schema-compatible before 0011.
+- To implement preserved content without placeholder accounts, 0012 also rebuilds `community_threads.member_id` and both `direct_conversations` participants as nullable `ON DELETE SET NULL` links, preserving their other columns, constraints and indexes. A discussion with any surviving reply becomes `Deleted discussion`, empty body, NULL source and zero opening timestamp; hidden moderation status stays. A discussion with no surviving reply is deleted. At the end of later deletions, owner-less stubs left without replies are removed with their dependent reactions/activity/reports. New replies to a visible stub are allowed; there is no owner to notify or email. Existing reactions to the removed opening are deleted.
+- Sent messages and the deleted member’s read markers are removed. Empty affected conversations and their read markers are deleted. A surviving conversation has an absent peer and zero creation timestamp; only the remaining participant can read it, and cannot send new messages to it. When that participant is deleted later, their messages and the empty shell are removed. Public APIs/UI label the absent author/peer `Deleted account`, without a profile or block link.
+- Reports about the removed opening, replies or messages are deleted even when filed by someone else, as are activity records referencing the removed content. Other members’ unrelated reports/activity, reply/message text, saved chats/lists and credentials stay. Automated `social_*` publication tables have no member references and are unchanged. There is no separate member-post table: posts are discussion openings/replies.
+- The batch removes current email/member/MCP limiter buckets and all expired buckets, leaving shared IP limits. Existing proofs and quota buckets can race, but a successful deletion retains no email hash. A returning email gets a fresh lifetime voice allowance; IP limits and orphaned global charges/slots still apply. Policies live in `community-deletion.ts`’s scope batch and limiter inventory for review/change.
+- The deletion screen discloses remaining voice charges, slots and provider IDs until one day after stored `closed_at`, on the next five-minute run. It makes no unverified promise to delete the provider’s copy. The web flow also clears this browser’s `opax-chats` cache, in-memory message drafts and displayed MCP key. Other devices’ local caches require their client’s own cleanup.
+- Deletion fails closed on the post-0011 schema before quota or email, even for an account with no voice history. Apply the complete 0012 before releasing W5; schema and old web-flow compatibility, full deletion and rollback are tested across that boundary. After any successful deletion, rollback must keep the NULL-aware content readers and guarded session issuance.
+
 **Evidence.** A hardware-free run of tests 1 to 7 passed on 3 October 2026. It used Node 26.10's built-in SQLite with foreign keys on, the repository's migrations 0001 to 0004, and the reservation, claim, reconcile, expiry and tool statements read unchanged from `portal/src/voice.ts`. It also confirmed that the current schema refuses the delete. It is evidence for this contract, not product code.
 
-The personal lifetime allowance stays separate from these aggregates. Whether a returning email gets a fresh 600 seconds is question 2.
+The branch follows decision 5’s default: a returning email receives a new member ID and a fresh 600-second allowance. No email hash is kept for usage accounting. The original orphan rows still hold global charges and slots.
 
 ### Worker changes
 
@@ -497,7 +509,7 @@ For the chosen cookie contract. Each item **needs Jake's OK to deploy**. The con
 1. **Native code issuance.** `auth/request` native mode, the challenge, the code, the keyed MAC and supersession, under the contract above. **Needs Jake's OK to deploy.**
 2. **Code exchange.** `auth/consume-code` with atomic attempts, one-winner redemption and shared link/code consumption. It returns the session cookie as `auth/consume` does, and labels the session `client:"ios"` through a migration. **Needs Jake's OK to deploy.**
 3. **Code secret.** A new Worker secret for the code MAC, with separate values for production and staging. **Needs Jake's OK to deploy.**
-4. **Account deletion.** A route for cookie sessions with Origin and fresh verification, linked from the web account page too, with the scope above. **Needs Jake's OK to deploy.**
+4. **Account deletion.** W5 implements `account/deletion-code` and `account/delete` POSTs for cookie sessions with exact Origin and fresh verification, linked from the web account page too, with the scope above. **Needs Jake's OK to deploy.**
 5. **Deletion-safe voice accounting.** Migration `0012_voice_deletion_safe`, the added cleanup statement, scheduled housekeeping on the five-minute cron that runs expiry before that cleanup, the deletion batch and the `Session` type change, with the ten tests in the contract above. Deletion cannot refund the monthly budget or free open slots. **Needs Jake's OK to deploy.**
 6. **Budget signal.** The 429 from start gains `reason: "budget" | "capacity"`, and status gains `budget_open`. Both clients can then say "Voice is closed for this month" (`portal/src/voice.ts:258-262`, `:64-74`). **Needs Jake's OK to deploy.**
 7. **Optional refund signal.** Error bodies from `connect` gain `released: true | false`. This helps HTTP clients only; WebSocket clients still read status (section 1). **Needs Jake's OK to deploy.**
