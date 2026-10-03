@@ -78,6 +78,9 @@ class Layouts(unittest.TestCase):
             f._load_docs([doc], db)
             for name in ('money', 'access', 'fits'):
                 (p/(name+'.json')).write_text('{}')
+            (p/'out').mkdir()
+            (p/'out/n-old-name.json').write_text(json.dumps({'name': 'Old spelling', 'buckets': {}}))
+            (p/'out/notes.json').write_text(json.dumps({'notes': 'unrelated'}))
             repo = Path(__file__).resolve().parents[1]
             subprocess.run([sys.executable, str(repo/'scripts/export_interests.py'),
                             '--out', str(p/'out'), '--money', str(p/'money.json'),
@@ -85,6 +88,8 @@ class Layouts(unittest.TestCase):
                            env={**os.environ, 'OPAX_DB': str(db)}, check=True, capture_output=True)
             person = json.loads((p/'out/n-basem-abdo.json').read_text())
             self.assertEqual(person['unread_pages'], 1)
+            self.assertFalse((p/'out/n-old-name.json').exists())
+            self.assertTrue((p/'out/notes.json').exists())
 
     def test_first_name_beats_dirty_tenure_for_same_surname(self):
         conn = sqlite3.connect(':memory:')

@@ -614,6 +614,19 @@ def main():
         }
         with open(os.path.join(out_dir, "recent.json"), "w") as f:
             json.dump(recent_export, f, **dump)
+        # Corrected source names can change an unmatched slug into a member ID.
+        # Remove only obsolete person objects; leave metadata and unrelated files.
+        for filename in os.listdir(out_dir):
+            if not filename.endswith(".json") or filename[:-5] in people:
+                continue
+            path = os.path.join(out_dir, filename)
+            try:
+                with open(path) as f:
+                    old = json.load(f)
+            except (OSError, ValueError):
+                continue
+            if isinstance(old, dict) and "name" in old and "buckets" in old:
+                os.unlink(path)
     else:
         json.dump({**index, "people": people}, sys.stdout, **dump)
     print(f"[export_interests] {n_rows} rows ({n_nil} nil dropped), {len(people)} people, "
