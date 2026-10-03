@@ -1,7 +1,7 @@
 import { ActionSheetIOS } from 'react-native';
 import type { CatalogKind } from '../../api/policy';
 import { Button } from '../../design/primitives';
-import { colors } from '../../design/tokens';
+import { chrome } from '../../design/tokens';
 import { kindLabel, searchKinds } from './model';
 
 /** A native menu keeps complete kind names readable on narrow phones. */
@@ -23,7 +23,7 @@ export function KindPicker({
             title: 'Search kind',
             options: [...searchKinds.map((kind) => kind.label), 'Cancel'],
             cancelButtonIndex: searchKinds.length,
-            tintColor: colors.navy,
+            tintColor: chrome.tint,
             userInterfaceStyle: 'light',
           },
           (index) => {

@@ -2,6 +2,7 @@ import { act } from 'react';
 import { ActionSheetIOS } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { Button } from '../src/design/primitives';
+import { chrome } from '../src/design/tokens';
 import { KindPicker } from '../src/features/search/KindPicker';
 
 jest.mock('react-native/Libraries/ActionSheetIOS/ActionSheetIOS', () => ({
@@ -22,6 +23,9 @@ test('the native kind menu submits only its allowed selection and honours Cancel
   });
   act(() => renderer.root.findByType(Button).props.onPress());
   const [options, select] = sheet.mock.calls[0]!;
+  // ActionSheetIOS rejects DynamicColorIOS objects before its native call.
+  expect(typeof options.tintColor).toBe('string');
+  expect(options.tintColor).toBe(chrome.tint);
   expect(options.options).toEqual([
     'People',
     'Declared interests',
