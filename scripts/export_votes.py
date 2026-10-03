@@ -27,15 +27,27 @@ Two sources, one shape:
              "against": [...]},
    "nsw:penny-sharpe": {..., "jurisdiction": "nsw", "house": "nsw_lc", ...},
    "_names": {"anthony albanese": ["10007"], "penny sharpe": ["nsw:penny-sharpe"], ...},
-   "_meta": {"exported_at": "2026-10-03T03:41:07Z", "latest_division_date": "2026-09-25",
+   "_meta": {"content_changed_at": "2026-10-03T03:41:07Z", "latest_division_date": "2026-09-25",
              "latest_division_date_by_jurisdiction": {"federal": "2026-09-11", "nsw": "2026-09-25"},
              "schema": 1}}
 
 `_names` (lowercased display name -> keys) is how a person page finds records
 for a name that has no portrait id; a name that voted in two parliaments lists
-both keys. `_meta` dates the file: when this export ran (UTC), and the newest
-dated division counted in any record above, overall and per jurisdiction (null
-and {} when there is none). `schema` changes only when the file's shape does.
+both keys. `_meta` dates the file:
+
+  content_changed_at  when this content was first exported (UTC). A run whose
+                      output matches the file it replaces (PREVIOUS, the
+                      checkout's portal/public/votes.json) byte for byte apart
+                      from this value keeps the old value, so an unchanged rerun
+                      writes an identical file. With no previous file, an
+                      unreadable one or one without the field, it is now.
+  latest_division_date  the newest dated division counted in the totals of a
+                      published record (null when none). Federal totals count
+                      every aye and no in the legacy tables, so a legacy state
+                      division a federal record counts dates it too.
+  latest_division_date_by_jurisdiction  the same per record `jurisdiction` ({}).
+  schema              changes only when the file's shape does.
+
 They are the only non-record keys; both start with "_" and neither carries a
 `name`, which is how readers that walk every value (home-data.js) skip them.
 
@@ -64,11 +76,15 @@ import sys
 import unicodedata
 from collections import Counter
 from datetime import datetime, timezone
+from pathlib import Path
 
 DB = "file:" + os.path.expanduser("~/.cache/autoresearch/parli.db") + "?mode=ro"
+# The file this export replaces (daily_refresh.sh runs this script from the same checkout).
+PREVIOUS = Path(__file__).resolve().parent.parent / "portal" / "public" / "votes.json"
 PER_SIDE = 6
 SCHEMA = 1  # _meta.schema: bump when the shape of the file changes
 ISO_DATE = re.compile(r"\d{4}-\d\d-\d\d")
+STAMP = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ")
 
 # Leading category in three-part motion names ("Motions - Climate Change - ...").
 CATEGORY_STAGE = {
@@ -202,6 +218,25 @@ def note_latest(latest, jur, date):
         latest[jur] = date
 
 
+def dump(out):
+    return json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n"
+
+
+def carried_stamp(out, previous):
+    """The previous file's content_changed_at when that file is exactly what this run
+    would write with it, else None: no file, not JSON, no usable _meta, or any other
+    byte changed. Leaves out["_meta"]["content_changed_at"] for the caller to set."""
+    try:
+        raw = Path(previous).read_text(encoding="utf-8")
+        stamp = json.loads(raw)["_meta"]["content_changed_at"]
+    except (OSError, ValueError, TypeError, KeyError):
+        return None
+    if not isinstance(stamp, str) or not STAMP.fullmatch(stamp):
+        return None
+    out["_meta"]["content_changed_at"] = stamp
+    return stamp if dump(out) == raw else None
+
+
 def pick_sides(rows, divisions):
     """rows: [(division_key, vote)] -> {"for": [...], "against": [...]}, one entry
     per bill, most recent first, PER_SIDE each."""
@@ -228,7 +263,7 @@ def pick_sides(rows, divisions):
     return out
 
 
-def export_federal(db, out, names, latest):
+def export_federal(db, out, names, newest):
     members = {r[0]: r for r in db.execute(
         "SELECT person_id, full_name, COALESCE(party_canonical, party), chamber FROM members")}
     divisions = {}
@@ -240,8 +275,14 @@ def export_federal(db, out, names, latest):
         title, stage, _, _ = parsed
         divisions[did] = {"name": title, "stage": stage, "date": date[:10], "jur": "federal",
                           "rebels": int(rebellions or 0), "polarity": polarity(parsed, summary)}
-    dates = {did: date[:10] for did, date in db.execute(
-        "SELECT division_id, date FROM divisions WHERE COALESCE(state, 'federal') = 'federal' AND date IS NOT NULL")}
+    # `dates` (federal divisions) gives a record its `years`; the totals count every legacy
+    # division, whatever its state, so `counted` dates them for _meta.
+    dates, counted = {}, {}
+    for did, date, state in db.execute(
+            "SELECT division_id, date, COALESCE(state, 'federal') FROM divisions WHERE date IS NOT NULL"):
+        counted[did] = date[:10]
+        if state == "federal":
+            dates[did] = date[:10]
     votes = {}
     for pid, did, vote in db.execute("SELECT person_id, division_id, vote FROM votes WHERE vote IN ('aye', 'no')"):
         votes.setdefault(pid, []).append((did, vote))
@@ -262,14 +303,16 @@ def export_federal(db, out, names, latest):
         dated = [dates[d] for d, _ in rows if d in dates]
         if dated:
             entry["years"] = [int(min(dated)[:4]), int(max(dated)[:4])]
-            note_latest(latest, "federal", max(dated))
         entry.update(pick_sides(rows, divisions))
         out[pid] = entry
+        counted_dates = [counted[d] for d, _ in rows if d in counted]
+        if counted_dates:
+            newest[pid] = max(counted_dates)
         names.setdefault(name.lower(), []).append(pid)
     return len(divisions)
 
 
-def export_state(db, out, names, latest):
+def export_state(db, out, names, newest):
     divisions = {}
     for did, name, question, bill_ref, date, extra in db.execute(
             "SELECT id, name, question, bill_ref, date, extra FROM ext_divisions WHERE jurisdiction != 'federal'"):
@@ -307,34 +350,39 @@ def export_state(db, out, names, latest):
         }
         entry["divisions_total"] = entry["ayes"] + entry["noes"]
         entry["years"] = [int(min(p["dates"])[:4]), int(max(p["dates"])[:4])]
-        note_latest(latest, jur, max(p["dates"]))
         entry.update(pick_sides(rows, divisions))
-        out[key] = entry
+        out[key] = entry  # two person keys can share a slug: the later one replaces the earlier
+        newest[key] = max(p["dates"])
         names.setdefault(name.lower(), []).append(key)
     return len(divisions), sum(1 for d in divisions.values() if d["polarity"])
 
 
 def main():
     db = sqlite3.connect(DB, uri=True)
-    out, names, latest = {}, {}, {}
-    n_fed = export_federal(db, out, names, latest)
-    n_state, n_state_bill = export_state(db, out, names, latest)
+    out, names, newest = {}, {}, {}
+    n_fed = export_federal(db, out, names, newest)
+    n_state, n_state_bill = export_state(db, out, names, newest)
+    latest = {}
+    for key, date in newest.items():  # one date per published key, so a replaced record leaves none
+        note_latest(latest, out[key]["jurisdiction"], date)
     out["_names"] = names
     out["_meta"] = {
-        "exported_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "content_changed_at": None,
         "latest_division_date": max(latest.values(), default=None),
         "latest_division_date_by_jurisdiction": dict(sorted(latest.items())),
         "schema": SCHEMA,
     }
+    carried = carried_stamp(out, PREVIOUS)
+    out["_meta"]["content_changed_at"] = carried or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    json.dump(out, sys.stdout, ensure_ascii=False, separators=(",", ":"))
-    sys.stdout.write("\n")
+    sys.stdout.write(dump(out))
     people = [e for k, e in out.items() if not k.startswith("_")]
     with_lists = sum(1 for e in people if e["for"] or e["against"])
     by_jur = Counter(e["jurisdiction"] for e in people)
     print(f"people {len(people)} ({dict(by_jur)}), with listed bills {with_lists}, "
           f"federal divisions parsed {n_fed}, state divisions {n_state} (bill questions {n_state_bill}), "
-          f"names indexed {len(names)}, latest division {out['_meta']['latest_division_date']}", file=sys.stderr)
+          f"names indexed {len(names)}, latest division {out['_meta']['latest_division_date']}, "
+          f"content {'unchanged since' if carried else 'changed at'} {out['_meta']['content_changed_at']}", file=sys.stderr)
 
 
 if __name__ == "__main__":
