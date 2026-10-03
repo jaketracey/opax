@@ -5488,6 +5488,16 @@ h3, #panel-methods h3, #panel-expenses h3 {
 .chat-launcher:focus-visible { outline: 3px solid var(--bronze-ink); outline-offset: 3px; }
 /* The launcher floats over the last lines of the page; the page leaves it room. */
 body.assistant-ready { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+/* Every other page's columns stop short of the corner; the grants register and
+   the receipts ledger run the full width, so their right-hand column and fine
+   print passed under the launcher wherever the reader stopped scrolling. Where
+   it floats on desktop they keep out of its column: its footprint (20px inset,
+   the 134px pill, a 12px gap) less the margin the centred page already leaves. */
+@media (min-width: 801px) {
+  body.assistant-ready #money-records-body {
+    padding-right: max(0px, calc(166px - (100vw - min(100vw, 1440px)) / 2 - clamp(1.25rem, 4vw, 4.5rem)));
+  }
+}
 /* While a guided journey plays the map the launcher steps aside; an open
    conversation stays where the reader put it. */
 body.journey-playing .chat-launcher { display: none; }
