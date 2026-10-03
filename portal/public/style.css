@@ -5653,6 +5653,28 @@ html[data-chat="docked"] #panel-chat .chat-composer {
   .chat-launcher svg { width: 23px; height: 23px; }
   body.assistant-ready { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
 }
+/* Where the band carries the menu button, the launcher joins it beside search.
+   Floating in the corner of a single text column, it sat over whatever line
+   came to rest under it. Its place follows the band's: the gutter, then the
+   menu and search buttons (44px each) and the band's 20px gaps. Below 360px
+   the band has no room between the wordmark and search, so it floats. */
+@media (min-width: 360px) and (max-width: 800px) {
+  .chat-launcher {
+    top: calc((var(--header-h, 80px) - 46px) / 2); bottom: auto;
+    right: calc(clamp(1.25rem, 4vw, 4.5rem) + 128px);
+    width: 44px; height: 44px; min-height: 44px; padding: 10px; justify-content: center;
+    border: 0; border-radius: 4px; background: transparent; box-shadow: none;
+  }
+  .chat-launcher:hover, .chat-launcher[aria-expanded="true"] { background: rgb(255 255 255 / 10%); }
+  .chat-launcher:focus-visible { outline-color: var(--bronze-bright); }
+  .chat-launcher > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .chat-launcher svg { width: 22px; height: 22px; }
+  body.assistant-ready { padding-bottom: 0; }
+}
+/* The corner panel no longer leaves room for a launcher under it. */
+@media (min-width: 601px) and (max-width: 800px) {
+  html[data-chat="docked"] #panel-chat { bottom: max(18px, env(safe-area-inset-bottom, 0px)); }
+}
 /* A short window (a landscape phone) gives the sheet everything it can. */
 @media (max-height: 620px) and (min-width: 601px) {
   html[data-chat="docked"] #panel-chat { max-height: calc(100dvh - 120px); }
