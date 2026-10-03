@@ -23,6 +23,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     centerElement: true
     speed: 70
     timeout: 180000
+- waitForAnimationToEnd
 - tapOn:
     id: bill-row-au-federal-r7534
 - extendedWaitUntil:
@@ -59,6 +60,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     centerElement: true
     speed: 70
     timeout: 180000
+- waitForAnimationToEnd
 - tapOn:
     id: bill-division-0-splits
 # Party splits by label and count in words, never colour alone.
@@ -84,6 +86,8 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     centerElement: true
     speed: 70
     timeout: 180000
+# A tap during scroll momentum only stops the scroll on iOS: settle first.
+- waitForAnimationToEnd
 # Sources open in the in-app browser; e2e shows the destination locally.
 - tapOn:
     id: bill-division-0-source
@@ -126,6 +130,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     centerElement: true
     speed: 70
     timeout: 180000
+- waitForAnimationToEnd
 - tapOn:
     id: bill-row-au-federal-ed-online-safety-digital-duty-of-care-2026
 - extendedWaitUntil:

@@ -58,6 +58,7 @@ name: 10 Filter and search the bill list, then open a bill
     centerElement: true
     speed: 70
     timeout: 180000
+- waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/10-search
 - tapOn:
     id: bill-row-au-federal-r7549
