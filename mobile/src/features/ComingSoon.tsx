@@ -44,10 +44,11 @@ export function AccountComingSoon() {
           disclosures.
         </Text>
         <Text>{independence}</Text>
-        <Text variant="fine">
-          Sources and licences, coverage, corrections, privacy and font licences
-          will be listed here in a later version.
-        </Text>
+        <Button
+          label="About and sources"
+          testID="account-about"
+          onPress={() => router.push('/account/about')}
+        />
       </Section>
       {isProduction ? null : (
         // Development and e2e builds only; the workbench route is not in release bundles.

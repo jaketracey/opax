@@ -52,7 +52,7 @@ export default function Person() {
       /parliamentary|roster|service/i.test(source.label) &&
       !source.url.includes('/subject/'),
   );
-  const webPath = `/subject/person/${slug}`;
+  const webPath = `/subject/person/${profile?.slug ?? slug}`;
   return (
     <>
       <Stack.Screen

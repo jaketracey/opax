@@ -210,9 +210,17 @@ parsing. The current SDK has no compatible fix; review Expo patch updates. Tooli
 advisories are individually classified in the same baseline. Never run
 `npm audit fix --force`; its suggested dependency downgrades break the fixed SDK.
 
-Today, Your MP and Bills are plain placeholders. Search and the core profile
-are deliberately minimal. Full feature screens, licensed postcode lookup,
-portrait rights, sign-in, voice and universal links belong to later work.
+Search has grouped on-device suggestions, explicit catalog submissions for People,
+Declared interests, Pay and Expenses, and saved/offline states. Today has dated
+bill and declaration feeds; `todayEdition` is disabled until W13 exists. About and
+sources pushes inside the Account sheet, with snapshot coverage, source terms,
+privacy and the build's complete font notices. Your MP and Bills remain placeholders.
+The Search/Today lane's `recent-bill/[key]` source preview is a temporary integration
+seam for the Bills lane's full detail route. Profile links resolve canonical person
+IDs before passing them through the existing identifier route; the slug form is
+also retained for the foundation journeys. Journeys 12–14 exercise these screens.
+Licensed postcode lookup, full profiles, portrait rights, sign-in, voice and
+universal links belong to their owning lanes.
 
 ## P0 catalog adapters (data only)
 

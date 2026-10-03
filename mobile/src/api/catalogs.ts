@@ -8,7 +8,7 @@ import {
 import type { CatalogKind } from './policy';
 import * as decode from './catalog-decoders';
 import type { Manifest } from './catalog-decoders';
-import { billKey, interestKey, personId, type PersonId } from './ids';
+import { billKey, interestKey, personId, nameKey, type PersonId } from './ids';
 import {
   profileFor,
   recentBillsFor,
@@ -30,6 +30,11 @@ interface SuggestionSources {
   roster: decode.Roster;
   electorates: decode.ElectorateIndex;
   bills: decode.BillIndex;
+  provenance: {
+    people: Block<null>;
+    electorates: Block<null>;
+    bills: Block<null>;
+  };
 }
 function cached<T>(
   block: Block<T>,
@@ -107,8 +112,12 @@ export class Catalogs {
   corpus() {
     return this.client.get('/corpus.json', decode.decodeCorpus);
   }
-  async about() {
-    const result = await this.corpus();
+  async about(refresh = false) {
+    const result = await this.client.get(
+      '/corpus.json',
+      decode.decodeCorpus,
+      refresh,
+    );
     return { ...result, data: cached(coverageFor(result.data), [result]) };
   }
   async billFor(key: string) {
@@ -138,7 +147,7 @@ export class Catalogs {
     const result = await this.bills();
     return { ...result, data: cached(billsFor(result.data, filter), [result]) };
   }
-  async today(limit = 6) {
+  async today(limit = 6, refresh = false) {
     const load = async <T, V>(
       pending: Promise<RecordResult<T>>,
       select: (data: T) => Block<V>,
@@ -166,9 +175,17 @@ export class Catalogs {
       }
     };
     const [bills, declarations] = await Promise.all([
-      load(this.bills(), (data) => recentBillsFor(data, limit)),
-      load(this.recentInterests(), (data) =>
-        recentDeclarationsFor(data, limit),
+      load(
+        this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
+        (data) => recentBillsFor(data, limit),
+      ),
+      load(
+        this.client.get(
+          '/interests/recent.json',
+          decode.decodeRecentInterests,
+          refresh,
+        ),
+        (data) => recentDeclarationsFor(data, limit),
       ),
     ]);
     return { bills, declarations };
@@ -228,11 +245,23 @@ export class Catalogs {
     if (!this.suggestionData || refresh) {
       const pending = (async () => {
         const [manifest, roster, bills] = await Promise.all([
-          this.manifest(),
-          this.roster(),
-          this.bills(),
+          this.client.get(
+            '/electorates/manifest.json',
+            decode.decodeManifest,
+            refresh,
+          ),
+          this.client.get(
+            '/parliamentarians.json',
+            decode.decodeRoster,
+            refresh,
+          ),
+          this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
         ]);
-        const electorates = await this.electorates(manifest.data);
+        const electorates = await this.client.get(
+          manifest.data.index_url,
+          decode.decodeElectorateIndex,
+          refresh,
+        );
         if (electorates.data.meta.release_id !== manifest.data.release_id)
           throw new ApiError(
             'invalid-data',
@@ -242,6 +271,56 @@ export class Catalogs {
           roster: roster.data,
           electorates: electorates.data,
           bills: bills.data,
+          provenance: {
+            people: cached(
+              {
+                data: null,
+                status: 'ready',
+                asAt: roster.asOf,
+                sources: [
+                  {
+                    label: 'OPAX parliamentary roster',
+                    url: '/subject/person',
+                  },
+                ],
+                stale: false,
+                savedAt: null,
+              },
+              [roster],
+            ),
+            electorates: cached(
+              {
+                data: null,
+                status: 'ready',
+                asAt: electorates.asOf ?? manifest.asOf,
+                sources: [
+                  {
+                    label: 'OPAX electorate release',
+                    url: '/subject/electorate',
+                  },
+                ],
+                stale: false,
+                savedAt: null,
+              },
+              [manifest, electorates],
+            ),
+            bills: cached(
+              {
+                data: null,
+                status: 'ready',
+                asAt: bills.asOf,
+                sources: [
+                  {
+                    label: 'ParlInfo bill records',
+                    url: 'https://parlinfo.aph.gov.au/',
+                  },
+                ],
+                stale: false,
+                savedAt: null,
+              },
+              [bills],
+            ),
+          },
         };
       })();
       this.suggestionData = pending;
@@ -403,6 +482,36 @@ export class Catalogs {
   async person(slug: string): Promise<RecordResult<PersonProfile>> {
     const directory = await this.directory();
     const { slugs, roster, manifest, people } = directory;
+    // Identifier-only handoff to the profile lane. Keep the existing slug route
+    // working while allowing callers to carry the canonical person ID.
+    if (slug.startsWith('person_')) {
+      const id = personId(slug);
+      const person = people.data.people.find((p) => p.person_id === id);
+      const names = new Set(
+        [person?.name, ...(person?.aliases ?? [])]
+          .filter(Boolean)
+          .map((name) => nameKey(name!)),
+      );
+      const resolved = Object.keys(slugs.data.slugs).filter((key) => {
+        if (!names.has(nameKey(slugs.data.slugs[key]!))) return false;
+        try {
+          return (
+            joinPerson(key, slugs.data, roster.data, people.data, manifest.data)
+              .canonicalPersonId === id
+          );
+        } catch {
+          return false;
+        }
+      });
+      if (!resolved.length)
+        throw new ApiError(
+          'not-found',
+          'This person is not in the public directory.',
+        );
+      slug =
+        resolved.find((key) => slugs.data.slugs[key] === person?.name) ??
+        resolved[0]!;
+    }
     return {
       data: joinPerson(
         slug,

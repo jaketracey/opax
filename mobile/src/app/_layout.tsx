@@ -39,7 +39,7 @@ export default function Layout() {
         />
         <Stack.Screen
           name="account"
-          options={{ ...sheet, title: 'Account and about' }}
+          options={{ ...sheet, headerShown: false }}
         />
         {isProduction ? null : (
           // Development and e2e only: the route file is excluded from release
