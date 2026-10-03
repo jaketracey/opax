@@ -427,16 +427,17 @@ Implemented on `ios/worker-deletion`, branch only, in `portal/migrations/0012_vo
 3. Copy every row, naming all ten columns explicitly.
 4. Drop `voice_sessions` and rename `voice_sessions_next` to `voice_sessions`. No table references `voice_sessions`, so the drop cascades nothing.
 5. Recreate the four indexes.
-6. `PRAGMA defer_foreign_keys = off`; `PRAGMA foreign_key_check` must return no rows.
+6. `PRAGMA defer_foreign_keys = off`; the migration includes `PRAGMA foreign_key_check`, but `migrations apply` does not print query results. Run `PRAGMA foreign_key_check` as a separate database command after applying, inspect the output and require zero rows.
 
-**Rollout.**
+**Rollout (future authorized operator work only).** Staging first, rehearsing with threads/replies and conversations/messages present. Apply **0011_native_signin before 0012**, following the sign-in compatibility order in COMMUNITY.md. Complete the disable/drain/migrate/release sequence **outside the nightly refresh/deploy window (03:15 Australia/Sydney)**, including its running time. Confirm no nightly is running or can overlap: it deploys `main` with `VOICE_ENABLED=true` and could re-enable voice mid-drain. Do not span that window with voice paused for migration.
+
 1. **Disable.** Deploy `VOICE_ENABLED=false`. New `start` and `connect` requests are then refused before reserving or claiming (`voice.ts:252`, `:268-269`). Existing calls stay bounded by their deadlines (`docs/VOICE-ASSISTANT.md:40`).
 2. **Drain.** Let requests already running on the previous deployment finish. A `start` or `connect` that began before the switch can still reserve, claim or activate a row afterwards.
 3. **Read the stored deadlines.** Take the latest `expires_at` of every open row from the database, not from a formula. Claiming resets it to claim time + `reserved_seconds` + 30, and activation resets it again (`voice.ts:51`, `:210`). A claim at 59 seconds after reservation, followed by up to 10 seconds for the signed URL and 10 for the upstream handshake (`voice.ts:179`, `:200-204`), gives activation at about +79 seconds and expiry at about +709 seconds for a 600-second reservation. D1 latency can add more, so no fixed bound is safe.
 4. **Run expiry.** After that latest deadline has passed, run the two expiry statements of `expireVoiceSessions` with the current time (`voice.ts:22`, `:25`). Waiting alone changes nothing: expiry only runs when status, `start` or `finish` executes it (`voice.ts:246`, `:256`, `:277`), and `start` is refused while voice is disabled.
 5. **Verify.** Check that no row is `reserved`, `connecting` or `active`. If any remains, for example a relay that closed late, repeat steps 3 and 4.
-6. **Apply the migration.**
-7. **Deploy and re-enable.** Deploy the code changes below and re-enable voice.
+6. **Record the restore point, then apply.** Immediately before 0012, record a **D1 Time Travel bookmark** with the environment/database, timestamp and currently applied migration in private operator evidence. There is no down migration. Apply 0012, then run **`PRAGMA foreign_key_check` as a separate database command** and inspect its output; require zero rows. The check inside the migration is silent under `migrations apply`. Verify row/constraint/index preservation and no remaining rebuild tables.
+7. **Merge, deploy and re-enable.** Only after production 0012 and the separate check pass, merge W5/W6 to **`main`, then deploy that merged `main`** with voice still disabled; validate and re-enable voice. Nothing reaches `main` before its required migration is applied in production. Do not ship by deploying this branch: the next nightly would replace it. Staging validation must pass and Jake must authorize the production sequence first.
 
 Today's code is compatible with the rebuilt table, because it never writes a NULL `member_id`, so a delay between steps 6 and 7 is safe.
 
