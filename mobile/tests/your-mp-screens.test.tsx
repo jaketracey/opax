@@ -31,6 +31,9 @@ jest.mock('../src/features/your-mp/choice-store', () => ({
   loadChoice: jest.fn(),
   saveChoice: jest.fn(),
 }));
+jest.mock('../src/api/image-policy', () => ({
+  remoteImageURI: (path: string) => `http://127.0.0.1:8912${path}`,
+}));
 const mockParams: { slug?: string; id?: string } = {};
 jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockParams,
@@ -63,7 +66,8 @@ const text = (r: TestRenderer.ReactTestRenderer) =>
     .findAllByType(Text)
     .flatMap((n) => n.props.children)
     .filter((v) => typeof v === 'string')
-    .join(' ');
+    .join(' ')
+    .replace(/\s+/g, ' ');
 beforeEach(() => {
   jest.clearAllMocks();
   mockParams.slug = 'anthony-albanese';
@@ -167,6 +171,8 @@ test('electorate preserves Census vintage and renders candidates as plain public
   );
   const r = await render(<Electorate />);
   expect(text(r)).toContain('2021 Census geography');
+  expect(text(r)).toContain('As at 2021');
+  expect(text(r)).not.toContain('1 January 2021');
   expect(text(r)).toContain('not been redistributed');
   expect(text(r)).toContain(
     'Election winners and present-day representation can differ',
@@ -215,5 +221,21 @@ test('unverified private identity is refused before any name or profile blocks r
   expect(
     r.root.findAll((n) => n.props.testID === 'person-error').length,
   ).toBeGreaterThan(0);
+  await act(async () => r.unmount());
+});
+
+test('permitted portrait renders with its source-provided credit and licence', async () => {
+  mockParams.slug = 'sheena-watt';
+  const identity = c.joinPerson('sheena-watt', slugs, roster, people, manifest);
+  mock.person.mockResolvedValue(result(identity));
+  mock.profileFor.mockResolvedValue(
+    c.profileFor(identity.canonicalPersonId!, catalogs),
+  );
+  const r = await render(<Person />);
+  expect(r.root.findByType(Image).props.source.uri).toContain(
+    '/photos/wd-Q100327610.webp',
+  );
+  expect(text(r)).toContain('Gabagool2005');
+  expect(text(r)).toContain('CC0');
   await act(async () => r.unmount());
 });

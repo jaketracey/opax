@@ -221,11 +221,13 @@ export default function YourMP() {
               </Group>
             ))
           )}
-          <SourceLink
-            citation="AEC electorate finder"
-            url="https://electorate.aec.gov.au/"
-            kind="register"
-          />
+          {!stateChoosing ? (
+            <SourceLink
+              citation="AEC electorate finder"
+              url="https://electorate.aec.gov.au/"
+              kind="register"
+            />
+          ) : null}
           {choice ? (
             <Button
               label="Cancel"

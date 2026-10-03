@@ -243,7 +243,11 @@ function ProfileScreen({ slug }: { slug: string }) {
                   ) : null}
                   <SourceLink
                     citation="Portrait licence"
-                    url={p.licenceURL}
+                    url={
+                      p.licenceURL.startsWith('https:')
+                        ? p.licenceURL
+                        : p.sourceURL
+                    }
                     kind="record"
                   />
                 </Group>
