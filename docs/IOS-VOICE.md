@@ -53,7 +53,7 @@ The chat composer's microphone button imports `/voice.js` the first time it is p
    - a JSON body of at most 2,000 bytes (`portal/src/voice.ts:253`, `portal/src/community-core.ts:6-13`);
    - rate limits of 6 starts a minute per member and 20 a minute per IP (`portal/src/voice.ts:254-255`).
 
-   After expiring stale rows, a single SQL write checks the member's balance, the monthly budget and the two call slots, and inserts a `reserved` row (`portal/src/voice.ts:256-257`, `portal/src/voice.ts:29-48`). The 201 response is `{session_id, transport:"websocket", signed_url, remaining_seconds, expires_at}`. `signed_url` is `wss://<COMMUNITY_ORIGIN>/api/voice/connect?session_id=<uuid>` (`portal/src/voice.ts:264-266`). `expires_at` is the 60-second window to connect, not the end of the call (`portal/src/voice.ts:5`, `portal/voice/client.js:345-347`).
+   After expiring stale rows, a single SQL write checks the member's balance, the monthly budget and the two call slots, and inserts a `reserved` row (`portal/src/voice.ts:256-257`, `portal/src/voice.ts:29-48`). The row's `charged_seconds` is set to the **full reservation at once** (`portal/src/voice.ts:42-43`), so it counts against the member's allowance and the shared monthly budget straight away. Only cancellation or expiry of an unclaimed row sets it back to 0 (`portal/src/voice.ts:22`, `:61`, `:276`). Status adds an open reservation's unused seconds back into the member's `remaining_seconds` (`portal/src/voice.ts:70-72`), so their displayed time does not drop, but the monthly budget stays withheld from everyone else until cleanup. The 201 response is `{session_id, transport:"websocket", signed_url, remaining_seconds, expires_at}`. `signed_url` is `wss://<COMMUNITY_ORIGIN>/api/voice/connect?session_id=<uuid>` (`portal/src/voice.ts:264-266`). `expires_at` is the 60-second window to connect, not the end of the call (`portal/src/voice.ts:5`, `portal/voice/client.js:345-347`).
 4. **Client validation.** The web client accepts `signed_url` only on its own host, with path `/api/voice/connect` and scheme `wss:`, or `ws:` when the page itself is served over HTTP (`portal/voice/client.js:341-343`).
 5. **Relay connection.** The SDK opens `new WebSocket(signedUrl + "&source=js_sdk&version=1.25.0", ["convai"])` (`@elevenlabs/client@1.25.0 dist/utils/WebSocketConnection.js:86-101`). The browser sends the session cookie and its Origin.
 6. **Claim and provider URL.** The Worker:
@@ -89,23 +89,26 @@ The chat composer's microphone button imports `/voice.js` the first time it is p
 
 **A 503 from `start` or `connect` does not tell the client what happened to the reservation.** Depending on where it failed, the row can be left `reserved`, `connecting` or `active`, or cancelled. Every "released" outcome below assumes the cleanup itself succeeded. If `releaseUnusedSession()` throws (`voice.ts:60-62`), or `response.body.cancel()` throws before it on the no-socket path (`voice.ts:206`), the generic handler returns 503 and the row stays `connecting` (`voice.ts:281-284`).
 
-| Failure point | Row left behind | Charge | How it clears | Where |
+| Failure point | Row left behind | Charge held, then final | How it clears | Where |
 | --- | --- | --- | --- | --- |
-| `start`: D1 error during the reservation write, a lost response after it committed, or any error building the response | Possibly `reserved`; the client never learns its `session_id` | None | Expires after 60 seconds as `cancelled`, charged 0 | `voice.ts:256-266`, `:22`, `:5` |
-| `connect` refused before the claim: 503 voice not configured, 426 no upgrade header, 400 bad ID | `reserved` (unclaimed) | None | The client can cancel it with `finish`, or it expires after 60 seconds | `voice.ts:269`, `:170-171`, `:272-276` |
-| `connect`: D1 error during the claim | `reserved` or `connecting`, unknown | None, or the full reservation if claimed | `reserved` as above; `connecting` as below | `voice.ts:172`, `:51` |
-| Signed URL fetch failed or timed out | `cancelled` if release succeeded; message "Your time has not been used." | None | At once | `voice.ts:177-183` |
-| Provider returned an unexpected URL | `cancelled` if release succeeded | None | At once | `voice.ts:184-189` |
-| Provider answered the upgrade without a WebSocket | `cancelled` if both the body cancel and the release succeeded ("The voice provider is busy") | None | At once | `voice.ts:205-206` |
-| Any of those three releases failed, or the conversation-ID write failed | `connecting` | Full reservation | Expires as `expired` at claim time + `reserved_seconds` + 30, still fully charged | `voice.ts:181`, `:185-188`, `:194`, `:206`, `:25` |
-| Upstream upgrade threw or timed out | `connecting` | Full reservation | As above | `voice.ts:200-204`, `:281-284` |
-| The `active` write failed, or its response was lost | `connecting`, or `active` if the write committed | Full reservation | Expires as `expired`, fully charged: a `connecting` row at claim time + `reserved_seconds` + 30, an `active` row at start time + `reserved_seconds` + 30 | `voice.ts:209-215`, `:51` |
-| Error after the `active` write, before the 101 (socket setup or accept) | `active` | Full reservation | Expires as `expired`, fully charged, unless the relay later confirms a clean provider close | `voice.ts:216-227`, `:159-165` |
+| `start`: D1 error during the reservation write, a lost response after it committed, or any error building the response | Possibly `reserved`; the client never learns its `session_id` | Full reservation held until cleanup; final 0 | Expires 60 seconds after reservation, once expiry processing runs, as `cancelled` with `charged_seconds` 0 | `voice.ts:256-266`, `:42-43`, `:22`, `:5` |
+| `connect` refused before the claim: 503 voice not configured, 426 no upgrade header, 400 bad ID | `reserved` (unclaimed) | Full reservation held until cleanup; final 0 | The client can cancel it with `finish`, or it expires 60 seconds after reservation | `voice.ts:269`, `:170-171`, `:272-276` |
+| `connect`: D1 error during the claim | `reserved` or `connecting`, unknown | Full reservation held either way; final 0 if it stays `reserved`, full if claimed | `reserved` as above; `connecting` as below | `voice.ts:172`, `:51` |
+| Signed URL fetch failed or timed out | `cancelled` if release succeeded; message "Your time has not been used." | Held until the release; final 0 | At once | `voice.ts:177-183`, `:61` |
+| Provider returned an unexpected URL | `cancelled` if release succeeded | Held until the release; final 0 | At once | `voice.ts:184-189`, `:61` |
+| Provider answered the upgrade without a WebSocket | `cancelled` if both the body cancel and the release succeeded ("The voice provider is busy") | Held until the release; final 0 | At once | `voice.ts:205-206`, `:61` |
+| Any of those three releases failed, or the conversation-ID write failed | `connecting` | Full reservation held; final full | Expires as `expired` at claim time + `reserved_seconds` + 30, still fully charged | `voice.ts:181`, `:185-188`, `:194`, `:206`, `:25` |
+| Upstream upgrade threw or timed out | `connecting` | Full reservation held; final full | As above | `voice.ts:200-204`, `:281-284` |
+| The `active` write failed, or its response was lost | `connecting`, or `active` if the write committed | Full reservation held; final full | Expires as `expired`, fully charged: a `connecting` row at claim time + `reserved_seconds` + 30, an `active` row at start time + `reserved_seconds` + 30 | `voice.ts:209-215`, `:51` |
+| Error after the `active` write, before the 101 (socket setup or accept) | `active` | Full reservation held; final full, or the elapsed seconds if the relay later confirms a clean provider close | Expires as `expired`, fully charged, unless that confirmation arrives | `voice.ts:216-227`, `:159-165` |
 
 **How the client recovers.**
-- A `reserved` row costs nothing. `finish` can cancel it when the client knows its `session_id` (`voice.ts:272-276`).
+- A `reserved` row holds the full reservation against the member's allowance and the monthly budget until it is cancelled or expires. Its final charge is then 0 (`voice.ts:22`, `:42-43`). `finish` cancels it at once when the client knows its `session_id` (`voice.ts:272-276`). That also returns the withheld budget to other members sooner.
 - `finish` cannot release `connecting` or `active` rows, because it only cancels `reserved` ones.
-- While any of these rows is open, status shows an `active_session` with its `state` and `expires_at`, and `start` returns 409 for that member (`portal/migrations/0003_voice.sql:16-17`, `voice.ts:45`). The longest wait is `reserved_seconds + 30`, at most 630 seconds.
+- While any of these rows is open, status shows an `active_session` with its `state` and `expires_at`, and `start` returns 409 for that member (`portal/migrations/0003_voice.sql:16-17`, `voice.ts:45`).
+  - Use the stored `expires_at` from status. It is set at the claim and reset at activation (`voice.ts:51`, `:210`), so there is no fixed bound from the original start.
+  - A row does not expire by time alone: expiry runs only when status (for a signed-in member), `start` or `finish` executes it (`voice.ts:246`, `:256`, `:277`). The app's status polling triggers it.
+  - Once a row has expired, status returns `active_session: null`. It never reports an `expired` state (`voice.ts:25`, `:69-73`). The full charge stays on the row and shows only as a lower `remaining_seconds`.
 
 The only refund signal is human-readable message text, and a WebSocket client usually cannot read the body of a refused upgrade. The allowance shown after any failure must therefore come from a fresh `GET /api/voice/status`, never from the HTTP status alone.
 
@@ -426,12 +429,15 @@ This is a proposal for a later Worker lane, written as a contract, not code. **N
 6. `PRAGMA defer_foreign_keys = off`; `PRAGMA foreign_key_check` must return no rows.
 
 **Rollout.**
-1. Deploy `VOICE_ENABLED=false`. Existing calls stay bounded by their deadlines (`docs/VOICE-ASSISTANT.md:40`).
-2. Wait until no row is `reserved`, `connecting` or `active`. That is at most 630 seconds after the last start.
-3. Apply the migration.
-4. Deploy the code changes below and re-enable voice.
+1. **Disable.** Deploy `VOICE_ENABLED=false`. New `start` and `connect` requests are then refused before reserving or claiming (`voice.ts:252`, `:268-269`). Existing calls stay bounded by their deadlines (`docs/VOICE-ASSISTANT.md:40`).
+2. **Drain.** Let requests already running on the previous deployment finish. A `start` or `connect` that began before the switch can still reserve, claim or activate a row afterwards.
+3. **Read the stored deadlines.** Take the latest `expires_at` of every open row from the database, not from a formula. Claiming resets it to claim time + `reserved_seconds` + 30, and activation resets it again (`voice.ts:51`, `:210`). A claim at 59 seconds after reservation, followed by up to 10 seconds for the signed URL and 10 for the upstream handshake (`voice.ts:179`, `:200-204`), gives activation at about +79 seconds and expiry at about +709 seconds for a 600-second reservation. D1 latency can add more, so no fixed bound is safe.
+4. **Run expiry.** After that latest deadline has passed, run the two expiry statements of `expireVoiceSessions` with the current time (`voice.ts:22`, `:25`). Waiting alone changes nothing: expiry only runs when status, `start` or `finish` executes it (`voice.ts:246`, `:256`, `:277`), and `start` is refused while voice is disabled.
+5. **Verify.** Check that no row is `reserved`, `connecting` or `active`. If any remains, for example a relay that closed late, repeat steps 3 and 4.
+6. **Apply the migration.**
+7. **Deploy and re-enable.** Deploy the code changes below and re-enable voice.
 
-Today's code is compatible with the rebuilt table, because it never writes a NULL `member_id`, so a delay between steps 3 and 4 is safe.
+Today's code is compatible with the rebuilt table, because it never writes a NULL `member_id`, so a delay between steps 6 and 7 is safe.
 
 **Statements, with what each does for a deleted member's rows:**
 
@@ -439,7 +445,7 @@ Today's code is compatible with the rebuilt table, because it never writes a NUL
 | --- | --- | --- |
 | Reservation `INSERT … SELECT` (`voice.ts:33-47`) | None. It must stay one atomic statement, with the 720-second window unchanged | The personal `SUM` ignores rows whose `member_id` is NULL. The global monthly `SUM` and open-row `COUNT` still include them |
 | Per-member lock (`voice.ts:45`) | None; the index gains `member_id IS NOT NULL` | Orphaned rows never block a member's own lock, but still hold a global slot |
-| Claim (`voice.ts:51`) | None | `member_id=?` never matches NULL, so an unclaimed reservation becomes unclaimable. It expires after 60 seconds as `cancelled`, charged 0 (`voice.ts:22`) |
+| Claim (`voice.ts:51`) | None | `member_id=?` never matches NULL, so an unclaimed reservation becomes unclaimable. It keeps its full charge in the global budget until expiry processing marks it `cancelled` with `charged_seconds` 0, at or after 60 seconds (`voice.ts:22`, `:42-43`) |
 | Active write, conversation-ID writes, reconcile, release and expiry (`voice.ts:22`, `:25`, `:57`, `:61`, `:194`, `:210`, `:218`) | None; they match by `id` and `state` | An orphaned call still closes and reconciles through its own relay, or expires fully charged |
 | Tool authorisation (`voice.ts:238`) | None | Its join to `members` finds nothing, so the orphaned call's tools return 403 until it ends |
 | Status and `finish` (`voice.ts:66-69`, `:276`) | None | Not reachable for a deleted member |
@@ -466,7 +472,7 @@ Today's code is compatible with the rebuilt table, because it never writes a NUL
    - B reserving at 5 seconds after the boundary gets 200 seconds: A's charge still counts in the new month.
    - Window edge: a row created at month start minus 720 seconds counts in the new month; one created at minus 721 does not.
 4. **Repeated delete-and-sign-up.** With a 1,200-second budget, two cycles of sign up, a 600-second call and deletion leave the budget spent. A third new member is refused.
-5. **Unclaimed reservation at deletion.** The claim fails, and the row expires as `cancelled` with no charge.
+5. **Unclaimed reservation at deletion.** The claim fails. Until expiry runs, the row's full reservation still counts in the global budget, so another member's reservation sees it withheld. After expiry it is `cancelled` with `charged_seconds` 0, and the budget returns.
 6. **Several orphaned open rows.** They coexist without a unique-index collision.
 7. **Batch atomicity.** A failing statement leaves the member and every voice row unchanged.
 8. **Conversation-ID cleanup.** It clears only orphaned, closed rows older than one day.
@@ -772,12 +778,12 @@ Each row is a fixture scenario selected by its session token, or an injected dep
 | Budget closed | start 429 `reason:"budget"` (after Worker change 6) | "Closed for this month" state |
 | At capacity | start 429 `reason:"capacity"` | "Busy, try again shortly" |
 | Call open elsewhere | status `active_session`; start 409 | Explain; poll status before enabling Start |
-| Start 503 after the row was written | 503 with only the generic error, so no `session_id`; status shows `active_session` in state `reserved` for up to 60 s, then none, with nothing charged (clock control) | Wait for status to clear; never show time as used |
+| Start 503 after the row was written | 503 with only the generic error, so no `session_id`; status shows `active_session` in state `reserved` until its `expires_at` (60 s after reservation), then none once expiry runs. The full reservation is held against both budgets meanwhile; the final charge is 0 (clock control) | Wait for status to clear. Never show time as used: status adds the held reservation back into `remaining_seconds` |
 | Connect refused before the claim | 503, 426 or 400; status shows the `reserved` row | Call `finish` with the known `session_id`, then refresh status |
 | Connect 503, released | 503; status then shows no open session and the same remaining time | "Couldn't connect; no time used", taken from status |
 | Connect 503, release failed | 503 (generic); status shows `connecting` until `expires_at`, then none, with the full reservation charged | Same as a retained `connecting` row |
 | Connect 503, retained `connecting` | 503; status shows `active_session` in state `connecting` until `expires_at`, then none, with the full reservation charged (clock control) | Show that the last call is still closing and when it will clear. Enable Start only after status clears. Show the charged allowance from status, never from the 503 |
-| Connect 503, retained `active` | 503 after the `active` write; status shows state `active` until `expires_at`, then `expired`, fully charged | Same as above; the state label does not change the message |
+| Connect 503, retained `active` | 503 after the `active` write; status shows `active_session` in state `active` until `expires_at`. After expiry runs, status returns `active_session: null` and a `remaining_seconds` lowered by the full charge. The row is `expired` internally and is never exposed with that state | Same as above; the state label does not change the message |
 | Replayed connect | Upgrade 409 for a `signed_url` already used | Never reopen an old `signed_url`; it is single-use (`portal/src/voice.ts:172-173`) |
 
 **How a call ends**
