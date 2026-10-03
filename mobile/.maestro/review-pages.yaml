@@ -1,0 +1,14 @@
+appId: au.com.opax.app
+name: Capture each viewport without speech
+---
+- evalScript: ${output.page = 0}
+- repeat:
+    while:
+      notVisible:
+        id: ${END}
+    commands:
+      - evalScript: ${output.page = output.page + 1}
+      - evalScript: ${output.name = String(output.page).padStart(3, '0')}
+      - takeScreenshot: ${EVIDENCE}/${PREFIX}-${output.name}
+      - scroll
+- takeScreenshot: ${EVIDENCE}/${PREFIX}-end

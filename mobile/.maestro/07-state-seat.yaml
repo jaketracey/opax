@@ -1,0 +1,52 @@
+appId: au.com.opax.app
+name: 07 Choose a state district explicitly where a verified roster exists
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-your-mp
+- tapOn:
+    id: seat-search
+- inputText: Ballarat
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-choice-federal-representatives-vic-ballarat
+- tapOn:
+    id: seat-choice-federal-representatives-vic-ballarat
+- scrollUntilVisible:
+    element:
+      id: choose-state-seat
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/07-state-choice-needed
+- tapOn:
+    id: choose-state-seat
+- scrollUntilVisible:
+    element:
+      id: seat-search
+    direction: UP
+- tapOn:
+    id: seat-search
+- inputText: Wendouree
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-choice-vic-vic-la-vic-wendouree
+- takeScreenshot: ${EVIDENCE}/07-state-chooser
+- tapOn:
+    id: seat-choice-vic-vic-la-vic-wendouree
+- scrollUntilVisible:
+    element:
+      id: your-state-member-juliana-addison
+    timeout: 60000
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/07-state-member
+- launchApp
+- tapOn:
+    id: tab-your-mp
+- scrollUntilVisible:
+    element:
+      id: your-state-member-juliana-addison
+    timeout: 60000
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/07-state-restored

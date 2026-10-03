@@ -210,9 +210,15 @@ parsing. The current SDK has no compatible fix; review Expo patch updates. Tooli
 advisories are individually classified in the same baseline. Never run
 `npm audit fix --force`; its suggested dependency downgrades break the fixed SDK.
 
-Today, Your MP and Bills are plain placeholders. Search and the core profile
-are deliberately minimal. Full feature screens, licensed postcode lookup,
-portrait rights, sign-in, voice and universal links belong to later work.
+Today and Bills remain placeholders; Search is a minimal public directory.
+Your MP supports an explicit seat choice saved on the device, verified member
+and senator observations, and explicit state-seat choices where a verified
+roster exists. Person profiles render the catalog blocks independently, including
+portrait permission, W12 voting dates, register OCR warnings, pay, expenses and
+party receipts. Electorates show dated representation, elections, Census vintage
+and sources. Journeys 07–09 cover these screens; the runner accepts 01–09.
+Licensed postcode/location lookup, universal links and wider data coverage remain
+later work.
 
 ## P0 catalog adapters (data only)
 

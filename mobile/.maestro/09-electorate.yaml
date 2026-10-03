@@ -1,0 +1,67 @@
+appId: au.com.opax.app
+name: 09 Electorate representation, elections, Census context and sources
+---
+- launchApp
+- tapOn:
+    id: tab-your-mp
+- runFlow:
+    when:
+      notVisible:
+        id: seat-search
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: change-seat
+          timeout: 60000
+      - tapOn:
+          id: change-seat
+- scrollUntilVisible:
+    element:
+      id: seat-search
+    direction: UP
+- tapOn:
+    id: seat-search
+- inputText: Grayndler
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-choice-federal-representatives-nsw-grayndler
+- tapOn:
+    id: seat-choice-federal-representatives-nsw-grayndler
+- scrollUntilVisible:
+    element:
+      id: your-electorate
+    timeout: 60000
+    centerElement: true
+- tapOn:
+    id: your-electorate
+- extendedWaitUntil:
+    visible:
+      id: electorate-name
+    timeout: 15000
+- assertVisible: Grayndler
+- takeScreenshot: ${EVIDENCE}/09-identity
+- scrollUntilVisible:
+    element:
+      id: election-expand-0
+- tapOn:
+    id: election-expand-0
+- takeScreenshot: ${EVIDENCE}/09-election-open
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: electorate-end
+      PREFIX: 09-electorate
+- scrollUntilVisible:
+    element:
+      id: electorate-coverage-source
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: electorate-coverage-source
+- takeScreenshot: ${EVIDENCE}/09-source
+- tapOn: OK
+- tapOn: Share Grayndler
+- assertVisible: https://opax.invalid/subject/electorate/federal-representatives-nsw-grayndler
+- takeScreenshot: ${EVIDENCE}/09-share
+- tapOn: OK

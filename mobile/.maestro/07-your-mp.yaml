@@ -1,0 +1,72 @@
+appId: au.com.opax.app
+name: 07 Choose an electorate by member name and restore it after relaunch
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-your-mp
+- assertVisible:
+    id: seat-empty
+- takeScreenshot: ${EVIDENCE}/07-chooser-empty
+- tapOn:
+    id: seat-search
+- inputText: Albanese
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-choice-federal-representatives-nsw-grayndler
+- takeScreenshot: ${EVIDENCE}/07-chooser-match
+- tapOn:
+    id: seat-choice-federal-representatives-nsw-grayndler
+- extendedWaitUntil:
+    visible:
+      id: your-seat-name
+    timeout: 15000
+- assertVisible: Grayndler
+- takeScreenshot: ${EVIDENCE}/07-seat
+- scrollUntilVisible:
+    element:
+      id: your-member-anthony-albanese
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/07-member
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: your-mp-end
+      PREFIX: 07-home
+- scrollUntilVisible:
+    element:
+      id: your-senators-end
+    direction: UP
+    centerElement: true
+- assertVisible:
+    id: your-senators-end
+- takeScreenshot: ${EVIDENCE}/07-senators
+- launchApp
+- tapOn:
+    id: tab-your-mp
+- assertVisible:
+    id: your-seat-name
+- assertVisible: Grayndler
+- takeScreenshot: ${EVIDENCE}/07-restored
+- scrollUntilVisible:
+    element:
+      id: change-seat
+    timeout: 60000
+- tapOn:
+    id: change-seat
+- scrollUntilVisible:
+    element:
+      id: seat-search
+    direction: UP
+- tapOn:
+    id: seat-search
+- inputText: No matching electorate
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: seat-no-results
+- takeScreenshot: ${EVIDENCE}/07-no-match
+- scrollUntilVisible:
+    element: Cancel
+- tapOn: Cancel
