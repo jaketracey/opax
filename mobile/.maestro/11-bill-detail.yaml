@@ -79,13 +79,12 @@ name: 11 Read a bill, its machine summary, divisions and speeches
     timeout: 180000
 - assertVisible: Labor, no ayes, 21 noes
 - takeScreenshot: ${EVIDENCE}/11-party-splits
+# The link is just below the splits: a gentle scroll, so the page is not
+# still coasting (and the link off screen) when the tap lands.
 - scrollUntilVisible:
     element:
       id: bill-division-0-source
-    visibilityPercentage: 50
-    centerElement: true
-    speed: 70
-    timeout: 180000
+    timeout: 60000
 # A tap during scroll momentum only stops the scroll on iOS: settle first.
 - waitForAnimationToEnd
 # Sources open in the in-app browser; e2e shows the destination locally.
