@@ -105,6 +105,8 @@ test('profile failure in expenses preserves votes, pay and identity; official po
   expect(r.root.findAllByType(Image)).toHaveLength(0);
   expect(text(r)).toContain('Portrait display permission needs review');
   expect(text(r)).toContain('Record date not published');
+  expect(text(r)).toContain('Real estate');
+  expect(text(r)).not.toContain('real_estate');
   await act(async () => r.unmount());
 });
 test('former roster identity never masquerades as a current affiliation', async () => {

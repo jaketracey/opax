@@ -376,7 +376,7 @@ function ProfileScreen({ slug }: { slug: string }) {
                   {Object.entries(r.buckets).map(([name, bucket]) => (
                     <Disclosure
                       key={name}
-                      label={`${name} (${formatCount(bucket.count)})`}
+                      label={`${name.charAt(0).toUpperCase()}${name.slice(1).replaceAll('_', ' ')} (${formatCount(bucket.count)})`}
                       id={`interest-bucket-${name}`}
                     >
                       <Group>
