@@ -17,6 +17,17 @@ const configured = (env: VoiceEnv) => String(env.VOICE_ENABLED) === 'true' && !!
 const monthStart = (timestamp: number) => {const d = new Date(timestamp * 1000); return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1) / 1000}
 const monthlyLimit = (env: VoiceEnv) => Math.max(0, Math.min(MAX_MONTHLY_SECONDS, Number.isFinite(Number(env.VOICE_MONTHLY_SECONDS)) ? Math.floor(Number(env.VOICE_MONTHLY_SECONDS)) : MAX_MONTHLY_SECONDS))
 
+// Status and the atomic reservation use this exact query and binding window.
+// Include the previous month's final twelve minutes: a call can span midnight.
+const BALANCES_SQL = `SELECT
+  CASE WHEN EXISTS (SELECT 1 FROM voice_access WHERE member_id=? AND unlimited=1) THEN ?
+    ELSE ? - COALESCE(SUM(CASE WHEN member_id=? THEN charged_seconds ELSE 0 END),0) END AS personal,
+  ? - COALESCE(SUM(CASE WHEN created_at>=? THEN charged_seconds ELSE 0 END),0) AS monthly,
+  COUNT(CASE WHEN state IN ('reserved','connecting','active') THEN 1 END) AS active
+  FROM voice_sessions`
+const balanceArgs = (env: VoiceEnv, memberId: string | null, timestamp: number) =>
+  [memberId, VOICE_ALLOWANCE_SECONDS, VOICE_ALLOWANCE_SECONDS, memberId, monthlyLimit(env), monthStart(timestamp) - VOICE_ALLOWANCE_SECONDS - RESERVATION_SECONDS - 60]
+
 export async function expireVoiceSessions(env: VoiceEnv, timestamp = now()): Promise<void> {
   // No connection was ever claimed, so an unused reservation is safe to release.
   await env.COMMUNITY_DB.prepare("UPDATE voice_sessions SET state='cancelled',charged_seconds=0,closed_at=? WHERE state='reserved' AND expires_at<=?").bind(timestamp, timestamp).run()
@@ -29,23 +40,14 @@ export async function expireVoiceSessions(env: VoiceEnv, timestamp = now()): Pro
 /** One SQLite write atomically checks member balance, monthly budget and locks. */
 export async function reserveVoiceSession(env: VoiceEnv, memberId: string, timestamp = now()): Promise<Session | null> {
   const id = crypto.randomUUID()
-  // Include the previous month's final twelve minutes conservatively: a
-  // reservation made then can still be running across the billing boundary.
   return env.COMMUNITY_DB.prepare(`
-    WITH balances AS (
-      SELECT
-        CASE WHEN EXISTS (SELECT 1 FROM voice_access WHERE member_id=? AND unlimited=1) THEN ?
-          ELSE ? - COALESCE(SUM(CASE WHEN member_id=? THEN charged_seconds ELSE 0 END),0) END AS personal,
-        ? - COALESCE(SUM(CASE WHEN created_at>=? THEN charged_seconds ELSE 0 END),0) AS monthly,
-        COUNT(CASE WHEN state IN ('reserved','connecting','active') THEN 1 END) AS active
-      FROM voice_sessions
-    )
+    WITH balances AS (${BALANCES_SQL})
     INSERT INTO voice_sessions(id,member_id,state,reserved_seconds,charged_seconds,created_at,expires_at)
     SELECT ?,?,'reserved',MIN(personal,monthly),MIN(personal,monthly),?,? FROM balances
     WHERE personal>0 AND monthly>0 AND active<?
       AND NOT EXISTS (SELECT 1 FROM voice_sessions WHERE member_id=? AND state IN ('reserved','connecting','active'))
     RETURNING *
-  `).bind(memberId, VOICE_ALLOWANCE_SECONDS, VOICE_ALLOWANCE_SECONDS, memberId, monthlyLimit(env), monthStart(timestamp) - VOICE_ALLOWANCE_SECONDS - RESERVATION_SECONDS - 60, id, memberId, timestamp, timestamp + RESERVATION_SECONDS, MAX_ACTIVE_SESSIONS, memberId).first<Session>()
+  `).bind(...balanceArgs(env, memberId, timestamp), id, memberId, timestamp, timestamp + RESERVATION_SECONDS, MAX_ACTIVE_SESSIONS, memberId).first<Session>()
 }
 
 export async function claimVoiceSession(env: VoiceEnv, memberId: string, id: string, timestamp = now()): Promise<Session | null> {
@@ -63,14 +65,17 @@ async function releaseUnusedSession(env: VoiceEnv, id: string): Promise<void> {
 }
 
 async function voiceStatus(env: VoiceEnv, memberId: string | null) {
-  if (!memberId) return {enabled: configured(env), signed_in: false, total_seconds: VOICE_ALLOWANCE_SECONDS, remaining_seconds: VOICE_ALLOWANCE_SECONDS, active_session: null}
+  const timestamp = now()
+  const balances = await env.COMMUNITY_DB.prepare(BALANCES_SQL).bind(...balanceArgs(env, memberId, timestamp)).first<{personal: number; monthly: number}>()
+  if (!balances) throw new Error('Voice balances unavailable')
+  const budget_open = balances.monthly > 0
+  if (!memberId) return {enabled: configured(env), signed_in: false, budget_open, total_seconds: VOICE_ALLOWANCE_SECONDS, remaining_seconds: VOICE_ALLOWANCE_SECONDS, active_session: null}
   const access = await env.COMMUNITY_DB.prepare('SELECT unlimited FROM voice_access WHERE member_id=?').bind(memberId).first<{unlimited:number}>()
   const unlimited = access?.unlimited === 1
-  const used = await env.COMMUNITY_DB.prepare('SELECT COALESCE(SUM(charged_seconds),0) AS seconds FROM voice_sessions WHERE member_id=?').bind(memberId).first<{seconds: number}>()
   const active = await env.COMMUNITY_DB.prepare("SELECT * FROM voice_sessions WHERE member_id=? AND state IN ('reserved','connecting','active')").bind(memberId).first<Session>()
-  const reservedRemaining = active ? Math.max(0, active.reserved_seconds - (active.started_at == null ? 0 : now() - active.started_at)) : 0
-  return {enabled: configured(env), signed_in: true, unlimited, total_seconds: unlimited ? null : VOICE_ALLOWANCE_SECONDS,
-    remaining_seconds: unlimited ? (active ? reservedRemaining : VOICE_ALLOWANCE_SECONDS) : Math.max(0, VOICE_ALLOWANCE_SECONDS - (used?.seconds ?? 0)) + reservedRemaining,
+  const reservedRemaining = active ? Math.max(0, active.reserved_seconds - (active.started_at == null ? 0 : timestamp - active.started_at)) : 0
+  return {enabled: configured(env), signed_in: true, budget_open, unlimited, total_seconds: unlimited ? null : VOICE_ALLOWANCE_SECONDS,
+    remaining_seconds: unlimited ? (active ? reservedRemaining : VOICE_ALLOWANCE_SECONDS) : Math.max(0, balances.personal) + reservedRemaining,
     active_session: active ? {id: active.id, expires_at: active.expires_at, state: active.state} : null}
 }
 
@@ -244,7 +249,9 @@ export async function voiceRoute(req: Request, env: VoiceEnv, ctx: ExecutionCont
     if (String(env.COMMUNITY_ENABLED) !== 'true') throw new CommunityError(503, 'Community access is being prepared.')
     if (path === 'status' && req.method === 'GET') {
       const current = await member(req, env)
-      if (current) await expireVoiceSessions(env)
+      // Global readiness must release expired unused reservations for signed-out
+      // readers too, just as start does before applying the shared balance SQL.
+      await expireVoiceSessions(env)
       return json(await voiceStatus(env, current?.id ?? null))
     }
     sameOrigin(req, env)
@@ -260,7 +267,9 @@ export async function voiceRoute(req: Request, env: VoiceEnv, ctx: ExecutionCont
         const status = await voiceStatus(env, current.id)
         if (status.active_session) throw new CommunityError(409, 'You already have a voice conversation open.')
         if (status.remaining_seconds <= 0) throw new CommunityError(403, 'You have used your ten free minutes of voice conversation.')
-        throw new CommunityError(429, 'The voice assistant is at capacity. Please try again later.')
+        return status.budget_open
+          ? json({error:'The voice assistant is at capacity. Please try again later.', reason:'capacity'}, 429)
+          : json({error:'Voice is closed for this month.', reason:'budget'}, 429)
       }
       const url = new URL('/api/voice/connect', env.COMMUNITY_ORIGIN)
       url.protocol = 'wss:'; url.searchParams.set('session_id', session.id)
@@ -280,7 +289,7 @@ export async function voiceRoute(req: Request, env: VoiceEnv, ctx: ExecutionCont
     }
     return json({error:'Voice endpoint not found.'}, 404)
   } catch (error) {
-    if (error instanceof CommunityError) return json({error:error.message}, error.status)
+    if (error instanceof CommunityError) return json({error:error.message, ...(error.status === 429 && new URL(req.url).pathname === '/api/voice/start' ? {reason:'capacity'} : {})}, error.status)
     return json({error:'The voice assistant is temporarily unavailable.'}, 503)
   }
 }

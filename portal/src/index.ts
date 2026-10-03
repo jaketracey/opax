@@ -28,6 +28,9 @@ import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { communityMcp } from './community-mcp'
 import { expireVoiceSessions, voiceRoute } from './voice'
+import { appEdition } from './app-edition'
+import { appManifest } from './app-manifest'
+import { appJson } from './app-http'
 import { proxyPostHog } from './posthog'
 import { networkBlock } from './network-block'
 import { handleBillText } from './bill-text'
@@ -5196,6 +5199,11 @@ export default {
       : new Response('Not found', { status: 404 })
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
+    // Public app adapters use this Worker's journal/assets, before any staging
+    // proxy or general retrieval dispatch. No composition callback is supplied.
+    if (url.pathname.startsWith('/api/app/v1/edition/')) return communityResponse(await appEdition(request, env))
+    if (url.pathname === '/api/app/v1/manifest') return communityResponse(await appManifest(request, env))
+    if (url.pathname.startsWith('/api/app/')) return communityResponse(appJson(request, {error:'not_found'}, 404))
     const entry = await pageEntry(request, env.ASSETS)
     if (entry) return communityResponse(entry)
     if (url.pathname.startsWith('/api/community/')) return communityResponse(await communityRoute(request, env, ctx))
