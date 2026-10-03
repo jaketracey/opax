@@ -1,5 +1,7 @@
 appId: au.com.opax.app
 name: 07 Scene lifecycle, cold and warm links and native share presentation
+env:
+  REMOTE_SHARE_UI: ${REMOTE_SHARE_UI || "false"}
 ---
 - stopApp
 - openLink: opax://person/anthony-albanese
@@ -32,23 +34,37 @@ name: 07 Scene lifecycle, cold and warm links and native share presentation
     timeout: 30000
 - tapOn:
     id: wb-native-share
-- assertVisible: Anthony Albanese
-- assertVisible: opax.invalid
 - takeScreenshot: ${EVIDENCE}/07-native-share
 - runFlow:
     when:
-      visible:
-        id: PopoverDismissRegion
+      true: ${REMOTE_SHARE_UI !== "true"}
     commands:
-      # iOS 27 presents a popover with no Close button. The upper quarter is
-      # outside the popover on the assigned phones at the standard text size.
-      - tapOn:
-          point: 50%,25%
+      - assertVisible: Anthony Albanese
+      - assertVisible: opax.invalid
+      - runFlow:
+          when:
+            visible:
+              id: PopoverDismissRegion
+          commands:
+            # The upper quarter is outside the popover on the assigned phones
+            # at the standard text size.
+            - tapOn:
+                point: 50%,25%
+      - runFlow:
+          when:
+            visible: Close
+          commands:
+            - tapOn: Close
 - runFlow:
     when:
-      visible: Close
+      true: ${REMOTE_SHARE_UI === "true"}
     commands:
-      - tapOn: Close
+      # The iOS 18.4 system-hosted sheet is absent from Maestro's app hierarchy.
+      # Review the captured metadata preview and close its observed X button
+      # on the assigned 16e at the standard text size. The cancellation and
+      # return-to-app assertions below remain mandatory in both modes.
+      - tapOn:
+          point: 93%,49%
 - assertVisible: Native share cancelled
 - tapOn: OK
 - assertVisible:

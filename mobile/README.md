@@ -45,6 +45,13 @@ scripts/e2e.sh <simulator-udid> 01 02 03 04 05 06
 OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <simulator-udid> 03 05 06
 ```
 
+The optional `.maestro/07-scene-lifecycle.yaml` smoke checks cold/warm links and
+the real native share module. On the 16e with iOS 18.4 at standard text size, use
+`OPAX_REMOTE_SHARE_UI=true`: its system-hosted share sheet is absent from Maestro's
+app hierarchy. Review `07-native-share.png` for the title, icon and URL; the flow
+closes the observed X button and still requires the native cancellation callback
+and return to Workbench. Other devices retain automated preview assertions.
+
 Copy `.qa.local.env.example` to the ignored `.qa.local.env` for optional host
 configuration. Scripts source it before running. Never commit actual paths or IDs.
 
