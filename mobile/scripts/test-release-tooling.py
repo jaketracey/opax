@@ -459,6 +459,46 @@ class BundleAttackTests(unittest.TestCase):
                 with self.assertRaises(ReleaseError):
                     verify.bundle_route_keys(baseline + plant + b"\0", routes)
 
+    def test_production_routes_exclude_workbench_and_accept_comma_groups(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            group = "(tabs)/(today,your-mp,bills,search)"
+            keys = ["./_layout.tsx", f"./{group}/_layout.tsx",
+                    f"./{group}/person/[slug].tsx"]
+            for key in keys + ["./workbench.tsx"]:
+                path = routes / key
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("source route")
+            bundle = b"\0" + b"\0".join(key.encode() for key in keys) + b"\0"
+            self.assertEqual(verify.bundle_route_keys(bundle, routes), sorted(keys))
+            # The source-only development route is allowed; shipping it is not.
+            with self.assertRaises(ReleaseError):
+                verify.bundle_route_keys(bundle + b"./workbench.tsx\0", routes)
+            for mutation in (bundle.replace(keys[-1].encode(), b"./unexpected.tsx"),
+                             bundle.replace(keys[-1].encode(), b"")):
+                with self.assertRaises(ReleaseError):
+                    verify.bundle_route_keys(mutation, routes)
+
+    def test_development_routes_fail_even_when_the_source_matches_the_bundle(self):
+        for key in ("./fixtures/index.tsx", "./fixture.tsx", "./__tests__/index.tsx",
+                    "./(dev)/index.tsx", "./__dev/index.tsx", "./workbench.jsx"):
+            with self.subTest(key=key), tempfile.TemporaryDirectory() as d:
+                routes = Path(d)
+                path = routes / key
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("unblocked development route")
+                with self.assertRaises(ReleaseError):
+                    verify.bundle_route_keys(key.encode() + b"\0", routes)
+
+    def test_scene_manifest_requires_the_expo_scene_delegate(self):
+        manifest = {"UIApplicationSupportsMultipleScenes": False, "UISceneConfigurations": {
+            "UIWindowSceneSessionRoleApplication": [{"UISceneConfigurationName": "Default Configuration",
+                "UISceneDelegateClassName": "EXExpoAppSceneDelegate"}]}}
+        self.assertTrue(verify.scene_manifest_valid({"UIApplicationSceneManifest": manifest}))
+        self.assertFalse(verify.scene_manifest_valid({}))
+        manifest["UISceneConfigurations"]["UIWindowSceneSessionRoleApplication"][0]["UISceneDelegateClassName"] = "MissingDelegate"
+        self.assertFalse(verify.scene_manifest_valid({"UIApplicationSceneManifest": manifest}))
+
     def test_reviewer_framework_and_analytics_host_plants(self):
         for url in (b"https://api.segment.io/v1/track", b"https://us.i.posthog.com/capture", b"crashlytics", b"HTTPS://API.HEAP.IO/track"):
             self.assertTrue(verify.has_analytics(url))

@@ -34,7 +34,10 @@ ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com"
                    "amplitude.com", "sentry.io", "appsflyer.com", "adjust.com", "google-analytics.com",
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
                    "appcenter.ms", "bugsnag.com", "datadoghq.com", "graph.facebook.com"}
-ROUTE_KEYS = re.compile(rb"\./[A-Za-z0-9_()@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
+ROUTE_KEYS = re.compile(rb"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
+PRODUCTION_BLOCK_LIST = [re.compile(source) for source in json.loads(
+    (Path(__file__).parent / "production-block-list.json").read_text())]
+DEVELOPMENT_ROUTE = re.compile(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype", re.I)
 
 
 def url_hosts(body):
@@ -77,12 +80,23 @@ def has_analytics(body):
 def bundle_route_keys(body, routes):
     actual = {key.decode() for key in ROUTE_KEYS.findall(body)}
     expected = {"./" + p.relative_to(routes).as_posix() for p in routes.rglob("*")
-                if p.is_file() and p.suffix in {".tsx", ".ts", ".jsx", ".js"}}
-    require(bool(actual) and actual == expected and not re.search(
-        rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures|\(dev\))|"
+                if p.is_file() and p.suffix in {".tsx", ".ts", ".jsx", ".js"}
+                and not any(pattern.search("/src/app/" + p.relative_to(routes).as_posix())
+                            for pattern in PRODUCTION_BLOCK_LIST)}
+    require(bool(actual) and actual == expected and
+        not any(DEVELOPMENT_ROUTE.search(key) for key in actual) and not re.search(
+        rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev)|"
         rb"ui-workbench|home-prototype|/__dev(?:/|\x00)", body, re.I),
         "bundle Expo route keys exactly match shipping source routes; no workbench routes")
     return sorted(actual)
+
+
+def scene_manifest_valid(info):
+    manifest = info.get("UIApplicationSceneManifest", {})
+    return (manifest.get("UIApplicationSupportsMultipleScenes") is False and
+            manifest.get("UISceneConfigurations", {}).get("UIWindowSceneSessionRoleApplication") == [
+                {"UISceneConfigurationName": "Default Configuration",
+                 "UISceneDelegateClassName": "EXExpoAppSceneDelegate"}])
 
 
 def framework_allowlist(app):
@@ -212,6 +226,7 @@ def verify_app(app, args):
     check(info.get("CFBundleShortVersionString") == args.version, "marketing version")
     check(info.get("CFBundleVersion") == args.build, "build number")
     check(info.get("MinimumOSVersion") == "18.4", "minimum iOS 18.4")
+    check(scene_manifest_valid(info), "single-window Expo scene lifecycle")
     check(info.get("ITSAppUsesNonExemptEncryption") is False, "standard HTTPS encryption compliance")
     check("NSAppTransportSecurity" not in info, "no ATS exception")
     # Current catalog app has no permission-gated features. This allow-list must
@@ -256,9 +271,6 @@ def verify_app(app, args):
     bundle = (app / "main.jsbundle").read_bytes()
     check(all(marker.encode() in bundle for marker in GUARDS), "shipped catalog/origin/redirect guards")
     check(not has_loopback(bundle), "no normalized loopback or fixture origin in shipped JS")
-    routes = list(Path("src/app").rglob("*"))
-    check(not any(re.search(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype", str(p), re.I) for p in routes),
-          "source route tree contains shipping routes only")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
     check(True, "bundle Expo route keys exactly match shipping source routes; no workbench routes")
     configs = list(app.rglob("app.config"))
