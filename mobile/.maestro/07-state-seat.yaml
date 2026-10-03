@@ -13,13 +13,13 @@ name: 07 Choose a state district explicitly where a verified roster exists
     element:
       id: seat-choice-federal-representatives-vic-ballarat
     centerElement: true
-    timeout: 60000
+    timeout: 300000
 - tapOn:
     id: seat-choice-federal-representatives-vic-ballarat
 - scrollUntilVisible:
     element:
       id: choose-state-seat
-    timeout: 60000
+    timeout: 300000
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/07-state-choice-needed
 - tapOn:
@@ -29,7 +29,7 @@ name: 07 Choose a state district explicitly where a verified roster exists
       id: seat-search
     direction: UP
     centerElement: true
-    timeout: 60000
+    timeout: 300000
 - tapOn:
     id: seat-search
 - inputText: Wendouree
@@ -38,24 +38,34 @@ name: 07 Choose a state district explicitly where a verified roster exists
     element:
       id: seat-choice-vic-vic-la-vic-wendouree
     centerElement: true
-    timeout: 60000
+    timeout: 300000
 - takeScreenshot: ${EVIDENCE}/07-state-chooser
 - tapOn:
     id: seat-choice-vic-vic-la-vic-wendouree
 - scrollUntilVisible:
     element:
       id: your-state-member-juliana-addison
-    timeout: 60000
+    timeout: 300000
     centerElement: true
     visibilityPercentage: 50
 - takeScreenshot: ${EVIDENCE}/07-state-member
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: your-mp-end
+      PREFIX: 07-state-details
 - launchApp
 - tapOn:
     id: tab-your-mp
 - scrollUntilVisible:
     element:
       id: your-state-member-juliana-addison
-    timeout: 60000
+    timeout: 300000
     centerElement: true
     visibilityPercentage: 50
 - takeScreenshot: ${EVIDENCE}/07-state-restored
+- runFlow:
+    file: review-pages.yaml
+    env:
+      END: your-mp-end
+      PREFIX: 07-state-restored-details

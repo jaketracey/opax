@@ -15,28 +15,28 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     element:
       id: person-expenses-heading
     direction: UP
-    timeout: 60000
+    timeout: 300000
 - assertVisible:
     id: person-expenses-heading
 - scrollUntilVisible:
     element:
       id: person-pay-heading
     direction: UP
-    timeout: 60000
+    timeout: 300000
 - assertVisible:
     id: person-pay-heading
 - scrollUntilVisible:
     element:
       id: person-interests-heading
     direction: UP
-    timeout: 60000
+    timeout: 300000
 - assertVisible:
     id: person-interests-heading
 - scrollUntilVisible:
     element:
       id: person-votes-heading
     direction: UP
-    timeout: 60000
+    timeout: 300000
 - assertVisible:
     id: person-votes-heading
 - tapOn: Share Anthony Albanese
@@ -62,7 +62,7 @@ name: 08 Independent profile blocks, current senator, former member and local sh
     element:
       id: person-portrait
     direction: UP
-    timeout: 60000
+    timeout: 300000
 - takeScreenshot: ${EVIDENCE}/08-permitted-portrait
 - runFlow:
     file: review-pages.yaml

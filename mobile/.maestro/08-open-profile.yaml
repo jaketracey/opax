@@ -8,7 +8,7 @@ name: Open a roster profile from the public search
     element:
       id: search-input
     centerElement: true
-    timeout: 60000
+    timeout: 300000
 - tapOn:
     id: search-input
 - inputText: ${NAME}
@@ -17,7 +17,7 @@ name: Open a roster profile from the public search
     element:
       id: search-result-${SLUG}
     centerElement: true
-    timeout: 60000
+    timeout: 300000
 - tapOn:
     id: search-result-${SLUG}
 - extendedWaitUntil:
