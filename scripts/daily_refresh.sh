@@ -76,7 +76,7 @@ IPEA_SINCE="${OPAX_IPEA_SINCE:-$(date +%Y)}"
 ONLY="${OPAX_ONLY:-}"
 ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 PARTIAL_OK=",arag_sync,"   # the KB push resumes from its checkpoint: hitting its own time limit is not a failure
-STALE_OK=",grants_apply,"   # exit 3 from ext_apply = the fetched window was empty or shrunken: rows kept, not a failure
+STALE_OK=",grants_apply,interests_federal,"   # refusal/unavailable source: rows kept, not a failure
 SYNC_GATE="${OPAX_SYNC_GATE:-}"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with weekly_refresh.sh)
@@ -104,7 +104,7 @@ if ! flock -n 9; then
   exit 0
 fi
 
-# Secrets: ARAG_*, OPENAUSTRALIA_API_KEY, TVFY_API_KEY.
+# Secrets: ARAG_*, OPENAUSTRALIA_API_KEY, TVFY_API_KEY, FIRECRAWL_API_KEY.
 # News is excluded from both acquisition and the knowledge box.
 if [ -f .env ]; then set -a; . ./.env; set +a; fi
 
@@ -289,6 +289,13 @@ db = sqlite3.connect("file:" + os.path.expanduser("~/.cache/autoresearch/parli.d
 for src, mx, n in db.execute("SELECT source, MAX(date), COUNT(*) FROM speeches GROUP BY source ORDER BY source"):
     print(f"{src:18s} newest {mx}  rows {n:,}")
 PYEOF
+# Federal registers change on most working days. Date-aware caching keeps daily
+# polling cheap (two indexes + changed Senate pages, shared maximum 100 credits).
+run_step interests_federal "SELECT COUNT(*) FROM ext_interests" \
+  "$PY" -m parli.ingest.conduct_interests_federal refresh --db "$DB"
+run_step x_interests "" env PY="$PY" scripts/vm/export_step.sh dir portal/public/interests -- \
+  "$PY" scripts/export_interests.py --out portal/public/interests
+
 log "===== daily refresh end ====="
 [ "${#STALE_STEPS[@]}" -eq 0 ] || log "Stale daily refresh: source refused to change the register: ${STALE_STEPS[*]}"
 [ "${#PARTIAL_STEPS[@]}" -eq 0 ] || log "Partial daily refresh: cut by its time limit, resumes from its checkpoint next run: ${PARTIAL_STEPS[*]}"

@@ -257,7 +257,8 @@ def stamp_is_stale(checked_at: str | None, now: datetime, hours: float) -> bool:
 
 def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | None,
             run_date: date, now: datetime, *, always_stamp: bool = False,
-            allow_shrink: bool = False, stamp_after_hours: float | None = None) -> tuple[dict, dict]:
+            allow_shrink: bool = False, stamp_after_hours: float | None = None,
+            interests_status: dict | None = None) -> tuple[dict, dict]:
     """Return (new manifest, result). Pure: no I/O."""
     new = copy.deepcopy(prev)
     refresh = new.setdefault("refresh", {})
@@ -336,6 +337,16 @@ def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | Non
                     limits[idx] = line
                     changed_fields.append("source_limitations")
 
+    # Persist the latest interests outcome on daily manifests, even if the KB did not
+    # change. Absence/corruption must never clear the old preservation warning.
+    if (isinstance(interests_status, dict) and isinstance(interests_status.get("limitations"), list)
+            and all(isinstance(line, str) for line in interests_status["limitations"])
+            and isinstance(interests_status.get("complete"), bool)):
+        limits = [line for line in refresh.get("source_limitations", [])
+                  if not line.startswith("Federal interests ")]
+        limits.extend(interests_status["limitations"])
+        put(refresh, "source_limitations", limits, "source_limitations")
+
     # Fields that can move without the box changing.
     for key in ("bills_registry", "current_parliament_bills", "latest_bill_introduced"):
         if bills.get(key) is not None:
@@ -370,6 +381,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--corpus", default=str(REPO / "portal" / "public" / "corpus.json"))
     ap.add_argument("--bills-index", default=str(REPO / "portal" / "public" / "bills" / "index.json"))
     ap.add_argument("--daily-log", default=os.path.expanduser("~/.cache/autoresearch/pipeline/daily.log"))
+    ap.add_argument("--interests-status", default=os.path.expanduser("~/.cache/autoresearch/pipeline/interests-status.json"),
+                    help="last federal interests outcome (preservation/Firecrawl warnings)")
     ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"),
                     help="parli.db, opened read-only, for the newest NSW release date")
     ap.add_argument("--date", help="version date, YYYY-MM-DD (default: today in Australia/Sydney)")
@@ -408,11 +421,15 @@ def main(argv: list[str] | None = None) -> int:
         except Exception:  # noqa: BLE001 - no tzdata: fall back to UTC+10
             run_date = (datetime.now(timezone.utc) + timedelta(hours=10)).date()
     now = datetime.now(timezone.utc)
+    try:
+        interests_status = json.loads(Path(args.interests_status).read_text())
+    except (OSError, ValueError):
+        interests_status = None
 
     try:
         new, result = compute(prev, kb, log, bills, latest_nsw_release(args.db), run_date, now,
                               always_stamp=args.always_stamp, allow_shrink=args.allow_shrink,
-                              stamp_after_hours=args.stamp_after_hours)
+                              stamp_after_hours=args.stamp_after_hours, interests_status=interests_status)
     except Refused as e:
         print(f"REFUSED: {e}", file=sys.stderr)
         if args.result_json:

@@ -113,6 +113,7 @@ if [ "$want_weekly" = 1 ]; then
     log "[fits_apply] SKIP: the fetch failed, nothing to apply"
   fi
 
+  # Federal interests and their export run daily; the QLD register is republished weekly.
   run_step interests_qld "SELECT COUNT(*) FROM ext_interests" \
     "$PY" -m parli.ingest.conduct_interests_qld --fetch --db "$DB"
   run_step diaries_nsw "SELECT COUNT(*) FROM ext_ministerial_meetings" \

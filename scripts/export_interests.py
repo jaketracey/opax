@@ -392,7 +392,8 @@ def main():
         name = d["member_name"] or d["member_name_raw"]
         p = people.get(k)
         if p is None:
-            unread = sum(1 for w in json.loads(d["warnings"] or "[]") if "not parsed" in w)
+            unread = sum(1 for w in json.loads(d["warnings"] or "[]")
+                         if "not parsed" in w or "OCR unavailable" in w)
             p = people[k] = {
                 "name": name, "jurisdiction": d["jurisdiction"], "chamber": d["chamber"],
                 "parliament": d["parliament"], "source_url": d["source_url"].split("#")[0],

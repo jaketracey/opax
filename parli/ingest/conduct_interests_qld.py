@@ -261,12 +261,13 @@ def main(argv=None):
     p.add_argument("--fetch", action="store_true", help="download the current register to the cache")
     p.add_argument("--db"); p.add_argument("--dry-run", action="store_true")
     p.add_argument("--export-jsonl"); p.add_argument("--limit", type=int)
-    p.add_argument("--browser-ua", action="store_true", help=argparse.SUPPRESS)
     args = p.parse_args(argv)
     if args.fetch:
         dest = CACHE_DIR.parent / "qld"
         dest.mkdir(parents=True, exist_ok=True)
-        r = _session(False).get(QLD_URL, timeout=120); r.raise_for_status()
+        r = _session().get(QLD_URL, timeout=120); r.raise_for_status()
+        if not r.content.startswith(b"%PDF-"):
+            raise ValueError("QLD register returned no PDF; existing disclosures preserved")
         stamp = datetime.now(timezone.utc).strftime("%Y%m%d")
         path = dest / f"MembersRegister_{stamp}.pdf"
         path.write_bytes(r.content)

@@ -295,6 +295,23 @@ class Compute(unittest.TestCase):
                                                 "latest_bill_introduced": "2026-09-17"})
 
 
+class InterestsStatus(unittest.TestCase):
+    def test_success_clears_old_warning_even_without_kb_change(self):
+        prev = manifest()
+        prev['refresh']['source_limitations'] = ['Federal interests pages returned no usable records. Existing disclosures were preserved.', 'Other source']
+        new, _ = run(prev=prev, interests_status={'complete': True, 'limitations': []})
+        self.assertEqual(new['refresh']['source_limitations'], ['Other source'])
+
+    def test_out_of_credits_replaces_warning_and_absence_preserves_it(self):
+        line = 'Federal interests refresh incomplete: Firecrawl out of credits. Existing disclosures were preserved.'
+        prev = manifest()
+        prev['refresh']['source_limitations'] = ['Federal interests pages returned no usable records.']
+        new, _ = run(prev=prev, interests_status={'complete': False, 'limitations': [line]})
+        self.assertEqual(new['refresh']['source_limitations'], [line])
+        kept, _ = run(prev=new)
+        self.assertEqual(kept['refresh']['source_limitations'], [line])
+
+
 class CommittedManifest(unittest.TestCase):
     """Guards on the real file, so a rename cannot silently stop a row updating."""
 

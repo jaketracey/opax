@@ -350,6 +350,9 @@ new_refresh_sandbox() {
   unset OPAX_REPO OPAX_DAILY_REFRESH OPAX_ALLOW_FAIL OPAX_SYNC_GATE OPAX_SYNC_KB   # nothing left over from the nightly scenarios
   cp "$SRC/scripts/daily_refresh.sh" "$SRC/scripts/refresh_bills.sh" "$RS/repo/scripts/"
   mkdir -p "$RS/repo/scripts/lib"; cp "$SRC/scripts/lib/refresh_lib.sh" "$RS/repo/scripts/lib/"
+  mkdir -p "$RS/repo/scripts/vm"
+  cp "$SRC/scripts/vm/export_step.sh" "$SRC/scripts/vm/keep_if_unchanged.py" "$RS/repo/scripts/vm/"
+  chmod +x "$RS/repo/scripts/vm/export_step.sh"
   : > "$RS/repo/.env"; : > "$RS/repo/download_hansard_fast.py"
   mkdir -p "$RS/repo/portal/public/bills"; echo '{"bills":[]}' > "$RS/repo/portal/public/bills/index.json"
   echo '{"tables":{"speeches":{"after":1323635,"pushed":600482,"failed":{}}}}' > "$HOME/.cache/autoresearch/arag_sync_state.json"
@@ -427,6 +430,10 @@ touch "$HOME/.cache/autoresearch/MIGRATED_TO_VM"
 refresh
 check "a local-only refresh (no KB sync) is still allowed" test "$RRC" -eq 0
 check "and it never touched the box" bash -c "! grep -q 'parli.ingest.arag_sync' '$RS_CALLS'"
+check "federal interests and their export run daily" bash -c "grep -q 'conduct_interests_federal refresh --db' '$RS_CALLS' && grep -q 'export_interests.py --out portal/public/interests' '$RS_CALLS'"
+new_refresh_sandbox r11f
+FAIL_RC=3 FAIL_STEPS="conduct_interests_federal" refresh
+check "an unavailable federal source is STALE and the daily run still completes" bash -c "[ '$RRC' -eq 0 ] && grep -q 'Stale daily refresh: .*interests_federal' '$HOME/.cache/autoresearch/pipeline/daily.log' && grep -q 'export_interests.py' '$RS_CALLS'"
 new_refresh_sandbox r11c
 touch "$HOME/.cache/autoresearch/MIGRATED_TO_VM"
 OPAX_SYNC_KB=1 OPAX_FORCE_KB_SYNC=1 refresh
@@ -533,6 +540,7 @@ check "log brackets the run" bash -c "grep -q 'weekly refresh start (groups: wee
 check "state donations are staged in a scratch file and applied by ext_apply, then labelled" bash -c "grep 'money_state_donations --source qld' '$RS_CALLS' | grep -q 'stage/weekly/donations/qld.sqlite' && grep 'scripts/ext_apply.py donations --stage-dir' '$RS_CALLS' | grep -q 'stage/weekly/donations' && grep -q 'money_classify' '$RS_CALLS'"
 check "lobbyists and FITS are staged then applied" bash -c "grep -q 'ext_apply.py lobbyists --stage' '$RS_CALLS' && grep -q 'ext_apply.py fits --stage' '$RS_CALLS'"
 check "ACNC/ATO runs with --check-updated" grep -q 'parli.ingest.acnc_ato --check-updated' "$RS_CALLS"
+check "QLD interests refresh weekly before the export; federal does not run twice on Sundays" bash -c "grep -q 'conduct_interests_qld --fetch --db' '$RS_CALLS' && ! grep -q 'conduct_interests_federal' '$RS_CALLS'"
 check "the people directory is enriched with the recorded representation right after it is exported" order scripts/export_parliamentarians.py scripts/enrich_profile_jurisdictions.py
 check "the loaders come before the exports, and the tax/charity export is the last" order parli.ingest.acnc_ato scripts/export_speakers.py scripts/export_money_graph.py scripts/export_access.py scripts/export_fits.py scripts/export_interests.py scripts/export_tax_charity.py
 check "no monthly step ran" bash -c "! grep -qE 'qld_contracts|money_ipea|state_rosters|export_suppliers|export_grants|build_pay|export_discovery' '$RS_CALLS'"
