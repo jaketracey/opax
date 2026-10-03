@@ -37,6 +37,12 @@ ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com"
                    "appcenter.ms", "bugsnag.com", "datadoghq.com", "graph.facebook.com"}
 ROUTE_KEYS = re.compile(rb"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
 DEVELOPMENT_ROUTE = re.compile(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype", re.I)
+DEVELOPMENT_PATHS = re.compile(rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev)|"
+                               rb"ui-workbench|home-prototype|/__dev(?:/|\x00)", re.I)
+SCENE_DELEGATE = "EXExpoAppSceneDelegate"
+# Files under mobile/scripts/ that shape the shipped app (Metro reads the block
+# list) are application inputs, not tooling, for artifact provenance.
+APP_INPUTS_UNDER_SCRIPTS = {"mobile/scripts/production-block-list.json"}
 
 
 def url_hosts(body):
@@ -98,7 +104,11 @@ process.stdout.write(JSON.stringify(rules.map(rule => ({source: rule.source, fla
         for flag, value in (("i", re.I), ("m", re.M), ("s", re.S)):
             if flag in rule["flags"]:
                 flags |= value
-        patterns.append(re.compile(rule["source"], flags))
+        try:
+            patterns.append(re.compile(rule["source"], flags))
+        except re.error as error:
+            require(False, f"Metro exclusion expression /{rule['source']}/{rule['flags']} "
+                           f"is not Python-compatible ({error}); rewrite it in the shared syntax")
     return tuple(patterns)
 
 
@@ -120,14 +130,24 @@ def shipping_source_keys(routes):
 
 
 def bundle_route_keys(body, routes):
-    actual = {key.decode() for key in ROUTE_KEYS.findall(body)}
+    """Hermes packs strings without separators, so a route key can run into its
+    neighbour ("./talk.tsxfoo.js"). Presence is an exact byte search for each
+    expected key; regex scans only look for keys that must be absent."""
     expected = shipping_source_keys(routes)
-    require(bool(actual) and actual == expected and
-        not any(DEVELOPMENT_ROUTE.search(key) for key in actual) and not re.search(
-        rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev)|"
-        rb"ui-workbench|home-prototype|/__dev(?:/|\x00)", body, re.I),
-        "bundle Expo route keys exactly match shipping source routes; no workbench routes")
-    return sorted(actual)
+    missing = sorted(key for key in expected if key.encode() not in body)
+    require(bool(expected) and not missing, "every shipping Expo route key is present in shipped JS" +
+            (f" (missing {', '.join(missing)})" if missing else ""))
+    # Blank out the expected keys (longest first), then any route-shaped string left
+    # over is a route the production tree does not ship.
+    remainder = body
+    for key in sorted(expected, key=len, reverse=True):
+        remainder = remainder.replace(key.encode(), b"\0")
+    unexpected = sorted({key.decode() for key in ROUTE_KEYS.findall(remainder)})
+    development = sorted(key for key in expected if DEVELOPMENT_ROUTE.search(key))
+    require(not unexpected and not development and not DEVELOPMENT_PATHS.search(body),
+            "no unshipped, development or workbench route keys in shipped JS" +
+            (f" (found {', '.join(unexpected + development)})" if unexpected or development else ""))
+    return sorted(expected)
 
 
 def scene_manifest_valid(info):
@@ -136,6 +156,21 @@ def scene_manifest_valid(info):
             manifest.get("UISceneConfigurations", {}).get("UIWindowSceneSessionRoleApplication") == [
                 {"UISceneConfigurationName": "Default Configuration",
                  "UISceneDelegateClassName": "EXExpoAppSceneDelegate"}])
+
+
+def scene_delegate_linked(executable):
+    """The manifest's delegate class must be defined in the app executable itself,
+    not merely named in a string or referenced from elsewhere."""
+    result = subprocess.run(["/usr/bin/otool", "-oV", str(executable)], capture_output=True, text=True)
+    require(result.returncode == 0, "otool reads the app executable's Objective-C metadata")
+    section = ""
+    for line in result.stdout.splitlines():
+        if line.startswith("Contents of ("):
+            section = line
+        elif "__objc_classlist" in section and re.fullmatch(
+                r"\s+name\s+0x[0-9a-fA-F]+\s+" + SCENE_DELEGATE + r"\s*", line):
+            return True
+    return False
 
 
 def framework_allowlist(app):
@@ -245,8 +280,9 @@ def verify_provenance(root, built_commit):
                               capture_output=True)
     require(ancestor.returncode == 0, "Artifact commit is an ancestor of the verification commit")
     changes = git("diff", "--name-only", built_commit, head).splitlines()
-    require(all(p.startswith("mobile/scripts/") or p in ("mobile/README.md", "docs/IOS-RELEASE.md")
-                for p in changes), "Application inputs unchanged since artifact commit")
+    require(all((p.startswith("mobile/scripts/") and p not in APP_INPUTS_UNDER_SCRIPTS) or
+                p in ("mobile/README.md", "docs/IOS-RELEASE.md") for p in changes),
+            "Application inputs unchanged since artifact commit")
     print("PASS artifact provenance: original commit retained; application inputs unchanged")
     return head
 
@@ -266,6 +302,8 @@ def verify_app(app, args):
     check(info.get("CFBundleVersion") == args.build, "build number")
     check(info.get("MinimumOSVersion") == "18.4", "minimum iOS 18.4")
     check(scene_manifest_valid(info), "single-window Expo scene lifecycle")
+    check(scene_delegate_linked(app / info["CFBundleExecutable"]),
+          "Expo scene delegate class linked in the app executable")
     check(info.get("ITSAppUsesNonExemptEncryption") is False, "standard HTTPS encryption compliance")
     check("NSAppTransportSecurity" not in info, "no ATS exception")
     # Current catalog app has no permission-gated features. This allow-list must
@@ -311,7 +349,8 @@ def verify_app(app, args):
     check(all(marker.encode() in bundle for marker in GUARDS), "shipped catalog/origin/redirect guards")
     check(not has_loopback(bundle), "no normalized loopback or fixture origin in shipped JS")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
-    check(True, "bundle Expo route keys exactly match shipping source routes; no workbench routes")
+    check(True, "every shipping Expo route key is present in shipped JS")
+    check(True, "no unshipped, development or workbench route keys in shipped JS")
     configs = list(app.rglob("app.config"))
     check(bool(configs), "embedded Expo config exists")
     for path in configs:
