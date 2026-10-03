@@ -33,6 +33,25 @@ name: 07 Choose an electorate by member name and restore it after relaunch
     timeout: 300000
     visibilityPercentage: 50
 - takeScreenshot: ${EVIDENCE}/07-member
+- scrollUntilVisible:
+    element:
+      id: your-register-toggle
+    centerElement: true
+    timeout: 300000
+- tapOn:
+    id: your-register-toggle
+- extendedWaitUntil:
+    visible:
+      id: your-register-heading
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/07-register-open
+- scrollUntilVisible:
+    element:
+      id: your-member-anthony-albanese
+    direction: UP
+    centerElement: true
+    visibilityPercentage: 50
+    timeout: 300000
 - runFlow:
     file: review-pages.yaml
     env:

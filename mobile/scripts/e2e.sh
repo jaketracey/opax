@@ -43,7 +43,10 @@ trap 'exit 143' TERM
 # Maestro inputText may use iOS pasteboard internally. Serialize all input flows.
 if [ -n "${OPAX_PASTE_LOCK:-}" ]; then
   deadline=$((SECONDS + ${OPAX_PASTE_WAIT_SECONDS:-3600}))
-  until mkdir "$OPAX_PASTE_LOCK" 2>/dev/null; do
+  while true; do
+    # Capacity waits belong outside the shared input lock, including after contention.
+    scripts/capacity.sh >> "$OUT/capacity.log"
+    if mkdir "$OPAX_PASTE_LOCK" 2>/dev/null; then break; fi
     [ "$SECONDS" -lt "$deadline" ] || { echo "Pasteboard lock wait expired" >&2; exit 1; }
     sleep 5
   done
@@ -51,8 +54,6 @@ if [ -n "${OPAX_PASTE_LOCK:-}" ]; then
 else
   echo "No pasteboard lock configured; skipping lock." >&2
 fi
-# Recheck capacity after a potentially long shared-lock wait, before boot.
-scripts/capacity.sh >> "$OUT/capacity.log"
 OWN_DEVICE=1; ORIGINAL_SIZE=large; ORIGINAL_APPEARANCE=light
 boot_simulator "$UDID" > "$OUT/simulator.log" 2>&1
 ORIGINAL_SIZE=$(xcrun simctl ui "$UDID" content_size)
@@ -75,7 +76,7 @@ for flow in "$@"; do
   case "$flow" in
     04|.maestro/04-offline.yaml) OFFLINE=1 ;;
     01|02|03|05|06|07|08|09) matches=(.maestro/"$flow"*.yaml); for match in "${matches[@]}"; do
-      case "$match" in *-open-profile.yaml) continue ;; esac
+      case "$match" in *-open-profile.yaml|*-scene-lifecycle.yaml) continue ;; esac
       FLOWS+=("$match")
     done ;;
     *) test -f "$flow" || { echo "Unknown flow: $flow" >&2; exit 1; }; FLOWS+=("$flow") ;;

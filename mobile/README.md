@@ -45,7 +45,8 @@ scripts/e2e.sh <simulator-udid> 01 02 03 04 05 06
 OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <simulator-udid> 03 05 06
 ```
 
-The optional `.maestro/07-scene-lifecycle.yaml` smoke checks cold/warm links and
+The optional `.maestro/07-scene-lifecycle.yaml` smoke is run by its explicit path;
+numeric journey 07 excludes it and runs only the Your MP journeys. It checks cold/warm links and
 the real native share module. On the 16e with iOS 18.4 at standard text size, use
 `OPAX_REMOTE_SHARE_UI=true`: its system-hosted share sheet is absent from Maestro's
 app hierarchy. Review `07-native-share.png` for the title, icon and URL; the flow
@@ -69,7 +70,10 @@ invalid or older candidates. The selected version is saved in `java.log`.
 | `OPAX_ALLOWED_UDIDS` | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning |
 
 Configured capacity checks run before builds and devices; a load above 140 waits
-for below 100. The e2e runner starts only its own fixture, installs the Release app
+for below 100. Capacity is checked before every pasteboard-lock attempt; no
+capacity wait runs while that lock is held. Set `OPAX_PASTE_WAIT_SECONDS=3600`
+for shared device runs. Start long builds and device runs detached with `nohup`
+and poll their logs. The e2e runner starts only its own fixture, installs the Release app
 without Metro, saves Maestro/screenshots/request logs in ignored `private/qa/<run>/`,
 restores text size/appearance, shuts down, then releases the lock on success or
 failure. Never commit QA evidence. `OPAX_QA_RUN` names evidence, `OPAX_QA_APP`
@@ -229,9 +233,15 @@ advisories are individually classified in the same baseline. Never run
 Today and Bills remain placeholders; Search is a minimal public directory.
 Your MP supports an explicit seat choice saved on the device, verified member
 and senator observations, and explicit state-seat choices where a verified
-roster exists. Person profiles render the catalog blocks independently, including
+roster exists. Historical seats are excluded from the picker; a saved historical
+choice and its electorate record explain that the seat was abolished. A state
+choice replaces the prior district/region in its chamber and can be removed.
+The choice file may be included in device backups. The member's register file
+is fetched only when Register changes is opened. Person profiles render the catalog blocks independently, including
 portrait permission, W12 voting dates, register OCR warnings, pay, expenses and
-party receipts. Electorates show dated representation, elections, Census vintage
+party receipts. Roster-only former profiles explicitly say their records are not
+linked in this release and link to the web; they do not claim those records are absent.
+Electorates show dated representation, elections, Census vintage
 and sources. Journeys 07–09 cover these screens; the runner accepts 01–09.
 Licensed postcode/location lookup, universal links and wider data coverage remain
 later work.
