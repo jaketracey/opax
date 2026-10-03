@@ -1,0 +1,43 @@
+appId: au.com.opax.app
+name: 07 Scene lifecycle, cold and warm links and native share presentation
+---
+- stopApp
+- openLink: opax://person/anthony-albanese
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 30000
+- assertVisible: Anthony Albanese
+- takeScreenshot: ${EVIDENCE}/07-cold-link
+- openLink: opax://person/julia-gillard
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible: Julia Gillard
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/07-warm-link
+# Exercise the real native module, with local metadata and the non-resolving
+# e2e origin. Dismiss the sheet without selecting a destination or copying.
+- openLink: opax://workbench
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: wb-native-share
+    timeout: 30000
+- tapOn:
+    id: wb-native-share
+- assertVisible: Anthony Albanese
+- assertVisible: opax.invalid
+- takeScreenshot: ${EVIDENCE}/07-native-share
+- tapOn: Close
+- assertVisible: Native share cancelled
+- tapOn: OK
+- assertVisible:
+    id: wb-top
+- takeScreenshot: ${EVIDENCE}/07-native-share-dismissed

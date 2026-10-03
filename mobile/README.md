@@ -22,6 +22,15 @@ must match at build and run time. There is no JS origin fallback or OTA update.
 CNG regenerates ignored `ios/` and `android/`; native edits must become config
 plugins. Prebuild's developer ATS defaults are
 removed by `plugins/withNetworkPolicy.js`; `native-config.ts` verifies its output.
+`plugins/withSceneLifecycle.js` enables SDK 57's supported
+`expo-build-properties` scene opt-in. Every prebuild writes the single-window
+manifest for Expo's built-in `EXExpoAppSceneDelegate` and exposes the React
+Native factory through `ExpoReactNativeFactoryProvider`. Expo creates the
+scene window and forwards lifecycle and cold/warm links; no generated Swift
+file needs hand editing. The share module resolves the foreground scene’s key
+window and follows its presented controllers before showing the system sheet.
+This requires Expo 57.0.23 or newer. See
+[Expo's scene lifecycle guide](https://github.com/expo/fyi/blob/main/ios-scene-lifecycle.md).
 Each build runs prebuild; set `OPAX_CLEAN_PREBUILD=1` for a full regeneration.
 Ordinary iterations retain generated Pods so unchanged native headers can reuse
 the shared host's compilation cache. Native build concurrency is capped at four.
