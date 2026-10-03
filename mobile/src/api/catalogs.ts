@@ -1,276 +1,357 @@
 import type { ApiClient, RecordResult } from './client';
 import { ApiError } from './errors';
+import {
+  joinPerson,
+  personSlugForResult,
+  type PersonProfile,
+} from './person-identity';
 import type { CatalogKind } from './policy';
-export interface RosterPerson {
-  name: string;
-  pid?: string;
-  party?: string | null;
-  party_now?: string;
-  current?: boolean;
-  representation?: {
-    jurisdiction: string;
-    chamber: string;
-    electorate: string;
-    state?: string;
-    basis?: string;
-  }[];
-}
-export interface Roster {
-  meta: { generated: string };
-  people: RosterPerson[];
-}
-export interface Slugs {
-  generated: string;
-  slugs: Record<string, string>;
-}
-export interface Source {
-  source_id: string;
-  label: string;
-  url: string;
-  fetched_at?: string;
-  licence?: string;
-}
-export interface Manifest {
-  release_id: string;
-  generated: string;
-  index_url: string;
-  people_url: string;
-  sources: Source[];
-}
-export interface SeatObservation {
-  electorate_id: string;
-  name: string;
-  current: boolean;
-  as_of: string | null;
-  party: string | null;
-  jurisdiction: string;
-  chamber: string;
-  url: string;
-}
-export interface ElectoratePerson {
-  person_id: string;
-  legacy_person_id?: string;
-  name: string;
-  aliases: string[];
-  electorates: SeatObservation[];
-  sources: string[];
-  source_url?: string | null;
-}
-export interface PeopleCatalog {
-  meta: { generated: string; release_id: string };
-  people: ElectoratePerson[];
-}
-export interface Electorate {
-  electorate_id: string;
-  name: string;
-  slug: string;
-  detail_url: string;
-  representation_as_of: string | null;
-  representation_status: string;
-  representatives: { party: string | null; person: ElectoratePerson }[];
-}
-export interface ElectorateIndex {
-  meta: { generated: string; release_id: string };
-  electorates: Electorate[];
-}
-export interface CatalogRecord {
-  kind: string;
-  title: string;
-  href: string;
-  snippet: string;
-  slug: string;
-  resource: string;
-  source?: string;
-  url?: string;
-  personSlug?: string;
-}
-export interface SearchPage {
-  query: string;
-  kind: string;
-  results: CatalogRecord[];
-  total: number;
-  page: number;
-  per_page: number;
-  warnings: string[];
-  coverage?: string;
-}
-export interface Bill {
-  key: string;
-  title: string;
-  jurisdiction: string;
-  introduced: string | null;
-  status: string;
-  has_summary: boolean;
-}
-export interface BillIndex {
-  generated_at: string;
-  bills: Bill[];
-}
-export interface BillDetail {
-  key: string;
-  title: string;
-  [key: string]: unknown;
-}
+import * as decode from './catalog-decoders';
+import type { Manifest } from './catalog-decoders';
+import { billKey, interestKey, personId, type PersonId } from './ids';
+import {
+  profileFor,
+  recentBillsFor,
+  recentDeclarationsFor,
+  yourMPFor,
+  electorateFor,
+  suggestionsFor,
+  billFor,
+  billsFor,
+  coverageFor,
+  type Block,
+  type ProfileCatalogs,
+} from './selectors';
+export * from './catalog-decoders';
+export * from './ids';
+export * from './selectors';
 
-function object(value: unknown): Record<string, unknown> {
-  if (!value || typeof value !== 'object' || Array.isArray(value))
-    throw new ApiError(
-      'invalid-data',
-      'The catalog response could not be read.',
-    );
-  return value as Record<string, unknown>;
+interface SuggestionSources {
+  roster: decode.Roster;
+  electorates: decode.ElectorateIndex;
+  bills: decode.BillIndex;
 }
-function list<T>(
-  value: unknown,
-  key: string,
-  valid: (row: Record<string, unknown>) => boolean,
-): T {
-  const data = object(value);
-  if (
-    !Array.isArray(data[key]) ||
-    !(data[key] as unknown[]).every((row) => valid(object(row)))
-  )
-    throw new ApiError(
-      'invalid-data',
-      'The catalog response could not be read.',
-    );
-  return data as T;
+function cached<T>(
+  block: Block<T>,
+  records: RecordResult<unknown>[],
+): Block<T> {
+  return {
+    ...block,
+    stale: records.some((r) => r.stale),
+    savedAt: Math.min(...records.map((r) => r.savedAt)),
+  };
 }
-export const decodeRoster = (value: unknown) => {
-  const data = list<Roster>(
-    value,
-    'people',
-    (row) =>
-      typeof row.name === 'string' &&
-      (row.party === undefined ||
-        row.party === null ||
-        typeof row.party === 'string'),
-  );
-  if (typeof object(data.meta).generated !== 'string')
-    throw new ApiError('invalid-data', 'The roster date is missing.');
-  return data;
-};
-export const decodePeople = (value: unknown) => {
-  const data = list<PeopleCatalog>(
-    value,
-    'people',
-    (row) =>
-      typeof row.person_id === 'string' &&
-      typeof row.name === 'string' &&
-      Array.isArray(row.electorates) &&
-      Array.isArray(row.sources) &&
-      Array.isArray(row.aliases) &&
-      row.aliases.every((alias) => typeof alias === 'string') &&
-      row.sources.every((source) => typeof source === 'string') &&
-      row.electorates.every((item) => {
-        const seat = object(item);
-        return (
-          typeof seat.electorate_id === 'string' &&
-          typeof seat.name === 'string' &&
-          typeof seat.current === 'boolean' &&
-          (seat.as_of === null || typeof seat.as_of === 'string') &&
-          (seat.party === null || typeof seat.party === 'string') &&
-          typeof seat.jurisdiction === 'string' &&
-          typeof seat.chamber === 'string'
-        );
-      }),
-  );
-  if (
-    typeof object(data.meta).generated !== 'string' ||
-    !/^[a-f0-9]{16}$/.test(String(data.meta.release_id))
-  )
-    throw new ApiError(
-      'invalid-data',
-      'The person release metadata is missing.',
-    );
-  return data;
-};
-export function decodeManifest(value: unknown): Manifest {
-  const data = object(value);
-  if (
-    typeof data.release_id !== 'string' ||
-    !/^[a-f0-9]{16}$/.test(data.release_id) ||
-    data.index_url !== `/electorates/releases/${data.release_id}/index.json` ||
-    data.people_url !==
-      `/electorates/releases/${data.release_id}/people.json` ||
-    !Array.isArray(data.sources) ||
-    !data.sources.every((item) => {
-      const source = object(item);
-      return (
-        typeof source.source_id === 'string' &&
-        typeof source.label === 'string' &&
-        typeof source.url === 'string' &&
-        source.url.startsWith('https://')
-      );
-    }) ||
-    typeof data.generated !== 'string'
-  )
-    throw new ApiError(
-      'invalid-data',
-      'The electorate release could not be read.',
-    );
-  return data as unknown as Manifest;
-}
-export function decodeSlugs(value: unknown): Slugs {
-  const data = object(value);
-  const slugs = object(data.slugs);
-  if (!Object.values(slugs).every((name) => typeof name === 'string'))
-    throw new ApiError(
-      'invalid-data',
-      'The person directory could not be read.',
-    );
-  return data as unknown as Slugs;
-}
-export const decodeSearch = (value: unknown) =>
-  list<SearchPage>(
-    value,
-    'results',
-    (row) =>
-      typeof row.title === 'string' &&
-      typeof row.slug === 'string' &&
-      typeof row.kind === 'string',
-  );
 export class Catalogs {
-  constructor(private client: ApiClient) {}
+  private suggestionData?: Promise<SuggestionSources>;
+  constructor(private client: Pick<ApiClient, 'get'>) {}
   roster() {
-    return this.client.get('/parliamentarians.json', decodeRoster);
+    return this.client.get('/parliamentarians.json', decode.decodeRoster);
   }
   slugs() {
-    return this.client.get('/api/person-slugs', decodeSlugs);
+    return this.client.get('/api/person-slugs', decode.decodeSlugs);
   }
   manifest() {
-    return this.client.get('/electorates/manifest.json', decodeManifest);
+    return this.client.get('/electorates/manifest.json', decode.decodeManifest);
   }
   people(manifest: Manifest) {
-    return this.client.get(manifest.people_url, decodePeople);
+    return this.client.get(manifest.people_url, decode.decodePeople);
   }
   electorates(manifest: Manifest) {
-    return this.client.get(manifest.index_url, (value) =>
-      list<ElectorateIndex>(
-        value,
-        'electorates',
-        (row) =>
-          typeof row.electorate_id === 'string' && typeof row.name === 'string',
-      ),
-    );
+    return this.client.get(manifest.index_url, decode.decodeElectorateIndex);
   }
   electorate(path: string) {
-    return this.client.get(path, object);
+    return this.client.get(path, decode.decodeElectorate);
   }
   bills() {
-    return this.client.get('/bills/index.json', (value) =>
-      list<BillIndex>(
-        value,
-        'bills',
-        (row) => typeof row.key === 'string' && typeof row.title === 'string',
-      ),
-    );
+    return this.client.get('/bills/index.json', decode.decodeBillIndex);
   }
   bill(key: string) {
+    return this.client.get(`/bills/${billKey(key)}.json`, decode.decodeBill);
+  }
+  votes() {
+    return this.client.get('/votes.json', decode.decodeVotes);
+  }
+  interestIndex() {
+    return this.client.get('/interests/index.json', decode.decodeInterestIndex);
+  }
+  interests(key: string) {
     return this.client.get(
-      `/bills/${key}.json`,
-      (value) => object(value) as BillDetail,
+      `/interests/${interestKey(key)}.json`,
+      decode.decodeInterest,
     );
+  }
+  recentInterests() {
+    return this.client.get(
+      '/interests/recent.json',
+      decode.decodeRecentInterests,
+    );
+  }
+  pay() {
+    return this.client.get('/pay.json', decode.decodePay);
+  }
+  expenses() {
+    return this.client.get('/expenses.json', decode.decodeExpenses);
+  }
+  expenseCategories() {
+    return this.client.get(
+      '/expense-categories.json',
+      decode.decodeExpenseCategories,
+    );
+  }
+  photoPeople() {
+    return this.client.get('/photos/people.json', decode.decodePhotoPeople);
+  }
+  photoCredits() {
+    return this.client.get('/photos/credits.json', decode.decodePhotoCredits);
+  }
+  corpus() {
+    return this.client.get('/corpus.json', decode.decodeCorpus);
+  }
+  async about() {
+    const result = await this.corpus();
+    return { ...result, data: cached(coverageFor(result.data), [result]) };
+  }
+  async billFor(key: string) {
+    const [bill, index] = await Promise.all([this.bill(key), this.bills()]);
+    const view = billFor(bill.data, index.data);
+    for (const block of [
+      view.identity,
+      view.summary,
+      view.keyDates,
+      view.divisions,
+      view.speeches,
+      view.acts,
+      view.consultation,
+    ]) {
+      block.stale = bill.stale;
+      block.savedAt = bill.savedAt;
+    }
+    view.divisions = cached(view.divisions, [bill, index]);
+    return {
+      ...bill,
+      stale: bill.stale || index.stale,
+      savedAt: Math.min(bill.savedAt, index.savedAt),
+      data: view,
+    };
+  }
+  async billsFor(filter: Parameters<typeof billsFor>[1] = {}) {
+    const result = await this.bills();
+    return { ...result, data: cached(billsFor(result.data, filter), [result]) };
+  }
+  async today(limit = 6) {
+    const load = async <T, V>(
+      pending: Promise<RecordResult<T>>,
+      select: (data: T) => Block<V>,
+    ): Promise<Block<V>> => {
+      try {
+        const record = await pending;
+        return {
+          ...select(record.data),
+          stale: record.stale,
+          savedAt: record.savedAt,
+        };
+      } catch (e) {
+        return {
+          data: null,
+          status: 'error',
+          error:
+            e instanceof ApiError
+              ? e
+              : new ApiError('invalid-data', 'This catalog could not be read.'),
+          sources: [],
+          asAt: null,
+          stale: false,
+          savedAt: null,
+        };
+      }
+    };
+    const [bills, declarations] = await Promise.all([
+      load(this.bills(), (data) => recentBillsFor(data, limit)),
+      load(this.recentInterests(), (data) =>
+        recentDeclarationsFor(data, limit),
+      ),
+    ]);
+    return { bills, declarations };
+  }
+  async directory() {
+    const [manifest, roster, slugs] = await Promise.all([
+      this.manifest(),
+      this.roster(),
+      this.slugs(),
+    ]);
+    const [people, electorates] = await Promise.all([
+      this.people(manifest.data),
+      this.electorates(manifest.data),
+    ]);
+    if (
+      people.data.meta.release_id !== manifest.data.release_id ||
+      electorates.data.meta.release_id !== manifest.data.release_id
+    )
+      throw new ApiError(
+        'invalid-data',
+        'The electorate release is incomplete. Try again.',
+      );
+    return { manifest, roster, slugs, people, electorates };
+  }
+  async yourMP(id: string, chosenStateSeats: string[] = []) {
+    const directory = await this.directory();
+    const view = yourMPFor(
+      id,
+      directory.electorates.data,
+      directory.manifest.data,
+      chosenStateSeats,
+    );
+    const records = [directory.electorates, directory.manifest];
+    view.seat = cached(view.seat, records);
+    view.members = cached(view.members, records);
+    view.senators = view.senators.map((block) => cached(block, records));
+    view.stateMembers = view.stateMembers.map((block) =>
+      cached(block, records),
+    );
+    return view;
+  }
+  async electorateFor(path: string) {
+    const result = await this.electorate(path);
+    const view = electorateFor(result.data);
+    for (const block of [
+      view.identity,
+      view.representatives,
+      ...view.elections,
+      ...view.census,
+    ]) {
+      block.stale = result.stale;
+      block.savedAt = result.savedAt;
+    }
+    return { ...result, data: view };
+  }
+  suggestionSources(refresh = false): Promise<SuggestionSources> {
+    if (!this.suggestionData || refresh) {
+      const pending = (async () => {
+        const [manifest, roster, bills] = await Promise.all([
+          this.manifest(),
+          this.roster(),
+          this.bills(),
+        ]);
+        const electorates = await this.electorates(manifest.data);
+        if (electorates.data.meta.release_id !== manifest.data.release_id)
+          throw new ApiError(
+            'invalid-data',
+            'The seat release does not match its manifest.',
+          );
+        return {
+          roster: roster.data,
+          electorates: electorates.data,
+          bills: bills.data,
+        };
+      })();
+      this.suggestionData = pending;
+      void pending.catch(() => {
+        if (this.suggestionData === pending) this.suggestionData = undefined;
+      });
+    }
+    return this.suggestionData;
+  }
+  async suggestions(query: string) {
+    const sources = await this.suggestionSources();
+    return suggestionsFor(
+      query,
+      sources.roster,
+      sources.electorates,
+      sources.bills,
+    );
+  }
+  async profileFor(id: PersonId) {
+    personId(id);
+    const directory = await this.directory();
+    const records = new Map<string, RecordResult<unknown>>(),
+      errors: Record<string, ApiError> = {};
+    const load = async <T>(
+      key: string,
+      pending: Promise<RecordResult<T>>,
+    ): Promise<T | undefined> => {
+      try {
+        const result = await pending;
+        records.set(key, result);
+        return result.data;
+      } catch (e) {
+        errors[key] =
+          e instanceof ApiError
+            ? e
+            : new ApiError('invalid-data', 'This catalog could not be read.');
+        return undefined;
+      }
+    };
+    const [
+      votes,
+      bills,
+      interestIndex,
+      pay,
+      expenses,
+      expenseCategories,
+      photoPeople,
+      photoCredits,
+    ] = await Promise.all([
+      load('votes', this.votes()),
+      load('bills', this.bills()),
+      load('interestIndex', this.interestIndex()),
+      load('pay', this.pay()),
+      load('expenses', this.expenses()),
+      load('expenseCategories', this.expenseCategories()),
+      load('photoPeople', this.photoPeople()),
+      load('photoCredits', this.photoCredits()),
+    ]);
+    const data: ProfileCatalogs = {
+      manifest: directory.manifest.data,
+      roster: directory.roster.data,
+      slugs: directory.slugs.data,
+      people: directory.people.data,
+      votes,
+      bills,
+      interestIndex,
+      pay,
+      expenses,
+      expenseCategories,
+      photoPeople,
+      photoCredits,
+    };
+    const initial = profileFor(id, data);
+    const interest = initial.interestKey
+      ? await load('interests', this.interests(initial.interestKey))
+      : undefined;
+    const profile = profileFor(id, { ...data, interest });
+    for (const [key, block] of Object.entries(profile.blocks)) {
+      const dependencies: Record<string, string[]> = {
+        identity: [],
+        votes: ['votes'],
+        interests: ['interestIndex', 'interests'],
+        ties: ['interestIndex', 'interests'],
+        pay: ['pay'],
+        expenses: ['expenses', 'expenseCategories'],
+        portrait: ['photoPeople', 'photoCredits'],
+        partyReceipts: [],
+      };
+      const keys = dependencies[key] ?? [];
+      const failure = keys.map((k) => errors[k]).find(Boolean);
+      if (failure) {
+        block.status = 'error';
+        block.error = failure;
+        block.data = null;
+      }
+      const cached = keys
+        .map((k) => records.get(k))
+        .filter((r): r is RecordResult<unknown> => r !== undefined);
+      block.stale = cached.some((r) => r.stale);
+      block.savedAt = cached.length
+        ? Math.min(...cached.map((r) => r.savedAt))
+        : null;
+    }
+    profile.blocks.identity.stale = Object.values(directory).some(
+      (r) => r.stale,
+    );
+    profile.blocks.identity.savedAt = Math.min(
+      ...Object.values(directory).map((r) => r.savedAt),
+    );
+    return profile;
   }
   async search(query: string, kind: CatalogKind = 'person', page = 1) {
     const params = new URLSearchParams({
@@ -279,34 +360,49 @@ export class Catalogs {
       page: String(page),
       per: '20',
     });
-    const pending = this.client.get(`/api/search-all?${params}`, decodeSearch);
-    if (kind !== 'person') return pending;
-    const [result, slugs] = await Promise.all([pending, this.slugs()]);
+    const [result, slugs] = await Promise.all([
+      this.client.get(`/api/search-all?${params}`, decode.decodeSearch),
+      this.slugs(),
+    ]);
+    const bridge =
+      kind === 'interest'
+        ? await Promise.all([this.interestIndex(), this.manifest()])
+        : undefined;
+    const people = bridge ? await this.people(bridge[1].data) : undefined;
+    if (people && people.data.meta.release_id !== bridge![1].data.release_id)
+      throw new ApiError(
+        'invalid-data',
+        'The person release does not match its manifest.',
+      );
+    const records = [
+      result,
+      slugs,
+      ...(bridge ?? []),
+      ...(people ? [people] : []),
+    ];
     return {
       ...result,
-      stale: result.stale || slugs.stale,
-      savedAt: Math.min(result.savedAt, slugs.savedAt),
+      stale: records.some((r) => r.stale),
+      savedAt: Math.min(...records.map((r) => r.savedAt)),
       data: {
         ...result.data,
-        results: result.data.results.map((row) => ({
-          ...row,
-          personSlug: personSlugForResult(row, slugs.data),
-        })),
+        results: result.data.results
+          .filter((row) => !row.href.startsWith('/ask'))
+          .map((row) => ({
+            ...row,
+            personSlug: personSlugForResult(
+              row,
+              slugs.data,
+              bridge?.[0].data,
+              people?.data,
+            ),
+          })),
       },
     };
   }
   async person(slug: string): Promise<RecordResult<PersonProfile>> {
-    const [slugs, roster, manifest] = await Promise.all([
-      this.slugs(),
-      this.roster(),
-      this.manifest(),
-    ]);
-    const people = await this.people(manifest.data);
-    if (people.data.meta.release_id !== manifest.data.release_id)
-      throw new ApiError(
-        'invalid-data',
-        'The electorate release is incomplete. Try again.',
-      );
+    const directory = await this.directory();
+    const { slugs, roster, manifest, people } = directory;
     return {
       data: joinPerson(
         slug,
@@ -315,92 +411,10 @@ export class Catalogs {
         people.data,
         manifest.data,
       ),
-      stale: [slugs, roster, manifest, people].some((record) => record.stale),
-      savedAt: Math.min(
-        slugs.savedAt,
-        roster.savedAt,
-        manifest.savedAt,
-        people.savedAt,
-      ),
+      stale: Object.values(directory).some((r) => r.stale),
+      savedAt: Math.min(...Object.values(directory).map((r) => r.savedAt)),
       asOf: people.asOf ?? manifest.asOf,
     };
   }
 }
-export interface PersonProfile {
-  slug: string;
-  name: string;
-  canonicalPersonId?: string;
-  legacyPersonId?: string;
-  party: string | null;
-  seats: SeatObservation[];
-  sources: Source[];
-  asOf: string;
-}
-const folded = (name: string) =>
-  name
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLocaleLowerCase('en-AU')
-    .replace(/[’']/g, '');
-// Catalog `slug` is an opaque catalog-N record ID, not a person slug. The href
-// carries a canonical slug or legacy encoded name; join it through person-slugs.
-export function personSlugForResult(
-  row: CatalogRecord,
-  slugs: Slugs,
-): string | undefined {
-  if (row.kind !== 'person') return undefined;
-  const match = /^\/subject\/person\/([^/?#]+)$/.exec(row.href);
-  if (!match?.[1]) return undefined;
-  let segment: string;
-  try {
-    segment = decodeURIComponent(match[1]);
-  } catch {
-    return undefined;
-  }
-  if (slugs.slugs[segment]) return segment;
-  const matches = Object.entries(slugs.slugs).filter(
-    ([, name]) => folded(name) === folded(segment),
-  );
-  return matches.length === 1 ? matches[0]![0] : undefined;
-}
-export function joinPerson(
-  slug: string,
-  slugs: Slugs,
-  roster: Roster,
-  people: PeopleCatalog,
-  manifest: Manifest,
-): PersonProfile {
-  const name = slugs.slugs[slug];
-  if (!name)
-    throw new ApiError(
-      'not-found',
-      'This person is not in the public directory.',
-    );
-  const row = roster.people.find((p) => folded(p.name) === folded(name));
-  const matches = people.people.filter(
-    (p) =>
-      (row?.pid && p.legacy_person_id === row.pid) ||
-      [p.name, ...p.aliases].some((alias) => folded(alias) === folded(name)),
-  );
-  if (matches.length > 1)
-    throw new ApiError(
-      'invalid-data',
-      'The person identity needs review before this record can be shown.',
-    );
-  const person = matches[0];
-  const seats = person?.electorates.filter((seat) => seat.current) ?? [];
-  // The roster's recorded affiliations are historical, not a current-seat fallback.
-  const sources = manifest.sources.filter((source) =>
-    person?.sources.includes(source.source_id),
-  );
-  return {
-    slug,
-    name,
-    canonicalPersonId: person?.person_id,
-    legacyPersonId: person?.legacy_person_id ?? row?.pid,
-    party: seats[0]?.party ?? row?.party_now ?? row?.party ?? null,
-    seats,
-    sources,
-    asOf: seats[0]?.as_of ?? roster.meta.generated,
-  };
-}
+export * from './person-identity';

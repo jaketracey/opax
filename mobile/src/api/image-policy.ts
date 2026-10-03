@@ -1,9 +1,9 @@
 import Constants from 'expo-constants';
+import { assertPortraitPath } from './portrait-policy';
 // Web portraits are /photos/<catalog-id>.webp. No OG, arbitrary assets,
 // absolute URLs, query strings or external hosts can enter the native Image API.
 export function remoteImageURI(path: string): string {
-  if (!/^\/photos\/[a-zA-Z0-9_-]+\.webp$/.test(path))
-    throw new Error('Image is outside the portrait allow-list');
+  assertPortraitPath(path);
   const extra = Constants.expoConfig?.extra;
   if (!extra || typeof extra.apiOrigin !== 'string')
     throw new Error('Missing image origin');

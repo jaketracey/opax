@@ -25,8 +25,17 @@ export function dataAsOf(value: unknown): string | null {
   if (!value || typeof value !== 'object') return null;
   const data = value as Record<string, unknown>;
   const meta = (data.meta ?? {}) as Record<string, unknown>;
+  const votesMeta = (data._meta ?? {}) as Record<string, unknown>;
+  const refresh = (data.refresh ?? {}) as Record<string, unknown>;
   const date =
-    meta.as_of ?? data.generated_at ?? meta.generated ?? data.generated;
+    meta.as_of ??
+    votesMeta.content_changed_at ??
+    refresh.checked_at ??
+    data.as_at ??
+    data.generated_at ??
+    meta.generated ??
+    votesMeta.generated ??
+    data.generated;
   return typeof date === 'string' ? date : null;
 }
 export class ApiClient {

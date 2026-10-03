@@ -5,16 +5,28 @@ const staticPaths = new Set([
   '/parliamentarians.json',
   '/electorates/manifest.json',
   '/bills/index.json',
+  '/votes.json',
+  '/interests/index.json',
+  '/interests/recent.json',
+  '/pay.json',
+  '/expenses.json',
+  '/expense-categories.json',
+  '/photos/people.json',
+  '/photos/credits.json',
+  '/corpus.json',
 ]);
 const releasePath =
   /^\/electorates\/releases\/[a-f0-9]{16}\/(?:index|people|el_[a-f0-9]{24})\.json$/;
-const billPath = /^\/bills\/au-federal-[rs]\d+\.json$/;
+const billPath =
+  /^\/bills\/au-federal-(?:[rs]\d+|alrc-\d+|ed-[a-z0-9]+(?:-[a-z0-9]+)*)\.json$/;
+const interestPath = /^\/interests\/(?:\d+|n-[a-z0-9]+(?:-[a-z0-9]+)*)\.json$/;
 
 export function assertAllowedPath(path: string): void {
   const [pathname, query] = path.split('?');
   if (
     !path.startsWith('/') ||
     path.startsWith('//') ||
+    /[\u0000-\u0020\u007f]/.test(path) ||
     /[%\\]/.test(pathname!) ||
     path.includes('#') ||
     path
@@ -36,7 +48,6 @@ export function assertAllowedPath(path: string): void {
       'state',
       'party',
       'speaker',
-      'topic',
       'from',
       'to',
     ];
@@ -44,6 +55,11 @@ export function assertAllowedPath(path: string): void {
       !kind ||
       !catalogKinds.includes(kind as CatalogKind) ||
       !params.get('q')?.trim() ||
+      params.get('q')!.length > 2000 ||
+      ['page', 'per'].some(
+        (key) => params.has(key) && !/^[1-9]\d*$/.test(params.get(key)!),
+      ) ||
+      (params.has('per') && Number(params.get('per')) > 200) ||
       [...params.keys()].some(
         (key) =>
           !allowedParams.includes(key) || params.getAll(key).length !== 1,
@@ -54,12 +70,14 @@ export function assertAllowedPath(path: string): void {
       );
     return;
   }
-  if (query) throw new Error('Static catalogs do not accept queries');
+  if (path.includes('?'))
+    throw new Error('Static catalogs do not accept queries');
   if (
     pathname === '/api/person-slugs' ||
     staticPaths.has(pathname!) ||
     releasePath.test(pathname!) ||
-    billPath.test(pathname!)
+    billPath.test(pathname!) ||
+    interestPath.test(pathname!)
   )
     return;
   throw new Error('Route is outside the public catalog allow-list');

@@ -1,10 +1,17 @@
 // Offline, data-only server. No Worker import, proxy, fetch, email or model path.
 import { createServer } from 'node:http';
-import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { resolve } from 'node:path';
 import snapshot from './fixture-snapshot.json';
-import { assertAllowedPath } from '../src/api/policy';
+import { assertAllowedPath, type CatalogKind } from '../src/api/policy';
+import { assertPortraitPath } from '../src/api/portrait-policy';
+import { fixtureBytes } from '../tests/fixture-bytes';
+import { catalogSearchRows } from '../src/api/catalog-search';
+import {
+  decodePay,
+  decodeExpenses,
+  decodeInterest,
+  decodeRecentInterests,
+} from '../src/api/catalogs';
 import type {
   Roster,
   PeopleCatalog,
@@ -14,14 +21,13 @@ import type {
 const port = Number(process.env.OPAX_FIXTURE_PORT ?? 8910);
 if (!Number.isInteger(port) || port < 8900 || port > 8999)
   throw new Error('Fixture port must be 8900–8999');
-const root = resolve(__dirname, '../../portal/public');
 const files = new Map<string, Buffer>();
-for (const [path, hash] of Object.entries(snapshot.files)) {
-  assertAllowedPath(path);
-  const body = readFileSync(resolve(root, `.${path}`));
-  if (createHash('sha256').update(body).digest('hex') !== hash)
-    throw new Error(`PIN MISMATCH: ${path}. Review and repin deliberately.`);
-  files.set(path, body);
+const pinnedBytes = fixtureBytes(snapshot);
+for (const path of Object.keys(snapshot.files)) {
+  if (snapshot.testOnlyFiles.includes(path)) continue;
+  if (path.endsWith('.webp')) assertPortraitPath(path);
+  else assertAllowedPath(path);
+  files.set(path, pinnedBytes(path));
 }
 const manifest = JSON.parse(
   files.get('/electorates/manifest.json')!.toString(),
@@ -59,6 +65,16 @@ for (const person of people.people) {
 const slugs = Object.fromEntries(
   [...rows].map(([slug, row]) => [slug, row.name]),
 );
+const fixtureCatalogs = {
+  pay: decodePay(JSON.parse(files.get('/pay.json')!.toString())),
+  expenses: decodeExpenses(JSON.parse(files.get('/expenses.json')!.toString())),
+  recent: decodeRecentInterests(
+    JSON.parse(files.get('/interests/recent.json')!.toString()),
+  ),
+  interests: [...files]
+    .filter(([path]) => /^\/interests\/(?:\d+|n-[a-z0-9-]+)\.json$/.test(path))
+    .map(([, body]) => decodeInterest(JSON.parse(body.toString()))),
+};
 const normalize = (value: string) =>
   value
     .normalize('NFKD')
@@ -82,9 +98,11 @@ export const server = createServer((request, response) => {
     ),
   );
   try {
-    if (request.headers.host !== `127.0.0.1:${port}`) throw new Error('Host is outside the loopback fixture boundary');
+    if (request.headers.host !== `127.0.0.1:${port}`)
+      throw new Error('Host is outside the loopback fixture boundary');
     if (request.method !== 'GET') throw new Error('Only GET is allowed');
-    assertAllowedPath(path);
+    if (path.endsWith('.webp')) assertPortraitPath(path);
+    else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
     let body = files.get(url.pathname);
     let cacheControl = 'public, max-age=300';
@@ -94,31 +112,37 @@ export const server = createServer((request, response) => {
       );
       cacheControl = 'public, max-age=3600';
     } else if (url.pathname === '/api/search-all') {
-      // Only the person catalog is used by this lane; unsupported kinds fail loudly.
-      if (url.searchParams.get('kind') !== 'person')
-        throw new Error('Fixture catalog kind not implemented');
+      const kind = url.searchParams.get('kind') as CatalogKind;
       const query = url.searchParams.get('q')!;
       const terms = normalize(query).trim().split(/\s+/);
-      const results: CatalogRecord[] = Object.entries(slugs)
-        .filter(([, name]) =>
-          terms.every((term) => normalize(name).includes(term)),
-        )
-        .map(([slug, name]) => {
-          const member = people.people.find(
-            (person) => person.name === name || person.aliases.includes(name),
-          );
-          const seat = member?.electorates.find((seat) => seat.current);
-          return {
-            kind: 'person',
-            slug: `catalog-${roster.people.findIndex((person) => person.name === name) >= 0 ? roster.people.findIndex((person) => person.name === name) : roster.people.length + Object.keys(slugs).indexOf(slug)}`,
-            title: name,
-            href: `/subject/person/${encodeURIComponent(name)}`,
-            resource: '',
-            snippet: seat
-              ? `${seat.party ?? 'Party not recorded'} · ${seat.name} · as at ${seat.as_of}`
-              : 'In the public parliamentary record',
-          };
-        });
+      const results: CatalogRecord[] =
+        kind !== 'person'
+          ? catalogSearchRows(kind, fixtureCatalogs).filter((row) =>
+              terms.every((term) =>
+                normalize(`${row.title} ${row.snippet}`).includes(term),
+              ),
+            )
+          : Object.entries(slugs)
+              .filter(([, name]) =>
+                terms.every((term) => normalize(name).includes(term)),
+              )
+              .map(([slug, name]) => {
+                const member = people.people.find(
+                  (person) =>
+                    person.name === name || person.aliases.includes(name),
+                );
+                const seat = member?.electorates.find((seat) => seat.current);
+                return {
+                  kind: 'person',
+                  slug: `catalog-${roster.people.findIndex((person) => person.name === name) >= 0 ? roster.people.findIndex((person) => person.name === name) : roster.people.length + Object.keys(slugs).indexOf(slug)}`,
+                  title: name,
+                  href: `/subject/person/${encodeURIComponent(name)}`,
+                  resource: '',
+                  snippet: seat
+                    ? `${seat.party ?? 'Party not recorded'} · ${seat.name} · as at ${seat.as_of}`
+                    : 'In the public parliamentary record',
+                };
+              });
       const page = Math.max(1, Number(url.searchParams.get('page') ?? 1));
       const per = Math.min(
         200,
@@ -127,7 +151,7 @@ export const server = createServer((request, response) => {
       body = Buffer.from(
         JSON.stringify({
           query,
-          kind: 'person',
+          kind,
           sort: 'relevance',
           page,
           per_page: per,
@@ -140,14 +164,17 @@ export const server = createServer((request, response) => {
           warnings: [],
           catalog_matches: results.length,
           coverage:
-            'Pinned public parliamentarians and electorate roster; local name matching, not production index ranking.',
+            'Pinned public catalogs; local matching, not production index ranking. Register detail search covers only pinned members; recent declarations retain the complete pinned feed.',
         }),
       );
       cacheControl = 'no-store';
     }
     if (!body) throw new Error('Path not in the pinned journey snapshot');
     const etag = `"${createHash('sha256').update(body).digest('hex')}"`;
-    response.setHeader('Content-Type', 'application/json');
+    response.setHeader(
+      'Content-Type',
+      url.pathname.endsWith('.webp') ? 'image/webp' : 'application/json',
+    );
     response.setHeader('Cache-Control', cacheControl);
     response.setHeader('ETag', etag);
     if (request.headers['if-none-match'] === etag) {

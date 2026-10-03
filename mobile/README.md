@@ -107,8 +107,7 @@ the app's only network origin still comes from the reviewed build configuration.
   read but retained locally for offline use. `savedAt`, `validatedAt`, `asOf` and
   `stale` are distinct. Transient failures can return stale data; 4xx identity,
   invalid data and forbidden routes do not. Display saved and source dates.
-- `scripts/fixture-snapshot.json` pins SHA-256 of exactly the three public files
-  needed by these journeys. Startup verifies hashes and freezes bytes in memory.
+- `scripts/fixture-snapshot.json` pins SHA-256 and byte sizes of the reviewed public P0 files. Startup verifies hashes and freezes bytes in memory.
   To add fixture data, review provenance/cost, add its hash/path to this manifest
   and implement the catalog route from those files. No arbitrary asset serving,
   Worker imports or outbound network. The person search projection matches names
@@ -155,3 +154,70 @@ advisories are individually classified in the same baseline. Never run
 Today, Your MP and Bills are plain placeholders. Search and the core profile
 are deliberately minimal. Full feature screens, licensed postcode lookup,
 portrait rights, sign-in, voice, universal links and signing belong to later work.
+
+## P0 catalog adapters (data only)
+
+Import `catalogs` from `src/api/runtime.ts`; all loaders validate complete JSON.
+Use `directory()` for the release/roster/slug joins, `yourMP(seatId, chosenStateSeatIds)`
+for verified member and senator observations, and `electorateFor(seat.detail_url)`
+for elections, Census vintage, representation and evidence. State seats are explicit
+choices; the adapter does not allocate a federal seat to a state district.
+`profileFor(personId)` takes a canonical ID from the release. Its `blocks` expose
+identity, votes, interests, ties, pay, expenses, portrait and party receipts, each
+with `status`, `data`, `asAt`, `sources`, `stale`, `savedAt` and an optional error.
+Optional failures keep the other blocks readable. An absent voting `_meta` means
+an unknown date. State profiles retain historical federal pay when `pay.pid` matches
+the identity's numeric legacy ID. Ties come from the member's register, including
+lobbyist/FITS entries and all declared rows grouped by organisation. Portraits expose licence/credit
+and a `display` permission status; official APH and unsupported Commons terms
+require native-use review. Exact full-name photo keys take priority over folded
+apostrophes; surname roster stubs never enter profile catalog lookups. Neither
+photo catalog supplies an as-at date.
+
+Use `billsFor(filters)`, `billFor(key)`, `today()`, `about()`, `suggestions(query)`
+and `search(query, kind)` for the remaining P0 blocks. Load `suggestionSources()`
+once on screen entry; `suggestions()` then matches that snapshot locally while
+typing. Reload explicitly with `suggestionSources(true)` when refreshing. Bill summaries retain their
+stored attribution; speeches carry “Machine brief”; duplicate divisions collapse
+using the web's pure logic, with `collapsed` and the original `rawRows` available.
+Search kinds are only `person`, `interest`, `pay`, `expense`; Ask-linked pay rows
+are excluded and register alterations resolve to a member slug. Pure selectors and
+branded ID parsers are also exported from `src/api/catalogs.ts` for already loaded data.
+OPAX record/party links are relative web paths: resolve them using the build-config
+origin when opening. E2E displays links locally and never opens production.
+
+The fixture pins 44 complete files (6,816,022 bytes), including whole-site votes,
+pay, expenses and money. `fixture-snapshot.json` records every size and hash;
+42 files are served. Its `testOnlyFiles` retain the money graph and donor ties
+for decoder/parity tests while their retired GET routes remain denied.
+Interest-detail search covers twelve pinned members; the recent feed, pay and
+expenses are complete. Local search does not reproduce production ranking.
+The tests compare pay, vote, expense and bill transforms to the original web
+functions, and resolve all 354 current canonical people in the pinned release.
+The profile sweep compares portrait, votes, interests, pay and expenses statuses
+against both round-1 commits on those same bytes. State profiles require a matching
+numeric ID for federal pay; ID-less federal pay records still join by name.
+
+Fixture startup and tests read git blobs at `fixture-snapshot.json`'s `sourceCommit`,
+then verify SHA-256 and byte size; worktree/nightly catalog changes cannot alter
+the pinned journeys. Keep that commit in the local git object database. To repin
+deliberately, review a new local commit, set `sourceCommit`, and recompute **every**
+existing path's hash and size from `git show <commit>:portal/public<path>`
+(`shasum -a 256` and `wc -c`), adding complete reviewed files as needed. Run `npm run qa`.
+The small party-label/alias lookup in `src/api/party-transforms.ts` is projected
+from the pinned money graph and parity-tested against the web's URL rule; refresh
+it when repinning that source. A drift test checks party labels/aliases in both
+the pinned and local graph, plus the pinned date, and fails with these repin
+instructions on drift. A date-only local regeneration stays green.
+Profiles fetch neither the money graph nor the donor
+ties index. State vote samples link their published `/votes.json` with an explicit
+OPAX label. Bill rows/details expose `introducedLabel` (Released for exposure
+drafts), normalized sponsors/portfolios/parties and readable source labels.
+
+The full-data parity sweeps run in `tests/parity-sweep.ts` as an isolated Node
+process under Jest, keeping their web reference VM allocations outside the suite runner.
+`tests/profile-sweep.ts` similarly isolates the 354-member status comparisons.
+Surname person pages use the release's unique current ID holder (or sole historical
+holder); incompatible roster representations are refused, including the shared
+David/Dorinda Cox ID. Roster-only register results such as Mark Furner retain their
+directory link without inventing a canonical release ID.
