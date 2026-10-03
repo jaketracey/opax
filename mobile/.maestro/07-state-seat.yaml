@@ -12,12 +12,14 @@ name: 07 Choose a state district explicitly where a verified roster exists
 - scrollUntilVisible:
     element:
       id: seat-choice-federal-representatives-vic-ballarat
+    centerElement: true
 - tapOn:
     id: seat-choice-federal-representatives-vic-ballarat
 - scrollUntilVisible:
     element:
       id: choose-state-seat
     timeout: 60000
+    centerElement: true
 - takeScreenshot: ${EVIDENCE}/07-state-choice-needed
 - tapOn:
     id: choose-state-seat
@@ -25,6 +27,7 @@ name: 07 Choose a state district explicitly where a verified roster exists
     element:
       id: seat-search
     direction: UP
+    centerElement: true
 - tapOn:
     id: seat-search
 - inputText: Wendouree
@@ -32,6 +35,7 @@ name: 07 Choose a state district explicitly where a verified roster exists
 - scrollUntilVisible:
     element:
       id: seat-choice-vic-vic-la-vic-wendouree
+    centerElement: true
 - takeScreenshot: ${EVIDENCE}/07-state-chooser
 - tapOn:
     id: seat-choice-vic-vic-la-vic-wendouree

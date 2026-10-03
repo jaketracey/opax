@@ -13,12 +13,14 @@ name: 09 Electorate representation, elections, Census context and sources
           element:
             id: change-seat
           timeout: 60000
+          centerElement: true
       - tapOn:
           id: change-seat
 - scrollUntilVisible:
     element:
       id: seat-search
     direction: UP
+    centerElement: true
 - tapOn:
     id: seat-search
 - inputText: Grayndler
@@ -26,6 +28,7 @@ name: 09 Electorate representation, elections, Census context and sources
 - scrollUntilVisible:
     element:
       id: seat-choice-federal-representatives-nsw-grayndler
+    centerElement: true
 - tapOn:
     id: seat-choice-federal-representatives-nsw-grayndler
 - scrollUntilVisible:
@@ -44,6 +47,7 @@ name: 09 Electorate representation, elections, Census context and sources
 - scrollUntilVisible:
     element:
       id: election-expand-0
+    centerElement: true
 - tapOn:
     id: election-expand-0
 - takeScreenshot: ${EVIDENCE}/09-election-open

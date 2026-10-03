@@ -7,6 +7,7 @@ name: Open a roster profile from the public search
 - scrollUntilVisible:
     element:
       id: search-input
+    centerElement: true
 - tapOn:
     id: search-input
 - inputText: ${NAME}
@@ -14,6 +15,7 @@ name: Open a roster profile from the public search
 - scrollUntilVisible:
     element:
       id: search-result-${SLUG}
+    centerElement: true
 - tapOn:
     id: search-result-${SLUG}
 - extendedWaitUntil:

@@ -15,6 +15,7 @@ name: 07 Choose an electorate by member name and restore it after relaunch
 - scrollUntilVisible:
     element:
       id: seat-choice-federal-representatives-nsw-grayndler
+    centerElement: true
 - takeScreenshot: ${EVIDENCE}/07-chooser-match
 - tapOn:
     id: seat-choice-federal-representatives-nsw-grayndler
@@ -53,12 +54,14 @@ name: 07 Choose an electorate by member name and restore it after relaunch
     element:
       id: change-seat
     timeout: 60000
+    centerElement: true
 - tapOn:
     id: change-seat
 - scrollUntilVisible:
     element:
       id: seat-search
     direction: UP
+    centerElement: true
 - tapOn:
     id: seat-search
 - inputText: No matching electorate
@@ -69,4 +72,5 @@ name: 07 Choose an electorate by member name and restore it after relaunch
 - takeScreenshot: ${EVIDENCE}/07-no-match
 - scrollUntilVisible:
     element: Cancel
+    centerElement: true
 - tapOn: Cancel
