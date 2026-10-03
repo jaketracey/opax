@@ -126,7 +126,7 @@ Five principles decide the scope:
 | # | Feature | What ships | Data (cost class) | Launch dependency |
 | --- | --- | --- | --- | --- |
 | 1 | **Your MP** | Choose your seat by electorate or name search; your member, your senators and, where verified, your state members; saved on the device | Electorates release and roster (static) | None for search. Postcode entry needs D1. |
-| 2 | **MP profile** | Identity, voting record summary, declared interests, pay, expenses, party receipts link | Roster, portraits, `votes.json`, interests, `pay.json`, `expenses.json`, money graph (static) | None. D5 recommended. |
+| 2 | **MP profile** | Identity, voting record summary, declared interests, pay, expenses, party receipts link | Roster, portraits, `votes.json`, interests, `pay.json`, `expenses.json`, money graph (static) | D7, for the voting record's as-at date. D5 recommended. |
 | 3 | **Electorate** | Representatives with as-of date, elections, Census context, sources | Electorates release (static) | None |
 | 4 | **Bills** | Tracker list and bill detail with stored summaries, divisions, party splits and speeches with stored briefs | `bills/index.json`, `bills/<key>.json` (static) | None |
 | 5 | **Search** | On-device suggestions; catalog search for people, interests, pay and expenses | Roster, electorates index, bills index (static); `/api/search-all` with `kind=person`, `interest`, `pay` or `expense` (catalog) | Validate the catalog route's contract |
@@ -134,19 +134,19 @@ Five principles decide the scope:
 | 7 | **Talk to OPAX** | Native voice screen: sign-in, consent, microphone, live call, transcript, sources, allowance and every error state | Voice routes (paid, signed in) | D3 |
 | 8 | **Account** | Sign in by emailed code, sign out, delete account | Community auth (D1, email) | D3, including deletion |
 | 9 | **About, sources and privacy** | Independence statement, sources and licences, coverage, corrections, privacy, font licences | `/corpus.json`, static text | D6 |
-| 10 | **Share and universal links** | Canonical opax.com.au URLs out; links in | Canonical URLs | Inbound links need D4; sharing does not |
+| 10 | **Share** | Canonical opax.com.au URLs out; opax.com.au links keep opening on the website | Canonical URLs | None. Inbound universal links are P1 (D4) |
 
-**Named dependencies.** Each is a Worker or pipeline change and needs Jake's OK to deploy. The consolidated list, with IDs W1 to W20, is in [IOS-APP.md, section 9](IOS-APP.md#9-worker-changes).
+**Named dependencies.** Each is a Worker or pipeline change and needs Jake's OK to deploy. The consolidated list, with IDs W1 to W24, is in [IOS-APP.md, section 9](IOS-APP.md#9-worker-changes).
 
 | ID | Change | Defined in |
 | --- | --- | --- |
 | D1 | A verified postcode-to-candidate-electorate export with source, licence, date and multi-seat handling | API contract, "Proposed Worker changes" |
 | D2 | A read-only frozen daily-edition endpoint (journal read only, no preview or generation fallback) | API contract |
 | D3 | Voice and account Worker changes: code sign-in (changes 1 to 3) and account deletion with deletion-safe voice accounting (changes 4 and 5) are launch blockers; the budget-closed signal (change 6) is recommended but not blocking. The app keeps the existing cookie session and attaches it itself, so there is no session-transport change | `docs/IOS-VOICE.md`, "Worker changes" |
-| D4 | `apple-app-site-association` for selected public paths | API contract |
+| D4 | `apple-app-site-association` for selected public paths (P1, with inbound universal links) | API contract |
 | D5 | Compact per-person projection, so a profile does not download the whole of `votes.json`, `pay.json` and `expenses.json` | API contract |
 | D6 | A privacy page covering the app: public reading, voice, ElevenLabs, retention and deletion | `docs/IOS-VOICE.md`, change 9 |
-| D7 | An as-of date in `votes.json`, which has none today | This document |
+| D7 | An as-at date in `votes.json`, which has none today. Required for P0 item 2. It changes `scripts/export_votes.py`, which runs in the nightly refresh | This document |
 
 **Five-line summary.**
 
@@ -154,7 +154,7 @@ Five principles decide the scope:
 2. MP profile, electorate and bills from static exports: voting summary, interests, pay, expenses, party receipts link; bills with stored summaries, divisions and party splits.
 3. Search with on-device suggestions and catalog-only results; Today from static feeds plus the frozen daily edition once D2 exists.
 4. Talk to OPAX behind email-code sign-in, with consent, microphone permission, transcript, sources, allowance and error states, and account deletion in the app.
-5. About, sources and privacy; share and universal links. No other ARAG or model-backed read in P0.
+5. About, sources and privacy; sharing canonical links (inbound universal links follow in P1 with D4). No other ARAG or model-backed read in P0.
 
 ### P1: should ship next
 
@@ -171,6 +171,7 @@ Five principles decide the scope:
 | Reports and topics reader | Long-form reading suits the phone | Static reports; ARAG topics |
 | Electorate outline map | Confirms a seat at a glance | Static release outline, labelled as a display outline |
 | Follows with local change notices | Turns a lookup into a habit without an account | A per-refresh list of changed entity keys; nothing synced |
+| Inbound universal links | opax.com.au links open the matching screen | D4 (association file) and a signed-device check |
 
 ### P2: later
 
@@ -317,7 +318,7 @@ Breadcrumbs become the back stack. The web's crumb labels are a good source for 
 
 ### Universal links
 
-Associated Domains: `applinks:opax.com.au` (D4). The Worker 308s `www.opax.com.au` requests that reach it to the apex (`canonicalPageRedirect`), and Apple's fetcher does not follow redirects. The association file must be served as JSON, without a redirect, on every host the app claims, or `www` is not claimed.
+**P1.** Until D4 ships, opax.com.au links open on the website and the app only shares links out. Associated Domains: `applinks:opax.com.au` (D4). The Worker 308s `www.opax.com.au` requests that reach it to the apex (`canonicalPageRedirect`), and Apple's fetcher does not follow redirects. The association file must be served as JSON, without a redirect, on every host the app claims, or `www` is not claimed.
 
 | Web URL | App screen | Notes |
 | --- | --- | --- |
@@ -712,7 +713,7 @@ Acknowledgements and font licences            >
 
 Protocol, audio, interruptions and tests: `docs/IOS-VOICE.md`. This section is the screen.
 
-**Order on first use.** Status check, then sign in (if needed), then the consent step (once), then microphone permission (once, before any time is reserved), then reserve and connect. Each step can stop the flow without spending time.
+**Order on first use.** Status check, then sign in (if needed), then the consent step (once), then microphone permission (once, before any time is reserved), then reserve and connect. Every step before Start can stop the flow without spending time. Start reserves the full allowance at once: cancelling before the connection is claimed returns it, but some connection failures keep the full reservation charged until it expires, and a call returns unused time only after a clean provider close (`docs/IOS-VOICE.md`, "Routes"). The screen never promises a refund; the time shown always comes from a fresh status read.
 
 ```
 Talk to OPAX                                Close
@@ -834,7 +835,7 @@ opax.com.au.
 ```
 
 - **Sign out** removes the token from the Keychain and revokes the session on the server through the existing `auth/logout` route. Voice consent stays on the device unless withdrawn.
-- **Delete account** opens a confirmation that says what is deleted and what is not: the account and its personal data, its sign-in sessions on every device, and the content it wrote on opax.com.au (discussions, replies, reading lists, saved chats and messages), as set out in [IOS-APP.md, account deletion](IOS-APP.md#account-deletion-guideline-511v). Records of voice call time stay without any link to the person, because the shared monthly limit depends on them. Public parliamentary records are not affected. Buttons: "Delete account" (destructive) and Cancel. After deletion the app is signed out and returns to the voice screen's signed-out state; everything public keeps working.
+- **Delete account** opens a confirmation that says what is deleted and what is not: the account and its personal data, its sign-in sessions on every device, and the content it wrote on opax.com.au (discussions, replies, reading lists, saved chats and messages), as set out in [IOS-APP.md, account deletion](IOS-APP.md#account-deletion-guideline-511v). Records of voice call time stay, because the shared monthly limit depends on them. They are unlinked from the account at once, but each keeps the voice provider's conversation reference until a scheduled cleanup removes it, a day after the call ends. Public parliamentary records are not affected. Buttons: "Delete account" (destructive) and Cancel. After deletion the app is signed out and returns to the voice screen's signed-out state; everything public keeps working.
 - Apple's guidance asks for deletion that is easy to find: it sits in Account and about, one tap from every root screen, and in the voice screen's account menu.
 
 ## 5. Design language mapped to native

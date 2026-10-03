@@ -315,6 +315,7 @@ Neither `Cookie`, `Origin` nor `X-Opax-Session` is on `NSURLRequest`'s reserved 
 Either way, one integration check remains before release. Against a TLS loopback fixture (no real email or voice), confirm on the iOS 18.4 simulator and a device that the `Cookie`, `Origin` and `Sec-WebSocket-Protocol` headers reach the Worker unchanged on the `wss:` upgrade. The cookie keeps `Secure`; the fixture must not drop it to pass over plain HTTP.
 
 Switch to the header design if:
+- the TLS fixture or device check shows the explicit `Cookie` header does not reach the Worker unchanged on the upgrade;
 - the Worker adds browser-only checks to these routes, such as `Sec-Fetch-Site`, which the app would otherwise have to imitate;
 - or app sessions need different powers from web sessions, enforced per request.
 
@@ -449,7 +450,7 @@ Today's code is compatible with the rebuilt table, because it never writes a NUL
 | Active write, conversation-ID writes, reconcile, release and expiry (`voice.ts:22`, `:25`, `:57`, `:61`, `:194`, `:210`, `:218`) | None; they match by `id` and `state` | An orphaned call still closes and reconciles through its own relay, or expires fully charged |
 | Tool authorisation (`voice.ts:238`) | None | Its join to `members` finds nothing, so the orphaned call's tools return 403 until it ends |
 | Status and `finish` (`voice.ts:66-69`, `:276`) | None | Not reachable for a deleted member |
-| `expireVoiceSessions` (`voice.ts:20-26`) | **Add one statement:** set `conversation_id` to NULL where `member_id IS NULL`, the state is `closed`, `cancelled` or `expired`, and `closed_at ≤ now − 86400` | Provider conversation IDs on orphaned rows are dropped once the documented one-day transcript retention has passed, never on open rows |
+| `expireVoiceSessions` (`voice.ts:20-26`) | **Add one statement:** set `conversation_id` to NULL where `member_id IS NULL`, the state is `closed`, `cancelled` or `expired`, and `closed_at ≤ now − 86400`. Also run this statement from the existing five-minute scheduled handler (`portal/wrangler.jsonc:30`, `portal/src/index.ts:5270`), because request-triggered expiry alone gives no deadline. Staging has no cron, so there it runs only on requests | Provider conversation IDs on orphaned rows are dropped once the documented one-day transcript retention has passed, within five minutes in production, never on open rows. Until then a deleted member's rows are unlinked from the account but still point to the provider's conversation records |
 | **New: deletion batch** | One D1 `batch()`, which is one transaction. Delete the member's sessions, sign-in proofs, MCP keys, `voice_access` row and content rows (scope above), then the `members` row | The foreign-key action sets `member_id` to NULL on every voice row in the same transaction. `state`, `reserved_seconds`, `charged_seconds`, `created_at`, `expires_at` and `started_at` are untouched. No reservation is cancelled, released or deleted |
 
 **Type changes.**
@@ -475,7 +476,7 @@ Today's code is compatible with the rebuilt table, because it never writes a NUL
 5. **Unclaimed reservation at deletion.** The claim fails. Until expiry runs, the row's full reservation still counts in the global budget, so another member's reservation sees it withheld. After expiry it is `cancelled` with `charged_seconds` 0, and the budget returns.
 6. **Several orphaned open rows.** They coexist without a unique-index collision.
 7. **Batch atomicity.** A failing statement leaves the member and every voice row unchanged.
-8. **Conversation-ID cleanup.** It clears only orphaned, closed rows older than one day.
+8. **Conversation-ID cleanup.** It clears only orphaned, closed rows older than one day, both from expiry and from the scheduled handler.
 9. **Same email signs up again while an orphaned call runs.** The new member gets a personal allowance as question 2 decides. The orphaned call still holds its slot and its budget.
 
 **Evidence.** A hardware-free run of tests 1 to 7 passed on 3 October 2026. It used Node 26.10's built-in SQLite with foreign keys on, the repository's migrations 0001 to 0004, and the reservation, claim, reconcile, expiry and tool statements read unchanged from `portal/src/voice.ts`. It also confirmed that the current schema refuses the delete. It is evidence for this contract, not product code.
@@ -484,13 +485,13 @@ The personal lifetime allowance stays separate from these aggregates. Whether a 
 
 ### Worker changes
 
-For the chosen cookie contract. Each item **needs Jake's OK to deploy**. The consolidated list, with IDs W1 to W20, is in [IOS-APP.md, section 9](IOS-APP.md#9-worker-changes). None of them changes the relay (`portal/src/voice.ts:91-228`) or the tools.
+For the chosen cookie contract. Each item **needs Jake's OK to deploy**. The consolidated list, with IDs W1 to W24, is in [IOS-APP.md, section 9](IOS-APP.md#9-worker-changes). None of them changes the relay (`portal/src/voice.ts:91-228`) or the tools.
 
 1. **Native code issuance.** `auth/request` native mode, the challenge, the code, the keyed MAC and supersession, under the contract above. **Needs Jake's OK to deploy.**
 2. **Code exchange.** `auth/consume-code` with atomic attempts, one-winner redemption and shared link/code consumption. It returns the session cookie as `auth/consume` does, and labels the session `client:"ios"` through a migration. **Needs Jake's OK to deploy.**
 3. **Code secret.** A new Worker secret for the code MAC, with separate values for production and staging. **Needs Jake's OK to deploy.**
 4. **Account deletion.** A route for cookie sessions with Origin and fresh verification, linked from the web account page too, with the scope above. **Needs Jake's OK to deploy.**
-5. **Deletion-safe voice accounting.** Migration `0011_voice_deletion_safe`, the added cleanup statement, the deletion batch and the `Session` type change, with the nine tests in the contract above. Deletion cannot refund the monthly budget or free open slots. **Needs Jake's OK to deploy.**
+5. **Deletion-safe voice accounting.** Migration `0011_voice_deletion_safe`, the added cleanup statement (also run from the five-minute scheduled handler), the deletion batch and the `Session` type change, with the nine tests in the contract above. Deletion cannot refund the monthly budget or free open slots. **Needs Jake's OK to deploy.**
 6. **Budget signal.** The 429 from start gains `reason: "budget" | "capacity"`, and status gains `budget_open`. Both clients can then say "Voice is closed for this month" (`portal/src/voice.ts:258-262`, `:64-74`). **Needs Jake's OK to deploy.**
 7. **Optional refund signal.** Error bodies from `connect` gain `released: true | false`. This helps HTTP clients only; WebSocket clients still read status (section 1). **Needs Jake's OK to deploy.**
 8. **Optional usage split.** A `client` column on `voice_sessions` so app and web minutes can be reported apart. **Needs Jake's OK to deploy.**

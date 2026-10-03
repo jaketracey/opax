@@ -37,7 +37,7 @@ The P0 rule: every public screen works signed out from static exports and the ca
 | # | Feature | What ships | Data source |
 | --- | --- | --- | --- |
 | 1 | Your MP | Seat chosen by electorate or member name; your member, senators and, where a verified roster exists, state members; saved on the device | Electorates release and roster (static) |
-| 2 | MP profile | Identity, voting record summary, declared interests, pay, expenses, party receipts link | Roster, portraits, `votes.json`, interests, `pay.json`, `expenses.json`, money graph (static) |
+| 2 | MP profile | Identity, voting record summary, declared interests, pay, expenses, party receipts link | Roster, portraits, `votes.json`, interests, `pay.json`, `expenses.json`, money graph (static); W12 for the voting record's as-at date |
 | 3 | Electorate | Representatives with as-at date, elections, Census 2021 context, sources | Electorates release seat file (static) |
 | 4 | Bills | Tracker and detail: stored summary under its attribution line, divisions, party splits, speeches with labelled machine briefs | `bills/index.json`, `bills/<key>.json` (static) |
 | 5 | Search | Suggestions while typing; catalog results for people, declared interests, pay and expenses | On-device roster, electorates and bill titles; `/api/search-all` with one of `person`, `interest`, `pay`, `expense` |
@@ -45,11 +45,11 @@ The P0 rule: every public screen works signed out from static exports and the ca
 | 7 | Talk to OPAX | Sign-in, consent, microphone, live call, transcript, sources, allowance and every error state | Voice routes (paid, signed in) |
 | 8 | Account | Sign in by emailed code, sign out, delete account | Community auth routes, W1, W2 and W5 |
 | 9 | About, sources and privacy | Independence statement, sources and licences, coverage, corrections, privacy, font licences | `/corpus.json` and static text |
-| 10 | Share and universal links | Canonical opax.com.au URLs out; supported links in | Canonical URLs; W17 for inbound links |
+| 10 | Share | Canonical opax.com.au URLs out, with link metadata built from loaded data. opax.com.au links keep opening on the website | Canonical URLs; no server change |
 
 **Journeys.** Measured on 3 October 2026 ([IOS-API-CONTRACT.md](IOS-API-CONTRACT.md#journeys-mapped-to-calls)): seat to member is four static files and 141,948 bytes transferred; an MP profile's core is 11 static requests and 503,819 bytes; bill list to detail is two requests and 128,245 bytes; catalog search is one request per page. Voice runs status, sign-in if needed, consent once, microphone permission before any time is reserved, start, connect, the call, end and a fresh status read. Deletion is a fresh code, the request, then signed out.
 
-**P1, next:** record reader; speeches, topics and mentions on profiles; chronological division history; document search; newly indexed records; live counters; a basic party page; Leads and the declared-interests feed; reports and topics; the electorate outline map; local follows. Most need ARAG reads, which cost money per request, or exports that do not exist yet.
+**P1, next:** inbound universal links (W17); record reader; speeches, topics and mentions on profiles; chronological division history; document search; newly indexed records; live counters; a basic party page; Leads and the declared-interests feed; reports and topics; the electorate outline map; local follows. Most need ARAG reads, which cost money per request, or exports that do not exist yet.
 
 **P2, later:** location lookup, push, native Ask, community, donors (organisations only), the receipts ledger, grants and the Explore quiz. These need paid model calls, new server infrastructure, large datasets or a way to keep private individuals out of profiles. The money map, journeys, contracts, suppliers, agencies and Programs & places stay on the web.
 
@@ -99,13 +99,13 @@ Most OPAX contributors work in TypeScript, fixtures and journeys share one langu
 
 **Needs a device test.** Against a TLS loopback fixture on the iOS 18.4 and 26.5 simulators, then Jake's iPhone: the three headers reach the Worker unchanged on the `wss:` upgrade, `Set-Cookie` on the exchange is readable with cookie handling off, and the Keychain item survives relaunch. The fixture keeps `Secure`; it never drops it to pass over plain HTTP.
 
-**Revisit only if** the Worker adds browser-only checks to these routes, such as `Sec-Fetch-Site`, or app sessions need different powers from web sessions. A `client:"ios"` session label (W2) helps list and revoke app sessions; it is not an authentication boundary. The API, UX and voice documents were updated on 3 October 2026 to match this decision.
+**Revisit only if** the device test shows the explicit `Cookie` header does not reach the Worker unchanged on the upgrade, the Worker adds browser-only checks to these routes, such as `Sec-Fetch-Site`, or app sessions need different powers from web sessions. A `client:"ios"` session label (W2) helps list and revoke app sessions; it is not an authentication boundary. The API, UX and voice documents were updated on 3 October 2026 to match this decision.
 
 ### Voice in brief
 
 - The existing same-origin WebSocket relay, tools, prompt and provider settings are unchanged. The official ElevenLabs mobile SDKs use WebRTC and cannot use the relay.
 - Voice opens as a sheet from a Talk button on each tab's root screen.
-- First use: status, sign in, consent once, microphone permission before reserving time, start, connect. Each step can stop without spending time.
+- First use: status, sign in, consent once, microphone permission, then start and connect. Every step before start costs nothing. Start charges the full reservation against the allowance and the monthly budget at once: cancelling before the relay claims it returns the time, but some connection failures keep the full charge until the reservation expires, and a call returns unused time only after a clean provider close ([IOS-VOICE.md, routes](IOS-VOICE.md#routes)). The app never claims a refund; it shows the allowance from status.
 - 600 seconds in total per ordinary account; the 40,000-second monthly budget and two concurrent calls are shared with the web. The allowance shown after any call or failure comes from a fresh status read.
 - Calls are foreground only. The transcript is shown as captions and never stored.
 - Screens: [IOS-UX.md, 4.10](IOS-UX.md#410-talk-to-opax-voice). Protocol and failures: [IOS-VOICE.md](IOS-VOICE.md).
@@ -141,7 +141,8 @@ Signing in creates an account, so the app must offer deletion. The requirement:
 
 - **Personal data deleted:** the member row (email, display name, bio), every session on every device, outstanding sign-in proofs, MCP keys, the voice entitlement, the email outbox and unsubscribe tokens. Migration 0002 already dropped the supporter tables.
 - **Authored content deleted by default:** discussions, replies, reading lists and items, saved chats, sent messages, likes, bookmarks, follows, blocks, reports filed and notifications to or from the member, including content written on opax.com.au.
-- **Deletion-safe voice accounting:** voice rows lose their member link in the same transaction and keep state, seconds and timestamps. Nothing is cancelled, released or deleted, so deletion never refunds the monthly budget or frees a call slot. A call open at deletion runs to its deadline or reconciles, with its tools refused. Provider conversation IDs on those rows are cleared one day after the call closes ([migration contract](IOS-VOICE.md#migration-contract-0011_voice_deletion_safe)).
+- **Deletion-safe voice accounting, at once:** voice rows lose their member link in the same transaction and keep state, seconds and timestamps. Nothing is cancelled, released or deleted, so deletion never refunds the monthly budget or frees a call slot. A call open at deletion runs to its deadline or reconciles, with its tools refused.
+- **Provider reference, later:** each row still holds the provider's conversation ID, which points to the provider's copy of that conversation, so the row is not anonymous yet. A cleanup statement clears the ID once the call has been closed for a day. It runs from the Worker's existing five-minute scheduled handler as well as from request-triggered expiry, so in production the ID goes within a day and five minutes of the call closing (W6; [migration contract](IOS-VOICE.md#migration-contract-0011_voice_deletion_safe)).
 - **Flow:** a fresh code; the app ends any live call first; one atomic database batch; a statement of what was deleted; signed out on the device. Public records are untouched.
 
 Open product questions (replies under a deleted discussion, legal retention, a returning email's allowance) are decision 5.
@@ -177,11 +178,11 @@ Automated tests never reach production, ARAG, ElevenLabs, email, social channels
 - **Simulators:** iPhone 17 Pro with iOS 26.5 (reference); iPhone 16e with iOS 18.4 (minimum, performance screening); iPhone 17 Pro Max with iOS 27 (newest, large).
 - **AX5:** every P0 screen at the default size, AX1 and AX5, checked with the Accessibility Inspector and the view hierarchy, never speech.
 - **Release gate.** GO means no open P0 or P1 defects (defect severities, not the scope tiers), no crashes across all journeys on all three simulators, AX5 passing on every P0 screen, and a clean release bundle scan (no fixture origins, no route outside the allow-list). Anything else is NO-GO.
-- **Physical-device checks, Jake only** (they play sound, spend provider credit or need a signed build): a full staging call with sources and allowance reconciliation; echo on speaker, AirPods, wired headphones and in a car; route changes, phone calls, Siri and alarms mid-call; lock and app switch; poor network; a ten-minute call's data and battery; VoiceOver with headphones at the largest text size; universal links; the session header check and Keychain persistence; the provider dashboard; one production call after deployment.
+- **Physical-device checks, Jake only** (they play sound, spend provider credit or need a signed build): a full staging call with sources and allowance reconciliation; echo on speaker, AirPods, wired headphones and in a car; route changes, phone calls, Siri and alarms mid-call; lock and app switch; poor network; a ten-minute call's data and battery; VoiceOver with headphones at the largest text size; the session header check and Keychain persistence; the provider dashboard; one production call after deployment. Universal links join this list in P1, with W17.
 
 ## 9. Worker changes
 
-Deduplicated across the three documents. Refs give the matching D-number in [IOS-UX.md](IOS-UX.md#2-candidate-v1-scope), V-number in [IOS-VOICE.md](IOS-VOICE.md#worker-changes) and row of [IOS-API-CONTRACT.md](IOS-API-CONTRACT.md#proposed-worker-changes). Effort is engineering judgement in person-days, with focused tests, excluding review and deployment. **Every row needs Jake's OK to deploy.**
+Deduplicated across the three documents. Refs give the matching D-number in [IOS-UX.md](IOS-UX.md#2-candidate-v1-scope), V-number in [IOS-VOICE.md](IOS-VOICE.md#worker-changes) and row of [IOS-API-CONTRACT.md](IOS-API-CONTRACT.md#proposed-worker-changes). Rows marked pipeline change an export script that runs in the nightly refresh rather than the Worker; that is a production change too. Effort is engineering judgement in person-days, with focused tests, excluding review and deployment; assumptions are stated where the range depends on them. **Every row needs Jake's OK to deploy.**
 
 | ID | Change | Why | v1 or later | Effort | Risk | Needs Jake's OK to deploy | Refs |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -192,27 +193,33 @@ Deduplicated across the three documents. Refs give the matching D-number in [IOS
 | W4 | Review per-IP limits for carrier NAT and an app User-Agent such as `OPAX-iOS/<version>` | Phones share carrier addresses | v1 review; change only if testing shows refusals | 1 to 3 if changed | Medium | Yes | API carrier-IP |
 | | **Account deletion** | | | | | | |
 | W5 | Deletion route: cookie and Origin, fresh code, one batch deleting the section 6 scope, revoking sessions, proofs and MCP keys; linked from the web account page too | Guideline 5.1.1(v) | **Required for v1** | 4 to 7 for W5 and W6 | High | Yes | D3, V4, API deletion |
-| W6 | Deletion-safe voice accounting: migration `0011_voice_deletion_safe`, conversation-ID cleanup, nine tests; rollout disables voice, drains, expires open rows, migrates, re-enables | A member with voice rows cannot be deleted today; deleting the rows would refund budget and free live slots | **Required for v1** | In W5 | High | Yes | D3, V5 |
+| W6 | Deletion-safe voice accounting: migration `0011_voice_deletion_safe`; conversation-ID cleanup, also run from the existing five-minute scheduled handler; nine tests; rollout disables voice, drains, expires open rows, migrates, re-enables | A member with voice rows cannot be deleted today; deleting the rows would refund budget and free live slots | **Required for v1** | In W5 | High | Yes | D3, V5 |
 | W7 | Privacy page and voice notes covering the app, microphone, ElevenLabs, retention and deletion | A privacy policy is required in the app and listing | **Required for v1** | About 1 | Low | Yes | D6, V9 |
 | | **Voice accounting and status** | | | | | | |
 | W8 | `reason:"budget"` or `"capacity"` on the start 429; `budget_open` in status | A spent monthly budget looks like "busy" today | v1, recommended; not blocking | 1 to 2 | Medium | Yes | D3, V6, API budget |
 | W9 | `client` column on `voice_sessions` | App and web minutes reported apart | v1, optional | Under 1 | Low | Yes | V8 |
 | W10 | `released` flag on connect error bodies | Helps HTTP clients; status stays authoritative | Later, optional | Under 1 | Low | Yes | V7 |
 | | **Data exports** | | | | | | |
-| W11 | Compact per-person projection with an as-at date per block | A profile now downloads four whole-site files: 2,762,089 bytes raw, 301,169 compressed | v1, recommended; not blocking | 3 to 6 | Medium | Yes | D5, API compact person |
-| W12 | An as-at date in `votes.json` | Every block shows one; this file has none | v1, recommended | Under 1 | Low | Yes | D7 |
+| W11 | Compact per-person projection with an as-at date per block | A profile now downloads four whole-site files: 2,762,089 bytes raw, 301,169 compressed | v1, recommended; not blocking | 3 to 6 | Medium | Yes (pipeline) | D5, API compact person |
+| W12 | A `_meta` entry in `votes.json`, beside the existing `_names` index, with the export time and latest division date, written by `scripts/export_votes.py` | The voting record is a P0 block and every block shows a source date. No published date identifies the votes export: `corpus.json`'s refresh time is not it, because a failed votes step leaves the previous file in place | **Required for v1** | Under 1, including checks that the web loaders, `export_parliamentarians.py` and `validate_data.py` ignore the new key | Low | Yes (pipeline, nightly refresh) | D7 |
 | W13 | Read-only frozen daily-edition endpoint: journal only, no preview, generation, OG or social fallback | Today's edition card; `/today` is only a redirect | v1 if approved; card hidden without it | 1 to 3 | Medium | Yes | D2, API frozen edition |
-| W14 | Verified postcode candidates: licensed dated source, every candidate seat, allocation basis, stable IDs | Postcode entry in Your MP | Later, after a source is approved | 3 to 6 after approval | High | Yes | D1, API postcode |
-| W15 | Per-person vote export with division keys; compact paged bills list | P1 division history; smaller bills index | Later (P1) | 2 to 4 | Medium | Yes | API paged bills and votes |
-| W16 | Per-refresh list of changed entity keys | P1 local follows without accounts | Later (P1) | Not estimated | Medium | Yes | IOS-UX.md follows |
+| W14 | Verified postcode candidates: licensed dated source, every candidate seat, allocation basis, stable IDs | Postcode entry in Your MP | Later, after a source is approved | 3 to 6 after approval | High | Yes (pipeline) | D1, API postcode |
+| W15 | Per-person vote export with division keys; compact paged bills list | P1 division history; smaller bills index | Later (P1) | 2 to 4 | Medium | Yes (pipeline) | API paged bills and votes |
+| W16 | Per-refresh list of changed entity keys | P1 local follows without accounts | Later (P1) | 2 to 3, assuming bills, roster members and register files only, diffed against the previous published export in the nightly run | Medium | Yes (pipeline) | IOS-UX.md follows |
+| W21 | Frozen record export for the P1 reader: text, stored brief and metadata for records the app links to | Record links open the web in v1; the reader otherwise reads ARAG `/api/resource` and `/api/brief` on every open | Later (P1) | 3 to 6, assuming records linked from bills, profiles and voice sources only, not the full corpus | Medium | Yes (pipeline) | IOS-UX.md P1 record reader |
+| W22 | Per-person recent-speeches export with stored briefs | P1 speeches on profiles without an ARAG search per profile | Later (P1) | 2 to 4, assuming the newest 20 speeches per roster member, read from the knowledge box during the nightly refresh | Medium | Yes (pipeline) | IOS-UX.md P1 speeches |
+| W23 | Frozen newly-indexed list and coverage snapshot written by the nightly refresh | P1 newly indexed records and live counters without `/api/recent` and `/api/stats`; `corpus.json` already carries resource counts, which may cover the counters | Later (P1) | 1 to 2, assuming the newest 12 records, matching `/api/recent` | Low | Yes (pipeline) | IOS-UX.md P1 recent and counters |
+| W24 | Direct per-record links in evidence exports where a source has stable record pages; register links stay elsewhere | All 89 evidence rows in `/discovery.json` are register links today | Later (P1, Leads) | 2 to 4, assuming two or three sources have stable record URLs | Medium | Yes (pipeline) | IOS-UX.md shared patterns |
 | | **Universal links** | | | | | | |
-| W17 | Apple app site association served by the Worker as JSON, no redirect, selected public paths only; `/community*`, `/ask` and `/chat` unclaimed; decide on `www` | Inbound links open the app | v1, recommended; not blocking, sign-in uses codes | 1, plus a signed-device check | Medium | Yes | D4, V10, API association |
-| W18 | Dedicated app sign-in link path | Tap-to-sign-in beside the code | Later | Not estimated | Medium | Yes | V10 |
+| W17 | Apple app site association served by the Worker as JSON, no redirect, selected public paths only; `/community*`, `/ask` and `/chat` unclaimed; decide on `www` | Inbound links open the app | Later (P1); v1 only shares links out, and sign-in uses codes | 1, plus a signed-device check | Medium | Yes | D4, V10, API association |
+| W18 | Dedicated app sign-in link path | Tap-to-sign-in beside the code | Later | 1 to 2 plus a signed-device check, assuming W17 exists and the native proof already covers link consumption; covers the association entry, an email link variant for native requests and a web fallback page that does not consume the token | Medium | Yes | V10 |
 | | **Cache and versioning** | | | | | | |
 | W19 | App manifest `/api/app/v1/manifest`: data version, catalog hashes and as-at dates, minimum app version | Atomic catalog swaps; a forced-update path | v1, recommended | 1 to 2 | Low to medium | Yes | API manifest |
 | W20 | ETag and `If-None-Match` on Worker JSON; written app cache policy | Static files revalidate already; Worker JSON does not | Later | 2 to 3 | Low to medium | Yes | API ETag |
 
-**Required for v1:** W1, W2, W3, W5, W6 and W7. Public reading needs no Worker deployment.
+**Required for v1:** W1, W2, W3, W5, W6, W7 and W12. Public reading needs no Worker deployment; its one launch dependency is W12, a change to the nightly export.
+
+**Proposals without a row.** Document search and topics (P1) would use existing ARAG routes. Allowing them means revisiting the never-call rule, a cost decision rather than a server change. Chronological division history maps to W15 and local follows to W16.
 
 **Not planned**, and each would need Jake's OK if proposed: an `X-Opax-Session` header (not chosen), CORS for Expo web or a hosted WebView, a WebRTC token endpoint that would bypass the relay's enforcement, and subscription and push infrastructure (P2, 7 to 12 days).
 
@@ -224,15 +231,15 @@ Lanes without a dependency between them run in parallel.
 | --- | --- | --- | --- |
 | 1 | Harness | Expo foundation, read-only client and allow-list, cache, fixture server, gated builds, first journeys. In progress on `ios/harness` | Decision 1 |
 | 2 | Design system | Tokens, fonts, primitives, people rows, as-at lines, states, AX5 behaviour | 1; decision 2 |
-| 3 | Your MP and profiles | Seat chooser, Your MP, MP profile, electorate | 2; decision 3; W11 and W12 optional |
+| 3 | Your MP and profiles | Seat chooser, Your MP, MP profile, electorate | 2; decision 3; W12; W11 optional |
 | 4 | Bills | Tracker, filters, bill detail | 2 |
 | 5 | Search | Suggestions, browse, catalog results | 2, 3; decision 3 |
 | 6 | Today and discover | Today feeds; the edition card with W13; Leads at P1 | 2, 4 |
 | 7 | Voice core | Swift module, fake relay, voice sheet, every call state | 1; can start alongside 2 |
 | 8 | Sign-in and account | Code sign-in, sign-out, deletion, consent, Account and about | 7; W1 to W3, W5 and W6 implemented; decision 5 |
-| W | Worker changes | W1 to W3 and W5 to W7 on a branch, then staging, then production | Decisions 5 and 6; Jake's OK for each deployment |
+| W | Worker and pipeline changes | W1 to W3, W5 to W7 and W12 on a branch. Worker rows go to staging, then production; W12 reaches production through the nightly refresh | Decisions 5 and 6; Jake's OK for each deployment |
 | 9 | Release candidate and QA gate | Release build, all journeys on three simulators, AX5, bundle scan, GO or NO-GO | 3 to 8; decision 4 |
-| 10 | TestFlight Internal | First internal build | 9 at GO; Jake's go; App Store Connect record; Worker lane in production for voice |
+| 10 | TestFlight Internal | First internal build | 9 at GO; Jake's go; App Store Connect record; W lane in production |
 
 ## 11. Open decisions
 
@@ -245,12 +252,12 @@ Each has a recommended default, ordered by what blocks work soonest.
 | 3 | Native-page scope for people (5.1.1(viii)) | Roster parliamentarians only; no donor, recipient, supplier or witness pages; private individuals never profiles or suggestions |
 | 4 | Performance and AX5 gates, which trigger the SwiftUI fallback | Release build, screened on the iOS 18.4 simulator and confirmed on Jake's iPhone: cold launch to cached content in 2 seconds or less; a cached MP profile in 1 second or less; scroll hitch rate under 5 ms per second; memory under 300 MB on a long profile; every P0 screen usable at AX5 with no clipped names, figures or caveats |
 | 5 | Account deletion policy | Delete authored content and personal data; other members keep their own replies and messages, and a deleted discussion with replies becomes a stub without personal data; no undisclosed retention; a returning email gets a fresh 600 seconds and no email hash is kept |
-| 6 | Deploy the required Worker changes | Approve W1 to W3 and W5 to W7, with W9, for staging and then production |
-| 7 | Optional adapters for v1 | Build W8, W11, W12, W13, W17 and W19; postcode (W14) waits for a licensed source, with a link to the AEC's electorate finder meanwhile |
+| 6 | Deploy the required Worker and pipeline changes | Approve W1 to W3, W5 to W7 and W12 (a nightly-refresh export change), with W9: Worker rows to staging and then production, W12 through the nightly refresh |
+| 7 | Optional adapters for v1 | Build W8, W11, W13 and W19; inbound universal links (W17) follow in P1; postcode (W14) waits for a licensed source, with a link to the AEC's electorate finder meanwhile |
 | 8 | Provider settings and the first real call | Jake confirms recording off, one-day transcripts and both audio formats in the dashboard, then makes the first staging call with his own account |
 | 9 | Voice budget | Share the 40,000-second monthly budget and two call slots with the web |
 | 10 | Voice behaviour | End calls on background; consent once, with the disclosure line before every call; add the consent step to the web panel later |
-| 11 | Guideline 4.7 | Ask App Review before submission; meanwhile ship a "Report this answer" path to the corrections contact |
+| 11 | Guideline 4.7 | Ask App Review before submission; meanwhile ship a "Report this answer" path to the corrections contact. If 4.7 applies, W17 moves into v1, because 4.7.4 asks for a universal link to the assistant |
 | 12 | Support URL and contact (guideline 1.5) | A published contact address and support page on opax.com.au, also used for corrections |
 | 13 | Rights review | Before submission: data licences for app distribution, native caching of APH portraits, no APH portraits in store screenshots, and the AGPL question for code reused from the web; the app stays free with no ads or purchases |
 | 14 | Privacy label inputs | Confirm how long Worker logs and limiters keep client IP addresses, then answer the App Privacy questions to match |
