@@ -4,15 +4,26 @@ Discovery notes for the voice part of the Opax iOS app, written 3 October 2026 f
 
 Version 1 of the app is read-only public data plus the voice assistant ("Talk to Opax"). This document covers voice only. Product and UX are in `docs/IOS-UX.md`; data, API and architecture are in `docs/IOS-API-CONTRACT.md`.
 
-No voice session was started while writing this. Nothing called ElevenLabs or any opax.com.au voice route (production, staging or local), and no audio was played. File and line references are to commit `8f1305e3` unless they name an SDK package.
+No voice session was started while writing this. Nothing called ElevenLabs or any opax.com.au voice or community route (production, staging or local), and no audio was played. File and line references are to commit `8f1305e3` unless they name an SDK package. Revised on 3 October 2026 after an independent review.
 
 ## Summary
 
-- **Access:** voice needs a signed-in community member, as it does on the web (option A). The app gets its own session token from a one-time code sent by email and sends it in an `X-Opax-Session` header. It has in-app account deletion. Apple requires deletion because signing in creates an account.
+- **Access (decided).** Jake approved option A on 3 October 2026. Voice is the only signed-in feature; every other screen is public and works signed out. The app signs in with a one-time code sent by email and offers in-app account deletion. Apple requires deletion because signing in creates an account.
+- **Session:** recommended for v1 is the existing cookie contract with explicit attachment. The app keeps the session token in the Keychain and attaches `Cookie: __Host-opax_session=…` and `Origin: https://opax.com.au` itself, only on voice and account routes. It is as safe as a new `X-Opax-Session` header and needs fewer Worker changes. The final choice is made in the synthesis (section 3).
 - **Transport:** keep the existing same-origin WebSocket relay. Neither official ElevenLabs mobile SDK can use it: both run voice over LiveKit WebRTC, and the React Native SDK throws on a signed URL. The relay needs no change.
-- **Audio:** one Swift voice core. A single `AVAudioEngine` with voice processing (echo cancellation) handles capture and playback, with 16 kHz PCM16 base64 chunks in both directions, and a `URLSessionWebSocketTask` connects to the relay. React Native wraps the core in a local Expo module; SwiftUI calls it directly. Voice favours SwiftUI only slightly.
-- **Worker changes:** header-token sessions, code sign-in, account deletion, and a budget-closed signal. Each **needs Jake's OK to deploy**. The relay and tool routes are unchanged.
-- **Testing:** a fake relay in the local fixture Worker speaks the same protocol, sends silent audio and answers tools from fixture data. The app has a synthetic microphone for tests. Real calls are physical-device checks for Jake only.
+- **Audio:** one Swift voice core. A single `AVAudioEngine` with voice processing (echo cancellation) handles capture and playback, and a `URLSessionWebSocketTask` connects to the relay. Audio travels as base64 chunks in whatever format the provider names at the start of each call: PCM16 or µ-law, at 16 kHz in the repository's fixtures. React Native wraps the core in a local Expo module; SwiftUI calls it directly. Voice favours SwiftUI only slightly.
+- **Worker changes:**
+  - code sign-in with a defined security contract;
+  - account deletion that cannot refund the shared monthly budget or free call slots;
+  - a budget-closed signal.
+
+  Each **needs Jake's OK to deploy**. The relay and tool routes are unchanged.
+- **Testing:**
+  - a fake relay in the local fixture Worker speaks the same protocol, sends silent audio and answers tools from fixture data;
+  - the voice core takes injected permission, audio-session and lifecycle dependencies, so every state runs without hardware;
+  - the app has a synthetic microphone for tests.
+
+  Real calls are physical-device checks for Jake only.
 
 ## 1. How web voice works today
 
@@ -32,7 +43,7 @@ The chat composer's microphone button imports `/voice.js` the first time it is p
 
 ### Sequence
 
-1. **Status.** `GET /api/voice/status` with the session cookie (`portal/voice/client.js:204`). This route has no Origin check (`portal/src/voice.ts:244-248`). The response is `{enabled, signed_in, unlimited, total_seconds, remaining_seconds, active_session}` (`portal/src/voice.ts:64-74`). A signed-out request gets `signed_in:false` and a nominal 600 seconds (`portal/src/voice.ts:65`).
+1. **Status.** `GET /api/voice/status` with the session cookie (`portal/voice/client.js:204`). This route has no Origin check (`portal/src/voice.ts:244-248`). The response is `{enabled, signed_in, unlimited, total_seconds, remaining_seconds, active_session}` (`portal/src/voice.ts:64-74`). A signed-out request gets `signed_in:false`, no `unlimited` field and a nominal 600 seconds (`portal/src/voice.ts:65`). For a signed-in member, status first expires stale rows, so it is a write as well as a read (`portal/src/voice.ts:246`). `remaining_seconds` includes the unused part of an open reservation (`portal/src/voice.ts:70-72`).
 2. **Start gesture.** The browser primes a 16 kHz `AudioContext` on the button press, before any await, because iOS requires it (`portal/voice/client.js:306-315`). It then loads the SDK chunk (`portal/voice/client.js:327`).
 3. **Reservation.** `POST /api/voice/start` with body `{}` and `Content-Type: application/json` (`portal/voice/client.js:330`). The Worker checks, in order:
    - community enabled (`portal/src/voice.ts:243`);
@@ -43,7 +54,7 @@ The chat composer's microphone button imports `/voice.js` the first time it is p
    - rate limits of 6 starts a minute per member and 20 a minute per IP (`portal/src/voice.ts:254-255`).
 
    After expiring stale rows, a single SQL write checks the member's balance, the monthly budget and the two call slots, and inserts a `reserved` row (`portal/src/voice.ts:256-257`, `portal/src/voice.ts:29-48`). The 201 response is `{session_id, transport:"websocket", signed_url, remaining_seconds, expires_at}`. `signed_url` is `wss://<COMMUNITY_ORIGIN>/api/voice/connect?session_id=<uuid>` (`portal/src/voice.ts:264-266`). `expires_at` is the 60-second window to connect, not the end of the call (`portal/src/voice.ts:5`, `portal/voice/client.js:345-347`).
-4. **Client validation.** The web client accepts `signed_url` only when it is a `wss:` URL on its own host with path `/api/voice/connect` (`portal/voice/client.js:341-343`).
+4. **Client validation.** The web client accepts `signed_url` only on its own host, with path `/api/voice/connect` and scheme `wss:`, or `ws:` when the page itself is served over HTTP (`portal/voice/client.js:341-343`).
 5. **Relay connection.** The SDK opens `new WebSocket(signedUrl + "&source=js_sdk&version=1.25.0", ["convai"])` (`@elevenlabs/client@1.25.0 dist/utils/WebSocketConnection.js:86-101`). The browser sends the session cookie and its Origin.
 6. **Claim and provider URL.** The Worker:
    - claims the reservation atomically, once, for its owner, setting `connecting` (`portal/src/voice.ts:50-52`, `portal/src/voice.ts:172-173`);
@@ -58,7 +69,11 @@ The chat composer's microphone button imports `/voice.js` the first time it is p
    - Microphone audio goes up as `{"user_audio_chunk": "<base64>"}` (`dist/utils/attachInputToConnection.js:7-9`).
    - Provider events come back verbatim. The relay checks only size and JSON (`portal/src/voice.ts:143-155`).
    - The SDK answers `ping` with `pong` (`dist/BaseConversation.js:454-458`). It plays `audio`, flushes playback on `interruption` and reports transcripts (`dist/VoiceConversation.js:68-87`, `dist/BaseConversation.js:146-172`).
-10. **Tools.** The provider calls the Worker's tool webhooks at `POST /api/voice/tools/<name>`. Each call carries the provider secret header `x-opax-voice-token` and a `session_id` (`portal/src/voice.ts:233-242`, `portal/src/voice.ts:76-82`). The provider fills `session_id` from the `opax_session_id` variable; that mapping is tool configuration in the provider dashboard, not in this repository. Tools run only for a live `active` session of an enabled member, at 30 calls a minute per session (`portal/src/voice.ts:238-240`). Results are bounded and carry `{source_notice, source_url, sources, data}` (`portal/src/voice-tools.ts:147-149`). The browser never calls tools; client tool results are dropped (`portal/src/voice.ts:105`).
+10. **Tools.** The provider calls the Worker's tool webhooks at `POST /api/voice/tools/<name>`. Each call carries the provider secret header `x-opax-voice-token` and a `session_id` (`portal/src/voice.ts:233-242`, `portal/src/voice.ts:76-82`). The provider fills `session_id` from the `opax_session_id` variable; that mapping is tool configuration in the provider dashboard, not in this repository. Tools run only for a live `active` session of an enabled member, at 30 calls a minute per session (`portal/src/voice.ts:238-240`). Results are bounded and come in two shapes:
+    - **Standard:** `{source_notice, source_url, sources, data}` (`portal/src/voice-tools.ts:147-149`).
+    - **Receipt answers:** money questions answered from the published receipt graph return `{source_notice, sources, data}` with no `source_url` (`portal/src/voice-tools.ts:74-84`, `:89-91`, `:124-127`). When the question needs a period or a narrower scope, `sources` is empty and `data` carries a clarifying `answer` with `needs_period` or `needs_scope` (`portal/src/voice-money.ts:156-181`). A computed answer has one source (`portal/src/voice-money.ts:251`).
+
+    The browser never calls tools; client tool results are dropped (`portal/src/voice.ts:105`).
 11. **End.** End, Close, Escape, navigation, `pagehide`, offline or a hidden tab all stop the call (`portal/voice/client.js:395-411`). The SDK closes with 1000 "User ended conversation" (`dist/utils/WebSocketConnection.js:149-152`). The client then posts `POST /api/voice/finish {session_id}` with `keepalive` (`portal/voice/client.js:219-232`).
 12. **Reconciliation.** When either socket closes, the relay closes the other. It holds the Worker invocation for up to 20 seconds to receive the provider's close acknowledgement (`portal/src/voice.ts:118-128`). Only a clean provider close that is not 1006 records the elapsed seconds, capped at the reservation (`portal/src/voice.ts:159-165`, `portal/src/voice.ts:55-58`). Otherwise the full reservation stays charged and the row expires later as `expired` (`portal/src/voice.ts:20-26`, `docs/VOICE-ASSISTANT.md:28`). `finish` can only cancel a reservation that never connected (`portal/src/voice.ts:272-279`).
 
@@ -68,9 +83,24 @@ The chat composer's microphone button imports `/voice.js` the first time it is p
 | --- | --- | --- | --- | --- | --- |
 | `GET /api/voice/status` | Cookie optional | None | None | 200 status JSON | 503 if community disabled (`voice.ts:243`) |
 | `POST /api/voice/start` | Cookie required | Exact match (`voice.ts:249`) | JSON, at most 2,000 bytes | 201 reservation | 403 origin; 401 signed out; 415, 413; 429 rate limit; 409 call open; 403 allowance used; 429 capacity or budget; 503 not configured (`voice.ts:251-266`) |
-| `GET /api/voice/connect?session_id=` | Cookie required | Exact match | WebSocket upgrade | 101 | 426 no upgrade; 400 bad ID; 409 used or expired; 503 provider unavailable, busy or unrecorded (`voice.ts:169-228`) |
+| `GET /api/voice/connect?session_id=` | Cookie required | Exact match | WebSocket upgrade | 101 | 426 no upgrade; 400 bad ID; 409 used or expired; 503 with the reservation released or retained (below) (`voice.ts:169-228`) |
 | `POST /api/voice/finish` | Cookie required | Exact match | `{session_id}`, at most 1,000 bytes | 200 status JSON | 401, 403, 400 (`voice.ts:272-279`) |
 | `POST /api/voice/tools/<name>` | Provider secret | None | JSON, at most 8,000 bytes | 200 tool result | 401, 403, 429, 503 (`voice.ts:233-242`) |
+
+**A 503 from `connect` does not tell the client whether time was used.**
+
+| Cause | Reservation | Where |
+| --- | --- | --- |
+| Signed URL fetch failed or timed out | Released; message says "Your time has not been used." | `voice.ts:177-183` |
+| Provider returned an unexpected URL | Released | `voice.ts:184-189` |
+| Provider answered the upgrade without a WebSocket | Released ("The voice provider is busy") | `voice.ts:205-206` |
+| Upstream upgrade threw or timed out | **Retained**: the generic handler returns 503 without releasing it | `voice.ts:200-204`, `:281-284` |
+| The `active` write to D1 failed | **Retained**: both sockets close and 503 is returned without releasing it | `voice.ts:209-215` |
+| Anything else after the claim | **Retained** (generic 503) | `voice.ts:281-284` |
+
+A retained reservation stays `connecting` until `started_at + reserved_seconds + 30` (`voice.ts:51`). It then becomes `expired` and stays fully charged (`voice.ts:25`). `finish` cannot release it, because it only cancels `reserved` rows (`voice.ts:272-279`). Until it expires, status shows an `active_session`, and `start` returns 409 for that member (`portal/migrations/0003_voice.sql:16-17`, `voice.ts:45`).
+
+The only refund signal is human-readable message text, and a WebSocket client usually cannot read the body of a refused upgrade. The allowance shown after any failure must therefore come from a fresh `GET /api/voice/status`, never from the HTTP status alone.
 
 All voice responses get `cache-control: no-store` and `referrer-policy: no-referrer` (`portal/src/community-core.ts:5`, `portal/src/index.ts:4880`). Errors are `{"error": "<message>"}` with the status above (`portal/src/voice.ts:281-284`). Voice routes are not among the model routes that refuse crawler user agents, but the scraper ASN block on `/api/*` applies (`portal/src/network-block.ts:36-39`, `portal/src/index.ts:5193-5195`).
 
@@ -94,7 +124,7 @@ The relay rate-limits client messages to 150 a second and closes with 1008 above
 | Message | Rule (`portal/src/voice.ts:96-106`) |
 | --- | --- |
 | `{"type":"conversation_initiation_client_data", ...}` | Must come first, within 10 seconds of the upgrade (`voice.ts:130`). Content is replaced; a second copy closes the call |
-| `{"user_audio_chunk":"<base64>"}` | Standard base64 alphabet with padding (`^[A-Za-z0-9+/]*={0,2}$`); base64url is rejected |
+| `{"user_audio_chunk":"<base64>"}` | Standard base64 alphabet with padding (`^[A-Za-z0-9+/]*={0,2}$`). Only the alphabet is checked, not length or canonical padding. A chunk that fails the pattern, such as base64url, is dropped silently rather than closing the call. Extra fields are removed |
 | `{"type":"pong","event_id":<int>}` | Reply to each provider `ping` |
 | `{"type":"user_activity"}` | Forwarded |
 | `{"type":"user_message","text":"..."}` or the same with `"contextual_update"` | Text up to 2,000 characters |
@@ -123,19 +153,24 @@ Which optional events the production agent emits (for example the full tool payl
 
 | Direction | Format | Evidence |
 | --- | --- | --- |
-| Up (microphone) | Mono PCM16 little-endian at `user_input_audio_format`; the SDK default is `pcm_16000`. Base64 inside JSON, one message every 25 ms (400 samples, 800 bytes, 1,068 base64 characters at 16 kHz). Muted input still sends zero-filled chunks | `dist/utils/WebSocketConnection.js:139-141`, `dist/InputController.js:2`, `dist/platform/web/rawAudioProcessor.generated.js:57-61`, `:100-123` |
+| Up (microphone) | Mono, at the codec and rate named by `user_input_audio_format`: `pcm_<rate>` is 16-bit little-endian, `ulaw_<rate>` is 8-bit G.711 µ-law. If metadata omits the format, the SDK assumes `pcm_16000`. Base64 inside JSON. Muted input still sends zero-valued chunks | `dist/utils/WebSocketConnection.js:139-141`, `dist/utils/BaseConnection.js:81-94`, `dist/platform/web/rawAudioProcessor.generated.js:100-123` |
+| Up, chunking | 25 ms is a nominal **threshold**, not a fixed chunk size. The capture worklet appends each render quantum, after resampling, to a buffer. Once the buffer reaches the threshold it sends the **whole** buffer and clears it. Chunk length therefore depends on the render quantum and resampler. With 16 kHz input and 128-frame quanta, the 400-sample threshold yields 512-sample (32 ms) chunks, as a hardware-free evaluation of the unmodified worklet showed during review | `dist/InputController.js:2`, `dist/platform/web/rawAudioProcessor.generated.js:57-61`, `:86-91`, `:99-126` |
 | Up, browser capture | `getUserMedia` with echo cancellation, noise suppression, automatic gain control, mono and `voiceIsolation` | `dist/platform/web/input.js:6-13`, `:52` |
-| Down (agent) | `pcm_<rate>` or `ulaw_<rate>` as named by `agent_output_audio_format`. Base64 in `audio` events, chunk sizes set by the provider | `dist/utils/BaseConnection.js:81-94`, `dist/platform/web/output.js` |
+| Down (agent) | `pcm_<rate>` (16-bit, so an even byte count) or `ulaw_<rate>` (one byte a sample, so odd counts are valid), as named by `agent_output_audio_format`. Base64 in `audio` events, with chunk sizes set by the provider | `dist/utils/BaseConnection.js:81-94`, `dist/platform/web/audioConcatProcessor.generated.js:53-57`, `:87-91` |
 
-The repository's tests and the web client's priming assume 16 kHz in both directions (`portal/test/voice.test.mjs:245`, `portal/voice/check.mjs:85`, `portal/voice/client.js:309`). ElevenLabs documents other output rates, for example `pcm_44100`. A native client must therefore read both formats from the metadata rather than hard-code them.
+The repository's tests and the web client's priming assume `pcm_16000` in both directions (`portal/test/voice.test.mjs:245`, `portal/voice/check.mjs:85`, `portal/voice/client.js:309`). These are fixtures, not proof of the production agent's settings. ElevenLabs documents other output rates, for example `pcm_44100`. A native client must read both codec and rate from the metadata rather than hard-code them.
 
-Floating-point samples become PCM16 as `sample < 0 ? sample * 32768 : sample * 32767` after clamping to [-1, 1] (`dist/platform/web/rawAudioProcessor.generated.js:108-119`). A native encoder should match this so fixtures compare byte for byte.
+**Sample encoding** (`dist/platform/web/rawAudioProcessor.generated.js:32-46`, `:104-119`). Samples are clamped to [-1, 1] and scaled as `sample < 0 ? sample * 32768 : sample * 32767`.
+- For PCM16 the scaled value is then stored into an `Int16Array`, which truncates toward zero.
+- For µ-law it is rounded and passed through the SDK's G.711 encoder.
+
+A native encoder can match these sample values exactly. Its chunk boundaries are a separate policy (section 4).
 
 ### Transcript, evidence and sources
 
 - **Transcript.** User and agent turns appear as text nodes, keyed by role and `event_id`. A correction replaces an earlier turn. The panel keeps at most 80 turns, each cut at 12,000 characters (`portal/voice/client.js:275-297`). The transcript is a `role="log"` polite live region (`portal/voice/client.js:129-135`).
 - **Links.** Markdown links in agent text become links only when they pass a same-origin allow-list of published record paths, such as `/doc/`, `/bill/`, `/subject/<kind>/`, `/money/...`, `/reports/` and `/journey/` (`portal/voice/client.js:38-65`).
-- **Sources list.** Sources are also collected from tool responses: `sources`, `records`, `full_tool_result` and similar fields, at most 12, under the same allow-list (`portal/voice/client.js:251-274`). On the server, every tool result includes `sources: [{title, url}]` and a notice that source material is untrusted evidence (`portal/src/voice-tools.ts:7`, `:147-149`).
+- **Sources list.** Sources are also collected from tool responses: `sources`, `records`, `full_tool_result` and similar fields, at most 12, under the same allow-list (`portal/voice/client.js:251-274`). On the server, every tool result carries a notice that source material is untrusted evidence and a `sources` array of `{title, url}` (`portal/src/voice-tools.ts:7`, `:83`, `:147-149`). That array is empty for receipt clarifications, and receipt answers have no `source_url` (step 10).
 - **Persistence.** None: no transcript, signed URL, account identifier or audio is stored in browser storage or sent to analytics (`portal/voice/README.md:21-24`, `portal/voice/client.js:84-85`).
 
 ### Timers and limits
@@ -153,6 +188,16 @@ Floating-point samples become PCM16 as `sample < 0 ? sample * 32768 : sample * 3
 
 At 600 seconds per member, the production monthly budget covers at most 66 full allowances a month, shared by web and app.
 
+**A call's deadline is not always the end of the member's allowance.** A reservation is the smaller of the member's personal balance and the month's remaining budget (`portal/src/voice.ts:36-43`). Unlimited members also get bounded calls. A call can therefore end at its deadline because:
+- the member's lifetime allowance ran out;
+- the month's application budget ran out;
+- an unlimited member reached the 600-second call limit.
+
+The relay closes all three with the same message.
+- A fresh status read afterwards shows a used-up personal allowance (`remaining_seconds: 0`) and the unlimited case (`unlimited: true`).
+- A spent monthly budget is invisible to status today. The member still appears to have time left, and the next start returns the shared 429.
+- Worker change 6 (`budget_open`) closes that gap.
+
 ### Error and allowance states on the web
 
 | Condition | Server signal | Web message (`portal/voice/client.js`) |
@@ -164,7 +209,7 @@ At 600 seconds per member, the production monthly budget covers at most 66 full 
 | Capacity **or** monthly budget spent | start 429, same message for both (`voice.ts:262`) | "Voice is busy right now…" (`:337`, `:373`) |
 | Microphone denied or missing | `NotAllowedError`, `NotFoundError` | (`:373`) |
 | Provider or network failure | close or error | "The connection ended…" or "Voice ran into a problem…" (`:364-365`) |
-| Deadline | relay close 1000 "Your free voice time has finished" | "Your 10 free minutes are complete…" (`:351`) |
+| Deadline | relay close 1000 "Your free voice time has finished", for every kind of deadline | "Your 10 free minutes are complete…", or "This call has finished…" for unlimited members (`:351`) |
 
 Relay close codes are:
 - 1000 when the call ends normally or reaches its deadline;
@@ -177,47 +222,199 @@ The provider's own close code is not forwarded (`portal/src/voice.ts:118-160`).
 
 1. **No credential a native app can get cleanly.** Voice routes accept only the `__Host-opax_session` cookie (`portal/src/community-core.ts:22-27`). The cookie is issued only to a request carrying the exact web Origin (`portal/src/community-auth.ts:18-26`). The token comes from an email link that opens `/community` in a browser (`portal/src/community-auth.ts:13`). No `apple-app-site-association` file exists: `portal/public` has no `.well-known` directory, and the Worker serves only `/.well-known/atproto-did` (`portal/src/index.ts:5199`). So the link cannot open the app. MCP bearer keys exist (`portal/src/community-mcp.ts:8-11`), but voice routes do not accept them.
 2. **Origin checks.** `start`, `connect` and `finish` require `Origin` to equal `COMMUNITY_ORIGIN` exactly (`portal/src/voice.ts:249`). Native HTTP and WebSocket clients send no Origin by default. Both `URLSession` and Node's `ws` can set one, and the staging smoke test does so with a Cookie header (`portal/test/voice-staging-smoke.mjs:41`, `:80`). So the check stops browsers from other sites, not non-browser clients. There are no `Sec-Fetch-*` checks.
-3. **The agent's origin restriction does not reach the client.** The provider agent is private and restricted to the Opax origin (`docs/VOICE-ASSISTANT.md:20`). The Worker satisfies that on the upstream connection by sending `Origin: COMMUNITY_ORIGIN` itself (`portal/src/voice.ts:203`). Any relay client inherits it. It would block an app that connected straight to ElevenLabs.
+3. **The agent's origin restriction does not reach the client.** The repository documents the provider agent as private and restricted to the Opax origin (`docs/VOICE-ASSISTANT.md:20`); the live provider configuration was not inspected. The Worker satisfies that restriction on the upstream connection by sending `Origin: COMMUNITY_ORIGIN` itself (`portal/src/voice.ts:203`), so any relay client inherits it. That it would block an app connecting straight to ElevenLabs is an inference from that documentation, not a verified provider behaviour.
 4. **CSP and Permissions-Policy are browser-only.** API responses carry `default-src 'none'` (`portal/src/index.ts:4859`, `:4879`), which a native client ignores. Pages allow `connect-src wss://opax.com.au` and `microphone=(self)` (`portal/src/index.ts:4823`, `:4848`). `X-Frame-Options: DENY` and `frame-ancestors 'none'` block iframes, not a top-level in-app browser (`portal/src/index.ts:4822`, `:4855`).
 5. **Browser assumptions in the protocol.**
    - The start body must be `application/json` (`portal/src/community-core.ts:7`).
    - `signed_url` is always `wss:` on `COMMUNITY_ORIGIN`, so a local plain-HTTP Worker hands out an unusable `wss://127.0.0.1` URL (`portal/src/voice.ts:264-265`).
    - The first message must be the initiation event within 10 seconds (`portal/src/voice.ts:100`, `:130`).
    - All capture and playback code is Web Audio: AudioWorklets, `getUserMedia` and a Wasm resampler (`portal/voice/build.mjs:13-25`).
-6. **No account deletion.** The community has no self-service account deletion route or page. `portal/src` has no member delete, and the privacy view lists none (`portal/public/community.js:196`). This blocks App Review for any app that signs people in (section 6).
+6. **No account deletion.** The community has no self-service account deletion route or page. `portal/src` has no member delete, and the privacy view lists none (`portal/public/community.js:196`). Removing a discussion or reply today only hides it (`portal/src/community.ts:45-47`). This blocks App Review for any app that signs people in (section 6).
 7. **"Budget closed" cannot be told apart from "busy".** When the monthly budget is spent, start returns the same 429 "at capacity" error as when both slots are taken (`portal/src/voice.ts:258-262`). Status does not expose the budget (`portal/src/voice.ts:64-74`).
 
 ## 3. Who can use voice in the app
 
-Voice is for signed-in members today; the rest of v1 is public and needs no account. Three options follow, plus one considered and rejected.
+### Decision
+
+**Decided on 3 October 2026:** Jake approved option A. Voice is the only feature that needs sign-in. Every other screen in the app is public and works signed out. Options B and C, and the provider's WebRTC SDKs, are kept at the end of this section as the record of what was considered.
 
 ### A. Sign in for voice
 
-Voice is the only signed-in feature in the app. The member signs in from the voice screen and can delete their account in the app.
+The member opens the voice screen, agrees to the third-party AI consent (section 6), and signs in with an emailed one-time code. Only then can they start a call. They can sign out, and delete their account, in the app.
 
-- **What the Worker needs.** A native session that is not a browser cookie:
-  - `member()` also accepts an `X-Opax-Session: <43-character token>` header, looked up in `member_sessions` like the cookie;
-  - `sameOrigin()` is skipped for requests that carry that header and no Cookie header. CSRF needs ambient credentials. A browser cannot add a custom header to a cross-site request without a CORS preflight, and the Worker grants none;
-  - `/mcp` already accepts a header token instead of a cookie and allows a missing Origin (`portal/src/community-mcp.ts:8-11`).
-- **Why not `Authorization: Bearer`.** Apple lists `Authorization` as a reserved header that `URLSession` "may ignore … or overwrite", and the same token must also go on the WebSocket handshake.
-- **Why not the existing cookie.** Sending the token as the existing cookie would work with `member()` unchanged. But it would also need a forged `Origin` header, which defeats the point of the check (section 2, item 2).
-- **Sign-in.** Recommended: a one-time code in the sign-in email for app-initiated requests, typed into the app and exchanged for a session token, with attempt limits.
+- **Session.** How the app proves the session to the Worker is compared below. The recommendation for v1 is the existing cookie contract, attached explicitly.
+- **Sign-in.** A one-time code in the sign-in email, typed into the app, under the security contract below.
   - It works when the email is read on another device.
   - It needs no `apple-app-site-association` file.
-  - It never steals web sign-in links into the app.
+  - It never pulls web sign-in links into the app.
 
   A universal link on a dedicated path such as `/app/signin` can come later as a convenience. Reusing `/community?view=signin` would send web sign-ins into the app. Apple's association file can match a `#` fragment, but no Apple page says the fragment survives into the URL the app receives, so the existing `#token=` format would need a device test first.
-- **Token storage.** The session token goes in the Keychain, never `UserDefaults`. Sessions last 30 days, as on the web.
-- **Account deletion.** Apple requires it (section 6). Deleting `voice_sessions` rows resets that email's lifetime allowance if the person signs up again (`docs/VOICE-ASSISTANT.md:40`). A new email address already gets a fresh 600 seconds, so a tombstone would add little protection. The monthly budget and the two slots remain the real limits.
+- **Account deletion.** In the app, with deletion-safe voice accounting (below). Apple requires it (section 6).
 - **Cost.** Unchanged per person. App members share the existing monthly budget, at most 66 full allowances a month.
-- **Abuse.** The same as the web today: one allowance per email address, rate limits, two slots and the monthly budget.
+- **Abuse.** The same as the web today: one allowance per email address, rate limits, two slots and the monthly budget. Deletion must not weaken the last two (below).
 - **Privacy.** The app collects an email address and user ID, linked to the person, as the web community already does.
 - **App Review.**
   - 5.1.1(v) applies, so the app needs in-app deletion.
   - Gating one feature behind sign-in is consistent with "let people use it without a login" for the rest of the app.
   - Sign in with Apple is not required for a company's own account system (4.8).
 
-### B. Anonymous app allowance
+### Session design: the existing cookie contract or an `X-Opax-Session` header
+
+The API lane's contract (`docs/IOS-API-CONTRACT.md` on `ios/discovery-api` at `6baf3ec4`, "Minimum-change cookie session versus header token") recommends the existing cookie session for v1. This section compares it with the `X-Opax-Session` header this document first proposed, and reaches the same recommendation. The two designs are:
+
+| | Cookie contract | `X-Opax-Session` header |
+| --- | --- | --- |
+| What the app sends on voice and account routes | `Cookie: __Host-opax_session=<token>` and `Origin: https://opax.com.au`. On `connect` it also sends `Sec-WebSocket-Protocol: convai` | `X-Opax-Session: <token>`, with no Cookie and no Origin. On `connect` it also sends `Sec-WebSocket-Protocol: convai` |
+| How the app gets the token | From the code exchange's `Set-Cookie`, as `auth/consume` returns today (`portal/src/community-auth.ts:26`) | From the code exchange's response body |
+| Worker auth code | Unchanged: `member()` and `sameOrigin()` (`portal/src/community-core.ts:15`, `:22-27`) | `member()` reads the header. `sameOrigin()` is skipped only for a successfully validated header token on a request with no Cookie header. Mixed or invalid credentials are refused, never fallen back from |
+| Voice routes and logout | Unchanged (`portal/src/voice.ts:230-285`, `portal/src/community-auth.ts:28-33`) | Logout must accept the header |
+
+**Security.** `Origin` is a browser's CSRF signal, not client authentication.
+- A browser sets it and a page cannot forge it, so it tells the Worker that a cookie-bearing request came from an Opax page rather than another site driving the person's browser.
+- Any non-browser client can send any Origin. The staging smoke test does exactly that (`portal/test/voice-staging-smoke.mjs:80`).
+- CSRF needs a victim's browser to attach ambient credentials. A native request carries a credential the app chose to attach.
+
+So a native client sending the expected Origin does not weaken the web's CSRF protection. The header design's Origin bypass is equally safe, as long as it requires a successfully validated token, refuses requests that also carry a Cookie, and leaves the Origin check on cookie requests unchanged. Neither design is stronger against CSRF.
+
+Token theft is the same in both: the same 43-character token, 30-day expiry, hashed lookup and revocation (`portal/src/community-auth.ts:25-33`). Keychain storage protects the device copy. Sign-out, sign-out everywhere and fresh verification before deletion are what limit a stolen token.
+
+**What `URLSession` does with cookies** (Apple, read 3 October 2026):
+- By default, a session takes cookies from responses into the configuration's `httpCookieStorage` and attaches matching ones to requests. `httpShouldSetCookies` defaults to true. Default sessions use the shared store, which on iOS is per app.
+- `URLSessionWebSocketTask` "supports cookies, by storing cookies to the session configuration's `httpCookieStorage`, and attaches cookies to outgoing HTTP handshake requests."
+- Apple's `HTTPCookie` documentation covers Netscape and RFC 6265 cookies and exposes `isSecure`, `isHTTPOnly` and `sameSitePolicy`. It says nothing about name prefixes such as `__Host-`. The prefix's guarantees (Secure, host-only, `Path=/`) are a browser storage rule, so the app must not rely on Foundation to enforce them. `HttpOnly` and `SameSite` defend against page scripts and cross-site browsing, which a native client does not have.
+- Apple documents how to take control:
+  - "If you want to provide cookies yourself, set this value to `false` and provide a `Cookie` header … on a per-request level" (`httpShouldSetCookies`).
+  - Set `httpCookieAcceptPolicy` to `.never` and "use the `allHeaderFields` and `cookies(withResponseHeaderFields:for:)` methods to extract cookies from the URL response object yourself".
+  - Or set `httpCookieStorage` to `nil`.
+
+**On the WebSocket upgrade.** `webSocketTask(with: URLRequest)` says: "You can modify the request's properties prior to calling `resume()` on the task. The task uses these properties during the HTTP handshake phase … The custom HTTP headers provided by the client remain unchanged for the handshake with the server." A subprotocol is requested with a `Sec-WebSocket-Protocol` header.
+
+Neither `Cookie`, `Origin` nor `X-Opax-Session` is on `NSURLRequest`'s reserved list: `Content-Length`, `Authorization`, `Connection`, `Host`, `Proxy-Authenticate`, `Proxy-Authorization` and `WWW-Authenticate`. Both designs' headers are on Apple's documented path. An `Authorization: Bearer` header is not: for reserved headers, "the system may ignore the value you set, or overwrite it with its own value, or simply not send it."
+
+**Worker effort.**
+- **Cookie contract:** new work only where both designs need it: code issuance and exchange, deletion, deletion-safe accounting and the budget signal. The auth core shared by every community route is untouched.
+- **Header design:** the same, plus a header parser in `member()`, a new `sameOrigin()` rule, mixed-credential refusal, header logout, and regression tests on every route that calls those two functions.
+
+**Recommendation: the cookie contract with explicit attachment, for v1.** Its CSRF and theft properties match the header design. It is on Apple's documented manual-cookie path, and it leaves the authentication code every community route depends on unchanged. With one credential type there are no precedence rules to get wrong.
+
+**Where this differs from the API lane.** The API lane agrees on the cookie session but prefers automatic attachment from an app-owned cookie jar, and falls back to an explicit `Cookie` header only if needed. This document prefers explicit attachment from the start, because it:
+- keeps the token in the Keychain rather than the jar's on-disk store;
+- attaches it only to an allow-listed set of routes;
+- does not depend on how Foundation treats the `__Host-` prefix, `Secure` and expiry across relaunches. The API lane lists those as unverified integration gates.
+
+Either way, one integration check remains before release. Against a TLS loopback fixture (no real email or voice), confirm on the iOS 18.4 simulator and a device that the `Cookie`, `Origin` and `Sec-WebSocket-Protocol` headers reach the Worker unchanged on the `wss:` upgrade. The cookie keeps `Secure`; the fixture must not drop it to pass over plain HTTP.
+
+Switch to the header design if:
+- the Worker adds browser-only checks to these routes, such as `Sec-Fetch-Site`, which the app would otherwise have to imitate;
+- or app sessions need different powers from web sessions, enforced per request.
+
+A `client` label on `member_sessions` is useful for listing and revoking app sessions in either design. It is not an authentication boundary unless the Worker enforces it.
+
+**Credential handling in the app, for either design:**
+1. **Separate sessions.** A dedicated authenticated `URLSession` with no cookie store (`httpCookieStorage` set to `nil`, `httpShouldSetCookies` false, accept policy `.never`). Public data uses a different session that never carries the credential.
+2. **Storage.** The token lives in the Keychain with a this-device-only accessibility class. It never goes in `UserDefaults`, a file or a shared cookie store.
+3. **Scope.** The credential is attached only to an allow-list of paths on the configured origin: voice `status`, `start`, `connect` and `finish`; community `status`, `auth/*`; and account deletion.
+4. **Redirects.** Redirects on authenticated requests are refused in the task delegate. The Worker never redirects `/api/*` (`portal/src/canonical-origin.ts:7-8`), so a redirect there is an error.
+5. **Logs.** `Cookie`, `X-Opax-Session` and `signed_url` values are redacted from logs, crash reports and analytics.
+6. **Expiry.** On 401, the token is deleted and the app shows signed out. Sign-out calls `auth/logout`, so the server session row is deleted too.
+
+### Code sign-in contract
+
+The existing link proof is a 256-bit random token stored as a hash and redeemed by one atomic conditional update (`portal/src/community-core.ts:3`, `portal/src/community-auth.ts:11-12`, `:21`). A code is far weaker on its own: six digits are about 19.9 bits and eight digits about 26.6 bits. So the new route needs these controls:
+
+1. **Request.** `POST /api/community/auth/request {email, client:"ios"}` is native mode.
+   - Web mode (no `client`) is unchanged, including its Origin requirement and limits of 15 an hour per IP and 5 an hour per email (`portal/src/community-auth.ts:6-10`).
+   - In native mode the response is `{sent:true, challenge_id}` whether or not an account exists, as today's response is the same for new and existing accounts (`portal/src/community-auth.ts:9`).
+2. **One proof, two forms.** Each request creates one proof row holding:
+   - the link token's hash, as now;
+   - a 256-bit random `challenge_id`, bound to the normalised email and `client`;
+   - an eight-digit code from `crypto.getRandomValues` with rejection sampling, so no digit is more likely than another.
+3. **Protected storage.** The code is stored only as an HMAC-SHA-256 keyed with a new Worker secret and bound to `challenge_id`. A plain hash of eight digits can be reversed by enumeration if the table leaks; a keyed MAC cannot without the key.
+4. **Supersession.** A new request for the same email and client invalidates that email's earlier unused proofs.
+5. **Verification.** `POST /api/community/auth/consume-code {challenge_id, code}`:
+   1. one atomic `UPDATE … SET attempts = attempts + 1 … WHERE` unused, unexpired and `attempts < 5`, `RETURNING` the MAC. No row means failure;
+   2. a constant-time comparison;
+   3. on a match, one conditional update sets `used_at` where it is still null, so only one request can win.
+
+   Then the member and session are created as `auth/consume` does (`portal/src/community-auth.ts:21-26`). Redeeming the code consumes the emailed link too, and the link consumes the code.
+6. **Throttles.**
+   - Five attempts per challenge.
+   - A per-IP verification limit like consume's 30 per 15 minutes (`portal/src/community-auth.ts:19`).
+   - An aggregate cap of 10 failed codes per email per 24 hours. After it, code entry is locked for that email while the link still works.
+
+   With eight digits and this cap, a sustained attacker gets at most 3,650 guesses a year against one address, about a 0.004% chance. Six digits would give about 0.37%.
+7. **One answer for every failure.** Wrong, expired, used, superseded, locked and unknown challenges all return the same message.
+8. **Expiry and revocation.** A proof expires after 15 minutes, as the link does. Deleting an account revokes that email's outstanding proofs.
+9. **Tests before implementation:**
+   - wrong code, expiry, reuse, supersession and lock;
+   - parallel redemption with exactly one winner;
+   - link then code, and code then link;
+   - a challenge used with another email's code;
+   - attempt counting under concurrency;
+   - identical responses for existing and unknown addresses.
+
+### Account deletion
+
+**Scope (default: delete).** Apple's FAQ says deletion includes "user-generated content that's shared with others, such as photos, video, text posts, and reviews", and that "If local laws or regulations require that you maintain some data, let your users know". Today's removal only hides posts (`portal/src/community.ts:45-47`).
+
+1. **Personal data.** The member row (email, display name, bio), sessions, outstanding sign-in proofs, MCP keys, `voice_access`, the email outbox and unsubscribe tokens. Supporter checkout and subscription records go once any billing obligation is settled and the person is told (`portal/migrations/0001_community.sql:14-21`, `0010_reply_email_notifications.sql:5-15`).
+2. **Authored content.**
+   - Discussions and replies, reading lists and their items, saved chats.
+   - Sent direct messages.
+   - Likes, bookmarks, follows, blocks, reports filed, and notifications to or from the member.
+
+   These rows are listed in `portal/migrations/0001_community.sql`, `0006_member_chats.sql` and `0009_community_social.sql`.
+3. **Other members' content attached to theirs** needs an explicit policy: replies in a deleted member's discussion, and conversations with another member. The default proposed here:
+   - other members keep their own replies and messages;
+   - the deleted discussion becomes a stub with no personal data.
+
+   This is question 2.
+4. **Provider-held data.** The repository documents provider transcripts as deleted within one day (`docs/VOICE-ASSISTANT.md:20`), and the deletion screen should say so.
+   - Deleting them at once by conversation ID would need a provider key permission that is disabled today (`docs/VOICE-ASSISTANT.md:16`).
+   - Stored `conversation_id` values link usage rows to provider records. Clear them once the provider's retention window has passed, or keep them only while a provider deletion is pending.
+5. **Retention exceptions.** Only where a law requires it or for a specific stated purpose, and disclosed in the deletion flow and on the privacy page.
+6. **Flow.** Fresh verification (a new code, which Apple allows), then deletion, a statement of how long it takes, and a confirmation when done. Any live call is ended first.
+
+**Deletion-safe voice accounting (required).** The monthly budget is `SUM(charged_seconds)` over `voice_sessions` rows since the month start. The call-slot limit is a `COUNT` of open rows (`portal/src/voice.ts:38-39`).
+
+Deleting a member's rows therefore does more than reset their personal allowance:
+- deleting a 600-second charge from a spent month gives the whole application 600 seconds back;
+- deleting an open row frees a call slot while its relay keeps running. A database delete does not close a socket held by another Worker invocation (`portal/src/voice.ts:110-167`).
+
+Repeated delete-and-sign-up would bypass the application's monthly ceiling, not just the per-email allowance. The provider's credit ceiling is a separate limit and does not restore that guarantee.
+
+The deletion route must:
+- keep application usage and open reservations countable after the member is gone. Either replace the member link on voice rows with a non-identifying deleted marker, or move monthly charges into a de-identified aggregate that the reservation query reads. The current schema cannot simply null the link, because `member_id` is `NOT NULL REFERENCES members(id)` (`portal/migrations/0003_voice.sql:6`);
+- never delete or release a `reserved`, `connecting` or `active` reservation. It ends as now, by confirmed provider close or by conservative expiry (`portal/src/voice.ts:20-26`, `:55-58`). Revoking the member's sessions stops new calls. A call still running loses its tools once the member row is gone (`portal/src/voice.ts:238`) and ends at its deadline;
+- treat the personal lifetime allowance separately from those aggregates. Whether a returning email gets a fresh 600 seconds is question 2.
+
+### Worker changes
+
+For the recommended cookie contract. Each item **needs Jake's OK to deploy**. None of them changes the relay (`portal/src/voice.ts:91-228`) or the tools.
+
+1. **Native code issuance.** `auth/request` native mode, the challenge, the code, the keyed MAC and supersession, under the contract above. **Needs Jake's OK to deploy.**
+2. **Code exchange.** `auth/consume-code` with atomic attempts, one-winner redemption and shared link/code consumption. It returns the session cookie as `auth/consume` does, and labels the session `client:"ios"` through a migration. **Needs Jake's OK to deploy.**
+3. **Code secret.** A new Worker secret for the code MAC, with separate values for production and staging. **Needs Jake's OK to deploy.**
+4. **Account deletion.** A route for cookie sessions with Origin and fresh verification, linked from the web account page too, with the scope above. **Needs Jake's OK to deploy.**
+5. **Deletion-safe voice accounting.** A migration and query change so deletion cannot refund the monthly budget or free open slots. **Needs Jake's OK to deploy.**
+6. **Budget signal.** The 429 from start gains `reason: "budget" | "capacity"`, and status gains `budget_open`. Both clients can then say "Voice is closed for this month" (`portal/src/voice.ts:258-262`, `:64-74`). **Needs Jake's OK to deploy.**
+7. **Optional refund signal.** Error bodies from `connect` gain `released: true | false`. This helps HTTP clients only; WebSocket clients still read status (section 1). **Needs Jake's OK to deploy.**
+8. **Optional usage split.** A `client` column on `voice_sessions` so app and web minutes can be reported apart. **Needs Jake's OK to deploy.**
+9. **Privacy page and voice docs.** Mention the app, the microphone, ElevenLabs and deletion in the privacy view (`portal/public/community.js:196`) and in `docs/VOICE-ASSISTANT.md`. **Needs Jake's OK to deploy.**
+10. **Universal links (later).** An `apple-app-site-association` route for a dedicated app sign-in path, only if links are wanted. **Needs Jake's OK to deploy.**
+
+If the synthesis chooses the header design, add these:
+- `member()` accepts `X-Opax-Session`;
+- `sameOrigin()` passes only a validated header token on a request with no Cookie;
+- mixed and invalid credentials are refused;
+- logout accepts the header;
+- regression tests run across every community route.
+
+**Needs Jake's OK to deploy.**
+
+### Options considered and not chosen
+
+#### B. Anonymous app allowance
 
 Each install gets an allowance without an email. App Attest or DeviceCheck proves the requests come from a genuine copy of the app.
 
@@ -237,7 +434,7 @@ Each install gets an allowance without an email. App Attest or DeviceCheck prove
 - **Privacy.** No email. Device attestation data and IP addresses are processed; audio and transcripts still go to the provider.
 - **App Review.** No account, so no deletion requirement. 5.1.2(i) consent for the third-party AI still applies.
 
-### C. Voice opens the web panel in an in-app browser
+#### C. Voice opens the web panel in an in-app browser
 
 The app opens `https://opax.com.au/chat` (or a voice deep link) in `SFSafariViewController` or `ASWebAuthenticationSession`, and the existing web client runs unchanged.
 
@@ -250,7 +447,7 @@ The app opens `https://opax.com.au/chat` (or a voice deep link) in `SFSafariView
 - **Cost and abuse.** As on the web.
 - **App Review.** 4.2 minimum functionality (low risk while the rest of the app is native). 5.1.1(vii) says a Safari view controller must be visible. Links that leave opax.com.au can affect the "Unrestricted Web Access" age-rating answer.
 
-### Considered and rejected: the provider's WebRTC SDKs
+#### The provider's WebRTC SDKs
 
 The official SDKs could connect directly to ElevenLabs with a WebRTC conversation token minted by the Worker (`GET /v1/convai/conversation/token`). That would bring Opus audio and WebRTC echo cancellation, with much less data than base64 PCM. But it bypasses the relay that enforces Opax's rules:
 - the client could set initiation data and dynamic variables, which the relay discards today (`portal/src/voice.ts:91-107`);
@@ -260,38 +457,16 @@ The official SDKs could connect directly to ElevenLabs with a WebRTC conversatio
 
 It also adds LiveKit WebRTC native dependencies. Revisit it only if data cost becomes the main problem.
 
-### Comparison
+#### Comparison
 
 | | A. Sign in | B. Anonymous | C. Web panel |
 | --- | --- | --- | --- |
-| Worker change | Moderate: header-token sessions, code sign-in, deletion | Large: attestation, new principal, new budget | None |
+| Worker change | Moderate: code sign-in, deletion with deletion-safe accounting | Large: attestation, new principal, new budget | None |
 | Native audio work | Yes | Yes | None |
 | Cost exposure | Same as web | Unbounded per person; needs its own budget | Same as web |
 | Abuse controls | Existing | New and weaker per person | Existing |
 | Privacy | Email and user ID | Device attestation | Web data in a view |
 | App Review | Needs in-app deletion | Simplest | Sign-in flow does not work in the view |
-
-### Recommendation
-
-Choose **A**. It keeps the allowance tied to a person and reuses every existing control. The relay, tools and provider configuration stay unchanged. The Worker changes are small, testable and useful beyond voice, for example for saved chats in a later app version. B moves cost risk onto everyone's monthly budget and adds attestation code the Worker does not have. C does not work as a product, because the person cannot sign in where they talk.
-
-### Worker changes for option A
-
-Each item **needs Jake's OK to deploy**. None of them changes the relay (`portal/src/voice.ts:91-228`) or the tools.
-
-1. **Header-token sessions.** `member()` accepts `X-Opax-Session: <token>` from `member_sessions` (`portal/src/community-core.ts:22-26`). A migration adds a `client` column so app sessions can be listed and revoked. **Needs Jake's OK to deploy.**
-2. **Origin rule.** `sameOrigin()` passes requests authenticated by that header that carry no Cookie header. It keeps the exact Origin check for cookie requests (`portal/src/community-core.ts:15`). **Needs Jake's OK to deploy.**
-3. **Code sign-in.**
-   - `auth/request` accepts `{email, client:"ios"}` without Origin and emails a one-time code alongside the usual link.
-   - Rate limits stay as they are: 15 an hour per IP and 5 an hour per email (`portal/src/community-auth.ts:8-10`). The Origin check never stopped non-browser senders, so these limits are already the real control.
-   - A new `auth/consume-code` exchanges `{email, code}` for `{session_token, expires_at}` in the response body. The code has at least six digits, allows at most five attempts and shares the link's 15-minute expiry.
-   - **Needs Jake's OK to deploy.**
-4. **Native sign-out.** `auth/logout` deletes the header-token session (`portal/src/community-auth.ts:28-33`). **Needs Jake's OK to deploy.**
-5. **Account deletion.** A route available to cookie and header-token sessions deletes the member and their rows, after re-confirmation. It should also be linked from the web account page. Decide the handling of public discussions and of `voice_sessions` (section 7). **Needs Jake's OK to deploy.**
-6. **Budget signal.** The 429 from start gains `reason: "budget" | "capacity"`, and status gains `budget_open`. Both clients can then say "Voice is closed for this month" (`portal/src/voice.ts:258-262`, `:64-74`). **Needs Jake's OK to deploy.**
-7. **Optional usage split.** A `client` column on `voice_sessions` so app and web minutes can be reported apart. **Needs Jake's OK to deploy.**
-8. **Privacy page and voice docs.** Mention the app, the microphone and ElevenLabs in the privacy view (`portal/public/community.js:196`) and in `docs/VOICE-ASSISTANT.md`. **Needs Jake's OK to deploy.**
-9. **Universal links (later).** An `apple-app-site-association` route for a dedicated app sign-in path, only if links are wanted later. **Needs Jake's OK to deploy.**
 
 ## 4. The native audio path
 
@@ -310,7 +485,8 @@ The audio and socket work is the same in either architecture, so write it once a
 1. **Relay client.**
    - A `URLSessionWebSocketTask` built from a `URLRequest`:
      - the URL is the `signed_url`, validated for scheme, host and path as the web does (`portal/voice/client.js:341-343`);
-     - headers are `Sec-WebSocket-Protocol: convai` and `X-Opax-Session`.
+     - headers are `Sec-WebSocket-Protocol: convai` plus the session credential: `Cookie` and `Origin` in the recommended design, or `X-Opax-Session` (section 3);
+     - the task comes from the dedicated authenticated session, with no cookie store.
    - Set `maximumMessageSize` explicitly, for example to 2 MiB. The relay passes provider messages of up to 1,000,000 characters (`portal/src/voice.ts:146`), and Apple does not document the default (reported as 1 MiB).
    - On open, send `{"type":"conversation_initiation_client_data"}` at once; the relay replaces its content.
    - Answer every `ping` with `pong`.
@@ -320,22 +496,34 @@ The audio and socket work is the same in either architecture, so write it once a
    - Call `inputNode.setVoiceProcessingEnabled(true)` while the engine is stopped. Apple's WWDC19 guidance is that voice processing switches both I/O nodes and works only when rendering to a device.
    - The `.voiceChat` mode alone does not cancel echo. Without voice processing, "the system doesn't apply voice-specific processing, like echo cancellation and automatic gain correction".
    - Capture and playback must share this engine, or the canceller has no reference for the agent's voice and the agent hears itself on the loudspeaker.
-3. **Capture.**
-   - Tap the input node in its hardware format.
-   - Convert with `AVAudioConverter.convert(to:error:withInputFrom:)` to mono Int16 at `user_input_audio_format`.
-   - Cut 25 ms chunks (400 samples at 16 kHz), base64-encode them with the standard alphabet and send `{"user_audio_chunk": …}`.
-   - While muted, send zero-filled chunks as the SDK does (`dist/platform/web/rawAudioProcessor.generated.js:100-102`), so the provider's turn-taking timing matches the web. Also set `isVoiceProcessingInputMuted`.
-4. **Playback.**
-   - Decode `audio` events at `agent_output_audio_format`, PCM16 or µ-law, into float buffers. Schedule them on an `AVAudioPlayerNode` feeding the main mixer.
+3. **Format negotiation.**
+   - Parse `user_input_audio_format` and `agent_output_audio_format` from the metadata before allocating any buffer or converter. Accept only `pcm_<rate>` and `ulaw_<rate>`, with rates from a fixed list (8,000, 16,000, 22,050, 24,000, 44,100 and 48,000).
+   - Missing input format means `pcm_16000`, as in the SDK (`dist/utils/WebSocketConnection.js:139-141`).
+   - Anything else fails closed: the call ends with "Voice is unavailable right now", and the error is logged without content.
+   - Both codecs are supported in both directions, so a provider-side format change does not break the app.
+4. **Capture.**
+   - Tap the input node in its hardware format. The tap callback only copies samples into a bounded ring buffer. Conversion and encoding run on the voice core's own serial queue, never in the tap.
+   - Convert with one long-lived `AVAudioConverter.convert(to:error:withInputFrom:)` instance per call, so resampler state carries across taps. The output is mono at the negotiated rate.
+   - Encode by codec:
+     - `pcm` as 16-bit **little-endian**, serialised explicitly;
+     - `ulaw` as 8-bit G.711 µ-law, matching the SDK's encoder table and its round-then-encode rule (`dist/platform/web/rawAudioProcessor.generated.js:11-46`, `:115-117`).
+   - **Chunk policy (new, not web parity).** Send exactly 25 ms per message at the negotiated rate. At 16 kHz that is 400 samples: 800 PCM bytes, or 400 µ-law bytes. The web SDK's chunks vary, for example 32 ms (section 1). Fixed chunks match the web's sample values, not its chunk boundaries. Base64 uses the standard alphabet with padding, inside `{"user_audio_chunk": …}`.
+   - While muted, send zero-valued chunks as the SDK does (`dist/platform/web/rawAudioProcessor.generated.js:100-102`), so the provider's turn-taking timing matches the web. Also set `isVoiceProcessingInputMuted`.
+   - **Backpressure.** The send queue is bounded, for example two seconds of audio. If the socket cannot keep up past that bound, end the call with a network error rather than buffering without limit.
+5. **Playback.**
+   - Decode `audio` events by the negotiated codec into float buffers. PCM16 payloads with an odd byte count are invalid and are dropped. µ-law payloads may have any length.
+   - Schedule the buffers on an `AVAudioPlayerNode` feeding the main mixer. The queue of scheduled audio is bounded.
    - Track queued buffers for the speaking/listening mode.
    - On `interruption`, stop the player node to flush its queue, restart it, and ignore audio events whose `event_id` is below the interruption's (`dist/VoiceConversation.js:68-87`).
-5. **Call controller.** A state machine:
-   - idle, checking status, asking for consent, asking for the microphone, reserving, connecting, live (listening, speaking or muted), ending, ended with a reason;
+6. **Call controller.** A state machine:
+   - idle, checking status, asking for consent, signing in, asking for the microphone, reserving, connecting, live (listening, speaking or muted), ending, ended with a reason;
    - the local countdown from `remaining_seconds` is display only, and the server deadline is authoritative;
    - a 35-second connect timeout, as on the web;
-   - End sends close 1000, then `finish`, then polls status.
-6. **Transcript and sources.**
+   - End sends close 1000, then `finish`, then polls status;
+   - after any call end or failure, the allowance shown and the end message come from a fresh status read. Status says whether the personal allowance is used up, whether the member is unlimited, and whether an earlier reservation is still open. A spent monthly budget shows only after Worker change 6 (section 1).
+7. **Transcript and sources.**
    - Ports of the web allow-list and Markdown link parsing (`portal/voice/client.js:38-65`), with the same caps.
+   - Both tool-result shapes are accepted: `source_url` may be absent and `sources` may be empty (section 1, step 10).
    - Allowed paths open the app's own record screens.
 
 ### Expo SDK 57 and React Native 0.86
@@ -346,7 +534,7 @@ Expo SDK 57 pairs with React Native 0.86.0.
 - **`expo-audio`: capture only.** Its `useAudioStream` / `AudioStream` captures real-time PCM (float32 or int16, a requested sample rate, default 48 kHz) through an `onBuffer` callback. But it documents no echo cancellation or voice-processing option, and no streaming PCM playback. Pairing it with a separate playback library leaves the canceller without the agent's voice as a reference. Not recommended.
 - **Recommended: a local Expo module** (`npx create-expo-module --local`) that wraps the Swift voice core.
   - The JavaScript surface is small: `status()`, `start()`, `setMuted()`, `end()`, plus events for state, mode, transcript, sources, countdown and the end reason.
-  - Audio and the socket stay native. Forty audio messages a second never cross into JavaScript, and a busy JavaScript thread cannot starve audio.
+  - Audio and the socket stay native. About forty audio messages a second never cross into JavaScript, and a busy JavaScript thread cannot starve audio.
 - **Configuration.**
   - The microphone purpose string goes through `ios.infoPlist` in `app.json`, or `expo-audio`'s `microphonePermission` plugin option if the app already uses it.
   - No `UIBackgroundModes`.
@@ -367,15 +555,17 @@ Expo SDK 57 pairs with React Native 0.86.0.
 | Siri | Treat like any interruption. Apple does not document Siri's effect on a `.playAndRecord` session, so this is a device check |
 | Interruption ends | Do not restart automatically. Offer Start again once status shows no open session |
 | iOS 27 | `InterruptionType` and its options are deprecated in favour of `didBecomeInactiveNotification` and `resumptionRecommendationNotification`. Handle both, because the deployment target likely spans iOS 18 to 27 |
-| Route change (AirPods on or off, wired headset) | `AVAudioEngineConfigurationChange` stops the engine. Rebuild the tap and converter for the new input format (Bluetooth hands-free often runs at 16 or 24 kHz) and restart while keeping the socket. If the restart fails, end the call. Unlike media playback, keep talking on the new route |
+| Route change (AirPods on or off, wired headset) | When the hardware sample rate or channel count changes, the engine "stops, uninitializes itself" and posts `AVAudioEngineConfigurationChangeNotification`. Its nodes keep their old formats, and Apple says: "The app must reestablish connections if the connection formats need to change." The notification arrives on an internal queue, and Apple warns against tearing the engine down synchronously in the handler. So hop to the voice core's queue, reconnect the input tap and player with the new formats, recreate the converter (Bluetooth hands-free often runs at 16 or 24 kHz), and restart, keeping the socket. If the restart fails, end the call. Unlike media playback, keep talking on the new route |
 | Media services reset | End the call; rebuild the engine and session on the next Start |
 | App goes to the background | End the call when the scene enters the background, matching the web's hidden-tab rule (`portal/voice/client.js:409`). Do not end it on a brief inactive state such as Control Centre. Keep the screen awake while connected (`isIdleTimerDisabled`), so auto-lock does not end calls |
 
-**Background mode.** Do not add `UIBackgroundModes` `audio` in v1:
-- Apple describes the mode as for apps that play "audible content in the background", and App Review 2.5.4 limits background services to their intended purpose;
-- a suspended app's sockets fail (TN2277);
+**Background mode.** Foreground-only calls are a product choice for v1, not an Apple prohibition. App Review 2.5.4 allows background services for their intended purposes, including VoIP and audio. Do not add `UIBackgroundModes` `audio` in v1, because:
+- it would need its own review justification;
+- a suspended app's sockets fail (TN2277), so without the mode the call cannot survive in the background anyway;
 - the web ends calls when the tab is hidden;
 - an open microphone after the person leaves the app is a privacy surprise.
+
+This is question 5.
 
 ### Microphone permission
 
@@ -387,20 +577,20 @@ Expo SDK 57 pairs with React Native 0.86.0.
 
 ### Energy and data for a ten-minute call
 
-These figures assume 16 kHz PCM16 in both directions. MB means 10^6 bytes.
+These figures assume `pcm_16000` in both directions and the native 25 ms chunk policy. MB means 10^6 bytes. They count application payload and WebSocket framing only: no downstream event metadata, and no TLS, TCP or IP overhead. Real network use is somewhat higher, and the top of the range is not a strict upper bound.
 
 | Stream | Rate | Ten minutes |
 | --- | --- | --- |
-| Up: 32,000 B/s of PCM, base64 (×4/3), JSON wrapper and WebSocket framing, 40 messages a second | about 43.9 KB/s (351 kbit/s), continuous, including while muted | about 26.3 MB |
-| Down: base64 PCM while the agent speaks | about 42.7 KB/s while speaking | about 12.8 MB if it speaks half the time; 25.6 MB at most |
-| Total | | **about 39 MB typical, 26 to 52 MB** |
+| Up: each message is 800 PCM bytes, 1,068 base64 bytes, 1,091 JSON bytes and 1,099 bytes framed, 40 a second | 43,960 B/s (about 352 kbit/s), continuous, including while muted | about 26.4 MB |
+| Down: base64 PCM while the agent speaks | about 42.7 KB/s while speaking | about 12.8 MB if it speaks half the time; 25.6 MB if it speaks throughout |
+| Total | | **about 39 MB typical; about 26 to 52 MB before overhead** |
 
 If the production agent's output format is `pcm_44100` rather than `pcm_16000`, downstream becomes about 117.6 KB/s while speaking, or 35 to 71 MB. That is why the output format is an open question.
 
 The upload alone is roughly ten times the bitrate of a typical Opus VoIP call at about 32 kbit/s. Base64 PCM over JSON is the relay protocol's cost.
 
 **Energy drivers:**
-- the radio stays fully active for the whole call, because chunks leave every 25 ms;
+- the radio stays fully active for the whole call, because chunks leave every 25 ms (or about every 32 ms on the web);
 - voice processing runs continuously;
 - the screen stays on.
 
@@ -437,18 +627,23 @@ Estimate: a few days of extra work within a multi-week voice build. That is not 
 
 ## 5. Testing without sound or cost
 
-Automated tests never open a real microphone, never play audible sound and never reach ElevenLabs or an opax.com.au voice route.
+Automated tests never open a real microphone, never play audible sound and never reach ElevenLabs or an opax.com.au voice or community route. Silent tests model every state, but they do not validate hardware effects such as echo cancellation, route quality, Siri or battery use. Those stay manual (below).
 
 ### Fake relay in the local fixture Worker
 
 The fake relay lives in the local fixture Worker defined by the API lane (`wrangler dev` on a port from 8900 to 8999), never in production routes.
 
-**Routes.** It serves `status`, `start`, `connect` and `finish` with the same paths, JSON shapes, status codes and error strings as section 1.
+**Routes.**
+- It serves `status`, `start`, `connect` and `finish` with the same paths, JSON shapes, status codes and error strings as section 1.
+- It serves local versions of the new auth routes (code request, code exchange, logout and account deletion), using synthetic accounts and no email.
+- A fixture-only clock control lets tests run reservation expiry without waiting.
+- Its tool runner reads fixture data through a local reader. It must never forward to a production service binding. The API lane notes that `STAGING_API` can forward reads to production, so the fixture fails closed on any non-loopback host.
 
 **URLs and launch arguments.**
 - Its `start` returns `ws://127.0.0.1:<port>/api/voice/connect?session_id=…`. The real route would emit `wss:` (section 2, item 5).
 - Debug builds accept `ws:` for loopback only, with App Transport Security's local-networking exception. Release builds accept only `wss:` on the configured origin, and validate host and path as the web does (`portal/voice/client.js:341-343`).
-- Fixture session tokens name the scenario (for example `fixture-voice-exhausted`). The fixture base URL and token arrive as launch arguments in debug builds, so Maestro selects a scenario without app test hooks.
+- A TLS loopback variant serves `https:` and `wss:` with a test certificate trusted only on the assigned simulator. It runs the credential integration check in section 3: `Cookie`, `Origin` and `Sec-WebSocket-Protocol` must reach the Worker unchanged on the upgrade, with the cookie keeping `Secure`.
+- Fixture session tokens name the scenario (for example `fixture-voice-exhausted`). The fixture base URL and token arrive as launch arguments in debug builds, so Maestro selects a server scenario without changing app logic.
 
 **Protocol.** It follows the provider stub already in `portal/test/voice.test.mjs:237-250`:
 - send `conversation_initiation_metadata` (`conv_fixture`, `pcm_16000` both ways) as soon as the socket opens;
@@ -461,62 +656,123 @@ It logs each accepted message type, audio chunk size and arrival time to a fixtu
 1. A greeting `agent_response` and `audio` events containing zero-valued PCM, so nothing is audible even on an unmuted device, with `alignment` data.
 2. A `ping` every 5 seconds.
 3. A canned `user_transcript`.
-4. `agent_tool_response` and `agent_tool_response_full_payload`. The `full_tool_result` comes from `runVoiceTool` (`portal/src/voice-tools.ts:71-150`) running against the fixture's own data, so the sources list shows real fixture records.
+4. `agent_tool_response` and `agent_tool_response_full_payload`. The `full_tool_result` comes from `runVoiceTool` (`portal/src/voice-tools.ts:71-150`) running against the fixture's own data, so the sources list shows real fixture records. Three results are covered:
+   - a standard result;
+   - a receipt answer with no `source_url`;
+   - a receipt clarification with empty `sources` (`portal/src/voice-money.ts:156-181`).
 5. An `agent_response` with Markdown links: some to published record paths, and one link the allow-list must reject.
 6. An `interruption` followed by stale lower-numbered `audio` events.
 7. An `agent_response_correction`.
 
 ### Scenarios
 
+Each row is a fixture scenario selected by its session token, or an injected dependency in the voice core. None needs hardware.
+
+**Status, start and connect**
+
 | Scenario | Fixture behaviour | App must |
 | --- | --- | --- |
-| Happy path | Script above, clean close 1000 on End | Show transcript, sources, mute state, end; call `finish`; refresh status |
+| Happy path | Script above, clean close 1000 on End | Show transcript, sources and mute state; end; call `finish`; refresh status |
 | Signed out | status `signed_in:false`; start 401 | Offer sign-in; never request the microphone |
 | Voice disabled | status `enabled:false` | Explain; point to Ask |
-| Permission not yet asked | Simulator microphone privacy reset | Ask before reserving time |
-| Permission denied | Microphone privacy revoked | Explain, link to Settings, never call `start` |
 | Allowance used | status `remaining_seconds:0`; start 403 | "10 free minutes used" state |
 | Budget closed | start 429 `reason:"budget"` (after Worker change 6) | "Closed for this month" state |
 | At capacity | start 429 `reason:"capacity"` | "Busy, try again shortly" |
 | Call open elsewhere | status `active_session`; start 409 | Explain; poll status before enabling Start |
-| Connect refused | Upgrade 409 (replay) or 503 (busy) | Error state; time not used for 503 |
+| Connect 503, released | 503; status then shows no open session and the same remaining time | "Couldn't connect; no time used", taken from status |
+| Connect 503, retained | 503; status shows `active_session` in state `connecting` until `expires_at`, then none, with the full reservation charged (clock control) | Show that the last call is still closing and when it will clear. Enable Start only after status clears. Show the charged allowance from status, never from the 503 |
+| Replayed connect | Upgrade 409 for a `signed_url` already used | Never reopen an old `signed_url`; it is single-use (`portal/src/voice.ts:172-173`) |
+
+**How a call ends**
+
+| Scenario | Fixture behaviour | App must |
+| --- | --- | --- |
+| Personal allowance deadline | Personal balance 5 s, budget ample; start reserves 5; close 1000 "Your free voice time has finished"; status then `remaining_seconds:0` | Allowance-used state |
+| Monthly budget deadline | Personal balance 300 s, budget 5 s; start reserves 5; same close message; status then shows personal time left and `budget_open:false`, and the next start returns 429 `reason:"budget"` (after Worker change 6) | "Closed for this month", not allowance used |
+| Unlimited call limit | status `unlimited:true`; the fixture shortens the call to 5 s; same close message; status then shows no open session | "This call has finished. Start another whenever you're ready." Start stays available |
 | Network drop | Fixture drops TCP without a close frame mid-call | End the call, explain, poll status until `active_session` is null |
-| Provider close | Relay-style close 1000 "Voice conversation ended" or 1011 "Voice provider connection interrupted" | Matching end state |
-| Deadline | start returns `remaining_seconds: 5`; close 1000 "Your free voice time has finished" | Countdown reaches zero; allowance-used state |
+| Provider close | Relay-style close 1000 "Voice conversation ended" or 1011 "Voice provider connection interrupted" | Matching end state; allowance from status |
 | Agent ends call | `agent_tool_response` for `end_call` | End cleanly |
 | Provider error | `error` with `max_duration_exceeded` | End cleanly |
-| Reconnect | After a drop, the first `start` returns 409, then 201 | Start a new call. Never reopen an old `signed_url`, which is single-use (`portal/src/voice.ts:172-173`) |
+| Reconnect | After a drop, the first `start` returns 409, then 201 | Start a new call once status shows no open session |
 
-A dropped call cannot be resumed. The reservation and the provider signature are both single-use. "Reconnect" therefore always means a new call, once status shows no open session.
+A dropped call cannot be resumed. The reservation and the provider signature are both single-use. "Reconnect" therefore always means a new call.
+
+**Sign-in, credentials and deletion**
+
+| Scenario | Fixture behaviour | App must |
+| --- | --- | --- |
+| Code request | Identical response for a known and an unknown address | Show "check your email" either way |
+| Bad code | Wrong, expired, reused, superseded or locked code: one generic failure | One message; offer a new code |
+| Parallel redemption | Two verifications of one code at once: exactly one session | End signed in once, with no duplicate session |
+| Link before code | The emailed link is redeemed first; the code then fails generically | Offer a new code |
+| Session expired or revoked | 401 on status or start, as after "sign out everywhere" on the web | Delete the token; show signed out |
+| Wrong credentials | Cookie without Origin, or wrong Origin: 403. Under the header design, mixed or invalid credentials are refused | Treat as signed out; never retry with other credentials |
+| Delete while idle | Fresh verification, then deletion | Signed out; status `signed_in:false` |
+| Delete during a call | The app ends the call before deleting. A fixture variant deletes server-side mid-call: tools return 403 and the call runs to its deadline | Signed out after the call. The fixture asserts the monthly budget and slot counts were not refunded |
+| Consent withdrawn | Consent cleared in settings | No microphone prompt and no start until consent is given again. A call in progress ends |
+
+**Tools, formats and lifecycle**
+
+| Scenario | Fixture or injection | App must |
+| --- | --- | --- |
+| Tool shapes | Standard, receipt-answer and receipt-clarification results | Sources list handles a missing `source_url` and empty `sources` |
+| µ-law call | Metadata names `ulaw_8000` both ways | Encoder and decoder switch codec; chunk sizes follow the policy |
+| Unsupported format | Metadata names `opus_48000` or `pcm_abc` | Fail closed before allocating buffers; end the call |
+| Audio failure | Injected failure of session activation, engine start or converter creation | End the call, explain, call `finish`, refresh status |
+| Interruptions | Injected began and ended events, in both the pre-iOS 27 and iOS 27 notification forms | End the call on began; no automatic restart on ended |
+| Route and configuration change | Injected configuration change with a new input format | Reconnect the graph on the core's queue and keep the socket |
+| Media services reset | Injected reset | End the call; rebuild on the next Start |
+| Background and foreground | Injected scene phase changes, including a brief inactive state | End on background only |
+
+The voice core takes these dependencies through protocols:
+- the permission source;
+- the audio session;
+- an engine factory;
+- a lifecycle event stream;
+- a clock;
+- the credential store.
+
+Unit and Maestro tests can therefore drive every transition without the microphone, the speaker or a provider.
 
 ### Unit tests with synthetic buffers
 
 - **Encoder.**
-  - Float to PCM16 with the SDK's scaling and clamping, little-endian.
+  - PCM16 with the SDK's clamping and scaling, the `Int16Array` truncation, and explicit little-endian bytes.
+  - µ-law with the SDK's round-then-encode rule, compared with its table for every 16-bit input.
   - Standard base64 with padding.
-  - 25 ms chunks: 400 samples, 800 bytes at 16 kHz, with partial chunks carried over.
-- **Resampler.** 48, 44.1 and 24 kHz sine tones to 16 kHz:
-  - output length within one sample per chunk;
-  - tone frequency preserved (Goertzel);
-  - no clipping.
+  - The native 25 ms chunk policy: 400 samples at 16 kHz, with partial chunks carried over. It is not web chunk parity.
+- **Resampler.**
+  - 48, 44.1 and 24 kHz sine tones to 16 kHz.
+  - Output length within one sample per chunk.
+  - Tone frequency preserved (Goertzel); no clipping.
+  - Feeding one buffer in two halves gives the same output as feeding it whole, proving converter state carries across taps.
 - **Decoder.**
-  - PCM16 and µ-law 8 kHz to float.
-  - Odd byte lengths rejected.
-  - The format parser accepts the names the SDK accepts (`dist/utils/BaseConnection.js:81-94`).
+  - PCM16 and µ-law to float.
+  - An odd byte count is invalid only for PCM16; µ-law accepts any length.
+- **Format parser.** Accepts the SDK's `pcm_<rate>` and `ulaw_<rate>` names (`dist/utils/BaseConnection.js:81-94`) with listed rates. Rejects malformed or unlisted formats before any allocation.
 - **Playback queue.**
-  - Buffers play in order.
+  - Buffers play in order, under the queue bound.
   - An interruption flushes the queue.
   - Audio with an `event_id` below the last interruption is dropped.
   - Mode is speaking while audio is queued and listening once it drains.
+- **Backpressure.** A stalled socket ends the call at the send-queue bound instead of growing memory.
 - **Protocol.**
   - Initiation goes first.
   - `pong` echoes the `event_id`.
   - Unknown event types are tolerated.
-  - Close codes and HTTP statuses map to UI states.
+  - Close codes and HTTP statuses map to UI states, with allowance always taken from status.
 - **Sources.**
   - A port of the web allow-list (`portal/voice/client.js:39-48`) with the same accepted and rejected cases.
   - Markdown link parsing.
   - Caps of 80 turns, 12 sources and 12,000 characters.
+  - The three tool-result shapes.
+- **Credentials.**
+  - The token is read from and written to a mock Keychain only.
+  - It is attached only on allow-listed paths.
+  - Redirects on authenticated requests are refused.
+  - Credential headers and `signed_url` are redacted in log output.
+  - A 401 clears the token.
 - **State machine.**
   - Every state from idle to ended, including cancellation at each step.
   - A reservation made before cancellation is released through `finish`.
@@ -529,9 +785,9 @@ A dropped call cannot be resumed. The reservation and the provider signature are
 
 ### Maestro journeys
 
-There is one flow for each scenario in the table, asserting on accessibility identifiers and visible text, never on audio. Flows:
+There is one flow for each scenario in the tables, asserting on accessibility identifiers and visible text, never on audio. Flows:
 - set microphone permission with Maestro's `launchApp` permissions or with `xcrun simctl privacy <udid> grant|revoke|reset microphone <bundle-id>`;
-- select the scenario with launch arguments;
+- select the fixture scenario with launch arguments. Audio-failure and lifecycle rows use launch arguments that swap in scripted dependencies, in debug builds only;
 - run only on the OPAX simulators assigned in the brief, booted through the shared simulator gate and built through the shared build gate.
 
 ### Physical-device checks for Jake (never automated)
@@ -546,6 +802,11 @@ These cost provider credit and play sound, so they are manual only, on a real iP
 6. **Ten-minute call.** Record mobile data used (Settings) and battery drain.
 7. **Accessibility.** VoiceOver with headphones; the largest accessibility text size; Reduce Motion.
 8. **Production.** One production call after deployment with an operator account. It counts against the production budget.
+9. **Provider settings.** Before store submission and before finalising consent copy, confirm in the provider dashboard:
+   - that audio recording is off and transcripts are kept for one day;
+   - the two audio formats.
+
+   This repository documents these settings but has not verified them live (`docs/VOICE-ASSISTANT.md:20`).
 
 ## 6. Store and privacy notes
 
@@ -557,8 +818,8 @@ Apple counts data as collected when it is kept "for a period longer than what is
 
 | Data type | Declare | Linked to the person | Tracking | Purpose | Why |
 | --- | --- | --- | --- | --- | --- |
-| Audio Data | Yes | Yes | No | App Functionality | The voice is streamed through Opax to ElevenLabs. Provider audio recording is off and Opax keeps none (`docs/VOICE-ASSISTANT.md:20`, `portal/public/community.js:196`). Declaring it is the safe reading for a third-party AI |
-| Other User Content | Yes | Yes | No | App Functionality | The provider keeps transcripts for one day (`docs/VOICE-ASSISTANT.md:20`) |
+| Audio Data | Yes, provisionally | Yes | No | App Functionality | The voice is streamed through Opax to ElevenLabs. The repository documents provider audio recording as off, and Opax keeps none (`docs/VOICE-ASSISTANT.md:20`, `portal/public/community.js:196`). Under Apple's definition, audio processed only in real time may not count as collected. Declaring it is the safe reading for a third-party AI. Confirm the live provider setting before submission |
+| Other User Content | Yes | Yes | No | App Functionality | The repository documents provider transcripts as kept for one day (`docs/VOICE-ASSISTANT.md:20`); confirm live before submission |
 | Email Address | Yes | Yes | No | App Functionality | Sign-in (option A) |
 | User ID | Yes | Yes | No | App Functionality | Member ID on `voice_sessions` rows (`portal/migrations/0003_voice.sql:4-15`) |
 | Usage data (voice minutes and times) | Align with the app-wide label | Yes | No | App Functionality | Kept for the lifetime allowance (`docs/VOICE-ASSISTANT.md:40`) |
@@ -581,36 +842,56 @@ Before the first call, show a one-time consent screen that states:
 - how long it is kept: no recordings, transcripts deleted within one day;
 - a link to the privacy page.
 
-The buttons are "Agree and start" and "Not now". Consent can be withdrawn in the app's settings, as 5.1.1(ii) requires.
+The buttons are "Agree and start" and "Not now". Consent can be withdrawn in the app's settings, as 5.1.1(ii) requires. If guideline 4.7 applies, 4.7.3's "in each instance" may require this consent before every call (section 6, below).
 
 ### Guidelines that apply
 
 | Guideline | What it means for voice |
 | --- | --- |
-| 5.1.1(v) | "If your app supports account creation, you must also offer account deletion within the app." Apple's FAQ says accounts created automatically on first sign-in count. A web link may finish the deletion; deactivation alone is not enough |
+| 5.1.1(v) | "If your app supports account creation, you must also offer account deletion within the app." Apple's FAQ says accounts created automatically count, and that deletion includes "user-generated content that's shared with others". A web link may finish the deletion; deactivation or hiding alone is not enough. Scope is in section 3 |
 | 5.1.1(v), first sentence | "If your app doesn't include significant account-based features, let people use it without a login." Only voice asks for sign-in |
 | 5.1.1(i) to (iv) | The privacy policy must name ElevenLabs and its retention. Purpose strings must be complete. Ask for the microphone only for voice, never to unlock anything else |
 | 5.1.2(i) | Explicit permission before sharing with a third-party AI (above) |
 | 2.5.14 | A clear indication while recording: the system microphone indicator plus a visible "Listening" state |
-| 2.5.4 | Background services only for their intended purpose. Background audio is for "audible content", so a live microphone in the background is a review risk (section 4) |
+| 2.5.4 | Background services "only for their intended purposes: VoIP, audio playback, location, task completion, local notifications, etc." A background microphone is not banned outright, but it needs a purpose that fits. Foreground-only calls in v1 are a product choice (section 4) |
 | 4.8 | Sign in with Apple is not required when the app uses only the company's own account system |
 | 4.2, 5.1.1(vii) | Only relevant to option C: a Safari view must be visible, and the app must be more than a website |
-| 4.7 | Covers chatbots that are "not embedded in the binary", with filtering and reporting duties (4.7.1). It is unclear whether a first-party server assistant counts (section 7) |
+| 4.7 | Covers "software that is not embedded in the binary", naming chatbots. The guideline gives no first-party exemption, and whether App Review applies it to a first-party assistant served by Opax's own Worker is not settled. If it applies, all of 4.7.1 to 4.7.5 apply (below), not just a report button |
 | Age rating | The questionnaire has no AI or chatbot question. "Unrestricted Web Access" raises the rating to 16+, so keep any web view on opax.com.au |
+
+### If guideline 4.7 applies
+
+Settle the classification before shipping, for example by asking App Review through the developer contact channel. If voice is treated as 4.7 software, each of these is needed, not only a way to report:
+
+| Rule | What it would mean for voice |
+| --- | --- |
+| 4.7 (general) | Opax is "responsible for all such software offered in your app", including compliance with every other guideline and applicable law |
+| 4.7.1 | Follow the privacy guidelines (5.1). Include "a method for filtering objectionable material, a mechanism to report content and timely responses to concerns, and the ability to block abusive users". For voice that means content filtering of agent answers, a report-this-answer path with a monitored response process, and a defined meaning of "block" for a one-to-one assistant. Also follow 3.1 for any paid digital goods (none planned) |
+| 4.7.2 | Do not "extend or expose native platform APIs or technologies to the software without prior permission from Apple". The relay protocol exposes no client tools today (section 1); keep it that way |
+| 4.7.3 | No sharing of "data or privacy permissions to any individual software … without explicit user consent in each instance". The per-call microphone use and the consent screen (above) would need to meet "each instance", which may mean consent before every call, not once |
+| 4.7.4 | "An index of software and metadata available in your app", with "universal links that lead to all of the software offered". For a single assistant, that is one index entry and a universal link to the voice screen, which needs the association file deferred in Worker change 10 |
+| 4.7.5 | "A way for users to identify software that exceeds the app's age rating, and use an age restriction mechanism based on verified or declared age". The assistant's rating must fit the app's rating, or access needs an age gate |
 
 ## 7. Open questions for Jake
 
-1. **Access.** Approve option A (sign in for voice, with an emailed one-time code) over B (anonymous) and C (web panel)?
-2. **Deletion.** When a member deletes their account:
-   - should their public discussions and replies be deleted, or kept and anonymised?
-   - should their voice usage be deleted, which resets their 600 seconds if they sign up again with the same email?
+1. **Access.** Decided on 3 October 2026: option A. Voice needs sign-in; every other screen is public and signed out.
+2. **Deletion.** When a member deletes their account, authored content and personal data are deleted by default (section 3).
+   - Should other members' replies in a deleted member's discussion stay, under a stub with no personal data?
+   - Is any data kept for a legal reason that must be disclosed?
+   - Should a returning email get a fresh 600 seconds, or should a keyed hash of the email be kept, which is retained personal data that must be disclosed?
+
+   Monthly budget and open-call accounting must survive deletion either way.
 3. **Budget.** Should the app share the production 40,000-second monthly budget and the two call slots with the web, or get its own budget, key and ceiling?
-4. **Provider settings.** What are the production agent's `user_input_audio_format` and `agent_output_audio_format`? Does it emit `agent_tool_response_full_payload` and audio `alignment`? These live in the ElevenLabs dashboard, not this repository, and set the data cost and the sources UI.
+4. **Provider settings.** These live in the ElevenLabs dashboard, not this repository, and set the data cost, the codecs the app must handle, the sources UI and the privacy label:
+   - the production agent's `user_input_audio_format` and `agent_output_audio_format`;
+   - whether it emits `agent_tool_response_full_payload` and audio `alignment`;
+   - whether audio recording is still off and transcripts are still kept for one day.
 5. **Background.** Is ending the call when the app goes to the background acceptable, as the web does?
 6. **Consent.** Should the explicit third-party AI consent screen (5.1.2(i)) also be added to the web panel, or stay app-only?
-7. **Guideline 4.7.** Should voice answers get a "report a problem" path, in case App Review treats the assistant as a chatbot?
+7. **Guideline 4.7.** How should the classification be settled before shipping, for example by asking App Review? If 4.7 applies, are the obligations in section 6 acceptable for v1: filtering, reporting with timely responses, blocking, per-instance consent, an index with a universal link, and age restriction?
 8. **Usage split.** May sessions and `voice_sessions` gain a `client` column, so app and web minutes are reported separately?
 9. **First real call.** Who makes the first real-device call on staging, and with which staging account? It needs either a sign-in email or a seeded session like the smoke test's (`portal/test/voice-staging-smoke.mjs:19-35`).
+10. **Session design.** The cookie contract (recommended) or `X-Opax-Session`? This is decided in the synthesis with the API lane.
 
 ## Sources checked
 
@@ -678,4 +959,18 @@ All sources were read on 3 October 2026.
 - [WWDC 2021/10244](https://developer.apple.com/videos/play/wwdc2021/10244/)
 - [App links components](https://developer.apple.com/documentation/bundleresources/applinks/details-swift.dictionary/components-swift.dictionary)
 - [`URLSessionWebSocketTask`](https://developer.apple.com/documentation/foundation/urlsessionwebsockettask)
+- [`URLSession.webSocketTask(with:)` for a URL request](https://developer.apple.com/documentation/foundation/urlsession/websockettask(with:)-mtks)
 - [`NSURLRequest` reserved headers](https://developer.apple.com/documentation/foundation/nsurlrequest)
+- [`httpShouldSetCookies`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/httpshouldsetcookies)
+- [`httpCookieAcceptPolicy`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/httpcookieacceptpolicy)
+- [`httpCookieStorage`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/httpcookiestorage)
+- [`HTTPCookieStorage`](https://developer.apple.com/documentation/foundation/httpcookiestorage)
+- [`HTTPCookie`](https://developer.apple.com/documentation/foundation/httpcookie)
+- [`AVAudioEngineConfigurationChangeNotification`](https://developer.apple.com/documentation/avfaudio/avaudioengineconfigurationchangenotification)
+
+**Independent review, 3 October 2026:**
+- 64 source spot checks;
+- a hardware-free evaluation of the unmodified SDK capture worklet;
+- the bandwidth and budget arithmetic.
+
+These are kept in the lane's git-ignored evidence folder. The API lane's comparison is `docs/IOS-API-CONTRACT.md` on `ios/discovery-api` at `6baf3ec4`.
