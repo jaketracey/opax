@@ -171,39 +171,69 @@ describe('source links', () => {
 });
 
 describe('fragment routes', () => {
-  // portal/public/app.js routes on the fragment's own segments with empty ones
-  // dropped; home.js resolves it as a path. Each of these reaches a forbidden
-  // view under one reading or another, so the app refuses all of them.
+  // The web app reads a route-shaped fragment three ways: its router drops
+  // empty segments, the startup fold and home.js parse it as a URL, and
+  // route() shows the Ask panel for any view it does not know. Only content
+  // views pass, exactly as written (tests/web-router.test.ts runs that code).
   test.each([
-    ['/money#//ask/ignored?q=housing', '/ask'],
-    ['/money#///ask', '/ask'],
-    ['/money#/%2Fask', '/ask'],
-    ['/money#%2F%2Fask', '/ask'],
-    ['/money#/%252Fask', '/ask'],
-    ['/money#/%61sk', '/ask'],
-    [String.raw`/money#\ask`, '/ask'],
-    [String.raw`/money#\\ask`, '/ask'],
-    [String.raw`/money#/\ask`, '/ask'],
-    ['/money#%5Cask', '/ask'],
-    ['/money#/ASK', '/ask'],
-    ['/money#//Ask?q=x', '/ask'],
-    ['/money#/%09ask', '/ask'],
-    ['/money#//chat', '/chat'],
-    ['/money#//search', '/search'],
-    ['/money#//api/x', '/api'],
-    ['/money#//og/x.png', '/og'],
-    ['/money#///MCP', '/mcp'],
-    ['/money#section#//ask', '/ask'],
+    ['/money#//ask/ignored?q=housing', 'an Ask query'],
+    ['/money#//ask/ignored', 'a fragment route'],
+    ['/money#///ask', 'a fragment route'],
+    ['/money#/%2Fask', 'a fragment route'],
+    ['/money#%2F%2Fask', 'a fragment route'],
+    ['/money#/%252Fask', 'a fragment route'],
+    ['/money#/%61sk', 'a fragment route'],
+    ['/money#/%252561sk', 'a fragment route'],
+    [String.raw`/money#\ask`, 'a fragment route'],
+    [String.raw`/money#\\ask`, 'a fragment route'],
+    [String.raw`/money#/\ask`, 'a fragment route'],
+    ['/money#%5Cask', 'a fragment route'],
+    ['/money#/ASK', 'a fragment route'],
+    ['/money#/aKs', 'a fragment route'],
+    ['/money#/%09ask', 'a fragment route'],
+    ['/money#//chat', 'a fragment route'],
+    ['/money#//search', 'a fragment route'],
+    ['/money#//api/x', 'a fragment route'],
+    ['/money#//og/x.png', 'a fragment route'],
+    ['/money#///MCP', 'a fragment route'],
+    ['/money#section#//ask', 'a fragment route'],
+    // A URL parser reads "//host/path" as a host: the path is what remains.
+    ['/#//opax.com.au/ask', 'a fragment route'],
+    ['/#//opax.com.au/api/search', 'a fragment route'],
+    ['/#//opax.com.au/og/x.png', 'a fragment route'],
+    ['/#//opax.com.au/mcp', 'a fragment route'],
+    ['/money#//example.org/chat', 'a fragment route'],
+    ['/money#//example.org/search', 'a fragment route'],
+    ['/money#//example.org/money', 'a fragment route'],
+    // Views route() does not know show the Ask panel.
+    ['/money#/ask;mode=x', 'a fragment route'],
+    ['/money#/ＡＳＫ', 'a fragment route'],
+    ['/money#/aſk', 'a fragment route'],
+    ['/money#/asks', 'a fragment route'],
+    ['/money#/doc', 'a fragment route'],
+    ['/money#/subject', 'a fragment route'],
+    ['/money#/subject/unknown', 'a fragment route'],
+    ['/money#/unknown', 'a fragment route'],
+    ['/money#/money;foo', 'a fragment route'],
+    ['/money#/Money', 'a fragment route'],
+    ['/money#/%6Doney', 'a fragment route'],
+    // Dot segments, plain and escaped, even under a content view.
+    ['/#/./ask', 'a fragment route'],
+    ['/#/x/../ask', 'a fragment route'],
+    ['/#/money/../ask', 'a fragment route'],
+    ['/#/money/%2e%2e/chat', 'a fragment route'],
+    ['/#/money/.%2E/ask', 'a fragment route'],
+    // "q" or "ask" anywhere in a fragment.
     ['/money#/money?ask=x', 'an Ask query'],
     ['/money#/money?a=1&ASK=x', 'an Ask query'],
     ['/money#/money?%71=x', 'an Ask query'],
+    ['/money#/money?x=1?ask=housing', 'an Ask query'],
+    ['/money#/money&ask=housing', 'an Ask query'],
+    ['/money#/money#?q=housing', 'an Ask query'],
     ['/#?q=x', 'an Ask query'],
     ['/#/?q=x', 'an Ask query'],
     ['/#//?q=x', 'an Ask query'],
     ['/#q=x', 'an Ask query'],
-    ['/#/./ask', 'a fragment route with dot segments'],
-    ['/#/x/../ask', 'a fragment route with dot segments'],
-    ['/#/x/%2e%2e/chat', 'a fragment route with dot segments'],
     ['/money#/%E0%A4%A', 'an unreadable fragment'],
     ['/money#/%25252561sk', 'an unreadable fragment'],
   ])('refuses %s (%s)', (address, reason) => {
@@ -216,17 +246,83 @@ describe('fragment routes', () => {
     '/subject/person/anthony-albanese#interests',
     '/reports/gambling#section-2',
     '/bill/x#bill-full-text',
+    '/community?view=thread&id=x#reply-ab12',
+    '/money#asking-price',
+    '/money#tokens',
+    '/money#keyboard',
+    // Content views, as legacy links wrote them.
     '/money#/money/grants',
     '/money#/bills?jur=federal',
     '/#/subject/person/Anthony%20Albanese',
-    '/money#asking-price',
-    '/money#/asks',
-    '/money#/subject/topic/search-and-rescue',
+    '/#/subject/donor/Example%20Pty%20Ltd',
+    '/#/subject/topic/search-and-rescue',
+    '/#/subject/party',
+    '/#/reports/gambling',
+    '/#/doc/x',
+    '/#/explore?game=grants&jur=federal',
   ])('keeps %s', (address) => {
     const url = new URL(`https://opax.com.au${address}`);
     expect(forbiddenOpaxRoute(url)).toBeNull();
     expect(sourceUrl(url.toString())).toBe(url.toString());
   });
+});
+
+describe('credentials', () => {
+  // portal/public/community.js signs a reader in with a fragment token, so
+  // no OPAX link the app opens or shares carries a credential, in any
+  // encoding or case, in the query or the fragment.
+  test.each([
+    '/community?view=signin#token=synthetic',
+    '/community?token=synthetic',
+    '/community#%74oken=synthetic',
+    '/community#x=1&token=synthetic',
+    '/community#;token=synthetic',
+    '/money#token=synthetic',
+    '/money#TOKEN=synthetic',
+    '/money#ｔｏｋｅｎ=synthetic',
+    '/money#access_token=synthetic',
+    '/money#id_token=synthetic',
+    '/money?Refresh_Token=synthetic',
+    '/money?%2574oken=synthetic',
+    '/money?api_key=synthetic',
+    '/money?key=synthetic',
+    '/money?code=synthetic',
+    '/money#/money?code=synthetic',
+    '/money?secret=synthetic',
+    '/money#session',
+    '/money?auth=synthetic',
+    '/money?password=synthetic',
+    '/money?sig=synthetic',
+    '/money?signature=synthetic',
+  ])('refuses %s', (address) => {
+    const url = new URL(`https://opax.com.au${address}`);
+    expect(forbiddenOpaxRoute(url)).toBe('a credential');
+    expect(() => sourceUrl(url.toString())).toThrow();
+  });
+  test('another site keeps its own keys', () => {
+    const url = 'https://example.org/register?key=abc&code=1#token=x';
+    expect(sourceUrl(url)).toBe(url);
+  });
+  test.each([
+    'token',
+    'TOKEN',
+    'access_token',
+    'code',
+    'key',
+    'session',
+    'ask',
+    'q',
+  ])('refuses the anchor %j', (anchor) => {
+    expect(() => canonicalUrl('/subject/person/x', anchor)).toThrow();
+  });
+  test.each(['person-pay', 'interests', 'section-2', 'bill-full-text'])(
+    'keeps the anchor %j',
+    (anchor) => {
+      expect(canonicalUrl('/subject/person/x', anchor)).toBe(
+        `${webOrigin}/subject/person/x#${anchor}`,
+      );
+    },
+  );
 });
 
 describe('e2e configuration and sharing', () => {

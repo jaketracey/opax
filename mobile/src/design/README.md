@@ -182,17 +182,25 @@ image sources, which the transport gate checks.
   (redirects to Ask's search), `/today` (a redirect chosen at request time),
   the root with `q` or `ask` (redirects to Ask), `ask` on any page (the web
   app's legacy Ask entry) and route-shaped fragments such as `#/ask`. Path
-  segments are decoded before checking. Fragments follow the web router, not
-  URL parsing: it drops empty segments, so `#//ask` is `/ask`, not a host.
-  They are decoded, case-folded and read with backslashes as slashes; dot
-  segments and `q` or `ask` anywhere in a fragment are refused, and plain
-  anchors such as `#person-pay` pass. Source links go through `sourceUrl`
-  (HTTPS, default port, no user information; on any OPAX host, including a
-  trailing dot or subdomain, the same rules after normalisation).
-  `tests/worker-redirects.test.ts` runs the Worker's entry redirects and
-  checks every address they send to Ask is refused;
-  `tests/web-router.test.ts` does the same with the web app's fragment
-  router (`app.js`) and the homepage's legacy redirect (`home.js`).
+  segments are decoded before checking. A route-shaped fragment (`#/…`) must
+  name a content view (`subject`, `bill`, `money`, `reports` and the other
+  views `route()` draws itself), exactly as written, with one leading slash
+  and no empty, dot or escaped segment. The web app reads such a fragment
+  three ways (its router drops empty segments, its startup fold and the
+  homepage parse it as a URL, and `route()` shows the Ask panel for any view
+  it does not know), and that shape is the one they all agree on. Fragments
+  are also read loosely (decoded, case- and width-folded) and refused when
+  they hold `q`, `ask` or a credential key (`token`, `code`, `key`, `session`
+  and others; Community signs a reader in with a fragment token); queries are
+  refused for a credential key too. Plain anchors such as `#person-pay` pass.
+  Source links go through `sourceUrl` (HTTPS, default port, no user
+  information; on any OPAX host, including a trailing dot or subdomain, the
+  same rules after normalisation). `tests/worker-redirects.test.ts` runs the
+  Worker's entry redirects and checks every address they send to Ask is
+  refused; `tests/web-router.test.ts` checks the guard against
+  `tests/web-oracle.mjs`, which runs the Worker's redirects, `home.js`,
+  `app.js` startup and `route()`, and `community.js` to find where the web
+  app really takes an address.
 - `MoneyFigure`: money with tabular figures, read in words ("4,537,500
   dollars, Contract value"). `compact` only in charts and tight figures.
 - `Figure`: a count or a percentage (`format="percent"`), tabular.
