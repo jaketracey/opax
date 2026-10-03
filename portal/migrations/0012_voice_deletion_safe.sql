@@ -1,3 +1,9 @@
+-- WARNING: never rebuild members by drop and rename after 0012.
+-- DROP TABLE deletes its rows first: ON DELETE SET NULL/CASCADE would fire,
+-- even with defer_foreign_keys ON, destroying ownership and voice allowances.
+-- Later rebuilds of members, voice_sessions, community_threads or
+-- direct_conversations require an explicit reviewed, digest-pinned exception
+-- in test/migration-deletion-safety.test.mjs and a rehearsed preservation plan.
 -- W6: retain every voice charge and open slot when its account is deleted.
 PRAGMA defer_foreign_keys = ON;
 CREATE TABLE voice_sessions_next (
