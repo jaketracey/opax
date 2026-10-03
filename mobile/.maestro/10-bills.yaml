@@ -18,7 +18,8 @@ name: 10 Filter and search the bill list, then open a bill
 - scrollUntilVisible:
     element:
       id: bill-filter-status-before_parliament
-    timeout: 60000
+    speed: 70
+    timeout: 180000
 - assertVisible: Before parliament, 119 bills
 - takeScreenshot: ${EVIDENCE}/10-filters
 - tapOn:
@@ -29,40 +30,71 @@ name: 10 Filter and search the bill list, then open a bill
       id: bills-chip-status
     timeout: 10000
 - assertVisible: Remove the status filter, Before parliament
+- scrollUntilVisible:
+    element:
+      id: bills-count
+    speed: 70
+    timeout: 180000
 - assertVisible: 119 of 2,989 bills · latest activity first
 - takeScreenshot: ${EVIDENCE}/10-filtered
+- scrollUntilVisible:
+    element:
+      id: bills-search
+    direction: UP
+    speed: 70
+    timeout: 180000
 - tapOn:
     id: bills-search
 - inputText: child support social services
 # Return submits and dismisses the keyboard; a swipe can land on the
 # keyboard itself at AX5.
 - pressKey: Enter
+# At the largest text sizes a bill row is taller than the screen: it counts
+# as found once part of it shows, then is centred so the tap lands on it.
 - scrollUntilVisible:
     element:
       id: bill-row-au-federal-r7549
-    timeout: 60000
+    visibilityPercentage: 10
+    centerElement: true
+    speed: 70
+    timeout: 180000
 - takeScreenshot: ${EVIDENCE}/10-search
 - tapOn:
     id: bill-row-au-federal-r7549
 - extendedWaitUntil:
     visible:
-      id: bill-title
+      id: bill-screen
     timeout: 15000
-- assertVisible: Before parliament, as at 17 September 2026
-- assertVisible: Introduced 17 September 2026 in the House of Representatives
 - takeScreenshot: ${EVIDENCE}/10-bill
+- scrollUntilVisible:
+    element:
+      id: bill-status
+    speed: 70
+    timeout: 180000
+- assertVisible: Before parliament, as at 17 September 2026
+- scrollUntilVisible:
+    element:
+      text: Introduced 17 September 2026 in the House of Representatives
+    speed: 70
+    timeout: 180000
 # Introduced and second reading on one day: one date, both stages under it.
 - scrollUntilVisible:
     element:
       id: bill-date-0
-    timeout: 60000
+    visibilityPercentage: 10
     centerElement: true
+    speed: 70
+    timeout: 180000
 - assertVisible: '17 September 2026: Introduced · House of Representatives; Second reading · House of Representatives'
 - assertNotVisible:
     id: bill-date-1
 - takeScreenshot: ${EVIDENCE}/10-one-day
 # Share uses the canonical web path; e2e carries a non-resolving origin.
 - tapOn: Share Child Support and Family Assistance Legislation Amendment .*
-- assertVisible: https://opax.invalid/bill/au-federal-r7549
+# At AX5 the alert's title pushes the link below its fold: scroll to it.
+- scrollUntilVisible:
+    element:
+      text: https://opax.invalid/bill/au-federal-r7549
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/10-share
 - tapOn: OK

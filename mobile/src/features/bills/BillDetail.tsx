@@ -286,7 +286,7 @@ function BillHead({
           : ''}
       </Text>
       {identity.introduced ? (
-        <Text variant="metadata" testID="bill-introduced">
+        <Text variant="metadata" wordSafe testID="bill-introduced">
           {identity.introducedLabel} {formatDate(identity.introduced)}
           {identity.house ? ` in the ${chamberLabel(identity.house)}` : ''}
         </Text>
@@ -458,7 +458,7 @@ function KeyDates({ view }: { view: BillView }) {
             >
               <Text variant="strong">{dateSpan(entry.from, entry.to)}</Text>
               {entry.stages.map((stage, i) => (
-                <Text key={i} variant="metadata">
+                <Text key={i} variant="metadata" wordSafe>
                   {stageText(stage)}
                 </Text>
               ))}
@@ -571,7 +571,11 @@ function DivisionItem({
   return (
     <View style={styles.division} testID={`bill-division-${index}`}>
       <Text variant="strong">{title}</Text>
-      {meta ? <Text variant="metadata">{meta}</Text> : null}
+      {meta ? (
+        <Text variant="metadata" wordSafe>
+          {meta}
+        </Text>
+      ) : null}
       <Text
         variant="body"
         accessibilityLabel={`${outcome}, ${counts}`}

@@ -40,7 +40,13 @@ export function BillRow({
           </Text>
           {text.asAt ? ` · ${text.asAt}` : ''}
         </Text>
-        {text.where ? <Text variant="metadata">{text.where}</Text> : null}
+        {/* Chamber names are long single words at AX5 ("Representatives"):
+            word-safe steps the line down rather than splitting the word. */}
+        {text.where ? (
+          <Text variant="metadata" wordSafe>
+            {text.where}
+          </Text>
+        ) : null}
         {text.people ? <Text variant="metadata">{text.people}</Text> : null}
       </View>
       <Icon name="chevron.right" size={14} tone="inkSoft" />
@@ -80,7 +86,11 @@ export function OptionRow({
       ]}
     >
       <View style={[styles.optionText, stacked ? styles.stacked : null]}>
-        <Text variant={selected ? 'strong' : 'body'} style={styles.grow}>
+        <Text
+          variant={selected ? 'strong' : 'body'}
+          wordSafe
+          style={styles.grow}
+        >
           {label}
         </Text>
         <Text variant="figureInline" tone="inkSoft">
