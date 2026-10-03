@@ -77,7 +77,7 @@ Every table in migrations 0001–0012 is accounted for:
 | `community_deletion_challenges` | Cascade every member-bound deletion proof on member deletion |
 | `mcp_keys`, `voice_access`, `member_chats` | Delete all member rows, including revoked/expired keys and saved chat JSON |
 | `reading_lists`, `reading_list_items` | Delete owned lists; their items cascade |
-| `community_threads` | Delete openings with no surviving reply; otherwise scrub title to `Deleted discussion`, body to empty, source to NULL and opening time to zero, then unlink owner; preserve hidden moderation status |
+| `community_threads` | Delete openings with no surviving reply; otherwise scrub title to `Deleted discussion`, body to empty, source to NULL and opening time to zero, then unlink owner; preserve hidden moderation status. At the end of later deletions, remove owner-less stubs left without replies, including dependent reactions/activity/reports |
 | `community_replies` | Delete all authored replies, including hidden ones; preserve other members’ replies under surviving stubs |
 | `direct_messages` | Delete all sent messages, including hidden ones; preserve other senders’ messages |
 | `direct_reads` | Delete the member’s markers and every marker for an affected empty conversation |

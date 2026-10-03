@@ -317,3 +317,22 @@ test('deletion admission is IP then email then challenge before comparison; sign
  f.seedCounter('consume-code-email:'+hash('a@example.test'),86400,10);
  const requested=await f.call('auth/request',{email:'a@example.test',client:'ios'});assert.equal(requested.status,200);const {challenge_id}=await requested.json(),code=f.outbox.at(-1).text.match(/app sign-in code: (\d{8})/)[1];assert.equal((await f.call('auth/consume-code',{challenge_id,code})).status,400);assert.equal(f.db.prepare('SELECT attempts FROM login_links').get().attempts,0);
 });
+
+test('deleting the last replier removes an owner-less stub and dependent rows while preserving surviving discussions',async t=>{
+ const f=fixture(t);for(const id of ['a','b','c'])await f.login(id);seedContent(f);await f.remove('a');
+ assert.equal(f.db.prepare("SELECT member_id FROM community_threads WHERE id='owned'").get().member_id,null);
+ f.db.exec(`INSERT INTO thread_likes VALUES ('owned','c',100);
+ INSERT INTO thread_bookmarks VALUES ('c','owned',100);
+ INSERT INTO community_notifications(member_id,actor_id,kind,target_id,thread_id,created_at) VALUES ('c','b','reply','theirs','owned',100);
+ INSERT INTO community_reports VALUES ('c','owned','Report on stub',100);
+ INSERT INTO community_threads VALUES ('surviving-stub',NULL,'Deleted discussion','',NULL,0,1),('live-empty','c','Live opening','Keep this discussion',NULL,100,0);
+ INSERT INTO community_replies VALUES ('surviving-reply','surviving-stub','c','Keep this reply',100,1);`);
+ await f.remove('b');
+ assert.equal(f.db.prepare("SELECT id FROM community_threads WHERE id='owned'").get(),undefined);
+ for(const table of ['thread_likes','thread_bookmarks','community_notifications'])assert.equal(f.db.prepare('SELECT count(*) n FROM '+table+" WHERE thread_id='owned'").get().n,0);
+ assert.equal(f.db.prepare("SELECT count(*) n FROM community_reports WHERE target_id='owned'").get().n,0);
+ assert.equal(f.db.prepare("SELECT hidden FROM community_threads WHERE id='surviving-stub'").get().hidden,1);
+ assert.equal(f.db.prepare("SELECT body FROM community_replies WHERE id='surviving-reply'").get().body,'Keep this reply');
+ assert.equal(f.db.prepare("SELECT member_id FROM community_threads WHERE id='live-empty'").get().member_id,'c');
+ assert.deepEqual(f.db.prepare('PRAGMA foreign_key_check').all(),[]);
+});

@@ -68,6 +68,7 @@ function deletionBatch(env:Env,m:Member,challengeId:string,sessionHash:string,t:
  const winner=randomToken()
  const guard='EXISTS(SELECT 1 FROM community_deletion_challenges WHERE challenge_id=? AND member_id=? AND redemption_token=?)'
  const statement=(sql:string,args:unknown[]=[])=>env.COMMUNITY_DB.prepare(sql+' AND '+guard).bind(...args,challengeId,m.id,winner)
+ const emptyStubs='SELECT id FROM community_threads WHERE member_id IS NULL AND NOT EXISTS(SELECT 1 FROM community_replies WHERE thread_id=community_threads.id)'
  return [
   env.COMMUNITY_DB.prepare(`UPDATE community_deletion_challenges SET used_at=?,redemption_token=? WHERE challenge_id=? AND member_id=? AND used_at IS NULL AND superseded_at IS NULL AND expires_at>?
    AND EXISTS(SELECT 1 FROM members WHERE id=? AND disabled=0) AND EXISTS(SELECT 1 FROM member_sessions WHERE token_hash=? AND member_id=? AND expires_at>?)`).bind(t,winner,challengeId,m.id,t,m.id,sessionHash,m.id,t),
@@ -93,6 +94,13 @@ function deletionBatch(env:Env,m:Member,challengeId:string,sessionHash:string,t:
   statement('DELETE FROM login_links WHERE email=? COLLATE NOCASE',[m.email]),
   statement('DELETE FROM member_sessions WHERE member_id=?',[m.id]),
   statement(`DELETE FROM community_limits WHERE (expires_at<=? OR key IN (${limitKeys.map(()=>'?').join(',')}))`,[t,...limitKeys]),
+  // Remove dependent rows before a last-replier deletion removes an empty stub.
+  // Keep the proof until these guarded statements finish; member deletion cascades it.
+  statement(`DELETE FROM thread_likes WHERE thread_id IN (${emptyStubs})`),
+  statement(`DELETE FROM thread_bookmarks WHERE thread_id IN (${emptyStubs})`),
+  statement(`DELETE FROM community_notifications WHERE thread_id IN (${emptyStubs})`),
+  statement(`DELETE FROM community_reports WHERE target_id IN (${emptyStubs})`),
+  statement(`DELETE FROM community_threads WHERE id IN (${emptyStubs})`),
   statement('DELETE FROM members WHERE id=?',[m.id]) // links SET NULL; challenges cascade
  ]
 }
