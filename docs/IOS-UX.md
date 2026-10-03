@@ -1,6 +1,6 @@
 # OPAX for iOS: surfaces, UX and design language
 
-Discovery, 3 October 2026, revised the same day after review. This is the product and UX half of the iOS discovery and feeds the public design document `docs/IOS-APP.md`. Data, the API contract and the native architecture comparison are in `docs/IOS-API-CONTRACT.md`. The voice assistant's protocol, audio path and Worker changes are in `docs/IOS-VOICE.md`; this document covers the voice screens and sign-in experience and refers to that document for everything underneath them.
+Discovery, 3 October 2026, revised the same day after review. This is the product and UX half of the iOS discovery and feeds the public design document [IOS-APP.md](IOS-APP.md), which records the decisions taken since. Data, the API contract and the native architecture comparison are in `docs/IOS-API-CONTRACT.md`. The voice assistant's protocol, audio path and Worker changes are in `docs/IOS-VOICE.md`; this document covers the voice screens and sign-in experience and refers to that document for everything underneath them.
 
 **Scope decision.** Version 1 is read-only public data plus the voice assistant. Every public screen works without an account. Voice is the one signed-in feature, behind the existing community email sign-in, so the app must also let people delete that account. Community discussions, synced follows and push notifications are not in v1.
 
@@ -136,16 +136,16 @@ Five principles decide the scope:
 | 9 | **About, sources and privacy** | Independence statement, sources and licences, coverage, corrections, privacy, font licences | `/corpus.json`, static text | D6 |
 | 10 | **Share and universal links** | Canonical opax.com.au URLs out; links in | Canonical URLs | Inbound links need D4; sharing does not |
 
-**Named dependencies.** Each is a Worker or pipeline change and needs Jake's OK to deploy.
+**Named dependencies.** Each is a Worker or pipeline change and needs Jake's OK to deploy. The consolidated list, with IDs W1 to W20, is in [IOS-APP.md, section 9](IOS-APP.md#9-worker-changes).
 
 | ID | Change | Defined in |
 | --- | --- | --- |
 | D1 | A verified postcode-to-candidate-electorate export with source, licence, date and multi-seat handling | API contract, "Proposed Worker changes" |
 | D2 | A read-only frozen daily-edition endpoint (journal read only, no preview or generation fallback) | API contract |
-| D3 | Voice Worker changes 1 to 6: header-token sessions, the Origin rule for them, code sign-in, native sign-out, account deletion, a budget-closed signal | `docs/IOS-VOICE.md`, "Worker changes for option A" |
+| D3 | Voice and account Worker changes: code sign-in (changes 1 to 3) and account deletion with deletion-safe voice accounting (changes 4 and 5) are launch blockers; the budget-closed signal (change 6) is recommended but not blocking. The app keeps the existing cookie session and attaches it itself, so there is no session-transport change | `docs/IOS-VOICE.md`, "Worker changes" |
 | D4 | `apple-app-site-association` for selected public paths | API contract |
 | D5 | Compact per-person projection, so a profile does not download the whole of `votes.json`, `pay.json` and `expenses.json` | API contract |
-| D6 | A privacy page covering the app: public reading, voice, ElevenLabs, retention and deletion | `docs/IOS-VOICE.md`, change 8 |
+| D6 | A privacy page covering the app: public reading, voice, ElevenLabs, retention and deletion | `docs/IOS-VOICE.md`, change 9 |
 | D7 | An as-of date in `votes.json`, which has none today | This document |
 
 **Five-line summary.**
@@ -259,7 +259,7 @@ Not in v1. **Local follows (P1)** store follows on the device, compare small cha
 
 ### Voice in v1
 
-Voice is the one paid, signed-in feature. `docs/IOS-VOICE.md` recommends "option A": the member signs in by an emailed one-time code, the app receives its own session token, and the existing WebSocket relay, tools, 600-second lifetime allowance and shared monthly budget stay as they are. This document specifies the screens (sections 4.10 to 4.12).
+Voice is the one paid, signed-in feature. `docs/IOS-VOICE.md` recommends "option A": the member signs in by an emailed one-time code, the app keeps the existing session token in the Keychain and attaches it itself, and the existing WebSocket relay, tools, 600-second lifetime allowance and shared monthly budget stay as they are. This document specifies the screens (sections 4.10 to 4.12).
 
 **Where voice lives: a persistent "Talk" button, not a tab.**
 
@@ -276,7 +276,7 @@ If Jake wants voice more prominent, the same screen can sit in a fifth "Talk" ta
 
 **In the app, the account exists only for voice.** The app does not show discussions, profiles, messages or reading lists. Consequences:
 
-- **Account deletion is a launch dependency (5.1.1(v)).** "If your app supports account creation, you must also offer account deletion within the app." The first successful sign-in creates the member (`portal/src/community-auth.ts:23`), so signing in for voice creates an account. No self-service deletion exists today; it is Worker change 5 in `docs/IOS-VOICE.md`. Deletion removes the shared community account, not just the app's access, and never touches the public parliamentary record.
+- **Account deletion is a launch dependency (5.1.1(v)).** "If your app supports account creation, you must also offer account deletion within the app." The first successful sign-in creates the member (`portal/src/community-auth.ts:23`), so signing in for voice creates an account. No self-service deletion exists today; it is Worker changes 4 and 5 in `docs/IOS-VOICE.md`. Deletion removes the shared community account, not just the app's access, and never touches the public parliamentary record.
 - **Login services (4.8).** Apps that use a third-party or social login for the primary account must also offer an equivalent login that limits data to name and email, lets people keep their email private, and does not collect interactions for advertising without consent. The guideline exempts apps that use only their company's own account system, which emailed codes are.
 - **User-generated content (1.2)** applies only if member content is shown in the app. A voice account does not ship the community UI.
 - **Sign-in handoff.** The web's link (`/community?view=signin#token=…`, 15 minutes, single use) and its browser cookie do not create a session in the app; browser and app sessions are separate. v1 uses the emailed code (D3) and claims no community path. A dedicated app sign-in link can come later.
@@ -758,7 +758,7 @@ Copy on these two screens is the web panel's own (`portal/voice/client.js`), wit
 | --- | --- |
 | Entry | The Talk button on any root screen. Opening the sheet only checks status; it never loads audio, asks for the microphone or reserves time |
 | Signed out | "Sign in to talk for free" opens sign-in (4.11). Nothing else in the app changes |
-| Consent (first call, and after it is withdrawn) | A separate step before the microphone prompt: what is sent (your voice and the words of the conversation), who receives it (ElevenLabs, OPAX's voice provider), how long it is kept (no recordings; transcripts deleted within one day; OPAX keeps your remaining minutes and session times), and a privacy link. Buttons: "Agree and start" and "Not now". Withdraw from Account and about. This is guideline 5.1.2(i) consent, separate from the iOS microphone permission |
+| Consent (first call, and after it is withdrawn) | A separate step before the microphone prompt: what is sent (your voice and the words of the conversation), who receives it (ElevenLabs, OPAX's voice provider), how long it is kept (no recordings; transcripts deleted within one day; OPAX keeps your remaining minutes and session times; the provider settings are confirmed live before release), and a privacy link. Buttons: "Agree and start" and "Not now". Withdraw from Account and about. This is guideline 5.1.2(i) consent, separate from the iOS microphone permission |
 | Microphone permission | Asked on the first Start, after consent and before reserving time, using the purpose string in `docs/IOS-VOICE.md`. Denied: "Microphone access is off for OPAX. Turn it on in Settings to talk." with an Open Settings button; no time is reserved |
 | Allowance | Always visible before starting: "10:00 free · 10 minutes total per account"; signed in, "[m:ss] remaining · 10 minutes free in total"; operator-approved unlimited accounts, "Unlimited voice access · up to 10 minutes per call". The local countdown is display only; the server's deadline decides |
 
@@ -808,15 +808,15 @@ have one. Privacy                             >
 Enter the code
 We sent a code to [email]. It expires in
 15 minutes.
-[ _ _ _ _ _ _ ]
+[ _ _ _ _ _ _ _ _ ]
               [ Sign in ]
 Send a new code · Use a different email
 ```
 
-- The code field uses one-time-code autofill. The email also contains the web sign-in link; tapping it opens the web, which signs in the browser, not the app.
-- Errors: wrong code ("That code is not right. [n] tries left."); too many attempts or expired ("This code has expired. Send a new code."); rate limited ("Too many codes requested. Try again later."); offline.
+- The code field uses one-time-code autofill. The email also contains the web sign-in link; tapping it opens the web, which signs in the browser, not the app, and uses up the code.
+- Errors: a code that fails for any reason (wrong, expired, already used, replaced by a newer code or locked) gets one message, as the code contract requires: "That code did not work. Check it, or send a new code." Also: too many codes requested ("Too many codes requested. Try again later."); offline.
 - On success the session token goes to the Keychain and the flow returns to the voice screen, which continues to consent.
-- Code length, attempt limit and expiry follow D3 (`docs/IOS-VOICE.md`: at least six digits, at most five attempts, 15 minutes).
+- Code length, attempt limits and expiry follow D3 (`docs/IOS-VOICE.md`, "Code sign-in contract": eight digits, at most five attempts per code and ten a day per email, 15 minutes).
 
 ### 4.12 Account, sign-out and deletion
 
@@ -833,8 +833,8 @@ Your OPAX community account is also used on
 opax.com.au.
 ```
 
-- **Sign out** removes the token from the Keychain and revokes the session on the server (D3). Voice consent stays on the device unless withdrawn.
-- **Delete account** opens a confirmation that says what is deleted and what is not: the account, its sign-in sessions on every device, and [voice usage and any web discussions, reading lists and messages, per the decision in `docs/IOS-VOICE.md` open question 2]. Public parliamentary records are not affected. Buttons: "Delete account" (destructive) and Cancel. After deletion the app is signed out and returns to the voice screen's signed-out state; everything public keeps working.
+- **Sign out** removes the token from the Keychain and revokes the session on the server through the existing `auth/logout` route. Voice consent stays on the device unless withdrawn.
+- **Delete account** opens a confirmation that says what is deleted and what is not: the account and its personal data, its sign-in sessions on every device, and the content it wrote on opax.com.au (discussions, replies, reading lists, saved chats and messages), as set out in [IOS-APP.md, account deletion](IOS-APP.md#account-deletion-guideline-511v). Records of voice call time stay without any link to the person, because the shared monthly limit depends on them. Public parliamentary records are not affected. Buttons: "Delete account" (destructive) and Cancel. After deletion the app is signed out and returns to the voice screen's signed-out state; everything public keeps working.
 - Apple's guidance asks for deletion that is easy to find: it sits in Account and about, one tap from every root screen, and in the voice screen's account menu.
 
 ## 5. Design language mapped to native
@@ -1108,7 +1108,7 @@ Checked 3 October 2026 against the App Review Guidelines, last updated 8 June 20
 2. **Postcode lookup.** Will the electorates release publish a verified postcode-to-electorate table (D1)? Until then, Your MP is search-only.
 3. **Daily edition.** Approve the frozen edition endpoint (D2)?
 4. **Voice placement.** A Talk button on every root screen, or a fifth "Talk" tab?
-5. **Account deletion scope.** What does deleting an account remove: voice usage, web discussions, lists and messages (`docs/IOS-VOICE.md` question 2)?
+5. **Account deletion scope.** Settled as a requirement in IOS-APP.md: authored content and personal data are deleted, and voice usage stays without a member link. Still open: other members' replies under a deleted discussion, legal retention, and a returning email's allowance (IOS-APP.md decision 5).
 6. **Dark mode.** Keep the app light-only like the web, or adopt the proposed dark palette?
 7. **App icon.** Australia mark alone, the full masthead mark, or something else?
 8. **Private individuals.** Agree the native-page scope in section 2, including no donor pages until donors can be filtered to organisations?
