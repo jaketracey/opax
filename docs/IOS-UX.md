@@ -705,7 +705,7 @@ Acknowledgements and font licences            >
 3. **Sources and licences**: the per-source list from the About page, each with its licence.
 4. **Machine-written text**: what is written by models and how it is labelled.
 5. **Corrections and contact**.
-6. **Privacy**: public reading collects nothing that identifies the reader (section 8); voice uses an email address, member ID, voice audio and words (D6).
+6. **Privacy**: public reading needs no account and sends no account or device identifier. Requests still reach OPAX's servers with the phone's IP address, which the rate limiters read; how long it is kept is open (section 8). Voice uses an email address, member ID, voice audio and words (D6).
 7. **Acknowledgements**, including the OFL texts for Merriweather and Public Sans.
 
 ### 4.10 Talk to OPAX (voice)
@@ -732,18 +732,18 @@ Your microphone starts when you choose Start
 talking. Voice privacy                        >
 ```
 
-**During a call.**
+**During a call.** Bracketed values are placeholders; the clock is the live countdown and the source count appears only when there are sources.
 
 ```
 Talk to OPAX                                 End
-● Listening to you                       7:42
+● Listening to you                    [m:ss]
 ───────────────────────────────────────────────
 You
   [user turn]
 OPAX
   [agent turn, with record links]
 …
-Sources (3)                                  v
+Sources ([n])                                v
   [title]                                    >
 ───────────────────────────────────────────────
 [ Type instead…                       ] [Send]
@@ -767,6 +767,7 @@ Copy on these two screens is the web panel's own (`portal/voice/client.js`), wit
 | State | Status line and message |
 | --- | --- |
 | Checking | "Checking availability…" |
+| Availability unknown (the status request failed) | "We could not check voice availability." with a Try again button. Start talking is disabled; the microphone is not requested and no time is reserved until a status check succeeds. The web's version asks the reader to close and reopen the panel |
 | Connecting | "Connecting…", with Cancel. After 35 seconds: "We could not connect in time. Your microphone is off. Please try again." |
 | Listening | "Listening to you", with the system microphone indicator and a visible level mark (guideline 2.5.14) |
 | Speaking | "OPAX is speaking". The person can interrupt by talking |
@@ -1051,7 +1052,7 @@ Subtitles avoid unverifiable claims ("most complete", "trusted"), as guideline 2
 | Portrait | "Official portrait of [name]", or hidden when the name is beside it; portraits ignore Smart Invert |
 | Voice status | Brief announcements of state changes only (connecting, listening, OPAX speaking, muted, ended with the reason); agent turns are not auto-announced because the agent speaks them |
 | Voice transcript turn | One element each: "You said …", "OPAX said …"; sources are links |
-| Voice countdown | "7 minutes 42 seconds remaining", updated on focus, not continuously |
+| Voice countdown | "[m] minutes [s] seconds remaining", updated on focus, not continuously |
 
 Values come from the examples in section 4. `docs/IOS-VOICE.md` adds Magic Tap to toggle mute and a headphones suggestion when VoiceOver runs during a call.
 
@@ -1063,7 +1064,7 @@ Values come from the examples in section 4. `docs/IOS-VOICE.md` adds Magic Tap t
 
 **Also supported:** Bold Text; Voice Control, with visible labels that match accessibility labels; Full Keyboard Access; the Large Content Viewer for the tab bar; en-AU language tagging so names and party abbreviations are read sensibly.
 
-**Implementation test plan additions.** For each P0 screen: headings and reading order in the Accessibility Inspector match the visual order; focus moves to the sheet's first element when a sheet opens and returns to the control that opened it when it closes; after an error, focus lands on the message and then on Try again; each chart's table view has the same fields and units as the chart; the voice screen keeps focus on the status line when the call state changes.
+**Implementation test plan additions.** For each P0 screen: headings and reading order in the Accessibility Inspector match the visual order; focus moves to the sheet's first element when a sheet opens and returns to the control that opened it when it closes; after an error, focus lands on the message and then on Try again; each chart's table view has the same fields and units as the chart. On the voice screen, a call state change is announced (as specified in the table above) without moving focus: focus stays on the transcript turn, source or control the reader is on, as the web updates its status without moving focus. Focus moves only at defined transitions: to the status line when the sheet opens, to the end message when a call ends, and back to the opening control when the sheet closes.
 
 **Inclusion.** Portraits include former parliamentarians who have died. Many Australian publishers warn Aboriginal and Torres Strait Islander readers that a page may contain images and names of people who have died; the web has no such notice today. This is an open question, not a recommendation made here.
 
