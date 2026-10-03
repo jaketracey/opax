@@ -1,7 +1,11 @@
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { Alert } from 'react-native';
-import { canonicalUrl, sourceUrl } from '../src/navigation/external';
+import {
+  canonicalUrl,
+  forbiddenOpaxRoute,
+  sourceUrl,
+} from '../src/navigation/external';
 import { shareRecord } from '../src/navigation/share';
 import { isE2E, webOrigin } from '../src/design/environment';
 import { partyIdentity } from '../src/design/party';
@@ -106,7 +110,11 @@ describe('source links', () => {
     'https://opax.com.au/subject/person?q=albanese',
     // A plain anchor is not a route.
     'https://opax.com.au/subject/person/anthony-albanese#person-pay',
+    'https://opax.com.au/subject/person/anthony-albanese#interests',
+    'https://opax.com.au/reports/gambling#section-2',
+    'https://opax.com.au/community?view=thread&id=x#reply-ab12',
     'https://opax.com.au/money#/money/grants',
+    'https://opax.com.au/#/subject/person/Anthony%20Albanese',
     // Another site's /search or ?q= is that site's business.
     'https://www.aph.gov.au/search?q=housing',
   ])('opens %s', (url) => {
@@ -147,6 +155,8 @@ describe('source links', () => {
     'https://opax.com.au/money#/chat',
     'https://opax.com.au/subject/person#/search?q=x',
     'https://opax.com.au/#/x#/api/search',
+    // The router drops empty segments: "//ask" is /ask, not a host named ask.
+    'https://opax.com.au/money#//ask/ignored?q=housing',
     // portal/src/social-publication.ts: /today goes where the journal says.
     'https://opax.com.au/today',
     // Encoded segments, trailing-dot and subdomain hosts are the same server.
@@ -157,6 +167,65 @@ describe('source links', () => {
     'https://opax.com.au/ask?view=search',
   ])('refuses %j', (url) => {
     expect(() => sourceUrl(url)).toThrow();
+  });
+});
+
+describe('fragment routes', () => {
+  // portal/public/app.js routes on the fragment's own segments with empty ones
+  // dropped; home.js resolves it as a path. Each of these reaches a forbidden
+  // view under one reading or another, so the app refuses all of them.
+  test.each([
+    ['/money#//ask/ignored?q=housing', '/ask'],
+    ['/money#///ask', '/ask'],
+    ['/money#/%2Fask', '/ask'],
+    ['/money#%2F%2Fask', '/ask'],
+    ['/money#/%252Fask', '/ask'],
+    ['/money#/%61sk', '/ask'],
+    [String.raw`/money#\ask`, '/ask'],
+    [String.raw`/money#\\ask`, '/ask'],
+    [String.raw`/money#/\ask`, '/ask'],
+    ['/money#%5Cask', '/ask'],
+    ['/money#/ASK', '/ask'],
+    ['/money#//Ask?q=x', '/ask'],
+    ['/money#/%09ask', '/ask'],
+    ['/money#//chat', '/chat'],
+    ['/money#//search', '/search'],
+    ['/money#//api/x', '/api'],
+    ['/money#//og/x.png', '/og'],
+    ['/money#///MCP', '/mcp'],
+    ['/money#section#//ask', '/ask'],
+    ['/money#/money?ask=x', 'an Ask query'],
+    ['/money#/money?a=1&ASK=x', 'an Ask query'],
+    ['/money#/money?%71=x', 'an Ask query'],
+    ['/#?q=x', 'an Ask query'],
+    ['/#/?q=x', 'an Ask query'],
+    ['/#//?q=x', 'an Ask query'],
+    ['/#q=x', 'an Ask query'],
+    ['/#/./ask', 'a fragment route with dot segments'],
+    ['/#/x/../ask', 'a fragment route with dot segments'],
+    ['/#/x/%2e%2e/chat', 'a fragment route with dot segments'],
+    ['/money#/%E0%A4%A', 'an unreadable fragment'],
+    ['/money#/%25252561sk', 'an unreadable fragment'],
+  ])('refuses %s (%s)', (address, reason) => {
+    const url = new URL(`https://opax.com.au${address}`);
+    expect(forbiddenOpaxRoute(url)).toBe(reason);
+    expect(() => sourceUrl(url.toString())).toThrow();
+  });
+  test.each([
+    '/subject/person/anthony-albanese#person-pay',
+    '/subject/person/anthony-albanese#interests',
+    '/reports/gambling#section-2',
+    '/bill/x#bill-full-text',
+    '/money#/money/grants',
+    '/money#/bills?jur=federal',
+    '/#/subject/person/Anthony%20Albanese',
+    '/money#asking-price',
+    '/money#/asks',
+    '/money#/subject/topic/search-and-rescue',
+  ])('keeps %s', (address) => {
+    const url = new URL(`https://opax.com.au${address}`);
+    expect(forbiddenOpaxRoute(url)).toBeNull();
+    expect(sourceUrl(url.toString())).toBe(url.toString());
   });
 });
 

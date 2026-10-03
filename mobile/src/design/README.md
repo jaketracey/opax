@@ -182,11 +182,17 @@ image sources, which the transport gate checks.
   (redirects to Ask's search), `/today` (a redirect chosen at request time),
   the root with `q` or `ask` (redirects to Ask), `ask` on any page (the web
   app's legacy Ask entry) and route-shaped fragments such as `#/ask`. Path
-  segments are decoded before checking. Source links go through `sourceUrl`
+  segments are decoded before checking. Fragments follow the web router, not
+  URL parsing: it drops empty segments, so `#//ask` is `/ask`, not a host.
+  They are decoded, case-folded and read with backslashes as slashes; dot
+  segments and `q` or `ask` anywhere in a fragment are refused, and plain
+  anchors such as `#person-pay` pass. Source links go through `sourceUrl`
   (HTTPS, default port, no user information; on any OPAX host, including a
   trailing dot or subdomain, the same rules after normalisation).
   `tests/worker-redirects.test.ts` runs the Worker's entry redirects and
-  checks every address they send to Ask is refused.
+  checks every address they send to Ask is refused;
+  `tests/web-router.test.ts` does the same with the web app's fragment
+  router (`app.js`) and the homepage's legacy redirect (`home.js`).
 - `MoneyFigure`: money with tabular figures, read in words ("4,537,500
   dollars, Contract value"). `compact` only in charts and tight figures.
 - `Figure`: a count or a percentage (`format="percent"`), tabular.

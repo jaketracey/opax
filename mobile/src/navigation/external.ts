@@ -12,8 +12,9 @@ import { light } from '../design/tokens';
 //   /ingest and /.well-known;
 // - the root with "q" or "ask" (302 to /ask);
 // - "ask" on any page (the web app's legacy Ask entry runs on every page);
-// - a route-shaped fragment ("#/ask"), which the web app routes instead of the
-//   path, checked by the same rules.
+// - a route-shaped fragment ("#/ask", "#//ask"), which the web app routes
+//   instead of the path (see forbiddenFragment), and "q" or "ask" anywhere in
+//   a fragment.
 const forbiddenRoutes = new Set([
   'api',
   'og',
@@ -28,6 +29,8 @@ const forbiddenRoutes = new Set([
 // Whitespace, control characters and backslashes (which URL parsers read as
 // slashes) are refused before any parsing.
 const unsafeCharacters = /[\u0000-\u0020\u007f\\]/;
+// Query keys that start Ask: "q" on the root or /ask, "ask" on any page.
+const askKeys = new Set(['q', 'ask']);
 
 /** An OPAX host, with any trailing dot or letter case: the same server. */
 function isOpaxHost(hostname: string): boolean {
@@ -56,12 +59,49 @@ export function forbiddenOpaxRoute(url: URL): string | null {
   if (url.searchParams.has('ask')) return 'an Ask query';
   const root = segments.every((segment) => segment === '');
   if (root && url.searchParams.has('q')) return 'an Ask query';
-  const fragment = url.hash.slice(1);
-  if (fragment.startsWith('/')) {
+  return forbiddenFragment(url.hash);
+}
+
+/**
+ * Why a fragment is one the web app would route somewhere forbidden, or null.
+ * The router in portal/public/app.js (rawFragment, hereRoute, parseHash) does
+ * not parse a fragment as a URL: when the text after the first "#" starts
+ * with "/", it is the route, empty segments are dropped (so "//ask" is "/ask",
+ * never a host) and the query is read after the first "?". On the homepage,
+ * portal/public/home.js resolves the same text as a path, dot segments
+ * included, and redirects to it. This check reads wider than both: it decodes
+ * up to three times (still escaped is refused), drops whitespace and control
+ * characters, reads backslashes as slashes, folds case, checks every "#" part
+ * and refuses "q" or "ask" anywhere. Plain anchors ("#person-pay") pass.
+ */
+function forbiddenFragment(hash: string): string | null {
+  let text = hash.replace(/^#/, '');
+  for (let round = 0; /%[0-9a-f]{2}/i.test(text); round++) {
+    if (round === 3) return 'an unreadable fragment';
     try {
-      return forbiddenOpaxRoute(new URL(fragment, url.origin));
+      text = decodeURIComponent(text);
     } catch {
-      return 'an unreadable fragment route';
+      return 'an unreadable fragment';
+    }
+  }
+  text = text
+    .replace(/[\u0000-\u0020\u007f]/g, '')
+    .replace(/\\/g, '/')
+    .toLowerCase();
+  for (const part of text.split('#')) {
+    const path = part.split('?')[0]!;
+    if (path.startsWith('/')) {
+      const segments = path.split('/').filter(Boolean);
+      if (segments.some((segment) => segment === '.' || segment === '..'))
+        return 'a fragment route with dot segments';
+      const first = segments[0] ?? '';
+      if (forbiddenRoutes.has(first)) return `/${first}`;
+    }
+    // Every "key=value" piece counts, and every piece after a "?" or "&".
+    const pieces = part.split(/[?&]/);
+    for (const [index, piece] of pieces.entries()) {
+      if (index === 0 && !piece.includes('=')) continue;
+      if (askKeys.has(piece.split('=')[0]!)) return 'an Ask query';
     }
   }
   return null;
@@ -112,7 +152,8 @@ export function canonicalUrl(path: string, anchor?: string): string {
  * normalised. HTTPS on the default port, no user information, no unsafe
  * characters; on OPAX's own hosts (any case, trailing dot or subdomain) every
  * route in forbiddenOpaxRoute is refused after normalisation, so
- * "/subject/../api", "/search", "/?q=" and "#/ask" cannot slip through.
+ * "/subject/../api", "/search", "/?q=", "#/ask" and "#//ask" cannot slip
+ * through.
  */
 export function sourceUrl(raw: string): string {
   if (typeof raw !== 'string' || unsafeCharacters.test(raw))
