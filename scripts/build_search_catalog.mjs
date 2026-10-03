@@ -59,6 +59,11 @@ export function interestPerson(register, id, people, names) {
    || candidates.find(p => p.name.includes(' ')) || candidates[0] || null;
 }
 
+export function interestHref(register, person, speakerNames) {
+ return person ? personHref(person.name)
+   : speakerNames.has(register.name) ? personHref(register.name) : register.source_url;
+}
+
 async function main() {
  const roster = await read('parliamentarians.json');
  for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${p.speeches.toLocaleString()} indexed speeches.${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:p.name,from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:period(p.first,p.last)});
@@ -97,13 +102,14 @@ async function main() {
   add('bill:'+b.key,'bill',b.short_title||b.title,'/bill/'+encodeURIComponent(b.key),[b.status?.replaceAll('_',' '),b.portfolio,summary?.sentences?.join(' '),summary?.affected].filter(Boolean).join('. '),{aliases:[b.title,...(b.aliases||[])].join(' '),date:b.introduced,state:b.jurisdiction,parties:[b.sponsor_party||''],speakers:[b.sponsor||''],source:summary?'Bill register · automated summary':'Bill register'});
  }
  const interestIndex = await read('interests/index.json');
+ const speakerNames = new Set((await read('speakers.json')).map(([name]) => name));
  for(const file of await files('interests')) {
   if(['index.json','ties-by-donor.json','recent.json'].includes(file))continue;
   const p=await read('interests/'+file);
   const person=interestPerson(p,file.slice(0,-5),roster.people,interestIndex._by_name);
-  // If the directory has no matching profile, the published register is the
-  // record's destination. Do not invent a profile or borrow a different jurisdiction's name.
-  const href=person ? personHref(person.name) : p.source_url;
+  // Speakers below the directory's floor still have profiles under their exact
+  // corpus name. Only names absent from both indexes need the official register.
+  const href=interestHref(p,person,speakerNames);
   for(const [category,b] of Object.entries(p.buckets||{})) for(const [i,item] of (b.items||[]).entries()) {
    add(`interest:${file}:${category}:${i}`,'interest',`${p.name} — ${category.replaceAll('_',' ')}`,href,`${item.description}. ${item.holder||''}. ${item.kind||''}.`,{aliases:person?.name||'',date:item.date||null,from:year(item.date||p.as_at),to:year(item.date||p.as_at),dateLabel:item.date?undefined:(p.as_at?'Register as at '+p.as_at:undefined),state:p.jurisdiction,speakers:[...new Set([p.name,person?.name].filter(Boolean))],parties:[person?.party_now||person?.party||''],source:'Register of interests',url:p.source_url});
   }
