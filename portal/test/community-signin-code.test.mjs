@@ -120,8 +120,27 @@ test('supersession is atomic per normalized email and client and preserves the o
  assert.equal((await f.call('auth/consume',{token:web.token})).status,200);
  assert.equal((await f.consume(latest)).status,200);
  const w1=await f.issue('browser@example.com',null),w2=await f.issue('browser@example.com',null);
- assert.equal((await f.call('auth/consume',{token:w1.token})).status,400);
+ assert.equal((await f.call('auth/consume',{token:w1.token})).status,200);
  assert.equal((await f.call('auth/consume',{token:w2.token})).status,200);
+});
+
+test('both web links remain usable when native proofs for the same email are superseded',async t=>{
+ const f=fixture(t),a=await f.issue('reader@example.com',null),b=await f.issue('reader@example.com',null);
+ const old=await f.issue(),current=await f.issue();
+ await failure(await f.consume(old));
+ assert.equal((await f.call('auth/consume',{token:old.token})).status,400);
+ for(const web of [a,b])assert.equal((await f.call('auth/consume',{token:web.token})).status,200);
+ assert.equal((await f.consume(current)).status,200);
+});
+
+test('a failed second web email preserves the first web link',async t=>{
+ const f=fixture(t),first=await f.issue('browser@example.com',null);
+ const expiresAt=f.db.prepare('SELECT expires_at FROM login_links WHERE token_hash=?').get(await digest(first.token)).expires_at;
+ f.env.COMMUNITY_EMAIL.send=async()=>{throw Error('stub failure')};
+ assert.equal((await f.call('auth/request',{email:first.email})).status,503);
+ assert.equal(f.db.prepare('SELECT count(*) n FROM login_links').get().n,1);
+ assert.equal(f.db.prepare('SELECT expires_at FROM login_links').get().expires_at,expiresAt);
+ assert.equal((await f.call('auth/consume',{token:first.token})).status,200);
 });
 
 test('failed delivery deletes the native proof and missing MAC secret fails closed without affecting web',async t=>{
