@@ -8,7 +8,7 @@ import {
   billTimeline,
   type BillTimelineStage,
 } from '../../api/bill-transforms';
-import type { PersonSlug } from '../../api/catalogs';
+import { billKey, type PersonSlug } from '../../api/catalogs';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
 import { formatCount, formatDate } from '../../design/format';
@@ -66,6 +66,14 @@ const copy = {
 };
 const DIVISIONS_SHOWN = 6;
 
+const isBillKey = (key: string) => {
+  try {
+    billKey(key);
+    return true;
+  } catch {
+    return false;
+  }
+};
 const stageText = (s: BillTimelineStage) =>
   [
     s.stage,
@@ -134,10 +142,12 @@ export default function BillDetail() {
   const name = identity
     ? billName({ title: identity.title, short_title: identity.shortTitle })
     : '';
+  // A key the register could never name, or one it does not publish. A file
+  // that arrives but cannot be read is an error, not a missing bill.
   const notFound =
-    error instanceof ApiError &&
-    (error.code === 'not-found' || error.code === 'invalid-data') &&
-    !record;
+    !record &&
+    (!isBillKey(String(key)) ||
+      (error instanceof ApiError && error.code === 'not-found'));
   return (
     <>
       <Stack.Screen
