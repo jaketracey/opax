@@ -78,6 +78,9 @@ test('web issuance is unchanged and native issuance holds one challenge-bound MA
  const native=await f.issue('  Reader@EXAMPLE.com  '),row=f.proofRow(native);
  assert.match(native.challenge_id,/^[\w-]{43}$/);assert.equal(Buffer.from(native.challenge_id,'base64url').length,32);
  assert.match(native.code,/^\d{8}$/);assert.match(native.mail.html,new RegExp(native.code));
+ assert.ok(native.mail.text.startsWith(`Sign in to Opax\n\nYour Opax app sign-in code: ${native.code}\n`));
+ assert.ok(native.mail.text.indexOf(native.code)<native.mail.text.indexOf('Sign in through your browser:'));
+ assert.ok(native.mail.text.indexOf(native.code)<native.mail.text.indexOf('#token='));
  for(const content of [native.mail.text,native.mail.html]){
   assert.match(content,/Never share this code/);
   assert.match(content,/The link signs you in through your browser, not the app/);
