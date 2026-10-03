@@ -129,9 +129,11 @@ function atoRows(rec, meta) {
   }
   const latestNote = t.y !== meta?.sources?.ato?.latest_year && meta?.sources?.ato?.latest_year ? `<span class="tc-sub">The latest year listed under this ABN. The ${esc(meta.sources.ato.latest_year)} report has no entry under it.</span>` : "";
   const older = years.slice(1);
-  const table = older.length ? `<details class="tc-more"><summary>Earlier years</summary><table class="tc-table"><thead><tr><th scope="col">Income year</th><th scope="col">Total income</th><th scope="col">Taxable income</th><th scope="col">Tax payable</th></tr></thead><tbody>${older.map((r) =>
-    `<tr><th scope="row">${esc(r.y)}</th><td>${r.inc != null ? dollars(r.inc) : blank}</td><td>${r.tax != null ? dollars(r.tax) : blank}</td><td>${r.pay != null ? dollars(r.pay) : blank}</td></tr>`).join("")}</tbody></table></details>` : "";
-  return [[`ATO ${esc(t.y)}`, `${text}${rec.tn ? `<span class="tc-sub">ATO name: ${esc(rec.tn)}</span>` : ""}${latestNote}${table}`, src]];
+  const table = older.length ? `<details class="tc-more"><summary>Earlier years</summary><div class="table-scroll" role="region" tabindex="0" aria-label="Earlier years (scrollable)"><table class="tc-table"><thead><tr><th scope="col">Income year</th><th scope="col">Total income</th><th scope="col">Taxable income</th><th scope="col">Tax payable</th></tr></thead><tbody>${older.map((r) =>
+    `<tr><th scope="row">${esc(r.y)}</th><td>${r.inc != null ? dollars(r.inc) : blank}</td><td>${r.tax != null ? dollars(r.tax) : blank}</td><td>${r.pay != null ? dollars(r.pay) : blank}</td></tr>`).join("")}</tbody></table></div></details>` : "";
+  // The earlier years go in a row of their own, across the whole block: beside the label
+  // there is no room for three exact figures side by side.
+  return [[`ATO ${esc(t.y)}`, `${text}${rec.tn ? `<span class="tc-sub">ATO name: ${esc(rec.tn)}</span>` : ""}${latestNote}`, src, table]];
 }
 
 /** The block's HTML for one record; "" when there is nothing to show. */
@@ -140,8 +142,8 @@ export function taxCharityHTML(rec, meta, { abn } = {}) {
   const a = abnOf(abn) || "";
   const { rows: charity } = charityRows(rec, meta, a);
   const ato = atoRows(rec, meta);
-  const rowsHtml = [...charity.map(([k, v]) => [k, v]), ...ato.map(([k, v]) => [k, v])]
-    .map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
+  const rowsHtml = [...charity.map(([k, v]) => [k, v]), ...ato.map(([k, v, , wide]) => [k, v, wide])]
+    .map(([k, v, wide]) => `<dt>${k}</dt><dd>${v}</dd>${wide ? `<dd class="tc-wide">${wide}</dd>` : ""}`).join("");
   if (!rowsHtml) return "";
   const s = meta?.sources || {};
   const sources = [];

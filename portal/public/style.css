@@ -2115,6 +2115,10 @@ a.ency-name:hover, a.ency-name:focus-visible {
 .tc-table th, .tc-table td { text-align: right; padding: 0.2rem 0.75rem 0.2rem 0; border-top: 1px solid var(--line); font-weight: 400; }
 .tc-table thead th { border-top: none; color: var(--ink-faint); }
 .tc-table tbody th { text-align: left; }
+/* Each filed figure is exact, so it stays on one line; the table takes the block's full
+   width, and a narrower block scrolls it instead. */
+.tc-facts .tc-wide { grid-column: 1 / -1; }
+.tc-table td, .tc-table tbody th { white-space: nowrap; }
 @media (max-width: 40rem) {
   .tc-facts { grid-template-columns: minmax(0, 1fr); gap: 0.1rem; }
   .tc-facts dd { margin-bottom: 0.55rem; }
