@@ -7407,12 +7407,18 @@ function billRulerHTML(dates) {
   const x = (t) => 8 + ((t - first) / span) * 664;
   const ticks = points.map((t) =>
     `<line class="bill-ruler-tick" x1="${x(t).toFixed(2)}" x2="${x(t).toFixed(2)}" y1="10" y2="30"/>`).join("");
+  const day = (t) => esc(fmtDate(new Date(t).toISOString().slice(0, 10)));
   const label = (t, anchor) =>
-    `<text class="bill-ruler-label" x="${x(t).toFixed(2)}" y="45" text-anchor="${anchor}">${esc(fmtDate(new Date(t).toISOString().slice(0, 10)))}</text>`;
+    `<text class="bill-ruler-label" x="${x(t).toFixed(2)}" y="45" text-anchor="${anchor}">${day(t)}</text>`;
+  // A bill whose every stage fell on one day has no span: both ends land on the
+  // left edge, and the end label, anchored to finish there, ran off the ruler and
+  // left its last digit printed over the first label (":617 Sep 2026"). One day
+  // is one notch with one date.
+  const oneDay = last === first;
   return `<svg class="bill-ruler" viewBox="0 0 680 52" role="img"
-    aria-label="The recorded stages of this bill, from ${esc(fmtDate(new Date(first).toISOString().slice(0, 10)))} to ${esc(fmtDate(new Date(last).toISOString().slice(0, 10)))}">
+    aria-label="The recorded stages of this bill, ${oneDay ? `all on ${day(first)}` : `from ${day(first)} to ${day(last)}`}">
     <line class="bill-ruler-axis" x1="8" x2="672" y1="30" y2="30"/>
-    ${ticks}${label(first, "start")}${label(last, "end")}
+    ${ticks}${label(first, "start")}${oneDay ? "" : label(last, "end")}
   </svg>`;
 }
 
