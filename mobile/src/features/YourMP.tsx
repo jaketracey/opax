@@ -387,7 +387,10 @@ export default function YourMP() {
                     : 'Show register changes'
                 }
                 testID="your-register-toggle"
-                onPress={() => setRegisterOpen((v) => !v)}
+                onPress={() => {
+                  setRegisterLoadedFor(null);
+                  setRegisterOpen((v) => !v);
+                }}
               />
               {registerOpen && registerLoadedFor !== memberProfile.personId ? (
                 memberFailure?.id === memberProfile.personId ? (

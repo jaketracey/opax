@@ -99,7 +99,10 @@ function ProfileScreen({ slug }: { slug: string }) {
       return p;
     })()
       .then((p) => {
-        if (active) setProfile(p);
+        if (active) {
+          setProfile(p);
+          if (p) setNoNativeProfile(false);
+        }
       })
       .catch((e) => {
         if (active) setError(errorMessage(e));
