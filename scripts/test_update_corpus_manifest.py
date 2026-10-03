@@ -299,7 +299,7 @@ class InterestsStatus(unittest.TestCase):
     def test_success_clears_old_warning_even_without_kb_change(self):
         prev = manifest()
         prev['refresh']['source_limitations'] = ['Federal interests pages returned no usable records. Existing disclosures were preserved.', 'Other source']
-        new, _ = run(prev=prev, interests_status={'complete': True, 'limitations': []})
+        new, _ = run(prev=prev, interests_status={'complete': True, 'held_count': 2, 'limitations': []})
         self.assertEqual(new['refresh']['source_limitations'], ['Other source'])
 
     def test_out_of_credits_replaces_warning_and_absence_preserves_it(self):

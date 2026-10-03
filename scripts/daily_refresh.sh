@@ -291,7 +291,7 @@ for src, mx, n in db.execute("SELECT source, MAX(date), COUNT(*) FROM speeches G
 PYEOF
 # Federal registers change on most working days. Date-aware caching keeps daily
 # polling cheap (two indexes + changed Senate pages, shared maximum 100 credits).
-run_step interests_federal "SELECT COUNT(*) FROM ext_interests" \
+STEP_TIMEOUT=45m run_step interests_federal "SELECT COUNT(*) FROM ext_interests" \
   "$PY" -m parli.ingest.conduct_interests_federal refresh --db "$DB"
 run_step x_interests "" env PY="$PY" scripts/vm/export_step.sh dir portal/public/interests -- \
   "$PY" scripts/export_interests.py --out portal/public/interests

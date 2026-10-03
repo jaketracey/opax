@@ -12,6 +12,7 @@ import os
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import requests
 
@@ -123,12 +124,15 @@ def cached_json(path):
 
 def date_settled(revision, fetched_at):
     """A date-only revision can change again during that day. Recheck it once
-    after the UTC date closes; opaque PDF revision hashes are already exact."""
+    after the Sydney date closes; opaque PDF revision hashes are already exact."""
     day = federal._iso(revision)
     if not day:
         return True
     try:
-        return datetime.fromisoformat(fetched_at).date().isoformat() > day
+        fetched = datetime.fromisoformat(fetched_at)
+        if fetched.tzinfo is None:
+            fetched = fetched.replace(tzinfo=timezone.utc)
+        return fetched.astimezone(ZoneInfo("Australia/Sydney")).date().isoformat() > day
     except (TypeError, ValueError):
         return False
 
@@ -185,13 +189,22 @@ def retain_house_ids(entries, db_path):
     """The new APH API links must not create duplicate statements for existing people."""
     if not db_path or not Path(db_path).exists():
         return
-    with closing(sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)) as conn:
-        try:
-            old = conn.execute("SELECT doc_id, member_name, electorate, source_url, last_updated FROM ext_interests_documents "
+    try:
+        with closing(sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)) as conn:
+            old = conn.execute("SELECT doc_id, member_name, electorate, source_url, last_updated, member_name_raw FROM ext_interests_documents "
                                "WHERE chamber='house' AND parliament=?", (federal.PARLIAMENT,)).fetchall()
-        except sqlite3.OperationalError:
+    except sqlite3.DatabaseError as e:
+        if isinstance(e, sqlite3.OperationalError) and str(e) == "no such table: ext_interests_documents":
             return
-    by_name = {(name, electorate): (doc_id, url, updated) for doc_id, name, electorate, url, updated in old}
+        raise FetchError(f"House document ID retention unavailable ({type(e).__name__}); chamber preserved") from None
+    # The recorded September index misspelled Alison Byrnes as Brynes, but its
+    # original PDF filename and document ID are Byrnes. Correct only that verified
+    # legacy identity for the exact lookup; never relax the surname fallback.
+    for i, (doc_id, name, electorate, url, updated, raw) in enumerate(old):
+        if (doc_id == "house-48-byrnes-48p" and name == "Alison Brynes" and electorate == "Cunningham"
+                and url.split("?", 1)[0].rsplit("/", 1)[-1] == "Byrnes_48P.pdf"):
+            old[i] = (doc_id, "Alison Byrnes", electorate, url, updated, raw.replace("Brynes,", "Byrnes,", 1))
+    by_name = {(name, electorate): (doc_id, url, updated) for doc_id, name, electorate, url, updated, raw in old}
     # Preferred-name/spelling changes observed on the new index. Match a
     # canonical GIVEN name and a unique same-Parliament seat, never a surname
     # alone or a first initial (e.g. Antony -> Tony does not share an initial).
@@ -200,14 +213,28 @@ def retain_house_ids(entries, db_path):
     def given(name):
         first = (name or "").split()[0].lower() if name else ""
         return aliases.get(first, first)
-    for entry in entries:
-        name = federal._normalize_name(f"{entry['surname']}, {entry['given']}") if entry.get("surname") else None
-        found = by_name.get((name, entry.get("electorate")))
+
+    def surname(name, raw=None):
+        # The source's comma-separated surname preserves compound family names.
+        # Older/synthetic records without it use the conservative full remainder.
+        family = (federal._HONORIFIC_ANYWHERE.sub(" ", raw.split(",", 1)[0])
+                  if raw and "," in raw else " ".join((name or "").split()[1:]))
+        return federal._norm_ws(family).casefold().replace("’", "'")
+
+    names = [federal._normalize_name(f"{e['surname']}, {e['given']}") if e.get("surname") else None for e in entries]
+    exact = [by_name.get((name, e.get("electorate"))) for name, e in zip(names, entries)]
+    # Reserve ALL exact matches before considering aliases, irrespective of index
+    # order. Former and new members can both appear for one seat (e.g. Farrer).
+    claimed = {match[0] for match in exact if match}
+    for entry, name, found in zip(entries, names, exact):
         if not found:
-            candidates = [(doc_id, url, updated) for doc_id, old_name, elec, url, updated in old
-                          if elec == entry.get("electorate") and old_name and name and given(old_name) == given(name)]
+            family = federal._norm_ws(entry.get("surname") or "").casefold().replace("’", "'")
+            candidates = [(doc_id, url, updated) for doc_id, old_name, elec, url, updated, raw in old
+                          if doc_id not in claimed and elec == entry.get("electorate") and old_name and name
+                          and given(old_name) == given(name) and surname(old_name, raw) == family]
             found = candidates[0] if len(candidates) == 1 else None
         if found:
+            claimed.add(found[0])
             entry["doc_id"] = found[0]
             # Stable across both old static URLs and new API URLs (which end in
             # /48 rather than a filename); otherwise day two redownloads all PDFs.
@@ -219,10 +246,11 @@ def refresh(args):
     client = Firecrawl(args.credit_cap)
     cache = Path(args.cache_dir)
     cache.mkdir(parents=True, exist_ok=True)
-    summary = {"checked_at": stamp(), "complete": False, "chambers": {},
+    summary = {"checked_at": stamp(), "complete": False, "chambers": {}, "held_count": 0, "holds": [],
                "limitations": ["Federal interests refresh interrupted; existing disclosures were preserved."]}
-    write_json(args.status, summary)  # a killed run must not leave yesterday's success
-    docs, failures = [], []
+    if args.status:
+        write_json(args.status, summary)  # a killed run must not leave yesterday's success
+    docs, failures, holds = [], [], []
     chambers = [args.chamber] if args.chamber else ["house", "senate"]
     for chamber in chambers:
         loaded = []
@@ -245,7 +273,10 @@ def refresh(args):
                 try:
                     if (entry.get("stored_updated") and entry.get("last_updated")
                             and entry["last_updated"] < entry["stored_updated"]):
-                        raise FetchError("source index date older than stored statement")
+                        holds.append({"chamber": chamber, "document": label,
+                                      "index_date": entry["last_updated"], "stored_date": entry["stored_updated"]})
+                        print(f"[held] {chamber} {label}: source index date older than stored statement", flush=True)
+                        continue
                     if chamber == "house":
                         path, fetched_at = house_pdf(entry, dest, client, session)
                         doc = federal.parse_house_pdf(path, {**entry, "fetched_at": fetched_at})
@@ -272,21 +303,23 @@ def refresh(args):
                     print(f"[preserved] {failures[-1]}", flush=True)
         except FetchError as e:
             failures.append(f"{chamber} index: {e}")
-        summary["chambers"][chamber] = {"documents": len(loaded), "rows": sum(len(d.rows) for d in loaded)}
+        summary["chambers"][chamber] = {"documents": len(loaded), "rows": sum(len(d.rows) for d in loaded),
+                                         "held": sum(h["chamber"] == chamber for h in holds)}
         docs.extend(loaded)
     if args.export_jsonl:
         Path(args.export_jsonl).write_text("".join(json.dumps(federal.doc_to_json(d), ensure_ascii=False) + "\n" for d in docs))
     if args.db and docs and not args.dry_run:
         federal._load_docs(docs, Path(args.db))
     reasons = sorted(set(f.split(": ", 1)[-1] for f in failures))
-    summary.update(complete=not failures, failures=failures,
+    summary.update(complete=not failures, failures=failures, held_count=len(holds), holds=holds,
                    credits_used=client.credits, credits_reserved=client.requests,
                    credits_unknown=client.unknown, credit_cap=client.cap,
                    limitations=([f"Federal interests refresh incomplete: {'; '.join(reasons)}. "
                                  f"{len(failures)} unavailable statements/indexes; existing disclosures were preserved."] if failures else []))
-    write_json(args.status, summary)
+    if args.status:
+        write_json(args.status, summary)
     print(f"[interests] documents={len(docs)} rows={sum(len(d.rows) for d in docs)} preserved={len(failures)} "
-          f"credits={client.credits} reserved={client.requests}/{client.cap}", flush=True)
+          f"held={len(holds)} credits={client.credits} reserved={client.requests}/{client.cap}", flush=True)
     for line in summary["limitations"]:
         print(line, flush=True)
     return 3 if failures else 0

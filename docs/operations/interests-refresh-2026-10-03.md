@@ -189,3 +189,28 @@ already installed. Scratch cache/data/status were **not promoted** into producti
 the first automatic run may fill the cache at the documented cold cost, within cap.
 Do not copy the scratch database into production. No scheduler change or manual full
 nightly is required. Deployment and next-nightly confirmation remain the orchestrator's work.
+
+## Review round 1 (offline)
+
+The candidate was rebased onto `origin/main` **86d6cb92**. No EC2 or Firecrawl request
+was made during this round. The original rehearsal outcomes above are historical;
+the candidate now records the two older-date holds separately, so those holds alone
+return success and clear the incomplete manifest line.
+
+The fallback requires the same complete surname and reserves every exact-match ID
+before considering preferred names, in either index order. Recorded Farrer-shaped
+tests cover two same-seat, same-first-name members. A narrowly verified legacy metadata
+correction keeps the recorded Alison Brynes/Byrnes typo from creating a duplicate;
+it requires the original document ID, misspelt name, Cunningham seat and Byrnes PDF
+filename, and does not relax the surname fallback.
+
+The interests step has a 45-minute timeout; manual chamber/dry-run/fetch-only runs do
+not write the production receipt by default. ID-retention database errors preserve the
+House chamber unless the interests table is absent. Date-only revisions settle using
+Sydney time, including the DST transition. The public account balance is removed
+from the candidate's unpublished history; the **101-credit debit** above is retained.
+
+Round-1 gates: **769 Python tests / 238 subtests passed** with outbound sockets blocked
+and `FIRECRAWL_API_KEY` unset; **191 shell checks passed** in Ubuntu 24.04 Docker;
+`bash -n` passed for the changed daily/test scripts and the weekly/nightly/data-group/
+bootstrap scripts. The recorded complete index retains **151 distinct legacy House IDs**.

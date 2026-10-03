@@ -22,6 +22,13 @@ FIX = Path(__file__).parent / 'fixtures/interests'
 def html(name):
     return (FIX / name).read_text()
 
+def house_db(path, records):
+    with sqlite3.connect(path) as conn:
+        f.ensure_tables(conn)
+        conn.executemany("INSERT INTO ext_interests_documents(doc_id,jurisdiction,chamber,parliament,member_name_raw,member_name,electorate,source_url) VALUES (?,'federal','house',48,?,?,?,?)",
+                         [(key, raw, name, seat, 'https://static.aph.gov.au/'+key+'.pdf')
+                          for key, name, seat, raw in records])
+
 def response(content=None, status=200, page_status=200, pdf=False):
     data = {'metadata': {'statusCode': page_status, 'creditsUsed': 1}}
     data['rawBase64' if pdf else 'rawHtml'] = base64.b64encode(content).decode() if pdf else content
@@ -164,8 +171,13 @@ class CreditAndTransport(unittest.TestCase):
 
 class CacheAndPreservation(unittest.TestCase):
     def test_date_only_revisions_are_rechecked_after_the_source_day(self):
-        self.assertFalse(fetch.date_settled('2026-10-03', '2026-10-03T23:00:00+00:00'))
-        self.assertTrue(fetch.date_settled('2026-10-03', '2026-10-04T01:00:00+00:00'))
+        self.assertFalse(fetch.date_settled('2026-10-03', '2026-10-03T13:59:00+00:00'))
+        self.assertTrue(fetch.date_settled('2026-10-03', '2026-10-03T14:00:00+00:00'))
+        # 03:15 Sydney is still the previous UTC day, both with and without DST.
+        self.assertTrue(fetch.date_settled('2026-10-03', '2026-10-03T16:15:00+00:00'))
+        self.assertTrue(fetch.date_settled('2026-09-01', '2026-09-01T17:15:00+00:00'))
+        self.assertTrue(fetch.date_settled('2026-09-01', '2026-09-01T17:15:00'))
+        self.assertFalse(fetch.date_settled('2026-10-03', None))
         self.assertTrue(fetch.date_settled('7185f24202cb4acfad0c0208e7d6b7e6', None))
 
     def test_partial_render_retries_once_then_caches_only_the_statement(self):
@@ -229,6 +241,158 @@ class CacheAndPreservation(unittest.TestCase):
             fetch.retain_house_ids(entries, db)
             self.assertEqual(entries[0]['doc_id'], 'house-48-pasin-48p')
             self.assertEqual(entries[0]['file'], 'house-48-pasin-48p.pdf')
+
+    def test_former_and_new_member_with_same_seat_and_first_name_do_not_share_id(self):
+        # The recorded index really lists both the former and new Farrer member.
+        shape = [e for e in f.parse_house_index(html('house-index.html')) if e['electorate'] == 'Farrer']
+        self.assertEqual({e['surname'] for e in shape}, {'Ley', 'Farley'})
+        with tempfile.TemporaryDirectory() as td:
+            db = Path(td)/'db.sqlite'
+            house_db(db, [('former-smith', 'David Smith', 'Farrer', 'Smith, Mr David')])
+            for reverse in (False, True):
+                with self.subTest(reverse=reverse):
+                    entries = [{**shape[0], 'surname': 'Smith', 'given': 'David'},
+                               {**shape[1], 'surname': 'Jones', 'given': 'David'}]
+                    if reverse:
+                        entries.reverse()
+                    fetch.retain_house_ids(entries, db)
+                    former = next(e for e in entries if e['surname'] == 'Smith')
+                    new = next(e for e in entries if e['surname'] == 'Jones')
+                    self.assertEqual(former['doc_id'], 'former-smith')
+                    self.assertNotIn('doc_id', new)
+                    self.assertNotEqual(former['file'], new['file'])
+
+    def test_exact_match_reserves_id_before_earlier_alias_fallback(self):
+        with tempfile.TemporaryDirectory() as td:
+            db = Path(td)/'db.sqlite'
+            house_db(db, [('pasin', 'Tony Pasin', 'Barker', 'Pasin, Mr Tony')])
+            for reverse in (False, True):
+                with self.subTest(reverse=reverse):
+                    entries = [{'surname': 'Pasin', 'given': 'Antony', 'electorate': 'Barker', 'file': 'new.pdf'},
+                               {'surname': 'Pasin', 'given': 'Tony', 'electorate': 'Barker', 'file': 'old.pdf'}]
+                    if reverse:
+                        entries.reverse()
+                    fetch.retain_house_ids(entries, db)
+                    self.assertEqual(next(e for e in entries if e['given'] == 'Tony')['doc_id'], 'pasin')
+                    self.assertNotIn('doc_id', next(e for e in entries if e['given'] == 'Antony'))
+
+    def test_alias_fallback_keeps_two_stored_same_seat_first_names_distinct(self):
+        with tempfile.TemporaryDirectory() as td:
+            db = Path(td)/'db.sqlite'
+            house_db(db, [('smith', 'Jim Smith', 'Farrer', 'Smith, Mr Jim'),
+                          ('jones', 'Jim Jones', 'Farrer', 'Jones, Mr Jim')])
+            entries = [{'surname': surname, 'given': 'James', 'electorate': 'Farrer', 'file': surname+'.pdf'}
+                       for surname in ('Jones', 'Smith')]
+            fetch.retain_house_ids(entries, db)
+            self.assertEqual([e['doc_id'] for e in entries], ['jones', 'smith'])
+
+    def test_fallback_compares_the_entire_compound_surname(self):
+        with tempfile.TemporaryDirectory() as td:
+            db = Path(td)/'db.sqlite'
+            house_db(db, [('van-smith', 'Tony Van Smith', 'Farrer', 'Van Smith, Hon Tony')])
+            entry = {'surname': 'Smith', 'given': 'Antony', 'electorate': 'Farrer', 'file': 'new.pdf'}
+            fetch.retain_house_ids([entry], db)
+            self.assertNotIn('doc_id', entry)
+
+    def test_recorded_byrnes_typo_correction_requires_the_verified_legacy_identity(self):
+        record = json.loads((FIX/'house-legacy-byrnes.json').read_text())
+        for change in ({}, {'doc_id': 'unverified-id'}, {'electorate': 'Farrer'},
+                       {'source_url': 'https://static.aph.gov.au/Brynes_48P.pdf'}):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as td:
+                stored = {**record, **change}; db = Path(td)/'db.sqlite'
+                house_db(db, [(stored['doc_id'], stored['member_name'], stored['electorate'], stored['member_name_raw'])])
+                with sqlite3.connect(db) as conn:
+                    conn.execute('UPDATE ext_interests_documents SET source_url=?', (stored['source_url'],))
+                entry = next(e for e in f.parse_house_index(html('house-index.html')) if e['surname'] == 'Byrnes')
+                fetch.retain_house_ids([entry], db)
+                if change:
+                    self.assertNotIn('doc_id', entry)
+                else:
+                    self.assertEqual(entry['doc_id'], record['doc_id'])
+
+    def test_database_errors_fail_id_retention_except_missing_interests_table(self):
+        with tempfile.TemporaryDirectory() as td:
+            db = Path(td)/'db.sqlite'
+            with sqlite3.connect(db) as conn:
+                conn.execute('CREATE TABLE unrelated(id)')
+            entry = {'surname': 'Smith', 'given': 'David', 'electorate': 'Farrer', 'file': 'new.pdf'}
+            fetch.retain_house_ids([entry], db)  # first load: no interests table
+            self.assertNotIn('doc_id', entry)
+            for error in (sqlite3.OperationalError('database is locked'),
+                          sqlite3.DatabaseError('file is not a database'),
+                          sqlite3.OperationalError('no such column: member_name_raw'),
+                          sqlite3.OperationalError('no such table: another_table')):
+                with self.subTest(error=str(error)), mock.patch.object(fetch.sqlite3, 'connect', side_effect=error):
+                    with self.assertRaisesRegex(fetch.FetchError, 'ID retention unavailable'):
+                        fetch.retain_house_ids([entry], db)
+
+    def test_older_dates_are_holds_and_only_actual_outages_make_refresh_incomplete(self):
+        for outage in (False, True):
+            with self.subTest(outage=outage), tempfile.TemporaryDirectory() as td, quiet():
+                p = Path(td)
+                args = argparse.Namespace(cache_dir=p/'cache', credit_cap=100, status=p/'status.json',
+                                          chamber='house', db=None, dry_run=True, export_jsonl=None)
+                c = client(responses=[response(html('house-index.html'))])
+                def attach_holds(entries, db):
+                    for entry in entries[:2]:
+                        entry['stored_updated'] = '2030-01-01'
+                paths = [fetch.FetchError('PDF unavailable')] if outage else []
+                paths += [(FIX/'house-abdo.pdf', '2026-10-03T12:00:00+00:00')] * 149
+                doc = mock.Mock(rows=[object()], ocr_pages=0, warnings=[])
+                with mock.patch.object(fetch, 'Firecrawl', return_value=c), \
+                     mock.patch.object(fetch, 'retain_house_ids', side_effect=attach_holds), \
+                     mock.patch.object(fetch, 'house_pdf', side_effect=paths), \
+                     mock.patch.object(f, 'parse_house_pdf', return_value=doc) as parser:
+                    self.assertEqual(fetch.refresh(args), 3 if outage else 0)
+                status = json.loads(args.status.read_text())
+                self.assertEqual(status['held_count'], 2)
+                self.assertEqual(status['chambers']['house']['held'], 2)
+                self.assertEqual(len(status['holds']), 2)
+                self.assertEqual(len(status['failures']), int(outage))
+                self.assertEqual(status['complete'], not outage)
+                self.assertEqual(bool(status['limitations']), outage)
+                self.assertEqual(parser.call_count, 148 if outage else 149)
+                self.assertNotIn('older', ' '.join(status['limitations']))
+
+    def test_failed_retention_preserves_house_chamber_but_checks_senate(self):
+        with tempfile.TemporaryDirectory() as td, quiet():
+            p = Path(td)
+            args = argparse.Namespace(cache_dir=p/'cache', credit_cap=100, status=p/'status.json',
+                                      chamber=None, db=None, dry_run=True, export_jsonl=None)
+            c = client(responses=[response(html('house-index.html')), response(html('senate-index.html'))])
+            doc = mock.Mock(rows=[object()], ocr_pages=0, warnings=[])
+            with mock.patch.object(fetch, 'Firecrawl', return_value=c), \
+                 mock.patch.object(fetch, 'retain_house_ids', side_effect=fetch.FetchError('House document ID retention unavailable (OperationalError); chamber preserved')), \
+                 mock.patch.object(fetch, 'house_pdf') as pdf, \
+                 mock.patch.object(fetch, 'senate_page', return_value=(html('senate-269375.html'), '2026-10-03T12:00:00+00:00')), \
+                 mock.patch.object(f, 'parse_senate_page', return_value=doc):
+                self.assertEqual(fetch.refresh(args), 3)
+            pdf.assert_not_called()
+            status = json.loads(args.status.read_text())
+            self.assertEqual(status['chambers']['house']['documents'], 0)
+            self.assertEqual(status['chambers']['senate']['documents'], 76)
+            self.assertIn('ID retention unavailable', status['limitations'][0])
+
+    def test_only_full_database_refresh_defaults_to_production_receipt(self):
+        for extra in (['--chamber', 'senate'], ['--chamber', 'house'], ['--dry-run'], []):
+            with self.subTest(extra=extra), mock.patch.object(fetch, 'refresh', return_value=0) as run:
+                f.main(['refresh', '--db', 'test.sqlite', *extra])
+                self.assertEqual(run.call_args.args[0].status, None if extra else str(fetch.STATUS_PATH))
+        with mock.patch.object(fetch, 'refresh', return_value=0) as run:
+            f.main(['refresh'])
+            self.assertIsNone(run.call_args.args[0].status)
+        with mock.patch.object(fetch, 'refresh', return_value=0) as run:
+            f.main(['refresh', '--dry-run', '--status', 'scratch.json'])
+            self.assertEqual(run.call_args.args[0].status, 'scratch.json')
+
+    def test_manual_failure_does_not_overwrite_production_receipt(self):
+        with tempfile.TemporaryDirectory() as td, quiet(), mock.patch.dict(os.environ, {}, clear=True):
+            p = Path(td); production = p/'production.json'
+            production.write_text('production sentinel')
+            with mock.patch.object(fetch, 'STATUS_PATH', production):
+                for extra in (['--chamber', 'senate'], ['--dry-run']):
+                    self.assertEqual(f.main(['refresh', '--db', str(p/'db.sqlite'), '--cache-dir', str(p/'cache'), *extra]), 3)
+                    self.assertEqual(production.read_text(), 'production sentinel')
 
     def test_unavailable_indices_preserve_db_and_write_limitation(self):
         with tempfile.TemporaryDirectory() as td, quiet(), mock.patch.dict(os.environ, {}, clear=True):

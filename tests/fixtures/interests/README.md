@@ -13,6 +13,11 @@ No credentials or response headers are retained.
 - `house-abdo.pdf`: the original 532,952-byte API PDF, obtained directly with
   `OPAX research (opax.com.au)`. Used to verify that unread scans stay flagged.
   Source: https://interests-register-api-public.aph.gov.au/api/members/316915/statement/48
+- `house-legacy-byrnes.json`: the read-only legacy metadata recorded from the
+  September House baseline on 3 October. The index misspelled Alison Byrnes as
+  Brynes; its original source PDF filename and document ID are Byrnes. Used to
+  limit that metadata correction to the verified legacy identity. The original
+  source URL is retained in the fixture; no current source request is required.
 
 These records contain declared facts and retain their original source links.
 HTTP envelopes and transport failures in the tests are synthetic; the source

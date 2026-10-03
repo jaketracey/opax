@@ -47,19 +47,24 @@ federal attempt. QLD already loaded successfully on 29 September (93 members,
   and loss of holder/section/page geometry.
 - Cache House PDFs by revision (API links use the index update date), and Senate
   pages by senator ID **and index Last updated**. Date-only revisions are checked
-  once after the source day has closed, so a second same-day alteration cannot freeze. Old undated manual caches are fetched
+  once after the Sydney source day has closed, so a second same-day alteration cannot freeze. Old undated manual caches are fetched
   again; missing dates never make a permanent cache hit. Missing interests blocks
   never replace a good page. Indexes are never served from stale local caches.
-- Preserve existing House document IDs across the API migration, including corrected
-  spellings and preferred names. A unique same-Parliament electorate and agreeing
-  canonical given name (including the observed preferred-name/spelling
-  corrections) handles those corrections; it is never a surname-only match.
+- Preserve existing House document IDs across the API migration and preferred given
+  names. The fallback requires a unique same-Parliament electorate, the **same complete
+  surname**, and an agreeing canonical given name. All exact-match IDs are reserved
+  first, regardless of index order; fallback matches cannot reuse claimed IDs. The
+  recorded Alison Brynes index typo is corrected only for its verified Byrnes legacy
+  document ID, name, seat and original PDF filename, before exact matching.
   The DB's same-surname **person** matching still requires first-name agreement before
   consulting dirty tenure flags (Marielle/Dean Smith; Matt/Barry O'Sullivan).
   The exporter removes obsolete person objects when a corrected name resolves to a
   member ID; metadata and unrelated files are retained.
-- Reject older House index dates and zero-row/failed parses; load only usable documents.
-  Unavailable documents retain their previous disclosures. Scans keep OCR flags and
+- Hold older House index dates separately (`held_count`, `holds`, per-chamber `held`)
+  and retain their stored disclosures. Holds alone return success with no incomplete
+  manifest limitation. Reject zero-row/failed parses; unavailable documents retain
+  their previous disclosures. A database error reading legacy IDs preserves the House
+  chamber, except an absent interests table on a first load. Scans keep OCR flags and
   warnings; `OCR unavailable` warnings now also reach the static export's unread-page
   caveat. This does not claim that scanned alterations have been extracted accurately.
 - Reserve one credit **before every request**, including failed/unknown responses.
@@ -80,7 +85,10 @@ at cutover. The existing parser still flags OCR rows and leaves scanned alterati
 unparsed with explicit warnings.
 
 A per-run receipt at `~/.cache/autoresearch/pipeline/interests-status.json` records
-counts, failures, credits used/reserved/unknown and a safe limitation. Exit 3 is STALE
+counts, holds, failures, credits used/reserved/unknown and a safe limitation. Only a
+full two-chamber load into a DB defaults to this production receipt. Manual `--chamber`,
+`--dry-run` and fetch-only runs write no receipt unless `--status` is explicit. The
+daily federal step has its own **45-minute** timeout. Exit 3 is STALE
 in the daily step runner; exports still run. The manifest consumes that receipt every
 night, even when the KB count does not change, replacing the federal preservation line
 with the current reason (including unavailable/out-of-credit Firecrawl). A missing or
@@ -267,7 +275,7 @@ ssh desktop 'cd /tmp/opax_interests && python3 conduct_interests_federal.py load
 ```
 
 Re-running a changed load replaces rows per `doc_id`; identical statements retain row IDs
-(so the recent-declarations ledger does not churn on quiet nights). A changed load and appends an `ext_ingest_log` line per
+(so the recent-declarations ledger does not churn on quiet nights). A changed load appends an `ext_ingest_log` line per
 `(chamber, parliament)` source; other sources are never touched. `PARSER_VERSION`
 (`2026-09-02.2`) is stamped on every document.
 

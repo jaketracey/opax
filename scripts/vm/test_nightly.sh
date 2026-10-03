@@ -360,6 +360,7 @@ new_refresh_sandbox() {
   cat > "$RS/repo/.venv/bin/python" <<'PYSTUB'
 #!/usr/bin/env bash
 echo "$*" >> "$RS_CALLS"
+echo "${STEP_TIMEOUT:-unset} $*" >> "$RS_CALLS.timeouts"
 if [ "${1:-}" = "-" ]; then
   case "${2:-}" in
     *.json) exit 0 ;;
@@ -431,6 +432,8 @@ refresh
 check "a local-only refresh (no KB sync) is still allowed" test "$RRC" -eq 0
 check "and it never touched the box" bash -c "! grep -q 'parli.ingest.arag_sync' '$RS_CALLS'"
 check "federal interests and their export run daily" bash -c "grep -q 'conduct_interests_federal refresh --db' '$RS_CALLS' && grep -q 'export_interests.py --out portal/public/interests' '$RS_CALLS'"
+check "interests has its own 45m timeout" grep -q '^45m -m parli.ingest.conduct_interests_federal refresh --db' "$RS_CALLS.timeouts"
+check "the interests timeout does not leak to exports" bash -c "grep 'scripts/export_interests.py --out' '$RS_CALLS.timeouts' | grep -q '^unset '"
 new_refresh_sandbox r11f
 FAIL_RC=3 FAIL_STEPS="conduct_interests_federal" refresh
 check "an unavailable federal source is STALE and the daily run still completes" bash -c "[ '$RRC' -eq 0 ] && grep -q 'Stale daily refresh: .*interests_federal' '$HOME/.cache/autoresearch/pipeline/daily.log' && grep -q 'export_interests.py' '$RS_CALLS'"

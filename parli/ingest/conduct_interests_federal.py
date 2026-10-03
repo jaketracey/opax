@@ -1300,10 +1300,10 @@ def main(argv=None):
     r = sub.add_parser("refresh", help="bounded, cached House + Senate refresh for the daily pipeline")
     common(r)
     r.add_argument("--cache-dir", default=str(CACHE_DIR))
-    r.add_argument("--status", default=str(Path("~/.cache/autoresearch/pipeline/interests-status.json").expanduser()))
+    r.add_argument("--status", help="receipt path; defaults to production only for both chambers loaded into a DB")
     r.add_argument("--credit-cap", type=int, default=int(os.environ.get("OPAX_INTERESTS_CREDIT_CAP", "100")))
     r.add_argument("--chamber", choices=("house", "senate"))
-    from .interests_fetch import refresh
+    from .interests_fetch import refresh, STATUS_PATH
     r.set_defaults(func=refresh)
 
     l = sub.add_parser("load")
@@ -1315,6 +1315,8 @@ def main(argv=None):
     k.set_defaults(func=cmd_kb_export)
 
     args = p.parse_args(argv)
+    if args.cmd == "refresh" and args.status is None and args.db and not args.chamber and not args.dry_run:
+        args.status = str(STATUS_PATH)
     return args.func(args)
 
 

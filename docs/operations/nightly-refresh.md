@@ -161,7 +161,11 @@ Unread scanned alterations keep warnings, OCR rows stay flagged, and unparseable
 statements retain their previous disclosures.
 
 The receipt `~/.cache/autoresearch/pipeline/interests-status.json` has chamber counts,
-failed statement IDs, credits used/reserved/unknown, and safe source limitations. Exit
+separate older-date holds, failed statement IDs, credits used/reserved/unknown, and safe
+source limitations. Holds alone succeed and do not add an incomplete limitation. Only
+a full two-chamber DB load defaults to the production receipt; manual `--chamber`,
+`--dry-run` or fetch-only runs need explicit `--status` to write one. Date settling
+uses Australia/Sydney. The federal step is limited to **45 minutes**. Exit
 3 is a STALE warning, so QLD and exports continue. The manifest reads the latest daily
 receipt every day, independent of KB changes. Missing credentials, exhausted credits,
 blocked/empty responses and interrupted runs explicitly say that disclosures were
@@ -380,11 +384,13 @@ power-off after them is the reboot, so a new kernel takes effect at the next sta
 | Night | Steps | Time |
 | --- | --- | --- |
 | Every night | daily refresh (Hansards, bills 9 min, votes, links, KB push when new rows) | ~17 min on a quiet night (2026-09-29 real run); a large push adds up to `OPAX_PUSH_TIMEOUT` (2 h) |
+| Every night, additional federal interests | fresh indexes, changed HTML/PDFs, cached PDF parsing/OCR, then export | ~5–10 min warm; `STEP_TIMEOUT=45m` for `interests_federal`, plus GNU timeout's 60-second kill grace |
 | Sunday: weekly | loaders 30 min (lobbyists 22 min, `frl_acts` 3 min, ABN-linked `contract_suppliers` 7 min, ACNC/ATO 1 min once loaded) + exports 8 min (`x_speakers` and `x_people` a speeches scan each, ~3 min) | ~40 min |
 | First Sunday: monthly, on top | `qld_contracts` 7 min, `diaries_qld` 10-13 min, IPEA 2 min, `speaker_hygiene` 11 min (a full `speeches` read), `grant_recipients` 4 min, exports 5 min | ~40 min |
 | Pre-commit test gate | search catalog build + 679 tests | ~4 min (each extra attribution run adds ~1.5 min) |
 
-A first-Sunday night is therefore about 20 + 40 + 40 + 5 min plus a push of up to 2 h: worst case ~4 h 10 min, which is why the
+A first-Sunday night is therefore about 20 + 40 + 40 + 5 min plus a push of up to 2 h,
+and up to 45 min (plus 60-second kill grace) for interests: budget roughly 5 h, which is why the
 unit limit is 6 h (`TimeoutStartSec=6h`) and the EventBridge stop backstop is at 10:30 (moved from 08:00 on 2026-09-29; a run that
 starts at 03:15 and uses the whole limit ends at 09:15). The freshness watchdog (11:00) reads `corpus.json`'s `checked_at`, which
 the nightly stamps near the end of the run: a Sunday run that ends after 11:00 would look stale to it. Runs measured with the
@@ -505,7 +511,8 @@ take long enough for someone to log in, failing updates), and the `daily_refresh
 cutover-marker behaviour, the new daily steps (releases, AusTender, GrantConnect, state votes, ACT, committee gate), the
 weekly/monthly group script (order, staging, exit 3 = stale, failures), `export_step.sh`, the group calendar and forcing, and
 the pre-commit gate (validation revert per group, red suite blamed on one group, never-completed run, lock held, node missing,
-partial push): 186 checks, run on the VM itself (`OPAX_TEST_SRC=~/checkout bash scripts/vm/test_nightly.sh` with the venv on
+partial push): 191 checks, including the isolated 45-minute interests limit and export timeout scope
+(offline Ubuntu 24.04 gate, 3 October). It can also run on the VM (`OPAX_TEST_SRC=~/checkout bash scripts/vm/test_nightly.sh` with the venv on
 `PATH`). The unit itself was also run under real systemd in a container (ok, failing, held, skipped and hung
 runs, with a shortened time limit).
 
