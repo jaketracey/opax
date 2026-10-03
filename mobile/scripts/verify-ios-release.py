@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Verify a signed OPAX archive app or exported IPA without disclosing signing IDs."""
 import argparse
+from functools import lru_cache
 import hashlib
 import ipaddress
 import json
@@ -17,7 +18,7 @@ import zipfile
 from urllib.parse import unquote, urlsplit
 
 sys.dont_write_bytecode = True
-from release_support import ReleaseError, load_credentials, matches, private_values, redact, scan_tracked
+from release_support import PRIVATE_NAMES, ReleaseError, load_credentials, matches, private_values, redact, scan_tracked
 
 GUARDS = (
     "Route is outside the public catalog allow-list",
@@ -34,7 +35,8 @@ ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com"
                    "amplitude.com", "sentry.io", "appsflyer.com", "adjust.com", "google-analytics.com",
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
                    "appcenter.ms", "bugsnag.com", "datadoghq.com", "graph.facebook.com"}
-ROUTE_KEYS = re.compile(rb"\./[A-Za-z0-9_()@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
+ROUTE_KEYS = re.compile(rb"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
+DEVELOPMENT_ROUTE = re.compile(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype", re.I)
 
 
 def url_hosts(body):
@@ -74,15 +76,66 @@ def has_analytics(body):
         for host in url_hosts(body) for denied in ANALYTICS_HOSTS)
 
 
+@lru_cache(maxsize=1)
+def production_block_list():
+    """Resolve Metro's actual rules, including inherited Expo exclusions."""
+    env = {key: value for key, value in os.environ.items()
+           if key not in (*PRIVATE_NAMES, "OPAX_INTERNAL_TESTER_EMAIL")}
+    env.update(OPAX_VARIANT="production", EXPO_NO_TELEMETRY="1", EXPO_NO_DOTENV="1")
+    result = subprocess.run(["node", "-e", """
+const config = require('./metro.config.js');
+const rules = [config.resolver.blockList].flat().filter(Boolean);
+process.stdout.write(JSON.stringify(rules.map(rule => ({source: rule.source, flags: rule.flags}))));
+"""], cwd=Path(__file__).resolve().parent.parent, env=env, capture_output=True, text=True)
+    require(result.returncode == 0, "production Metro exclusions resolve successfully")
+    rules = json.loads(result.stdout)
+    require(isinstance(rules, list) and bool(rules), "production Metro exclusion list exists")
+    patterns = []
+    for rule in rules:
+        require(isinstance(rule.get("source"), str) and isinstance(rule.get("flags"), str) and
+                set(rule["flags"]) <= set("imsu"), "supported Metro exclusion expression")
+        flags = re.ASCII
+        for flag, value in (("i", re.I), ("m", re.M), ("s", re.S)):
+            if flag in rule["flags"]:
+                flags |= value
+        patterns.append(re.compile(rule["source"], flags))
+    return tuple(patterns)
+
+
+def shipping_source_keys(routes):
+    # Model the production tree even when a tooling test uses a temporary tree.
+    production_root = Path(__file__).resolve().parent.parent / "src/app"
+    patterns = production_block_list()
+    keys = set()
+    for path in routes.rglob("*"):
+        if not path.is_file() or path.suffix not in {".tsx", ".ts", ".jsx", ".js"}:
+            continue
+        relative = path.relative_to(routes)
+        candidate = production_root / relative
+        # Metro can block a directory itself, preventing traversal of its files.
+        if not any(pattern.search(str(part)) for pattern in patterns
+                   for part in (candidate, *candidate.parents)):
+            keys.add("./" + relative.as_posix())
+    return keys
+
+
 def bundle_route_keys(body, routes):
     actual = {key.decode() for key in ROUTE_KEYS.findall(body)}
-    expected = {"./" + p.relative_to(routes).as_posix() for p in routes.rglob("*")
-                if p.is_file() and p.suffix in {".tsx", ".ts", ".jsx", ".js"}}
-    require(bool(actual) and actual == expected and not re.search(
-        rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures|\(dev\))|"
+    expected = shipping_source_keys(routes)
+    require(bool(actual) and actual == expected and
+        not any(DEVELOPMENT_ROUTE.search(key) for key in actual) and not re.search(
+        rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev)|"
         rb"ui-workbench|home-prototype|/__dev(?:/|\x00)", body, re.I),
         "bundle Expo route keys exactly match shipping source routes; no workbench routes")
     return sorted(actual)
+
+
+def scene_manifest_valid(info):
+    manifest = info.get("UIApplicationSceneManifest", {})
+    return (manifest.get("UIApplicationSupportsMultipleScenes") is False and
+            manifest.get("UISceneConfigurations", {}).get("UIWindowSceneSessionRoleApplication") == [
+                {"UISceneConfigurationName": "Default Configuration",
+                 "UISceneDelegateClassName": "EXExpoAppSceneDelegate"}])
 
 
 def framework_allowlist(app):
@@ -212,6 +265,7 @@ def verify_app(app, args):
     check(info.get("CFBundleShortVersionString") == args.version, "marketing version")
     check(info.get("CFBundleVersion") == args.build, "build number")
     check(info.get("MinimumOSVersion") == "18.4", "minimum iOS 18.4")
+    check(scene_manifest_valid(info), "single-window Expo scene lifecycle")
     check(info.get("ITSAppUsesNonExemptEncryption") is False, "standard HTTPS encryption compliance")
     check("NSAppTransportSecurity" not in info, "no ATS exception")
     # Current catalog app has no permission-gated features. This allow-list must
@@ -256,9 +310,6 @@ def verify_app(app, args):
     bundle = (app / "main.jsbundle").read_bytes()
     check(all(marker.encode() in bundle for marker in GUARDS), "shipped catalog/origin/redirect guards")
     check(not has_loopback(bundle), "no normalized loopback or fixture origin in shipped JS")
-    routes = list(Path("src/app").rglob("*"))
-    check(not any(re.search(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype", str(p), re.I) for p in routes),
-          "source route tree contains shipping routes only")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
     check(True, "bundle Expo route keys exactly match shipping source routes; no workbench routes")
     configs = list(app.rglob("app.config"))

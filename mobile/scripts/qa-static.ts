@@ -35,6 +35,17 @@ for (const variant of ['production', 'e2e']) {
   );
   const native = introspected._internal.modResults.ios.infoPlist;
   assert(!native.NSMicrophoneUsageDescription);
+  assert.deepEqual(native.UIApplicationSceneManifest, {
+    UIApplicationSupportsMultipleScenes: false,
+    UISceneConfigurations: {
+      UIWindowSceneSessionRoleApplication: [
+        {
+          UISceneConfigurationName: 'Default Configuration',
+          UISceneDelegateClassName: 'EXExpoAppSceneDelegate',
+        },
+      ],
+    },
+  });
   if (variant === 'production')
     assert(
       !native.NSAppTransportSecurity,
@@ -73,7 +84,7 @@ for (const app of [release, e2e]) {
     app.plugins.some(
       (plugin: unknown) =>
         Array.isArray(plugin) &&
-        plugin[0] === 'expo-build-properties' &&
+        plugin[0] === './plugins/withSceneLifecycle.js' &&
         plugin[1].ios.deploymentTarget === '18.4',
     ),
   );

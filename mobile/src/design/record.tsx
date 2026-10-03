@@ -92,7 +92,7 @@ export function SourceLink({
       onPress={() => openSource(url, label)}
       style={({ pressed }) => [styles.link, pressed ? styles.pressed : null]}
     >
-      <Text variant="body" tone="bronzeInk" style={styles.linkText}>
+      <Text wordSafe variant="body" tone="bronzeInk" style={styles.linkText}>
         {label}
       </Text>
       <Icon name="arrow.up.right.square" size={16} tone="bronzeInk" />

@@ -73,8 +73,15 @@ public final class OpaxShareModule: Module {
       guard let url = URL(string: request.url), url.scheme == "https", url.host != nil else {
         throw InvalidShareURLException()
       }
-      guard let presenter = self.appContext?.utilities?.currentViewController() else {
+      // Resolve the active scene's presenter each time, including an open
+      // profile or Account sheet. The application-wide keyWindow is legacy.
+      guard let scene = SceneGeometry.foregroundScene(),
+        let window = scene.windows.first(where: { $0.isKeyWindow }),
+        var presenter = window.rootViewController else {
         throw NoPresenterException()
+      }
+      while let presented = presenter.presentedViewController, !presented.isBeingDismissed {
+        presenter = presented
       }
       let item = OpaxLinkItem(url: url, title: request.title, icon: self.appIcon())
       let controller = UIActivityViewController(activityItems: [item], applicationActivities: nil)
