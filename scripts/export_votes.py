@@ -39,11 +39,11 @@ both keys. `_meta` dates the file:
                       output matches the file it replaces (PREVIOUS, the
                       checkout's portal/public/votes.json) byte for byte apart
                       from this value keeps the old value, so an unchanged rerun
-                      writes an identical file. The old value must be a real UTC
-                      time, not in the future, and the file a regular one of at
-                      most PREVIOUS_MAX_BYTES; otherwise, or with no previous
-                      file, it is now. The previous file is compared, never
-                      parsed, so no content there can stop the export.
+                      writes an identical file, whatever the clock says now. The
+                      old value must be a real UTC time and the file a regular
+                      one of at most PREVIOUS_MAX_BYTES; otherwise, or with no
+                      previous file, it is now. The previous file is compared,
+                      never parsed, so no content there can stop the export.
   latest_division_date  the newest dated division counted in the totals of a
                       published record (null when none). Federal totals count
                       every aye and no in the legacy tables, so a legacy state
@@ -252,8 +252,9 @@ def read_previous(path):
 def carried_stamp(out, previous):
     """The previous file's content_changed_at when that file is byte for byte what this run
     would write with it, else None. Only the stamp's 20 bytes may differ, and they must
-    hold a real UTC time no later than now. Leaves out["_meta"]["content_changed_at"] for
-    the caller to set."""
+    hold a real UTC time; it is not compared with the clock, so a clock set back cannot
+    restamp unchanged content. Leaves out["_meta"]["content_changed_at"] for the caller
+    to set."""
     old = read_previous(previous)
     if old is None:
         return None
@@ -265,12 +266,10 @@ def carried_stamp(out, previous):
         return None
     try:
         stamp = old[at:end].decode("ascii")
-        when = datetime.strptime(stamp, STAMP_FORMAT).replace(tzinfo=timezone.utc)
+        datetime.strptime(stamp, STAMP_FORMAT)
     except ValueError:  # non-ASCII bytes, or no such date or time (2026-02-30, 24:00:00, :60)
         return None
-    if not STAMP.fullmatch(stamp) or when > datetime.now(timezone.utc):
-        return None
-    return stamp
+    return stamp if STAMP.fullmatch(stamp) else None
 
 
 def pick_sides(rows, divisions):

@@ -20,6 +20,7 @@ import time
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from unittest import mock
 
 _spec = importlib.util.spec_from_file_location(
     "export_votes", Path(__file__).resolve().parents[1] / "scripts/export_votes.py")
@@ -305,11 +306,11 @@ class ExportVotesTests(unittest.TestCase):
         self.assertStampedNow(canonical.replace(b"Zo\xc3\xab", b"Zo\\u00eb", 1), "one character escaped")
         self.assertStampedNow(b"\xef\xbb\xbf" + canonical, "a UTF-8 byte order mark")
 
-    def test_impossible_or_future_stamps_are_not_carried(self):
+    def test_impossible_stamps_are_not_carried(self):
         first, _, _, _ = self.export()
         for stamp in ("2026-02-30T03:04:05Z", "2026-01-02T99:99:99Z", "2026-13-01T00:00:00Z",
                       "2026-01-02T24:00:00Z", "2026-01-02T23:59:60Z", "2026-00-10T00:00:00Z",
-                      "2026-01- 2T03:04:05Z", "2099-01-01T00:00:00Z"):
+                      "2026-01- 2T03:04:05Z"):
             self.assertEqual(len(stamp), 20)  # same width as a real stamp: only validation can refuse it
             self.assertStampedNow(restamp(first, stamp).encode("utf-8"), stamp)
         # and the controls: real times, a leap day among them, are carried
@@ -319,6 +320,28 @@ class ExportVotesTests(unittest.TestCase):
                 raw, _, data, _ = self.run_export()
                 self.assertEqual(data["_meta"]["content_changed_at"], stamp)
                 self.assertEqual(raw.encode("utf-8"), self.previous.read_bytes())
+
+    def test_clock_set_back_keeps_the_stamp_of_unchanged_content(self):
+        """The previous stamp is later than "now" (the clock went back a second): identical content
+        still writes an identical file. A stamp from any future date is kept the same way."""
+        first, _, _, _ = self.export()
+
+        class RolledBack(datetime):
+            @classmethod
+            def now(cls, tz=None):
+                return datetime(2026, 1, 2, 3, 4, 4, tzinfo=timezone.utc)  # one second before OLD_STAMP
+
+        with mock.patch.object(X, "datetime", RolledBack):
+            for stamp in (OLD_STAMP, "2099-12-31T23:59:59Z"):
+                with self.subTest(stamp):
+                    self.previous.write_bytes(restamp(first, stamp).encode("utf-8"))
+                    raw, err, data, _ = self.run_export()
+                    self.assertEqual(raw.encode("utf-8"), self.previous.read_bytes())
+                    self.assertIn(f"content unchanged since {stamp}", err)
+            # control: the patched clock is the one a changed file is stamped with
+            self.previous.write_bytes(restamp(first, OLD_STAMP).encode("utf-8")[:-1] + b"\r\n")
+            _, _, data, _ = self.run_export()
+            self.assertEqual(data["_meta"]["content_changed_at"], "2026-01-02T03:04:04Z")
 
     def test_deeply_nested_previous_file_stamps_now(self):
         self.export()
