@@ -1,5 +1,6 @@
 import {
   decodeChoice,
+  hasParliamentaryMembership,
   matchingSeats,
   representativeProfile,
   uncoveredProfile,
@@ -58,4 +59,15 @@ test('roster-only former profiles retain Formerly and explicit missing blocks', 
   expect(view.blocks.identity.data).toBe(p);
   expect(view.blocks.pay.status).toBe('missing');
   expect(view.blocks.votes.asAt).toBeNull();
+});
+
+test('committee/witness identity without a membership observation never becomes a page', () => {
+  const member = joinPerson('tony-abbott', slugs, roster, people, manifest);
+  expect(hasParliamentaryMembership(member, directory)).toBe(true);
+  expect(
+    hasParliamentaryMembership(
+      { ...member, name: 'Synthetic witness', rosterPersonId: undefined },
+      directory,
+    ),
+  ).toBe(false);
 });

@@ -97,7 +97,10 @@ export default function YourMP() {
   } | null>(null);
   useEffect(() => {
     let active = true;
-    const id = view?.members.data?.[0]?.person_id;
+    const id =
+      view?.members.data?.length === 1
+        ? view.members.data[0]!.person_id
+        : undefined;
     if (id)
       catalogs
         .profileFor(id)
@@ -157,6 +160,15 @@ export default function YourMP() {
     >
       {error ? (
         <ErrorState message={error} onRetry={retry} testID="your-mp-error" />
+      ) : null}
+      {error && choice && !view ? (
+        <Button
+          label="Change seat"
+          onPress={() => {
+            setChoosing(true);
+            setQuery('');
+          }}
+        />
       ) : null}
       {!ready || (choice && !view && !chooser && !error) ? (
         <LoadingState shape="people" label="Loading your representatives" />
@@ -250,22 +262,28 @@ export default function YourMP() {
               }
             />
           </Group>
-          <RecordBlock
-            title="Your member"
-            id="your-member"
-            block={view.members}
-            missing="No verified representative is recorded for this date. This does not establish a vacancy."
-            retry={retry}
-          >
-            {(rows) => (
-              <RepresentativeRows
-                rows={rows}
-                directory={directory}
-                asAt={view.members.asAt}
-                id="your-member"
-              />
-            )}
-          </RecordBlock>
+          {view.seat.data!.chamber !== 'senate' ? (
+            <RecordBlock
+              title={
+                view.members.data && view.members.data.length > 1
+                  ? 'Your representatives'
+                  : 'Your member'
+              }
+              id="your-member"
+              block={view.members}
+              missing="No verified representative is recorded for this date. This does not establish a vacancy."
+              retry={retry}
+            >
+              {(rows) => (
+                <RepresentativeRows
+                  rows={rows}
+                  directory={directory}
+                  asAt={view.members.asAt}
+                  id="your-member"
+                />
+              )}
+            </RecordBlock>
+          ) : null}
           {memberProfile ? (
             <>
               <RecordBlock
@@ -362,7 +380,7 @@ export default function YourMP() {
             </>
           ) : memberFailure?.id === view.members.data?.[0]?.person_id ? (
             <ErrorState message={memberFailure!.message} onRetry={retry} />
-          ) : view.members.data?.length ? (
+          ) : view.members.data?.length === 1 ? (
             <LoadingState label="Loading the member’s public record" />
           ) : null}
           <Section title="Your senators" testID="your-senators">

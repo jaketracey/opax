@@ -6,7 +6,6 @@ import {
   ErrorState,
   Group,
   Heading,
-  OfflineBanner,
   OpaxWebLink,
   Section,
   SourceLink,
@@ -47,7 +46,6 @@ export function EvidenceFooter({
       ) : null}
       {block.stale ? (
         <>
-          <OfflineBanner />
           {block.savedAt !== null ? (
             <StaleNotice savedAt={block.savedAt} />
           ) : (

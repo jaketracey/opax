@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { Image, RefreshControl } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
+import { ApiError } from '../api/errors';
 import { remoteImageURI } from '../api/image-policy';
 import {
   AsAtLine,
@@ -39,7 +40,11 @@ import {
 import { shareHeaderItem } from '../navigation/share';
 import { electorateRoute } from '../navigation/routes';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
-import { uncoveredProfile, type ProfileView } from './your-mp/model';
+import {
+  uncoveredProfile,
+  hasParliamentaryMembership,
+  type ProfileView,
+} from './your-mp/model';
 function Disclosure({
   label,
   id,
@@ -75,6 +80,14 @@ function ProfileScreen({ slug }: { slug: string }) {
     let active = true;
     (async () => {
       const person = await catalogs.person(slug);
+      if (
+        !person.data.canonicalPersonId &&
+        !hasParliamentaryMembership(person.data, await catalogs.directory())
+      )
+        throw new ApiError(
+          'not-found',
+          'Native profiles cover parliamentarians in the public record. This person is outside the covered parliamentary roster.',
+        );
       const p = person.data.canonicalPersonId
         ? await catalogs.profileFor(person.data.canonicalPersonId)
         : uncoveredProfile(person.data);
@@ -191,6 +204,12 @@ function ProfileScreen({ slug }: { slug: string }) {
                   No current electorate observation is held in this release.
                 </Text>
               )}
+              {profile.personId === null ? (
+                <Text>
+                  The electorate release does not include this person. Only the
+                  public directory identity is available here.
+                </Text>
+              ) : null}
               <Text variant="fine">
                 These are dated public records. Representation may have changed
                 since collection.

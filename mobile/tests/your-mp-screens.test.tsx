@@ -88,7 +88,7 @@ test('profile failure in expenses preserves votes, pay and identity; official po
     ...p.blocks.expenses,
     data: null,
     status: 'error',
-    error: new ApiError('network', 'Unavailable'),
+    error: new ApiError('server', 'Unavailable'),
   };
   mock.person.mockResolvedValue(result(person));
   mock.profileFor.mockResolvedValue(p);
@@ -186,5 +186,34 @@ test('electorate preserves Census vintage and renders candidates as plain public
       .findAllByType(PersonRow)
       .some((n) => n.props.name === 'Rodney Smith'),
   ).toBe(false);
+  await act(async () => r.unmount());
+});
+
+test('roster-only member shows limited coverage without fabricating figures', async () => {
+  mockParams.slug = 'tony-abbott';
+  mock.person.mockResolvedValue(
+    result(c.joinPerson('tony-abbott', slugs, roster, people, manifest)),
+  );
+  const r = await render(<Person />);
+  expect(text(r)).toContain('Only the public directory identity');
+  expect(mock.profileFor).not.toHaveBeenCalled();
+  expect(r.root.findByType(PartyLabel).props.current).toBe(false);
+  await act(async () => r.unmount());
+});
+test('unverified private identity is refused before any name or profile blocks render', async () => {
+  mockParams.slug = 'synthetic-witness';
+  mock.person.mockResolvedValue(
+    result({
+      ...c.joinPerson('tony-abbott', slugs, roster, people, manifest),
+      name: 'Synthetic witness',
+      rosterPersonId: undefined,
+    }),
+  );
+  const r = await render(<Person />);
+  expect(text(r)).not.toContain('Synthetic witness');
+  expect(mock.profileFor).not.toHaveBeenCalled();
+  expect(
+    r.root.findAll((n) => n.props.testID === 'person-error').length,
+  ).toBeGreaterThan(0);
   await act(async () => r.unmount());
 });

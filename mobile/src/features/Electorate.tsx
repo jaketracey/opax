@@ -223,9 +223,6 @@ function ElectorateScreen({ id }: { id: string }) {
               ) : (
                 <EmptyState message="No election records are held for this electorate." />
               )}
-              <Text variant="fine" testID="electorate-elections-end">
-                Elections
-              </Text>
             </Section>
             <Section title="Local context" testID="electorate-census">
               {view.census.length ? (
@@ -270,9 +267,6 @@ function ElectorateScreen({ id }: { id: string }) {
               ) : (
                 <EmptyState message="No Census context is held for this electorate." />
               )}
-              <Text variant="fine" testID="electorate-census-end">
-                Local context
-              </Text>
             </Section>
             <Section title="Related constituencies">
               {view.related.length ? (

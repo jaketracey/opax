@@ -1,10 +1,11 @@
+import { chamberName } from '../../design/parliament';
 import type {
   Catalogs,
   Electorate,
   PersonProfile,
   PersonId,
 } from '../../api/catalogs';
-import { joinPerson, nameKey } from '../../api/catalogs';
+import { joinPerson, nameKey, rosterRowFor } from '../../api/catalogs';
 export type Directory = Awaited<ReturnType<Catalogs['directory']>>;
 export type YourMPView = Awaited<ReturnType<Catalogs['yourMP']>>;
 export type ProfileView = Omit<
@@ -111,4 +112,26 @@ export function uncoveredProfile(identity: PersonProfile): ProfileView {
       partyReceipts: { ...missing },
     },
   };
+}
+
+/** Committee appearances alone do not establish parliamentary membership. */
+export function hasParliamentaryMembership(
+  identity: PersonProfile,
+  directory: Directory,
+): boolean {
+  if (identity.canonicalPersonId)
+    return directory.people.data.people.some(
+      (p) => p.person_id === identity.canonicalPersonId,
+    );
+  const row = rosterRowFor(
+    [identity.name],
+    directory.roster.data,
+    identity.rosterPersonId,
+  );
+  return !!row?.representation?.some(
+    (r) =>
+      r.electorate.trim() &&
+      r.chamber !== 'senate_committee' &&
+      chamberName(r.chamber, r.jurisdiction),
+  );
 }
