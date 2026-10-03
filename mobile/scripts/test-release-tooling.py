@@ -296,6 +296,32 @@ class PrivacyTests(unittest.TestCase):
             with self.assertRaisesRegex(ReleaseError, "Application inputs unchanged"):
                 verify.verify_provenance(root, original)
 
+    def test_production_block_list_is_an_application_input(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            def git(*args):
+                return subprocess.check_output(["git", *args], cwd=root, stderr=subprocess.DEVNULL).decode().strip()
+            git("init")
+            git("config", "user.email", "test@example.invalid")
+            git("config", "user.name", "Test")
+            (root / "mobile/scripts").mkdir(parents=True)
+            block_list = root / "mobile/scripts/production-block-list.json"
+            block_list.write_text('["workbench"]')
+            (root / "mobile/scripts/verify.py").write_text("original verifier")
+            git("add", ".")
+            git("commit", "-m", "artifact")
+            original = git("rev-parse", "HEAD")
+            (root / "mobile/scripts/verify.py").write_text("updated verifier")
+            git("commit", "-am", "tooling change")
+            with contextlib.redirect_stdout(io.StringIO()):
+                verify.verify_provenance(root, original)
+            # Metro reads this file, so a weakened list would change what ships
+            # and what the verifier expects; it is not tooling.
+            block_list.write_text("[]")
+            git("commit", "-am", "block list change")
+            with self.assertRaisesRegex(ReleaseError, "Application inputs unchanged"):
+                verify.verify_provenance(root, original)
+
 
 class ReleaseStepTests(unittest.TestCase):
     values = {**PrivacyTests.values, "OPAX_RELEASE_COMMIT": "a" * 40,
@@ -500,6 +526,88 @@ class BundleAttackTests(unittest.TestCase):
             self.assertEqual(verify.bundle_route_keys(baseline, routes), ["./_layout.tsx"])
             with self.assertRaises(ReleaseError):
                 verify.bundle_route_keys(baseline + b"./__tests__/fixture.tsx\0", routes)
+
+    def test_route_keys_found_when_hermes_packs_neighbouring_strings(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            keys = ["./(tabs)/(bills)/bills.tsx", "./_layout.tsx", "./account.tsx", "./talk.tsx"]
+            for key in keys:
+                path = routes / key
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("source route")
+            # Hermes string storage has no separators: keys run into neighbours
+            # on either side and into each other.
+            bundle = (b"configurable./(tabs)/(bills)/bills.tsxFileSystem\0./talk.tsxfoo.js\0"
+                      b"no children./_layout.tsx./account.tsxBINARY")
+            self.assertEqual(verify.bundle_route_keys(bundle, routes), sorted(keys))
+
+    def test_unshipped_route_merged_into_a_shipping_key_is_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            (routes / "talk.tsx").write_text("source route")
+            self.assertEqual(verify.bundle_route_keys(b"\0./talk.tsx\0", routes), ["./talk.tsx"])
+            for plant in (b"\0./talk.tsx./secret.tsx\0", b"\0./talk.tsxfoo./workbench.tsx\0",
+                          b"\0./talk.tsx\0x./(dev)/index.tsx\0"):
+                with self.subTest(plant=plant), self.assertRaisesRegex(ReleaseError, "no unshipped.*found"):
+                    verify.bundle_route_keys(plant, routes)
+
+    def test_each_missing_route_key_is_named(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            (routes / "talk.tsx").write_text("source route")
+            (routes / "account.tsx").write_text("source route")
+            with self.assertRaisesRegex(ReleaseError, r"FAIL every shipping .*missing \./account\.tsx\)$"):
+                verify.bundle_route_keys(b"\0./talk.tsx\0", routes)
+
+    def test_incompatible_metro_rule_is_a_fail_line_not_a_traceback(self):
+        verify.production_block_list.cache_clear()
+        self.addCleanup(verify.production_block_list.cache_clear)
+        for source in ("[^]", "(?<name>workbench)"):
+            with self.subTest(source=source):
+                verify.production_block_list.cache_clear()
+                rules = subprocess.CompletedProcess([], 0, json.dumps([{"source": source, "flags": ""}]), "")
+                with patch.object(verify.subprocess, "run", return_value=rules):
+                    with self.assertRaisesRegex(ReleaseError, "^FAIL Metro exclusion expression .* is not Python-compatible"):
+                        verify.production_block_list()
+        # The release entry point reports it as one FAIL line.
+        verify.production_block_list.cache_clear()
+        with tempfile.TemporaryDirectory() as d:
+            directory = Path(d)
+            (directory / "commit.txt").write_text("a" * 40)
+            argv = ["verify", str(directory / "OPAX.app"), "--kind", "archive", "--version", "0.1.0",
+                    "--build", "5", "--commit", "a" * 40, "--xcode-build", "fixture",
+                    "--output", str(directory / "verification.json")]
+            rules = subprocess.CompletedProcess([], 0, json.dumps([{"source": "[^]", "flags": ""}]), "")
+            with patch.object(sys, "argv", argv), patch.object(verify, "load_credentials"), \
+                 patch.object(verify, "verify_provenance", return_value="a" * 40), \
+                 patch.object(verify, "scan_tracked"), \
+                 patch.object(verify, "verify_app", side_effect=lambda *_: verify.production_block_list()), \
+                 patch.object(verify.subprocess, "check_output", return_value=b"/repository\n"), \
+                 patch.object(verify.subprocess, "run", return_value=rules):
+                with self.assertRaisesRegex(SystemExit, "^FAIL Metro exclusion expression"):
+                    verify.main()
+
+    def test_scene_delegate_must_be_defined_in_the_executable(self):
+        def otool(stdout, returncode=0):
+            return subprocess.CompletedProcess([], returncode, stdout, "")
+        linked = ("OPAX:\nContents of (__DATA_CONST,__objc_classlist) section\n"
+                  "0000000100492540 0x1004b9d78\n    data       0x1004b9d1a Swift class\n"
+                  "        name           0x1003cec10 EXExpoAppSceneDelegate\n"
+                  "Contents of (__DATA_CONST,__objc_classrefs) section\n")
+        elsewhere = ("OPAX:\nContents of (__DATA_CONST,__objc_classlist) section\n"
+                     "        name           0x1003ce960 _TtC4OPAX11AppDelegate\n"
+                     "Contents of (__TEXT,__cstring) section\n"
+                     "        name           0x1003cec10 EXExpoAppSceneDelegate\n")
+        renamed = linked.replace("EXExpoAppSceneDelegate", "EXExpoAppSceneDelegateShim")
+        with patch.object(verify.subprocess, "run", return_value=otool(linked)) as run:
+            self.assertTrue(verify.scene_delegate_linked(Path("OPAX.app/OPAX")))
+            self.assertEqual(run.call_args.args[0], ["/usr/bin/otool", "-oV", "OPAX.app/OPAX"])
+        for output in (elsewhere, renamed, ""):
+            with patch.object(verify.subprocess, "run", return_value=otool(output)):
+                self.assertFalse(verify.scene_delegate_linked(Path("OPAX.app/OPAX")))
+        with patch.object(verify.subprocess, "run", return_value=otool(linked, returncode=1)):
+            with self.assertRaisesRegex(ReleaseError, "otool"):
+                verify.scene_delegate_linked(Path("OPAX.app/OPAX"))
 
     def test_scene_manifest_requires_the_expo_scene_delegate(self):
         manifest = {"UIApplicationSupportsMultipleScenes": False, "UISceneConfigurations": {
