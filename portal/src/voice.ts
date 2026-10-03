@@ -8,7 +8,7 @@ const MAX_ACTIVE_SESSIONS = 2
 const PROVIDER_ORIGIN = 'https://api.elevenlabs.io'
 
 type Session = {
-  id: string; member_id: string; state: string; reserved_seconds: number; charged_seconds: number
+  id: string; member_id: string | null; state: string; reserved_seconds: number; charged_seconds: number
   created_at: number; expires_at: number; started_at: number | null; conversation_id: string | null
 }
 type VoiceConfig = {VOICE_ENABLED?: string; VOICE_AGENT_ID?: string; ELEVENLABS_API_KEY?: string; VOICE_TOOL_SECRET?: string; VOICE_MONTHLY_SECONDS?: string}
@@ -23,6 +23,7 @@ export async function expireVoiceSessions(env: VoiceEnv, timestamp = now()): Pro
   // Uncertain disconnects remain fully charged. Never trust a client claim that
   // the call ended, or give it another reservation while an old socket can run.
   await env.COMMUNITY_DB.prepare("UPDATE voice_sessions SET state='expired',closed_at=? WHERE state IN ('connecting','active') AND expires_at<=?").bind(timestamp, timestamp).run()
+  await env.COMMUNITY_DB.prepare("UPDATE voice_sessions SET conversation_id=NULL WHERE member_id IS NULL AND state IN ('closed','cancelled','expired') AND closed_at<=?").bind(timestamp - 86400).run()
 }
 
 /** One SQLite write atomically checks member balance, monthly budget and locks. */
