@@ -29,9 +29,9 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
  if(path==='/api/community/auth/consume'&&req.method==='POST'){
   sameOrigin(req,env);await limit(env,'consume:'+(req.headers.get('cf-connecting-ip')||'local'),30,900)
   const data=await body(req),token=text(data.token,43,43,'Sign-in token');if(!/^[\w-]{43}$/.test(token))throw new CommunityError(400,'This link is not valid.')
-  const t=now(),link=await env.COMMUNITY_DB.prepare('UPDATE login_links SET used_at=? WHERE token_hash=? AND used_at IS NULL AND expires_at>? RETURNING email').bind(t,await digest(token),t).first<{email:string}>()
+  const t=now(),proofHash=await digest(token),link=await env.COMMUNITY_DB.prepare('UPDATE login_links SET used_at=? WHERE token_hash=? AND used_at IS NULL AND expires_at>? RETURNING email').bind(t,proofHash,t).first<{email:string}>()
   if(!link)throw new CommunityError(400,'This link has expired or was already used. Request a new one.')
-  return issueSession(env,link.email,t,'web')
+  return issueSession(env,link.email,t,'web',proofHash)
  }
  if(path==='/api/community/auth/consume-code'&&req.method==='POST'){
   sameOrigin(req,env)
@@ -49,9 +49,9 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
    if(!admitted||typeof data.code!=='string'||!/^\d{8}$/.test(data.code))throw new CommunityError(400,CODE_FAILURE)
    if(!await matchesSignInCode(env,challengeId!,data.code,admitted.code_mac))throw new CommunityError(400,CODE_FAILURE)
    // This write competes with link consumption and rechecks expiry and supersession.
-   const redeemed=await env.COMMUNITY_DB.prepare("UPDATE login_links SET used_at=? WHERE challenge_id=? AND client='ios' AND used_at IS NULL AND superseded_at IS NULL AND expires_at>? RETURNING email").bind(now(),challengeId,now()).first<{email:string}>()
+   const redeemed=await env.COMMUNITY_DB.prepare("UPDATE login_links SET used_at=? WHERE challenge_id=? AND client='ios' AND used_at IS NULL AND superseded_at IS NULL AND expires_at>? RETURNING email,token_hash").bind(now(),challengeId,now()).first<{email:string,token_hash:string}>()
    if(!redeemed)throw new CommunityError(400,CODE_FAILURE)
-   return await issueSession(env,redeemed.email,now(),'ios')
+   return await issueSession(env,redeemed.email,now(),'ios',redeemed.token_hash)
   }catch(e){if(e instanceof CommunityError)throw new CommunityError(400,CODE_FAILURE);throw e}
  }
  if(path==='/api/community/auth/logout'&&req.method==='POST'){
@@ -63,12 +63,17 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
  return null
 }
 
-async function issueSession(env:Env,email:string,t:number,client:'web'|'ios'):Promise<Response> {
- await env.COMMUNITY_DB.prepare('INSERT INTO members(id,email,created_at) VALUES (?,?,?) ON CONFLICT(email) DO NOTHING').bind(crypto.randomUUID(),email,t).run()
- const m=await env.COMMUNITY_DB.prepare('SELECT id,disabled FROM members WHERE email=?').bind(email).first<{id:string,disabled:number}>();if(!m||m.disabled)throw new CommunityError(403,'This account is unavailable.')
+async function issueSession(env:Env,email:string,t:number,client:'web'|'ios',proofHash:string):Promise<Response> {
  const session=randomToken(),hash=await digest(session)
- if(client==='ios')await env.COMMUNITY_DB.prepare("INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at,client) VALUES (?,?,?,?,'ios')").bind(hash,m.id,t+30*86400,t).run()
- else await env.COMMUNITY_DB.prepare('INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at) VALUES (?,?,?,?)').bind(hash,m.id,t+30*86400,t).run()
+ // The redeemed proof must still exist in the same transaction that issues the
+ // session. Concurrent account deletion removes it and cannot resurrect an account.
+ const results=await env.COMMUNITY_DB.batch([
+  env.COMMUNITY_DB.prepare('INSERT INTO members(id,email,created_at) SELECT ?,?,? WHERE EXISTS(SELECT 1 FROM login_links WHERE token_hash=? AND email=? AND used_at IS NOT NULL) ON CONFLICT(email) DO NOTHING').bind(crypto.randomUUID(),email,t,proofHash,email),
+  env.COMMUNITY_DB.prepare(client==='ios'?
+   "INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at,client) SELECT ?,m.id,?,?,'ios' FROM members m WHERE m.email=? AND m.disabled=0 AND EXISTS(SELECT 1 FROM login_links WHERE token_hash=? AND email=m.email AND used_at IS NOT NULL)":
+   'INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at) SELECT ?,m.id,?,? FROM members m WHERE m.email=? AND m.disabled=0 AND EXISTS(SELECT 1 FROM login_links WHERE token_hash=? AND email=m.email AND used_at IS NOT NULL)').bind(hash,t+30*86400,t,email,proofHash)
+ ])
+ if(!results[1].meta.changes)throw new CommunityError(403,'This account is unavailable.')
  return json({signed_in:true},200,{'set-cookie':`${COOKIE}=${session}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${30*86400}`})
 }
 

@@ -16,16 +16,17 @@ export function randomSignInCode():string {
  return String(sample[0]%range).padStart(8,'0')
 }
 
-export async function signInCodeMac(env:Env,challengeId:string,code:string):Promise<Uint8Array> {
+export async function signInCodeMac(env:Env,challengeId:string,code:string,deletionMemberId?:string):Promise<Uint8Array> {
  const key=await crypto.subtle.importKey('raw',encoder.encode(requireSignInCodeSecret(env)),{name:'HMAC',hash:'SHA-256'},false,['sign'])
  // Domain separation and an unambiguous encoding bind the code to this challenge.
- return new Uint8Array(await crypto.subtle.sign('HMAC',key,encoder.encode(JSON.stringify(['opax-signin-code-v1',challengeId,code]))))
+ const context=deletionMemberId===undefined?['opax-signin-code-v1',challengeId,code]:['opax-deletion-code-v1',deletionMemberId,challengeId,code]
+ return new Uint8Array(await crypto.subtle.sign('HMAC',key,encoder.encode(JSON.stringify(context))))
 }
 
 export const macHex=(mac:Uint8Array)=>[...mac].map(v=>v.toString(16).padStart(2,'0')).join('')
 
-export async function matchesSignInCode(env:Env,challengeId:string,code:string,storedMac:string):Promise<boolean> {
- const actual=await signInCodeMac(env,challengeId,code)
+export async function matchesSignInCode(env:Env,challengeId:string,code:string,storedMac:string,deletionMemberId?:string):Promise<boolean> {
+ const actual=await signInCodeMac(env,challengeId,code,deletionMemberId)
  const expected=new Uint8Array(storedMac.match(/../g)!.map(byte=>parseInt(byte,16)))
  // Cloudflare's native fixed-size comparator; no JavaScript string comparison.
  return crypto.subtle.timingSafeEqual(actual,expected)
