@@ -1,0 +1,90 @@
+import type { ExpoConfig } from 'expo/config';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+type Variant = 'development' | 'e2e' | 'production';
+const variant = (process.env.OPAX_VARIANT ?? 'development') as Variant;
+if (!['development', 'e2e', 'production'].includes(variant)) {
+  throw new Error('OPAX_VARIANT must be development, e2e or production');
+}
+const port = Number(process.env.OPAX_FIXTURE_PORT ?? 8910);
+if (!Number.isInteger(port) || port < 8900 || port > 8999) {
+  throw new Error('OPAX_FIXTURE_PORT must be 8900–8999');
+}
+// These branches run at build time. Never put origin fallbacks in app JS.
+const origin =
+  variant === 'e2e'
+    ? `http://127.0.0.1:${port}`
+    : variant === 'development'
+      ? (process.env.OPAX_DEV_ORIGIN ?? 'https://opax.com.au')
+      : 'https://opax.com.au';
+const originURL = new URL(origin);
+const localDevelopment =
+  variant === 'development' &&
+  originURL.protocol === 'http:' &&
+  ['localhost', '127.0.0.1'].includes(originURL.hostname);
+if (
+  variant === 'development' &&
+  originURL.protocol !== 'https:' &&
+  !localDevelopment
+)
+  throw new Error('Development origin must use HTTPS or loopback HTTP');
+if (
+  originURL.username ||
+  originURL.password ||
+  originURL.pathname !== '/' ||
+  originURL.search ||
+  originURL.hash
+)
+  throw new Error('Invalid API origin');
+const config: ExpoConfig = {
+  name: 'OPAX',
+  slug: 'opax',
+  version: '0.1.0',
+  scheme: 'opax',
+  platforms: ['ios'],
+  userInterfaceStyle: 'light',
+  orientation: 'default',
+  ios: {
+    bundleIdentifier: 'au.com.opax.app',
+    buildNumber: '1',
+    supportsTablet: false,
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
+      ...(variant === 'e2e' || localDevelopment
+        ? {
+            NSAppTransportSecurity: {
+              NSAllowsArbitraryLoads: false,
+              NSAllowsLocalNetworking: true,
+              NSExceptionDomains: {
+                [originURL.hostname]: {
+                  NSExceptionAllowsInsecureHTTPLoads: true,
+                  NSIncludesSubdomains: false,
+                },
+              },
+            },
+          }
+        : {}),
+    },
+  },
+  plugins: [
+    'expo-router',
+    ['expo-build-properties', { ios: { deploymentTarget: '18.4' } }],
+    './plugins/withNetworkPolicy.js',
+  ],
+  extra: {
+    variant,
+    apiOrigin: origin,
+    appVersion: '0.1.0',
+    appBuild: '1',
+    fontAcknowledgements: ['Merriweather', 'PublicSans'].map((name) => ({
+      name,
+      notice: readFileSync(
+        resolve(__dirname, `assets/fonts/OFL-${name}.txt`),
+        'utf8',
+      ),
+    })),
+  },
+  updates: { enabled: false },
+};
+export default config;

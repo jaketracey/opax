@@ -1,0 +1,29 @@
+appId: au.com.opax.app
+name: 01 Launch and reach every tab
+---
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: today-screen-title
+- takeScreenshot: ${EVIDENCE}/01-today
+- scrollUntilVisible:
+    element:
+      id: today-screen-footer
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/01-today-footer
+- tapOn:
+    id: tab-your-mp
+- assertVisible:
+    id: your-mp-screen-title
+- tapOn:
+    id: tab-bills
+- assertVisible:
+    id: bills-screen-title
+- tapOn:
+    id: tab-search
+- assertVisible:
+    id: search-screen-title
+- tapOn:
+    id: tab-today
+- assertVisible:
+    id: today-screen-title

@@ -1,0 +1,37 @@
+appId: au.com.opax.app
+name: 04 Read previously saved records with the fixture stopped
+---
+- launchApp
+- tapOn:
+    id: tab-search
+- scrollUntilVisible:
+    element:
+      id: search-input
+- tapOn:
+    id: search-input
+- eraseText
+- inputText: Anthony Albanese
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: search-submit
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: search-cache-state
+- assertVisible: Offline · Saved .*
+- scrollUntilVisible:
+    element:
+      id: search-result-anthony-albanese
+- takeScreenshot: ${EVIDENCE}/04-offline-search
+- tapOn:
+    id: search-result-anthony-albanese
+- scrollUntilVisible:
+    element:
+      id: person-party
+- scrollUntilVisible:
+    element:
+      id: person-electorate
+- assertVisible: Grayndler
+- takeScreenshot: ${EVIDENCE}/04-offline-profile

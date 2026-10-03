@@ -1,0 +1,29 @@
+{
+  "reviewed": "2026-10-03",
+  "accepted": [
+    {
+      "package": "braces",
+      "advisory": "GHSA-vfj7-8cjw-p6xm",
+      "exposure": "tooling",
+      "reason": "Metro/Jest glob processing; build/test tooling, not executed by the app."
+    },
+    {
+      "package": "decode-uri-component",
+      "advisory": "GHSA-vcc3-ghjq-m6fr",
+      "exposure": "runtime",
+      "reason": "Expo Router deep-link parsing uses query-string 7 and decode-uri-component 0.2.2. No compatible upstream patch exists; forced npm remediation downgrades the fixed SDK. Accepted moderate denial-of-service risk from a crafted deep link; review on SDK patch updates."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-86w9-cpqp-85rv",
+      "exposure": "tooling",
+      "reason": "Expo CLI signing tooling; no app import or signing in this lane."
+    },
+    {
+      "package": "uuid",
+      "advisory": "GHSA-w5hq-g745-h8pq",
+      "exposure": "tooling",
+      "reason": "Prebuild xcode tooling; not executed by the app."
+    }
+  ]
+}

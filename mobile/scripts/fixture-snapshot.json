@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "sourceCommit": "8f1305e383b2f20c2a2fe879e550bd5b7414b8cc",
+  "files": {
+    "/parliamentarians.json": "6e0105041516fe00402b923c1ed86fea3b63c254a37e5e0faa54d1e7622eaf35",
+    "/electorates/manifest.json": "5d705fbdad6763707a8dd8b034cc47f6f990c75a3610f14f95c4ed89eab252db",
+    "/electorates/releases/b56417062ccc33cf/people.json": "8d520fd27b744d71cdd30750f1fec6a89bac25ed2961c53b54d6d2538c96ff95"
+  }
+}

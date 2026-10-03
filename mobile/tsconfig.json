@@ -1,0 +1,18 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "types": ["jest", "node"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "scripts/**/*.ts",
+    "tests/**/*.ts",
+    "app.config.ts",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
+}

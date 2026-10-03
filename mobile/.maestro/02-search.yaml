@@ -1,0 +1,33 @@
+appId: au.com.opax.app
+name: 02 Search the public people catalog
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-search
+- scrollUntilVisible:
+    element:
+      id: search-input
+- tapOn:
+    id: search-input
+- inputText: Anthony Albanese
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: search-submit
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: search-result-anthony-albanese
+- takeScreenshot: ${EVIDENCE}/02-search
+- tapOn:
+    id: search-result-anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/02-person-name
+- scrollUntilVisible:
+    element:
+      id: person-party

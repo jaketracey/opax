@@ -1,0 +1,27 @@
+appId: au.com.opax.app
+name: 03 Read a sourced profile
+---
+- runFlow: 02-search.yaml
+- scrollUntilVisible:
+    element:
+      id: person-screen-title
+    direction: UP
+- takeScreenshot: ${EVIDENCE}/03-person-name
+- scrollUntilVisible:
+    element:
+      id: person-party
+- assertVisible:
+    id: person-party
+- scrollUntilVisible:
+    element:
+      id: person-electorate
+    centerElement: true
+- assertVisible: Grayndler
+- takeScreenshot: ${EVIDENCE}/03-profile
+- scrollUntilVisible:
+    element:
+      id: person-source
+    centerElement: true
+- assertVisible:
+    id: person-source
+- takeScreenshot: ${EVIDENCE}/03-source
