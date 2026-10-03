@@ -32,7 +32,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["money-records","connections","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "bill"];
+const PANELS = ["money-records","connections","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "privacy", "bill"];
 // /bills is the bill panel's index; it has no panel of its own, so isRoute has
 // to be told the word is ours before the click handler will follow it.
 const PANEL_ALIASES = { bills: "bill" };
@@ -965,6 +965,7 @@ const TITLES = {
   methods: "Methods · OPAX",
   stats: "Corpus stats · OPAX",
   expenses: "What the expense categories mean · OPAX",
+  privacy: "Privacy · OPAX",
   bill: "Bill · OPAX",
   bills: "Federal bills: votes, speeches & summaries · OPAX",
 };
@@ -1848,6 +1849,17 @@ function route() {
     document.title = TITLES.expenses;
     setCrumbs([{ label: "About", href: "/about" }, { label: "Expense categories" }]);
     renderExpenseGlossary();
+  } else if (view === "privacy") {
+    showPanel("privacy");
+    document.title = TITLES.privacy;
+    setCrumbs([{ label: "About", href: "/about" }, { label: "Privacy" }]);
+    // The voice panel's privacy link lands on /privacy#voice. The panel was
+    // hidden when the browser looked for the section, so land on it once it
+    // shows; route() scrolls to the top first, so wait a frame.
+    const section = pendingAnchor || (/^#[\w-]+$/.test(location.hash) ? location.hash.slice(1) : "");
+    pendingAnchor = "";
+    const target = section && $("panel-privacy").querySelector(`[id="${section}"]`);
+    if (target) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
   } else {
     showPanel("ask");
     document.title = TITLES.ask;
@@ -14054,6 +14066,7 @@ const VIEW_DESCRIPTIONS = {
   methods: "How the OPAX corpus is built, its known limits, and how to cite an answer or a speech.",
   stats: "Live counts for every collection in the OPAX index.",
   expenses: "What each category in the Independent Parliamentary Expenses Authority's quarterly reports covers.",
+  privacy: "What the OPAX website and app collect, which companies receive it, how long it is kept and how to delete your account.",
 };
 function syncPathMeta() {
   const path = hereRoute();
