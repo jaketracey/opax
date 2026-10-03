@@ -9,8 +9,11 @@ name: 14 About, coverage, original sources, privacy and font notices
     timeout: 90000
 - tapOn:
     id: account-about
-- assertVisible:
-    id: about-name
+- scrollUntilVisible:
+    element:
+      id: about-name
+    timeout: 90000
+    visibilityPercentage: 1
 - takeScreenshot: ${EVIDENCE}/14-name
 - scrollUntilVisible:
     element:

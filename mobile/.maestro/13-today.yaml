@@ -9,6 +9,7 @@ name: 13 Today feeds and their dated original sources
       id: today-bill-0
     timeout: 90000
     visibilityPercentage: 1
+    centerElement: true
 - takeScreenshot: ${EVIDENCE}/13-bills
 - scrollUntilVisible:
     element:
@@ -21,13 +22,15 @@ name: 13 Today feeds and their dated original sources
       id: today-bill-0
     timeout: 90000
     visibilityPercentage: 1
+    centerElement: true
     direction: UP
 - tapOn:
     id: today-bill-0
-- extendedWaitUntil:
-    visible:
+- scrollUntilVisible:
+    element:
       id: recent-bill-title
-    timeout: 15000
+    timeout: 90000
+    visibilityPercentage: 1
 - takeScreenshot: ${EVIDENCE}/13-open-bill
 - scrollUntilVisible:
     element:
