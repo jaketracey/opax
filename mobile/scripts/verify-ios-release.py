@@ -36,7 +36,7 @@ ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com"
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
                    "appcenter.ms", "bugsnag.com", "datadoghq.com", "graph.facebook.com"}
 ROUTE_KEYS = re.compile(rb"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
-DEVELOPMENT_ROUTE = re.compile(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype", re.I)
+DEVELOPMENT_ROUTE = re.compile(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype|voice-bridge-test|test-screens", re.I)
 
 
 def url_hosts(body):
@@ -124,10 +124,14 @@ def bundle_route_keys(body, routes):
     expected = shipping_source_keys(routes)
     require(bool(actual) and actual == expected and
         not any(DEVELOPMENT_ROUTE.search(key) for key in actual) and not re.search(
-        rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev)|"
-        rb"ui-workbench|home-prototype|/__dev(?:/|\x00)", body, re.I),
+        rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev|voice-bridge-test|test-screens)|"
+        rb"(?:src/)?test-screens/|ui-workbench|home-prototype|/__dev(?:/|\x00)", body, re.I),
         "bundle Expo route keys exactly match shipping source routes; no workbench routes")
     return sorted(actual)
+
+
+def no_voice_native_symbols(symbols):
+    return not re.search(rb"OpaxVoiceCore|OpaxVoice|requestRecordPermission", symbols, re.I)
 
 
 def scene_manifest_valid(info):
@@ -312,6 +316,8 @@ def verify_app(app, args):
     check(not has_loopback(bundle), "no normalized loopback or fixture origin in shipped JS")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
     check(True, "bundle Expo route keys exactly match shipping source routes; no workbench routes")
+    check(no_voice_native_symbols(command("/usr/bin/nm", "-a", str(app / info["CFBundleExecutable"]))),
+          "no OpaxVoiceCore, OpaxVoice or microphone permission symbols in production binary")
     configs = list(app.rglob("app.config"))
     check(bool(configs), "embedded Expo config exists")
     for path in configs:

@@ -62,6 +62,7 @@ const config: ExpoConfig = {
     supportsTablet: false,
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
+      ...(variant === 'e2e' ? { OPAXVoiceFixturePort: port } : {}),
       ...(variant === 'e2e' || localDevelopment
         ? {
             NSAppTransportSecurity: {
@@ -82,6 +83,7 @@ const config: ExpoConfig = {
     ['expo-router', { sitemap: variant !== 'production' }],
     ['./plugins/withSceneLifecycle.js', { ios: { deploymentTarget: '18.4' } }],
     './plugins/withNetworkPolicy.js',
+    ['./plugins/withVoiceAutolinking.js', { variant }],
   ],
   extra: {
     variant,

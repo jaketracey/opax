@@ -481,7 +481,8 @@ class BundleAttackTests(unittest.TestCase):
 
     def test_development_routes_fail_even_when_the_source_matches_the_bundle(self):
         for key in ("./fixtures/index.tsx", "./fixture.tsx", "./__tests__/index.tsx",
-                    "./(dev)/index.tsx", "./__dev/index.tsx", "./workbench.jsx"):
+                    "./(dev)/index.tsx", "./__dev/index.tsx", "./workbench.jsx",
+                    "./voice-bridge-test.tsx", "./test-screens/index.tsx"):
             with self.subTest(key=key), tempfile.TemporaryDirectory() as d:
                 routes = Path(d)
                 path = routes / key
@@ -500,6 +501,19 @@ class BundleAttackTests(unittest.TestCase):
             self.assertEqual(verify.bundle_route_keys(baseline, routes), ["./_layout.tsx"])
             with self.assertRaises(ReleaseError):
                 verify.bundle_route_keys(baseline + b"./__tests__/fixture.tsx\0", routes)
+
+    def test_compiled_bundle_test_screen_path_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            (routes / "_layout.tsx").write_text("shipping")
+            for marker in (b"src/test-screens/VoiceBridgeTestScreen.tsx", b"src/app/voice-bridge-test.tsx"):
+                with self.subTest(marker=marker), self.assertRaises(ReleaseError):
+                    verify.bundle_route_keys(b"./_layout.tsx\0" + marker, routes)
+
+    def test_voice_and_microphone_symbols_are_refused(self):
+        self.assertTrue(verify.no_voice_native_symbols(b"_OBJC_CLASS_$_EXExpoAppSceneDelegate"))
+        for symbol in (b"_$s13OpaxVoiceCore", b"_OBJC_CLASS_$_OpaxVoiceModule", b"_requestRecordPermission"):
+            self.assertFalse(verify.no_voice_native_symbols(symbol))
 
     def test_scene_manifest_requires_the_expo_scene_delegate(self):
         manifest = {"UIApplicationSupportsMultipleScenes": False, "UISceneConfigurations": {

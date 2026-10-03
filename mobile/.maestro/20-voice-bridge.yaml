@@ -1,0 +1,147 @@
+appId: au.com.opax.app
+name: 20 Silent native voice bridge and account lifecycle
+---
+# Preserve the catalog cache populated by journeys 02/03 for offline journey 04.
+# Account state is exercised explicitly through sign-in, logout and deletion.
+- launchApp
+- openLink: opax://voice-bridge-test
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: voice-bridge-test-title
+    timeout: 15000
+- runFlow:
+    file: support/voice-code.yaml
+    env:
+      VOICE_EMAIL: happy@example.invalid
+- scrollUntilVisible:
+    element:
+      id: voice-start
+    centerElement: true
+- tapOn:
+    id: voice-start
+- scrollUntilVisible:
+    element:
+      id: voice-state
+    direction: UP
+- extendedWaitUntil:
+    visible: 'State: live'
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/20-live
+- scrollUntilVisible:
+    element:
+      id: voice-turn-user
+- assertVisible: 'user: Synthetic fixture question'
+- assertVisible: 'agent: Synthetic corrected greeting'
+- scrollUntilVisible:
+    element:
+      id: voice-source-0
+- assertVisible: '.*Interactive Gambling.*'
+- takeScreenshot: ${EVIDENCE}/20-evidence
+- scrollUntilVisible:
+    element:
+      id: voice-mute
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: voice-mute
+- scrollUntilVisible:
+    element:
+      id: voice-mode
+    direction: UP
+- assertVisible: 'Mode: muted'
+- scrollUntilVisible:
+    element:
+      id: voice-end
+    centerElement: true
+- tapOn:
+    id: voice-end
+- scrollUntilVisible:
+    element:
+      id: voice-state
+    direction: UP
+- assertVisible: 'State: ended'
+- assertVisible: 'Reason: user'
+- scrollUntilVisible:
+    element:
+      id: voice-logout
+    centerElement: true
+- tapOn:
+    id: voice-logout
+- runFlow:
+    file: support/voice-code.yaml
+    env:
+      VOICE_EMAIL: deadline@example.invalid
+- scrollUntilVisible:
+    element:
+      id: voice-start
+    centerElement: true
+- tapOn:
+    id: voice-start
+- scrollUntilVisible:
+    element:
+      id: voice-state
+    direction: UP
+- extendedWaitUntil:
+    visible: 'Reason: allowanceExhausted'
+    timeout: 15000
+- assertVisible: 'Remaining: 0'
+- takeScreenshot: ${EVIDENCE}/20-deadline
+- scrollUntilVisible:
+    element:
+      id: voice-start
+    centerElement: true
+- tapOn:
+    id: voice-start
+- scrollUntilVisible:
+    element:
+      id: voice-error
+    direction: UP
+- assertVisible: 'Error: allowanceExhausted'
+- assertVisible: 'State: unavailable'
+- scrollUntilVisible:
+    element:
+      id: voice-logout
+    centerElement: true
+- tapOn:
+    id: voice-logout
+- scrollUntilVisible:
+    element:
+      id: voice-auth
+    direction: UP
+- assertVisible: Signed out
+- runFlow:
+    file: support/voice-code.yaml
+    env:
+      VOICE_EMAIL: happy@example.invalid
+- scrollUntilVisible:
+    element:
+      id: voice-deletion-code
+    centerElement: true
+- tapOn:
+    id: voice-deletion-code
+- scrollUntilVisible:
+    element:
+      id: voice-code
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: voice-code
+- eraseText: 100
+- inputText: '01234567'
+- runFlow: support/voice-dismiss-keyboard.yaml
+- scrollUntilVisible:
+    element:
+      id: voice-delete
+    centerElement: true
+- tapOn:
+    id: voice-delete
+- scrollUntilVisible:
+    element:
+      id: voice-message
+    direction: UP
+- assertVisible: Account deleted
+- assertVisible: Signed out
+- takeScreenshot: ${EVIDENCE}/20-deleted

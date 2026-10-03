@@ -2,7 +2,6 @@
 // cannot see connections opened and closed between samples; keep raw evidence.
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { lookup } from 'node:dns/promises';
 import { appendFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 const exec = promisify(execFile);
@@ -10,8 +9,6 @@ const [udid, output] = process.argv.slice(2);
 if (!udid || !output)
   throw new Error('Usage: connection-audit.ts <udid> <output>');
 async function main(udid: string, output: string) {
-  const addresses = await lookup('opax.com.au', { all: true }).catch(() => []);
-  const ips = new Set(addresses.map((row) => row.address));
   let stopping = false;
   for (const signal of ['SIGTERM', 'SIGINT'] as const)
     process.on(signal, () => {
@@ -20,8 +17,7 @@ async function main(udid: string, output: string) {
   const pids = new Set<string>();
   let samples = 0,
     processSamples = 0,
-    observedConnections = 0,
-    productionConnections = 0;
+    observedConnections = 0;
   const external = new Set<string>();
   const errors: string[] = [];
   while (!stopping) {
@@ -59,7 +55,7 @@ async function main(udid: string, output: string) {
             await exec(
               '/usr/sbin/lsof',
               ['-nP', '-a', '-p', pid, '-i', '-FpcnT'],
-              { timeout: 3000 },
+              { timeout: 10000 },
             )
           ).stdout;
         } catch (error) {
@@ -76,7 +72,6 @@ async function main(udid: string, output: string) {
           if (!remote) continue;
           observedConnections++;
           const host = remote.replace(/:\d+$/, '').replace(/^\[|\]$/g, '');
-          if (ips.has(host) || host === 'opax.com.au') productionConnections++;
           if (!['127.0.0.1', '::1'].includes(host)) external.add(name);
         }
         appendFileSync(
@@ -87,7 +82,19 @@ async function main(udid: string, output: string) {
       }
       samples++;
     } catch (error) {
-      errors.push(String(error));
+      const failure = error as {
+        code?: unknown;
+        killed?: boolean;
+        signal?: string;
+      };
+      errors.push(
+        JSON.stringify({
+          message: String(error),
+          code: failure.code,
+          killed: failure.killed,
+          signal: failure.signal,
+        }),
+      );
     }
     await new Promise((resolve) =>
       setTimeout(resolve, Math.max(0, 250 - (Date.now() - started))),
@@ -98,18 +105,12 @@ async function main(udid: string, output: string) {
     processSamples,
     pids: [...pids],
     observedConnections,
-    productionConnections,
     nonLoopbackConnections: [...external],
-    productionAddresses: addresses,
     errors,
     basis:
-      'lsof -a -p <app-pid> -i; simulator launchctl app PIDs only, nominal 250ms interval',
+      'lsof -a -p <app-pid> -i; simulator launchctl app PIDs only, nominal 250ms interval; no DNS or outbound probes',
     limitation: 'Connections shorter than the interval may be missed.',
-    pass:
-      processSamples > 0 &&
-      errors.length === 0 &&
-      productionConnections === 0 &&
-      external.size === 0,
+    pass: processSamples > 0 && errors.length === 0 && external.size === 0,
   };
   writeFileSync(
     join(output, 'connection-audit.json'),

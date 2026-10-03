@@ -36,6 +36,18 @@ public enum VoiceEvent: Sendable, Equatable {
     case error(VoiceFailure)
     case status(VoiceStatusSnapshot)
 }
+/// Atomic read model for a screen that missed events while unmounted.
+/// No reservation, audio, credential or raw response is exposed.
+public struct VoiceSnapshot: Sendable, Equatable {
+    public let state: CallState
+    public let reason: EndReason?
+    public let mode: CallMode?
+    public let playback: PlaybackState
+    public let remaining: Int
+    public let transcript: [TranscriptTurn]
+    public let sources: [VoiceSource]
+    public let status: VoiceStatusSnapshot?
+}
 public struct ActiveSession: Sendable, Decodable, Equatable {
     public enum State: Sendable, Codable, Equatable {
         case reserved, connecting, active, unknown(String)

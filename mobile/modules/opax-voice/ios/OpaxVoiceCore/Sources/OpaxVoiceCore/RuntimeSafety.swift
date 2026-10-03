@@ -1,4 +1,4 @@
-#if DEBUG
+#if DEBUG || OPAX_VOICE_E2E
 import Foundation
 
 /// One execution boundary for real and fake HTTP/WebSocket transports and I/O.
@@ -16,7 +16,11 @@ enum VoiceTestSafety {
         init(loopbackOnly: Bool = true) { self.loopbackOnly = loopbackOnly }
         func audit() -> Audit { lock.withLock { Audit(inputOpens: inputOpens, outputOpens: outputOpens, hosts: hosts) } }
     }
+    #if OPAX_VOICE_E2E
+    private static let shared = Monitor(loopbackOnly: true)
+    #else
     private static let shared = Monitor(loopbackOnly: NSClassFromString("XCTestCase") != nil)
+    #endif
     // Negative guard self-tests use a separate measured scope and assert it is
     // dirty. Every ordinary test uses the cumulative monitor; it is never reset.
     @TaskLocal static var isolated: Monitor?

@@ -52,6 +52,7 @@ public actor VoiceCallController {
     private var epoch = 0
     private var muted = false
     private var mode: CallMode?
+    private var reason: EndReason?
     private var interruptionID = 0
     private var evidence = EvidenceModel()
     private var remaining = 0
@@ -67,6 +68,11 @@ public actor VoiceCallController {
         let stream = AsyncStream<VoiceEvent>.makeStream(bufferingPolicy: .bufferingNewest(128))
         events = stream.stream; continuation = stream.continuation
     }
+    /// Reads actor-owned values atomically; does not refresh, emit or open a call.
+    public func snapshot() -> VoiceSnapshot {
+        VoiceSnapshot(state: state, reason: reason, mode: mode, playback: playbackState,
+            remaining: remaining, transcript: evidence.turns, sources: evidence.sources, status: latestStatus)
+    }
     private func observe() {
         guard lifecycleTask == nil else { return }
         let events = lifecycle.events
@@ -75,7 +81,7 @@ public actor VoiceCallController {
         }
     }
     private func change(_ state: CallState, reason: EndReason? = nil) {
-        self.state = state; continuation.yield(.state(state, reason: reason))
+        self.state = state; self.reason = reason; continuation.yield(.state(state, reason: reason))
     }
     private func changeMode(_ value: CallMode) {
         guard value != mode else { return }; mode = value; continuation.yield(.mode(value))

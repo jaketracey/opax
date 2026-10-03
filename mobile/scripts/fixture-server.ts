@@ -1,4 +1,5 @@
 // Offline, data-only server. No Worker import, proxy, fetch, email or model path.
+import { createVoiceFixture } from './voice-fixture';
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
 import snapshot from './fixture-snapshot.json';
@@ -18,9 +19,11 @@ import type {
   Manifest,
   CatalogRecord,
 } from '../src/api/catalogs';
-const port = Number(process.env.OPAX_FIXTURE_PORT ?? 8910);
-if (!Number.isInteger(port) || port < 8900 || port > 8999)
-  throw new Error('Fixture port must be 8900–8999');
+let port = Number(process.env.OPAX_FIXTURE_PORT ?? 8910);
+if (!Number.isInteger(port) || (port !== 0 && (port < 8900 || port > 8999)))
+  throw new Error(
+    'Fixture port must be 8900–8999 or 0 (OS-assigned loopback port)',
+  );
 const files = new Map<string, Buffer>();
 const pinnedBytes = fixtureBytes(snapshot);
 for (const path of Object.keys(snapshot.files)) {
@@ -80,7 +83,9 @@ const normalize = (value: string) =>
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
-export const server = createServer((request, response) => {
+const bill = JSON.parse(files.get('/bills/au-federal-r7534.json')!.toString());
+let voice: Awaited<ReturnType<typeof createVoiceFixture>>;
+export const server = createServer(async (request, response) => {
   let status = 200;
   let loud = false;
   const path = request.url ?? '/';
@@ -100,6 +105,12 @@ export const server = createServer((request, response) => {
   try {
     if (request.headers.host !== `127.0.0.1:${port}`)
       throw new Error('Host is outside the loopback fixture boundary');
+    if (request.socket.remoteAddress !== '127.0.0.1')
+      throw new Error('Peer is outside the loopback boundary');
+    if (await voice.route(request, response)) {
+      status = response.statusCode;
+      return;
+    }
     if (request.method !== 'GET') throw new Error('Only GET is allowed');
     if (path.endsWith('.webp')) assertPortraitPath(path);
     else assertAllowedPath(path);
@@ -200,15 +211,24 @@ export const server = createServer((request, response) => {
     );
   }
 });
-// Future fake voice relay hook: replace this rejection with a local, explicit upgrade handler.
-server.on('upgrade', (request, socket) => {
+// Authenticated, numeric-loopback fake relay. Never proxies a provider.
+server.on('upgrade', (request, socket, head) => {
+  if (voice.upgrade(request, socket, head)) return;
   console.error(`OUTSIDE_ALLOW_LIST UPGRADE ${request.url}`);
   socket.end('HTTP/1.1 404 Not Found\r\n\r\n');
 });
-server.listen(port, '127.0.0.1', () =>
+server.listen(port, '127.0.0.1', async () => {
+  port = (server.address() as { port: number }).port;
+  voice = await createVoiceFixture(port, {
+    title: bill.title,
+    path: '/bill/au-federal-r7534',
+  });
   console.log(
     `OPAX_FIXTURE_READY port=${port} files=${files.size} offline=true`,
-  ),
-);
+  );
+});
 for (const signal of ['SIGTERM', 'SIGINT'] as const)
-  process.on(signal, () => server.close(() => process.exit(0)));
+  process.on(signal, () => {
+    voice.close();
+    server.close(() => process.exit(0));
+  });

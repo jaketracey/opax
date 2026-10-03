@@ -14,6 +14,22 @@ assert(
   !plist.NSMicrophoneUsageDescription,
   'Microphone permission is deferred',
 );
+if (config.extra?.variant === 'production') {
+  assert(
+    !plist.OPAXVoiceFixturePort,
+    'Production has no native voice fixture configuration',
+  );
+  assert(
+    readFileSync('ios/Podfile', 'utf8').includes(
+      "use_expo_modules! :exclude => ['opax-voice']",
+    ),
+    'Production excludes both voice pods',
+  );
+} else if (config.extra?.variant === 'e2e')
+  assert.equal(
+    plist.OPAXVoiceFixturePort,
+    Number(process.env.OPAX_FIXTURE_PORT ?? 8910),
+  );
 if (config.ios?.infoPlist?.NSAppTransportSecurity)
   assert.deepEqual(
     plist.NSAppTransportSecurity,

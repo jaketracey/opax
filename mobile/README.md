@@ -79,7 +79,8 @@ saved data without clearing the app. Default runs include 01–04;
 
 The runner samples the selected simulator's app processes with `lsof -a -p <pid> -i`
 every nominal 250ms, writing raw `connection-samples.jsonl` and a measured
-`connection-audit.json`. Missing process coverage, collection errors or observed
+`connection-audit.json`. The sampler uses numeric socket addresses without DNS or
+outbound probes. Missing process coverage, collection errors or observed
 external connections fail. Short connections between samples may be missed; the
 source, variant and bundle boundaries are checked separately. Fixture request
 counts are in `request-audit.json` and do not claim to measure external traffic.
@@ -166,7 +167,7 @@ attack regression tests.
   Worker imports or outbound network. The person search projection matches names
   from these catalogs; it does not reproduce production index ranking. A Host header other than the exact loopback host is rejected. Unknown
   routes/methods/kinds return 404 with `OUTSIDE_ALLOW_LIST`. The documented
-  `upgrade` hook is reserved for a later fake voice relay.
+  `upgrade` hook now hosts the loopback fake voice relay; see `src/voice/README.md`.
 - Add independent `.maestro/<nn>-<journey>.yaml` flows using stable `testID`s.
   Use `${EVIDENCE}` for relative screenshot paths within Maestro's artifact bundle;
   the runner gathers named PNGs into the run's `screenshots/` folder.
