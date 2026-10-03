@@ -1242,7 +1242,7 @@ def link_speakers() -> None:
     # Step 0b: Seed state parliament members from state speeches
     seed_state_members(db)
 
-    # Step 1: Build member lookup (includes state members now)
+    # Step 1: Build federal member lookup; state speeches use their own lookup.
     full_lookup, surname_lookup = build_member_lookup(db)
 
     if not full_lookup:

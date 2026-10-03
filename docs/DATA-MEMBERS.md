@@ -51,13 +51,17 @@ Do it after every by-election, casual vacancy or defection; quarterly otherwise.
 Annabelle Cleeland is the Victorian member for Euroa, [The Nationals](https://www.parliament.vic.gov.au/members/annabelle-cleeland/).
 She is outside the APH federal sweep above. Her `vic_annabelle_cleeland` member row
 incorrectly carries `party = ALP`; her Victorian Hansard speeches have no party,
-so the directory exporter inherited Labor from the member fallback. Historic
-federal `Mr Cleeland` speeches were also linked to that state ID. The federal
+so the directory exporter inherited Labor from the member fallback. Older
+federal `Mr Cleeland` speeches were also mislinked to that state ID. The federal
 surname lookup now accepts only federal chambers; state matching stays scoped
 to its jurisdiction.
 
 The same audit found `sa_harvey` (Richard Manuel Harvey), wrongly carrying ALP
-and linked to historic federal `Mrs Harvey` speeches. The [South Australian
+and linked to federal speeches by other people, including older `Mrs Harvey`
+speeches and recent committee turns. In the 28 September snapshot, 179 federal
+rows dated since 1993 remain linked to that state ID, mostly recent committee
+rows. They extend the `Harvey` directory entry to 2026 and add `senate_committee`
+to its chambers. The [South Australian
 parliamentary record](https://hansardsearch.parliament.sa.gov.au/daily/uh/2018-05-16/35)
 identifies Richard Harvey as a Liberal member for Newland. His directory entry
 is the surname-only `Harvey`. Yasmin Catley's row has the same historical
@@ -69,4 +73,12 @@ before the fallback. Each requires the exact ID, name, jurisdiction, chamber
 and known incorrect Labor label; a different future party is preserved. The
 read-only export therefore survives a refresh from the existing DB snapshot.
 Speech party histories, dates, counts and representation are retained. The
-underlying stored cross-links are not repaired by this export.
+underlying stored cross-links are not repaired by this export. The linker fills
+unlinked speeches; changing its lookup does not clear existing wrong IDs.
+
+Follow-up, not performed by this fix: audit and apply a one-off relink of the
+existing mislinked federal rows, including `sa_harvey`, `nsw_david_shoebridge`,
+`nsw_mehreen_faruqi` and other affected state IDs. Recent federal speeches by
+current federal members still carry their former state IDs. Relink actual
+members to their federal identities while keeping committee witnesses separate,
+then re-export the directory with its normal representation enrichment.
