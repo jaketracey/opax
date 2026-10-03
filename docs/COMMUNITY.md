@@ -9,6 +9,7 @@ The public record stays open. An email account enables private or shared reading
 - `/community` serves responsive account, discussion, reading-list and connected-tool views. Shared desktop/mobile navigation links to the community.
 - `/api/community/*` owns isolated D1 community data. Staging never proxies account requests to production.
 - Magic links expire after 15 minutes, are stored only as hashes and are consumed atomically after an explicit POST. Tokens travel in URL fragments, which the browser removes immediately. Email scanners cannot consume them by fetching the link.
+- Native code sign-in uses the same proof and session as the web; see the code flow below. Only native requests supersede earlier unused iOS proofs for the same normalized email. Web links remain independently usable until consumed or expired, including when a later web email fails to send.
 - Sessions use hashed random tokens and a Secure, HttpOnly, SameSite=Lax `__Host-` cookie. Account mutations require the configured origin. Login and content creation are rate-limited.
 - Reading lists start private. Owners control sharing and deletion; public profiles omit email. Saved records use Opax's `/doc/` paths.
 - Saved conversations (13 September 2026): the chat keeps every conversation in the browser's localStorage (`opax-chats`, twenty newest, trimmed sources) and mirrors a signed-in member's to `member_chats` (migration 0006) through `GET/PUT/DELETE /api/community/chats[/:id]` - one owner per row, private, the reader's `updated` clock deciding between devices (an older write is acknowledged as `stale`). Fifty per member; a body up to 600 KB and eighty turns. Nothing anonymous is stored server-side.
@@ -31,6 +32,26 @@ The public record stays open. An email account enables private or shared reading
 
   The exact label `"Community Development Grants"` also resolves when unique. The response includes the canonical `id: "GO3141"`, `key: "go3141"` and `opax_url: "https://opax.com.au/money/grants?jur=federal&program=GO3141"` alongside current program data and coverage notes.
 
+## Native code sign-in (W1 to W3, branch implementation)
+
+`POST /api/community/auth/request` accepts `{email, client:"ios"}`. Omitting `client` keeps the web email and response unchanged. Native requests receive `{sent:true, message, challenge_id}` for both existing and new accounts. The challenge is 32 cryptographically random bytes encoded as 43 URL-safe characters and bound in the proof row to the normalized email and `client:"ios"`. The response carries no code or link token.
+
+The native email includes the existing `/community?view=signin#token=…` link and an eight-digit app code, including possible leading zeroes. Its copy says never to share the code and explains that the link signs in through the browser, not the app, and consumes the code too. Rejection sampling over `crypto.getRandomValues` makes every code equally likely. One proof holds the SHA-256 link hash, the challenge and an HMAC-SHA-256 of the code bound to that challenge. The code is never stored in clear or as an unkeyed hash. The proof expires after 15 minutes. The new proof is inserted first. Only after the email is accepted are older native proofs for that email superseded; supersession also sets their `expires_at` to the current time, so the existing link-consume SQL refuses them. Email-delivery failure deletes the newly created proof and leaves earlier codes and links working. The web and native share the existing `login-ip:` and `login-email:` counters: 15 per fixed hour per IP and 5 per fixed hour per email.
+
+`POST /api/community/auth/consume-code` accepts `{challenge_id, code}`, with the code supplied as an eight-character decimal string. It looks up the challenge's email, then completes these atomic admissions in order before comparing any MAC:
+
+1. IP: the existing `consume:` counter, shared with link consumption, permits 30 attempts per fixed 15-minute window. Unknown and malformed challenges still spend IP quota.
+2. Email: a counter keyed by a digest of the proof's normalized email permits 10 attempts per fixed 24-hour window. Every known-challenge attempt counts, including attempts on expired, consumed or superseded proofs. Reissue and supersession never reset it; a caller-supplied email cannot choose its key.
+3. Challenge: one conditional update increments attempts only on an unused, unexpired, unsuperseded iOS proof with fewer than five attempts and returns its MAC.
+
+The Worker computes the submitted code's MAC and compares the two fixed-size MACs with Cloudflare's native constant-time `crypto.subtle.timingSafeEqual`. A matching code must then win a conditional `used_at` update that rechecks expiry and supersession. Link consumption competes for that same row: whichever wins consumes both forms. Parallel requests cannot create a second session from that proof.
+
+Success returns `{signed_in:true}` and the existing `__Host-opax_session` cookie: host-only, `Path=/`, `Secure`, `HttpOnly`, `SameSite=Lax`, `Max-Age=2592000` (30 days). Its random token remains stored only as a SHA-256 hash. Code exchange labels the session `client:"ios"`; browser link consumption labels it `web`. The label adds no authority. Existing member lookup and logout apply to both.
+
+Wrong, malformed, expired, superseded, consumed, unknown, disabled-account and over-limit code exchanges return the same HTTP 400 body: `{"error":"This code could not be used. Request a new sign-in email or use its link to sign in through your browser."}`. Missing or partial native schema, or a missing/short MAC secret, makes both native issuance and exchange return the existing generic HTTP 503 before spending any quota or creating a proof. Origin rejection remains the existing HTTP 403. All auth POSTs, including native issuance/exchange and cookie-bearing mutations, require the exact configured `COMMUNITY_ORIGIN`. The native core explicitly sends `Origin: https://opax.com.au` in production, and the configured staging origin when testing staging. There is no Origin bypass, CORS addition or new session header.
+
+At the email cap, the link remains the fallback until the daily window ends. Fixed windows can allow attempts on both sides of a boundary. Carrier NAT still shares the existing IP caps. Rotating the MAC secret invalidates outstanding codes; their links remain usable unless already consumed or superseded.
+
 ## Configuration and launch requirements
 
 Production and staging have separate `COMMUNITY_DB` bindings. Apply every migration in `portal/migrations` to each target database before enabling accounts. Configure:
@@ -38,7 +59,16 @@ Production and staging have separate `COMMUNITY_DB` bindings. Apply every migrat
 - `COMMUNITY_ORIGIN`: the exact HTTPS origin for that environment.
 - `COMMUNITY_EMAIL_FROM`: an authenticated Cloudflare Email Sending address.
 - `COMMUNITY_EMAIL`: the sending binding.
+- `COMMUNITY_CODE_MAC_SECRET`: a new Worker secret for HMAC-SHA-256 code storage, with separate high-entropy values (at least 32 random bytes) for staging and production. The runtime requires at least 32 characters after trimming, before any native quota call. Keep it out of Wrangler vars, source and logs. Missing or short configuration refuses native issuance/exchange without spending shared web quota, storing a proof or sending email. Automated tests use a fixed test-only key.
 - `COMMUNITY_ENABLED`: enable after real email delivery and sign-in are verified.
+
+Migration `0011_native_signin.sql` adds the proof's client, challenge, MAC, attempts and supersession columns, its lookup indexes, and the session client label. Existing rows default to `web` and remain valid. The corrected web request, consume and session statements work on both schemas: they use explicit original-column inserts, the original expiry-based consume statement, and omit session `client` so the migrated default supplies `web`. Native paths require the migration and secret and fail closed before quota when unavailable.
+
+Two orders preserve web sign-in. In staging, either deploy compatibility commit `9039198`, apply 0011, set the secret and deploy the corrected native feature; or deploy the complete corrected Worker first, then apply 0011 and set the secret (either order). In the second order, native routes return generic 503 until both are ready. The compatibility commit can be folded into that complete corrected staging release; it need not be deployed separately there. Applying 0011 while the original positional-insert Worker is live is unsafe.
+
+**don't merge the native feature to `main` until migration 0011 is applied to production, because the nightly refresh deploys `main`.** For production, first ship `9039198` (or an equivalent web-only compatibility patch) on `main` and verify that its Worker is live; then apply 0011 and set the distinct production secret; only then merge/release the corrected native feature. This separate compatibility release is still required when production and `main` retain the original positional inserts: folding it solely into the native merge cannot satisfy this gate. A manually deployed corrected branch cannot protect production from a later nightly deployment of an incompatible `main`. Staging must pass before this production sequence is authorized.
+
+After migration, rollback to the compatibility commit or the corrected Worker preserves web sign-in and expiry-based refusal of superseded native links. Do not roll back to the original positional-insert baseline. No deployment, remote migration, secret setup or `main` change was performed in this lane. The orchestrator owns the separate W6 migration-number correction; the IOS design documents are unchanged here.
 
 The current release removes payment routes, SDK dependencies, promotional copy and payment-based MCP restrictions. Migration 0002 removes the unused subscription and checkout tables from the earlier draft.
 
@@ -46,10 +76,12 @@ The current release removes payment routes, SDK dependencies, promotional copy a
 
 Automated tests cover single-use links, expiration, sessions, origins, login rate limiting, private list ownership/sharing, public profile privacy, moderation, disabled accounts and member MCP access. MCP tests exercise tool discovery, search/read citations, invalid arguments, bounded responses, hashed keys and revocation. Grant regressions cover recipient-to-program candidates, exact-label resolution, ambiguous names, authoritative collision keys, malformed assets, source provenance, jurisdiction-specific value semantics and adaptive truncation. External email is simulated in these tests.
 
+Native sign-in tests additionally cover unbiased code generation, challenge-bound keyed storage, issuance non-enumeration, shared quotas, native-only supersession, admission order, concurrent per-challenge and email caps across old/new challenges and at the cap boundary, one-winner link/code races, generic failures, cookie attributes and unchanged Origin enforcement. Real route statements exercise the full web flow before and after 0011 and across migration, both web links staying valid, failed second delivery and native supersession preserving web links, and missing/short secrets or partial migration spending no native quota. A local Worker/D1 runtime test uses an ephemeral port, stubs the email binding and denies outbound requests; it verifies the concurrent email-cap boundary and native session label. Existing community and voice fixtures apply the additive migration too.
+
 The mobile browser harness exercises sign-in, profile editing, reading lists, discussions and token creation/revocation in Chromium and WebKit at 390, 768 and 1280 pixels. TypeScript, syntax and asset-stamp checks are also required.
 
 Preview: `https://staging.opax.com.au/community`. Cloudflare Email Sending is enabled for `login.opax.com.au`. The real sign-in email arrived at the owner's mailbox and passed SPF, DKIM and DMARC authentication. A WebKit browser consumed the emailed link successfully, verified the Secure/HttpOnly session cookie, rejected replay, created an MCP token, read a live public record, revoked the token and confirmed its rejection. The test signed out afterwards.
 
 The official MCP client passes an HTTP integration check: initialization, tool discovery, record reading and rejection after token revocation. Run `npm run test:community` from `portal` to reproduce the account and MCP checks. Both production database migrations have been applied successfully; the configured production launch enables community accounts.
 
-Production moderation ownership is assigned to the project owner at jake.tracey@noice.net.au. This does not create a session: the owner must still authenticate using a single-use email link.
+Production moderation ownership is assigned to the project owner. This does not create a session: the owner must still authenticate using a single-use email link.
