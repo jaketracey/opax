@@ -45,11 +45,13 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - assertVisible: Machine summary
 - assertVisible: Written by a model from the explanatory memorandum; not the record\.
 - takeScreenshot: ${EVIDENCE}/11-summary
-# Long jumps aim fast at a whole section (any part showing counts), then
+# Long jumps aim fast at a large container (any part showing counts), then
 # step gently to the small element: fast swipes can carry past a short one.
+# (At AX5 the whole Divisions section is too tall to appear in the iOS
+# hierarchy; the first division's container does.)
 - scrollUntilVisible:
     element:
-      id: bill-divisions
+      id: bill-division-0
     visibilityPercentage: 1
     speed: 70
     timeout: 180000
