@@ -1,17 +1,29 @@
-import { chamberName } from '../../design/parliament';
+import { chamberName, jurisdictionName } from '../../design/parliament';
 import type {
   Catalogs,
   Electorate,
   PersonProfile,
   PersonId,
+  Block,
 } from '../../api/catalogs';
 import { joinPerson, nameKey, rosterRowFor } from '../../api/catalogs';
 export type Directory = Awaited<ReturnType<Catalogs['directory']>>;
 export type YourMPView = Awaited<ReturnType<Catalogs['yourMP']>>;
-export type ProfileView = Omit<
-  Awaited<ReturnType<Catalogs['profileFor']>>,
-  'personId'
-> & { personId: PersonId | null };
+type SelectedProfile = Awaited<ReturnType<Catalogs['profileFor']>>;
+export type EvidenceBlock<T> = Omit<Block<T>, 'status'> & {
+  status: Block<T>['status'] | 'unlinked';
+};
+export type ProfileView = Omit<SelectedProfile, 'personId' | 'blocks'> & {
+  personId: PersonId | null;
+  blocks: {
+    [K in keyof SelectedProfile['blocks']]: Omit<
+      SelectedProfile['blocks'][K],
+      'status'
+    > & {
+      status: SelectedProfile['blocks'][K]['status'] | 'unlinked';
+    };
+  };
+};
 export type ElectorateView = Awaited<
   ReturnType<Catalogs['electorateFor']>
 >['data'];
@@ -44,12 +56,55 @@ export function matchingSeats(
 ): Electorate[] {
   const q = nameKey(query.trim());
   return q
-    ? seats.filter((s) =>
-        [s.name, ...s.representatives.map((r) => r.person.name)].some((n) =>
-          nameKey(n).includes(q),
-        ),
+    ? seats.filter(
+        (s) =>
+          s.status !== 'historical' &&
+          [s.name, ...s.representatives.map((r) => r.person.name)].some((n) =>
+            nameKey(n).includes(q),
+          ),
       )
     : [];
+}
+/** Correct a district/region without retaining the old choice in that chamber. */
+export function replaceStateSeat(
+  choice: SeatChoice,
+  seat: Electorate,
+  seats: Electorate[],
+): SeatChoice {
+  return {
+    ...choice,
+    stateSeatIds: [
+      ...choice.stateSeatIds.filter((id) => {
+        const old = seats.find((s) => s.electorate_id === id);
+        return (
+          old &&
+          (old.chamber !== seat.chamber ||
+            old.jurisdiction !== seat.jurisdiction)
+        );
+      }),
+      seat.electorate_id,
+    ],
+  };
+}
+export function registerCategoryLabel(key: string): string {
+  const plain = key.replaceAll('_', ' ');
+  return plain.charAt(0).toUpperCase() + plain.slice(1);
+}
+export function registerChangeLabel(kind: string): string {
+  return (
+    (
+      {
+        addition: 'added',
+        deletion: 'deleted',
+        amendment: 'changed',
+        change: 'changed',
+        declaration: 'declared',
+      } as Record<string, string>
+    )[kind] ?? 'recorded'
+  );
+}
+export function seatContext(seat: Electorate): string {
+  return `${chamberName(seat.chamber, seat.jurisdiction) ?? 'Chamber not recorded'} · ${jurisdictionName(seat.state_code) ?? jurisdictionName(seat.jurisdiction) ?? 'Jurisdiction not recorded'}`;
 }
 export function representativeProfile(
   id: string,
@@ -80,10 +135,15 @@ export function representativeProfile(
 /** A roster-only former person retains identity, with explicit coverage states. */
 export function uncoveredProfile(identity: PersonProfile): ProfileView {
   const missing = {
-    status: 'missing' as const,
+    status: 'unlinked' as const,
     data: null,
     asAt: null,
-    sources: [],
+    sources: [
+      {
+        label: 'Record on opax.com.au',
+        url: `/subject/person/${identity.slug}`,
+      },
+    ],
     stale: false,
     savedAt: null,
   };
@@ -128,11 +188,17 @@ export function hasParliamentaryMembership(
     directory.roster.data,
     identity.rosterPersonId,
   );
-  return !!row?.representation?.some(
-    (r) =>
-      r.electorate.trim() &&
-      r.chamber !== 'senate_committee' &&
-      chamberName(r.chamber, r.jurisdiction),
+  return (
+    !!row?.chambers?.some(
+      (chamber) =>
+        chamber !== 'senate_committee' && !!chamberName(chamber, 'federal'),
+    ) ||
+    !!row?.representation?.some(
+      (r) =>
+        r.electorate.trim() &&
+        r.chamber !== 'senate_committee' &&
+        chamberName(r.chamber, r.jurisdiction),
+    )
   );
 }
 

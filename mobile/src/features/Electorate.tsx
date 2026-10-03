@@ -139,7 +139,13 @@ function ElectorateScreen({ id }: { id: string }) {
             <Heading level={1} testID="electorate-name">
               {identity.name}
             </Heading>
-            <Text variant="metadata">
+            {identity.status === 'historical' ? (
+              <Text wordSafe testID="electorate-abolished">
+                Abolished; not a current seat. This record describes a
+                historical electorate.
+              </Text>
+            ) : null}
+            <Text wordSafe variant="metadata">
               {chamberName(identity.chamber, identity.jurisdiction) ??
                 CHAMBER_NOT_RECORDED}{' '}
               ·{' '}
@@ -152,7 +158,11 @@ function ElectorateScreen({ id }: { id: string }) {
               id="electorate-representatives"
               block={view.representatives}
               retry={refresh}
-              missing="No verified representative is recorded for this date. This does not establish a vacancy."
+              missing={
+                identity.status === 'historical'
+                  ? 'Abolished; not a current seat. Historical representation is shown where recorded.'
+                  : 'No verified representative is recorded for this date. This does not establish a vacancy.'
+              }
             >
               {(rows) => (
                 <Group>
@@ -162,7 +172,7 @@ function ElectorateScreen({ id }: { id: string }) {
                     asAt={view.representatives.asAt}
                     id="electorate-member"
                   />
-                  <Text>
+                  <Text wordSafe>
                     Election winners and present-day representation can differ.
                   </Text>
                 </Group>
@@ -181,7 +191,7 @@ function ElectorateScreen({ id }: { id: string }) {
                   >
                     {(e) => (
                       <Group>
-                        <Text variant="metadata">
+                        <Text wordSafe variant="metadata">
                           {formatDate(e.election.poll_date)} · {e.election.kind}
                         </Text>
                         <Button
@@ -202,8 +212,10 @@ function ElectorateScreen({ id }: { id: string }) {
                         {expanded.includes(e.election_id)
                           ? e.candidates.map((c, j) => (
                               <Group key={j} gap={4}>
-                                <Text variant="strong">{c.name}</Text>
-                                <Text variant="metadata">
+                                <Text wordSafe variant="strong">
+                                  {c.name}
+                                </Text>
+                                <Text wordSafe variant="metadata">
                                   {c.party ?? 'Party not recorded'}
                                   {c.elected ? ' · Elected' : ''}
                                 </Text>
@@ -242,8 +254,10 @@ function ElectorateScreen({ id }: { id: string }) {
                   >
                     {(d) => (
                       <Group>
-                        <Text variant="strong">{d.vintage}</Text>
-                        <Text>{d.note}</Text>
+                        <Text wordSafe variant="strong">
+                          {d.vintage}
+                        </Text>
+                        <Text wordSafe>{d.note}</Text>
                         <KeyValueList
                           items={Object.entries(d.indicators).map(
                             ([key, value]) => {
@@ -277,8 +291,17 @@ function ElectorateScreen({ id }: { id: string }) {
               {view.related.length ? (
                 view.related.map((r, i) => (
                   <Group key={i}>
-                    <Text>
-                      {r.kind.replaceAll('_', ' ')} · {r.vintage}
+                    <Text wordSafe>
+                      {(
+                        {
+                          within_upper_house:
+                            'Upper-house region covering this electorate',
+                          within_lower_house:
+                            'Lower-house district covering this electorate',
+                          overlaps: 'Overlapping electorate',
+                        } as Record<string, string>
+                      )[r.kind] ?? 'Related electorate'}{' '}
+                      · {r.vintage}
                     </Text>
                     <Button
                       label={r.related.name}
@@ -301,15 +324,15 @@ function ElectorateScreen({ id }: { id: string }) {
             >
               {() => (
                 <Group>
-                  <Text>{view.coverageNote}</Text>
-                  <Text>
+                  <Text wordSafe>{view.coverageNote}</Text>
+                  <Text wordSafe>
                     Representation is shown only as recorded in the dated
                     release.
                   </Text>
                 </Group>
               )}
             </RecordBlock>
-            <Text variant="fine" testID="electorate-end">
+            <Text wordSafe variant="fine" testID="electorate-end">
               End of electorate record
             </Text>
           </>

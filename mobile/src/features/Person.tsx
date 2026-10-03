@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react';
 import { Image, RefreshControl } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { catalogs } from '../api/runtime';
-import { ApiError } from '../api/errors';
 import { remoteImageURI } from '../api/image-policy';
 import {
   AsAtLine,
@@ -44,6 +43,7 @@ import {
   uncoveredProfile,
   hasParliamentaryMembership,
   votingMetaFor,
+  registerCategoryLabel,
   type ProfileView,
 } from './your-mp/model';
 function Disclosure({
@@ -76,7 +76,8 @@ function ProfileScreen({ slug }: { slug: string }) {
     [error, setError] = useState<string | null>(null),
     [retry, setRetry] = useState(0),
     [busy, setBusy] = useState(true),
-    [portraitFailed, setPortraitFailed] = useState(false);
+    [portraitFailed, setPortraitFailed] = useState(false),
+    [noNativeProfile, setNoNativeProfile] = useState(false);
   useEffect(() => {
     let active = true;
     (async () => {
@@ -84,11 +85,10 @@ function ProfileScreen({ slug }: { slug: string }) {
       if (
         !person.data.canonicalPersonId &&
         !hasParliamentaryMembership(person.data, await catalogs.directory())
-      )
-        throw new ApiError(
-          'not-found',
-          'Native profiles cover parliamentarians in the public record. This person is outside the covered parliamentary roster.',
-        );
+      ) {
+        if (active) setNoNativeProfile(true);
+        return null;
+      }
       const p = person.data.canonicalPersonId
         ? await catalogs.profileFor(person.data.canonicalPersonId)
         : uncoveredProfile(person.data);
@@ -141,7 +141,13 @@ function ProfileScreen({ slug }: { slug: string }) {
         {error ? (
           <ErrorState message={error} onRetry={refresh} testID="person-error" />
         ) : null}
-        {!profile && !error ? (
+        {noNativeProfile ? (
+          <Group testID="person-no-native-profile">
+            <EmptyState message="No native profile yet. Native profiles cover verified parliamentarians in the public record." />
+            <OpaxWebLink label="Public record on opax.com.au" path={webPath} />
+          </Group>
+        ) : null}
+        {!profile && !error && !noNativeProfile ? (
           <LoadingState
             shape="people"
             count={1}
@@ -177,14 +183,14 @@ function ProfileScreen({ slug }: { slug: string }) {
               {identity.seats.length ? (
                 identity.seats.map((seat) => (
                   <Group key={seat.electorate_id} gap={4}>
-                    <Text variant="strong" testID="person-electorate">
+                    <Text wordSafe variant="strong" testID="person-electorate">
                       {seat.name}
                     </Text>
-                    <Text variant="metadata" testID="person-chamber">
+                    <Text wordSafe variant="metadata" testID="person-chamber">
                       {chamberName(seat.chamber, seat.jurisdiction) ??
                         CHAMBER_NOT_RECORDED}
                     </Text>
-                    <Text variant="metadata">
+                    <Text wordSafe variant="metadata">
                       {jurisdictionName(seat.jurisdiction) ??
                         'Jurisdiction not recorded'}
                     </Text>
@@ -201,17 +207,18 @@ function ProfileScreen({ slug }: { slug: string }) {
                   </Group>
                 ))
               ) : (
-                <Text>
+                <Text wordSafe>
                   No current electorate observation is held in this release.
                 </Text>
               )}
               {profile.personId === null ? (
-                <Text>
+                <Text wordSafe>
                   The electorate release does not include this person. Only the
-                  public directory identity is available here.
+                  public directory identity is linked here. Other records may be
+                  available on opax.com.au.
                 </Text>
               ) : null}
-              <Text variant="fine">
+              <Text wordSafe variant="fine">
                 These are dated public records. Representation may have changed
                 since collection.
               </Text>
@@ -226,18 +233,22 @@ function ProfileScreen({ slug }: { slug: string }) {
             >
               {(p) => (
                 <Group gap={8}>
-                  <Text variant="fine">
+                  <Text wordSafe variant="fine">
                     {p.credit} · {p.licence}
                   </Text>
-                  <Text variant="fine">{p.attribution}</Text>
-                  <Text variant="fine">{p.notice}</Text>
+                  <Text wordSafe variant="fine">
+                    {p.attribution}
+                  </Text>
+                  <Text wordSafe variant="fine">
+                    {p.notice}
+                  </Text>
                   {p.display !== 'permitted' ? (
-                    <Text variant="fine">
+                    <Text wordSafe variant="fine">
                       Portrait display permission needs review. A blank circle
                       is shown.
                     </Text>
                   ) : portraitFailed ? (
-                    <Text variant="fine">
+                    <Text wordSafe variant="fine">
                       The permitted portrait could not be loaded. A blank circle
                       is shown.
                     </Text>
@@ -275,15 +286,16 @@ function ProfileScreen({ slug }: { slug: string }) {
                     ]}
                   />
                   {v.ayePct !== null ? (
-                    <Text>
-                      {formatPercent(v.ayePct)} ayes in the recorded divisions
+                    <Text wordSafe>
+                      {formatPercent(v.ayePct, 0)} ayes in the recorded
+                      divisions
                       {v.years.length === 2
                         ? `, ${formatYearRange(v.years[0]!, v.years[1]!)}`
                         : ''}
                       .
                     </Text>
                   ) : null}
-                  <Text>{v.method}</Text>
+                  <Text wordSafe>{v.method}</Text>
                   <Disclosure label="Bill votes" id="person-bill-votes">
                     <Group>
                       {(['for', 'against'] as const).map((side) => (
@@ -294,11 +306,13 @@ function ProfileScreen({ slug }: { slug: string }) {
                           {v[side].length ? (
                             v[side].map((row, i) => (
                               <Group key={i} gap={4}>
-                                <Text variant="strong">{row.name}</Text>
-                                <Text variant="metadata">
+                                <Text wordSafe variant="strong">
+                                  {row.name}
+                                </Text>
+                                <Text wordSafe variant="metadata">
                                   {row.stage} · {formatDate(row.date)}
                                 </Text>
-                                <Text variant="fine">
+                                <Text wordSafe variant="fine">
                                   {row.billKey
                                     ? 'Bill record on opax.com.au'
                                     : 'Not matched to a bill record'}
@@ -350,25 +364,25 @@ function ProfileScreen({ slug }: { slug: string }) {
             >
               {(r) => (
                 <Group>
-                  <Text>
+                  <Text wordSafe>
                     {formatCount(r.total)} declared entries ·{' '}
                     {formatCount(r.alterations.added)} added ·{' '}
                     {formatCount(r.alterations.deleted)} deleted.
                   </Text>
                   {r.statement_date ? (
-                    <Text variant="metadata">
+                    <Text wordSafe variant="metadata">
                       Statement dated {formatDate(r.statement_date)}
                     </Text>
                   ) : null}
                   {r.ocr_rows > 0 ? (
-                    <Text testID="person-ocr">
+                    <Text wordSafe testID="person-ocr">
                       {formatCount(r.ocr_rows)} entries were read by OCR from
                       scanned pages. Transcription may contain errors; check the
                       original register.
                     </Text>
                   ) : null}
                   {r.unread_pages ? (
-                    <Text>
+                    <Text wordSafe>
                       {formatCount(r.unread_pages)} pages could not be read. The
                       register may be incomplete.
                     </Text>
@@ -376,17 +390,19 @@ function ProfileScreen({ slug }: { slug: string }) {
                   {Object.entries(r.buckets).map(([name, bucket]) => (
                     <Disclosure
                       key={name}
-                      label={`${name.charAt(0).toUpperCase()}${name.slice(1).replaceAll('_', ' ')} (${formatCount(bucket.count)})`}
+                      label={`${registerCategoryLabel(name)} (${formatCount(bucket.count)})`}
                       id={`interest-bucket-${name}`}
                     >
                       <Group>
                         {bucket.items.map((row, i) => (
                           <Group key={i} gap={4}>
-                            <Text variant="strong">{row.holder}</Text>
-                            <Text>
+                            <Text wordSafe variant="strong">
+                              {row.holder}
+                            </Text>
+                            <Text wordSafe>
                               {row.description || 'Description not recorded'}
                             </Text>
-                            <Text variant="metadata">
+                            <Text wordSafe variant="metadata">
                               {row.kind}
                               {row.date ? ` · ${formatDate(row.date)}` : ''}
                               {row.page
@@ -394,7 +410,7 @@ function ProfileScreen({ slug }: { slug: string }) {
                                 : ''}
                             </Text>
                             {row.ocr ? (
-                              <Text variant="fine">
+                              <Text wordSafe variant="fine">
                                 OCR transcription; check the original register.
                               </Text>
                             ) : null}
@@ -410,12 +426,16 @@ function ProfileScreen({ slug }: { slug: string }) {
               title="Declared ties"
               id="person-ties"
               block={b.ties}
-              missing="No declared organisation ties are held in this register file."
+              missing={
+                b.interests.data
+                  ? 'No declared organisation ties are held in this register file.'
+                  : 'No linked register file is available for declared organisation ties.'
+              }
               retry={refresh}
             >
               {(ties) => (
                 <Group>
-                  <Text>
+                  <Text wordSafe>
                     Declared ties are public disclosures, not findings of
                     wrongdoing.
                   </Text>
@@ -426,10 +446,12 @@ function ProfileScreen({ slug }: { slug: string }) {
                     <Group>
                       {ties.map((tie, i) => (
                         <Group key={i} gap={4}>
-                          <Text variant="strong">{tie.organisation}</Text>
-                          <Text>{tie.kinds.join('; ')}</Text>
+                          <Text wordSafe variant="strong">
+                            {tie.organisation}
+                          </Text>
+                          <Text wordSafe>{tie.kinds.join('; ')}</Text>
                           {tie.declarations.map((d, j) => (
-                            <Text key={j}>
+                            <Text wordSafe key={j}>
                               {d.category}: {d.description}
                             </Text>
                           ))}
@@ -451,36 +473,36 @@ function ProfileScreen({ slug }: { slug: string }) {
                 <Group>
                   {p.person.now ? (
                     <>
-                      <Text variant="figureInline">
+                      <Text wordSafe variant="figureInline">
                         {formatMoney(p.person.now.salary)} a year
                       </Text>
-                      <Text>
+                      <Text wordSafe>
                         {p.person.now.post}
                         {p.person.now.assumed
                           ? ' (if named in the Opposition Leader’s notice)'
                           : ''}
                       </Text>
-                      <Text>
+                      <Text wordSafe>
                         Base salary {formatMoney(p.base.amount)}
                         {p.person.now.pct
-                          ? ` plus a ${formatPercent(p.person.now.pct)} loading`
+                          ? ` plus a ${formatPercent(p.person.now.pct, Number.isInteger(p.person.now.pct) ? 0 : 1)} loading`
                           : ''}
                         .
                       </Text>
-                      <Text variant="metadata">
+                      <Text wordSafe variant="metadata">
                         Post held since {formatDate(p.person.now.since)}
                       </Text>
                     </>
                   ) : (
-                    <Text>
+                    <Text wordSafe>
                       No current pay rate is held. Historical entitlements are
                       listed below.
                     </Text>
                   )}
-                  <Text>
+                  <Text wordSafe>
                     These are entitlements set by instrument, not payslips.
                   </Text>
-                  <Text>{p.method}</Text>
+                  <Text wordSafe>{p.method}</Text>
                   <Disclosure
                     label="Salary by financial year"
                     id="person-pay-years"
@@ -498,15 +520,20 @@ function ProfileScreen({ slug }: { slug: string }) {
                         .reverse()
                         .map(([from, to, post, pct, salary], i) => (
                           <Group key={i} gap={4}>
-                            <Text variant="strong">{post}</Text>
-                            <Text variant="metadata">
+                            <Text wordSafe variant="strong">
+                              {post}
+                            </Text>
+                            <Text wordSafe variant="metadata">
                               {formatDate(from)} to{' '}
                               {to ? formatDate(to) : 'present'}
                             </Text>
-                            <Text>
+                            <Text wordSafe>
                               {formatMoney(salary)} a year ·{' '}
-                              {formatPercent(pct)} loading at the end of this
-                              spell
+                              {formatPercent(
+                                pct,
+                                Number.isInteger(pct) ? 0 : 1,
+                              )}{' '}
+                              loading at the end of this spell
                             </Text>
                           </Group>
                         ))}
@@ -515,7 +542,9 @@ function ProfileScreen({ slug }: { slug: string }) {
                   <Disclosure label="Pay coverage" id="person-pay-coverage">
                     <Group>
                       {p.notCovered.map((note) => (
-                        <Text key={note.id}>{note.text}</Text>
+                        <Text wordSafe key={note.id}>
+                          {note.text}
+                        </Text>
                       ))}
                     </Group>
                   </Disclosure>
@@ -531,22 +560,22 @@ function ProfileScreen({ slug }: { slug: string }) {
             >
               {(e) => (
                 <Group>
-                  <Text variant="figureInline">
+                  <Text wordSafe variant="figureInline">
                     {formatMoney(e.person.total)}
                   </Text>
-                  <Text>
+                  <Text wordSafe>
                     Recorded expenses,{' '}
                     {formatYearRange(e.person.from, e.person.to)}
                   </Text>
-                  <Text>
+                  <Text wordSafe>
                     Coverage: {e.coverage.from} to {e.coverage.to}
                   </Text>
-                  <Text>{e.note}</Text>
+                  <Text wordSafe>{e.note}</Text>
                   <KeyValueList
                     items={[
                       {
                         label: 'Recorded annual average',
-                        value: formatMoney(e.annual),
+                        value: `about ${formatMoney(e.annual)}`,
                       },
                       {
                         label: 'Benchmark annual median',
@@ -554,12 +583,13 @@ function ProfileScreen({ slug }: { slug: string }) {
                       },
                     ]}
                   />
-                  <Text>
+                  <Text wordSafe>
                     Benchmark: {formatCount(e.benchmarks.count)} members with
                     records through {e.benchmarks.latestQuarter}, starting in{' '}
                     {e.benchmarks.fromCutoff} or earlier. Partial calendar years
-                    can affect the comparison. A bar past its tick is a fact,
-                    not a finding.
+                    can affect the comparison. The recorded annual average is
+                    the supplied total divided by its covered calendar years.
+                    This comparison is a lead, not a finding.
                   </Text>
                   <Disclosure
                     label="Expenses by year"
@@ -583,19 +613,25 @@ function ProfileScreen({ slug }: { slug: string }) {
                         );
                         return (
                           <Group key={name} gap={4}>
-                            <Text variant="strong">{name}</Text>
-                            <Text variant="figureInline">
+                            <Text wordSafe variant="strong">
+                              {name}
+                            </Text>
+                            <Text wordSafe variant="figureInline">
                               {formatMoney(amount)}
                             </Text>
                             {category ? (
                               <>
-                                <Text>{category.text}</Text>
+                                <Text wordSafe>{category.text}</Text>
                                 {category.note ? (
-                                  <Text variant="fine">{category.note}</Text>
+                                  <Text wordSafe variant="fine">
+                                    {category.note}
+                                  </Text>
                                 ) : null}
                               </>
                             ) : (
-                              <Text>Category definition not held.</Text>
+                              <Text wordSafe>
+                                Category definition not held.
+                              </Text>
                             )}
                           </Group>
                         );
@@ -604,7 +640,7 @@ function ProfileScreen({ slug }: { slug: string }) {
                   </Disclosure>
                   {e.categories ? (
                     <>
-                      <Text variant="fine">
+                      <Text wordSafe variant="fine">
                         {e.categories.meta.licence_note}
                       </Text>
                       <AsAtLine
@@ -619,7 +655,7 @@ function ProfileScreen({ slug }: { slug: string }) {
                       />
                     </>
                   ) : (
-                    <Text>
+                    <Text wordSafe>
                       Category definitions and their licence notes could not be
                       loaded.
                     </Text>
@@ -636,7 +672,7 @@ function ProfileScreen({ slug }: { slug: string }) {
             >
               {(p) => (
                 <Group>
-                  <Text>{p.caption}</Text>
+                  <Text wordSafe>{p.caption}</Text>
                   <OpaxWebLink
                     label="Party receipts"
                     path={p.url}
@@ -651,7 +687,7 @@ function ProfileScreen({ slug }: { slug: string }) {
                 path={webPath}
                 testID="person-web"
               />
-              <Text variant="fine" testID="person-end">
+              <Text wordSafe variant="fine" testID="person-end">
                 End of profile
               </Text>
             </Section>

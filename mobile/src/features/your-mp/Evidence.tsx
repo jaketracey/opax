@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { Block } from '../../api/catalogs';
+import type { EvidenceBlock } from './model';
 import {
   AsAtLine,
   EmptyState,
@@ -18,14 +18,14 @@ export function EvidenceFooter({
   id,
   date = true,
 }: {
-  block: Block<unknown>;
+  block: EvidenceBlock<unknown>;
   id: string;
   date?: boolean;
 }) {
   return (
     <Group gap={8}>
       {date && block.asAt && /^\d{4}$/.test(block.asAt) ? (
-        <Text variant="fine" testID={`${id}-as-at`}>
+        <Text wordSafe variant="fine" testID={`${id}-as-at`}>
           As at {block.asAt} · Source:{' '}
           {block.sources
             .map((s) => [s.label, s.licence].filter(Boolean).join(', '))
@@ -49,7 +49,7 @@ export function EvidenceFooter({
           {block.savedAt !== null ? (
             <StaleNotice savedAt={block.savedAt} />
           ) : (
-            <Text variant="fine">
+            <Text wordSafe variant="fine">
               This is a saved copy. It may be out of date.
             </Text>
           )}
@@ -75,7 +75,9 @@ export function EvidenceFooter({
           ),
         )
       ) : (
-        <Text variant="fine">No source link is held for this block.</Text>
+        <Text wordSafe variant="fine">
+          No source link is held for this block.
+        </Text>
       )}
     </Group>
   );
@@ -91,7 +93,7 @@ export function RecordBlock<T>({
 }: {
   title: string;
   id: string;
-  block: Block<T>;
+  block: EvidenceBlock<T>;
   missing: string;
   retry: () => void;
   children: (data: T) => ReactNode;
@@ -102,7 +104,12 @@ export function RecordBlock<T>({
       <Heading level={2} testID={`${id}-heading`}>
         {title}
       </Heading>
-      {block.status === 'error' ? (
+      {block.status === 'unlinked' ? (
+        <EmptyState
+          message={`This release does not link this person's ${title.toLowerCase()}. See the record on opax.com.au.`}
+          testID={`${id}-unlinked`}
+        />
+      ) : block.status === 'error' ? (
         <ErrorState
           message={errorMessage(block.error)}
           onRetry={retry}

@@ -260,7 +260,7 @@ export class Catalogs {
       sources.bills,
     );
   }
-  async profileFor(id: PersonId) {
+  async profileFor(id: PersonId, options: { includeInterests?: boolean } = {}) {
     personId(id);
     const directory = await this.directory();
     const records = new Map<string, RecordResult<unknown>>(),
@@ -315,9 +315,10 @@ export class Catalogs {
       photoCredits,
     };
     const initial = profileFor(id, data);
-    const interest = initial.interestKey
-      ? await load('interests', this.interests(initial.interestKey))
-      : undefined;
+    const interest =
+      options.includeInterests !== false && initial.interestKey
+        ? await load('interests', this.interests(initial.interestKey))
+        : undefined;
     const profile = profileFor(id, { ...data, interest });
     for (const [key, block] of Object.entries(profile.blocks)) {
       const dependencies: Record<string, string[]> = {

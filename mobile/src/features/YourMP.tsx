@@ -31,6 +31,10 @@ import { RepresentativeRows } from './your-mp/RepresentativeRows';
 import { loadChoice, saveChoice } from './your-mp/choice-store';
 import {
   matchingSeats,
+  replaceStateSeat,
+  registerCategoryLabel,
+  registerChangeLabel,
+  seatContext,
   votingMetaFor,
   type Directory,
   type SeatChoice,
@@ -48,7 +52,9 @@ export default function YourMP() {
     [error, setError] = useState<string | null>(null),
     [saving, setSaving] = useState(false),
     [refresh, setRefresh] = useState(0),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [registerOpen, setRegisterOpen] = useState(false),
+    [registerLoadedFor, setRegisterLoadedFor] = useState<string | null>(null);
   useEffect(() => {
     let active = true;
     Promise.all([catalogs.directory(), loadChoice()])
@@ -107,9 +113,13 @@ export default function YourMP() {
         : undefined;
     if (id)
       catalogs
-        .profileFor(id)
+        .profileFor(id, { includeInterests: registerOpen })
         .then((p) => {
-          if (active) setMemberProfile(p);
+          if (active) {
+            setMemberProfile(p);
+            setMemberFailure(null);
+            if (registerOpen) setRegisterLoadedFor(id);
+          }
         })
         .catch((e) => {
           if (active) setMemberFailure({ id, message: errorMessage(e) });
@@ -117,7 +127,7 @@ export default function YourMP() {
     return () => {
       active = false;
     };
-  }, [view]);
+  }, [view, registerOpen]);
   const memberProfile =
     memberRecord?.personId === view?.members.data?.[0]?.person_id
       ? memberRecord
@@ -129,18 +139,18 @@ export default function YourMP() {
   async function choose(seat: Electorate) {
     const next: SeatChoice =
       stateChoosing && choice
-        ? {
-            ...choice,
-            stateSeatIds: [
-              ...new Set([...choice.stateSeatIds, seat.electorate_id]),
-            ],
-          }
+        ? replaceStateSeat(choice, seat, view?.verifiedStateSeats ?? [])
         : { version: 1, seatId: seat.electorate_id, stateSeatIds: [] };
+    await persist(next);
+  }
+  async function persist(next: SeatChoice) {
     setSaving(true);
     try {
       await saveChoice(next);
       Keyboard.dismiss();
       setView(null);
+      setRegisterOpen(false);
+      setRegisterLoadedFor(null);
       setChoice(next);
       setChoosing(false);
       setStateChoosing(false);
@@ -157,6 +167,10 @@ export default function YourMP() {
     ? (view?.verifiedStateSeats ?? [])
     : (directory?.electorates.data.electorates ?? []);
   const matches = matchingSeats(seats, query);
+  const selectedStateSeats =
+    view?.verifiedStateSeats.filter((s) =>
+      choice?.stateSeatIds.includes(s.electorate_id),
+    ) ?? [];
   return (
     <Screen
       testID="your-mp-screen"
@@ -193,7 +207,7 @@ export default function YourMP() {
           />
           {!query.trim() ? (
             <EmptyState
-              message="Search by electorate or member name. Your choice is saved on this iPhone only."
+              message="Search by electorate or member name. Your choice is saved on this device. Device backups may include it."
               testID="seat-empty"
             />
           ) : !matches.length ? (
@@ -206,11 +220,12 @@ export default function YourMP() {
               <Group key={s.electorate_id} gap={4}>
                 <Button
                   label={s.name}
+                  accessibilityHint={seatContext(s)}
                   testID={`seat-choice-${s.slug}`}
                   onPress={() => void choose(s)}
                   disabled={saving}
                 />
-                <Text variant="metadata">
+                <Text wordSafe variant="metadata">
                   {chamberName(s.chamber, s.jurisdiction) ??
                     CHAMBER_NOT_RECORDED}{' '}
                   ·{' '}
@@ -218,7 +233,7 @@ export default function YourMP() {
                     jurisdictionName(s.jurisdiction) ??
                     'Jurisdiction not recorded'}
                 </Text>
-                <Text variant="fine">
+                <Text wordSafe variant="fine">
                   {s.representatives.map((r) => r.person.name).join('; ') ||
                     'No verified representative recorded'}
                 </Text>
@@ -250,7 +265,7 @@ export default function YourMP() {
             <Heading level={2} testID="your-seat-name">
               {view.seat.data!.name}
             </Heading>
-            <Text variant="metadata">
+            <Text wordSafe variant="metadata">
               {chamberName(
                 view.seat.data!.chamber,
                 view.seat.data!.jurisdiction,
@@ -260,6 +275,12 @@ export default function YourMP() {
                 'Jurisdiction not recorded'}
             </Text>
             <EvidenceFooter block={view.seat} id="your-seat" />
+            {view.seat.data!.status === 'historical' ? (
+              <Text wordSafe testID="your-seat-abolished">
+                Abolished; not a current seat. Choose a current electorate to
+                update your saved choice.
+              </Text>
+            ) : null}
             <Button
               label="Electorate record"
               testID="your-electorate"
@@ -277,7 +298,11 @@ export default function YourMP() {
               }
               id="your-member"
               block={view.members}
-              missing="No verified representative is recorded for this date. This does not establish a vacancy."
+              missing={
+                view.seat.data!.status === 'historical'
+                  ? 'Abolished; not a current seat. See the electorate record for its history.'
+                  : 'No verified representative is recorded for this date. This does not establish a vacancy.'
+              }
               retry={retry}
             >
               {(rows) => (
@@ -303,20 +328,25 @@ export default function YourMP() {
                 {(v) => (
                   <Group>
                     {[
-                      ...v.for.map((row) => ({ ...row, side: 'Voted for' })),
-                      ...v.against.map((row) => ({
-                        ...row,
-                        side: 'Voted against',
-                      })),
+                      ...[...v.for]
+                        .sort((a, b) => b.date.localeCompare(a.date))
+                        .slice(0, 6)
+                        .map((row) => ({ ...row, side: 'Voted for' })),
+                      ...[...v.against]
+                        .sort((a, b) => b.date.localeCompare(a.date))
+                        .slice(0, 6)
+                        .map((row) => ({
+                          ...row,
+                          side: 'Voted against',
+                        })),
                     ]
                       .sort((a, b) => b.date.localeCompare(a.date))
-                      .slice(0, 6)
                       .map((row, i) => (
                         <Group key={i} gap={4}>
-                          <Text variant="strong">
+                          <Text wordSafe variant="strong">
                             {row.side} · {row.name}
                           </Text>
-                          <Text variant="metadata">
+                          <Text wordSafe variant="metadata">
                             {row.stage} · {formatDate(row.date!)}
                           </Text>
                           {row.billKey ? (
@@ -325,7 +355,7 @@ export default function YourMP() {
                               path={`/bill/${row.billKey}`}
                             />
                           ) : (
-                            <Text variant="fine">
+                            <Text wordSafe variant="fine">
                               Not matched to a bill record
                             </Text>
                           )}
@@ -334,10 +364,10 @@ export default function YourMP() {
                     {!v.for.length && !v.against.length ? (
                       <EmptyState message="None of their recorded divisions was a vote on a bill itself." />
                     ) : null}
-                    <Text>{v.method}</Text>
+                    <Text wordSafe>{v.method}</Text>
                     {v.jurisdictions.map((jur) => (
                       <Group key={jur} gap={4}>
-                        <Text variant="fine">
+                        <Text wordSafe variant="fine">
                           {jurisdictionName(jur) ?? 'Jurisdiction not recorded'}{' '}
                           voting record
                         </Text>
@@ -350,109 +380,150 @@ export default function YourMP() {
                   </Group>
                 )}
               </RecordBlock>
-              <RecordBlock
-                title="Register changes"
-                id="your-register"
-                block={memberProfile.blocks.interests}
-                missing="No register file is held for this member in the covered registers."
-                retry={retry}
-              >
-                {(r) => (
-                  <Group>
-                    {Object.entries(r.buckets)
-                      .flatMap(([category, bucket]) =>
-                        bucket.items
-                          .filter((row) => row.date)
-                          .map((row) => ({ ...row, category })),
-                      )
-                      .sort((a, b) =>
-                        (b.date ?? '').localeCompare(a.date ?? ''),
-                      )
-                      .slice(0, 3)
-                      .map((row, i) => (
-                        <Group key={i} gap={4}>
-                          <Text>
-                            {row.category} · {row.kind} ·{' '}
-                            {formatDate(row.date!)}
-                          </Text>
-                          <Text>{row.description}</Text>
-                          {row.ocr ? (
-                            <Text variant="fine">
-                              OCR transcription; check the original register.
+              <Button
+                label={
+                  registerOpen
+                    ? 'Hide register changes'
+                    : 'Show register changes'
+                }
+                testID="your-register-toggle"
+                onPress={() => setRegisterOpen((v) => !v)}
+              />
+              {registerOpen && registerLoadedFor !== memberProfile.personId ? (
+                memberFailure?.id === memberProfile.personId ? (
+                  <ErrorState message={memberFailure.message} onRetry={retry} />
+                ) : (
+                  <LoadingState label="Loading the member’s register" />
+                )
+              ) : null}
+              {registerOpen && registerLoadedFor === memberProfile.personId ? (
+                <RecordBlock
+                  title="Register changes"
+                  id="your-register"
+                  block={memberProfile.blocks.interests}
+                  missing="No register file is held for this member in the covered registers."
+                  retry={retry}
+                >
+                  {(r) => (
+                    <Group>
+                      {Object.entries(r.buckets)
+                        .flatMap(([category, bucket]) =>
+                          bucket.items
+                            .filter((row) => row.date)
+                            .map((row) => ({ ...row, category })),
+                        )
+                        .sort((a, b) =>
+                          (b.date ?? '').localeCompare(a.date ?? ''),
+                        )
+                        .slice(0, 3)
+                        .map((row, i) => (
+                          <Group key={i} gap={4}>
+                            <Text wordSafe>
+                              {registerCategoryLabel(row.category)} ·{' '}
+                              {registerChangeLabel(row.kind)}{' '}
+                              {formatDate(row.date!)}
                             </Text>
-                          ) : null}
-                        </Group>
-                      ))}
-                    <Text variant="fine">
-                      Changes are shown only where the register records a date.
-                    </Text>
-                  </Group>
-                )}
-              </RecordBlock>
+                            <Text wordSafe>{row.description}</Text>
+                            {row.ocr ? (
+                              <Text wordSafe variant="fine">
+                                OCR transcription; check the original register.
+                              </Text>
+                            ) : null}
+                          </Group>
+                        ))}
+                      <Text wordSafe variant="fine">
+                        Changes are shown only where the register records a
+                        date.
+                      </Text>
+                    </Group>
+                  )}
+                </RecordBlock>
+              ) : null}
             </>
-          ) : memberFailure?.id === view.members.data?.[0]?.person_id ? (
+          ) : memberFailure &&
+            memberFailure.id === view.members.data?.[0]?.person_id ? (
             <ErrorState message={memberFailure!.message} onRetry={retry} />
           ) : view.members.data?.length === 1 ? (
             <LoadingState label="Loading the member’s public record" />
           ) : null}
-          <Section title="Your senators" testID="your-senators">
-            {view.senators.length ? (
-              view.senators.map((b, i) => (
-                <Group key={i}>
-                  <RepresentativeRows
-                    rows={b.data ?? []}
-                    directory={directory}
-                    asAt={b.asAt}
-                    id="your-senator"
-                  />
-                  <EvidenceFooter block={b} id={`your-senators-${i}`} />
-                </Group>
-              ))
-            ) : (
-              <EmptyState message="No verified Senate roster is held for this jurisdiction." />
-            )}
-            <Text testID="your-senators-end" variant="fine">
-              Senators are shown as recorded in the dated release.
-            </Text>
-          </Section>
-          <Section title="State members" testID="your-state">
-            {view.stateRosterVerified ? (
-              <>
-                {view.stateMembers.map((b, i) => (
+          {view.seat.data!.status !== 'historical' ? (
+            <Section title="Your senators" testID="your-senators">
+              {view.senators.length ? (
+                view.senators.map((b, i) => (
                   <Group key={i}>
                     <RepresentativeRows
                       rows={b.data ?? []}
                       directory={directory}
                       asAt={b.asAt}
-                      id="your-state-member"
+                      id="your-senator"
                     />
-                    <EvidenceFooter block={b} id={`your-state-${i}`} />
+                    <EvidenceFooter block={b} id={`your-senators-${i}`} />
                   </Group>
-                ))}
-                {!view.stateMembers.length ? (
-                  <Text>
-                    Choose your state electorate to see its verified
-                    representatives.
-                  </Text>
-                ) : null}
-                <Button
-                  label="Choose state electorate"
-                  testID="choose-state-seat"
-                  onPress={() => {
-                    setStateChoosing(true);
-                    setQuery('');
-                  }}
-                />
-              </>
-            ) : (
-              <Text>
-                OPAX does not yet have a verified roster of{' '}
-                {jurisdictionName(view.seat.data!.state_code) ??
-                  'this jurisdiction’s'}{' '}
-                members.
+                ))
+              ) : (
+                <EmptyState message="No verified Senate roster is held for this jurisdiction." />
+              )}
+              <Text wordSafe testID="your-senators-end" variant="fine">
+                Senators are shown as recorded in the dated release.
               </Text>
-            )}
-          </Section>
+            </Section>
+          ) : null}
+          {view.seat.data!.status !== 'historical' ? (
+            <Section title="State members" testID="your-state">
+              {view.stateRosterVerified ? (
+                <>
+                  {view.stateMembers.map((b, i) => (
+                    <Group key={i}>
+                      <RepresentativeRows
+                        rows={b.data ?? []}
+                        directory={directory}
+                        asAt={b.asAt}
+                        id="your-state-member"
+                      />
+                      <EvidenceFooter block={b} id={`your-state-${i}`} />
+                      {choice && selectedStateSeats[i] ? (
+                        <Button
+                          label={`Remove ${selectedStateSeats[i]!.name}`}
+                          testID={`remove-state-seat-${selectedStateSeats[i]!.electorate_id}`}
+                          disabled={saving}
+                          onPress={() =>
+                            void persist({
+                              ...choice,
+                              stateSeatIds: choice.stateSeatIds.filter(
+                                (id) =>
+                                  id !== selectedStateSeats[i]!.electorate_id,
+                              ),
+                            })
+                          }
+                        />
+                      ) : null}
+                    </Group>
+                  ))}
+                  {!view.stateMembers.length ? (
+                    <Text wordSafe>
+                      Choose your state electorate to see its verified
+                      representatives.
+                    </Text>
+                  ) : null}
+                  <Button
+                    label="Choose state electorate"
+                    testID="choose-state-seat"
+                    onPress={() => {
+                      setStateChoosing(true);
+                      setQuery('');
+                    }}
+                  />
+                </>
+              ) : (
+                <Text wordSafe>
+                  OPAX does not yet have a verified roster of{' '}
+                  {jurisdictionName(view.seat.data!.state_code) ??
+                    'this jurisdiction’s'}{' '}
+                  members.
+                </Text>
+              )}
+            </Section>
+          ) : null}
           <Button
             label="Change seat"
             testID="change-seat"
@@ -461,8 +532,8 @@ export default function YourMP() {
               setQuery('');
             }}
           />
-          <Text variant="fine" testID="your-mp-end">
-            Your choice is saved on this iPhone only.
+          <Text wordSafe variant="fine" testID="your-mp-end">
+            Your choice is saved on this device. Device backups may include it.
           </Text>
         </>
       ) : null}

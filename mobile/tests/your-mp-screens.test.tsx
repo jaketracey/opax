@@ -16,7 +16,13 @@ import {
 import Person from '../src/features/Person';
 import YourMP from '../src/features/YourMP';
 import Electorate from '../src/features/Electorate';
-import { PersonRow, PartyLabel, Text } from '../src/design/primitives';
+import {
+  PersonRow,
+  PartyLabel,
+  Text,
+  Button,
+  OpaxWebLink,
+} from '../src/design/primitives';
 import { loadChoice, saveChoice } from '../src/features/your-mp/choice-store';
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
@@ -70,6 +76,7 @@ const text = (r: TestRenderer.ReactTestRenderer) =>
     .replace(/\s+/g, ' ');
 beforeEach(() => {
   jest.clearAllMocks();
+  Object.values(mock).forEach((fn) => fn.mockReset());
   mockParams.slug = 'anthony-albanese';
   mockParams.id = index.electorates.find(
     (s) => s.name === 'Grayndler',
@@ -78,13 +85,7 @@ beforeEach(() => {
 });
 test('profile failure in expenses preserves votes, pay and identity; official portrait stays blank', async () => {
   mockParams.slug = 'penny-wong';
-  const person = c.joinPerson(
-    'penny-wong',
-    slugs,
-    roster,
-    people,
-    manifest,
-  );
+  const person = c.joinPerson('penny-wong', slugs, roster, people, manifest);
   const p = c.profileFor(person.canonicalPersonId!, {
     ...catalogs,
     interest: c.decodeInterest(pinned('/interests/10678.json')),
@@ -179,7 +180,9 @@ test('refresh completes while no seat has been chosen', async () => {
   expect(control().type).toBe(RefreshControl);
   await act(async () => control().props.onRefresh());
   expect(control().props.refreshing).toBe(false);
-  expect(text(r)).toContain('Your choice is saved on this iPhone only');
+  expect(text(r)).toContain(
+    'Your choice is saved on this device. Device backups may include it.',
+  );
   await act(async () => r.unmount());
 });
 test('electorate preserves Census vintage and renders candidates as plain public-record text', async () => {
@@ -237,8 +240,11 @@ test('unverified private identity is refused before any name or profile blocks r
   expect(text(r)).not.toContain('Synthetic witness');
   expect(mock.profileFor).not.toHaveBeenCalled();
   expect(
-    r.root.findAll((n) => n.props.testID === 'person-error').length,
+    r.root.findAll((n) => n.props.testID === 'person-no-native-profile').length,
   ).toBeGreaterThan(0);
+  expect(
+    r.root.findAllByType(Button).some((n) => n.props.label === 'Try again'),
+  ).toBe(false);
   await act(async () => r.unmount());
 });
 
@@ -267,4 +273,304 @@ test('a crossed electorate detail is rejected before names or figures render', a
   expect(text(r)).not.toContain('Brisbane');
   expect(text(r)).toContain('does not match the selected seat');
   await act(async () => r.unmount());
+});
+
+test.each([
+  ['anthony-albanese', '43%', '160%'],
+  ['penny-wong', '52%', '87.5%'],
+])(
+  'pinned %s percentages preserve their source precision',
+  async (slug, aye, loading) => {
+    mockParams.slug = slug;
+    const identity = c.joinPerson(slug, slugs, roster, people, manifest);
+    mock.person.mockResolvedValue(result(identity));
+    const profile = c.profileFor(identity.canonicalPersonId!, catalogs);
+    mock.profileFor.mockResolvedValue(profile);
+    const r = await render(<Person />);
+    expect(text(r)).toContain(`${aye} ayes`);
+    expect(text(r)).toContain(`${loading} loading`);
+    expect(text(r)).not.toContain('43.0%');
+    expect(text(r)).not.toContain('52.0%');
+    expect(text(r)).not.toContain('160.0%');
+    await act(async () =>
+      r.root
+        .findAllByType(Button)
+        .find((n) => n.props.testID === 'person-pay-posts')!
+        .props.onPress(),
+    );
+    expect(text(r)).toContain(`${loading} loading at the end`);
+    expect(text(r)).not.toContain('160.0%');
+    await act(async () => r.unmount());
+  },
+);
+
+test.each([
+  ['tony-abbott', 1392, 10, 3737187],
+  ['bill-shorten', 2302, 12, 13744241],
+  ['joe-hockey', 1093, 8, -645],
+  ['jenny-macklin', 1797, 9, 1140235],
+])(
+  'pinned records for %s never become false absence claims',
+  async (slug, divisions, spells, expenses) => {
+    mockParams.slug = String(slug);
+    const identity = c.joinPerson(
+      String(slug),
+      slugs,
+      roster,
+      people,
+      manifest,
+    );
+    const legacy = String(identity.legacyPersonId);
+    expect(identity.canonicalPersonId).toBeUndefined();
+    expect(catalogs.votes!.records[legacy]!.divisions_total).toBe(divisions);
+    expect(
+      Object.values(catalogs.pay!.people).find((p) => p.pid === legacy)!.spells,
+    ).toHaveLength(Number(spells));
+    expect(catalogs.expenses!.people[legacy]!.total).toBe(expenses);
+    mock.person.mockResolvedValue(result(identity));
+    const r = await render(<Person />);
+    for (const id of ['votes', 'pay', 'expenses', 'interests', 'ties'])
+      expect(
+        r.root.findAll((n) => n.props.testID === `person-${id}-unlinked`)
+          .length,
+      ).toBeGreaterThan(0);
+    expect(text(r)).not.toMatch(
+      /No (voting summary|covered federal salary|expense summary|register file) is held/,
+    );
+    expect(text(r)).toContain('This release does not link');
+    expect(
+      r.root
+        .findAllByType(OpaxWebLink)
+        .some((n) => n.props.path === `/subject/person/${slug}`),
+    ).toBe(true);
+    expect(mock.profileFor).not.toHaveBeenCalled();
+    await act(async () => r.unmount());
+  },
+);
+
+test('Windsor is a former parliamentarian even without a representation row', async () => {
+  mockParams.slug = 'antony-windsor';
+  const identity = c.joinPerson(
+    mockParams.slug,
+    slugs,
+    roster,
+    people,
+    manifest,
+  );
+  mock.person.mockResolvedValue(result(identity));
+  const r = await render(<Person />);
+  expect(text(r)).toContain('Antony Windsor');
+  expect(r.root.findByType(PartyLabel).props.current).toBe(false);
+  expect(text(r)).toContain('does not link');
+  expect(
+    r.root.findAllByType(Button).some((n) => n.props.label === 'Try again'),
+  ).toBe(false);
+  await act(async () => r.unmount());
+});
+
+test('a saved abolished seat is identified and can be changed', async () => {
+  const seat = index.electorates.find((s) => s.name === 'Higgins')!;
+  (loadChoice as jest.Mock).mockResolvedValue({
+    version: 1,
+    seatId: seat.electorate_id,
+    stateSeatIds: [],
+  });
+  mock.yourMP.mockResolvedValue(
+    c.yourMPFor(seat.electorate_id, index, manifest),
+  );
+  const r = await render(<YourMP />);
+  expect(text(r)).toContain('Abolished; not a current seat');
+  expect(text(r)).not.toContain('does not establish a vacancy');
+  expect(
+    r.root.findAllByType(Button).some((n) => n.props.testID === 'change-seat'),
+  ).toBe(true);
+  expect(r.root.findAll((n) => n.props.testID === 'your-state')).toHaveLength(
+    0,
+  );
+  await act(async () => r.unmount());
+});
+
+test('historical electorate records retain the abolished notice', async () => {
+  const seat = index.electorates.find((s) => s.name === 'Higgins')!;
+  mockParams.id = seat.electorate_id;
+  mock.electorateFor.mockResolvedValue(
+    result(c.electorateFor(c.decodeElectorate(pinned(seat.detail_url)))),
+  );
+  const r = await render(<Electorate />);
+  expect(text(r)).toContain('Abolished; not a current seat');
+  expect(text(r)).not.toContain('does not establish a vacancy');
+  await act(async () => r.unmount());
+});
+
+test('state district correction and removal retain the federal choice', async () => {
+  const find = (name: string) =>
+    index.electorates.find((s) => s.name === name)!;
+  const seat = find('Ballarat'),
+    district = find('Wendouree'),
+    replacement = find('Eureka'),
+    region = find('Northern Metropolitan');
+  (loadChoice as jest.Mock).mockResolvedValue({
+    version: 1,
+    seatId: seat.electorate_id,
+    stateSeatIds: [district.electorate_id, region.electorate_id],
+  });
+  (saveChoice as jest.Mock).mockResolvedValue(undefined);
+  mock.yourMP.mockImplementation(async (id, chosen) =>
+    c.yourMPFor(id, index, manifest, chosen),
+  );
+  mock.profileFor.mockImplementation(async (id) => c.profileFor(id, catalogs));
+  const r = await render(<YourMP />);
+  const press = async (id: string) =>
+    act(async () =>
+      r.root
+        .findAllByType(Button)
+        .find((n) => n.props.testID === id)!
+        .props.onPress(),
+    );
+  await press('choose-state-seat');
+  await act(async () =>
+    r.root
+      .find(
+        (n) =>
+          n.props.testID === 'seat-search' &&
+          typeof n.props.onChangeText === 'function',
+      )
+      .props.onChangeText('Eureka'),
+  );
+  await press(`seat-choice-${replacement.slug}`);
+  expect(saveChoice).toHaveBeenLastCalledWith({
+    version: 1,
+    seatId: seat.electorate_id,
+    stateSeatIds: [region.electorate_id, replacement.electorate_id],
+  });
+  await press(`remove-state-seat-${region.electorate_id}`);
+  expect(saveChoice).toHaveBeenLastCalledWith({
+    version: 1,
+    seatId: seat.electorate_id,
+    stateSeatIds: [replacement.electorate_id],
+  });
+  await act(async () => r.unmount());
+});
+
+test('Your MP register disclosure is lazy and renders plain category/change labels', async () => {
+  const seat = index.electorates.find((s) => s.name === 'Ballarat')!;
+  (loadChoice as jest.Mock).mockResolvedValue({
+    version: 1,
+    seatId: seat.electorate_id,
+    stateSeatIds: [],
+  });
+  mock.yourMP.mockResolvedValue(
+    c.yourMPFor(seat.electorate_id, index, manifest),
+  );
+  mock.profileFor.mockImplementation(async (id, options) =>
+    c.profileFor(id, {
+      ...catalogs,
+      ...(options?.includeInterests
+        ? { interest: c.decodeInterest(pinned('/interests/10368.json')) }
+        : {}),
+    }),
+  );
+  const r = await render(<YourMP />);
+  expect(mock.profileFor).toHaveBeenLastCalledWith(
+    seat.representatives[0]!.person_id,
+    { includeInterests: false },
+  );
+  expect(text(r)).not.toContain('Register changes');
+  await act(async () =>
+    r.root
+      .findAllByType(Button)
+      .find((n) => n.props.testID === 'your-register-toggle')!
+      .props.onPress(),
+  );
+  expect(mock.profileFor).toHaveBeenLastCalledWith(
+    seat.representatives[0]!.person_id,
+    { includeInterests: true },
+  );
+  expect(text(r)).toContain('Gifts · added');
+  expect(text(r)).toContain('Gifts · deleted');
+  expect(text(r)).not.toContain('real_estate');
+  expect(text(r)).not.toContain('addition');
+  await act(async () => r.unmount());
+});
+
+test('picker passes distinct chamber hints for repeated seat names', async () => {
+  (loadChoice as jest.Mock).mockResolvedValue(null);
+  const r = await render(<YourMP />);
+  await act(async () =>
+    r.root
+      .find(
+        (n) =>
+          n.props.testID === 'seat-search' &&
+          typeof n.props.onChangeText === 'function',
+      )
+      .props.onChangeText('Melbourne'),
+  );
+  const buttons = r.root
+    .findAllByType(Button)
+    .filter((n) => n.props.label === 'Melbourne');
+  expect(buttons.map((n) => n.props.accessibilityHint)).toEqual(
+    expect.arrayContaining([
+      'House of Representatives · Victoria',
+      'Victorian Legislative Assembly · Victoria',
+    ]),
+  );
+  await act(async () => r.unmount());
+});
+
+test('Your MP shows six recorded bill votes in each direction', async () => {
+  const seat = index.electorates.find((s) => s.name === 'Grayndler')!;
+  (loadChoice as jest.Mock).mockResolvedValue({
+    version: 1,
+    seatId: seat.electorate_id,
+    stateSeatIds: [],
+  });
+  mock.yourMP.mockResolvedValue(
+    c.yourMPFor(seat.electorate_id, index, manifest),
+  );
+  const profile = c.profileFor(seat.representatives[0]!.person_id, catalogs);
+  expect(profile.blocks.votes.data!.for.length).toBeGreaterThanOrEqual(6);
+  expect(profile.blocks.votes.data!.against.length).toBeGreaterThanOrEqual(6);
+  mock.profileFor.mockResolvedValue(profile);
+  const r = await render(<YourMP />);
+  expect(text(r).match(/Voted for ·/g)).toHaveLength(6);
+  expect(text(r).match(/Voted against ·/g)).toHaveLength(6);
+  await act(async () => r.unmount());
+});
+
+test('missing register ties do not refer to an existing file; expense copy uses about without a chart metaphor', async () => {
+  mockParams.slug = 'sheena-watt';
+  const identity = c.joinPerson(
+    mockParams.slug,
+    slugs,
+    roster,
+    people,
+    manifest,
+  );
+  mock.person.mockResolvedValue(result(identity));
+  mock.profileFor.mockResolvedValue(
+    c.profileFor(identity.canonicalPersonId!, catalogs),
+  );
+  const r = await render(<Person />);
+  expect(text(r)).toContain(
+    'No linked register file is available for declared organisation ties',
+  );
+  expect(text(r)).not.toContain('in this register file');
+  await act(async () => r.unmount());
+  mockParams.slug = 'anthony-albanese';
+  const albanese = c.joinPerson(
+    mockParams.slug,
+    slugs,
+    roster,
+    people,
+    manifest,
+  );
+  mock.person.mockResolvedValue(result(albanese));
+  mock.profileFor.mockResolvedValue(
+    c.profileFor(albanese.canonicalPersonId!, catalogs),
+  );
+  const a = await render(<Person />);
+  expect(text(a)).toContain('about $2,440,277');
+  expect(text(a)).not.toContain('A bar past its tick');
+  expect(text(a)).toContain('divided by its covered calendar years');
+  await act(async () => a.unmount());
 });

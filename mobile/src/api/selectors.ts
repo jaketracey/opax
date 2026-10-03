@@ -639,6 +639,7 @@ export function electorateFor(seat: ElectorateDetail) {
         chamber: seat.chamber,
         jurisdiction: seat.jurisdiction,
         state: seat.state_code,
+        status: seat.status,
       },
       seat.representation_as_of,
       Object.values(seat.sources).map((s) => ({

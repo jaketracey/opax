@@ -108,7 +108,7 @@ export function EmptyState({
   testID?: string;
 }) {
   return (
-    <Text variant="body" tone="inkSoft" testID={testID}>
+    <Text wordSafe variant="body" tone="inkSoft" testID={testID}>
       {message}
     </Text>
   );
@@ -142,7 +142,7 @@ export function ErrorState({
         style={styles.inline}
       >
         <Icon name="exclamationmark.circle" size={18} tone="danger" />
-        <Text variant="body" testID={testID} style={styles.grow}>
+        <Text wordSafe variant="body" testID={testID} style={styles.grow}>
           {message}
         </Text>
       </View>
@@ -179,7 +179,7 @@ export function OfflineBanner({
       style={styles.banner}
     >
       <Icon name="wifi.slash" size={18} tone="ink" />
-      <Text variant="metadata" tone="ink" style={styles.grow}>
+      <Text wordSafe variant="metadata" tone="ink" style={styles.grow}>
         {message}
       </Text>
     </View>
@@ -198,7 +198,7 @@ export function StaleNotice({
   testID?: string;
 }) {
   return (
-    <Text variant="fine" testID={testID}>
+    <Text wordSafe variant="fine" testID={testID}>
       {staleText(savedAt)}
       {refreshing ? ' Checking for a newer copy.' : ''}
     </Text>

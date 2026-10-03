@@ -5,6 +5,10 @@ import {
   matchingSeats,
   representativeProfile,
   uncoveredProfile,
+  replaceStateSeat,
+  seatContext,
+  registerCategoryLabel,
+  registerChangeLabel,
   type Directory,
 } from '../src/features/your-mp/model';
 import {
@@ -61,13 +65,87 @@ test('only release/roster identities receive a native profile', () => {
   );
   expect(representativeProfile('private-person', directory)).toBeNull();
 });
-test('roster-only former profiles retain Formerly and explicit missing blocks', () => {
+test('roster-only former profiles retain Formerly and explicit unlinked blocks', () => {
   const p = joinPerson('tony-abbott', slugs, roster, people, manifest);
   expect(p.partyCurrent).toBe(false);
   const view = uncoveredProfile(p);
   expect(view.blocks.identity.data).toBe(p);
-  expect(view.blocks.pay.status).toBe('missing');
+  expect(view.blocks.pay.status).toBe('unlinked');
   expect(view.blocks.votes.asAt).toBeNull();
+});
+test('abolished seats never appear in the normal picker, including ambiguous Fraser', () => {
+  expect(matchingSeats(index.electorates, 'Higgins')).toEqual([]);
+  const fraser = matchingSeats(index.electorates, 'Fraser');
+  expect(fraser).toHaveLength(1);
+  expect(fraser[0]?.status).toBe('current');
+  expect(fraser[0]?.state_code).toBe('vic');
+});
+test('correcting a state district replaces that chamber while retaining the council region', () => {
+  const find = (name: string) =>
+    index.electorates.find((s) => s.name === name)!;
+  const federal = find('Ballarat'),
+    wendouree = find('Wendouree'),
+    eureka = find('Eureka'),
+    region = find('Northern Metropolitan');
+  const corrected = replaceStateSeat(
+    {
+      version: 1,
+      seatId: federal.electorate_id,
+      stateSeatIds: [wendouree.electorate_id, region.electorate_id],
+    },
+    eureka,
+    index.electorates,
+  );
+  expect(corrected.stateSeatIds).toEqual([
+    region.electorate_id,
+    eureka.electorate_id,
+  ]);
+  expect(corrected.seatId).toBe(federal.electorate_id);
+});
+test('duplicate seat names have distinct chamber and jurisdiction hints', () => {
+  const seats = matchingSeats(index.electorates, 'Melbourne').filter(
+    (s) => s.name === 'Melbourne',
+  );
+  expect(seats).toHaveLength(2);
+  expect(seats.map(seatContext)).toEqual(
+    expect.arrayContaining([
+      'House of Representatives · Victoria',
+      'Victorian Legislative Assembly · Victoria',
+    ]),
+  );
+});
+test('former chamber-only roster members are admitted while committee-only witnesses are refused', () => {
+  for (const slug of [
+    'antony-windsor',
+    'christopher-pearce',
+    'stephen-martin',
+    'david-tollner',
+  ]) {
+    const member = joinPerson(slug, slugs, roster, people, manifest);
+    expect(member.canonicalPersonId).toBeUndefined();
+    expect(hasParliamentaryMembership(member, directory)).toBe(true);
+  }
+  const member = joinPerson('antony-windsor', slugs, roster, people, manifest);
+  expect(
+    hasParliamentaryMembership(
+      { ...member, name: 'Synthetic witness', rosterPersonId: undefined },
+      {
+        ...directory,
+        roster: result({
+          ...roster,
+          people: [
+            { name: 'Synthetic witness', chambers: ['senate_committee'] },
+          ],
+        }),
+      },
+    ),
+  ).toBe(false);
+});
+test('register category and alteration keys have plain labels', () => {
+  expect(registerCategoryLabel('real_estate')).toBe('Real estate');
+  expect(registerChangeLabel('addition')).toBe('added');
+  expect(registerChangeLabel('deletion')).toBe('deleted');
+  expect(registerChangeLabel('amendment')).toBe('changed');
 });
 
 test('committee/witness identity without a membership observation never becomes a page', () => {

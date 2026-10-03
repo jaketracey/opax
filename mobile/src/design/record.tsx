@@ -46,7 +46,7 @@ export function AsAtLine(props: AsAtLineProps) {
       .join(' · ');
   } else text = asAtText(props as AsAt);
   return (
-    <Text variant="fine" testID={props.testID}>
+    <Text wordSafe variant="fine" testID={props.testID}>
       {text}
     </Text>
   );
@@ -124,7 +124,7 @@ export function OpaxWebLink({
       style={({ pressed }) => [styles.link, pressed ? styles.pressed : null]}
     >
       <View style={styles.linkText}>
-        <Text variant="body" tone="bronzeInk">
+        <Text wordSafe variant="body" tone="bronzeInk">
           {label}
         </Text>
         <Text variant="fine">Opens on opax.com.au</Text>
@@ -214,7 +214,11 @@ function FigureLayout({
       style={styles.figure}
     >
       <Text variant={size === 'tile' ? 'figure' : 'figureInline'}>{text}</Text>
-      {label ? <Text variant="metadata">{label}</Text> : null}
+      {label ? (
+        <Text wordSafe variant="metadata">
+          {label}
+        </Text>
+      ) : null}
     </View>
   );
 }
