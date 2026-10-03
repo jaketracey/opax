@@ -9,7 +9,7 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
   // Both new and existing accounts take the same path and receive the same response.
   await limit(env,'login-email:'+email,5,3600)
   const token=randomToken(),hash=await digest(token),t=now()
-  await env.COMMUNITY_DB.prepare('INSERT INTO login_links VALUES (?,?,?,NULL,?)').bind(hash,email,t+900,t).run()
+  await env.COMMUNITY_DB.prepare('INSERT INTO login_links(token_hash,email,expires_at,used_at,created_at) VALUES (?,?,?,NULL,?)').bind(hash,email,t+900,t).run()
   const link=env.COMMUNITY_ORIGIN+'/community?view=signin#token='+token
   try{const delivery=await env.COMMUNITY_EMAIL.send({from:{email:env.COMMUNITY_EMAIL_FROM,name:'Opax'},to:email,...signInEmail(link)});console.log(JSON.stringify({event:'community_email_accepted',message_id:delivery?.messageId}))}catch{await env.COMMUNITY_DB.prepare('DELETE FROM login_links WHERE token_hash=?').bind(hash).run();throw new CommunityError(503,'We could not send your sign-in email. Please try again shortly.')}
   await env.COMMUNITY_DB.batch([env.COMMUNITY_DB.prepare('DELETE FROM login_links WHERE expires_at<?').bind(t-86400),env.COMMUNITY_DB.prepare('DELETE FROM member_sessions WHERE expires_at<?').bind(t),env.COMMUNITY_DB.prepare('DELETE FROM community_limits WHERE expires_at<?').bind(t-86400)])
@@ -22,7 +22,7 @@ export async function authRoute(req:Request,env:Env,path:string):Promise<Respons
   if(!link)throw new CommunityError(400,'This link has expired or was already used. Request a new one.')
   await env.COMMUNITY_DB.prepare('INSERT INTO members(id,email,created_at) VALUES (?,?,?) ON CONFLICT(email) DO NOTHING').bind(crypto.randomUUID(),link.email,t).run()
   const m=await env.COMMUNITY_DB.prepare('SELECT id,disabled FROM members WHERE email=?').bind(link.email).first<{id:string,disabled:number}>();if(!m||m.disabled)throw new CommunityError(403,'This account is unavailable.')
-  const session=randomToken();await env.COMMUNITY_DB.prepare('INSERT INTO member_sessions VALUES (?,?,?,?)').bind(await digest(session),m.id,t+30*86400,t).run()
+  const session=randomToken();await env.COMMUNITY_DB.prepare('INSERT INTO member_sessions(token_hash,member_id,expires_at,created_at) VALUES (?,?,?,?)').bind(await digest(session),m.id,t+30*86400,t).run()
   return json({signed_in:true},200,{'set-cookie':`${COOKIE}=${session}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${30*86400}`})
  }
  if(path==='/api/community/auth/logout'&&req.method==='POST'){
