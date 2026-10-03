@@ -75,6 +75,110 @@ test('a reservation spanning the UTC month boundary still reduces the new monthl
   const next=await reserveVoiceSession(f.env,b.id,boundary+5);assert.equal(next.reserved_seconds,200);f.db.close();
 });
 
+test('start distinguishes budget and capacity; every start throttle also carries a capacity reason',async()=>{
+  const f=fixture(),a=await f.login(),b=await f.login('second@example.test'),c=await f.login('third@example.test');
+  try {
+    await reserveVoiceSession(f.env,a.id);await reserveVoiceSession(f.env,b.id);
+    let response=await f.call('start','POST',{},c.cookie);
+    assert.equal(response.status,429);assert.equal((await response.json()).reason,'capacity');
+    assert.equal(response.headers.get('cache-control'),'no-store');
+    assert.equal((await (await f.call('status','GET',undefined,c.cookie)).json()).budget_open,true);
+    f.env.VOICE_MONTHLY_SECONDS='1200';
+    response=await f.call('start','POST',{},c.cookie);
+    assert.equal(response.status,429);assert.deepEqual(await response.json(),{error:'Voice is closed for this month.',reason:'budget'});
+    assert.equal((await (await f.call('status')).json()).budget_open,false,'signed-out readers see only the global boolean');
+    for(let i=0;i<4;i++)await f.call('start','POST',{},c.cookie);
+    response=await f.call('start','POST',{},c.cookie);
+    assert.equal(response.status,429);assert.equal((await response.json()).reason,'capacity','admission quota precedes budget checks');
+    response=await f.call('start','POST',{},a.cookie);
+    assert.equal(response.status,409,'an existing member call keeps its error precedence');
+  } finally {f.db.close()}
+});
+
+test('budget_open and reservation use the same exact 720-second window across UTC month and year boundaries',async t=>{
+  let clock=0;t.mock.method(Date,'now',()=>clock*1000);
+  for(const boundary of [Date.UTC(2026,0,1)/1000,Date.UTC(2026,9,1)/1000])for(const offset of [-721,-720,-1,0]){
+    clock=boundary+5;
+    const f=fixture(),a=await f.login();f.env.VOICE_MONTHLY_SECONDS='600';
+    try {
+      f.db.prepare("INSERT INTO voice_sessions(id,member_id,state,reserved_seconds,charged_seconds,created_at,expires_at,closed_at) VALUES(?,NULL,'expired',600,600,?,?,?)")
+        .run(crypto.randomUUID(),boundary+offset,boundary+offset+630,boundary+offset+630);
+      const expected=offset < -720;
+      for(const cookie of ['',a.cookie]){
+        const response=await f.call('status','GET',undefined,cookie),status=await response.json();
+        assert.equal(response.status,200);assert.equal(status.budget_open,expected,`${boundary} ${offset} ${cookie?'signed in':'signed out'}`);
+        assert.equal(status.remaining_seconds,600,'unlinked charges only affect shared budget');
+      }
+      const started=await f.call('start','POST',{},a.cookie);
+      assert.equal(started.status,expected?201:429);
+      assert.equal((await started.json()).reason,expected?undefined:'budget');
+    } finally {f.db.close()}
+  }
+});
+
+test('a new month reopens budget except its boundary window; cancellation and confirmed close refresh the signal',async t=>{
+  const boundary=Date.UTC(2026,9,1)/1000;let clock=boundary-800;t.mock.method(Date,'now',()=>clock*1000);
+  const f=fixture(),a=await f.login(),b=await f.login('second@example.test');f.env.VOICE_MONTHLY_SECONDS='600';
+  try {
+    let started=await f.call('start','POST',{},a.cookie),session=await started.json();assert.equal(started.status,201);
+    assert.equal((await (await f.call('status')).json()).budget_open,false);
+    const finish=await f.call('finish','POST',{session_id:session.session_id},a.cookie);
+    assert.equal((await finish.json()).budget_open,true);
+    started=await f.call('start','POST',{},a.cookie);session=await started.json();
+    await claimVoiceSession(f.env,a.id,session.session_id);await reconcileVoiceSession(f.env,session.session_id,600);
+    assert.equal((await (await f.call('status')).json()).budget_open,false);
+    clock=boundary+1;
+    assert.equal((await (await f.call('status')).json()).budget_open,true);
+    assert.equal((await f.call('start','POST',{},b.cookie)).status,201);
+    assert.equal((await (await f.call('status')).json()).budget_open,false);
+  } finally {f.db.close()}
+});
+
+test('disabled and zero-budget voice keep enabled and budget_open independent and fail closed on database errors',async()=>{
+  const f=fixture();
+  try {
+    f.env.VOICE_MONTHLY_SECONDS='0';f.env.VOICE_ENABLED='false';
+    const status=await (await f.call('status')).json();assert.equal(status.enabled,false);assert.equal(status.budget_open,false);
+    f.env.VOICE_MONTHLY_SECONDS='999999';
+    const a=await f.login();
+    for(let i=0;i<67;i++){
+      const seconds=Math.min(600,40000-i*600),timestamp=Math.floor(Date.now()/1000);
+      f.db.prepare("INSERT INTO voice_sessions(id,member_id,state,reserved_seconds,charged_seconds,created_at,expires_at) VALUES(?,?,'closed',?,?,?,?)")
+        .run(crypto.randomUUID(),a.id,seconds,seconds,timestamp,timestamp);
+    }
+    assert.equal((await (await f.call('status')).json()).budget_open,false,'configured budget is capped at 40,000');
+    f.env.COMMUNITY_DB={prepare(){throw Error('private database detail')}};
+    const unavailable=await f.call('status');assert.equal(unavailable.status,503);assert.equal(unavailable.headers.get('cache-control'),'no-store');
+    assert.deepEqual(await unavailable.json(),{error:'The voice assistant is temporarily unavailable.'});
+  } finally {f.db.close()}
+});
+
+test('signed-out budget status is read-only; cron and authenticated paths expire reservations with the same balance result',async t=>{
+  let clock=Date.UTC(2026,9,3)/1000;t.mock.method(Date,'now',()=>clock*1000);
+  const f=fixture(),a=await f.login(),b=await f.login('second@example.test');f.env.VOICE_MONTHLY_SECONDS='600';
+  try {
+    const reservation=await reserveVoiceSession(f.env,a.id);
+    const database=f.env.COMMUNITY_DB,queries=[];
+    f.env.COMMUNITY_DB={prepare(sql){assert.match(sql,/^SELECT/,'signed-out status must never write');queries.push(sql);return database.prepare(sql)}};
+    for(const seconds of [0,60]){
+      clock+=seconds;
+      assert.deepEqual(await (await f.call('status')).json(),{enabled:true,signed_in:false,budget_open:false,total_seconds:600,remaining_seconds:600,active_session:null});
+      assert.equal(f.db.prepare('SELECT state FROM voice_sessions WHERE id=?').get(reservation.id).state,'reserved');
+    }
+    assert.equal(queries.length,2);assert.equal(queries[0],queries[1],'same balance SELECT before and after expiry');
+    f.env.COMMUNITY_DB=database;
+    await expireVoiceSessions(f.env); // The existing cron uses this expiry path.
+    const unsigned=await (await f.call('status')).json();assert.equal(unsigned.budget_open,true);
+    assert.equal((await (await f.call('status','GET',undefined,b.cookie)).json()).budget_open,unsigned.budget_open);
+    assert.equal(f.db.prepare('SELECT state,charged_seconds FROM voice_sessions WHERE id=?').get(reservation.id).state,'cancelled');
+    assert.equal((await f.call('start','POST',{},b.cookie)).status,201);
+    clock+=60;
+    assert.equal((await (await f.call('status')).json()).budget_open,false);
+    assert.equal((await (await f.call('status','GET',undefined,b.cookie)).json()).budget_open,true,'authenticated status retains expiry');
+    assert.equal((await (await f.call('status')).json()).budget_open,true,'anonymous read agrees after authenticated expiry');
+  } finally {f.db.close()}
+});
+
 test('only a confirmed provider closure returns unused time and never returns it twice',async()=>{
   const f=fixture(),a=await f.login(),s=await reserveVoiceSession(f.env,a.id);await claimVoiceSession(f.env,a.id,s.id);
   const finish=await f.call('finish','POST',{session_id:s.id,seconds:0},a.cookie);assert.equal(finish.status,200);
