@@ -59,6 +59,7 @@ const config: ExpoConfig = {
       tinted: './assets/icon/icon-tinted.png',
     },
     buildNumber,
+    deploymentTarget: '18.4',
     supportsTablet: false,
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
@@ -80,7 +81,7 @@ const config: ExpoConfig = {
   },
   plugins: [
     ['expo-router', { sitemap: variant !== 'production' }],
-    ['./plugins/withSceneLifecycle.js', { ios: { deploymentTarget: '18.4' } }],
+    './plugins/withSceneLifecycle.js',
     './plugins/withNetworkPolicy.js',
   ],
   extra: {

@@ -1,6 +1,6 @@
 # OPAX iOS foundation
 
-Expo SDK 57 / React Native 0.86, strict TypeScript, expo-router. iOS 18.4 is
+Expo SDK 57 / React Native 0.86, strict TypeScript, expo-router. iOS 18.4 (`ios.deploymentTarget`) is
 the minimum. Light mode only; Android is possible later and is not built here.
 App identity: OPAX, `au.com.opax.app`, version `0.1.0`, build `1`.
 No push, analytics, crash reporter or microphone permission. Production release

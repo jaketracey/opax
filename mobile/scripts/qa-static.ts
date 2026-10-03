@@ -80,13 +80,13 @@ for (const app of [release, e2e]) {
   assert.equal(app.ios.buildNumber, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert(!app.ios.infoPlist.NSMicrophoneUsageDescription);
   assert.equal(app.updates.enabled, false);
+  // SDK 57's built-in deployment target; the scene plugin passes no deprecated
+  // expo-build-properties target.
+  assert.equal(app.ios.deploymentTarget, '18.4');
+  assert(app.plugins.includes('./plugins/withSceneLifecycle.js'));
   assert(
-    app.plugins.some(
-      (plugin: unknown) =>
-        Array.isArray(plugin) &&
-        plugin[0] === './plugins/withSceneLifecycle.js' &&
-        plugin[1].ios.deploymentTarget === '18.4',
-    ),
+    !JSON.stringify(app.plugins).includes('deploymentTarget'),
+    'Use ios.deploymentTarget, not the deprecated build-properties option',
   );
 }
 assert.equal(
