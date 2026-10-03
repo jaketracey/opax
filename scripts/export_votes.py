@@ -26,11 +26,18 @@ Two sources, one shape:
                           "date": "2012-08-15", "jur": "federal", "rebels": 3}, ...],
              "against": [...]},
    "nsw:penny-sharpe": {..., "jurisdiction": "nsw", "house": "nsw_lc", ...},
-   "_names": {"anthony albanese": ["10007"], "penny sharpe": ["nsw:penny-sharpe"], ...}}
+   "_names": {"anthony albanese": ["10007"], "penny sharpe": ["nsw:penny-sharpe"], ...},
+   "_meta": {"exported_at": "2026-10-03T03:41:07Z", "latest_division_date": "2026-09-25",
+             "latest_division_date_by_jurisdiction": {"federal": "2026-09-11", "nsw": "2026-09-25"},
+             "schema": 1}}
 
 `_names` (lowercased display name -> keys) is how a person page finds records
 for a name that has no portrait id; a name that voted in two parliaments lists
-both keys. It is the one non-record key in the file.
+both keys. `_meta` dates the file: when this export ran (UTC), and the newest
+dated division counted in any record above, overall and per jurisdiction (null
+and {} when there is none). `schema` changes only when the file's shape does.
+They are the only non-record keys; both start with "_" and neither carries a
+`name`, which is how readers that walk every value (home-data.js) skip them.
 
 `for` and `against` hold up to six bills each, most recent first, one entry per
 bill. Only divisions whose question was the bill itself qualify: federally
@@ -56,9 +63,12 @@ import sqlite3
 import sys
 import unicodedata
 from collections import Counter
+from datetime import datetime, timezone
 
 DB = "file:" + os.path.expanduser("~/.cache/autoresearch/parli.db") + "?mode=ro"
 PER_SIDE = 6
+SCHEMA = 1  # _meta.schema: bump when the shape of the file changes
+ISO_DATE = re.compile(r"\d{4}-\d\d-\d\d")
 
 # Leading category in three-part motion names ("Motions - Climate Change - ...").
 CATEGORY_STAGE = {
@@ -186,6 +196,12 @@ def slugify(name):
     return s or None
 
 
+def note_latest(latest, jur, date):
+    """Keep the newest ISO date seen for each jurisdiction (ISO dates sort as strings)."""
+    if ISO_DATE.fullmatch(date or "") and date > latest.get(jur, ""):
+        latest[jur] = date
+
+
 def pick_sides(rows, divisions):
     """rows: [(division_key, vote)] -> {"for": [...], "against": [...]}, one entry
     per bill, most recent first, PER_SIDE each."""
@@ -212,7 +228,7 @@ def pick_sides(rows, divisions):
     return out
 
 
-def export_federal(db, out, names):
+def export_federal(db, out, names, latest):
     members = {r[0]: r for r in db.execute(
         "SELECT person_id, full_name, COALESCE(party_canonical, party), chamber FROM members")}
     divisions = {}
@@ -246,13 +262,14 @@ def export_federal(db, out, names):
         dated = [dates[d] for d, _ in rows if d in dates]
         if dated:
             entry["years"] = [int(min(dated)[:4]), int(max(dated)[:4])]
+            note_latest(latest, "federal", max(dated))
         entry.update(pick_sides(rows, divisions))
         out[pid] = entry
         names.setdefault(name.lower(), []).append(pid)
     return len(divisions)
 
 
-def export_state(db, out, names):
+def export_state(db, out, names, latest):
     divisions = {}
     for did, name, question, bill_ref, date, extra in db.execute(
             "SELECT id, name, question, bill_ref, date, extra FROM ext_divisions WHERE jurisdiction != 'federal'"):
@@ -290,6 +307,7 @@ def export_state(db, out, names):
         }
         entry["divisions_total"] = entry["ayes"] + entry["noes"]
         entry["years"] = [int(min(p["dates"])[:4]), int(max(p["dates"])[:4])]
+        note_latest(latest, jur, max(p["dates"]))
         entry.update(pick_sides(rows, divisions))
         out[key] = entry
         names.setdefault(name.lower(), []).append(key)
@@ -298,19 +316,25 @@ def export_state(db, out, names):
 
 def main():
     db = sqlite3.connect(DB, uri=True)
-    out, names = {}, {}
-    n_fed = export_federal(db, out, names)
-    n_state, n_state_bill = export_state(db, out, names)
+    out, names, latest = {}, {}, {}
+    n_fed = export_federal(db, out, names, latest)
+    n_state, n_state_bill = export_state(db, out, names, latest)
     out["_names"] = names
+    out["_meta"] = {
+        "exported_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "latest_division_date": max(latest.values(), default=None),
+        "latest_division_date_by_jurisdiction": dict(sorted(latest.items())),
+        "schema": SCHEMA,
+    }
 
     json.dump(out, sys.stdout, ensure_ascii=False, separators=(",", ":"))
     sys.stdout.write("\n")
-    people = [e for k, e in out.items() if k != "_names"]
+    people = [e for k, e in out.items() if not k.startswith("_")]
     with_lists = sum(1 for e in people if e["for"] or e["against"])
     by_jur = Counter(e["jurisdiction"] for e in people)
     print(f"people {len(people)} ({dict(by_jur)}), with listed bills {with_lists}, "
           f"federal divisions parsed {n_fed}, state divisions {n_state} (bill questions {n_state_bill}), "
-          f"names indexed {len(names)}", file=sys.stderr)
+          f"names indexed {len(names)}, latest division {out['_meta']['latest_division_date']}", file=sys.stderr)
 
 
 if __name__ == "__main__":
