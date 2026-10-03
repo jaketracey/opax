@@ -1,19 +1,19 @@
 import {body, CommunityError, json, limit, member, now, publicMember, requireMember, text, type Member} from './community-core'
 
 type SocialMember = Member & {message_policy: 'everyone'|'following'|'nobody',reply_email_notifications:number}
-type Conversation = {id:string, member_a:string, member_b:string}
+type Conversation = {id:string, member_a:string|null, member_b:string|null}
 // These predicates are shared by list/detail/count queries so badges cannot leak
 // activity that a member is not allowed to see. All interpolated SQL is static.
 const unblocked = (viewer:string, other:string) => `NOT EXISTS (SELECT 1 FROM member_blocks b WHERE (b.member_id=${viewer} AND b.blocked_id=${other}) OR (b.member_id=${other} AND b.blocked_id=${viewer}))`
 const visibleNotification = `EXISTS (SELECT 1 FROM members a WHERE a.id=n.actor_id AND a.disabled=0)
  AND ${unblocked('n.member_id','n.actor_id')}
- AND (n.thread_id IS NULL OR EXISTS (SELECT 1 FROM community_threads t JOIN members owner ON owner.id=t.member_id WHERE t.id=n.thread_id AND t.hidden=0 AND owner.disabled=0 AND ${unblocked('n.member_id','t.member_id')}))
+ AND (n.thread_id IS NULL OR EXISTS (SELECT 1 FROM community_threads t LEFT JOIN members owner ON owner.id=t.member_id WHERE t.id=n.thread_id AND t.hidden=0 AND coalesce(owner.disabled,0)=0 AND ${unblocked('n.member_id','t.member_id')}))
  AND (n.kind<>'reply' OR EXISTS (SELECT 1 FROM community_replies r WHERE r.id=n.target_id AND r.hidden=0))`
 const unreadMessages = `SELECT count(*) AS n FROM direct_messages d JOIN direct_conversations c ON c.id=d.conversation_id
- JOIN members peer ON peer.id=CASE WHEN c.member_a=?1 THEN c.member_b ELSE c.member_a END
+ LEFT JOIN members peer ON peer.id=CASE WHEN c.member_a=?1 THEN c.member_b ELSE c.member_a END
  LEFT JOIN direct_reads r ON r.conversation_id=c.id AND r.member_id=?1
  WHERE (c.member_a=?1 OR c.member_b=?1) AND d.sender_id<>?1 AND d.hidden=0 AND d.seq>coalesce(r.through_seq,0)
- AND peer.disabled=0 AND ${unblocked('?1','peer.id')}`
+ AND coalesce(peer.disabled,0)=0 AND ${unblocked('?1','peer.id')}`
 export async function socialCounts(env:Env, id:string) {
  const [messages, activity] = await Promise.all([
   env.COMMUNITY_DB.prepare(unreadMessages).bind(id).first<{n:number}>(),
@@ -21,9 +21,9 @@ export async function socialCounts(env:Env, id:string) {
  ])
  return {messages:messages?.n||0, activity:activity?.n||0}
 }
-export function notification(env:Env, recipient:string, actor:string, kind:string, target:string, thread:string|null) {
+export function notification(env:Env, recipient:string|null, actor:string, kind:string, target:string, thread:string|null) {
  return env.COMMUNITY_DB.prepare(`INSERT INTO community_notifications(member_id,actor_id,kind,target_id,thread_id,created_at)
- SELECT ?1,?2,?3,?4,?5,?6 WHERE ?1<>?2 AND ${unblocked('?1','?2')}
+ SELECT ?1,?2,?3,?4,?5,?6 WHERE ?1 IS NOT NULL AND ?1<>?2 AND ${unblocked('?1','?2')}
  ON CONFLICT(member_id,actor_id,kind,target_id) DO NOTHING`).bind(recipient,actor,kind,target,thread,now())
 }
 async function peerMember(env:Env,id:string){
@@ -65,13 +65,13 @@ export async function socialRoute(req:Request,env:Env):Promise<Response|null>{
    if(!['all','following','saved'].includes(feed))throw new CommunityError(400,'Choose a discussion feed.')
    if(feed!=='all'&&!viewer)throw new CommunityError(401,'Sign in to see your discussions.')
    const filter=feed==='following'?'AND EXISTS (SELECT 1 FROM member_follows f WHERE f.follower_id=?1 AND f.followed_id=t.member_id)':feed==='saved'?'AND EXISTS (SELECT 1 FROM thread_bookmarks b WHERE b.member_id=?1 AND b.thread_id=t.id)':''
-   const rows=await env.COMMUNITY_DB.prepare(`SELECT ${threadColumns} FROM community_threads t JOIN members m ON m.id=t.member_id
-    WHERE t.hidden=0 AND m.disabled=0 AND ${unblocked('?1','t.member_id')} ${filter}
+   const rows=await env.COMMUNITY_DB.prepare(`SELECT ${threadColumns} FROM community_threads t LEFT JOIN members m ON m.id=t.member_id
+    WHERE t.hidden=0 AND coalesce(m.disabled,0)=0 AND ${unblocked('?1','t.member_id')} ${filter}
     AND (?2='' OR instr(lower(t.title||' '||t.body),lower(?2))>0) ORDER BY t.created_at DESC,t.id DESC LIMIT 21 OFFSET ?3`).bind(id,q,page*20).all()
    return json({threads:rows.results.slice(0,20),more:rows.results.length>20})
   }
   if(threadId){
-   const thread=await env.COMMUNITY_DB.prepare(`SELECT ${threadColumns} FROM community_threads t JOIN members m ON m.id=t.member_id WHERE t.id=?2 AND t.hidden=0 AND m.disabled=0 AND ${unblocked('?1','t.member_id')}`).bind(id,threadId).first()
+   const thread=await env.COMMUNITY_DB.prepare(`SELECT ${threadColumns} FROM community_threads t LEFT JOIN members m ON m.id=t.member_id WHERE t.id=?2 AND t.hidden=0 AND coalesce(m.disabled,0)=0 AND ${unblocked('?1','t.member_id')}`).bind(id,threadId).first()
    if(!thread)throw new CommunityError(404,'This discussion is unavailable.')
    const focus=url.searchParams.get('reply')||''
    if(focus&&!/^[\w-]{1,64}$/.test(focus))throw new CommunityError(400,'Choose a valid reply.')
@@ -87,7 +87,7 @@ export async function socialRoute(req:Request,env:Env):Promise<Response|null>{
     (SELECT count(*) FROM community_threads WHERE member_id=? AND hidden=0) AS discussions`).bind(peer.id,peer.id,peer.id).first(),
     env.COMMUNITY_DB.prepare('SELECT EXISTS(SELECT 1 FROM member_follows WHERE follower_id=? AND followed_id=?) AS following, EXISTS(SELECT 1 FROM member_blocks WHERE member_id=? AND blocked_id=?) AS blocked').bind(id,peer.id,id,peer.id).first(),
     env.COMMUNITY_DB.prepare('SELECT id,title,description,created_at FROM reading_lists WHERE member_id=? AND public=1 AND ?=0 ORDER BY created_at DESC LIMIT 100').bind(peer.id,Number(blocked)).all(),
-    env.COMMUNITY_DB.prepare(`SELECT ${threadColumns} FROM community_threads t JOIN members m ON m.id=t.member_id WHERE t.member_id=?2 AND t.hidden=0 AND ?3=0 ORDER BY t.created_at DESC,t.id DESC LIMIT 20`).bind(id,peer.id,Number(blocked)).all()
+    env.COMMUNITY_DB.prepare(`SELECT ${threadColumns} FROM community_threads t LEFT JOIN members m ON m.id=t.member_id WHERE t.member_id=?2 AND t.hidden=0 AND ?3=0 ORDER BY t.created_at DESC,t.id DESC LIMIT 20`).bind(id,peer.id,Number(blocked)).all()
    ])
    const conversation=viewer&&!blocked?await env.COMMUNITY_DB.prepare('SELECT id FROM direct_conversations WHERE (member_a=? AND member_b=?) OR (member_a=? AND member_b=?)').bind(id,peer.id,peer.id,id).first<{id:string}>():null
    return json({member:publicMember(peer),stats,relationship,can_message:viewer?await mayMessage(env,id,peer):false,conversation_id:conversation?.id||null,lists:lists.results,threads:threads.results})
@@ -146,7 +146,7 @@ export async function socialRoute(req:Request,env:Env):Promise<Response|null>{
  const reaction=path.match(/^threads\/([\w-]+)\/(like|save)$/)
  if(reaction&&['PUT','DELETE'].includes(req.method)){
   const [,id,action]=reaction,adding=req.method==='PUT'
-  const thread=await env.COMMUNITY_DB.prepare(`SELECT t.member_id FROM community_threads t JOIN members m ON m.id=t.member_id WHERE t.id=?2 AND t.hidden=0 AND m.disabled=0 AND ${unblocked('?1','t.member_id')}`).bind(m.id,id).first<{member_id:string}>()
+  const thread=await env.COMMUNITY_DB.prepare(`SELECT t.member_id FROM community_threads t LEFT JOIN members m ON m.id=t.member_id WHERE t.id=?2 AND t.hidden=0 AND coalesce(m.disabled,0)=0 AND ${unblocked('?1','t.member_id')}`).bind(m.id,id).first<{member_id:string|null}>()
   if(!thread)throw new CommunityError(404,'This discussion is unavailable.')
   const table=action==='like'?'thread_likes':'thread_bookmarks'
   if(adding){await limit(env,'social:'+m.id,120,3600);const insert=env.COMMUNITY_DB.prepare(`INSERT INTO ${table}(thread_id,member_id,created_at) VALUES (?,?,?) ON CONFLICT DO NOTHING`).bind(id,m.id,t);if(action==='like')await env.COMMUNITY_DB.batch([insert,notification(env,thread.member_id,m.id,'like',id,id)]);else await insert.run()}
@@ -164,21 +164,22 @@ export async function socialRoute(req:Request,env:Env):Promise<Response|null>{
   const rows=await env.COMMUNITY_DB.prepare(`SELECT c.id,peer.id AS member_id,peer.display_name AS name, d.created_at AS updated_at,
    CASE WHEN d.hidden=1 THEN 'Message removed' ELSE substr(d.body,1,160) END AS preview,
    (SELECT count(*) FROM direct_messages msg WHERE msg.conversation_id=c.id AND msg.sender_id<>?1 AND msg.hidden=0 AND msg.seq>coalesce(r.through_seq,0)) AS unread
-   FROM direct_conversations c JOIN members peer ON peer.id=CASE WHEN c.member_a=?1 THEN c.member_b ELSE c.member_a END
+   FROM direct_conversations c LEFT JOIN members peer ON peer.id=CASE WHEN c.member_a=?1 THEN c.member_b ELSE c.member_a END
    JOIN direct_messages d ON d.seq=(SELECT max(seq) FROM direct_messages WHERE conversation_id=c.id)
    LEFT JOIN direct_reads r ON r.conversation_id=c.id AND r.member_id=?1
-   WHERE (c.member_a=?1 OR c.member_b=?1) AND peer.disabled=0 AND ${unblocked('?1','peer.id')}
+   WHERE (c.member_a=?1 OR c.member_b=?1) AND coalesce(peer.disabled,0)=0 AND ${unblocked('?1','peer.id')}
    ORDER BY d.seq DESC LIMIT 31 OFFSET ?2`).bind(m.id,page*30).all()
   return json({conversations:rows.results.slice(0,30),more:rows.results.length>30})
  }
  const conversationId=path.match(/^conversations\/([\w-]+)(?:\/(read|messages))?$/)
  if(conversationId){
-  const [,id,action]=conversationId,c=await ownedConversation(env,id,m),peer=await peerMember(env,c.member_a===m.id?c.member_b:c.member_a)
-  if(await isBlocked(env,m.id,peer.id))throw new CommunityError(404,'This conversation is unavailable.')
+  const [,id,action]=conversationId,c=await ownedConversation(env,id,m),peerId=c.member_a===m.id?c.member_b:c.member_a
+  const peer=peerId?await peerMember(env,peerId):null
+  if(peer&&await isBlocked(env,m.id,peer.id))throw new CommunityError(404,'This conversation is unavailable.')
   if(read&&!action){
    const before=url.searchParams.get('before'),after=url.searchParams.get('after'),incremental=after!==null
    const rows=await env.COMMUNITY_DB.prepare(`SELECT seq,id,sender_id,CASE WHEN hidden=1 THEN '' ELSE body END AS body,created_at,hidden FROM direct_messages WHERE conversation_id=? AND seq${incremental?'>':'<'}? ORDER BY seq ${incremental?'ASC':'DESC'} LIMIT 51`).bind(id,incremental?(after==='0'?0:seqValue(after)):before?seqValue(before):Number.MAX_SAFE_INTEGER).all<{seq:number}>()
-   return json({conversation:{id,member:publicMember(peer)},can_message:await mayMessage(env,m.id,peer),messages:incremental?rows.results.slice(0,50):rows.results.slice(0,50).reverse(),more:rows.results.length>50})
+   return json({conversation:{id,member:peer?publicMember(peer):{id:null,name:'Deleted account',bio:'',joined_at:0}},can_message:peer?await mayMessage(env,m.id,peer):false,messages:incremental?rows.results.slice(0,50):rows.results.slice(0,50).reverse(),more:rows.results.length>50})
   }
   if(action==='read'&&req.method==='POST'){
    const d=await body(req),seq=seqValue(d.through)
@@ -186,7 +187,7 @@ export async function socialRoute(req:Request,env:Env):Promise<Response|null>{
     ON CONFLICT(conversation_id,member_id) DO UPDATE SET through_seq=max(through_seq,excluded.through_seq)`).bind(id,m.id,seq).run()
    return json({saved:true})
   }
-  if(action==='messages'&&req.method==='POST')return sendMessage(req,env,m,peer,c)
+  if(action==='messages'&&req.method==='POST'){if(!peer)throw new CommunityError(403,'This conversation is read-only.');return sendMessage(req,env,m,peer,c)}
  }
  if(path==='conversations'&&req.method==='POST'){
   const d=await body(req),peer=await peerMember(env,text(d.recipient_id,1,64,'Recipient'))

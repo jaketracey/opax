@@ -26,11 +26,33 @@ Two sources, one shape:
                           "date": "2012-08-15", "jur": "federal", "rebels": 3}, ...],
              "against": [...]},
    "nsw:penny-sharpe": {..., "jurisdiction": "nsw", "house": "nsw_lc", ...},
-   "_names": {"anthony albanese": ["10007"], "penny sharpe": ["nsw:penny-sharpe"], ...}}
+   "_names": {"anthony albanese": ["10007"], "penny sharpe": ["nsw:penny-sharpe"], ...},
+   "_meta": {"content_changed_at": "2026-10-03T03:41:07Z", "latest_division_date": "2026-09-25",
+             "latest_division_date_by_jurisdiction": {"federal": "2026-09-11", "nsw": "2026-09-25"},
+             "schema": 1}}
 
 `_names` (lowercased display name -> keys) is how a person page finds records
 for a name that has no portrait id; a name that voted in two parliaments lists
-both keys. It is the one non-record key in the file.
+both keys. `_meta` dates the file:
+
+  content_changed_at  when this content was first exported (UTC). A run whose
+                      output matches the file it replaces (PREVIOUS, the
+                      checkout's portal/public/votes.json) byte for byte apart
+                      from this value keeps the old value, so an unchanged rerun
+                      writes an identical file, whatever the clock says now. The
+                      old value must be a real UTC time and the file a regular
+                      one of at most PREVIOUS_MAX_BYTES; otherwise, or with no
+                      previous file, it is now. The previous file is compared,
+                      never parsed, so no content there can stop the export.
+  latest_division_date  the newest dated division counted in the totals of a
+                      published record (null when none). Federal totals count
+                      every aye and no in the legacy tables, so a legacy state
+                      division a federal record counts dates it too.
+  latest_division_date_by_jurisdiction  the same per record `jurisdiction` ({}).
+  schema              changes only when the file's shape does.
+
+They are the only non-record keys; both start with "_" and neither carries a
+`name`, which is how readers that walk every value (home-data.js) skip them.
 
 `for` and `against` hold up to six bills each, most recent first, one entry per
 bill. Only divisions whose question was the bill itself qualify: federally
@@ -53,12 +75,23 @@ import json
 import os
 import re
 import sqlite3
+import stat
 import sys
 import unicodedata
 from collections import Counter
+from datetime import datetime, timezone
+from pathlib import Path
 
 DB = "file:" + os.path.expanduser("~/.cache/autoresearch/parli.db") + "?mode=ro"
+# The file this export replaces (daily_refresh.sh runs this script from the same checkout).
+PREVIOUS = Path(__file__).resolve().parent.parent / "portal" / "public" / "votes.json"
+PREVIOUS_MAX_BYTES = 20_000_000  # votes.json is about 1.3 MB
 PER_SIDE = 6
+SCHEMA = 1  # _meta.schema: bump when the shape of the file changes
+ISO_DATE = re.compile(r"\d{4}-\d\d-\d\d")
+STAMP = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ")
+STAMP_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+STAMP_SLOT = b'"content_changed_at":"'
 
 # Leading category in three-part motion names ("Motions - Climate Change - ...").
 CATEGORY_STAGE = {
@@ -186,6 +219,59 @@ def slugify(name):
     return s or None
 
 
+def note_latest(latest, jur, date):
+    """Keep the newest ISO date seen for each jurisdiction (ISO dates sort as strings)."""
+    if ISO_DATE.fullmatch(date or "") and date > latest.get(jur, ""):
+        latest[jur] = date
+
+
+def dump(out):
+    return json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n"
+
+
+def read_previous(path):
+    """The bytes at `path` if it is a regular file of at most PREVIOUS_MAX_BYTES, else None.
+    Opened non-blocking, so a FIFO or device there cannot stall the export."""
+    try:
+        fd = os.open(path, os.O_RDONLY | getattr(os, "O_NONBLOCK", 0))
+    except OSError:
+        return None
+    try:
+        st = os.fstat(fd)
+        if not stat.S_ISREG(st.st_mode) or st.st_size > PREVIOUS_MAX_BYTES:
+            return None
+        with os.fdopen(fd, "rb", closefd=False) as f:
+            data = f.read(PREVIOUS_MAX_BYTES + 1)  # +1: a file that grew since fstat is refused too
+    except OSError:
+        return None
+    finally:
+        os.close(fd)
+    return data if len(data) <= PREVIOUS_MAX_BYTES else None
+
+
+def carried_stamp(out, previous):
+    """The previous file's content_changed_at when that file is byte for byte what this run
+    would write with it, else None. Only the stamp's 20 bytes may differ, and they must
+    hold a real UTC time; it is not compared with the clock, so a clock set back cannot
+    restamp unchanged content. Leaves out["_meta"]["content_changed_at"] for the caller
+    to set."""
+    old = read_previous(previous)
+    if old is None:
+        return None
+    out["_meta"]["content_changed_at"] = "0000-00-00T00:00:00Z"  # the width of every stamp
+    new = dump(out).encode("utf-8")
+    at = new.rfind(STAMP_SLOT) + len(STAMP_SLOT)  # _meta is written last, so this is its stamp
+    end = at + 20
+    if len(old) != len(new) or old[:at] != new[:at] or old[end:] != new[end:]:
+        return None
+    try:
+        stamp = old[at:end].decode("ascii")
+        datetime.strptime(stamp, STAMP_FORMAT)
+    except ValueError:  # non-ASCII bytes, or no such date or time (2026-02-30, 24:00:00, :60)
+        return None
+    return stamp if STAMP.fullmatch(stamp) else None
+
+
 def pick_sides(rows, divisions):
     """rows: [(division_key, vote)] -> {"for": [...], "against": [...]}, one entry
     per bill, most recent first, PER_SIDE each."""
@@ -212,7 +298,7 @@ def pick_sides(rows, divisions):
     return out
 
 
-def export_federal(db, out, names):
+def export_federal(db, out, names, newest):
     members = {r[0]: r for r in db.execute(
         "SELECT person_id, full_name, COALESCE(party_canonical, party), chamber FROM members")}
     divisions = {}
@@ -224,8 +310,14 @@ def export_federal(db, out, names):
         title, stage, _, _ = parsed
         divisions[did] = {"name": title, "stage": stage, "date": date[:10], "jur": "federal",
                           "rebels": int(rebellions or 0), "polarity": polarity(parsed, summary)}
-    dates = {did: date[:10] for did, date in db.execute(
-        "SELECT division_id, date FROM divisions WHERE COALESCE(state, 'federal') = 'federal' AND date IS NOT NULL")}
+    # `dates` (federal divisions) gives a record its `years`; the totals count every legacy
+    # division, whatever its state, so `counted` dates them for _meta.
+    dates, counted = {}, {}
+    for did, date, state in db.execute(
+            "SELECT division_id, date, COALESCE(state, 'federal') FROM divisions WHERE date IS NOT NULL"):
+        counted[did] = date[:10]
+        if state == "federal":
+            dates[did] = date[:10]
     votes = {}
     for pid, did, vote in db.execute("SELECT person_id, division_id, vote FROM votes WHERE vote IN ('aye', 'no')"):
         votes.setdefault(pid, []).append((did, vote))
@@ -248,11 +340,14 @@ def export_federal(db, out, names):
             entry["years"] = [int(min(dated)[:4]), int(max(dated)[:4])]
         entry.update(pick_sides(rows, divisions))
         out[pid] = entry
+        counted_dates = [counted[d] for d, _ in rows if d in counted]
+        if counted_dates:
+            newest[pid] = max(counted_dates)
         names.setdefault(name.lower(), []).append(pid)
     return len(divisions)
 
 
-def export_state(db, out, names):
+def export_state(db, out, names, newest):
     divisions = {}
     for did, name, question, bill_ref, date, extra in db.execute(
             "SELECT id, name, question, bill_ref, date, extra FROM ext_divisions WHERE jurisdiction != 'federal'"):
@@ -291,26 +386,38 @@ def export_state(db, out, names):
         entry["divisions_total"] = entry["ayes"] + entry["noes"]
         entry["years"] = [int(min(p["dates"])[:4]), int(max(p["dates"])[:4])]
         entry.update(pick_sides(rows, divisions))
-        out[key] = entry
+        out[key] = entry  # two person keys can share a slug: the later one replaces the earlier
+        newest[key] = max(p["dates"])
         names.setdefault(name.lower(), []).append(key)
     return len(divisions), sum(1 for d in divisions.values() if d["polarity"])
 
 
 def main():
     db = sqlite3.connect(DB, uri=True)
-    out, names = {}, {}
-    n_fed = export_federal(db, out, names)
-    n_state, n_state_bill = export_state(db, out, names)
+    out, names, newest = {}, {}, {}
+    n_fed = export_federal(db, out, names, newest)
+    n_state, n_state_bill = export_state(db, out, names, newest)
+    latest = {}
+    for key, date in newest.items():  # one date per published key, so a replaced record leaves none
+        note_latest(latest, out[key]["jurisdiction"], date)
     out["_names"] = names
+    out["_meta"] = {
+        "content_changed_at": None,
+        "latest_division_date": max(latest.values(), default=None),
+        "latest_division_date_by_jurisdiction": dict(sorted(latest.items())),
+        "schema": SCHEMA,
+    }
+    carried = carried_stamp(out, PREVIOUS)
+    out["_meta"]["content_changed_at"] = carried or datetime.now(timezone.utc).strftime(STAMP_FORMAT)
 
-    json.dump(out, sys.stdout, ensure_ascii=False, separators=(",", ":"))
-    sys.stdout.write("\n")
-    people = [e for k, e in out.items() if k != "_names"]
+    sys.stdout.write(dump(out))
+    people = [e for k, e in out.items() if not k.startswith("_")]
     with_lists = sum(1 for e in people if e["for"] or e["against"])
     by_jur = Counter(e["jurisdiction"] for e in people)
     print(f"people {len(people)} ({dict(by_jur)}), with listed bills {with_lists}, "
           f"federal divisions parsed {n_fed}, state divisions {n_state} (bill questions {n_state_bill}), "
-          f"names indexed {len(names)}", file=sys.stderr)
+          f"names indexed {len(names)}, latest division {out['_meta']['latest_division_date']}, "
+          f"content {'unchanged since' if carried else 'changed at'} {out['_meta']['content_changed_at']}", file=sys.stderr)
 
 
 if __name__ == "__main__":

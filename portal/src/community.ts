@@ -1,4 +1,5 @@
 import {authRoute} from './community-auth'
+import {deletionMember,deletionRoute} from './community-deletion'
 import {socialRoute,socialCounts,notification} from './community-social'
 import {deliverReplyEmails,queueReplyEmail,replyEmailUnsubscribe} from './community-notifications'
 import {body,CommunityError,digest,json,limit,member,now,publicMember,randomToken,requireMember,sameOrigin,sourcePath,text} from './community-core'
@@ -9,9 +10,11 @@ async function route(req:Request,env:Env,ctx?:Pick<ExecutionContext,'waitUntil'>
  const url=new URL(req.url),path=url.pathname,t=now()
  // Unsubscribe is a narrowly scoped token action, including while the community is paused.
  const unsubscribe=await replyEmailUnsubscribe(req,env);if(unsubscribe)return unsubscribe
+ // Account deletion remains available during a pause and after moderation.
+ const deletion=await deletionRoute(req,env,path);if(deletion)return deletion
  if(path==='/api/community/status'&&req.method==='GET'){
   const m=await member(req,env)
-  return json({enabled:String(env.COMMUNITY_ENABLED)==='true',member:m?{...publicMember(m),email:m.email,role:m.role}:null,unread:m&&String(env.COMMUNITY_ENABLED)==='true'?await socialCounts(env,m.id):{messages:0,activity:0},mcp_url:env.COMMUNITY_ORIGIN+'/mcp'})
+  return json({enabled:String(env.COMMUNITY_ENABLED)==='true',member:m?{...publicMember(m),email:m.email,role:m.role}:null,can_delete_account:!!(m||await deletionMember(req,env)),unread:m&&String(env.COMMUNITY_ENABLED)==='true'?await socialCounts(env,m.id):{messages:0,activity:0},mcp_url:env.COMMUNITY_ORIGIN+'/mcp'})
  }
  if(String(env.COMMUNITY_ENABLED)!=='true')throw new CommunityError(503,'The community is being prepared. Please check back soon.')
  const auth=await authRoute(req,env,path);if(auth)return auth
@@ -35,7 +38,7 @@ async function route(req:Request,env:Env,ctx?:Pick<ExecutionContext,'waitUntil'>
  if(threadId&&req.method==='POST'){
   if(!m.display_name)throw new CommunityError(400,'Choose a display name in your account first.')
   const d=await body(req),reply=text(d.body,2,3000,'Reply'),id=crypto.randomUUID()
-  const thread=await env.COMMUNITY_DB.prepare(`SELECT t.member_id FROM community_threads t JOIN members owner ON owner.id=t.member_id WHERE t.id=? AND t.hidden=0 AND owner.disabled=0 AND NOT EXISTS(SELECT 1 FROM member_blocks b WHERE (b.member_id=? AND b.blocked_id=t.member_id) OR (b.member_id=t.member_id AND b.blocked_id=?))`).bind(threadId,m.id,m.id).first<{member_id:string}>()
+  const thread=await env.COMMUNITY_DB.prepare(`SELECT t.member_id FROM community_threads t LEFT JOIN members owner ON owner.id=t.member_id WHERE t.id=? AND t.hidden=0 AND coalesce(owner.disabled,0)=0 AND NOT EXISTS(SELECT 1 FROM member_blocks b WHERE (b.member_id=? AND b.blocked_id=t.member_id) OR (b.member_id=t.member_id AND b.blocked_id=?))`).bind(threadId,m.id,m.id).first<{member_id:string|null}>()
   if(!thread)throw new CommunityError(404,'This discussion is unavailable.')
   await limit(env,'reply:'+m.id,30,86400)
   await env.COMMUNITY_DB.batch([env.COMMUNITY_DB.prepare('INSERT INTO community_replies(id,thread_id,member_id,body,created_at) VALUES (?,?,?,?,?)').bind(id,threadId,m.id,reply,t),notification(env,thread.member_id,m.id,'reply',id,threadId),queueReplyEmail(env,id)])

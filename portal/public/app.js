@@ -4189,8 +4189,10 @@ async function renderPersonExpenses(name, personId, sections) {
   await Promise.all([loadExpenses(), loadPhotoMap(), loadExpenseDefs()]);
   if (currentSubjectKey !== key || !expensesData?.people) return;
   const nameKey = String(name || "").trim().toLowerCase();
-  const pid = personId || photoMap?.[nameKey] || expensesData.names?.[nameKey];
-  const e = pid && expensesData.people[pid];
+  // Portrait keys may be Wikimedia IDs, while IPEA uses legacy person IDs.
+  // Only a candidate with an expense record may take priority over the name index.
+  const e = [personId, photoMap?.[nameKey], expensesData.names?.[nameKey]]
+    .map((pid) => pid && expensesData.people[pid]).find(Boolean);
   if (!e) return;
   const span = e.from === e.to ? `in ${e.from}` : `${e.from} to ${e.to}`;
   const lines = Number(e.lines || 0);
