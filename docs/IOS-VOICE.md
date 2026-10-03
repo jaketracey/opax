@@ -407,7 +407,7 @@ Deleting the voice rows to get around that would do more than reset a personal a
 
 Repeated delete-and-sign-up would then bypass the application's monthly ceiling. The provider's credit ceiling is a separate limit and does not restore that guarantee. Keeping a member reference and moving only monthly charges into an aggregate would not help either: open rows would still reference the member and block the delete.
 
-#### Migration contract: `0011_voice_deletion_safe`
+#### Migration contract: `0012_voice_deletion_safe`
 
 This is a proposal for a later Worker lane, written as a contract, not code. **Needs Jake's OK to deploy.**
 
@@ -455,7 +455,7 @@ Today's code is compatible with the rebuilt table, because it never writes a NUL
 
 **Type changes.**
 - `Session.member_id` becomes `string | null` (`portal/src/voice.ts:10-13`). Every reader must handle NULL. None returns it to a client today: status returns only `id`, `expires_at` and `state` (`portal/src/voice.ts:73`).
-- The migration lists in the unit fixture and the Worker integration test gain `0011` (`portal/test/voice.test.mjs:21`, `:254`).
+- The migration lists in the unit fixture and the Worker integration test gain `0012` (`portal/test/voice.test.mjs:21`, `:254`).
 
 **Tests that must pass before deployment.** All run with foreign keys enforced: Node's built-in SQLite enables them by default, and Miniflare's D1 enforces them.
 1. **Migration fidelity.**
@@ -498,7 +498,7 @@ For the chosen cookie contract. Each item **needs Jake's OK to deploy**. The con
 2. **Code exchange.** `auth/consume-code` with atomic attempts, one-winner redemption and shared link/code consumption. It returns the session cookie as `auth/consume` does, and labels the session `client:"ios"` through a migration. **Needs Jake's OK to deploy.**
 3. **Code secret.** A new Worker secret for the code MAC, with separate values for production and staging. **Needs Jake's OK to deploy.**
 4. **Account deletion.** A route for cookie sessions with Origin and fresh verification, linked from the web account page too, with the scope above. **Needs Jake's OK to deploy.**
-5. **Deletion-safe voice accounting.** Migration `0011_voice_deletion_safe`, the added cleanup statement, scheduled housekeeping on the five-minute cron that runs expiry before that cleanup, the deletion batch and the `Session` type change, with the ten tests in the contract above. Deletion cannot refund the monthly budget or free open slots. **Needs Jake's OK to deploy.**
+5. **Deletion-safe voice accounting.** Migration `0012_voice_deletion_safe`, the added cleanup statement, scheduled housekeeping on the five-minute cron that runs expiry before that cleanup, the deletion batch and the `Session` type change, with the ten tests in the contract above. Deletion cannot refund the monthly budget or free open slots. **Needs Jake's OK to deploy.**
 6. **Budget signal.** The 429 from start gains `reason: "budget" | "capacity"`, and status gains `budget_open`. Both clients can then say "Voice is closed for this month" (`portal/src/voice.ts:258-262`, `:64-74`). **Needs Jake's OK to deploy.**
 7. **Optional refund signal.** Error bodies from `connect` gain `released: true | false`. This helps HTTP clients only; WebSocket clients still read status (section 1). **Needs Jake's OK to deploy.**
 8. **Optional usage split.** A `client` column on `voice_sessions` so app and web minutes can be reported apart. **Needs Jake's OK to deploy.**
