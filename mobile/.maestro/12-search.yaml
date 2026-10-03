@@ -1,0 +1,105 @@
+appId: au.com.opax.app
+name: 12 Local suggestions and the four catalog search kinds
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-search
+- tapOn:
+    id: search-input
+- inputText: Anthony Albanese
+- scrollUntilVisible:
+    element:
+      id: search-suggestions-people
+    timeout: 90000
+    visibilityPercentage: 1
+- takeScreenshot: ${EVIDENCE}/12-suggestions
+- assertVisible: Anthony Albanese.*
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    timeout: 90000
+    direction: UP
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: search-result-anthony-albanese
+    timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/12-people
+- scrollUntilVisible:
+    element:
+      id: search-kind-interest
+    timeout: 90000
+    direction: UP
+- tapOn:
+    id: search-kind-interest
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    timeout: 90000
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: search-result-anthony-albanese
+    timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/12-interests
+- scrollUntilVisible:
+    element:
+      id: search-kind-pay
+    timeout: 90000
+    direction: UP
+- tapOn:
+    id: search-kind-pay
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    timeout: 90000
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: search-result-anthony-albanese
+    timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/12-pay
+- scrollUntilVisible:
+    element:
+      text: Read matching record
+    timeout: 90000
+- tapOn: Read matching record
+- takeScreenshot: ${EVIDENCE}/12-pay-expanded
+- tapOn: Hide matching record
+- scrollUntilVisible:
+    element:
+      id: search-kind-expense
+    timeout: 90000
+    direction: UP
+- tapOn:
+    id: search-kind-expense
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    timeout: 90000
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: search-result-anthony-albanese
+    timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/12-expenses
+- tapOn:
+    id: search-result-anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-screen-title
+    timeout: 20000
+- takeScreenshot: ${EVIDENCE}/12-open-person

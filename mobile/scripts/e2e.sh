@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer EXPO_NO_TELEMETRY=1 MAESTRO_CLI_NO_ANALYTICS=true MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true
-UDID=${1:?Usage: scripts/e2e.sh udid [01 02 03 04 05 06]}; shift
+UDID=${1:?Usage: scripts/e2e.sh udid [01 02 03 04 05 06 12 13 14]}; shift
 source scripts/qa-env.sh
 source scripts/qa-java.sh
 configure_java
@@ -72,7 +72,7 @@ if [ "$#" = 0 ]; then set -- 01 02 03 04; fi
 for flow in "$@"; do
   case "$flow" in
     04|.maestro/04-offline.yaml) OFFLINE=1 ;;
-    01|02|03|05|06) matches=(.maestro/"$flow"*.yaml); for match in "${matches[@]}"; do
+    01|02|03|05|06|12|13|14) matches=(.maestro/"$flow"*.yaml); for match in "${matches[@]}"; do
       case "$match" in *-open-profile.yaml) continue ;; esac
       FLOWS+=("$match")
     done ;;

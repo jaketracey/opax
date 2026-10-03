@@ -1,0 +1,56 @@
+appId: au.com.opax.app
+name: 14 About, coverage, original sources, privacy and font notices
+---
+- launchApp
+- tapOn: Account and about
+- scrollUntilVisible:
+    element:
+      id: account-about
+    timeout: 90000
+- tapOn:
+    id: account-about
+- assertVisible:
+    id: about-name
+- takeScreenshot: ${EVIDENCE}/14-name
+- scrollUntilVisible:
+    element:
+      id: about-resources
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/14-coverage
+- scrollUntilVisible:
+    element:
+      id: about-coverage-as-at
+    timeout: 90000
+- assertVisible: As at .* Source.*OPAX collection.*
+- takeScreenshot: ${EVIDENCE}/14-coverage-as-at
+- scrollUntilVisible:
+    element:
+      id: about-source-aph
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/14-sources
+- tapOn:
+    id: about-source-aph
+- assertVisible: https://www.aph.gov.au/Help/Disclaimer_Privacy_Copyright
+- takeScreenshot: ${EVIDENCE}/14-source-alert
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: about-privacy
+    timeout: 90000
+- tapOn:
+    id: about-privacy
+- assertVisible: https://opax.invalid/community\?view=privacy
+- takeScreenshot: ${EVIDENCE}/14-privacy-alert
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: about-font-Merriweather
+    timeout: 90000
+- tapOn:
+    id: about-font-Merriweather
+- scrollUntilVisible:
+    element:
+      id: about-notice-Merriweather
+    timeout: 90000
+    visibilityPercentage: 1
+- takeScreenshot: ${EVIDENCE}/14-font-notice
