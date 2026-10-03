@@ -7,7 +7,15 @@ import {
   uncoveredProfile,
   type Directory,
 } from '../src/features/your-mp/model';
-import { catalogs, index, manifest, people, roster, slugs } from './pinned';
+import {
+  catalogs,
+  index,
+  manifest,
+  people,
+  roster,
+  servedFiles,
+  slugs,
+} from './pinned';
 import { joinPerson, profileFor } from '../src/api/catalogs';
 const result = <T>(data: T) => ({ data, stale: false, savedAt: 1, asOf: null });
 export const directory: Directory = {
@@ -90,4 +98,19 @@ test('voting metadata never borrows the global division date for a missing juris
   expect(meta.latest_division_date_by_jurisdiction).toEqual({
     federal: '2026-09-25',
   });
+});
+
+test('the profile journeys and state-seat member use pinned register bytes', () => {
+  for (const slug of [
+    'anthony-albanese',
+    'penny-wong',
+    'sheena-watt',
+    'julia-gillard',
+    'catherine-king',
+  ]) {
+    const identity = joinPerson(slug, slugs, roster, people, manifest);
+    const { interestKey } = profileFor(identity.canonicalPersonId!, catalogs);
+    if (interestKey)
+      expect(servedFiles).toContain(`/interests/${interestKey}.json`);
+  }
 });
