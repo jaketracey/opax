@@ -14,6 +14,7 @@ class MemberPartyTests(unittest.TestCase):
     def test_verified_state_roster_repairs_are_scoped_to_the_contaminated_identity(self):
         self.assertEqual(export.member_party('vic_annabelle_cleeland', 'Annabelle Cleeland', 'vic', 'vic_la', 'ALP', None), 'Nationals')
         self.assertEqual(export.member_party('sa_harvey', 'Richard Manuel Harvey', 'sa', 'sa_ha', 'ALP', None), 'Liberal')
+        self.assertEqual(export.member_party('sa_harvey', 'Richard Manuel Harvey', 'sa', 'sa_ha', 'ALP', 'ALP'), 'Liberal')
         for identity in [('vic_annabelle_cleeland', 'Annabelle Cleeland', 'federal', 'representatives'),
                          ('vic_annabelle_cleeland', 'Peter Cleeland', 'vic', 'vic_la'),
                          ('historic_cleeland', 'Annabelle Cleeland', 'vic', 'vic_la')]:
@@ -32,7 +33,7 @@ class MemberPartyTests(unittest.TestCase):
         ''')
         db.executemany('INSERT INTO members VALUES (?,?,?,?,?,?,?)', [
             ('vic_annabelle_cleeland', 'Annabelle Cleeland', 'vic', 'vic_la', 'ALP', None, None),
-            ('sa_harvey', 'Richard Manuel Harvey', 'sa', 'sa_ha', 'ALP', None, '2022-03-19'),
+            ('sa_harvey', 'Richard Manuel Harvey', 'sa', 'sa_ha', 'ALP', 'ALP', '2022-03-19'),
             ('100', 'Peter Cleeland', 'federal', 'representatives', 'ALP', None, '1996-03-02'),
             ('101', 'Party Switch', 'federal', 'senate', 'Greens', 'Greens', None),
         ])
