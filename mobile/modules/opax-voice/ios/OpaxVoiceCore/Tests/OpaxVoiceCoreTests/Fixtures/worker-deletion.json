@@ -1,0 +1,410 @@
+{
+  "source_ref": "origin/main",
+  "timestamp": 1700000000,
+  "sources": {
+    "community-deletion.ts": "b3774c97cbe38e2f4f55f7b8ffe18dd9911cd34db3c44695cfb07ae59fe73776",
+    "community-core.ts": "7d3a3e40a7734d38a2cf556c5cf3ff152831afc7c564ae76a18e8e245f9e9e8e",
+    "community.ts": "75453e9f9dc8b0eaf064ede0a278efd9b447d6aecbc0821b7fdc6513630acb8b"
+  },
+  "shapes": {
+    "requestSuccess": {
+      "status": 200,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "sent": true,
+        "challenge_id": "ccccccccccccccccccccccccccccccccccccccccccc",
+        "message": "Check your email for a deletion code. It expires in 15 minutes."
+      }
+    },
+    "requestSuccessStatus": {
+      "status": 200,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "enabled": true,
+        "member": {
+          "id": "fixture",
+          "name": "Community member",
+          "bio": "",
+          "joined_at": 1700000000,
+          "email": "fixture@example.invalid",
+          "role": "member"
+        },
+        "can_delete_account": true,
+        "unread": {
+          "messages": 0,
+          "activity": 0
+        },
+        "mcp_url": "https://opax.com.au/mcp"
+      }
+    },
+    "requestDisabled": {
+      "status": 200,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "sent": true,
+        "challenge_id": "ccccccccccccccccccccccccccccccccccccccccccc",
+        "message": "Check your email for a deletion code. It expires in 15 minutes."
+      }
+    },
+    "requestDisabledStatus": {
+      "status": 200,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "enabled": true,
+        "member": null,
+        "can_delete_account": true,
+        "unread": {
+          "messages": 0,
+          "activity": 0
+        },
+        "mcp_url": "https://opax.com.au/mcp"
+      }
+    },
+    "requestPaused": {
+      "status": 200,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "sent": true,
+        "challenge_id": "ccccccccccccccccccccccccccccccccccccccccccc",
+        "message": "Check your email for a deletion code. It expires in 15 minutes."
+      }
+    },
+    "requestPausedStatus": {
+      "status": 200,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "enabled": false,
+        "member": {
+          "id": "fixture",
+          "name": "Community member",
+          "bio": "",
+          "joined_at": 1700000000,
+          "email": "fixture@example.invalid",
+          "role": "member"
+        },
+        "can_delete_account": true,
+        "unread": {
+          "messages": 0,
+          "activity": 0
+        },
+        "mcp_url": "https://opax.com.au/mcp"
+      }
+    },
+    "request400": {
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This deletion could not be completed. Request a new deletion code and try again."
+      }
+    },
+    "request400Quota": {
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This deletion could not be completed. Request a new deletion code and try again."
+      }
+    },
+    "request401": {
+      "status": 401,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "Sign in to continue."
+      }
+    },
+    "request401Status": {
+      "status": 200,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "enabled": true,
+        "member": null,
+        "can_delete_account": false,
+        "unread": {
+          "messages": 0,
+          "activity": 0
+        },
+        "mcp_url": "https://opax.com.au/mcp"
+      }
+    },
+    "request403": {
+      "status": 403,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "Open this action from your Opax account."
+      }
+    },
+    "request503": {
+      "status": 503,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This action could not be completed. Please try again shortly."
+      }
+    },
+    "request503Email": {
+      "status": 503,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This action could not be completed. Please try again shortly."
+      }
+    },
+    "deleteSuccess": {
+      "status": 200,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer",
+        "set-cookie": "__Host-opax_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
+      },
+      "body": {
+        "deleted": true,
+        "signed_out": true,
+        "message": "Your account and authored content have been deleted."
+      }
+    },
+    "deleteDisabled": {
+      "status": 200,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer",
+        "set-cookie": "__Host-opax_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
+      },
+      "body": {
+        "deleted": true,
+        "signed_out": true,
+        "message": "Your account and authored content have been deleted."
+      }
+    },
+    "deletePaused": {
+      "status": 200,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer",
+        "set-cookie": "__Host-opax_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
+      },
+      "body": {
+        "deleted": true,
+        "signed_out": true,
+        "message": "Your account and authored content have been deleted."
+      }
+    },
+    "delete400": {
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This deletion could not be completed. Request a new deletion code and try again."
+      }
+    },
+    "delete400Expired": {
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This deletion could not be completed. Request a new deletion code and try again."
+      }
+    },
+    "delete400Used": {
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This deletion could not be completed. Request a new deletion code and try again."
+      }
+    },
+    "delete400Superseded": {
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This deletion could not be completed. Request a new deletion code and try again."
+      }
+    },
+    "delete400OverLimit": {
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This deletion could not be completed. Request a new deletion code and try again."
+      }
+    },
+    "delete400OtherMember": {
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This deletion could not be completed. Request a new deletion code and try again."
+      }
+    },
+    "delete400Unknown": {
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This deletion could not be completed. Request a new deletion code and try again."
+      }
+    },
+    "delete400MalformedChallenge": {
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This deletion could not be completed. Request a new deletion code and try again."
+      }
+    },
+    "delete400MalformedCode": {
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This deletion could not be completed. Request a new deletion code and try again."
+      }
+    },
+    "delete400Quota": {
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This deletion could not be completed. Request a new deletion code and try again."
+      }
+    },
+    "delete401": {
+      "status": 401,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "Sign in to continue."
+      }
+    },
+    "delete403": {
+      "status": 403,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "Open this action from your Opax account."
+      }
+    },
+    "delete503": {
+      "status": 503,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This action could not be completed. Please try again shortly."
+      }
+    },
+    "delete503Database": {
+      "status": 503,
+      "headers": {
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "This action could not be completed. Please try again shortly."
+      }
+    },
+    "request405": {
+      "status": 405,
+      "headers": {
+        "allow": "POST",
+        "cache-control": "no-store",
+        "content-type": "application/json",
+        "referrer-policy": "no-referrer"
+      },
+      "body": {
+        "error": "Use POST for account deletion."
+      }
+    }
+  }
+}
