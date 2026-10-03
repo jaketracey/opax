@@ -153,16 +153,29 @@ test('disabled and zero-budget voice keep enabled and budget_open independent an
   } finally {f.db.close()}
 });
 
-test('signed-out budget status expires an unused reservation before reading the same balances as start',async t=>{
+test('signed-out budget status is read-only; cron and authenticated paths expire reservations with the same balance result',async t=>{
   let clock=Date.UTC(2026,9,3)/1000;t.mock.method(Date,'now',()=>clock*1000);
   const f=fixture(),a=await f.login(),b=await f.login('second@example.test');f.env.VOICE_MONTHLY_SECONDS='600';
   try {
     const reservation=await reserveVoiceSession(f.env,a.id);
-    assert.equal((await (await f.call('status')).json()).budget_open,false);
-    clock+=60;
-    assert.equal((await (await f.call('status')).json()).budget_open,true);
+    const database=f.env.COMMUNITY_DB,queries=[];
+    f.env.COMMUNITY_DB={prepare(sql){assert.match(sql,/^SELECT/,'signed-out status must never write');queries.push(sql);return database.prepare(sql)}};
+    for(const seconds of [0,60]){
+      clock+=seconds;
+      assert.deepEqual(await (await f.call('status')).json(),{enabled:true,signed_in:false,budget_open:false,total_seconds:600,remaining_seconds:600,active_session:null});
+      assert.equal(f.db.prepare('SELECT state FROM voice_sessions WHERE id=?').get(reservation.id).state,'reserved');
+    }
+    assert.equal(queries.length,2);assert.equal(queries[0],queries[1],'same balance SELECT before and after expiry');
+    f.env.COMMUNITY_DB=database;
+    await expireVoiceSessions(f.env); // The existing cron uses this expiry path.
+    const unsigned=await (await f.call('status')).json();assert.equal(unsigned.budget_open,true);
+    assert.equal((await (await f.call('status','GET',undefined,b.cookie)).json()).budget_open,unsigned.budget_open);
     assert.equal(f.db.prepare('SELECT state,charged_seconds FROM voice_sessions WHERE id=?').get(reservation.id).state,'cancelled');
     assert.equal((await f.call('start','POST',{},b.cookie)).status,201);
+    clock+=60;
+    assert.equal((await (await f.call('status')).json()).budget_open,false);
+    assert.equal((await (await f.call('status','GET',undefined,b.cookie)).json()).budget_open,true,'authenticated status retains expiry');
+    assert.equal((await (await f.call('status')).json()).budget_open,true,'anonymous read agrees after authenticated expiry');
   } finally {f.db.close()}
 });
 

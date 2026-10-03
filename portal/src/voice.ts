@@ -1,5 +1,6 @@
 import {body, CommunityError, digest, json, limit, member, now, requireMember, sameOrigin, text} from './community-core'
 import {boundedJson, runVoiceTool, type PublicReader} from './voice-tools'
+import {voiceConfigured as configured, type VoiceConfig} from './voice-config'
 
 export const VOICE_ALLOWANCE_SECONDS = 600
 const RESERVATION_SECONDS = 60
@@ -11,9 +12,7 @@ type Session = {
   id: string; member_id: string | null; state: string; reserved_seconds: number; charged_seconds: number
   created_at: number; expires_at: number; started_at: number | null; conversation_id: string | null
 }
-type VoiceConfig = {VOICE_ENABLED?: string; VOICE_AGENT_ID?: string; ELEVENLABS_API_KEY?: string; VOICE_TOOL_SECRET?: string; VOICE_MONTHLY_SECONDS?: string}
 type VoiceEnv = Env & VoiceConfig
-const configured = (env: VoiceEnv) => String(env.VOICE_ENABLED) === 'true' && !!env.VOICE_AGENT_ID && !!env.ELEVENLABS_API_KEY && (env.VOICE_TOOL_SECRET?.length ?? 0) >= 32
 const monthStart = (timestamp: number) => {const d = new Date(timestamp * 1000); return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1) / 1000}
 const monthlyLimit = (env: VoiceEnv) => Math.max(0, Math.min(MAX_MONTHLY_SECONDS, Number.isFinite(Number(env.VOICE_MONTHLY_SECONDS)) ? Math.floor(Number(env.VOICE_MONTHLY_SECONDS)) : MAX_MONTHLY_SECONDS))
 
@@ -249,9 +248,9 @@ export async function voiceRoute(req: Request, env: VoiceEnv, ctx: ExecutionCont
     if (String(env.COMMUNITY_ENABLED) !== 'true') throw new CommunityError(503, 'Community access is being prepared.')
     if (path === 'status' && req.method === 'GET') {
       const current = await member(req, env)
-      // Global readiness must release expired unused reservations for signed-out
-      // readers too, just as start does before applying the shared balance SQL.
-      await expireVoiceSessions(env)
+      // Anonymous polling is read-only. Cron and authenticated paths expire
+      // reservations; every reader still uses the reservation's balance SQL.
+      if (current) await expireVoiceSessions(env)
       return json(await voiceStatus(env, current?.id ?? null))
     }
     sameOrigin(req, env)

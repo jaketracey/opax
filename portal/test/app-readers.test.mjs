@@ -11,6 +11,7 @@ const compile=async file=>{
 };
 const {appEdition}=await compile('app-edition.ts');
 const {appManifest}=await compile('app-manifest.ts');
+const {voiceRoute}=await compile('voice.ts');
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 const at=Date.UTC(2026,9,2,22);
 const post={date:'2026-10-03',subject:'bill:au-federal-test',kind:'bill',title:'A test bill',text:'Published source copy.',caption:'Stored summary; attributed to Parliament.',url:'https://opax.com.au/bill/au-federal-test'};
@@ -33,13 +34,13 @@ function journal(){
   return {db,env,calls,store,call:(path='edition/today',method='GET',headers={})=>appEdition(request(path,method,headers),env,at)};
 }
 
-test('today and date return the exact published journal copy with attribution, slides and revalidation',async()=>{
+test('latest, today and date return the exact published journal copy with attribution, slides and revalidation',async()=>{
   const f=journal();try{
     f.store({...post,slides});
-    for(const path of ['edition/today','edition/2026-10-03']){
+    for(const path of ['edition/latest','edition/today','edition/2026-10-03']){
       const response=await f.call(path),body=await response.json();
       assert.equal(response.status,200);assert.deepEqual(body,{schema_version:1,date:post.date,created_at:'2026-10-02T22:00:00Z',edition:{...post,slides}});
-      assert.equal(response.headers.get('cache-control'),path.endsWith('today')?'public, max-age=300, must-revalidate':'public, max-age=86400, must-revalidate');
+      assert.equal(response.headers.get('cache-control'),path.endsWith('2026-10-03')?'public, max-age=86400, must-revalidate':'public, max-age=300, must-revalidate');
       assert.equal(response.headers.get('set-cookie'),null);assert.equal(response.headers.get('access-control-allow-origin'),null);
       const etag=response.headers.get('etag');assert.match(etag,/^W\/"[a-f0-9]{64}"$/);
       for(const tag of [etag,etag.slice(2),'"unrelated", '+etag,'*']){
@@ -53,6 +54,34 @@ test('today and date return the exact published journal copy with attribution, s
 
 test('legacy editions without slides remain readable without manufacturing a story',async()=>{
   const f=journal();try{f.store();assert.deepEqual((await (await f.call()).json()).edition,post)}finally{f.db.close()}
+});
+
+test('latest selects the newest posted edition on or before Melbourne today, including the morning publication gap',async()=>{
+  for(const status of [null,'preparing','sending','failed','review_required']){
+    const f=journal();try{
+      for(const date of ['2026-10-01','2026-10-02','2026-10-04'])f.store({...post,date});
+      f.store(post,status);
+      const response=await f.call('edition/latest');assert.equal(response.status,200);
+      const body=await response.json();assert.equal(body.date,'2026-10-02');assert.deepEqual(body.edition,{...post,date:'2026-10-02'});
+      assert.equal(f.calls.length,1);assert.match(f.calls[0],/e\.date<=\?/);assert.match(f.calls[0],/ORDER BY e\.date DESC LIMIT 1/);
+      assert.equal((await f.call('edition/today')).status,404,'today remains exact');
+      // At Melbourne midnight the prior posted date still supplies the Today card.
+      const morning=await appEdition(request('edition/latest'),f.env,Date.UTC(2026,9,2,14));assert.equal((await morning.json()).date,'2026-10-02');
+      f.db.prepare("INSERT INTO social_deliveries(edition_date,channel,status,post_id,updated_at) VALUES(?,'bluesky','posted','fixture-new','2026-10-02T22:01:00Z')").run(post.date);
+      assert.equal((await (await f.call('edition/latest')).json()).date,post.date,'the newest posted date replaces the previous one');
+    }finally{f.db.close()}
+  }
+});
+
+test('latest has a clear cached 404 when no qualifying edition exists, including empty posted receipts',async()=>{
+  for(const [status,id] of [[null,null],['posted',null],['posted',''],['failed','fixture']]){
+    const f=journal();try{
+      f.store(post,status,id);f.store({...post,date:'2026-10-04'});
+      const response=await f.call('edition/latest');assert.equal(response.status,404);assert.deepEqual(await response.json(),{error:'edition_not_published',date:post.date});
+      assert.equal(response.headers.get('cache-control'),'public, max-age=60, must-revalidate');
+      const head=await f.call('edition/latest','HEAD');assert.equal(head.status,404);assert.equal(await head.text(),'');
+    }finally{f.db.close()}
+  }
 });
 
 test('missing, frozen-only and every unsuccessful delivery remain a clear 404, with no previous-day fallback',async()=>{
@@ -92,11 +121,11 @@ test('edition refuses invalid dates, composition parameters and all mutation met
     for(const date of ['2026-02-30','2025-02-29','2026-13-01','2026-1-01','2026-10-03/extra','preview','%32%30%32%36-10-03','']){
       const response=await f.call('edition/'+date);assert.equal(response.status,400);assert.deepEqual(await response.json(),{error:'invalid_date'});assert.equal(response.headers.get('cache-control'),'no-store');
     }
-    for(const query of ['kind=bill','date=2026-10-02','subject=test','dry_run=true','nocache=1']){
-      const response=await f.call('edition/today?'+query);assert.equal(response.status,400);assert.deepEqual(await response.json(),{error:'invalid_query'});
+    for(const suffix of ['today','latest'])for(const query of ['kind=bill','date=2026-10-02','subject=test','dry_run=true','nocache=1']){
+      const response=await f.call('edition/'+suffix+'?'+query);assert.equal(response.status,400);assert.deepEqual(await response.json(),{error:'invalid_query'});
     }
-    for(const method of ['POST','PUT','DELETE','OPTIONS','PATCH']){
-      const response=await f.call('edition/today',method);assert.equal(response.status,405);assert.equal(response.headers.get('allow'),'GET, HEAD');assert.deepEqual(await response.json(),{error:'method_not_allowed'});
+    for(const suffix of ['today','latest'])for(const method of ['POST','PUT','DELETE','OPTIONS','PATCH']){
+      const response=await f.call('edition/'+suffix,method);assert.equal(response.status,405);assert.equal(response.headers.get('allow'),'GET, HEAD');assert.deepEqual(await response.json(),{error:'method_not_allowed'});
     }
     assert.equal(f.calls.length,0);
   }finally{f.db.close()}
@@ -106,14 +135,18 @@ test('malformed journal content or schema/database failure returns generic uncac
   for(const corrupt of ['not-json','null','{}',JSON.stringify({...post,date:'2026-10-02'}),JSON.stringify({...post,url:'https://example.test/'}),JSON.stringify({...post,url:'https://opax.com.au/og/story/2026-10-03/1.jpg'}),JSON.stringify({...post,slides:[]}),JSON.stringify({...post,caption:123})]){
     const f=journal();try{
       f.store();f.db.prepare('UPDATE social_editions SET post_json=?').run(corrupt);
-      const response=await f.call();assert.equal(response.status,503);assert.deepEqual(await response.json(),{error:'edition_unavailable'});assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('retry-after'),'60');
+      f.store({...post,date:'2026-10-02'});
+      for(const suffix of ['today','latest']){
+        const response=await f.call('edition/'+suffix);assert.equal(response.status,503);assert.deepEqual(await response.json(),{error:'edition_unavailable'});assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('retry-after'),'60');
+      }
     }finally{f.db.close()}
   }
-  for(const env of [{},{COMMUNITY_DB:{prepare(){throw Error('private detail')}}}])assert.equal((await appEdition(request('edition/today'),env,at)).status,503);
+  for(const suffix of ['today','latest'])for(const env of [{},{COMMUNITY_DB:{prepare(){throw Error('private detail')}}}])assert.equal((await appEdition(request('edition/'+suffix),env,at)).status,503);
 });
 
 function assetsFixture(){
-  const paths=['/corpus.json','/parliamentarians.json','/votes.json','/bills/index.json','/interests/index.json','/interests/recent.json','/pay.json','/expenses.json','/expense-categories.json','/graph/money.json','/photos/people.json','/photos/credits.json','/electorates/manifest.json','/social/photos.json'];
+  // Static paths from mobile/src/api/policy.ts on ios/app; detail releases below.
+  const paths=['/corpus.json','/parliamentarians.json','/votes.json','/bills/index.json','/interests/index.json','/interests/recent.json','/pay.json','/expenses.json','/expense-categories.json','/photos/people.json','/photos/credits.json','/electorates/manifest.json'];
   const payloads=new Map(paths.map(path=>[path,JSON.stringify({meta:{generated:'2026-09-01'},fixture:path})]));
   payloads.set('/corpus.json',JSON.stringify({version:'2026-10-03',refresh:{checked_at:'2026-10-02T18:21:42Z'}}));
   payloads.set('/pay.json',JSON.stringify({meta:{as_of:'2026-08-31',generated:'2026-09-01'}}));
@@ -123,46 +156,80 @@ function assetsFixture(){
   const files=Object.fromEntries(['index.json','people.json','reference.json','crosswalk.json','el_'+'a'.repeat(24)+'.json'].map(name=>[name,digest(name)]));
   payloads.set('/electorates/manifest.json',JSON.stringify({release_id:release,generated:'2026-09-09',files,index_url:base+'index.json',people_url:base+'people.json',reference_url:base+'reference.json',crosswalk_url:base+'crosswalk.json'}));
   const calls=[];
-  const env={ASSETS:{async fetch(req){assert.equal(new URL(req.url).origin,'https://app-assets.invalid');assert.equal(req.headers.get('cookie'),null);calls.push(new URL(req.url).pathname);const text=payloads.get(new URL(req.url).pathname);return new Response(text??'missing',{status:text===undefined?404:200,headers:{'content-type':'application/json'}})}},VOICE_ENABLED:'true'};
+  const env={ASSETS:{async fetch(req){assert.equal(new URL(req.url).origin,'https://app-assets.invalid');assert.equal(req.headers.get('cookie'),null);calls.push(new URL(req.url).pathname);const text=payloads.get(new URL(req.url).pathname);return new Response(text??'missing',{status:text===undefined?404:200,headers:{'content-type':'application/json'}})}},VOICE_ENABLED:'true',VOICE_AGENT_ID:'fixture-agent',ELEVENLABS_API_KEY:'fixture-key',VOICE_TOOL_SECRET:'t'.repeat(32)};
   return {env,calls,payloads,files,base,call:(method='GET',headers={})=>appManifest(request('manifest',method,headers),env)};
 }
 
 test('manifest covers P0 root catalogs and immutable seats, hashes exact bytes, and preserves actual source dates',async()=>{
   const f=assetsFixture();const response=await f.call();assert.equal(response.status,200);const body=await response.json();
-  assert.equal(body.schema_version,1);assert.match(body.data_version,/^[a-f0-9]{64}$/);assert.equal(body.generated_at,'2026-10-02T18:21:42Z');assert.equal(body.minimum_app_version,'1.0.0');
+  assert.equal(body.schema_version,1);assert.match(body.data_version,/^[a-f0-9]{64}$/);assert.equal(body.generated_at,'2026-10-02T18:21:42Z');assert.equal(body.minimum_app_version,'0.0.0');
   assert.deepEqual(body.features,{public_data:true,voice:true,community:false,push:false});
   assert.equal(response.headers.get('cache-control'),'public, max-age=300, must-revalidate');
   for(const path of f.payloads.keys()){
     const catalog=Object.values(body.catalogs).find(c=>c.url===path);assert.ok(catalog,path);assert.equal(catalog.sha256,digest(f.payloads.get(path)),path);
   }
   assert.equal(body.catalogs.pay.as_of,'2026-08-31');assert.equal(body.catalogs.votes.as_of,null);assert.equal(body.catalogs.portraits.as_of,null);
-  for(const [name,hash] of Object.entries(f.files))assert.deepEqual(body.catalogs['electorates/'+name],{url:f.base+name,sha256:hash,as_of:'2026-09-09'});
-  assert.equal(f.calls.length,14,'no seat/detail fetches');
+  for(const [name,hash] of Object.entries(f.files)){
+    if(['reference.json','crosswalk.json'].includes(name))assert.equal(body.catalogs['electorates/'+name],undefined);
+    else assert.deepEqual(body.catalogs['electorates/'+name],{url:f.base+name,sha256:hash,as_of:'2026-09-09'});
+  }
+  assert.equal(f.calls.length,12,'no seat/detail fetches');
 });
 
 test('manifest caches concurrent and repeated asset reads, supports HEAD and conditional GET without D1',async()=>{
   const f=assetsFixture();const responses=await Promise.all(Array.from({length:5},()=>f.call()));
-  assert.equal(f.calls.length,14);const etag=responses[0].headers.get('etag');
+  assert.equal(f.calls.length,12);const etag=responses[0].headers.get('etag');
   for(const response of responses)assert.equal(response.headers.get('etag'),etag);
   const head=await f.call('HEAD');assert.equal(head.status,200);assert.equal(await head.text(),'');assert.equal(head.headers.get('etag'),etag);
-  const revalidated=await f.call('GET',{'if-none-match':etag});assert.equal(revalidated.status,304);assert.equal(await revalidated.text(),'');assert.equal(f.calls.length,14);
+  const revalidated=await f.call('GET',{'if-none-match':etag});assert.equal(revalidated.status,304);assert.equal(await revalidated.text(),'');assert.equal(f.calls.length,12);
 });
 
-test('manifest minimum version is configurable and fails safely for missing or malformed values',async()=>{
+test('manifest minimum version accepts 0.1.0 and fails safely for missing or malformed values',async()=>{
   const f=assetsFixture();
-  for(const [value,expected] of [[undefined,'1.0.0'],['','1.0.0'],[' 2.3.4 ','2.3.4'],['garbage','1.0.0'],['01.0.0','1.0.0'],['2.0','1.0.0'],['9999999999.0.0','1.0.0']]){
+  for(const [value,expected] of [[undefined,'0.0.0'],['','0.0.0'],[' 2.3.4 ','2.3.4'],['0.1.0','0.1.0'],['garbage','0.0.0'],['01.0.0','0.0.0'],['2.0','0.0.0'],['9999999999.0.0','0.0.0']]){
     f.env.APP_MINIMUM_VERSION=value;assert.equal((await (await f.call()).json()).minimum_app_version,expected);
   }
   const before=await f.call();f.env.APP_MINIMUM_VERSION='2.0.0';f.env.VOICE_ENABLED='false';const after=await f.call();
-  assert.notEqual(before.headers.get('etag'),after.headers.get('etag'));const previous=await before.json(),next=await after.json();assert.equal(previous.data_version,next.data_version);assert.equal(next.features.voice,false);assert.equal(f.calls.length,14);
+  assert.notEqual(before.headers.get('etag'),after.headers.get('etag'));const previous=await before.json(),next=await after.json();assert.equal(previous.data_version,next.data_version);assert.equal(next.features.voice,false);assert.equal(f.calls.length,12);
+});
+
+test('manifest voice readiness agrees with signed-out status for every required configuration field',async()=>{
+  const f=assetsFixture();
+  const configured={VOICE_ENABLED:'true',VOICE_AGENT_ID:'fixture-agent',ELEVENLABS_API_KEY:'fixture-key',VOICE_TOOL_SECRET:'t'.repeat(32)};
+  for(const override of [{},{VOICE_ENABLED:undefined},{VOICE_ENABLED:'false'},{VOICE_AGENT_ID:undefined},{VOICE_AGENT_ID:''},{ELEVENLABS_API_KEY:undefined},{ELEVENLABS_API_KEY:''},{VOICE_TOOL_SECRET:undefined},{VOICE_TOOL_SECRET:'t'.repeat(31)}]){
+    Object.assign(f.env,configured,override);const sql=[];
+    const env={...f.env,COMMUNITY_ENABLED:'true',COMMUNITY_DB:{prepare(query){assert.match(query,/^SELECT/);sql.push(query);return {bind(){return this},async first(){return {personal:600,monthly:1,active:0}}}}}};
+    const fail=()=>{throw Error('Configuration checks cannot call providers or defer work')};
+    const status=await voiceRoute(new Request('https://opax.test/api/voice/status'),env,{waitUntil:fail},fail);assert.equal(status.status,200);
+    const manifest=await (await f.call()).json(),voice=await status.json();
+    assert.equal(manifest.features.voice,Object.keys(override).length===0);assert.equal(manifest.features.voice,voice.enabled);assert.equal(sql.length,1);
+    assert.equal(JSON.stringify(manifest).includes('fixture-key'),false);assert.equal(JSON.stringify(manifest).includes('t'.repeat(32)),false);
+  }
+  assert.equal(f.calls.length,12,'configuration changes do not rebuild catalogs');
+});
+
+test('manifest ignores missing or malformed web-only assets and electorate entries',async()=>{
+  for(const malformed of [false,true]){
+    const f=assetsFixture(),m=JSON.parse(f.payloads.get('/electorates/manifest.json'));
+    for(const name of ['reference','crosswalk']){
+      if(malformed){m.files[name+'.json']='not-a-hash';m[name+'_url']='https://example.test/'+name}
+      else {delete m.files[name+'.json'];delete m[name+'_url']}
+    }
+    m.files['../escape.json']='not-a-hash';f.payloads.set('/electorates/manifest.json',JSON.stringify(m));
+    const response=await f.call();assert.equal(response.status,200);const catalogs=(await response.json()).catalogs;
+    assert.equal(Object.keys(catalogs).length,15,'twelve roots plus index, people and one seat');
+    assert.equal(catalogs.money,undefined);assert.equal(catalogs.story_photos,undefined);
+    assert.equal(Object.keys(catalogs).some(key=>/reference|crosswalk|escape/.test(key)),false);
+    assert.equal(f.calls.length,12);assert.equal(f.calls.some(path=>/graph\/money|social\/photos/.test(path)),false);
+  }
 });
 
 test('manifest cache expires and a changed catalog changes data_version even with an unchanged corpus refresh',async t=>{
   let clock=at;t.mock.method(Date,'now',()=>clock);
   const f=assetsFixture(),before=await (await f.call()).json();
   f.payloads.set('/pay.json',JSON.stringify({meta:{as_of:'2026-09-17'},updated:true}));
-  clock+=299999;assert.equal((await (await f.call()).json()).data_version,before.data_version);assert.equal(f.calls.length,14);
-  clock++;const after=await (await f.call()).json();assert.notEqual(after.data_version,before.data_version);assert.equal(after.generated_at,before.generated_at);assert.equal(f.calls.length,28);
+  clock+=299999;assert.equal((await (await f.call()).json()).data_version,before.data_version);assert.equal(f.calls.length,12);
+  clock++;const after=await (await f.call()).json();assert.notEqual(after.data_version,before.data_version);assert.equal(after.generated_at,before.generated_at);assert.equal(f.calls.length,24);
   const other=assetsFixture();assert.equal((await (await other.call()).json()).data_version,before.data_version,'separate deployments/bindings never share cached catalogs');
 });
 
@@ -170,7 +237,7 @@ test('manifest missing or malformed assets and invalid release paths/hashes fail
   for(const mutate of [
     f=>f.payloads.delete('/votes.json'),f=>f.payloads.set('/pay.json','not-json'),f=>f.payloads.set('/corpus.json','[]'),
     f=>{const m=JSON.parse(f.payloads.get('/electorates/manifest.json'));m.index_url='https://example.test/index.json';f.payloads.set('/electorates/manifest.json',JSON.stringify(m))},
-    f=>{const m=JSON.parse(f.payloads.get('/electorates/manifest.json'));m.files['../escape.json']='a'.repeat(64);f.payloads.set('/electorates/manifest.json',JSON.stringify(m))},
+    f=>{const m=JSON.parse(f.payloads.get('/electorates/manifest.json'));m.files['el_'+'a'.repeat(24)+'.json']='invalid';f.payloads.set('/electorates/manifest.json',JSON.stringify(m))},
     f=>{const m=JSON.parse(f.payloads.get('/electorates/manifest.json'));m.files['index.json']='invalid';f.payloads.set('/electorates/manifest.json',JSON.stringify(m))},
     f=>{const m=JSON.parse(f.payloads.get('/electorates/manifest.json'));delete m.files['people.json'];f.payloads.set('/electorates/manifest.json',JSON.stringify(m))},
   ]){
@@ -197,7 +264,7 @@ test('manifest hashes and source dates match this worktree static exports',async
   const response=await appManifest(request('manifest'),{ASSETS:{async fetch(req){const path=new URL(req.url).pathname;paths.push(path);return new Response(readFileSync(new URL('../public'+path,import.meta.url)),{headers:{'content-type':'application/json'}})}}});
   assert.equal(response.status,200);const body=await response.json();
   for(const catalog of Object.values(body.catalogs))assert.equal(catalog.sha256,digest(readFileSync(new URL('../public'+catalog.url,import.meta.url))),catalog.url);
-  assert.equal(paths.length,14);
+  assert.equal(paths.length,12);
   assert.equal(body.catalogs.pay.as_of,JSON.parse(readFileSync(new URL('../public/pay.json',import.meta.url),'utf8')).meta.as_of);
   const votes=JSON.parse(readFileSync(new URL('../public/votes.json',import.meta.url),'utf8'));
   if(!votes._meta)assert.equal(body.catalogs.votes.as_of,null,'never substitute the corpus refresh for missing vote metadata');

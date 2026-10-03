@@ -11,6 +11,7 @@ test('W13 static call graph closes over two modules, pure builtins and one SELEC
   const helpers=new Set(['appJson','appRead','readOnly','validDate','melbourneDay','sha256','storedEdition','missing']);
   const pureMethods=new Set(['stringify','parse','format','isFinite','isArray','toISOString','slice','digest','encode','map','toString','padStart','join','split','trim','replace','includes','get','test','every','at','now']);
   const constructors=new Set(['Response','URL','Error','Date','Intl.DateTimeFormat','TextEncoder','Uint8Array']);
+  const selects=[];
   for(const name of ['app-edition.ts','app-http.ts']){
     const source=ts.createSourceFile(name,readFileSync(new URL('../src/'+name,import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
     const visit=node=>{
@@ -26,7 +27,9 @@ test('W13 static call graph closes over two modules, pure builtins and one SELEC
               assert.equal(expression.expression.getText(source),'env.COMMUNITY_DB');
               assert.ok(ts.isNoSubstitutionTemplateLiteral(node.arguments[0]));
               assert.match(node.arguments[0].text,/^SELECT /);assert.doesNotMatch(node.arguments[0].text,/\b(?:INSERT|UPDATE|DELETE|REPLACE)\b/i);
-              assert.match(node.arguments[0].text,/e\.date=\? AND EXISTS/);assert.match(node.arguments[0].text,/d\.status='posted'/);
+              const sql=node.arguments[0].text;selects.push(sql);
+              assert.match(sql,/e\.date(?:=|<=)\? AND EXISTS/);assert.match(sql,/d\.status='posted'/);
+              assert.match(sql,/d\.post_id IS NOT NULL AND d\.post_id!=''/);
             }
           }else assert.ok(pureMethods.has(method),expression.getText(source));
         }else assert.fail('Unreviewed call: '+expression.getText(source));
@@ -36,6 +39,8 @@ test('W13 static call graph closes over two modules, pure builtins and one SELEC
     };
     visit(source);
   }
+  assert.equal(selects.length,2,'exact-date and latest are the only query paths');
+  assert.equal(selects.filter(sql=>/e\.date<=\?/.test(sql)&&/ORDER BY e\.date DESC LIMIT 1/.test(sql)).length,1);
   assert.doesNotMatch(built.outputFiles[0].text,/\bfetch\s*\(|\b(?:composeDailyPost|previewPublication|publicationCopy|runSocialPublication|renderOg|personTopicsFor)\b/);
   const source=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
   const dispatch=source.indexOf("if (url.pathname.startsWith('/api/app/v1/edition/')) return communityResponse(await appEdition(request, env))");
@@ -67,25 +72,26 @@ test('real Worker dispatch serves only local journal/assets and refuses every ap
   const original=globalThis.fetch;globalThis.fetch=fail;
   try{
     const call=(path,method='GET',headers={})=>worker.fetch(new Request('https://opax.test/api/app/'+path,{method,headers}),env,{waitUntil:fail});
-    for(const suffix of ['today',date]){
+    for(const suffix of ['latest','today',date]){
       const response=await call('v1/edition/'+suffix);assert.equal(response.status,200);assert.deepEqual((await response.json()).edition,post);assert.equal(response.headers.get('x-robots-tag'),'noindex, nofollow');
       const head=await call('v1/edition/'+suffix,'HEAD');assert.equal(head.status,200);assert.equal(await head.text(),'');
       const cached=await call('v1/edition/'+suffix,'GET',{'if-none-match':response.headers.get('etag')});assert.equal(cached.status,304);
     }
     assert.equal(assetReads,0,'W13 cannot read assets or OG');
     const missing=await call('v1/edition/2000-01-01');assert.equal(missing.status,404);
-    for(const [path,method,status] of [['v1/edition/invalid','GET',400],['v1/edition/today?kind=bill','GET',400],['v1/edition/today','POST',405],['v1/manifest','POST',405],['v1/manifest?preview=1','GET',400],['v1/unknown','GET',404],['v2/manifest','GET',404]]){
+    for(const [path,method,status] of [['v1/edition/invalid','GET',400],['v1/edition/today?kind=bill','GET',400],['v1/edition/latest?kind=bill','GET',400],['v1/edition/today','POST',405],['v1/edition/latest','POST',405],['v1/manifest','POST',405],['v1/manifest?preview=1','GET',400],['v1/unknown','GET',404],['v2/manifest','GET',404]]){
       assert.equal((await call(path,method)).status,status,path);
     }
     const before=reads;
-    const manifest=await call('v1/manifest');assert.equal(manifest.status,200);assert.equal((await manifest.json()).schema_version,1);assert.equal(reads,before,'manifest never touches D1');assert.equal(assetReads,14);
+    const manifest=await call('v1/manifest');assert.equal(manifest.status,200);assert.equal((await manifest.json()).schema_version,1);assert.equal(reads,before,'manifest never touches D1');assert.equal(assetReads,12);
     const head=await call('v1/manifest','HEAD');assert.equal(head.status,200);assert.equal(await head.text(),'');
     assert.equal((await call('v1/manifest','GET',{'if-none-match':manifest.headers.get('etag')})).status,304);
-    for(const path of ['v1/edition/today','v1/manifest']){
+    for(const path of ['v1/edition/latest','v1/edition/today','v1/manifest']){
       const req=new Request('https://opax.test/api/app/'+path);Object.defineProperty(req,'cf',{value:{asn:45102}});
       const blocked=await worker.fetch(req,env,{});assert.equal(blocked.status,403);assert.deepEqual(await blocked.json(),{error:'forbidden',reason:'network'});assert.equal(blocked.headers.get('cache-control'),'no-store');
     }
-    sqlite.exec('DROP TABLE social_deliveries');const unavailable=await call('v1/edition/today');assert.equal(unavailable.status,503);assert.deepEqual(await unavailable.json(),{error:'edition_unavailable'});
+    sqlite.exec('DELETE FROM social_deliveries');const empty=await call('v1/edition/latest');assert.equal(empty.status,404);assert.deepEqual(await empty.json(),{error:'edition_not_published',date});
+    sqlite.exec('DROP TABLE social_deliveries');for(const suffix of ['latest','today']){const unavailable=await call('v1/edition/'+suffix);assert.equal(unavailable.status,503);assert.deepEqual(await unavailable.json(),{error:'edition_unavailable'})}
   }finally{globalThis.fetch=original;sqlite.close()}
 });
 

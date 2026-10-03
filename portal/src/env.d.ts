@@ -1,5 +1,5 @@
 interface Env {
-  /** Minimum supported native app version; absent/invalid defaults to 1.0.0. */
+  /** Minimum native app version; absent/invalid defaults to 0.0.0 (never blocks). Raising it is Jake's deliberate update lever. */
   APP_MINIMUM_VERSION?: string
   /** HMAC-SHA-256 key for sign-in and member-bound deletion codes. Separate Worker secret in each environment. */
   COMMUNITY_CODE_MAC_SECRET?: string

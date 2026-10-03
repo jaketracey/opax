@@ -7,7 +7,7 @@ type EditionRow = {date: string; subject: string; post_json: string; created_at:
 
 function storedEdition(row: EditionRow): DailyPost {
   const post = JSON.parse(row.post_json) as DailyPost
-  if (!post || post.date !== row.date || post.subject !== row.subject
+  if (!post || !validDate(row.date) || post.date !== row.date || post.subject !== row.subject
     || !['politician','bill','grant','topic','program','largest'].includes(post.kind)
     || ![post.subject,post.title,post.text,post.url].every(s => typeof s === 'string' && s.length > 0)
     || typeof row.created_at !== 'string' || !Number.isFinite(Date.parse(row.created_at))) throw new Error('Invalid edition')
@@ -31,20 +31,25 @@ export async function appEdition(req: Request, env: EditionEnv, at = Date.now())
   const value = url.pathname.slice('/api/app/v1/edition/'.length)
   if (url.search) return appJson(req, {error:'invalid_query'}, 400)
   const today = melbourneDay(at)
-  const date = value === 'today' ? today : value
+  const date = value === 'today' || value === 'latest' ? today : value
   if (!validDate(date)) return appJson(req, {error:'invalid_date'}, 400)
   const missing = () => appJson(req, {error:'edition_not_published', date}, 404, {'cache-control':'public, max-age=60, must-revalidate'})
   if (date > today) return missing()
   try {
     // An edition is frozen before delivery. Only an accepted, journalled post
     // makes it public here; preparing/failed/uncertain editions remain absent.
-    const row = await env.COMMUNITY_DB.prepare(`SELECT e.date,e.subject,e.post_json,e.created_at FROM social_editions e
+    const query = value === 'latest'
+      ? env.COMMUNITY_DB.prepare(`SELECT e.date,e.subject,e.post_json,e.created_at FROM social_editions e
+      WHERE e.date<=? AND EXISTS (SELECT 1 FROM social_deliveries d
+        WHERE d.edition_date=e.date AND d.status='posted' AND d.post_id IS NOT NULL AND d.post_id!='')
+      ORDER BY e.date DESC LIMIT 1`)
+      : env.COMMUNITY_DB.prepare(`SELECT e.date,e.subject,e.post_json,e.created_at FROM social_editions e
       WHERE e.date=? AND EXISTS (SELECT 1 FROM social_deliveries d
         WHERE d.edition_date=e.date AND d.status='posted' AND d.post_id IS NOT NULL AND d.post_id!='')`)
-      .bind(date).first<EditionRow>()
+    const row = await query.bind(date).first<EditionRow>()
     if (!row) return missing()
-    return await appRead(req, {schema_version:1, date, created_at:row.created_at, edition:storedEdition(row)},
-      value === 'today' ? APP_CACHE : 'public, max-age=86400, must-revalidate')
+    return await appRead(req, {schema_version:1, date:row.date, created_at:row.created_at, edition:storedEdition(row)},
+      value === 'today' || value === 'latest' ? APP_CACHE : 'public, max-age=86400, must-revalidate')
   } catch {
     return appJson(req, {error:'edition_unavailable'}, 503, {'retry-after':'60'})
   }
