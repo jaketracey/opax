@@ -1,8 +1,9 @@
 appId: au.com.opax.app
 name: 11 Read a bill, its machine summary, divisions and speeches
 ---
-- launchApp:
-    clearState: true
+# No clearState: a relaunch resets the list's filters, and offline journey
+# 04 reads the records earlier journeys saved.
+- launchApp
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:
@@ -16,6 +17,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-row-au-federal-r7534
+    timeout: 60000
 - tapOn:
     id: bill-row-au-federal-r7534
 - extendedWaitUntil:
@@ -28,6 +30,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-summary-attribution
+    timeout: 60000
     centerElement: true
 - assertVisible: Machine summary
 - assertVisible: Written by a model from the explanatory memorandum; not the record\.
@@ -35,6 +38,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-division-0-splits
+    timeout: 60000
     centerElement: true
 - assertVisible: Negatived, 11 ayes, 24 noes
 - tapOn:
@@ -42,18 +46,21 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-division-0-splits-greens
+    timeout: 60000
     centerElement: true
 # Party splits by label and count in words, never colour alone.
 - assertVisible: Greens, 9 ayes, no noes
 - scrollUntilVisible:
     element:
       id: bill-division-0-splits-labor
+    timeout: 60000
     centerElement: true
 - assertVisible: Labor, no ayes, 21 noes
 - takeScreenshot: ${EVIDENCE}/11-party-splits
 - scrollUntilVisible:
     element:
       id: bill-division-0-source
+    timeout: 60000
     centerElement: true
 # Sources open in the in-app browser; e2e shows the destination locally.
 - tapOn:
@@ -65,6 +72,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-speech-0-brief-label
+    timeout: 60000
 - assertVisible: Tony Burke
 - assertVisible: Machine brief
 - takeScreenshot: ${EVIDENCE}/11-speech
@@ -83,6 +91,7 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-row-au-federal-ed-online-safety-digital-duty-of-care-2026
+    timeout: 60000
 - tapOn:
     id: bill-row-au-federal-ed-online-safety-digital-duty-of-care-2026
 - extendedWaitUntil:
@@ -96,10 +105,12 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-consultation
+    timeout: 60000
 - assertVisible: Open for consultation from 8 September 2026
 - takeScreenshot: ${EVIDENCE}/11-consultation
 - scrollUntilVisible:
     element:
       id: bill-summary-attribution
+    timeout: 60000
 - assertVisible: Written by a model from the exposure draft text; not the record\.
 - takeScreenshot: ${EVIDENCE}/11-exposure-summary

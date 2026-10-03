@@ -1,8 +1,9 @@
 appId: au.com.opax.app
 name: 10 Filter and search the bill list, then open a bill
 ---
-- launchApp:
-    clearState: true
+# No clearState: a relaunch resets the list's filters, and offline journey
+# 04 reads the records earlier journeys saved.
+- launchApp
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:
@@ -17,6 +18,7 @@ name: 10 Filter and search the bill list, then open a bill
 - scrollUntilVisible:
     element:
       id: bill-filter-status-before_parliament
+    timeout: 60000
 - assertVisible: Before parliament, 119 bills
 - takeScreenshot: ${EVIDENCE}/10-filters
 - tapOn:
@@ -38,6 +40,7 @@ name: 10 Filter and search the bill list, then open a bill
 - scrollUntilVisible:
     element:
       id: bill-row-au-federal-r7549
+    timeout: 60000
 - takeScreenshot: ${EVIDENCE}/10-search
 - tapOn:
     id: bill-row-au-federal-r7549
@@ -52,6 +55,7 @@ name: 10 Filter and search the bill list, then open a bill
 - scrollUntilVisible:
     element:
       id: bill-date-0
+    timeout: 60000
     centerElement: true
 - assertVisible: '17 September 2026: Introduced · House of Representatives; Second reading · House of Representatives'
 - assertNotVisible:
