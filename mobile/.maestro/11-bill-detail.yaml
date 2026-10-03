@@ -41,25 +41,27 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-summary-attribution
-    centerElement: true
-    speed: 70
-    timeout: 180000
+    timeout: 60000
 - assertVisible: Machine summary
 - assertVisible: Written by a model from the explanatory memorandum; not the record\.
 - takeScreenshot: ${EVIDENCE}/11-summary
+# Long jumps aim fast at a whole section (any part showing counts), then
+# step gently to the small element: fast swipes can carry past a short one.
+- scrollUntilVisible:
+    element:
+      id: bill-divisions
+    visibilityPercentage: 1
+    speed: 70
+    timeout: 180000
 - scrollUntilVisible:
     element:
       id: bill-division-0-outcome
-    centerElement: true
-    speed: 70
-    timeout: 180000
+    timeout: 60000
 - assertVisible: Negatived, 11 ayes, 24 noes
 - scrollUntilVisible:
     element:
       id: bill-division-0-splits
-    centerElement: true
-    speed: 70
-    timeout: 180000
+    timeout: 60000
 - waitForAnimationToEnd
 - tapOn:
     id: bill-division-0-splits
@@ -67,16 +69,12 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-division-0-splits-greens
-    centerElement: true
-    speed: 70
-    timeout: 180000
+    timeout: 60000
 - assertVisible: Greens, 9 ayes, no noes
 - scrollUntilVisible:
     element:
       id: bill-division-0-splits-labor
-    centerElement: true
-    speed: 70
-    timeout: 180000
+    timeout: 60000
 - assertVisible: Labor, no ayes, 21 noes
 - takeScreenshot: ${EVIDENCE}/11-party-splits
 # The link is just below the splits: a gentle scroll, so the page is not
@@ -99,9 +97,14 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 # Near the end of the page an element cannot be centred: scroll to it only.
 - scrollUntilVisible:
     element:
-      id: bill-speech-0-brief-label
+      id: bill-speeches
+    visibilityPercentage: 1
     speed: 70
     timeout: 180000
+- scrollUntilVisible:
+    element:
+      id: bill-speech-0-brief-label
+    timeout: 60000
 - assertVisible: Machine brief
 - scrollUntilVisible:
     element:
