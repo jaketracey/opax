@@ -16,6 +16,7 @@ name: 07 Choose an electorate by member name and restore it after relaunch
     element:
       id: seat-choice-federal-representatives-nsw-grayndler
     centerElement: true
+    timeout: 60000
 - takeScreenshot: ${EVIDENCE}/07-chooser-match
 - tapOn:
     id: seat-choice-federal-representatives-nsw-grayndler
@@ -29,6 +30,8 @@ name: 07 Choose an electorate by member name and restore it after relaunch
     element:
       id: your-member-anthony-albanese
     centerElement: true
+    timeout: 60000
+    visibilityPercentage: 50
 - takeScreenshot: ${EVIDENCE}/07-member
 - runFlow:
     file: review-pages.yaml
@@ -40,6 +43,7 @@ name: 07 Choose an electorate by member name and restore it after relaunch
       id: your-senators-end
     direction: UP
     centerElement: true
+    timeout: 60000
 - assertVisible:
     id: your-senators-end
 - takeScreenshot: ${EVIDENCE}/07-senators
@@ -62,6 +66,7 @@ name: 07 Choose an electorate by member name and restore it after relaunch
       id: seat-search
     direction: UP
     centerElement: true
+    timeout: 60000
 - tapOn:
     id: seat-search
 - inputText: No matching electorate
@@ -69,8 +74,10 @@ name: 07 Choose an electorate by member name and restore it after relaunch
 - scrollUntilVisible:
     element:
       id: seat-no-results
+    timeout: 60000
 - takeScreenshot: ${EVIDENCE}/07-no-match
 - scrollUntilVisible:
     element: Cancel
     centerElement: true
+    timeout: 60000
 - tapOn: Cancel

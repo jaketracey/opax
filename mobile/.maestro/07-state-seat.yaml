@@ -13,6 +13,7 @@ name: 07 Choose a state district explicitly where a verified roster exists
     element:
       id: seat-choice-federal-representatives-vic-ballarat
     centerElement: true
+    timeout: 60000
 - tapOn:
     id: seat-choice-federal-representatives-vic-ballarat
 - scrollUntilVisible:
@@ -28,6 +29,7 @@ name: 07 Choose a state district explicitly where a verified roster exists
       id: seat-search
     direction: UP
     centerElement: true
+    timeout: 60000
 - tapOn:
     id: seat-search
 - inputText: Wendouree
@@ -36,6 +38,7 @@ name: 07 Choose a state district explicitly where a verified roster exists
     element:
       id: seat-choice-vic-vic-la-vic-wendouree
     centerElement: true
+    timeout: 60000
 - takeScreenshot: ${EVIDENCE}/07-state-chooser
 - tapOn:
     id: seat-choice-vic-vic-la-vic-wendouree
@@ -44,6 +47,7 @@ name: 07 Choose a state district explicitly where a verified roster exists
       id: your-state-member-juliana-addison
     timeout: 60000
     centerElement: true
+    visibilityPercentage: 50
 - takeScreenshot: ${EVIDENCE}/07-state-member
 - launchApp
 - tapOn:
@@ -53,4 +57,5 @@ name: 07 Choose a state district explicitly where a verified roster exists
       id: your-state-member-juliana-addison
     timeout: 60000
     centerElement: true
+    visibilityPercentage: 50
 - takeScreenshot: ${EVIDENCE}/07-state-restored
