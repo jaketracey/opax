@@ -36,9 +36,10 @@ function fixture(t,{nativeSchema=true}={}){
    return row;
   },
   async all(){return {results:db.prepare(sql).all(...args)}},
-  async run(){const result=db.prepare(sql).run(...args);return {success:true,meta:{changes:Number(result.changes)}}}
+  run(){const result=db.prepare(sql).run(...args);return {success:true,meta:{changes:Number(result.changes)}}}
  });
- const env={COMMUNITY_DB:{prepare:statement,async batch(stmts){db.exec('BEGIN');try{const result=[];for(const stmt of stmts)result.push(await stmt.run());db.exec('COMMIT');return result}catch(e){db.exec('ROLLBACK');throw e}}},COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_CODE_MAC_SECRET:TEST_KEY,COMMUNITY_EMAIL:{async send(mail){outbox.push(mail);return {messageId:'test'}}}};
+ // D1 batches are atomic: the SQLite double must not yield with its transaction open.
+ const env={COMMUNITY_DB:{prepare:statement,async batch(stmts){db.exec('BEGIN');try{const result=stmts.map(stmt=>stmt.run());db.exec('COMMIT');return result}catch(e){db.exec('ROLLBACK');throw e}}},COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',COMMUNITY_EMAIL_FROM:'signin@example.test',COMMUNITY_CODE_MAC_SECRET:TEST_KEY,COMMUNITY_EMAIL:{async send(mail){outbox.push(mail);return {messageId:'test'}}}};
  const request=(path,data,headers={})=>new Request('https://opax.test/api/community/'+path,{method:'POST',headers:{origin:env.COMMUNITY_ORIGIN,'content-type':'application/json',...headers},body:JSON.stringify(data)});
  const call=(path,data,headers)=>context.run(trace,()=>communityRoute(request(path,data,headers),env));
  async function issue(email='reader@example.com',client='ios',headers){
@@ -150,6 +151,64 @@ test('a failed second web email preserves the first web link',async t=>{
  assert.equal(f.db.prepare('SELECT count(*) n FROM login_links').get().n,1);
  assert.equal(f.db.prepare('SELECT expires_at FROM login_links').get().expires_at,expiresAt);
  assert.equal((await f.call('auth/consume',{token:first.token})).status,200);
+});
+
+test('failed native resends preserve the earlier code and link until either is redeemed',async t=>{
+ const f=fixture(t),send=f.env.COMMUNITY_EMAIL.send;
+ for(const transport of ['code','link']){
+  f.env.COMMUNITY_EMAIL.send=send;
+  const first=await f.issue(`${transport}@example.com`),original=f.proofRow(first);
+  f.env.COMMUNITY_EMAIL.send=async()=>{throw Error('stub failure')};
+  assert.equal((await f.call('auth/request',{email:first.email,client:'ios'})).status,503);
+  assert.deepEqual(f.proofRow(first),original);
+  assert.equal(f.db.prepare('SELECT count(*) n FROM login_links WHERE email=?').get(first.email).n,1);
+  const response=transport==='code'?await f.consume(first):await f.call('auth/consume',{token:first.token});
+  assert.equal(response.status,200);
+  if(transport==='code')assert.equal((await f.call('auth/consume',{token:first.token})).status,400);
+  else await failureResponse(await f.consume(first));
+ }
+ assert.equal(f.db.prepare('SELECT count(*) n FROM member_sessions').get().n,2);
+});
+
+test('a pending native send preserves the old proof and successful delivery supersedes it',async t=>{
+ const f=fixture(t),first=await f.issue();let release,started;
+ const sending=new Promise(resolve=>{started=resolve});
+ f.env.COMMUNITY_EMAIL.send=async mail=>{f.outbox.push(mail);started();await new Promise(resolve=>{release=resolve});return {messageId:'test'}};
+ const request=f.issue();await sending;
+ try{
+  assert.equal(f.proofRow(first).superseded_at,null);
+  assert.ok(f.proofRow(first).expires_at>timestamp());
+ }finally{release()}
+ const current=await request;
+ await failureResponse(await f.consume(first));
+ assert.equal((await f.call('auth/consume',{token:first.token})).status,400);
+ assert.equal((await f.consume(current)).status,200);
+});
+
+for(const olderAccepted of [true,false])test(`a same-second older native send completing last with ${olderAccepted?'success':'failure'} preserves the newer proof`,async t=>{
+ const f=fixture(t),fixedNow=Date.now();t.mock.method(Date,'now',()=>fixedNow);
+ const gates=[];let started;
+ const firstSending=new Promise(resolve=>{started=resolve});
+ f.env.COMMUNITY_EMAIL.send=mail=>new Promise((resolve,reject)=>{f.outbox.push(mail);gates.push({resolve,reject,mail});started()});
+ const firstRequest=f.call('auth/request',{email:'reader@example.com',client:'ios'});await firstSending;
+ const secondSending=new Promise(resolve=>{started=resolve});
+ const secondRequest=f.call('auth/request',{email:'reader@example.com',client:'ios'});await secondSending;
+ gates[1].resolve({messageId:'newer'});
+ const newerResponse=await secondRequest;assert.equal(newerResponse.status,200);
+ const current={...await newerResponse.json(),code:gates[1].mail.text.match(/Your Opax app sign-in code: (\d{8})/)[1]};
+ assert.equal(f.proofRow(current).superseded_at,null);
+ if(olderAccepted)gates[0].resolve({messageId:'older'});else gates[0].reject(Error('stub failure'));
+ const olderResponse=await firstRequest;assert.equal(olderResponse.status,olderAccepted?200:503);
+ if(olderAccepted){
+  const old={...await olderResponse.json(),code:gates[0].mail.text.match(/Your Opax app sign-in code: (\d{8})/)[1]};
+  assert.equal(f.proofRow(old).created_at,f.proofRow(current).created_at);
+  assert.notEqual(f.proofRow(old).superseded_at,null);
+  await failureResponse(await f.consume(old));
+ }
+ const oldToken=new URL(gates[0].mail.text.match(/https:\/\/\S+/)[0]).hash.slice(7);
+ assert.equal((await f.call('auth/consume',{token:oldToken})).status,400);
+ assert.equal(f.proofRow(current).superseded_at,null);
+ assert.equal((await f.consume(current)).status,200);
 });
 
 test('failed delivery deletes the native proof and missing MAC secret fails closed without affecting web',async t=>{
