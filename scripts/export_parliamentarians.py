@@ -77,9 +77,30 @@ NAME_RE = re.compile(r"^[^\W\d_][\w'’.\-]*(?: [^\W\d_][\w'’.\-]*){0,4}$", re
 # vocabulary (clean_party) abbreviates them.
 CANON_FIX = {"Democratic Labor Party": "DLP", "Jacqui Lambie Network": "JLN"}
 
+# State roster rows contaminated by historic federal surname matches. Guard
+# each repair by ID, full name, jurisdiction, chamber AND the known bad label;
+# this must neither relabel the historic federal member nor pin a future party.
+# The exporter is read-only, so these repairs also cover an uncorrected DB snapshot.
+MEMBER_PARTY_CORRECTIONS = {
+    ("vic_annabelle_cleeland", "Annabelle Cleeland", "vic", "vic_la"):
+        ("Labor", "Nationals", "https://www.parliament.vic.gov.au/members/annabelle-cleeland/"),
+    ("sa_harvey", "Richard Manuel Harvey", "sa", "sa_ha"):
+        ("Labor", "Liberal", "https://hansardsearch.parliament.sa.gov.au/daily/uh/2018-05-16/35"),
+}
+
 
 def canon_party(raw, canonical):
     return clean_party(raw) or clean_party(canonical) or CANON_FIX.get(canonical or "") or None
+
+
+def member_party(pid, name, state, chamber, raw, canonical):
+    label = canon_party(raw, canonical)
+    correction = MEMBER_PARTY_CORRECTIONS.get((pid, name, state, chamber))
+    if correction and label == correction[0]:
+        # A subsequently verified canonical party supersedes the stale raw ALP.
+        verified = canon_party(None, canonical)
+        return verified if verified and verified != correction[0] else correction[1]
+    return label
 
 
 def main() -> None:
@@ -100,8 +121,8 @@ def main() -> None:
                COUNT(*) AS n
         FROM speeches WHERE {where}
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8""").fetchall()
-    members = {r[0]: (r[1], canon_party(r[2], r[3]))
-               for r in db.execute("SELECT person_id, full_name, party, party_canonical FROM members")}
+    members = {r[0]: (r[1], member_party(*r)) for r in db.execute(
+        "SELECT person_id, full_name, state, chamber, party, party_canonical FROM members")}
     # Sitting federal parliamentarians and the party they sit for today (members.left_house is
     # NULL only for the current 150 + 76 after the APH sweep of 2026-09-04). The speech-dominant
     # "party" stays as the history; "party_now" is what the page should lead with.

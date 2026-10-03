@@ -192,7 +192,7 @@ def extract_surname(raw: str) -> str | None:
 
 
 def build_member_lookup(db) -> tuple[dict, dict]:
-    """Build lookup dictionaries for member matching.
+    """Build lookup dictionaries for federal member matching.
 
     Returns:
       - full_lookup: normalized_name_lower -> person_id (first+last, last+first, full_name)
@@ -201,7 +201,10 @@ def build_member_lookup(db) -> tuple[dict, dict]:
     """
     members = db.execute(
         "SELECT person_id, first_name, last_name, full_name, chamber FROM members "
-        "WHERE full_name IS NOT NULL AND full_name != ''"
+        "WHERE full_name IS NOT NULL AND full_name != '' "
+        # State speeches have their own jurisdiction-scoped lookup below.
+        # A unique state surname must not capture a historic federal speaker.
+        "AND chamber IN ('representatives', 'senate')"
     ).fetchall()
 
     full_lookup = {}

@@ -45,3 +45,28 @@ office string, not a party).
 Re-run the three Firecrawl fetches, re-run the diff (`/tmp/aph_diff.json` on desktop was the
 session's dry run), apply, then `export_parliamentarians.py` on desktop and copy the JSON in.
 Do it after every by-election, casual vacancy or defection; quarterly otherwise.
+
+## State party corrections (2026-10-03)
+
+Annabelle Cleeland is the Victorian member for Euroa, [The Nationals](https://www.parliament.vic.gov.au/members/annabelle-cleeland/).
+She is outside the APH federal sweep above. Her `vic_annabelle_cleeland` member row
+incorrectly carries `party = ALP`; her Victorian Hansard speeches have no party,
+so the directory exporter inherited Labor from the member fallback. Historic
+federal `Mr Cleeland` speeches were also linked to that state ID. The federal
+surname lookup now accepts only federal chambers; state matching stays scoped
+to its jurisdiction.
+
+The same audit found `sa_harvey` (Richard Manuel Harvey), wrongly carrying ALP
+and linked to historic federal `Mrs Harvey` speeches. The [South Australian
+parliamentary record](https://hansardsearch.parliament.sa.gov.au/daily/uh/2018-05-16/35)
+identifies Richard Harvey as a Liberal member for Newland. His directory entry
+is the surname-only `Harvey`. Yasmin Catley's row has the same historical
+cross-link, but its Labor party is correct. Genuine federal/state careers such
+as Mark Latham's do not imply a party error.
+
+`scripts/export_parliamentarians.py` applies two sourced member-party repairs
+before the fallback. Each requires the exact ID, name, jurisdiction, chamber
+and known incorrect Labor label; a different future party is preserved. The
+read-only export therefore survives a refresh from the existing DB snapshot.
+Speech party histories, dates, counts and representation are retained. The
+underlying stored cross-links are not repaired by this export.
