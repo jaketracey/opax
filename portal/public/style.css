@@ -5653,22 +5653,23 @@ html[data-chat="docked"] #panel-chat .chat-composer {
   .chat-launcher svg { width: 23px; height: 23px; }
   body.assistant-ready { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
 }
-/* Where the band carries the menu button, the launcher joins it beside search.
-   Floating in the corner of a single text column, it sat over whatever line
-   came to rest under it. Its place follows the band's: the gutter, then the
-   menu and search buttons (44px each) and the band's 20px gaps. Below 360px
-   the band has no room between the wordmark and search, so it floats. */
+/* Where the band carries the menu button (360 to 800px), app.js moves the
+   launcher into it, beside search, so it comes where it shows in the tab
+   order. Floating in the corner of a single text column, it sat over whatever
+   line came to rest under it. At 360px the row is full: the wordmark gives up
+   8px of its gap to make room. Below 360px it floats, as on desktop. */
+.site-header .chat-launcher {
+  position: static; flex: 0 0 44px; margin-left: auto;
+  width: 44px; height: 44px; min-height: 44px; padding: 10px; justify-content: center;
+  border: 0; border-radius: 4px; background: transparent; box-shadow: none;
+}
+.site-header .chat-launcher:hover, .site-header .chat-launcher[aria-expanded="true"] { background: rgb(255 255 255 / 10%); }
+.site-header .chat-launcher:focus-visible { outline-color: var(--bronze-bright); }
+.site-header .chat-launcher > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.site-header .chat-launcher svg { width: 22px; height: 22px; }
+.site-header .masthead:has(> .chat-launcher) > .masthead-id { margin-right: -8px; }
+.site-header .masthead:has(> .chat-launcher) > .header-search-toggle { margin-left: 0; }
 @media (min-width: 360px) and (max-width: 800px) {
-  .chat-launcher {
-    top: calc((var(--header-h, 80px) - 46px) / 2); bottom: auto;
-    right: calc(clamp(1.25rem, 4vw, 4.5rem) + 128px);
-    width: 44px; height: 44px; min-height: 44px; padding: 10px; justify-content: center;
-    border: 0; border-radius: 4px; background: transparent; box-shadow: none;
-  }
-  .chat-launcher:hover, .chat-launcher[aria-expanded="true"] { background: rgb(255 255 255 / 10%); }
-  .chat-launcher:focus-visible { outline-color: var(--bronze-bright); }
-  .chat-launcher > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .chat-launcher svg { width: 22px; height: 22px; }
   body.assistant-ready { padding-bottom: 0; }
 }
 /* The corner panel no longer leaves room for a launcher under it. */

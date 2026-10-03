@@ -10752,6 +10752,23 @@ function closeDock({ restoreFocus = true } = {}) {
 }
 
 $("chat-launcher").addEventListener("click", () => (dockOpen ? closeDock() : openDock()));
+// Where the band carries the menu button (360 to 800px) the launcher sits in
+// it, beside search, so the tab order meets it where the eye does; elsewhere it
+// floats in the corner from its place at the end of the page.
+{
+  const launcher = $("chat-launcher");
+  const home = document.createComment(" chat-launcher ");
+  launcher.before(home);
+  const inBand = matchMedia("(min-width: 360px) and (max-width: 800px)");
+  const place = () => {
+    const focused = document.activeElement === launcher;
+    if (inBand.matches) $("header-search-open").before(launcher);
+    else home.after(launcher);
+    if (focused) launcher.focus({ preventScroll: true });
+  };
+  inBand.addEventListener("change", place);
+  place();
+}
 $("dock-close").addEventListener("click", () => closeDock());
 // The corner is for a question and its answer; a long answer, its sources and
 // the conversation behind it want the page. Same thread, more room.
