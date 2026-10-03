@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Verify a signed OPAX archive app or exported IPA without disclosing signing IDs."""
 import argparse
+from functools import lru_cache
 import hashlib
 import ipaddress
 import json
@@ -17,7 +18,7 @@ import zipfile
 from urllib.parse import unquote, urlsplit
 
 sys.dont_write_bytecode = True
-from release_support import ReleaseError, load_credentials, matches, private_values, redact, scan_tracked
+from release_support import PRIVATE_NAMES, ReleaseError, load_credentials, matches, private_values, redact, scan_tracked
 
 GUARDS = (
     "Route is outside the public catalog allow-list",
@@ -35,8 +36,6 @@ ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com"
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
                    "appcenter.ms", "bugsnag.com", "datadoghq.com", "graph.facebook.com"}
 ROUTE_KEYS = re.compile(rb"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
-PRODUCTION_BLOCK_LIST = [re.compile(source) for source in json.loads(
-    (Path(__file__).parent / "production-block-list.json").read_text())]
 DEVELOPMENT_ROUTE = re.compile(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype", re.I)
 
 
@@ -77,12 +76,52 @@ def has_analytics(body):
         for host in url_hosts(body) for denied in ANALYTICS_HOSTS)
 
 
+@lru_cache(maxsize=1)
+def production_block_list():
+    """Resolve Metro's actual rules, including inherited Expo exclusions."""
+    env = {key: value for key, value in os.environ.items()
+           if key not in (*PRIVATE_NAMES, "OPAX_INTERNAL_TESTER_EMAIL")}
+    env.update(OPAX_VARIANT="production", EXPO_NO_TELEMETRY="1", EXPO_NO_DOTENV="1")
+    result = subprocess.run(["node", "-e", """
+const config = require('./metro.config.js');
+const rules = [config.resolver.blockList].flat().filter(Boolean);
+process.stdout.write(JSON.stringify(rules.map(rule => ({source: rule.source, flags: rule.flags}))));
+"""], cwd=Path(__file__).resolve().parent.parent, env=env, capture_output=True, text=True)
+    require(result.returncode == 0, "production Metro exclusions resolve successfully")
+    rules = json.loads(result.stdout)
+    require(isinstance(rules, list) and bool(rules), "production Metro exclusion list exists")
+    patterns = []
+    for rule in rules:
+        require(isinstance(rule.get("source"), str) and isinstance(rule.get("flags"), str) and
+                set(rule["flags"]) <= set("imsu"), "supported Metro exclusion expression")
+        flags = re.ASCII
+        for flag, value in (("i", re.I), ("m", re.M), ("s", re.S)):
+            if flag in rule["flags"]:
+                flags |= value
+        patterns.append(re.compile(rule["source"], flags))
+    return tuple(patterns)
+
+
+def shipping_source_keys(routes):
+    # Model the production tree even when a tooling test uses a temporary tree.
+    production_root = Path(__file__).resolve().parent.parent / "src/app"
+    patterns = production_block_list()
+    keys = set()
+    for path in routes.rglob("*"):
+        if not path.is_file() or path.suffix not in {".tsx", ".ts", ".jsx", ".js"}:
+            continue
+        relative = path.relative_to(routes)
+        candidate = production_root / relative
+        # Metro can block a directory itself, preventing traversal of its files.
+        if not any(pattern.search(str(part)) for pattern in patterns
+                   for part in (candidate, *candidate.parents)):
+            keys.add("./" + relative.as_posix())
+    return keys
+
+
 def bundle_route_keys(body, routes):
     actual = {key.decode() for key in ROUTE_KEYS.findall(body)}
-    expected = {"./" + p.relative_to(routes).as_posix() for p in routes.rglob("*")
-                if p.is_file() and p.suffix in {".tsx", ".ts", ".jsx", ".js"}
-                and not any(pattern.search("/src/app/" + p.relative_to(routes).as_posix())
-                            for pattern in PRODUCTION_BLOCK_LIST)}
+    expected = shipping_source_keys(routes)
     require(bool(actual) and actual == expected and
         not any(DEVELOPMENT_ROUTE.search(key) for key in actual) and not re.search(
         rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev)|"

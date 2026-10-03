@@ -490,6 +490,17 @@ class BundleAttackTests(unittest.TestCase):
                 with self.assertRaises(ReleaseError):
                     verify.bundle_route_keys(key.encode() + b"\0", routes)
 
+    def test_inherited_metro_exclusions_do_not_require_unshipped_source_routes(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            (routes / "_layout.tsx").write_text("shipping route")
+            (routes / "__tests__").mkdir()
+            (routes / "__tests__/fixture.tsx").write_text("Metro-excluded test route")
+            baseline = b"\0./_layout.tsx\0"
+            self.assertEqual(verify.bundle_route_keys(baseline, routes), ["./_layout.tsx"])
+            with self.assertRaises(ReleaseError):
+                verify.bundle_route_keys(baseline + b"./__tests__/fixture.tsx\0", routes)
+
     def test_scene_manifest_requires_the_expo_scene_delegate(self):
         manifest = {"UIApplicationSupportsMultipleScenes": False, "UISceneConfigurations": {
             "UIWindowSceneSessionRoleApplication": [{"UISceneConfigurationName": "Default Configuration",
