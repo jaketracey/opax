@@ -1,0 +1,107 @@
+appId: au.com.opax.app
+name: 11 Read a bill, its machine summary, divisions and speeches
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: tab-bills
+- extendedWaitUntil:
+    visible:
+      id: bills-count
+    timeout: 20000
+- tapOn:
+    id: bills-search
+- inputText: interactive gambling levy
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: bill-row-au-federal-r7534
+- tapOn:
+    id: bill-row-au-federal-r7534
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 15000
+- assertVisible: Passed, as at 26 August 2026
+- takeScreenshot: ${EVIDENCE}/11-bill
+# The machine summary sits under its stored attribution, never as the record.
+- scrollUntilVisible:
+    element:
+      id: bill-summary-attribution
+    centerElement: true
+- assertVisible: Machine summary
+- assertVisible: Written by a model from the explanatory memorandum; not the record\.
+- takeScreenshot: ${EVIDENCE}/11-summary
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-splits
+    centerElement: true
+- assertVisible: Negatived, 11 ayes, 24 noes
+- tapOn:
+    id: bill-division-0-splits
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-splits-greens
+    centerElement: true
+# Party splits by label and count in words, never colour alone.
+- assertVisible: Greens, 9 ayes, no noes
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-splits-labor
+    centerElement: true
+- assertVisible: Labor, no ayes, 21 noes
+- takeScreenshot: ${EVIDENCE}/11-party-splits
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-source
+    centerElement: true
+# Sources open in the in-app browser; e2e shows the destination locally.
+- tapOn:
+    id: bill-division-0-source
+- assertVisible: https://theyvoteforyou.org.au/divisions/senate/2026-08-19/.*
+- takeScreenshot: ${EVIDENCE}/11-division-source
+- tapOn: OK
+- scrollUntilVisible:
+    element:
+      id: bill-speech-0-brief-label
+    centerElement: true
+- assertVisible: Tony Burke
+- assertVisible: Machine brief
+- takeScreenshot: ${EVIDENCE}/11-speech
+# An exposure draft: released, not introduced, with its consultation.
+- launchApp
+- tapOn:
+    id: tab-bills
+- extendedWaitUntil:
+    visible:
+      id: bills-count
+    timeout: 20000
+- tapOn:
+    id: bills-search
+- inputText: digital duty of care
+- pressKey: Enter
+- scrollUntilVisible:
+    element:
+      id: bill-row-au-federal-ed-online-safety-digital-duty-of-care-2026
+- tapOn:
+    id: bill-row-au-federal-ed-online-safety-digital-duty-of-care-2026
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 15000
+- assertVisible: Exposure draft
+- assertVisible: Released 8 September 2026
+- assertVisible: Government exposure draft, not yet introduced
+- takeScreenshot: ${EVIDENCE}/11-exposure-draft
+- scrollUntilVisible:
+    element:
+      id: bill-consultation
+    centerElement: true
+- assertVisible: Open for consultation from 8 September 2026
+- takeScreenshot: ${EVIDENCE}/11-consultation
+- scrollUntilVisible:
+    element:
+      id: bill-summary-attribution
+    centerElement: true
+- assertVisible: Written by a model from the exposure draft text; not the record\.
+- takeScreenshot: ${EVIDENCE}/11-exposure-summary
