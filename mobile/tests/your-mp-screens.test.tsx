@@ -77,8 +77,9 @@ beforeEach(() => {
   mock.directory.mockResolvedValue(directory);
 });
 test('profile failure in expenses preserves votes, pay and identity; official portrait stays blank', async () => {
+  mockParams.slug = 'penny-wong';
   const person = c.joinPerson(
-    'anthony-albanese',
+    'penny-wong',
     slugs,
     roster,
     people,
@@ -86,7 +87,7 @@ test('profile failure in expenses preserves votes, pay and identity; official po
   );
   const p = c.profileFor(person.canonicalPersonId!, {
     ...catalogs,
-    interest: c.decodeInterest(pinned('/interests/10007.json')),
+    interest: c.decodeInterest(pinned('/interests/10678.json')),
   });
   p.blocks.expenses = {
     ...p.blocks.expenses,
@@ -97,7 +98,7 @@ test('profile failure in expenses preserves votes, pay and identity; official po
   mock.person.mockResolvedValue(result(person));
   mock.profileFor.mockResolvedValue(p);
   const r = await render(<Person />);
-  expect(text(r)).toContain('Anthony Albanese');
+  expect(text(r)).toContain('Penny Wong');
   expect(text(r)).toContain('These are entitlements set by instrument');
   expect(
     r.root.findAll((n) => n.props.testID === 'person-expenses-error').length,
