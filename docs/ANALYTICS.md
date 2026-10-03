@@ -17,6 +17,11 @@ The browser sends events through `https://opax.com.au/ingest/` on the existing
 `opax-portal` Worker. `src/posthog.ts` routes ingestion to `us.i.posthog.com` and
 `/static/*` and `/array/*` to `us-assets.i.posthog.com`. Destinations are fixed;
 site cookies, Authorization, referrers and upstream Set-Cookie are not forwarded.
+For ingestion (not assets) the proxy does forward the reader's address: it sends
+`CF-Connecting-IP` as `X-Forwarded-For` to PostHog's US ingestion service (since
+10 September 2026), so events are located at the reader rather than at the
+Worker's egress. Only the body, content type and encoding, Accept and User-Agent
+go with it.
 Cross-origin browser submissions are rejected; redirects are not followed;
 ingestion responses are never cached. The frontend SDK is bundled locally,
 so the existing self-only script/connect CSP requires no extra host exceptions.
@@ -63,8 +68,15 @@ the same path allowlist), every ad click id posthog-js collects (`igshid`,
 `title` property: until 2026-09-26 an unprefixed `title` carrying the page
 title (which names a reader's search, "Search: … · OPAX") reached PostHog.
 There are no accounts to identify; anonymous IDs support session/funnel analysis,
-but person profiles are disabled. Do Not Track is respected and IP capture is
-disabled. Session replay, generic DOM autocapture, exception text capture, surveys
+but person profiles are disabled. Do Not Track is respected. IP addresses are
+**not** disabled: `ip: false` in `analytics/index.js` has no effect in posthog-js
+1.427.2 (the SDK logs that the option does nothing), and the proxy forwards the
+address as above. Whether PostHog keeps it after the location lookup is the
+project's "Discard client IP data" setting, which is not in this repository.
+The SDK also sends the browser details it collects (browser and version, OS,
+device type, screen and viewport, language, time zone, referring domain) and
+keeps its identifier in a one-year cookie plus local storage; that cookie also
+holds the full first-visit URL, which `beforeSend` strips from events. Session replay, generic DOM autocapture, exception text capture, surveys
 and remote feature flags are disabled to keep private questions out of telemetry.
 The shared event allowlist and Do Not Track gate apply to both systems. GA4
 Enhanced Measurement is disabled at the stream level so automatic search,

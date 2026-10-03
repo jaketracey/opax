@@ -32,7 +32,7 @@ The public record stays open. An email account enables private or shared reading
 
   The exact label `"Community Development Grants"` also resolves when unique. The response includes the canonical `id: "GO3141"`, `key: "go3141"` and `opax_url: "https://opax.com.au/money/grants?jur=federal&program=GO3141"` alongside current program data and coverage notes.
 
-## Native code sign-in (W1 to W3, branch implementation)
+## Native code sign-in (W1 to W3, live since 3 October 2026)
 
 `POST /api/community/auth/request` accepts `{email, client:"ios"}`. Omitting `client` keeps the web email and response unchanged. Native requests receive `{sent:true, message, challenge_id}` for both existing and new accounts. The challenge is 32 cryptographically random bytes encoded as 43 URL-safe characters and bound in the proof row to the normalized email and `client:"ios"`. The response carries no code or link token.
 
@@ -52,9 +52,9 @@ Wrong, malformed, expired, superseded, consumed, unknown, disabled-account and o
 
 At the email cap, the link remains the fallback until the daily window ends. Fixed windows can allow attempts on both sides of a boundary. Carrier NAT still shares the existing IP caps. Rotating the MAC secret invalidates outstanding codes; their links remain usable unless already consumed or superseded.
 
-## Account deletion (W5 and W6, branch implementation)
+## Account deletion (W5 and W6, live since 3 October 2026)
 
-Branch `ios/worker-deletion` implements deletion; it has never been deployed. Decision 5 is still open; this code uses its requested defaults. `/community?view=account` links to an accessible `/community?view=delete-account` flow with a fresh code field, permanent-deletion disclosure, cancel link, loading/status feedback and field errors using the shared controls.
+Account deletion went live in production on 3 October 2026, together with native code sign-in. It implements the defaults requested for decision 5 in [IOS-APP.md](IOS-APP.md#11-open-decisions). `/community?view=account` links to an accessible `/community?view=delete-account` flow with a fresh code field, permanent-deletion disclosure, cancel link, loading/status feedback and field errors using the shared controls.
 
 | Method/path | JSON request | Response |
 | --- | --- | --- |
@@ -112,9 +112,9 @@ W6 changes `voice_sessions.member_id` to nullable ON DELETE SET NULL and recreat
 
 **Migration warning: never rebuild `members` by drop and rename after 0012; ON DELETE SET NULL/CASCADE would fire.** D1 performs these delete actions even with `PRAGMA defer_foreign_keys=ON`: dropping the parent deletes its rows first, unlinks content and voice history, and destroys deletion proofs. Later migrations must not drop, rename or recreate `members`, `voice_sessions`, `community_threads` or `direct_conversations` without an explicit reviewed exception. `portal/test/migration-deletion-safety.test.mjs` enforces this, with an initially empty exception list. An exception must name the reviewer, review reference and preservation rationale and pin the exact migration SHA-256 in that test; a SQL comment alone cannot waive it. Rehearse any approved exception on seeded local D1 and verify row/constraint/foreign-key preservation.
 
-`expireVoiceSessions` now runs reserved expiry, connecting/active expiry, **then** clears `conversation_id` only on orphaned terminal rows with stored `closed_at <= now-86400`. The existing five-minute `scheduled()` branch runs this before reply-email delivery, in independent error handling, even when voice/community are disabled or email delivery throws. For a lost relay, `closed_at` is the expiry processing time, not its deadline; cleanup waits a full day from that stored time. Staging has no cron, so staging validation must explicitly invoke scheduled housekeeping or request expiry. No production/staging calls or migrations have run in this lane.
+`expireVoiceSessions` now runs reserved expiry, connecting/active expiry, **then** clears `conversation_id` only on orphaned terminal rows with stored `closed_at <= now-86400`. The existing five-minute `scheduled()` branch runs this before reply-email delivery, in independent error handling, even when voice/community are disabled or email delivery throws. For a lost relay, `closed_at` is the expiry processing time, not its deadline; cleanup waits a full day from that stored time. Staging has no cron, so staging validation must explicitly invoke scheduled housekeeping or request expiry. The lane that wrote this ran no production or staging calls or migrations; the release followed on 3 October 2026.
 
-Deploy order (future, Jake-authorized only): staging first, with seeded discussions/replies and conversations/messages; satisfy the sign-in compatibility release and apply **0011_native_signin**, then follow the W6 sequence below. No rollout action is authorized by these notes.
+Deploy order (written before the 3 October 2026 release; follow it again for any new environment, with Jake's authorization): staging first, with seeded discussions/replies and conversations/messages; satisfy the sign-in compatibility release and apply **0011_native_signin**, then follow the W6 sequence below. These notes authorize no rollout by themselves.
 
 1. Schedule the entire disable/drain/migrate/release sequence **outside the nightly refresh/deploy window (03:15 Australia/Sydney)**, including its running time. Confirm no nightly is running or can overlap: it deploys `main` with `VOICE_ENABLED=true` and could re-enable voice mid-drain. Do not leave the drain or migration spanning that window.
 2. Disable voice, drain old requests, read the latest stored open-row deadlines, run expiry after those deadlines and verify **zero open rows**. Repeat deadline/expiry checks if any remain.
@@ -122,7 +122,7 @@ Deploy order (future, Jake-authorized only): staging first, with seeded discussi
 4. Apply **0012_voice_deletion_safe**. Run **`PRAGMA foreign_key_check` as a separate database command after applying**, inspect its output and require zero rows. `migrations apply` does not print the query results of the check inside the migration. Verify row/constraint/index preservation and no remaining rebuild tables before release.
 5. For production, **merge W5/W6 to `main` only after the production migration and separate FK check pass, then deploy that merged `main`** with voice still disabled. Validate deletion, preserved content, accounting and housekeeping, then re-enable voice. A branch deployment would be replaced by the next nightly; it is not the production shipping procedure.
 
-The old corrected Worker is compatible with 0012 until deletion is enabled. After deletion creates NULL content owners, rollback must retain the NULL-aware readers and guarded session issuance. **Nothing reaches main before its required migration is applied in production: the nightly refresh deploys main.** Production first needs the separate web-sign-in compatibility release described below, then 0011; after staging passes and Jake authorizes production, repeat the complete W6 sequence. The approved sign-in branch at `0028a5f5` was merged locally into this branch with merge commit `dbc85cf4`, without conflicts. No push, main merge or deployment was performed here.
+The old corrected Worker is compatible with 0012 until deletion is enabled. After deletion creates NULL content owners, rollback must retain the NULL-aware readers and guarded session issuance. **Nothing reaches main before its required migration is applied in production: the nightly refresh deploys main.** Production first needs the separate web-sign-in compatibility release described below, then 0011; after staging passes and Jake authorizes production, repeat the complete W6 sequence. The approved sign-in branch at `0028a5f5` was merged locally into this branch with merge commit `dbc85cf4`, without conflicts. No push, main merge or deployment was performed in that lane.
 
 ## Configuration and launch requirements
 
