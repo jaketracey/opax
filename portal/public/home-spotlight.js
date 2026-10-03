@@ -1,15 +1,10 @@
+import { shortMoney as fmtMoney } from './format.js';
 // Restored from the previous homepage's Money & words module.
 // Keep its charts, rankings, questions and source notes while readers choose the topic.
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const subjectHash = (kind, name) => '/subject/' + kind + '/' + encodeURIComponent(name);
 const askHash = (question) => '/ask?' + new URLSearchParams({q: question});
 const searchHash = (topic, filters) => '/ask?' + new URLSearchParams({view: 'search', q: topic, ...filters});
-function fmtMoney(n) {
-  if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
-  if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
-  if (n >= 1e3) return `$${Math.round(n / 1e3)}K`;
-  return `$${n}`;
-}
 
 
 function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {

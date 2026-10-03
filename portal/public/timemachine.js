@@ -2,7 +2,8 @@
  * OPAX Time Machine — an Encarta-style year explorer for the Australian
  * parliamentary record (1998–2026).
  *
- * Plain browser ES module, no dependencies, no build step.
+ * Plain browser ES module, no build step; its one import is the shared
+ * short formats.
  *
  *   import { mountTimeMachine } from '/timemachine.js'
  *   const tm = mountTimeMachine(container)  // renders into container
@@ -33,6 +34,8 @@
  * text (the year in brief, the per-speech summaries) is always labelled as
  * such and never presented as the record; every claim links to a speech.
  */
+
+import { shortMoney as fmtMoney } from './format.js'
 
 const YEAR_MIN = 1998
 const YEAR_MAX = 2026
@@ -284,12 +287,6 @@ function clampYear(y) {
 
 function fmtInt(n) {
   return Number(n).toLocaleString('en-AU')
-}
-
-function fmtMoney(n) {
-  if (n >= 1e6) return '$' + (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M'
-  if (n >= 1e3) return '$' + Math.round(n / 1e3) + 'K'
-  return '$' + Math.round(n)
 }
 
 function fmtDate(iso) {

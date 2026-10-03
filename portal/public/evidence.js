@@ -1,4 +1,5 @@
 /* Source-backed connections. Only unambiguous identities are displayed. */
+import {shortDate} from './format.js';
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 export const nameKey = value => (String(value || '').toLocaleLowerCase().match(/[\p{L}\p{N}]+/gu) || []).join(' ');
 const safeURL = value => /^https?:\/\//i.test(String(value || '')) ? value : null;
@@ -14,8 +15,7 @@ async function read(url, signal) {
 }
 function displayDate(value) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ''))) return value || 'Date not recorded';
-  const date=new Date(value+'T00:00:00');
-  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+  return shortDate(value);
 }
 function sourceContent(row) {
   const fields=row.details?.source_fields;

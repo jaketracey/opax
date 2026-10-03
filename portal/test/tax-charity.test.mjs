@@ -79,13 +79,13 @@ test('a charity block shows size, PBI/HPC, revenue, the government share and whe
   const f = text(facts(html));
   assert.match(f, /Large charity · Health Promotion Charity \(HPC\) · registered 1 Apr 2015/);
   assert.match(f, /ACNC name: WA Primary Health Alliance Limited/);
-  assert.match(f, /\$237\.1M revenue \(year to 30 June 2024\), of which \$228\.9M \(97%\) from government/);
+  assert.match(f, /\$237\.1M revenue \(year to 30 Jun 2024\), of which \$228\.9M \(97%\) from government/);
   assert.match(f, /\$1K donations and bequests/);
   assert.match(f, /AIS 2023: \$199\.1M revenue, \$193\.4M \(97%\) from government/);
   assert.match(html, /https:\/\/www\.acnc\.gov\.au\/charity\/charities\?search=11602416697/);
   // attribution: publisher, licence and a link to the record, per source
   assert.match(html, /<a href="https:\/\/data\.gov\.au\/data\/dataset\/acnc-register"[^>]*>ACNC Registered Charities/);
-  assert.match(text(html), /CC BY 3\.0 AU, updated 27 Sept 2026/);
+  assert.match(text(html), /CC BY 3\.0 AU, updated 27 Sep 2026/);
   assert.match(html, /<a href="https:\/\/data\.gov\.au\/data\/dataset\/acnc-2024"[^>]*>ACNC 2024 Annual Information Statement/);
   assert.match(text(html), /\(CC BY 4\.0\)/);
   assert.match(html, /DGR status is not part of the ACNC dataset/);
@@ -95,7 +95,7 @@ test('a charity block shows size, PBI/HPC, revenue, the government share and whe
 test('the ATO row reports the published figures neutrally, with the ATO caveat and its licence', () => {
   const html = T.taxCharityHTML(COMPANY, META, { abn: '88000014675' });
   const f = text(facts(html));
-  assert.match(f, /ATO 2023-24 Total income \$56\.6B · taxable income \$2\.7B · tax payable \$767\.3M/);
+  assert.match(f, /ATO 2023-24 Total income \$56\.60B · taxable income \$2\.70B · tax payable \$767\.3M/);
   assert.match(f, /ATO name: WOOLWORTHS GROUP LIMITED/);
   // exact dollars are in the tooltip
   assert.match(html, /title="\$767,268,429"/);
@@ -108,17 +108,17 @@ test('the ATO row reports the published figures neutrally, with the ATO caveat a
   assert.match(text(html), /\(CC BY 3\.0 AU\)/);
   assert.match(html, /<a href="https:\/\/www\.ato\.gov\.au\/report-of-entity-tax-information"[^>]*>ATO guidance/);
   // earlier years in a table
-  assert.match(html, /<th scope="row">2022-23<\/th><td>[^]*\$50B/);
+  assert.match(html, /<th scope="row">2022-23<\/th><td>[^]*\$50\.00B/);
   assert.doesNotMatch(html, /Registered charity|ACNC Charity Register/);
 });
 
 test('a blank ATO amount reads as blank (zero or less), never as $0', () => {
   const html = T.taxCharityHTML({ t: [{ y: '2023-24', inc: 150000000 }, { y: '2022-23', inc: 100000000, tax: 5000000 }] }, META, { abn: '55555555555' });
   const f = text(facts(html));
-  assert.match(f, /Total income \$150M · taxable income blank · tax payable blank/);
+  assert.match(f, /Total income \$150\.0M · taxable income blank · tax payable blank/);
   assert.match(html, /title="The ATO leaves a field blank when the amount is zero or less"/);
   assert.doesNotMatch(f, /\$0\b/);
-  assert.match(html, /<td>[^<]*<span[^>]*>\$5M<\/span><\/td><td><span class="tc-blank"/);   // earlier year: taxable shown, tax payable blank
+  assert.match(html, /<td>[^<]*<span[^>]*>\$5\.0M<\/span><\/td><td><span class="tc-blank"/);   // earlier year: taxable shown, tax payable blank
 });
 
 test('a PRRT-only listing is described as such', () => {
@@ -138,7 +138,7 @@ test('a charity that is no longer on the register is described from its AIS row 
   const html = T.taxCharityHTML({ a: [{ y: 2024, rev: 0, gov: 0, rs: 'Voluntarily Revoked No Longer Operating', n: 'GONE INC', to: '2024-06-30' }] }, META, { abn: '44444444444' });
   const f = text(facts(html));
   assert.match(f, /In the ACNC 2024 Annual Information Statement dataset \(status there: Voluntarily Revoked No Longer Operating\)\. Not in the current Charity Register dataset\./);
-  assert.match(f, /The dataset shows \$0 revenue \(year to 30 June 2024\)\./);
+  assert.match(f, /The dataset shows \$0 revenue \(year to 30 Jun 2024\)\./);
   assert.doesNotMatch(f, /Reported no revenue/);   // a zero in the dataset may be a figure never reported
   assert.doesNotMatch(f, /Registered charity|Large charity/);
   assert.doesNotMatch(html, /Registered Charities/);        // the register dataset is not a source for this row

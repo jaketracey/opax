@@ -14,6 +14,8 @@
    under the figures. No dependencies; the host page mounts it and it removes its slot when there is
    nothing to show. */
 
+import { shortDate, shortMoney } from "./format.js";
+
 const BASE = "/entities/tax-charity";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const safeUrl = (value) => (typeof value === "string" && /^https:\/\//i.test(value) ? value : null);
@@ -25,13 +27,12 @@ export function normName(x) {
 }
 export const shardOf = (abn) => String(abn).slice(-2);
 
-const COMPACT = new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", notation: "compact", maximumFractionDigits: 1 });
 const EXACT = new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
-/** "$1.4B", with the exact dollars in the tooltip. */
-const money = (value) => `<span title="${esc(EXACT.format(value))}">${esc(COMPACT.format(value))}</span>`;
+/** "$1.40B", with the exact dollars in the tooltip. */
+const money = (value) => `<span title="${esc(EXACT.format(value))}">${esc(shortMoney(value))}</span>`;
 const day = (iso) => {
   if (!/^\d{4}-\d{2}-\d{2}/.test(iso || "")) return "";
-  return new Date(`${iso.slice(0, 10)}T00:00:00`).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
+  return shortDate(iso);
 };
 
 /** Government's share of a charity's revenue, from the two AIS figures; null when it cannot be stated. */

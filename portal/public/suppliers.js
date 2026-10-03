@@ -1,17 +1,17 @@
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
-   No dependencies; the host router owns mounting and calls destroy on departure. */
+   No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
+import { shortDate, shortMoney } from "./format.js";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");
 const currency = (value) => (Number(value) || 0).toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
 const percent = (value) => value > 0 && value < 0.1 ? "less than 0.1%" : value > 99.9 && value < 100 ? "over 99.9%" : `${value.toLocaleString("en-AU", { maximumFractionDigits: 1 })}%`;
-const compact = (value) => (Number(value) || 0).toLocaleString("en-AU", { style: "currency", currency: "AUD", notation: "compact", maximumFractionDigits: 1 });
 const sourceUrl = (value) => typeof value === "string" && /^https?:\/\//i.test(value) ? value : null;
 const profileUrl = (id) => `/subject/supplier/${encodeURIComponent(id)}`;
 const identityMethod = (method) => ({ source: "Supplier identity in the source register", source_abn: "ABN in the source register", abn: "Matching ABN", exact_normalized_name: "Matching recorded name", normalized_name: "Matching recorded name", exact_name: "Matching recorded name", published_graph_supplier_id: "Linked in the money map", verified_abn: "Matching ABN" })[method] || "Linked source records";
 const donorUrl = (value) => typeof value === "string" && /^\/subject\/donor\/[^\s]+$/.test(value) ? value : null;
 // The source writes 1900-01-01 where it has no date; that is "not recorded", not a day.
 const placeholderDate = (value) => !value || !/^\d{4}-\d{2}-\d{2}/.test(value) || Number(value.slice(0, 4)) <= 1900;
-const date = (value) => placeholderDate(value) ? "Not recorded" : new Date(`${value.slice(0, 10)}T00:00:00`).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
+const date = (value) => placeholderDate(value) ? "Not recorded" : shortDate(value);
 /** An undated $0 row is the register's placeholder, not a contract a reader can follow. */
 export function placeholderContract(contract) { return placeholderDate(contract?.start_date) && !(Number(contract?.amount) > 0); }
 let agencyIdsPromise = null;
@@ -162,7 +162,7 @@ async function renderProfile(root, profile, meta, helpers, life) {
   root.removeAttribute("aria-busy");
   root.innerHTML = `<div class="supplier-page"><div class="subject-head"><h2 id="subject-title" tabindex="-1">${esc(profile.name)}</h2><p class="subject-tag">Commonwealth supplier${profile.abn ? ` · ABN ${esc(profile.abn)}` : ""}</p></div>
     <p class="supplier-lede">${top ? `${esc(top.name)} accounts for ${percent(share)} of the recorded contract value.` : "No agency breakdown is available in this export."}</p>
-    <dl class="supplier-totals"><div><dt>Recorded contract value</dt><dd title="${currency(profile.total)}">${compact(profile.total)}</dd></div><div><dt>Contracts</dt><dd>${number(profile.count)}</dd></div><div><dt>Agencies</dt><dd>${number(agencies.length)}</dd></div></dl>
+    <dl class="supplier-totals"><div><dt>Recorded contract value</dt><dd title="${currency(profile.total)}">${shortMoney(profile.total)}</dd></div><div><dt>Contracts</dt><dd>${number(profile.count)}</dd></div><div><dt>Agencies</dt><dd>${number(agencies.length)}</dd></div></dl>
     <div class="supplier-profile-grid"><div class="supplier-profile-main">${agencyChart(agencies, Number(profile.total), ids)}<section class="supplier-section"><h3 class="subject-section-title">Agency connections</h3><p>Explore the agencies awarding contracts to this supplier.</p><div class="supplier-money-map supplier-agency-map"></div></section>${yearChart(years, profile.undated)}<section class="supplier-section supplier-funding" hidden></section><section class="supplier-section supplier-evidence" hidden></section><section class="supplier-section supplier-mentions"></section>
       <section class="supplier-section"><h3 class="subject-section-title">The contract record</h3><div class="ui-toolbar"><label class="ui-field">Filter contracts<input class="ui-input" type="search" name="contract-query" placeholder="Title, agency or reference" autocomplete="off"></label></div><p class="supplier-contract-count" role="status"></p><div class="supplier-contract-list"></div><div class="supplier-contract-more"></div></section>
     </div><aside class="supplier-context"><section><h3>Follow the connections</h3>${donorLinks.length ? `<p>Also in the recorded party funding data:</p><ul>${donorLinks.map((link) => `<li><a href="${esc(donorUrl(link.url))}">${esc(link.name)}</a>${link.method ? `<small>${esc(identityMethod(link.method))}</small>` : ""}</li>`).join("")}</ul><p class="fineprint">An identity link connects records. It does not establish that funding influenced a contract award.</p>` : '<p>No link to an available donor profile is recorded for this supplier.</p>'}<a href="/search?kind=speech&q=${encodeURIComponent(`"${profile.name}"`)}">Find mentions in parliament</a><p class="fineprint">Search results may refer to other organisations with similar names.</p><a class="supplier-directory-link" href="/subject/supplier">Browse all suppliers</a></section>

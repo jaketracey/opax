@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
+import { shortMoney } from '../public/format.js';
 
 const source = readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8');
 const parsed = ts.createSourceFile('index.ts', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
@@ -23,7 +24,7 @@ const supplier = (overrides = {}) => ({ id, name: 'Acme Pty Ltd', abn: '12345678
 function harness(rows = [supplier()], loader) {
   let requests = 0;
   const context = {
-    URL, Request, Response, SITE_ORIGIN: 'https://opax.com.au', SITE_TITLE: 'OPAX', SITE_DESCRIPTION: 'Parliamentary records', TOPIC_NAMES: {},
+    money: shortMoney, URL, Request, Response, SITE_ORIGIN: 'https://opax.com.au', SITE_TITLE: 'OPAX', SITE_DESCRIPTION: 'Parliamentary records', TOPIC_NAMES: {},
     assetJson: async (_env, path) => { assert.equal(path, '/suppliers.json'); requests++; return loader ? loader() : { meta: { generated_at: '2026-09-07T00:00:00Z' }, suppliers: rows }; },
     cachedJson: async (_key, fn) => fn(),
     loadPeople: async () => ({ people: [] }), loadMoney: async () => ({ parties: new Map(), donors: new Map() }),

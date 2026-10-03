@@ -9,7 +9,9 @@ const end = app.indexOf('// --- money map (lazy-loaded', start);
 assert.ok(start >= 0 && end > start);
 // Substitute only the module loader: production rendering and async lifecycle
 // execute unchanged, without requiring WebGL in Node.
-const code = app.slice(start, end).replace(/import\("\/money-map\.js(?:\?[^"]*)?"\)/g, 'loadMapModule()');
+// discoveryMoney writes through app.js's own short money form, defined above the slice.
+const fmtMoney = app.match(/^function fmtMoney\(value\) \{[\s\S]*?^\}$/m)[0];
+const code = fmtMoney + '\n' + app.slice(start, end).replace(/import\("\/money-map\.js(?:\?[^"]*)?"\)/g, 'loadMapModule()');
 assert.ok(code.includes('loadMapModule()'), 'the map module loader is intercepted');
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const deferred = () => { let resolve; const promise = new Promise((r) => { resolve = r; }); return { promise, resolve }; };
@@ -66,15 +68,15 @@ test('concentration bars use percentage points and reconcile an explicit other g
   assert.deepEqual(widths, [41.01, 30, 28.99]);
   assert.ok(Math.abs(widths.reduce((a, b) => a + b) - 100) < 1e-9);
   assert.match(html, /Other 5 suppliers/);
-  assert.match(html, /\$410\.1k/);
+  assert.match(html, /\$410K/);
   assert.match(html, /41(?:\.0)?%/);
 });
 
 test('overlap keeps receipts and awards separate instead of manufacturing a combined total', () => {
   const html = harness().context.discoveryDetailHTML(overlap());
-  assert.match(html, /Party receipts<\/span><strong>\$2m/);
-  assert.match(html, /Government contracts<\/span><strong>\$7m/);
-  assert.doesNotMatch(html, /\$9m|style="width:/);
+  assert.match(html, /Party receipts<\/span><strong>\$2\.0M/);
+  assert.match(html, /Government contracts<\/span><strong>\$7\.0M/);
+  assert.doesNotMatch(html, /\$9\.0M|style="width:/);
   assert.match(html, /Different money flows and reporting periods/);
 });
 

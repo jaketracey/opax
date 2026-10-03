@@ -74,14 +74,8 @@ export function shortLabel(label: string): string {
   return label.length > 34 ? `${label.slice(0, 32)}…` : label
 }
 
-/** Dollars for labels and cards: $1.2b / $12.3m / $46k / $123. */
-export function formatMoney(value: number): string {
-  const v = Math.abs(value)
-  if (v >= 1e9) return `$${(value / 1e9).toFixed(1)}b`
-  if (v >= 1e6) return `$${(value / 1e6).toFixed(1)}m`
-  if (v >= 1e3) return `$${Math.round(value / 1e3)}k`
-  return `$${Math.round(value)}`
-}
+/** Dollars for labels and cards, in the site's short form: $1.25B / $12.3M / $46K / $123. */
+export { shortMoney as formatMoney } from '../public/format.js'
 
 /**
  * Node radius. The money map sizes by dollars on a log scale ('resources'

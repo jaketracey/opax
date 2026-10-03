@@ -1,6 +1,7 @@
 import { readMoneyFilters, moneyTotals, moneyRecordsCSV, moneyFlowType } from './money-records.js?v=ia-ux-20260908-2';
+import { shortMoney } from './format.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const money = value => new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:1,notation:'compact'}).format(value);
+const money = shortMoney;
 const exactMoney = value => new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(value);
 const labels = { receipts:'Political receipts', contracts:'Contract values', grants:'Grant awards' };
 export function mountMapResearch(container, data, options = {}) {

@@ -56,11 +56,16 @@ function localISODate() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
+// fmtDate and fmtMoney are copies of shortDate and shortMoney in /format.js: this
+// is a classic script and cannot import it. test/format.test.mjs keeps them equal.
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-function fmtDate(iso) {
-  if (!iso || !/^\d{4}-\d{2}-\d{2}/.test(iso)) return iso || "";
-  const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
-  return `${d} ${MONTHS[m - 1]} ${y}`;
+function fmtDate(value) {
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? "" : `${value.getDate()} ${MONTHS[value.getMonth()]} ${value.getFullYear()}`;
+  }
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(value ?? ""));
+  const month = m ? MONTHS[Number(m[2]) - 1] : undefined;
+  return month ? `${Number(m[3])} ${month} ${m[1]}` : String(value ?? "");
 }
 
 // --- resource titles --------------------------------------------------------
@@ -109,11 +114,14 @@ function displayTitle(rec) {
   return titleSubject(rec) || String(rec?.title || rec?.slug || "");
 }
 
-function fmtMoney(n) {
-  if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
-  if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
-  if (n >= 1e3) return `$${Math.round(n / 1e3)}K`;
-  return `$${n}`;
+function fmtMoney(value) {
+  const n = Number(value) || 0;
+  const sign = n < 0 ? "-" : "";
+  const a = Math.abs(n);
+  if (a >= 999.95e6) return `${sign}$${(a / 1e9).toFixed(2)}B`;
+  if (a >= 999.5e3) return `${sign}$${(a / 1e6).toFixed(1)}M`;
+  if (a >= 999.5) return `${sign}$${Math.round(a / 1e3)}K`;
+  return `${sign}$${Math.round(a)}`;
 }
 
 // Party identity: dot + short text label, always redundant with text (never color alone).
@@ -974,10 +982,7 @@ let discoveryMapGeneration = 0;
 
 function discoveryMoney(value) {
   const n = Number(value);
-  if (!Number.isFinite(n)) return "Unavailable";
-  const amount = Math.abs(n);
-  const unit = amount >= 1e9 ? [1e9, "bn"] : amount >= 1e6 ? [1e6, "m"] : amount >= 1e3 ? [1e3, "k"] : [1, ""];
-  return `$${(n / unit[0]).toLocaleString("en-AU", { maximumFractionDigits: unit[0] === 1 ? 0 : 1 })}${unit[1]}`;
+  return Number.isFinite(n) ? fmtMoney(n) : "Unavailable";
 }
 function discoveryPercent(value) {
   return `${Number(value).toLocaleString("en-AU", { maximumFractionDigits: 1 })}%`;
@@ -9821,7 +9826,8 @@ function renderChatHistory() {
     const meta = document.createElement("span");
     meta.className = "chat-history-meta";
     const n = c.thread.filter((m) => m.role === "user").length;
-    meta.textContent = `${n} ${n === 1 ? "question" : "questions"} · ${new Date(c.updated * 1000).toLocaleDateString("en-AU", { day: "numeric", month: "short" })}`;
+    const updated = new Date(c.updated * 1000);
+    meta.textContent = `${n} ${n === 1 ? "question" : "questions"} · ${updated.getDate()} ${MONTHS[updated.getMonth()]}`;
     open.append(title, meta);
     open.addEventListener("click", () => openSavedChat(c.id));
     const del = document.createElement("button");

@@ -1,9 +1,10 @@
 import { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract } from './suppliers.js?v=austender-1';
 import { procurementGraph } from './procurement-data.js';
+import { shortMoney } from './format.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = value => (Number(value) || 0).toLocaleString('en-AU');
 const money = value => (Number(value) || 0).toLocaleString('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
-const compact = value => (Number(value) || 0).toLocaleString('en-AU', {style:'currency', currency:'AUD', notation:'compact', maximumFractionDigits:1});
+const compact = shortMoney;
 const url = id => `/subject/agency/${encodeURIComponent(id)}`;
 const supplierUrl = id => `/subject/supplier/${encodeURIComponent(id)}`;
 

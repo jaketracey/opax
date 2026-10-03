@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
+import { shortMoney } from '../public/format.js';
 const source = readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8');
 const parsed = ts.createSourceFile('index.ts', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
 const names = new Set(['DIRECTORY_KINDS','isDirectoryKind','STATIC_PAGES','SUBJECT_NAME_MAX','CAMPAIGNER_NAME_MAX','SUPPLIER_NAME_MAX','BILL_KEY_MAX','BILL_KEY_RE','matchSeoRoute','agenciesMemo','loadAgencies','agencyMeta','escHtml','clip','withTail','num','money','indexLinks','prerenderBlock','canonicalFor']);
@@ -10,7 +11,7 @@ const statements = parsed.statements.filter(n => ts.isFunctionDeclaration(n) ? n
 const code = ts.transpileModule(statements.map(n=>n.getText(parsed)).join('\n'), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 const entry = {id:'a-0123456789abcdef0123',name:'Department <Works> & Transport',total:100,count:2,supplier_count:1};
 function harness(loader = async () => ({agencies:[entry]})) {
-  const context={ URL, SITE_ORIGIN:'https://opax.com.au', SITE_TITLE:'OPAX',SITE_DESCRIPTION:'Record', assetJson:loader };
+  const context={ URL, SITE_ORIGIN:'https://opax.com.au', SITE_TITLE:'OPAX',SITE_DESCRIPTION:'Record', assetJson:loader, money: shortMoney };
   runInNewContext(code,context); return context;
 }
 test('agency aliases resolve to canonical stable IDs and escaped metadata', async () => {

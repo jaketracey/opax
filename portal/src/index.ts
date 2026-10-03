@@ -38,6 +38,7 @@ import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, int
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { tokens as catalogTokens } from './catalog-query.mjs'
 import { journeyStoryContext, parseJourneyStory, journeyStoryPrompt, JOURNEY_STORY_SYSTEM, STORY_VERSION, type StoryGraph } from './journey-story'
+import { shortDate, shortMoney as money } from '../public/format.js'
 
 import { SEARCH_SUMMARY_VERSION, SEARCH_SUMMARY_SYSTEM, summarySources, summaryPrompt, parseSearchSummary, summaryModelAnswer, summaryPointValidator, SummaryPointStream, quotedInOrder, type SearchSummary } from './search-summary'
 
@@ -1484,7 +1485,7 @@ function quotedPositionAnswer(payload: AskPayload, query: string, question = '')
   const citations: Record<string,number[][]> = {}
   for (const source of sources) {
     const date = source.date?.slice(0,10) || source.title.match(/\b\d{4}-\d{2}-\d{2}\b/)?.[0]
-    const timestamp = date && Number.isFinite(Date.parse(date)) ? new Intl.DateTimeFormat('en-AU',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(date)) : ''
+    const timestamp = date && Number.isFinite(Date.parse(date)) ? shortDate(date) : ''
     answer += [source.speaker,timestamp].filter(Boolean).join(' · ') + ':\n\n'
     for(const quote of source.quotes) {
       answer += '> '+quote
@@ -1608,7 +1609,7 @@ async function recoverPositionAnswer(payload: AskPayload, body: Record<string,un
         const date = source?.date?.slice(0,10) || source?.title.match(/\b\d{4}-\d{2}-\d{2}\b/)?.[0]
         return date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? [date] : []
       }))]
-      if (dates.length) text += ' (' + dates.map(date => new Intl.DateTimeFormat('en-AU',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(date))).join('; ') + ')'
+      if (dates.length) text += ' (' + dates.map(shortDate).join('; ') + ')'
       const end = Array.from(text).length
       for (const id of point.source_ids) (citations[id] ||= []).push([end-1,end])
       text += '\n'
@@ -3599,12 +3600,6 @@ function withTail(facts: string, tail: string, max = 158): string {
 }
 
 const num = (n: number): string => n.toLocaleString('en-AU')
-function money(n: number): string {
-  if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`
-  if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`
-  if (n >= 1e3) return `$${Math.round(n / 1e3)}K`
-  return `$${Math.round(n)}`
-}
 const years = (a: number | null | undefined, b: number | null | undefined): string =>
   a && b && a !== b ? `${a} to ${b}` : String(a || b || '')
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']

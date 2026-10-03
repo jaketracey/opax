@@ -1,7 +1,8 @@
 import { buildMoneyJourneys } from './money-journeys-data.js?v=story-1';
+import { shortMoney } from './format.js';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-const money = (value) => Number(value).toLocaleString('en-AU', { style: 'currency', currency: 'AUD', notation: 'compact', maximumFractionDigits: 1 });
+const money = shortMoney;
 const safeLink = (url) => typeof url === 'string' && /^\/(?!\/)[^\s\\]*$/.test(url);
 const STEP_MS = 7000;
 

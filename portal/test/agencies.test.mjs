@@ -5,9 +5,10 @@ import { runInNewContext } from 'node:vm';
 import { procurementGraph } from '../public/procurement-data.js';
 import { filterMoneyEdges, moneyTotals } from '../public/money-records.js';
 import { buildGraph } from '../public/money-map.js';
+import { shortDate, shortMoney } from '../public/format.js';
 
 const source = readFileSync(new URL('../public/agencies.js', import.meta.url), 'utf8').replace(/^import .*;$/gm, '').replaceAll('export async function ', 'async function ').replaceAll('export function ', 'function ');
-const shared = readFileSync(new URL('../public/suppliers.js', import.meta.url), 'utf8').replaceAll('export async function ', 'async function ').replaceAll('export function ', 'function ');
+const shared = readFileSync(new URL('../public/suppliers.js', import.meta.url), 'utf8').replace(/^import .*;$/gm, '').replaceAll('export async function ', 'async function ').replaceAll('export function ', 'function ');
 const tick = () => new Promise(resolve => setImmediate(resolve));
 function node() {
   const children = new Map();
@@ -17,7 +18,7 @@ function node() {
     querySelectorAll() { return []; }, focus() {} };
 }
 function harness(fetch) {
-  const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, procurementGraph };
+  const context = { fetch, AbortController, URLSearchParams, history: { replaceState() {} }, procurementGraph, shortDate, shortMoney };
   runInNewContext(`Object.assign(this, (() => { ${shared}; return { json, lifecycle, coverageHTML, yearChart, contractHTML, mountYearChart, placeholderContract }; })());`, context);
   runInNewContext(source, context); return context;
 }

@@ -29,19 +29,14 @@
  * reaches the DOM through textContent — never innerHTML.
  */
 
+import { shortMoney as fmtMoney } from './format.js'
+
 const MATRIX_URL = '/api/matrix'
 const MONEY_URL = '/graph/money.json'
 const STYLE_ID = 'wd-styles'
 
 const NUM = new Intl.NumberFormat('en-AU')
 
-/** Mirror of app.js fmtMoney. */
-function fmtMoney (n) {
-  if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`
-  if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`
-  if (n >= 1e3) return `$${Math.round(n / 1e3)}K`
-  return `$${n}`
-}
 
 // Mirror of app.js TOPICS for the slugs this view pairs (the enrichment
 // taxonomy is canonical there).

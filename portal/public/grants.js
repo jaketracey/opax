@@ -49,6 +49,8 @@
  * reaches the DOM through textContent.
  */
 
+import { shortMoney as fmtMoney } from './format.js'
+
 const JURISDICTIONS = {
   federal: { label: 'Commonwealth', file: '/graph/grants.federal.json', dir: '/grants/federal/' },
   qld: { label: 'Queensland', file: '/graph/grants.qld.json', dir: '/grants/qld/' },
@@ -76,14 +78,8 @@ const PARTY_MAP = {
   'legalise cannabis': ['oth', 'LC'], coalition: ['lib', 'COALITION'],
 }
 
-/** Mirror of app.js fmtMoney. */
-export function fmtMoney (n) {
-  n = Number(n) || 0
-  if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`
-  if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`
-  if (n >= 1e3) return `$${Math.round(n / 1e3)}K`
-  return `$${Math.round(n)}`
-}
+/** The shared short form (format.js), under the name the grants modules use. */
+export { fmtMoney }
 
 export function kindLabel (k) {
   return KIND_LABELS[k] || (k ? k.charAt(0).toUpperCase() + k.slice(1) : 'Other')
