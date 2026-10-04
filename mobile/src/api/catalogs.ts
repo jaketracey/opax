@@ -55,6 +55,7 @@ function cached<T>(
 }
 export class Catalogs {
   private suggestionData?: Promise<SuggestionSources>;
+  private suggestionIdentityRetry: 'unused' | 'available' | 'used' = 'unused';
   constructor(private client: Pick<ApiClient, 'get'>) {}
   roster() {
     return this.client.get('/parliamentarians.json', decode.decodeRoster);
@@ -356,11 +357,29 @@ export class Catalogs {
         };
       })();
       this.suggestionData = pending;
-      void pending.catch(() => {
-        if (this.suggestionData === pending) this.suggestionData = undefined;
-      });
+      void pending.then(
+        (sources) => {
+          if (
+            this.suggestionData === pending &&
+            this.suggestionIdentityRetry !== 'used'
+          )
+            this.suggestionIdentityRetry =
+              sources.slugs && sources.people ? 'unused' : 'available';
+        },
+        () => {
+          if (this.suggestionData === pending) this.suggestionData = undefined;
+        },
+      );
     }
     return this.suggestionData;
+  }
+  /** One automatic identity recovery per session, triggered by a later focus. */
+  suggestionSourcesOnFocus(): Promise<SuggestionSources> {
+    if (this.suggestionIdentityRetry === 'available') {
+      this.suggestionIdentityRetry = 'used';
+      return this.suggestionSources(true);
+    }
+    return this.suggestionSources();
   }
   async suggestions(query: string) {
     const sources = await this.suggestionSources();

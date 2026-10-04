@@ -5,7 +5,12 @@ import { catalogs as runtime } from '../src/api/runtime';
 import { Catalogs } from '../src/api/catalogs';
 import type { ApiClient, RecordResult } from '../src/api/client';
 import { dataAsOf } from '../src/api/client';
-import { LoadingState, Screen } from '../src/design/primitives';
+import {
+  Field,
+  LoadingState,
+  PersonRow,
+  Screen,
+} from '../src/design/primitives';
 import About from '../src/features/About';
 import Electorate from '../src/features/Electorate';
 import Person from '../src/features/Person';
@@ -15,6 +20,7 @@ import { pinned, slugs } from './pinned';
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
     suggestionSources: jest.fn(),
+    suggestionSourcesOnFocus: jest.fn(),
     about: jest.fn(),
     person: jest.fn(),
     profileFor: jest.fn(),
@@ -23,10 +29,25 @@ jest.mock('../src/api/runtime', () => ({
   },
 }));
 const mockParams: { slug?: string; id?: string } = {};
+const mockFocus: {
+  effect?: () => void | (() => void);
+  cleanup?: void | (() => void);
+} = {};
 jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockParams,
   router: { push: jest.fn() },
   Stack: { Screen: () => null },
+  useFocusEffect: (effect: () => void | (() => void)) => {
+    jest.requireActual<typeof import('react')>('react').useEffect(() => {
+      mockFocus.effect = effect;
+      mockFocus.cleanup = effect();
+      return () => {
+        mockFocus.cleanup?.();
+        mockFocus.effect = undefined;
+        mockFocus.cleanup = undefined;
+      };
+    }, [effect]);
+  },
 }));
 const client: Pick<ApiClient, 'get'> = {
   async get<T>(
@@ -64,9 +85,8 @@ test.each(['Search', 'About', 'Person', 'Electorate'] as const)(
       const ready = await fixture.suggestionSources();
       const initial = deferred<typeof ready>();
       const refreshed = deferred<typeof ready>();
-      mock.suggestionSources
-        .mockReturnValueOnce(initial.promise)
-        .mockReturnValueOnce(refreshed.promise);
+      mock.suggestionSourcesOnFocus.mockReturnValueOnce(initial.promise);
+      mock.suggestionSources.mockReturnValueOnce(refreshed.promise);
       element = <Search />;
       finishInitial = () => initial.resolve(ready);
       finishRefresh = () => refreshed.resolve(ready);
@@ -139,3 +159,34 @@ test.each(['Search', 'About', 'Person', 'Electorate'] as const)(
     await act(async () => renderer.unmount());
   },
 );
+test('a later Search focus restores identity context without native refreshing', async () => {
+  const ready = await fixture.suggestionSources();
+  const recovered = deferred<typeof ready>();
+  mock.suggestionSourcesOnFocus
+    .mockResolvedValueOnce({ ...ready, slugs: undefined, people: undefined })
+    .mockReturnValueOnce(recovered.promise);
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(<Search />);
+  });
+  await act(async () =>
+    renderer.root.findByType(Field).props.onChangeText('Anthony Albanese'),
+  );
+  expect(renderer.root.findByType(PersonRow).props.party).toBeUndefined();
+  const control = () => renderer.root.findByType(Screen).props.refreshControl;
+  await act(async () => {
+    mockFocus.cleanup?.();
+    mockFocus.cleanup = mockFocus.effect!();
+  });
+  expect(mock.suggestionSourcesOnFocus).toHaveBeenCalledTimes(2);
+  expect(control().props.refreshing).toBe(false);
+  expect(renderer.root.findByType(PersonRow).props.party).toBeUndefined();
+  await act(async () => recovered.resolve(ready));
+  expect(renderer.root.findByType(PersonRow).props).toMatchObject({
+    party: 'Labor',
+    place: 'Grayndler · House of Representatives · New South Wales',
+  });
+  expect(control().props.refreshing).toBe(false);
+  expect(mock.suggestionSources).not.toHaveBeenCalled();
+  await act(async () => renderer.unmount());
+});

@@ -163,6 +163,57 @@ test('explicit suggestion refresh retries optional identity context', async () =
     place: 'Grayndler · House of Representatives · New South Wales',
   });
 });
+test.each([
+  ['/api/person-slugs'],
+  [data.manifest.people_url],
+  ['/api/person-slugs', data.manifest.people_url],
+])(
+  'the next Search focus retries missing identity context: %j',
+  async (...paths) => {
+    const failures = [...paths];
+    const { catalogs, calls } = loader(failures);
+    const first = await catalogs.suggestionSourcesOnFocus();
+    const row = (await catalogs.suggestions('Albanese')).people[0]!;
+    expect(
+      personRowContext(rosterIdentityFor(row, first)).place,
+    ).toBeUndefined();
+    const initialCalls = calls.length;
+    // Typing does not consume the retry before Search regains focus.
+    await catalogs.suggestions('Grayndler');
+    expect(calls).toHaveLength(initialCalls);
+    failures.length = 0;
+    const recovered = await catalogs.suggestionSourcesOnFocus();
+    expect(personRowContext(rosterIdentityFor(row, recovered))).toMatchObject({
+      party: 'Labor',
+      place: 'Grayndler · House of Representatives · New South Wales',
+    });
+    const recoveredCalls = calls.length;
+    await catalogs.suggestionSourcesOnFocus();
+    expect(calls).toHaveLength(recoveredCalls);
+  },
+);
+test('identity recovery is shared by concurrent focuses and never loops after another failure', async () => {
+  const failures = ['/api/person-slugs', data.manifest.people_url];
+  const { catalogs, calls } = loader(failures);
+  await catalogs.suggestionSourcesOnFocus();
+  const retry = catalogs.suggestionSourcesOnFocus();
+  expect(catalogs.suggestionSourcesOnFocus()).toBe(retry);
+  const partial = await retry;
+  expect(partial.slugs).toBeUndefined();
+  expect(partial.people).toBeUndefined();
+  for (const path of failures)
+    expect(calls.filter((called) => called === path)).toHaveLength(2);
+  const attemptedCalls = calls.length;
+  for (let focus = 0; focus < 4; focus++)
+    await catalogs.suggestionSourcesOnFocus();
+  await catalogs.suggestions('Albanese');
+  expect(calls).toHaveLength(attemptedCalls);
+  // Explicit user refresh remains available after the automatic budget is used.
+  failures.length = 0;
+  const refreshed = await catalogs.suggestionSources(true);
+  expect(refreshed.slugs).toBeDefined();
+  expect(refreshed.people).toBeDefined();
+});
 test('bill, electorate and About blocks retain actual cache state', async () => {
   const seatPath =
     '/electorates/releases/b56417062ccc33cf/el_5d600e7f6dca5b72ae04d686.json';

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Keyboard, RefreshControl } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { catalogs } from '../api/runtime';
 import {
   suggestionsFor,
@@ -72,24 +72,29 @@ export default function Search() {
       if (token === sourceRequest.current) setRefreshing(false);
     }
   }
-  useEffect(() => {
-    let active = true;
-    const token = ++sourceRequest.current;
-    void catalogs
-      .suggestionSources()
-      .then((data) => {
-        if (active && token === sourceRequest.current) setSources(data);
-      })
-      .catch((e) => {
-        if (active && token === sourceRequest.current) setSourceError(e);
-      })
-      .finally(() => {
-        if (active && token === sourceRequest.current) setRefreshing(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+      const token = ++sourceRequest.current;
+      void catalogs
+        .suggestionSourcesOnFocus()
+        .then((data) => {
+          if (active && token === sourceRequest.current) {
+            setSources(data);
+            setSourceError(null);
+          }
+        })
+        .catch((e) => {
+          if (active && token === sourceRequest.current) setSourceError(e);
+        })
+        .finally(() => {
+          if (active && token === sourceRequest.current) setRefreshing(false);
+        });
+      return () => {
+        active = false;
+      };
+    }, []),
+  );
   function change(nextQuery: string, nextKind = kind) {
     request.current++;
     setQuery(nextQuery);

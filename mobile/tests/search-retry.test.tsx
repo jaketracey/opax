@@ -18,18 +18,28 @@ import { ApiError } from '../src/api/errors';
 import { bills, index, roster, people, manifest, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
-  catalogs: { suggestionSources: jest.fn(), search: jest.fn() },
+  catalogs: {
+    suggestionSources: jest.fn(),
+    suggestionSourcesOnFocus: jest.fn(),
+    search: jest.fn(),
+  },
 }));
 jest.mock('../src/features/search/navigation', () => ({
   openSuggestedPerson: jest.fn(),
   openSearchPerson: jest.fn(),
 }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn() },
+  useFocusEffect: (effect: () => void | (() => void)) =>
+    jest
+      .requireActual<typeof import('react')>('react')
+      .useEffect(effect, [effect]),
+}));
 
 beforeEach(() => {
   jest.clearAllMocks();
   const source = { stale: false, savedAt: null, asAt: null, sources: [] };
-  jest.mocked(catalogs.suggestionSources).mockResolvedValue({
+  jest.mocked(catalogs.suggestionSourcesOnFocus).mockResolvedValue({
     roster,
     people,
     manifest,
