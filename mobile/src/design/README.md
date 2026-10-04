@@ -77,6 +77,10 @@ Design workbench) to see every component and state at the current text size.
   when a text's lines add up exactly to the pixel grid, TextKit can drop the
   last line and draw the one before it clipped. Don't set your own
   `lineHeight` on `Text`; pick a role.
+  Word-safe text also reserves one whole point beyond its first measured height:
+  Yoga can round the frame below TextKit's fractional line height and drop the
+  final wrapped line on the iPhone 16e. This is a measured minimum, never a
+  height or line cap, and resets when the text size or content changes.
 - `Heading`: a VoiceOver header. `level` 1 (page), 2 (section), 3 (subsection).
   Always word-safe, so "representation" never breaks at AX5. Root screens take
   their title from the native large title instead.

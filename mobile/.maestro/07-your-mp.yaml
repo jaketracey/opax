@@ -28,10 +28,14 @@ name: 07 Choose an electorate by member name and restore it after relaunch
 - takeScreenshot: ${EVIDENCE}/07-seat
 - scrollUntilVisible:
     element:
-      id: your-member-anthony-albanese
+      id: your-member-anthony-albanese-name
     centerElement: true
     timeout: 300000
-    visibilityPercentage: 50
+    visibilityPercentage: 100
+- waitForAnimationToEnd
+- assertVisible:
+    id: your-member-anthony-albanese-name
+    text: Anthony Albanese
 - takeScreenshot: ${EVIDENCE}/07-member
 - scrollUntilVisible:
     element:

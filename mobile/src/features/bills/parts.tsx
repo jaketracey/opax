@@ -53,7 +53,11 @@ export function BillRow({
             {text.where}
           </Text>
         ) : null}
-        {text.people ? <Text variant="metadata">{text.people}</Text> : null}
+        {text.people ? (
+          <Text wordSafe variant="metadata">
+            {text.people}
+          </Text>
+        ) : null}
       </View>
       <Icon name="chevron.right" size={14} tone="inkSoft" />
     </Pressable>
@@ -135,7 +139,7 @@ export function InlineLink({
         pressed ? { backgroundColor: colors.sunken } : null,
       ]}
     >
-      <Text variant="body" tone="bronzeInk" style={styles.grow}>
+      <Text wordSafe variant="body" tone="bronzeInk" style={styles.grow}>
         {label}
       </Text>
       <Icon name={icon} size={14} tone="bronzeInk" />
