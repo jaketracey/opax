@@ -29,6 +29,7 @@ name: 13 Today feeds and their dated original sources
     timeout: 90000
     visibilityPercentage: 10
     centerElement: true
+- waitForAnimationToEnd
 - tapOn:
     id: today-edition-link
 # E2E shows the guarded web address on the build's reserved origin instead.
@@ -74,10 +75,13 @@ name: 13 Today feeds and their dated original sources
     timeout: 90000
     visibilityPercentage: 1
 - takeScreenshot: ${EVIDENCE}/13-open-bill
+# On iOS 27 an uncentred source link can sit under the tab bar.
 - scrollUntilVisible:
     element:
       id: bill-source-0
     timeout: 90000
+    centerElement: true
+- waitForAnimationToEnd
 - tapOn:
     id: bill-source-0
 - assertVisible: https://parlinfo.aph.gov.au/.*

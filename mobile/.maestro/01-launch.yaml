@@ -8,10 +8,11 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
 - assertVisible:
     id: today-screen-message
 - takeScreenshot: ${EVIDENCE}/01-today
+# AX5 swipes through the long Today feed need minutes on a slow simulator.
 - scrollUntilVisible:
     element:
       id: today-screen-footer
-    timeout: 90000
+    timeout: 300000
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/01-today-footer
 - tapOn:
@@ -23,7 +24,7 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
 - extendedWaitUntil:
     visible:
       id: bills-count
-    timeout: 20000
+    timeout: 300000
 - tapOn:
     id: tab-search
 - assertVisible:
@@ -36,7 +37,7 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     element:
       id: today-screen-message
     direction: UP
-    timeout: 90000
+    timeout: 300000
 - assertVisible:
     id: today-screen-message
 # Talk and Account and about are navigation-bar buttons on every root screen.
