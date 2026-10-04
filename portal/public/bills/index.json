@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-29T17:29:38+00:00",
+ "generated_at": "2026-10-04T16:27:54+00:00",
  "count": 2989,
  "meta": {
   "mode": "registry",
@@ -1306,7 +1306,7 @@
    "summary_version": 5,
    "divisions": 0,
    "speeches": 5,
-   "acts": 0
+   "acts": 1
   },
   {
    "key": "au-federal-r7497",
@@ -1363,7 +1363,7 @@
    "summary_version": 4,
    "divisions": 0,
    "speeches": 1,
-   "acts": 0
+   "acts": 1
   },
   {
    "key": "au-federal-s1496",
@@ -2009,7 +2009,7 @@
    "summary_version": 4,
    "divisions": 0,
    "speeches": 4,
-   "acts": 0
+   "acts": 1
   },
   {
    "key": "au-federal-r7463",

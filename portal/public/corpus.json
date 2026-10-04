@@ -1,9 +1,9 @@
 {
-  "version": "2026-10-04",
-  "expected_resources": 728771,
+  "version": "2026-10-05",
+  "expected_resources": 728772,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 728769,
-    "new_press_release_resources": 2
+    "live_index_before_refresh": 728771,
+    "new_press_release_resources": 1
   },
   "collected_speeches": 691104,
   "sources": [
@@ -114,7 +114,7 @@
     },
     {
       "name": "Australian Treasury ministerial releases",
-      "docs": 110,
+      "docs": 111,
       "coverage": "7–21 Sep 2026 refresh"
     },
     {
@@ -146,7 +146,7 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-10-03T19:47:42+00:00",
+    "checked_at": "2026-10-04T17:28:32+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
@@ -156,8 +156,7 @@
       "SA Hansard refresh blocked by source HTTP 403; stored coverage ends 2024-11-12.",
       "Federal Hansard is current to 2026-09-17 (no sittings since); NSW Parliament to 2026-09-24; Victoria to 2026-09-24; QLD to 2026-09-16; ACT to 2026-09-24. Federal committee hearings (Senate, House and Joint) are current to 2026-10-01.",
       "New AEC source snapshots are retained for reconciliation. Amended federal donation rows have not replaced reviewed public data.",
-      "Ministerial diary and IPEA expense refreshes returned the same published rows as the previous verified snapshots.",
-      "Federal interests refresh incomplete: source has no interests blocks after retry (statement unavailable). 1 unavailable statements/indexes; existing disclosures were preserved."
+      "Ministerial diary and IPEA expense refreshes returned the same published rows as the previous verified snapshots."
     ],
     "grants_research": {
       "checked_at": "2026-09-09",
@@ -191,7 +190,7 @@
       "grant_award": 8159,
       "grant_invitation": 227,
       "parliamentary_profile": 983,
-      "press_release": 6349,
+      "press_release": 6350,
       "research_report": 35,
       "speech": 691104
     },
@@ -202,7 +201,7 @@
       "qld_speeches": 0,
       "act_speeches": 0,
       "nsw_releases": 0,
-      "austender_contracts": 15,
+      "austender_contracts": 7,
       "new_federal_divisions": 0
     },
     "structured_sources": {
