@@ -42,7 +42,11 @@ export default function Today() {
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
     >
-      <Text variant="fine" testID="today-screen-message">
+      <Text
+        variant="fine"
+        testID="today-screen-message"
+        style={{ flexShrink: 0 }}
+      >
         OPAX is independent and non-partisan. It is not a government app.
       </Text>
       <Section title="Recently introduced bills" testID="today-bills">
