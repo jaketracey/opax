@@ -73,6 +73,9 @@ Design workbench) to see every component and state at the current text size.
   inside a word, the text lowers its own Dynamic Type cap in 10% steps until
   the word fits, never below the reader's default size, and starts again from
   full size when the text size, width or text (nested text included) changes.
+  The cap scales the role's font size and line height, never
+  `maxFontSizeMultiplier`: React Native's text measure cache ignores that prop,
+  so a cap passed through it keeps the full-size layout and drawing.
   Every role's line height carries a 1/997pt nudge (`LINE_HEIGHT_NUDGE`):
   when a text's lines add up exactly to the pixel grid, TextKit can drop the
   last line and draw the one before it clipped. Don't set your own

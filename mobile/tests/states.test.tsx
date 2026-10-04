@@ -29,11 +29,18 @@ import {
 } from '../src/design/contrast';
 import { light, partyColors } from '../src/design/palette';
 import {
+  LINE_HEIGHT_NUDGE,
   breaksMidWord,
+  lineScale,
   nextWordSafeCap,
   textContent,
 } from '../src/design/text';
-import { controlHeight, minimumTarget } from '../src/design/tokens';
+import {
+  controlHeight,
+  minimumTarget,
+  textStyles,
+  type TextVariant,
+} from '../src/design/tokens';
 
 function render(element: ReactElement) {
   let renderer!: TestRenderer.ReactTestRenderer;
@@ -392,6 +399,18 @@ describe('party context', () => {
 });
 
 describe('word-safe text', () => {
+  // The cap scales the role's own size and line height: React Native's text
+  // measure cache ignores maxFontSizeMultiplier, so that prop stays 0.
+  const capScale = (node: ReactTestInstance, variant: TextVariant) => {
+    const role = textStyles[variant];
+    const style = StyleSheet.flatten(node.props.style);
+    expect(node.props.maxFontSizeMultiplier).toBe(0);
+    expect(style.lineHeight).toBeCloseTo(
+      ((role.lineHeight + LINE_HEIGHT_NUDGE) * style.fontSize) / role.fontSize,
+      6,
+    );
+    return Number(style.fontSize) / role.fontSize;
+  };
   test('a field label that changes starts again from full size', () => {
     for (const required of [false, true]) {
       let renderer!: TestRenderer.ReactTestRenderer;
@@ -415,11 +434,12 @@ describe('word-safe text', () => {
           },
         });
       });
-      expect(label().props.maxFontSizeMultiplier).toBe(2.7);
+      // 2.7 of the uncapped 3.
+      expect(capScale(label(), 'control')).toBeCloseTo(0.9, 6);
       act(() => {
         renderer.update(<Field label="Name" required={required} />);
       });
-      expect(label().props.maxFontSizeMultiplier).toBe(0);
+      expect(capScale(label(), 'control')).toBe(1);
       // Changing only the required marker is a change of text too.
       act(() => {
         label().props.onTextLayout({
@@ -431,11 +451,11 @@ describe('word-safe text', () => {
           },
         });
       });
-      expect(label().props.maxFontSizeMultiplier).toBe(2.7);
+      expect(capScale(label(), 'control')).toBeCloseTo(0.9, 6);
       act(() => {
         renderer.update(<Field label="Name" required={!required} />);
       });
-      expect(label().props.maxFontSizeMultiplier).toBe(0);
+      expect(capScale(label(), 'control')).toBe(1);
     }
   });
   test('reads the text of nested children', () => {
@@ -466,11 +486,12 @@ describe('word-safe text', () => {
     );
   });
   test('steps the scale down, never below the reader default', () => {
+    expect(lineScale(30 * 2.3, 30)).toBe(2.3);
     expect(nextWordSafeCap(30 * 2.3, 30)).toBe(2.07);
     expect(nextWordSafeCap(30 * 1.05, 30)).toBe(1);
     expect(nextWordSafeCap(30, 30)).toBeNull();
   });
-  test('a heading lowers its own cap after a mid-word break, and only then', () => {
+  test('a heading lowers its own size after a mid-word break, and only then', () => {
     let renderer!: TestRenderer.ReactTestRenderer;
     act(() => {
       renderer = TestRenderer.create(
@@ -478,7 +499,7 @@ describe('word-safe text', () => {
       );
     });
     const text = () => renderer.root.findByType(NativeText);
-    expect(text().props.maxFontSizeMultiplier).toBe(0);
+    expect(capScale(text(), 'heading')).toBe(1);
     const layout = (lines: { text: string; height: number }[]) =>
       act(() => {
         text().props.onTextLayout({ nativeEvent: { lines } });
@@ -487,12 +508,31 @@ describe('word-safe text', () => {
       { text: 'Recorded ', height: 30 * 2.2 },
       { text: 'representation', height: 30 * 2.2 },
     ]);
-    expect(text().props.maxFontSizeMultiplier).toBe(0);
+    expect(capScale(text(), 'heading')).toBe(1);
     layout([
       { text: 'Recorded representatio', height: 30 * 2.3 },
       { text: 'n', height: 30 * 2.3 },
     ]);
-    expect(text().props.maxFontSizeMultiplier).toBe(2.07);
+    // Uncapped 2.3, capped 2.07: 90% of the role's size, which Dynamic Type
+    // then multiplies by the same 2.3.
+    expect(capScale(text(), 'heading')).toBeCloseTo(2.07 / 2.3, 6);
+    // Still breaking at 2.07: the next step is 1.86 of the same uncapped 2.3.
+    layout([
+      { text: 'Recorded representatio', height: 30 * 2.07 },
+      { text: 'n', height: 30 * 2.07 },
+    ]);
+    expect(capScale(text(), 'heading')).toBeCloseTo(1.86 / 2.3, 6);
+    // Never below the reader's default size.
+    layout([
+      { text: 'Recorded representatio', height: 30 * 1.05 },
+      { text: 'n', height: 30 * 1.05 },
+    ]);
+    expect(capScale(text(), 'heading')).toBeCloseTo(1 / 2.3, 6);
+    layout([
+      { text: 'Recorded representatio', height: 30 },
+      { text: 'n', height: 30 },
+    ]);
+    expect(capScale(text(), 'heading')).toBeCloseTo(1 / 2.3, 6);
     expect(text().props.accessibilityRole).toBe('header');
   });
 });

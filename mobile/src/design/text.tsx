@@ -77,15 +77,22 @@ export function textContent(node: ReactNode): string {
 }
 
 /**
- * The next scale cap after a mid-word break, from the line height in effect
- * (line heights scale with the same Dynamic Type multiplier as the font).
+ * The Dynamic Type multiplier in effect, to two places, from a laid-out line
+ * height (line heights scale with the same multiplier as the font).
+ */
+export function lineScale(lineHeight: number, baseLineHeight: number): number {
+  return Math.round((lineHeight / baseLineHeight) * 100) / 100;
+}
+
+/**
+ * The next scale cap after a mid-word break, from the line height in effect.
  * Null when the text is already at the reader's default size or below.
  */
 export function nextWordSafeCap(
   lineHeight: number,
   baseLineHeight: number,
 ): number | null {
-  const current = Math.round((lineHeight / baseLineHeight) * 100) / 100;
+  const current = lineScale(lineHeight, baseLineHeight);
   if (current <= 1.01) return null;
   return Math.max(1, Math.round(current * 90) / 100);
 }
@@ -111,8 +118,15 @@ export function Text({
   // A cap belongs to one text size, width and text (nested text included, such
   // as a field's "(required)"): any change starts again from full size.
   const key = `${fontScale}|${width}|${textContent(props.children)}`;
-  const [capped, setCapped] = useState({ key, cap: 0 });
-  const cap = capped.key === key ? capped.cap : 0;
+  // `full` is the uncapped multiplier, measured at the first mid-word break.
+  const [capped, setCapped] = useState({ key, cap: 0, full: 0 });
+  const { cap, full } = capped.key === key ? capped : { cap: 0, full: 0 };
+  // React Native's text measure cache compares fonts by size, multiplier and
+  // ramp but not maxFontSizeMultiplier, so a cap passed that way keeps the
+  // cached full-size layout and drawing ("Parliamentar / y" in About at AX5).
+  // The cap scales the role's own size and line height instead, which the
+  // cache does compare; Dynamic Type multiplies the result by the same ramp.
+  const capScale = wordSafe && cap && full ? cap / full : 1;
   const heightKey = `${key}|${variant}|${bold}|${cap}|${scale}`;
   const [heightGuard, setHeightGuard] = useState({
     key: '',
@@ -124,11 +138,14 @@ export function Text({
     if (!wordSafe) return;
     const lines = event.nativeEvent.lines;
     if (!lines.length || !breaksMidWord(lines)) return;
-    const next = nextWordSafeCap(
-      lines[0]!.height,
-      role.lineHeight + LINE_HEIGHT_NUDGE,
-    );
-    if (next !== null) setCapped({ key, cap: next });
+    const base = role.lineHeight + LINE_HEIGHT_NUDGE;
+    const next = nextWordSafeCap(lines[0]!.height, base);
+    if (next !== null)
+      setCapped({
+        key,
+        cap: next,
+        full: full || lineScale(lines[0]!.height, base),
+      });
   };
   return (
     <NativeText
@@ -161,14 +178,14 @@ export function Text({
           : undefined
       }
       allowFontScaling
-      maxFontSizeMultiplier={wordSafe && cap ? cap : 0}
+      maxFontSizeMultiplier={0}
       dynamicTypeRamp={role.dynamicTypeRamp}
       style={[
         {
           color: colors[tone ?? role.color],
           fontFamily: bold ? boldStep[role.fontFamily] : role.fontFamily,
-          fontSize: role.fontSize,
-          lineHeight: role.lineHeight + LINE_HEIGHT_NUDGE,
+          fontSize: role.fontSize * capScale,
+          lineHeight: (role.lineHeight + LINE_HEIGHT_NUDGE) * capScale,
           flexShrink: 1,
         },
         tabular ? { fontVariant: ['tabular-nums'] } : null,
