@@ -3,6 +3,18 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 ---
 # No clearState: a relaunch resets the list, and offline journey 04 reads
 # the records earlier journeys saved.
+#
+# scrollUntilVisible always swipes from the centre of the screen. A speed-70
+# swipe moves about 0.8 of a screen: it only brings an element into view
+# (any part showing counts), since it can carry a tall AX5 element past a
+# full-visibility check. Whole-element checks and tap targets use speed 20
+# (about half a screen per swipe).
+#
+# Tap targets are centred first. From iOS 26 the tab bar floats over the
+# bottom of the page, and a link drawn under it still counts as visible: the
+# tap hits the tab, and the Bills tab pops back to the list. Each group of
+# steps on the bill page first checks the page is still shown, so a lost
+# page fails at once rather than after a long scroll.
 - launchApp
 - tapOn:
     id: tab-bills
@@ -19,9 +31,10 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-row-au-federal-r7534
+    direction: DOWN
     visibilityPercentage: 10
     centerElement: true
-    speed: 70
+    speed: 20
     timeout: 180000
 - waitForAnimationToEnd
 - tapOn:
@@ -33,60 +46,92 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-status
-    speed: 70
+    direction: DOWN
+    speed: 20
     timeout: 180000
 - assertVisible: Passed, as at 26 August 2026
 - takeScreenshot: ${EVIDENCE}/11-bill
 # The machine summary sits under its stored attribution, never as the record.
+- assertVisible:
+    id: bill-screen
+# Long jumps aim fast at the element (any part showing counts), then step
+# gently until the whole of it shows.
 - scrollUntilVisible:
     element:
       id: bill-summary-attribution
+    direction: DOWN
+    visibilityPercentage: 1
+    speed: 70
+    timeout: 180000
+- scrollUntilVisible:
+    element:
+      id: bill-summary-attribution
+    direction: DOWN
+    speed: 20
     timeout: 60000
 - assertVisible: Machine summary
 - assertVisible: Written by a model from the explanatory memorandum; not the record\.
 - takeScreenshot: ${EVIDENCE}/11-summary
-# Long jumps aim fast at a large container (any part showing counts), then
-# step gently to the small element: fast swipes can carry past a short one.
-# (At AX5 the whole Divisions section is too tall to appear in the iOS
-# hierarchy; the first division's container does.)
+# At AX5 the whole Divisions section is too tall to appear in the iOS
+# hierarchy; the first division's container does.
+- assertVisible:
+    id: bill-screen
 - scrollUntilVisible:
     element:
       id: bill-division-0
+    direction: DOWN
     visibilityPercentage: 1
     speed: 70
     timeout: 180000
 - scrollUntilVisible:
     element:
       id: bill-division-0-outcome
+    direction: DOWN
+    speed: 20
     timeout: 60000
 - assertVisible: Negatived, 11 ayes, 24 noes
+- assertVisible:
+    id: bill-screen
 - scrollUntilVisible:
     element:
       id: bill-division-0-splits
+    direction: DOWN
+    centerElement: true
+    speed: 20
     timeout: 60000
+# A tap during scroll momentum only stops the scroll on iOS: settle first.
 - waitForAnimationToEnd
 - tapOn:
     id: bill-division-0-splits
 # Party splits by label and count in words, never colour alone.
 # In list order: the largest party (Labor) first, then Greens.
+- assertVisible:
+    id: bill-screen
 - scrollUntilVisible:
     element:
       id: bill-division-0-splits-labor
+    direction: DOWN
+    speed: 20
     timeout: 60000
 - assertVisible: Labor, no ayes, 21 noes
 - scrollUntilVisible:
     element:
       id: bill-division-0-splits-greens
+    direction: DOWN
+    speed: 20
     timeout: 60000
 - assertVisible: Greens, 9 ayes, no noes
 - takeScreenshot: ${EVIDENCE}/11-party-splits
-# The link is just below the splits: a gentle scroll, so the page is not
-# still coasting (and the link off screen) when the tap lands.
+# The link is just below the splits, at the bottom edge of the screen.
+- assertVisible:
+    id: bill-screen
 - scrollUntilVisible:
     element:
       id: bill-division-0-source
+    direction: DOWN
+    centerElement: true
+    speed: 20
     timeout: 60000
-# A tap during scroll momentum only stops the scroll on iOS: settle first.
 - waitForAnimationToEnd
 # Sources open in the in-app browser; e2e shows the destination locally.
 - tapOn:
@@ -94,42 +139,59 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       text: https://theyvoteforyou.org.au/divisions/senate/2026-08-19/.*
+    direction: DOWN
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/11-division-source
 - tapOn: OK
 # The record's long note folds below the counts and source; it opens whole.
+- assertVisible:
+    id: bill-screen
 - scrollUntilVisible:
     element:
       id: bill-division-0-note
+    direction: DOWN
+    centerElement: true
+    speed: 20
     timeout: 60000
 - assertVisible: Division note, 45 words
 - waitForAnimationToEnd
 - tapOn:
     id: bill-division-0-note
+- assertVisible:
+    id: bill-screen
 - scrollUntilVisible:
     element:
       id: bill-division-0-note-text
+    direction: DOWN
     visibilityPercentage: 10
+    speed: 20
     timeout: 60000
 - takeScreenshot: ${EVIDENCE}/11-division-note
 # Near the end of the page an element cannot be centred: scroll to it only.
+- assertVisible:
+    id: bill-screen
 - scrollUntilVisible:
     element:
       id: bill-speeches
+    direction: DOWN
     visibilityPercentage: 1
     speed: 70
     timeout: 180000
 - scrollUntilVisible:
     element:
       id: bill-speech-0-brief-label
+    direction: DOWN
+    speed: 20
     timeout: 60000
 - assertVisible: Machine brief
 - scrollUntilVisible:
     element:
       text: Tony Burke
     direction: UP
-    speed: 70
+    speed: 20
     timeout: 180000
+- assertVisible:
+    id: bill-screen
 - takeScreenshot: ${EVIDENCE}/11-speech
 # An exposure draft: released, not introduced, with its consultation.
 - launchApp
@@ -146,9 +208,10 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-row-au-federal-ed-online-safety-digital-duty-of-care-2026
+    direction: DOWN
     visibilityPercentage: 10
     centerElement: true
-    speed: 70
+    speed: 20
     timeout: 180000
 - waitForAnimationToEnd
 - tapOn:
@@ -162,24 +225,48 @@ name: 11 Read a bill, its machine summary, divisions and speeches
 - scrollUntilVisible:
     element:
       id: bill-introduced
-    speed: 70
+    direction: DOWN
+    speed: 20
     timeout: 180000
 - assertVisible: Released 8 September 2026
 - scrollUntilVisible:
     element:
       text: Government exposure draft, not yet introduced
+    direction: DOWN
+    speed: 20
+    timeout: 180000
+# At AX5 this line is about 350pt tall: a speed-70 swipe carried it from the
+# bottom edge to above the top, so the full-visibility check never held.
+- assertVisible:
+    id: bill-screen
+- scrollUntilVisible:
+    element:
+      text: Open for consultation from 8 September 2026
+    direction: DOWN
+    visibilityPercentage: 1
     speed: 70
     timeout: 180000
 - scrollUntilVisible:
     element:
       text: Open for consultation from 8 September 2026
-    speed: 70
-    timeout: 180000
+    direction: DOWN
+    speed: 20
+    timeout: 60000
 - takeScreenshot: ${EVIDENCE}/11-consultation
+- assertVisible:
+    id: bill-screen
 - scrollUntilVisible:
     element:
       id: bill-summary-attribution
+    direction: DOWN
+    visibilityPercentage: 1
     speed: 70
     timeout: 180000
+- scrollUntilVisible:
+    element:
+      id: bill-summary-attribution
+    direction: DOWN
+    speed: 20
+    timeout: 60000
 - assertVisible: Written by a model from the exposure draft text; not the record\.
 - takeScreenshot: ${EVIDENCE}/11-exposure-summary

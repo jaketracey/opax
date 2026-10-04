@@ -9,6 +9,8 @@ name: 04 Read saved public catalogs with the fixture stopped
 - scrollUntilVisible:
     element:
       id: search-refresh
+    direction: DOWN
+    timeout: 20000
 - tapOn:
     id: search-refresh
 - extendedWaitUntil:
@@ -19,6 +21,7 @@ name: 04 Read saved public catalogs with the fixture stopped
     element:
       id: search-input
     direction: UP
+    timeout: 20000
 - tapOn:
     id: search-input
 - eraseText
@@ -30,21 +33,27 @@ name: 04 Read saved public catalogs with the fixture stopped
 - scrollUntilVisible:
     element:
       text: As at .* Source.*OPAX parliamentary roster.*
+    direction: DOWN
     timeout: 60000
 - scrollUntilVisible:
     element:
       id: search-suggestion-person-.*
     direction: UP
     centerElement: true
+    timeout: 20000
 - takeScreenshot: ${EVIDENCE}/04-offline-suggestion
 - tapOn:
     id: search-suggestion-person-.*
 - scrollUntilVisible:
     element:
       id: person-party
+    direction: DOWN
+    timeout: 20000
 - scrollUntilVisible:
     element:
       id: person-electorate
+    direction: DOWN
+    timeout: 20000
 - assertVisible: Grayndler
 - takeScreenshot: ${EVIDENCE}/04-offline-profile
 # A submitted search has no disk fallback, even though catalogs remain saved.
@@ -53,19 +62,29 @@ name: 04 Read saved public catalogs with the fixture stopped
     element:
       id: search-input
     direction: UP
+    timeout: 20000
 - tapOn:
     id: search-input
 - eraseText
 - inputText: offline submitted search
+# Leave the field and let the page settle before submitting. With the
+# keyboard up the page scrolls to keep the field in view; when the keyboard
+# goes, this short page moves back down (52 to 100pt on the assigned phones),
+# and on iOS 27 a tap aimed before that move opened the kind menu instead.
+- hideKeyboard
+- waitForAnimationToEnd
 - scrollUntilVisible:
     element:
       id: search-submit
+    direction: DOWN
     timeout: 90000
+- waitForAnimationToEnd
 - tapOn:
     id: search-submit
 - scrollUntilVisible:
     element:
       id: search-offline-uncached
+    direction: DOWN
     timeout: 90000
 - assertVisible: This record is not saved on this iPhone yet\. It will load when you are back online\.
 - assertVisible:
