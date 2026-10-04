@@ -1,36 +1,44 @@
 appId: au.com.opax.app
-name: 04 Read previously saved records with the fixture stopped
+name: 04 Read saved public catalogs with the fixture stopped
 ---
 - launchApp
 - tapOn:
     id: tab-search
+# Search pages are session-only. Explicitly refresh the saved public catalogs
+# to demonstrate their offline fallback after an app relaunch.
+- scrollUntilVisible:
+    element:
+      id: search-refresh
+- tapOn:
+    id: search-refresh
+- extendedWaitUntil:
+    visible:
+      id: search-suggestions-offline
+    timeout: 20000
 - scrollUntilVisible:
     element:
       id: search-input
+    direction: UP
 - tapOn:
     id: search-input
 - eraseText
 - inputText: Anthony Albanese
-# Return submits and dismisses the keyboard; a swipe can land on the
-# keyboard itself at AX5.
-- pressKey: Enter
+# Swipe on content above the keyboard; visibility checks can see through it.
+- swipe:
+    start: 90%, 40%
+    end: 90%, 20%
 - scrollUntilVisible:
     element:
-      id: search-submit
+      text: As at .* Source.*OPAX parliamentary roster.*
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: search-suggestion-person-.*
+    direction: UP
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/04-offline-suggestion
 - tapOn:
-    id: search-submit
-- scrollUntilVisible:
-    element:
-      id: search-cache-state
-- assertVisible: Saved .* It may be out of date\.
-- assertVisible:
-    id: search-offline
-- scrollUntilVisible:
-    element:
-      id: search-result-anthony-albanese
-- takeScreenshot: ${EVIDENCE}/04-offline-search
-- tapOn:
-    id: search-result-anthony-albanese
+    id: search-suggestion-person-.*
 - scrollUntilVisible:
     element:
       id: person-party
@@ -39,3 +47,29 @@ name: 04 Read previously saved records with the fixture stopped
       id: person-electorate
 - assertVisible: Grayndler
 - takeScreenshot: ${EVIDENCE}/04-offline-profile
+# A submitted search has no disk fallback, even though catalogs remain saved.
+- tapOn: Search
+- scrollUntilVisible:
+    element:
+      id: search-input
+    direction: UP
+- tapOn:
+    id: search-input
+- eraseText
+- inputText: offline submitted search
+- scrollUntilVisible:
+    element:
+      id: search-submit
+    timeout: 90000
+- tapOn:
+    id: search-submit
+- scrollUntilVisible:
+    element:
+      id: search-offline-uncached
+    timeout: 90000
+- assertVisible: This record is not saved on this iPhone yet\. It will load when you are back online\.
+- assertVisible:
+    id: search-error
+- assertNotVisible:
+    id: search-result-.*
+- takeScreenshot: ${EVIDENCE}/04-offline-submitted-search

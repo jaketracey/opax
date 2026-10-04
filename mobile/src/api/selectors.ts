@@ -863,26 +863,38 @@ export function suggestionsFor(
   seats: ElectorateIndex,
   bills: BillIndex,
 ) {
-  const q = titleKey(query);
+  const q = titleKey(nameKey(query));
   if (q.length < 2) return { people: [], electorates: [], bills: [] };
+  // Keep the fuller spelling, as the web's slug index does. A folded name
+  // identifies a row; a roster pid is not a canonical profile ID.
+  const people = new Map<string, Roster['people'][number]>();
+  for (const person of roster.people) {
+    const key = nameKey(person.name);
+    if (
+      !(
+        person.name.trim().includes(' ') ||
+        person.pid ||
+        person.full ||
+        person.representation?.length
+      )
+    )
+      continue;
+    const previous = people.get(key);
+    if (!previous || (person.speeches ?? 0) > (previous.speeches ?? 0))
+      people.set(key, person);
+  }
   return {
-    // A speech-role token such as "Senator" has neither a personal name nor
-    // identity evidence. Keep surname records only when an ID/full name or
-    // observed representation supports them.
-    people: roster.people.filter(
-      (p) =>
-        (p.name.trim().includes(' ') ||
-          p.pid ||
-          p.full ||
-          p.representation?.length) &&
-        titleKey(p.name).includes(q),
+    people: [...people.values()].filter((p) =>
+      titleKey(nameKey(p.name)).includes(q),
     ),
     electorates: seats.electorates.filter(
       (s) =>
-        titleKey(s.name).includes(q) ||
-        s.representatives.some((r) => titleKey(r.person.name).includes(q)),
+        titleKey(nameKey(s.name)).includes(q) ||
+        s.representatives.some((r) =>
+          titleKey(nameKey(r.person.name)).includes(q),
+        ),
     ),
-    bills: bills.bills.filter((b) => titleKey(b.title).includes(q)),
+    bills: bills.bills.filter((b) => titleKey(nameKey(b.title)).includes(q)),
   };
 }
 export function coverageFor(corpus: Corpus) {

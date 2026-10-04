@@ -218,3 +218,55 @@ test('interest search adapter loads the ID bridge and retains its cache state', 
   expect(result.data.results[0]?.personSlug).toBe('tony-pasin');
   expect(result.stale).toBe(true);
 });
+
+test('canonical person ID handoff resolves the existing native profile', async () => {
+  const { catalogs } = loader();
+  const person = (await catalogs.person(id)).data;
+  expect(person.canonicalPersonId).toBe(id);
+  expect(person.slug).toBe('anthony-albanese');
+  await expect(
+    catalogs.person('person_000000000000000000000000'),
+  ).rejects.toMatchObject({ code: 'not-found' });
+});
+test('suggestion provenance keeps the stale group and source dates separate', async () => {
+  const { catalogs } = loader([], ['/bills/index.json']);
+  const sources = await catalogs.suggestionSources();
+  expect(sources.provenance.bills.stale).toBe(true);
+  expect(sources.provenance.people.stale).toBe(false);
+  expect(sources.provenance.bills.asAt).toBe(data.bills!.generated_at);
+  expect(sources.provenance.bills.savedAt).toBe(200);
+});
+test('explicit suggestion, Today and coverage refreshes revalidate fresh cache entries', async () => {
+  const forced: string[] = [];
+  const { catalogs: underlying } = loader();
+  const client: Pick<ApiClient, 'get'> = {
+    async get<T>(
+      path: string,
+      decode: (input: unknown) => T,
+      force = false,
+    ): Promise<RecordResult<T>> {
+      if (force) forced.push(path);
+      const raw = path === '/api/person-slugs' ? slugs : pinned(path);
+      return {
+        data: decode(raw),
+        stale: false,
+        savedAt: 200,
+        asOf: dataAsOf(raw),
+      };
+    },
+  };
+  const catalogs = new Catalogs(client);
+  await underlying.suggestionSources();
+  await catalogs.suggestionSources(true);
+  await catalogs.today(6, true);
+  await catalogs.about(true);
+  expect(forced).toEqual([
+    '/electorates/manifest.json',
+    '/parliamentarians.json',
+    '/bills/index.json',
+    data.manifest.index_url,
+    '/bills/index.json',
+    '/interests/recent.json',
+    '/corpus.json',
+  ]);
+});

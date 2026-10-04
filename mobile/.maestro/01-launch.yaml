@@ -11,6 +11,7 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
 - scrollUntilVisible:
     element:
       id: today-screen-footer
+    timeout: 90000
     centerElement: true
 - takeScreenshot: ${EVIDENCE}/01-today-footer
 - tapOn:
@@ -29,6 +30,10 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     id: search-screen
 - tapOn:
     id: tab-today
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
 - assertVisible:
     id: today-screen-message
 # Talk and Account and about are navigation-bar buttons on every root screen.

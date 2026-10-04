@@ -14,6 +14,15 @@ build_command() {
     "$@"
   fi
 }
+paste_lock_wait_seconds() {
+  local default_wait=7200
+  local wait_seconds=${OPAX_PASTE_WAIT_SECONDS:-$default_wait}
+  # Validate before arithmetic; bound the length to prevent integer overflow.
+  if [[ ! "$wait_seconds" =~ ^[0-9]+$ || ${#wait_seconds} -gt 9 ]]; then
+    wait_seconds=$default_wait
+  fi
+  printf '%s\n' "$((10#$wait_seconds))"
+}
 allow_simulator() {
   if [ -z "${OPAX_ALLOWED_UDIDS:-}" ]; then
     echo "Warning: no simulator allow-list configured; accepting the requested simulator." >&2

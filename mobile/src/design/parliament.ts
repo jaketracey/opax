@@ -60,3 +60,31 @@ export function chamberName(
 }
 
 export const CHAMBER_NOT_RECORDED = 'Chamber not recorded';
+
+/** Plain descriptions of the register's changes, without raw export IDs. */
+export function declarationKind(kind: string): string {
+  return (
+    (
+      {
+        addition: 'Interest added',
+        deletion: 'Interest removed',
+        amendment: 'Interest updated',
+      } as Record<string, string>
+    )[kind] ?? 'Register update'
+  );
+}
+/** A bill's published status; unknown export values are not reader copy. */
+export function billStatus(status: string): string {
+  return (
+    (
+      {
+        before_parliament: 'Before Parliament',
+        exposure_draft: 'Exposure draft',
+        lapsed: 'Lapsed',
+        passed: 'Passed',
+        withdrawn: 'Withdrawn',
+        enacted: 'Enacted',
+      } as Record<string, string>
+    )[status] ?? 'Status not recorded'
+  );
+}

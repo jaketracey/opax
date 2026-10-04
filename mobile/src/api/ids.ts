@@ -6,7 +6,7 @@ export type PersonId = ID<'canonical-person'>;
 export type LegacyPersonId = ID<'legacy-numeric-person'>;
 // State exports also carry IDs such as vic_enver_erdogan. They are not TVFY IDs.
 export type RosterId = ID<'roster-person'>;
-export type NameKey = ID<'lowercase-name'>;
+export type NameKey = ID<'folded-name'>;
 export type PersonSlug = ID<'person-slug'>;
 export type BillKey = ID<'bill-key'>;
 export type ElectorateId = ID<'electorate'>;
@@ -38,9 +38,12 @@ export const voteKey = branded<'vote-key'>(
 export const portraitKey = branded<'portrait-key'>(/^(?:\d+|wd-Q\d+)$/);
 export function nameKey(name: string): NameKey {
   return name
-    .trim()
+    .normalize('NFKD')
+    .replace(/\p{M}/gu, '')
     .toLowerCase()
-    .replace(/[’‘ʼ`]/g, "'") as NameKey;
+    .replace(/['’‘ʼ`.]/g, '')
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim() as NameKey;
 }
 // Apply the same folding to both the query and source keys. Decoders retain
 // source spellings; several spellings may legitimately index the same ID.

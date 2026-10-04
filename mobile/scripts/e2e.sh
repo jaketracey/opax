@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer EXPO_NO_TELEMETRY=1 MAESTRO_CLI_NO_ANALYTICS=true MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true
-UDID=${1:?Usage: scripts/e2e.sh udid [01 02 03 04 05 06 10 11]}; shift
+UDID=${1:?Usage: scripts/e2e.sh udid [01 02 03 04 05 06 10 11 12 13 14]}; shift
 source scripts/qa-env.sh
 source scripts/qa-java.sh
 configure_java
@@ -57,7 +57,7 @@ until grep -q OPAX_FIXTURE_READY "$OUT/fixture.log"; do
 done
 # Maestro inputText may use iOS pasteboard internally. Serialize all input flows.
 if [ -n "${OPAX_PASTE_LOCK:-}" ]; then
-  deadline=$((SECONDS + 600))
+  deadline=$((SECONDS + $(paste_lock_wait_seconds)))
   until mkdir "$OPAX_PASTE_LOCK" 2>/dev/null; do
     [ "$SECONDS" -lt "$deadline" ] || { echo "Pasteboard lock wait expired" >&2; exit 1; }
     sleep 5

@@ -25,10 +25,12 @@ export interface WriteCondition {
   // Present only for a conditional 304; an absent ETag cannot validate a body.
   revalidatedETag?: string;
 }
-const bucket = (url: string) =>
-  url.includes('/api/search-all?') ? 'search' : 'catalog';
+const isSearch = (url: string) =>
+  url.split('?')[0]!.endsWith('/api/search-all');
+const bucket = (url: string) => (isSearch(url) ? 'search' : 'catalog');
 export class CatalogCache {
   private queue: Promise<unknown> = Promise.resolve();
+  private searches = new Map<string, CacheEntry>();
   private index?: CacheIndexEntry[];
   private indexLoad?: Promise<CacheIndexEntry[]>;
   constructor(
@@ -43,20 +45,49 @@ export class CatalogCache {
     this.indexLoad ??= this.store
       .readIndex()
       .catch(() => [])
-      .then((index) => (this.index = index));
+      .then(async (index) => {
+        // Remove search pages written by older builds, including query URLs
+        // in their index. Only public catalogs remain on disk.
+        const catalogs = index.filter(
+          (item) => item.bucket !== 'search' && !isSearch(item.url),
+        );
+        if (catalogs.length !== index.length) {
+          try {
+            for (const item of index)
+              if (!catalogs.includes(item)) await this.store.remove(item.url);
+            await this.store.writeIndex(catalogs);
+          } catch {
+            // Cleanup is best effort: catalog reads and writes must still work.
+            // The old disk index (or DiskStore's orphan sweep) retries on launch.
+          }
+        }
+        return (this.index = catalogs);
+      });
     return this.indexLoad;
   }
   async get(url: string): Promise<CacheEntry | undefined> {
     await this.queue;
+    if (isSearch(url)) return this.searches.get(url);
     if (!(await this.loadIndex()).some((entry) => entry.url === url)) return;
     return this.store.read(url).catch(() => undefined);
   }
-  // Serialized compare-and-write, including a fresh per-URL disk read. A caller
+  // Serialized compare-and-write; search queries and bodies stay in memory. A caller
   // receives the retained entry when its response loses a validation/date race.
   put(entry: CacheEntry, condition?: WriteCondition): Promise<CacheEntry> {
     const task = this.queue.then(async () => {
-      const index = await this.loadIndex();
-      const current = await this.store.read(entry.url).catch(() => undefined);
+      const group = bucket(entry.url);
+      const memoryOnly = group === 'search';
+      const index: CacheIndexEntry[] = memoryOnly
+        ? [...this.searches.values()].map((item) => ({
+            url: item.url,
+            bytes: new TextEncoder().encode(JSON.stringify(item)).length,
+            validatedAt: item.validatedAt,
+            bucket: 'search',
+          }))
+        : await this.loadIndex();
+      const current = memoryOnly
+        ? this.searches.get(entry.url)
+        : await this.store.read(entry.url).catch(() => undefined);
       if (current) {
         const currentDate = Date.parse(current.asOf ?? '');
         const incomingDate = Date.parse(entry.asOf ?? '');
@@ -81,7 +112,6 @@ export class CatalogCache {
         return entry;
       }
       const bytes = new TextEncoder().encode(JSON.stringify(entry)).length;
-      const group = bucket(entry.url);
       const maxBytes = group === 'search' ? this.searchMaxBytes : this.maxBytes;
       const maxEntries =
         group === 'search' ? this.searchMaxEntries : this.maxEntries;
@@ -103,6 +133,12 @@ export class CatalogCache {
         total += item.bytes;
         return i < maxEntries && total <= maxBytes;
       });
+      if (memoryOnly) {
+        this.searches.set(entry.url, entry);
+        for (const item of candidates)
+          if (!kept.includes(item)) this.searches.delete(item.url);
+        return entry;
+      }
       await this.store.write(entry);
       const next = [...kept, ...index.filter((item) => item.bucket !== group)];
       for (const item of candidates)

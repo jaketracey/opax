@@ -1,0 +1,72 @@
+appId: au.com.opax.app
+name: 13 Today feeds and their dated original sources
+---
+- launchApp
+- assertVisible:
+    id: today-screen-message
+- scrollUntilVisible:
+    element:
+      id: today-bill-0
+    timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/13-bills
+- scrollUntilVisible:
+    element:
+      id: today-bills-as-at
+    timeout: 90000
+- assertVisible: As at .* Source.*ParlInfo.*
+- takeScreenshot: ${EVIDENCE}/13-bills-as-at
+- scrollUntilVisible:
+    element:
+      id: today-bill-0
+    timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
+    direction: UP
+- tapOn:
+    id: today-bill-0
+- scrollUntilVisible:
+    element:
+      id: bill-title
+    timeout: 90000
+    visibilityPercentage: 1
+- takeScreenshot: ${EVIDENCE}/13-open-bill
+- scrollUntilVisible:
+    element:
+      id: bill-source-0
+    timeout: 90000
+- tapOn:
+    id: bill-source-0
+- assertVisible: https://parlinfo.aph.gov.au/.*
+- takeScreenshot: ${EVIDENCE}/13-bill-source-alert
+- tapOn: OK
+- tapOn: Today
+- scrollUntilVisible:
+    element:
+      id: today-declaration-0
+    timeout: 90000
+- takeScreenshot: ${EVIDENCE}/13-declaration
+- tapOn:
+    id: today-declaration-0
+- assertVisible: https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072
+- takeScreenshot: ${EVIDENCE}/13-declaration-source-alert
+- tapOn: OK
+# AX5 swipes can overshoot this tall text. Find it, then use a short drag
+# to keep its date below the navigation bar before requiring full visibility.
+- scrollUntilVisible:
+    element:
+      id: today-declarations-as-at
+    timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
+- swipe:
+    start: 90%, 30%
+    end: 90%, 60%
+    duration: 1000
+- scrollUntilVisible:
+    element:
+      id: today-declarations-as-at
+    timeout: 90000
+- assertVisible: As at .* Source.*
+- takeScreenshot: ${EVIDENCE}/13-declarations-as-at

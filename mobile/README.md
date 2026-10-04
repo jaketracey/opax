@@ -60,16 +60,18 @@ runner selects a working Java 17+ installation. It tries inherited `JAVA_HOME`,
 sdkman installations, macOS `java_home -v 17+`, then Java on `PATH`, skipping
 invalid or older candidates. The selected version is saved in `java.log`.
 
-| Variable             | Local purpose                                                                         | When blank                                     |
-| -------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `OPAX_BUILD_GATE`    | Executable shell script wrapping builds, invoked with lane name and command arguments | Run the command directly, with a notice        |
-| `OPAX_SIM_GATE`      | Shell script booting an allowed simulator, invoked with lane name and UDID            | Boot directly, with a notice                   |
-| `OPAX_PASTE_LOCK`    | Shared directory lock for Maestro input                                               | Skip locking, with a notice                    |
-| `OPAX_CAPACITY_CMD`  | Trusted local shell command checking host capacity                                    | Skip capacity checks, with a notice            |
-| `OPAX_ALLOWED_UDIDS` | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning |
+| Variable                  | Local purpose                                                                         | When blank                                          |
+| ------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `OPAX_BUILD_GATE`         | Executable shell script wrapping builds, invoked with lane name and command arguments | Run the command directly, with a notice             |
+| `OPAX_SIM_GATE`           | Shell script booting an allowed simulator, invoked with lane name and UDID            | Boot directly, with a notice                        |
+| `OPAX_PASTE_LOCK`         | Shared directory lock for Maestro input                                               | Skip locking, with a notice                         |
+| `OPAX_CAPACITY_CMD`       | Trusted local shell command checking host capacity                                    | Skip capacity checks, with a notice                 |
+| `OPAX_ALLOWED_UDIDS`      | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning      |
+| `OPAX_PASTE_WAIT_SECONDS` | Digit-only pasteboard lock wait (seconds)                                             | 7,200 seconds; invalid values also use this default |
 
-Configured capacity checks run before builds and devices; a load above 140 waits
-for below 100. The e2e runner starts only its own fixture, installs the Release app
+Configured capacity checks run before builds and devices; load5 at or above 140
+waits until it is below 140, before taking the shared lock. The e2e runner starts
+only its own fixture, installs the Release app
 without Metro, saves Maestro/screenshots/request logs in ignored `private/qa/<run>/`,
 restores text size/appearance, shuts down, then releases the lock on success or
 failure. Never commit QA evidence. `OPAX_QA_RUN` names evidence, `OPAX_QA_APP`
@@ -147,17 +149,19 @@ attack regression tests.
   `personSlugForResult` resolves the encoded name/canonical slug from `href`
   through the slug API before navigation. Current seats come from dated electorate
   observations, not last speech year or the roster's historical representation array.
-- Cache entries use one disk file per complete origin and URL, with a small
-  in-memory metadata index persisted separately. Catalogs have a 40-entry/12 MiB
-  budget; no-store search pages have their own 8-entry/1 MiB budget and cannot
-  evict catalogs. Oldest validation is evicted within each bucket. Writes serialize
-  and use temporary files. Every write re-reads the entry: older source dates or
+- Public catalog cache entries use one disk file per complete origin and URL,
+  with a small metadata index persisted separately and a 40-entry/12 MiB budget.
+  Search queries and result pages stay in memory only, with an 8-entry/1 MiB
+  budget, and cannot evict catalogs. Legacy disk search entries are removed when
+  the catalog index loads. Oldest validation is evicted within each bucket.
+  Writes serialize; catalog disk writes use temporary files. Every write checks
+  the retained entry: older source dates or
   responses started before the stored validation are rejected; 304 refreshes need
   the same stored ETag. A rejected response returns the retained observation.
   The v2 layout discards the earlier snapshot cache; system cache storage can also
   be reclaimed by iOS. Offline data is opportunistic, not permanent storage. HTTP freshness
   expires at max-age (capped to one day); no-store search is revalidated on every
-  read but retained locally for offline use. `savedAt`, `validatedAt`, `asOf` and
+  read and retained only for the current app session. `savedAt`, `validatedAt`, `asOf` and
   `stale` are distinct. Transient failures can return stale data; 4xx identity,
   invalid data and forbidden routes do not. Display saved and source dates.
 - `scripts/fixture-snapshot.json` pins SHA-256 and byte sizes of the reviewed public P0 files. Startup verifies hashes and freezes bytes in memory.
@@ -226,9 +230,17 @@ parsing. The current SDK has no compatible fix; review Expo patch updates. Tooli
 advisories are individually classified in the same baseline. Never run
 `npm audit fix --force`; its suggested dependency downgrades break the fixed SDK.
 
-Today, Your MP and Bills are plain placeholders. Search and the core profile
-are deliberately minimal. Full feature screens, licensed postcode lookup,
-portrait rights, sign-in, voice and universal links belong to later work.
+Search has grouped on-device suggestions, explicit catalog submissions for People,
+Declared interests, Pay and Expenses, and saved/offline states. Today has dated
+bill and declaration feeds; `todayEdition` is disabled until W13 exists. About and
+sources pushes inside the Account sheet, with snapshot coverage, source terms,
+privacy and the build's complete font notices. Bills has a native list and detail
+stack; Today bill rows and Search bill suggestions open that detail route. Your MP
+remains a placeholder. Profile links resolve canonical person IDs before passing
+them through the existing identifier route; the slug form is also retained for the
+foundation journeys. Journeys 12–14 exercise these screens.
+Licensed postcode lookup, full profiles, portrait rights, sign-in, voice and
+universal links belong to their owning lanes.
 
 ## P0 catalog adapters (data only)
 

@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 import {
   canonicalUrl,
   forbiddenOpaxRoute,
+  openOnWeb,
   sourceUrl,
 } from '../src/navigation/external';
 import { shareRecord } from '../src/navigation/share';
@@ -424,3 +425,46 @@ describe('workbench exclusion', () => {
       ).toBe(false);
   });
 });
+
+test('the temporary privacy link preserves its reviewed query in the e2e destination', async () => {
+  const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+  await openOnWeb('/community?view=privacy', 'Privacy policy');
+  expect(alert).toHaveBeenCalledWith(
+    'Opens on opax.com.au: Privacy policy',
+    `${webOrigin}/community?view=privacy`,
+  );
+  expect(canonicalUrl('/community?view=privacy')).toBe(
+    `${webOrigin}/community`,
+  );
+  alert.mockRestore();
+});
+
+test('web record navigation retains its query while sharing stays canonical', async () => {
+  const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+  await openOnWeb('/declared?person=Anthony%20Albanese', 'Open the record');
+  expect(alert).toHaveBeenCalledWith(
+    'Opens on opax.com.au: Open the record',
+    `${webOrigin}/declared?person=Anthony%20Albanese`,
+  );
+  expect(canonicalUrl('/declared?person=Anthony%20Albanese')).toBe(
+    `${webOrigin}/declared`,
+  );
+  alert.mockRestore();
+});
+test.each([
+  '/community?view=privacy&ask=x',
+  '/declared?person=x&token=secret',
+  '/?q=search',
+  '/declared#/ask',
+])(
+  'web navigation guards the complete query and fragment: %s',
+  async (path) => {
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+    await openOnWeb(path, 'Open');
+    expect(alert).toHaveBeenCalledWith(
+      'opax.com.au',
+      'This page could not be opened.',
+    );
+    alert.mockRestore();
+  },
+);

@@ -395,19 +395,20 @@ test('search eviction cannot evict catalogs; oldest validation is evicted within
   await cache.put(entry('catalog-c', 2));
   for (let n = 1; n <= 12; n++)
     await cache.put(entry(`${origin}/api/search-all?kind=person&q=${n}`, n));
-  expect(store.entries.map((e) => e.url).sort()).toEqual(
-    [
-      'catalog-a',
-      'catalog-c',
-      `${origin}/api/search-all?kind=person&q=11`,
-      `${origin}/api/search-all?kind=person&q=12`,
-    ].sort(),
-  );
+  expect(store.entries.map((e) => e.url).sort()).toEqual([
+    'catalog-a',
+    'catalog-c',
+  ]);
+  expect(store.index.every((e) => e.bucket === 'catalog')).toBe(true);
   expect(
-    store.index
-      .filter((e) => e.bucket === 'search')
-      .reduce((total, e) => total + e.bytes, 0),
-  ).toBeLessThanOrEqual(1000);
+    await cache.get(`${origin}/api/search-all?kind=person&q=10`),
+  ).toBeUndefined();
+  expect(
+    await cache.get(`${origin}/api/search-all?kind=person&q=11`),
+  ).toBeDefined();
+  expect(
+    await cache.get(`${origin}/api/search-all?kind=person&q=12`),
+  ).toBeDefined();
 });
 test('429 honours Retry-After seconds and dates, without exceeding the total budget', async () => {
   for (const header of ['2', new Date(3000).toUTCString()]) {
@@ -605,4 +606,182 @@ test('concurrent first reads and a write share one pending index load without lo
   expect(await cache.get('new')).toEqual(entry);
   expect(store.index.map((item) => item.url)).toEqual(['new']);
   expect(indexReads).toHaveBeenCalledTimes(1);
+});
+
+test('search query URLs and result bodies never reach the persistent store or survive a new cache', async () => {
+  const store = new MemoryStore();
+  const methods = [
+    'readIndex',
+    'writeIndex',
+    'read',
+    'write',
+    'remove',
+  ] as const;
+  const calls = methods.map((method) => jest.spyOn(store, method));
+  const cache = new CatalogCache(store);
+  const entry: CacheEntry = {
+    url: `${origin}/api/search-all?kind=interest&q=private-query&page=2`,
+    body: { query: 'private-query', results: ['private-result'] },
+    savedAt: 1,
+    validatedAt: 1,
+    expiresAt: 2,
+    asOf: null,
+  };
+  await cache.put(entry);
+  expect(await cache.get(entry.url)).toEqual(entry);
+  for (const call of calls) expect(call).not.toHaveBeenCalled();
+  expect(JSON.stringify(store)).not.toMatch(
+    /private-query|private-result|search-all/,
+  );
+  expect(await new CatalogCache(store).get(entry.url)).toBeUndefined();
+});
+test('legacy persistent search pages and query metadata are removed while catalogs remain', async () => {
+  const store = new MemoryStore();
+  const entry = (url: string): CacheEntry => ({
+    url,
+    body: 'saved',
+    savedAt: 1,
+    validatedAt: 1,
+    expiresAt: 2,
+    asOf: null,
+  });
+  const catalog = entry('catalog');
+  const search = entry(`${origin}/api/search-all?q=legacy-query&kind=person`);
+  store.entries = [catalog, search];
+  store.index = [
+    { url: catalog.url, bytes: 100, validatedAt: 1, bucket: 'catalog' },
+    { url: search.url, bytes: 100, validatedAt: 1, bucket: 'search' },
+  ];
+  const cache = new CatalogCache(store);
+  expect(await cache.get(search.url)).toBeUndefined();
+  expect(await cache.get(catalog.url)).toEqual(catalog);
+  expect(store.entries).toEqual([catalog]);
+  expect(store.index).toEqual([
+    { url: catalog.url, bytes: 100, validatedAt: 1, bucket: 'catalog' },
+  ]);
+  expect(JSON.stringify(store)).not.toContain('legacy-query');
+});
+
+describe.each(['remove', 'writeIndex'] as const)(
+  'legacy search cleanup with a failing %s',
+  (method) => {
+    function legacyStore() {
+      const store = new MemoryStore();
+      const catalog: CacheEntry = {
+        url: `${origin}/parliamentarians.json`,
+        body: { generated: '2026-09-04' },
+        savedAt: 1,
+        validatedAt: 1,
+        expiresAt: 2,
+        asOf: '2026-09-04',
+      };
+      const search = {
+        ...catalog,
+        url: `${origin}/api/search-all?q=legacy-query&kind=person`,
+        body: { query: 'legacy-query', results: ['legacy-result'] },
+      };
+      store.entries = [catalog, search];
+      store.index = [
+        { url: catalog.url, bytes: 100, validatedAt: 1, bucket: 'catalog' },
+        { url: search.url, bytes: 100, validatedAt: 1, bucket: 'search' },
+      ];
+      jest.spyOn(store, method).mockRejectedValueOnce(new Error('disk full'));
+      return { store, catalog, search };
+    }
+    test('catalog reads, network fetches and writes survive the cleanup failure', async () => {
+      const { store, catalog, search } = legacyStore();
+      const cache = new CatalogCache(store);
+      expect(await cache.get(catalog.url)).toEqual(catalog);
+      expect(await cache.get(search.url)).toBeUndefined();
+      const transport = jest.fn().mockResolvedValue(response());
+      const client = new ApiClient({
+        origin,
+        version: '0.1.0',
+        build: '1',
+        cache,
+        transport,
+        now: () => 1000,
+        retries: 0,
+      });
+      await expect(
+        client.get('/parliamentarians.json', decode),
+      ).resolves.toMatchObject({
+        data: { generated: '2026-09-04' },
+        stale: false,
+      });
+      expect(transport).toHaveBeenCalledTimes(1);
+      expect(await cache.get(catalog.url)).toMatchObject({ validatedAt: 1000 });
+      const next = { ...catalog, url: 'next-catalog', validatedAt: 1001 };
+      await expect(cache.put(next)).resolves.toEqual(next);
+      expect(await cache.get(next.url)).toEqual(next);
+      expect(store.index.map((entry) => entry.url)).toEqual([
+        next.url,
+        catalog.url,
+      ]);
+      expect(JSON.stringify(store.index)).not.toContain('legacy-query');
+    });
+    test('keeps the filtered index in memory and retries failed cleanup next launch', async () => {
+      const { store, catalog, search } = legacyStore();
+      const indexReads = jest.spyOn(store, 'readIndex');
+      const cache = new CatalogCache(store);
+      expect(await cache.get(catalog.url)).toEqual(catalog);
+      expect(await cache.get(catalog.url)).toEqual(catalog);
+      expect(await cache.get(search.url)).toBeUndefined();
+      expect(indexReads).toHaveBeenCalledTimes(1);
+      expect(store.index.some((entry) => entry.url === search.url)).toBe(true);
+      expect(await new CatalogCache(store).get(catalog.url)).toEqual(catalog);
+      expect(indexReads).toHaveBeenCalledTimes(2);
+      expect(store.entries).toEqual([catalog]);
+      expect(JSON.stringify(store)).not.toContain('legacy-query');
+    });
+  },
+);
+
+test('a catalog write during legacy cleanup cannot be overwritten by the cleanup index', async () => {
+  const store = new MemoryStore();
+  const catalog: CacheEntry = {
+    url: 'catalog',
+    body: 'saved',
+    savedAt: 1,
+    validatedAt: 1,
+    expiresAt: 2,
+    asOf: null,
+  };
+  const search = {
+    ...catalog,
+    url: `${origin}/api/search-all?q=legacy-query&kind=person`,
+  };
+  store.entries = [catalog, search];
+  store.index = [
+    { url: catalog.url, bytes: 100, validatedAt: 1, bucket: 'catalog' },
+    { url: search.url, bytes: 100, validatedAt: 1, bucket: 'search' },
+  ];
+  let started!: () => void;
+  const cleanupStarted = new Promise<void>((resolve) => {
+    started = resolve;
+  });
+  let finish!: () => void;
+  const remove = store.remove.bind(store);
+  jest.spyOn(store, 'remove').mockImplementationOnce(async (url) => {
+    started();
+    await new Promise<void>((resolve) => {
+      finish = resolve;
+    });
+    await remove(url);
+  });
+  const cache = new CatalogCache(store);
+  const read = cache.get(catalog.url);
+  await cleanupStarted;
+  const next = { ...catalog, url: 'next-catalog', validatedAt: 2 };
+  const writes = jest.spyOn(store, 'write');
+  const write = cache.put(next);
+  await new Promise<void>((resolve) => setImmediate(resolve));
+  expect(writes).not.toHaveBeenCalled();
+  finish();
+  await Promise.all([read, write]);
+  expect(await cache.get(next.url)).toEqual(next);
+  expect(store.index.map((entry) => entry.url)).toEqual([
+    next.url,
+    catalog.url,
+  ]);
 });
