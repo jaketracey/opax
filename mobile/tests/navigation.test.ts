@@ -21,6 +21,15 @@ import {
   navigationTitleSizes,
 } from '../src/design/tokens';
 
+jest.mock('expo-constants', () => ({
+  __esModule: true,
+  default: {
+    expoConfig: {
+      extra: { variant: 'e2e', webOrigin: 'https://opax.invalid' },
+    },
+  },
+}));
+
 describe('canonical share links', () => {
   test('use the configured origin, with no query or app state', () => {
     expect(canonicalUrl('/subject/person/anthony-albanese')).toBe(
@@ -355,8 +364,11 @@ describe('e2e configuration and sharing', () => {
     const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     const url =
       'https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072';
-    await openSource(url);
-    expect(sourceDestination()).toBe(url);
+    await openSource(url, 'Register of Senators’ Interests');
+    expect(sourceDestination()).toEqual({
+      url,
+      citation: 'Register of Senators’ Interests',
+    });
     expect(alert).not.toHaveBeenCalled();
     presentSourceDestination(null);
     alert.mockRestore();

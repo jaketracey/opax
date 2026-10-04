@@ -1,5 +1,6 @@
 import { catalogs, people, roster } from './pinned';
-import { nameKey } from '../src/api/ids';
+import { nameKey, nameValues } from '../src/api/ids';
+import { portraitFor } from '../src/api/selectors';
 import { payNameKey } from '../src/api/transforms';
 
 // Freeze the fold preceding 2f1fbfeb, independently of the production helper.
@@ -39,11 +40,11 @@ test.each(Object.entries(indexes))(
   'nameKey changes no joins on the pinned %s index',
   (kind, index) => {
     const before = indexed(index, previousNameKey),
-      after = indexed(index, nameKey);
+      queries = [...names, ...Object.keys(index)];
     const joined = (map: Map<string, Set<string>>, keys: string[]) =>
       [...new Set(keys.flatMap((key) => [...(map.get(key) ?? [])]))].sort();
     let matches = 0;
-    for (const name of [...names, ...Object.keys(index)]) {
+    for (const name of queries) {
       const oldQueries =
         kind === 'pay'
           ? [payNameKey(name), payNameKey(previousNameKey(name))]
@@ -51,7 +52,9 @@ test.each(Object.entries(indexes))(
       const newQueries =
         kind === 'pay' ? [payNameKey(name), payNameKey(nameKey(name))] : [name];
       const expected = joined(before, oldQueries.map(previousNameKey));
-      const actual = joined(after, newQueries.map(nameKey));
+      const actual = [
+        ...new Set(nameValues<string | string[]>(index, newQueries).flat()),
+      ].sort();
       if (expected.length) matches++;
       expect({ name, ids: actual }).toEqual({ name, ids: expected });
     }
@@ -60,3 +63,27 @@ test.each(Object.entries(indexes))(
     expect(matches).toBeGreaterThan(100);
   },
 );
+
+test('pinned portraits retain the exact-key-first join before folded lookup', () => {
+  const index = catalogs.photoPeople!,
+    credits = catalogs.photoCredits!;
+  const before = indexed(index, previousNameKey);
+  for (const name of [...names, ...Object.keys(index)]) {
+    const exact = index[name.trim().toLowerCase()];
+    const expected = [
+      ...(exact ? [exact] : (before.get(previousNameKey(name)) ?? [])),
+    ];
+    if (expected.length > 1)
+      expect(() => portraitFor([name], index, credits)).toThrow();
+    else {
+      const key = expected[0];
+      expect({
+        name,
+        key: portraitFor([name], index, credits)?.key ?? null,
+      }).toEqual({
+        name,
+        key: key && (/^\d+$/.test(key) || credits[key]) ? key : null,
+      });
+    }
+  }
+});

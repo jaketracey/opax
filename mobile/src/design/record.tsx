@@ -89,7 +89,7 @@ export function SourceLink({
         kind === 'register' ? 'Opens the register' : 'Opens the source'
       }
       testID={testID}
-      onPress={() => openSource(url)}
+      onPress={() => openSource(url, label)}
       style={({ pressed }) => [styles.link, pressed ? styles.pressed : null]}
     >
       <Text wordSafe variant="body" tone="bronzeInk" style={styles.linkText}>

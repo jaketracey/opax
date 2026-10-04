@@ -533,7 +533,7 @@ class BundleAttackTests(unittest.TestCase):
 
     def test_development_routes_fail_even_when_the_source_matches_the_bundle(self):
         for key in ("./fixtures/index.tsx", "./fixture.tsx", "./__tests__/index.tsx",
-                    "./(dev)/index.tsx", "./__dev/index.tsx", "./workbench.jsx"):
+                    "./(dev)/index.tsx", "./__dev/index.tsx", "./workbench.jsx", "./source-destination.tsx"):
             with self.subTest(key=key), tempfile.TemporaryDirectory() as d:
                 routes = Path(d)
                 path = routes / key

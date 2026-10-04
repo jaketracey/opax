@@ -7,9 +7,11 @@ import { colors, layout, spacing } from '../design/tokens';
 /** UIKit alerts truncate long URL messages even after scrolling at AX5. */
 export function SourceDestination({
   url,
+  citation,
   dismiss,
 }: {
   url: string | null;
+  citation?: string;
   dismiss: () => void;
 }) {
   return (
@@ -20,7 +22,9 @@ export function SourceDestination({
           contentContainerStyle={styles.content}
           testID="source-destination-scroll"
         >
-          <Heading level={1}>Source record</Heading>
+          <Heading level={1}>
+            {citation ? `Source record: ${citation}` : 'Source record'}
+          </Heading>
           {url ? (
             <Text
               accessibilityLabel={url}

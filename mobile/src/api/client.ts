@@ -186,8 +186,7 @@ export class ApiClient {
         const validatedSameRecord =
           !!entry.etag &&
           retained.etag === entry.etag &&
-          retained.validatedAt >= requestStartedAt &&
-          retained.validatedAt <= time;
+          retained.validatedAt >= requestStartedAt;
         return result(
           retained,
           retained !== entry &&

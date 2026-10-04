@@ -3,7 +3,7 @@ import { Stack, router, type Href } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { isE2E, isProduction } from '../design/environment';
+import { hasSourcePreview, isProduction } from '../design/environment';
 import { fonts, light } from '../design/tokens';
 import { closeSheetItem, useStackChrome } from '../navigation/chrome';
 import {
@@ -21,13 +21,16 @@ export default function Layout() {
   });
   const chrome = useStackChrome();
   useEffect(() => {
-    if (!isE2E) return;
+    if (!hasSourcePreview) return;
     return subscribeSourceDestination(() => {
-      const url = sourceDestination();
-      if (url === null) return;
+      const destination = sourceDestination();
+      if (destination === null) return;
       presentSourceDestination(null);
       // A native-stack route can present above Account's existing sheet.
-      router.push({ pathname: '/source-destination', params: { url } } as Href);
+      router.push({
+        pathname: '/source-destination',
+        params: { ...destination },
+      } as Href);
     });
   }, []);
   if (!loaded && !error) return null;
@@ -57,7 +60,7 @@ export default function Layout() {
           name="account"
           options={{ ...sheet, headerShown: false }}
         />
-        {isE2E ? (
+        {hasSourcePreview ? (
           <Stack.Screen
             name="source-destination"
             options={{

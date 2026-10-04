@@ -16,7 +16,11 @@ test('the local destination keeps the complete URL in bounded scrolling content 
   const dismiss = jest.fn();
   act(() => {
     renderer = TestRenderer.create(
-      <SourceDestination url={url} dismiss={dismiss} />,
+      <SourceDestination
+        url={url}
+        citation="Register of Senators’ Interests"
+        dismiss={dismiss}
+      />,
     );
   });
   expect(
@@ -25,6 +29,15 @@ test('the local destination keeps the complete URL in bounded scrolling content 
   expect(
     StyleSheet.flatten(renderer.root.findByType(ScrollView).props.style).flex,
   ).toBe(1);
+  expect(
+    renderer.root
+      .findAllByType(Text)
+      .some(
+        (node) =>
+          node.props.children ===
+          'Source record: Register of Senators’ Interests',
+      ),
+  ).toBe(true);
   const destination = renderer.root
     .findAllByType(Text)
     .find((node) => node.props.testID === 'source-destination-url')!;
