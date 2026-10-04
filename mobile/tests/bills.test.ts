@@ -370,6 +370,36 @@ describe('sponsor links', () => {
       sponsorSlug('Andrew Wilkie', roster, slugs, view.sponsorPersonId),
     ).toBe('andrew-wilkie');
     expect(sponsorSlug('Andrew Wilkie', roster, slugs)).toBe('andrew-wilkie');
+    // Name and ID agreeing on one person is what links.
+    expect(sponsorSlug('Tony Abbott', roster, slugs, d.rosterId('10001'))).toBe(
+      'tony-abbott',
+    );
+  });
+
+  test('a name two roster people share stays plain text', () => {
+    // A fictional pair added to the pinned roster: two IDs, one name.
+    const twin = (pid: string) => ({
+      name: 'Sam Example',
+      pid: d.rosterId(pid),
+      party: null,
+    });
+    const shared = {
+      ...roster,
+      people: [...roster.people, twin('99990001'), twin('99990002')],
+    };
+    const withSlug = d.decodeSlugs({
+      ...slugs,
+      slugs: { ...slugs.slugs, 'sam-example': 'Sam Example' },
+    });
+    expect(sponsorSlug('Sam Example', shared, withSlug)).toBeNull();
+    expect(
+      sponsorSlug('Sam Example', shared, withSlug, d.rosterId('99990001')),
+    ).toBeNull();
+    // One of them alone would link.
+    const single = { ...roster, people: [...roster.people, twin('99990001')] };
+    expect(
+      sponsorSlug('Sam Example', single, withSlug, d.rosterId('99990001')),
+    ).toBe('sam-example');
   });
 
   test('names that are not a single roster parliamentarian stay plain text', () => {
@@ -381,12 +411,19 @@ describe('sponsor links', () => {
     ).toBeNull();
     expect(sponsorSlug('Wilkie', roster, slugs)).toBeNull();
     expect(sponsorSlug('Not A Parliamentarian', roster, slugs)).toBeNull();
-    // A roster ID that names someone else never borrows this name's slug.
-    const other = roster.people.find(
-      (p) => p.pid && p.name.includes(' ') && p.name !== 'Andrew Wilkie',
-    )!;
+    // A roster ID that names someone else never links: not to this name's
+    // profile and not to the ID's person (the reviewer's probe, 10001 being
+    // Tony Abbott's roster ID).
+    const abbott = roster.people.find((p) => p.pid === '10001')!;
+    expect(abbott.name).toBe('Tony Abbott');
     expect(
-      sponsorSlug('Andrew Wilkie', roster, slugs, d.rosterId(other.pid!)),
-    ).not.toBe('andrew-wilkie');
+      sponsorSlug('Andrew Wilkie', roster, slugs, d.rosterId('10001')),
+    ).toBeNull();
+    for (const other of roster.people.filter(
+      (p) => p.pid && p.name.includes(' ') && p.name !== 'Andrew Wilkie',
+    ))
+      expect(
+        sponsorSlug('Andrew Wilkie', roster, slugs, d.rosterId(other.pid!)),
+      ).toBeNull();
   });
 });

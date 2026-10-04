@@ -1,6 +1,5 @@
 import {
   personSlug,
-  rosterRowFor,
   type PersonSlug,
   type Roster,
   type RosterId,
@@ -16,11 +15,19 @@ const folded = (name: string) =>
     .replace(/\s+/g, ' ')
     .trim();
 
+/** The names a roster row answers to: its name and its recorded full name. */
+const namesOf = (row: RosterRow) =>
+  [row.name, row.full].filter((n): n is string => !!n?.trim());
+type RosterRow = Roster['people'][number];
+
 /**
  * The profile a bill's sponsor opens, or null. Native pages are for roster
- * parliamentarians only (decision 3): the sponsor must be a full-name roster
- * row (by the bill's roster ID when it has one, else by name), and that name
- * must resolve to exactly one directory slug. Anything else stays plain text.
+ * parliamentarians only (decision 3), and a link must never point at someone
+ * other than the person named on screen. So the displayed name has to name
+ * exactly one full-name roster person; when the bill also carries a roster ID,
+ * that ID has to identify the same person (by name or recorded full name) and
+ * no other roster person may share the name. That person must then resolve to
+ * exactly one directory slug. Any contradiction or ambiguity: plain text.
  */
 export function sponsorSlug(
   name: string,
@@ -28,19 +35,27 @@ export function sponsorSlug(
   slugs: Slugs,
   id?: RosterId | null,
 ): PersonSlug | null {
+  const wanted = folded(name);
   if (!name.trim().includes(' ')) return null;
-  let row: Roster['people'][number] | undefined;
-  try {
-    row = rosterRowFor([name], roster, id ?? undefined);
-  } catch {
-    return null;
-  }
-  if (!row || !row.name.trim().includes(' ')) return null;
-  for (const candidate of new Set([row.name, name])) {
-    const matches = Object.entries(slugs.slugs).filter(
-      ([, n]) => folded(n) === folded(candidate),
+  const full = (row: RosterRow) => row.name.trim().includes(' ');
+  const named = roster.people.filter(
+    (row) => full(row) && namesOf(row).some((n) => folded(n) === wanted),
+  );
+  // Rows without an ID cannot be told apart, so each counts as its own person.
+  const people = new Set(named.map((row, i) => row.pid ?? `row-${i}`));
+  let person: RosterRow | undefined;
+  if (id) {
+    if (named.some((row) => row.pid !== id)) return null;
+    person = roster.people.find(
+      (row) =>
+        row.pid === id &&
+        full(row) &&
+        namesOf(row).some((n) => folded(n) === wanted),
     );
-    if (matches.length === 1) return personSlug(matches[0]![0]);
-  }
-  return null;
+  } else if (people.size === 1) person = named[0];
+  if (!person) return null;
+  const matches = Object.entries(slugs.slugs).filter(
+    ([, n]) => folded(n) === folded(person.name),
+  );
+  return matches.length === 1 ? personSlug(matches[0]![0]) : null;
 }
