@@ -15,7 +15,9 @@ export default function Today() {
   const [data, setData] = useState<Awaited<
     ReturnType<typeof catalogs.today>
   > | null>(null);
-  const [refreshing, setRefreshing] = useState(true);
+  // CatalogState shows the initial fetch. The native control belongs to a
+  // user refresh; starting it on mount moves the large-title scroll offset.
+  const [refreshing, setRefreshing] = useState(false);
   const [retry, setRetry] = useState(0);
   useEffect(() => {
     let active = true;
