@@ -1,12 +1,18 @@
 appId: au.com.opax.app
 name: 13 Today feeds and their dated original sources
 ---
+# scrollUntilVisible always swipes from the centre of the screen. Tap
+# targets are centred with speed-20 swipes (about half a screen each). From
+# iOS 26 the tab bar floats over the bottom of the page, and a link drawn
+# under it still counts as visible: on iOS 27 a source tap hit the Your MP
+# tab. Each group of steps first checks the page is still shown.
 - launchApp
 - assertVisible:
     id: today-screen-message
 - scrollUntilVisible:
     element:
       id: today-bill-0
+    direction: DOWN
     timeout: 90000
     visibilityPercentage: 1
     centerElement: true
@@ -14,6 +20,7 @@ name: 13 Today feeds and their dated original sources
 - scrollUntilVisible:
     element:
       id: today-bills-as-at
+    direction: DOWN
     timeout: 90000
 - assertVisible: As at .* Source.*ParlInfo.*
 - takeScreenshot: ${EVIDENCE}/13-bills-as-at
@@ -23,30 +30,49 @@ name: 13 Today feeds and their dated original sources
     timeout: 90000
     visibilityPercentage: 1
     centerElement: true
+    speed: 20
     direction: UP
+- waitForAnimationToEnd
 - tapOn:
     id: today-bill-0
 - scrollUntilVisible:
     element:
       id: bill-title
+    direction: DOWN
     timeout: 90000
     visibilityPercentage: 1
 - takeScreenshot: ${EVIDENCE}/13-open-bill
+- assertVisible:
+    id: bill-screen
 - scrollUntilVisible:
     element:
       id: bill-source-0
+    direction: DOWN
     timeout: 90000
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
+- assertVisible:
+    id: bill-screen
 - tapOn:
     id: bill-source-0
 - assertVisible: https://parlinfo.aph.gov.au/.*
 - takeScreenshot: ${EVIDENCE}/13-bill-source-alert
 - tapOn: OK
 - tapOn: Today
+- assertVisible:
+    id: today-screen
 - scrollUntilVisible:
     element:
       id: today-declaration-0
+    direction: DOWN
     timeout: 90000
+    centerElement: true
+    speed: 20
+- waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/13-declaration
+- assertVisible:
+    id: today-screen
 - tapOn:
     id: today-declaration-0
 - assertVisible: https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072
@@ -54,9 +80,12 @@ name: 13 Today feeds and their dated original sources
 - tapOn: OK
 # AX5 swipes can overshoot this tall text. Find it, then use a short drag
 # to keep its date below the navigation bar before requiring full visibility.
+- assertVisible:
+    id: today-screen
 - scrollUntilVisible:
     element:
       id: today-declarations-as-at
+    direction: DOWN
     timeout: 90000
     visibilityPercentage: 1
     centerElement: true
@@ -67,6 +96,7 @@ name: 13 Today feeds and their dated original sources
 - scrollUntilVisible:
     element:
       id: today-declarations-as-at
+    direction: DOWN
     timeout: 90000
 - assertVisible: As at .* Source.*
 - takeScreenshot: ${EVIDENCE}/13-declarations-as-at
