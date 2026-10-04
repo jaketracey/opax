@@ -20,8 +20,10 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     id: your-mp-screen-message
 - tapOn:
     id: tab-bills
-- assertVisible:
-    id: bills-screen-message
+- extendedWaitUntil:
+    visible:
+      id: bills-count
+    timeout: 20000
 - tapOn:
     id: tab-search
 - assertVisible:

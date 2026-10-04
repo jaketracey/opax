@@ -147,7 +147,10 @@ function billStripStage(text: string, stage: string | null) {
   // Only when something is left: a division named by its stage alone keeps it.
   return rest || out;
 }
-export function billQuestionParts(division: Division, bill: BillDetail) {
+export function billQuestionParts(
+  division: Division,
+  bill: Pick<BillDetail, 'title' | 'short_title'>,
+) {
   const raw = billStripStage(
     billStripTitle(billNoteRepair(division?.question), bill),
     division?.stage,
@@ -194,7 +197,10 @@ export function billDedupeDivisions(divisions: Division[], bill: BillDetail) {
   kept.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
   return { divisions: kept, collapsed };
 }
-function billStripTitle(text: string, bill: BillDetail) {
+function billStripTitle(
+  text: string,
+  bill: Pick<BillDetail, 'title' | 'short_title'>,
+) {
   let out = String(text || '').trim();
   for (const t of [bill?.title, bill?.short_title]) {
     const title = String(t || '').trim();
@@ -206,4 +212,214 @@ function billStripTitle(text: string, bill: BillDetail) {
     }
   }
   return out;
+}
+
+// List search, labels, stage runs and party splits, ported from the web's
+// bill pages (portal/public/app.js). Parity: tests/bills.test.ts.
+
+/** The web's foldText: what directory search compares, term by term. */
+export function billFoldText(s: string | null | undefined) {
+  return String(s || '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/['’]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+/** A register token in English: "before_parliament" is "Before parliament". */
+export function billSentenceCase(s: string | null | undefined) {
+  const t = String(s || '')
+    .replace(/_/g, ' ')
+    .trim();
+  return t ? t[0]!.toUpperCase() + t.slice(1) : '';
+}
+/** A stage as the register wrote it; a parsed-out compound title is clipped. */
+export function billStage(stage: string | null | undefined) {
+  const t = billSentenceCase(stage);
+  return t.length > 60 ? `${t.slice(0, 57).trimEnd()}…` : t;
+}
+/** The short title when the register carries one, else the title itself. */
+export const billName = (b: {
+  short_title?: string | null;
+  title?: string | null;
+  key?: string | null;
+}) => b.short_title || b.title || b.key || '';
+// The register's own codes for who is not a party.
+const BILL_PARTY_LABELS: Record<string, string> = {
+  PRES: 'Presiding officer',
+  SPK: 'Speaker',
+  '': 'Not recorded',
+};
+/** A party-split key as the web labels it. */
+export const billParty = (p: string | null | undefined) =>
+  BILL_PARTY_LABELS[String(p || '').trim()] || billPartyName(p ?? null);
+/** A division note as plain words: link text kept, URLs and emphasis dropped. */
+export const billNoteText = (note: string) => billFlat(billNoteRepair(note));
+// Relative links in They Vote For You's notes are its own pages.
+const BILL_NOTE_BASE = 'https://theyvoteforyou.org.au';
+export interface BillNoteLink {
+  /** The link text as the note reads it ("bills digest"). */
+  label: string;
+  /** The destination, relative links resolved against They Vote For You. */
+  url: string;
+}
+/**
+ * The record's own citations in a division note, in order, exactly where the
+ * web's billNoteHTML makes a link: http(s) destinations only, everything else
+ * stays words. Callers still pass each through the app's source-link policy.
+ */
+export function billNoteLinks(note: string): BillNoteLink[] {
+  const links: BillNoteLink[] = [];
+  for (const m of billNoteRepair(note).matchAll(BILL_MD_LINK)) {
+    const url = m[2]!.startsWith('/') ? BILL_NOTE_BASE + m[2] : m[2]!;
+    if (/^https?:\/\//i.test(url)) links.push({ label: billPlain(m[1]!), url });
+  }
+  return links;
+}
+
+export interface BillStageRun<D> {
+  /** The stage as the register wrote it, in English ("Second reading"). */
+  stage: string;
+  /** The register's chamber code, or null. */
+  house: string | null;
+  dates: D[];
+}
+/**
+ * The register records a stage on every day it was before a house; a run of
+ * one stage in one chamber is one entry carrying its span (web billStageRuns).
+ * Dates are sorted first, as the web's timeline does.
+ */
+export function billStageRuns<
+  D extends { stage: string; date: string; house: string | null },
+>(keyDates: readonly D[]): BillStageRun<D>[] {
+  const dates = keyDates
+    .filter((d) => d?.date)
+    .slice()
+    .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+  const runs: BillStageRun<D>[] = [];
+  for (const d of dates) {
+    const stage = billStage(d.stage) || 'Stage not named';
+    const house = d.house ? d.house.toLowerCase() : null;
+    const last = runs[runs.length - 1];
+    if (last && last.stage === stage && last.house === house) {
+      last.dates.push(d);
+      continue;
+    }
+    runs.push({ stage, house, dates: [d] });
+  }
+  return runs;
+}
+
+export interface BillSplit {
+  /** The split's key as recorded ("Labor", "PRES", ""). */
+  party: string;
+  /** The web's label for it ("Labor", "Presiding officer", "Not recorded"). */
+  label: string;
+  ayes: number;
+  noes: number;
+}
+// The parties that decide a division are drawn; the one- and two-member
+// remainder is named on one line, in full (web BILL_SPLIT_DRAWN/SMALL).
+const BILL_SPLIT_DRAWN = 5;
+const BILL_SPLIT_SMALL = 2;
+/**
+ * A division's party splits as the web's bill page lays them out: largest
+ * first, small parties folded onto one line, and the notes on what the
+ * attribution rests on (web billSplitHTML, without the markup).
+ */
+export function billSplits(division: Division) {
+  const splits: BillSplit[] = Object.entries(division.party_splits || {})
+    .map(([party, v]) => ({
+      party,
+      label: billParty(party),
+      ayes: Number(v?.ayes) || 0,
+      noes: Number(v?.noes) || 0,
+    }))
+    .filter((s) => s.ayes || s.noes)
+    .sort(
+      (a, b) =>
+        b.ayes + b.noes - (a.ayes + a.noes) || a.party.localeCompare(b.party),
+    );
+  let drawn = splits.filter(
+    (s, i) => i < BILL_SPLIT_DRAWN || s.ayes + s.noes > BILL_SPLIT_SMALL,
+  );
+  let folded = splits.slice(drawn.length);
+  // One line saved is no saving.
+  if (folded.length === 1) {
+    drawn = splits;
+    folded = [];
+  }
+  const max = Math.max(...drawn.map((s) => Math.max(s.ayes, s.noes)), 1);
+  const named = splits.reduce((a, s) => a + s.ayes + s.noes, 0);
+  const total = (Number(division.ayes) || 0) + (Number(division.noes) || 0);
+  const cov = (division.party_coverage || {}) as Record<string, number>;
+  const weak =
+    (Number(cov.member) || 0) +
+    (Number(cov.earliest) || 0) +
+    (Number(cov.unknown) || 0);
+  const dated = Number(cov.dated) || 0;
+  const notes = [
+    total && named && named < total
+      ? `${total - named} not placed with a party`
+      : '',
+    weak > 0 && dated + weak > 0
+      ? `${weak} of ${dated + weak} inferred, not observed on the day`
+      : '',
+    Number(division.paired) > 0 ? `${division.paired} paired` : '',
+  ].filter(Boolean);
+  return { drawn, folded, max, notes, recorded: splits.length > 0 };
+}
+
+export interface BillTimelineStage {
+  stage: string;
+  /** The register's chamber code; null when the stage names no chamber. */
+  house: string | null;
+  /** Distinct sitting days the stage ran across. */
+  days: number;
+}
+export interface BillTimelineEntry {
+  from: string;
+  /** The last day of a span; null for a single day. */
+  to: string | null;
+  stages: BillTimelineStage[];
+}
+/**
+ * The bill's stages as dated entries: the web's stage runs, with runs that
+ * share the same day (or the same span) under one date, so a bill that went
+ * through every stage in one day shows that day once.
+ */
+export function billTimeline(
+  keyDates: readonly { stage: string; date: string; house: string | null }[],
+) {
+  const runs = billStageRuns(keyDates);
+  const entries: BillTimelineEntry[] = [];
+  for (const run of runs) {
+    const from = run.dates[0]!.date;
+    const last = run.dates[run.dates.length - 1]!.date;
+    const to = last === from ? null : last;
+    const stage = {
+      stage: run.stage,
+      // "Royal assent · Assent": a stage that names its chamber says it once.
+      house:
+        run.house && !run.stage.toLowerCase().includes(run.house)
+          ? run.house
+          : null,
+      days: new Set(run.dates.map((d) => d.date)).size,
+    };
+    const previous = entries[entries.length - 1];
+    if (previous && previous.from === from && previous.to === to)
+      previous.stages.push(stage);
+    else entries.push({ from, to, stages: [stage] });
+  }
+  const dates = runs.reduce((n, r) => n + r.dates.length, 0);
+  return {
+    entries,
+    /** Register rows folded into runs (the web's fold note). */
+    folded: dates - runs.length,
+    runs: runs.length,
+    dates,
+    /** Every recorded stage fell on one day. */
+    oneDay: entries.length === 1 && entries[0]!.to === null,
+  };
 }
