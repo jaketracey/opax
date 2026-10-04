@@ -12,6 +12,7 @@ import {
   errorMessage,
 } from '../design/primitives';
 import { formatDate } from '../design/format';
+import { billStatus } from '../design/parliament';
 import { CatalogState } from './CatalogState';
 export default function RecentBill() {
   const { key } = useLocalSearchParams<{ key: string }>();
@@ -60,7 +61,7 @@ export default function RecentBill() {
                   items={[
                     {
                       label: 'Status',
-                      value: bill.status.replaceAll('_', ' '),
+                      value: billStatus(bill.status),
                     },
                     ...(bill.introduced
                       ? [
@@ -73,7 +74,8 @@ export default function RecentBill() {
                   ]}
                 />
                 <Text variant="fine">
-                  Read the bill and its progress in the source record.
+                  Read the bill’s OPAX page for its progress and links to the
+                  original records.
                 </Text>
                 <OpaxWebLink
                   label="Read the bill on OPAX"

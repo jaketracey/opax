@@ -11,7 +11,7 @@ import {
   Text,
 } from '../design/primitives';
 import { formatDate } from '../design/format';
-import { chamberName } from '../design/parliament';
+import { chamberName, declarationKind } from '../design/parliament';
 import { CatalogState } from './CatalogState';
 import { RecordRow } from './RecordRow';
 
@@ -104,7 +104,7 @@ export default function Today() {
                   <Text variant="metadata">
                     {[
                       chamberName(item.chamber, item.jurisdiction),
-                      item.kind,
+                      declarationKind(item.kind),
                       formatDate(item.date, 'short'),
                     ]
                       .filter(Boolean)

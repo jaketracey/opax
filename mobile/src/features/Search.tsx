@@ -23,6 +23,7 @@ import {
   Text,
   errorMessage,
 } from '../design/primitives';
+import { billStatus } from '../design/parliament';
 import { RecordRow } from './RecordRow';
 import { Excerpt } from './search/Excerpt';
 import { KindPicker } from './search/KindPicker';
@@ -41,6 +42,10 @@ export default function Search() {
   const [refreshing, setRefreshing] = useState(true);
   const [result, setResult] = useState<Results | null>(null);
   const [error, setError] = useState<unknown>(null);
+  const [openError, setOpenError] = useState<{
+    cause: unknown;
+    action: () => Promise<void>;
+  } | null>(null);
   const [busy, setBusy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const request = useRef(0);
@@ -83,6 +88,7 @@ export default function Search() {
     setSubmitted(false);
     setResult(null);
     setError(null);
+    setOpenError(null);
     setBusy(false);
   }
   async function search(page = 1) {
@@ -91,6 +97,7 @@ export default function Search() {
     const token = ++request.current;
     setBusy(true);
     setError(null);
+    setOpenError(null);
     setSubmitted(true);
     try {
       const data = await catalogs.search(query.trim(), kind, page);
@@ -102,10 +109,12 @@ export default function Search() {
     }
   }
   async function open(action: () => Promise<void>) {
+    const token = request.current;
+    setOpenError(null);
     try {
       await action();
-    } catch (e) {
-      setError(e);
+    } catch (cause) {
+      if (token === request.current) setOpenError({ cause, action });
     }
   }
   const suggestions = sources
@@ -181,6 +190,13 @@ export default function Search() {
             testID="search-error"
           />
         </Group>
+      ) : null}
+      {openError ? (
+        <ErrorState
+          message={errorMessage(openError.cause)}
+          onRetry={() => void open(openError.action)}
+          testID="search-open-error"
+        />
       ) : null}
       {!submitted ? (
         <>
@@ -282,7 +298,7 @@ export default function Search() {
                   <RecordRow
                     key={b.key}
                     title={b.title}
-                    detail={b.status.replaceAll('_', ' ')}
+                    detail={billStatus(b.status)}
                     onPress={() =>
                       router.push({
                         pathname: '/recent-bill/[key]',

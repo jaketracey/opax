@@ -298,12 +298,11 @@ export async function openSource(url: string, label: string): Promise<void> {
 export async function openOnWeb(path: string, label: string): Promise<void> {
   let url: string;
   try {
-    // The temporary privacy page is selected by this exact, reviewed query.
-    // Share URLs keep dropping queries; no other query navigation is added.
-    url =
-      path === '/community?view=privacy'
-        ? `${canonicalUrl('/community')}?view=privacy`
-        : canonicalUrl(path);
+    // Validate the raw path, then keep the record's query for navigation.
+    // sourceUrl applies the route/query/fragment guard to privacy links too.
+    // Canonical share links still omit query state.
+    canonicalUrl(path);
+    url = sourceUrl(new URL(path, webOrigin).toString());
   } catch {
     Alert.alert('opax.com.au', 'This page could not be opened.');
     return;
