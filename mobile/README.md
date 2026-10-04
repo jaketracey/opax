@@ -60,16 +60,18 @@ runner selects a working Java 17+ installation. It tries inherited `JAVA_HOME`,
 sdkman installations, macOS `java_home -v 17+`, then Java on `PATH`, skipping
 invalid or older candidates. The selected version is saved in `java.log`.
 
-| Variable             | Local purpose                                                                         | When blank                                     |
-| -------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `OPAX_BUILD_GATE`    | Executable shell script wrapping builds, invoked with lane name and command arguments | Run the command directly, with a notice        |
-| `OPAX_SIM_GATE`      | Shell script booting an allowed simulator, invoked with lane name and UDID            | Boot directly, with a notice                   |
-| `OPAX_PASTE_LOCK`    | Shared directory lock for Maestro input                                               | Skip locking, with a notice                    |
-| `OPAX_CAPACITY_CMD`  | Trusted local shell command checking host capacity                                    | Skip capacity checks, with a notice            |
-| `OPAX_ALLOWED_UDIDS` | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning |
+| Variable                  | Local purpose                                                                         | When blank                                          |
+| ------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `OPAX_BUILD_GATE`         | Executable shell script wrapping builds, invoked with lane name and command arguments | Run the command directly, with a notice             |
+| `OPAX_SIM_GATE`           | Shell script booting an allowed simulator, invoked with lane name and UDID            | Boot directly, with a notice                        |
+| `OPAX_PASTE_LOCK`         | Shared directory lock for Maestro input                                               | Skip locking, with a notice                         |
+| `OPAX_CAPACITY_CMD`       | Trusted local shell command checking host capacity                                    | Skip capacity checks, with a notice                 |
+| `OPAX_ALLOWED_UDIDS`      | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning      |
+| `OPAX_PASTE_WAIT_SECONDS` | Digit-only pasteboard lock wait (seconds)                                             | 7,200 seconds; invalid values also use this default |
 
-Configured capacity checks run before builds and devices; a load above 140 waits
-for below 100. The e2e runner starts only its own fixture, installs the Release app
+Configured capacity checks run before builds and devices; load5 at or above 140
+waits until it is below 140, before taking the shared lock. The e2e runner starts
+only its own fixture, installs the Release app
 without Metro, saves Maestro/screenshots/request logs in ignored `private/qa/<run>/`,
 restores text size/appearance, shuts down, then releases the lock on success or
 failure. Never commit QA evidence. `OPAX_QA_RUN` names evidence, `OPAX_QA_APP`
@@ -232,11 +234,11 @@ Search has grouped on-device suggestions, explicit catalog submissions for Peopl
 Declared interests, Pay and Expenses, and saved/offline states. Today has dated
 bill and declaration feeds; `todayEdition` is disabled until W13 exists. About and
 sources pushes inside the Account sheet, with snapshot coverage, source terms,
-privacy and the build's complete font notices. Your MP and Bills remain placeholders.
-The Search/Today lane's `recent-bill/[key]` source preview is a temporary integration
-seam for the Bills lane's full detail route. Profile links resolve canonical person
-IDs before passing them through the existing identifier route; the slug form is
-also retained for the foundation journeys. Journeys 12–14 exercise these screens.
+privacy and the build's complete font notices. Bills has a native list and detail
+stack; Today bill rows and Search bill suggestions open that detail route. Your MP
+remains a placeholder. Profile links resolve canonical person IDs before passing
+them through the existing identifier route; the slug form is also retained for the
+foundation journeys. Journeys 12–14 exercise these screens.
 Licensed postcode lookup, full profiles, portrait rights, sign-in, voice and
 universal links belong to their owning lanes.
 

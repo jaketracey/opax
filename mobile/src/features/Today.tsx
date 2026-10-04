@@ -14,15 +14,10 @@ import { formatDate } from '../design/format';
 import { chamberName, declarationKind } from '../design/parliament';
 import { CatalogState } from './CatalogState';
 import { RecordRow } from './RecordRow';
+import { billRoute } from '../navigation/routes';
 
 /** W13 seam: no edition request or card until the reviewed endpoint exists. */
 export const todayEdition = { enabled: false } as const;
-// The Bills lane owns full bill detail. This native source preview reads the
-// same selector and can be replaced by its bill route during integration.
-export const recentBillRoute = (key: string) => ({
-  pathname: '/recent-bill/[key]' as const,
-  params: { key },
-});
 export default function Today() {
   const [data, setData] = useState<Awaited<
     ReturnType<typeof catalogs.today>
@@ -79,7 +74,7 @@ export default function Today() {
                   ]
                     .filter(Boolean)
                     .join(' · ')}
-                  onPress={() => router.push(recentBillRoute(bill.key))}
+                  onPress={() => router.push(billRoute(bill.key))}
                   testID={`today-bill-${i}`}
                 />
               ))}

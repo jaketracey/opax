@@ -28,16 +28,16 @@ name: 13 Today feeds and their dated original sources
     id: today-bill-0
 - scrollUntilVisible:
     element:
-      id: recent-bill-title
+      id: bill-title
     timeout: 90000
     visibilityPercentage: 1
 - takeScreenshot: ${EVIDENCE}/13-open-bill
 - scrollUntilVisible:
     element:
-      id: recent-bill-source-0
+      id: bill-source-0
     timeout: 90000
 - tapOn:
-    id: recent-bill-source-0
+    id: bill-source-0
 - assertVisible: https://parlinfo.aph.gov.au/.*
 - takeScreenshot: ${EVIDENCE}/13-bill-source-alert
 - tapOn: OK

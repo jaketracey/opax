@@ -31,6 +31,7 @@ import { isOffline } from './CatalogState';
 import { groupSuggestions, kindLabel } from './search/model';
 import { openSearchPerson, openSuggestedPerson } from './search/navigation';
 import { openOnWeb } from '../navigation/external';
+import { billRoute } from '../navigation/routes';
 
 type Sources = Awaited<ReturnType<typeof catalogs.suggestionSources>>;
 type Results = Awaited<ReturnType<typeof catalogs.search>>;
@@ -299,12 +300,7 @@ export default function Search() {
                     key={b.key}
                     title={b.title}
                     detail={billStatus(b.status)}
-                    onPress={() =>
-                      router.push({
-                        pathname: '/recent-bill/[key]',
-                        params: { key: b.key },
-                      })
-                    }
+                    onPress={() => router.push(billRoute(b.key))}
                   />
                 ))}
               </RowList>
