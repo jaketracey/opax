@@ -46,6 +46,19 @@ name: 09 Electorate representation, elections, Census context and sources
     timeout: 15000
 - assertVisible: Grayndler
 - takeScreenshot: ${EVIDENCE}/09-identity
+# Check the name itself before the taller row. Its accessibility label alone
+# can contain the full string even when TextKit clips the drawn surname.
+- scrollUntilVisible:
+    element:
+      id: electorate-member-anthony-albanese-name
+    speed: 20
+    centerElement: true
+    timeout: 180000
+- waitForAnimationToEnd
+- assertVisible:
+    id: electorate-member-anthony-albanese-name
+    text: Anthony Albanese
+- takeScreenshot: ${EVIDENCE}/09-representative-name-settled
 - scrollUntilVisible:
     element:
       id: election-expand-0

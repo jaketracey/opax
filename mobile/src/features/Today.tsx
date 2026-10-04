@@ -95,7 +95,13 @@ export default function Today() {
             <RowList>
               {declarations.map((item, i) => (
                 <Group key={item.id}>
-                  <Text variant="strong">{item.name}</Text>
+                  <Text
+                    wordSafe
+                    variant="strong"
+                    testID={`today-declaration-name-${i}`}
+                  >
+                    {item.name}
+                  </Text>
                   <Text variant="metadata">
                     {[
                       chamberName(item.chamber, item.jurisdiction),

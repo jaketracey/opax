@@ -101,17 +101,24 @@ export function Text({
   style,
   wordSafe = false,
   onTextLayout,
+  onLayout,
   ...props
 }: OpaxTextProps) {
   const bold = useBoldText();
   const role = textStyles[variant];
   const tabular = 'tabular' in role && role.tabular;
-  const { fontScale, width } = useWindowDimensions();
+  const { fontScale, width, scale } = useWindowDimensions();
   // A cap belongs to one text size, width and text (nested text included, such
   // as a field's "(required)"): any change starts again from full size.
   const key = `${fontScale}|${width}|${textContent(props.children)}`;
   const [capped, setCapped] = useState({ key, cap: 0 });
   const cap = capped.key === key ? capped.cap : 0;
+  const heightKey = `${key}|${variant}|${bold}|${cap}|${scale}`;
+  const [heightGuard, setHeightGuard] = useState({
+    key: '',
+    width: 0,
+    minimum: 0,
+  });
   const onLayoutLines = (event: TextLayoutEvent) => {
     onTextLayout?.(event);
     if (!wordSafe) return;
@@ -129,6 +136,30 @@ export function Text({
       accessibilityLanguage="en-AU"
       {...props}
       onTextLayout={wordSafe || onTextLayout ? onLayoutLines : undefined}
+      onLayout={
+        wordSafe || onLayout
+          ? (event) => {
+              onLayout?.(event);
+              if (!wordSafe) return;
+              const frame = event.nativeEvent.layout;
+              if (frame.height <= 0 || frame.width <= 0) return;
+              setHeightGuard((previous) =>
+                previous.key === heightKey && previous.width === frame.width
+                  ? previous
+                  : {
+                      key: heightKey,
+                      width: frame.width,
+                      // TextKit measures with unbounded height, but draws into
+                      // Yoga's rounded frame. The fractional last line can fall
+                      // outside it (141.182pt in a 141pt AX5 frame). One whole
+                      // point survives rounding; a physical pixel may round away.
+                      // Keep this minimum stable rather than growing on each layout.
+                      minimum: Math.ceil(frame.height) + 1,
+                    },
+              );
+            }
+          : undefined
+      }
       allowFontScaling
       maxFontSizeMultiplier={wordSafe && cap ? cap : 0}
       dynamicTypeRamp={role.dynamicTypeRamp}
@@ -141,6 +172,9 @@ export function Text({
           flexShrink: 1,
         },
         tabular ? { fontVariant: ['tabular-nums'] } : null,
+        wordSafe && heightGuard.key === heightKey
+          ? { minHeight: heightGuard.minimum }
+          : null,
         style,
       ]}
     />

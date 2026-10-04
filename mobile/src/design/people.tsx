@@ -129,8 +129,15 @@ export function PersonRow({
     <>
       <View style={[styles.personMain, stacked ? styles.personStacked : null]}>
         <Portrait />
-        <View style={styles.personText}>
-          <Text wordSafe variant="strong">
+        <View
+          style={[styles.personText, stacked ? null : styles.personTextInline]}
+        >
+          <Text
+            wordSafe
+            variant="strong"
+            testID={testID ? `${testID}-name` : undefined}
+            style={styles.personName}
+          >
             {name}
           </Text>
           {partyContext ? <PartyLabel {...partyContext} dense /> : null}
@@ -199,5 +206,9 @@ const styles = StyleSheet.create({
     gap: spacing.s4,
   },
   personStacked: { flexDirection: 'column', gap: spacing.s3 },
-  personText: { flex: 1, gap: spacing.s1, alignSelf: 'stretch' },
+  // flex: 1 allocates width beside the portrait, but becomes a zero height
+  // basis when the main axis stacks. Let the column measure all its lines.
+  personText: { gap: spacing.s1, alignSelf: 'stretch' },
+  personTextInline: { flex: 1 },
+  personName: { flexShrink: 0 },
 });
