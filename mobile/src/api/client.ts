@@ -40,13 +40,17 @@ export function dataAsOf(value: unknown): string | null {
 }
 // Cached JSON must remain the version that passed validation. Freezing once
 // prevents a screen from changing a reused result without another decode.
-function freezeSnapshot(value: unknown) {
-  const pending = [value];
+function freezeSnapshot(...values: unknown[]) {
+  const pending = [...values];
+  const seen = new WeakSet<object>();
   while (pending.length) {
     const item = pending.pop();
-    if (item === null || typeof item !== 'object' || Object.isFrozen(item))
+    if (item === null || typeof item !== 'object' || seen.has(item))
       continue;
-    Object.freeze(item);
+    seen.add(item);
+    // A decoder or store may have frozen only the parent. Still traverse its
+    // children; shared raw/decoded descendants are visited once per snapshot.
+    if (!Object.isFrozen(item)) Object.freeze(item);
     for (const child of Object.values(item)) pending.push(child);
   }
 }
@@ -63,8 +67,7 @@ export class ApiClient {
     let versions = this.decoded.get(body);
     if (versions?.has(decode)) return versions.get(decode) as T;
     const value = decode(body); // Never retain a failed validation.
-    freezeSnapshot(body);
-    freezeSnapshot(value);
+    freezeSnapshot(body, value);
     if (!versions) this.decoded.set(body, (versions = new Map()));
     versions.set(decode, value);
     return value;

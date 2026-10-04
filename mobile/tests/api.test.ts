@@ -930,3 +930,31 @@ test('validated raw and decoded snapshots cannot be mutated to bypass their deco
   );
   expect(validate).toHaveBeenCalledTimes(1);
 });
+
+test('pre-frozen parents still protect nested raw and decoded snapshot values', async () => {
+  const transport = jest.fn();
+  const { client, cache } = setup(transport);
+  const body = Object.freeze({
+    generated: '2026-09-04',
+    nested: { value: 1 },
+  });
+  await cache.put({
+    url: `${origin}/parliamentarians.json`,
+    body,
+    savedAt: 1000,
+    validatedAt: 1000,
+    expiresAt: 61000,
+    asOf: body.generated,
+  });
+  const validate = jest.fn((value: unknown) =>
+    Object.freeze({ ...decode(value), nested: { values: [1, 2] } }),
+  );
+  const first = await client.get('/parliamentarians.json', validate);
+  expect(Reflect.set(body.nested, 'value', 2)).toBe(false);
+  expect(Reflect.set(first.data.nested.values, 0, 2)).toBe(false);
+  expect((await client.get('/parliamentarians.json', validate)).data).toBe(
+    first.data,
+  );
+  expect(validate).toHaveBeenCalledTimes(1);
+  expect(transport).not.toHaveBeenCalled();
+});
