@@ -305,8 +305,8 @@ numeric ID for federal pay; ID-less federal pay records still join by name.
 
 One API response is pinned beside the catalogs: `responses` in
 `fixture-snapshot.json` records the W13 edition fetched once from production
-(`scripts/fixtures/edition-latest.json`, its SHA-256, size, fetch time and Worker
-commit). The fixture serves those exact bytes; prettier ignores the folder so the
+(`scripts/fixtures/edition-latest.json`, its SHA-256, size, fetch time and the
+reader code it was checked against). The fixture serves those exact bytes; prettier ignores the folder so the
 bytes never change. `OPAX_FIXTURE_EDITION=absent` makes the fixture answer the
 edition as the Worker does when none is posted (404 `edition_not_published`) for
 the no-edition journey, run on its own by path:

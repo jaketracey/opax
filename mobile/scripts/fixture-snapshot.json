@@ -100,7 +100,7 @@
       "sha256": "07ea41c3675b24023dbe99242342851b5b8fb665c37742fe6380fc643f66fc2f",
       "size": 4208,
       "fetchedAt": "2026-10-04T03:24:09Z",
-      "worker": "d74b35d8",
+      "readerContract": "origin/main d74b35d8 portal/src/app-edition.ts",
       "cacheControl": "public, max-age=300, must-revalidate"
     }
   }

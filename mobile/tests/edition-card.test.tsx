@@ -19,6 +19,7 @@ import {
   StaleNotice,
 } from '../src/design/primitives';
 import { EditionCard, EditionSection } from '../src/features/EditionCard';
+import { webPageUrl } from '../src/navigation/external';
 import Today from '../src/features/Today';
 import { responseBytes } from './fixture-bytes';
 import { replaceAt } from './pinned';
@@ -190,6 +191,19 @@ describe('the edition card', () => {
     expect(webOrigin).not.toContain('opax.com.au');
     alert.mockRestore();
   });
+  test.each([
+    '/subject/person/Tony%20Abbott',
+    '/bill/au-federal-r7529',
+    '/money/grants/federal/recipient/abn:83140439239?award=GA12345',
+    '/money/grants?jur=federal&program=abc',
+    '/money/grants?jur=federal&largest=2026-08',
+    '/reports/housing',
+  ])(
+    "the guard passes the publisher's page %s on the build's origin",
+    (path) => {
+      expect(webPageUrl(path)).toBe(`${webOrigin}${path}`);
+    },
+  );
   test('a link the guard refuses is not drawn', () => {
     const { root } = render(
       <EditionCard
