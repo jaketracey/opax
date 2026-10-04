@@ -9,7 +9,7 @@ import {
   type RosterId,
 } from './ids';
 import { ApiError, PersonIdentityError } from './errors';
-import { personPartyFor } from './party-transforms';
+import { personPartyFor, type PartyStatus } from './party-transforms';
 import type {
   Roster,
   Slugs,
@@ -27,8 +27,11 @@ export interface PersonProfile {
   legacyPersonId?: LegacyPersonId;
   rosterPersonId?: RosterId;
   party: string | null;
-  /** True only for a current seat or an explicitly current roster observation. */
-  partyCurrent: boolean;
+  /**
+   * "current" for a current seat or an explicitly current roster observation;
+   * "former" only when dated data or the roster says so; otherwise "unknown".
+   */
+  partyStatus: PartyStatus;
   rosterParty: string | null;
   formerly: string | null;
   seats: SeatObservation[];
@@ -254,7 +257,8 @@ export function joinPerson(
       'The person identity needs review before this record can be shown.',
     );
   const person = matches[0];
-  const seats = person?.electorates.filter((seat) => seat.current) ?? [];
+  const observations = person?.electorates ?? [];
+  const seats = observations.filter((seat) => seat.current);
   // The roster's recorded affiliations are historical, not a current-seat fallback.
   const sources = manifest.sources.filter((source) =>
     person?.sources.includes(source.source_id),
@@ -266,7 +270,7 @@ export function joinPerson(
     legacyPersonId: numericPersonId(person?.legacy_person_id, row),
     rosterPersonId: person?.legacy_person_id ?? row?.pid,
     ...personPartyFor(
-      seats,
+      observations,
       row,
       namedRosterRow(
         [person?.name ?? name, name, ...(person?.aliases ?? [])],

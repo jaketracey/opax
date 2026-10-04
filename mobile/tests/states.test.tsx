@@ -267,7 +267,7 @@ describe('every drawn state is in the contrast table and passes', () => {
         <PersonRow
           name="Anthony Albanese"
           party={party}
-          partyCurrent
+          partyStatus="current"
           place="Member for Grayndler · NSW"
           onPress={noop}
         />
@@ -348,43 +348,75 @@ describe('party context', () => {
       .flatMap((node) => [node.props.children].flat())
       .filter((child) => typeof child === 'string')
       .join('');
-  test('a historical party reads "Formerly …", seen and heard', () => {
-    const label = <PartyLabel party="Labor" current={false} />;
-    expect(labelOf(label)).toBe('Formerly Labor');
-    expect(textOf(label)).toBe('Formerly Labor');
+  // Fixed expectations per status: [visible, VoiceOver], full then dense.
+  test.each([
+    ['current', 'Labor', 'Labor', 'ALP'],
+    ['unknown', 'Labor', 'Labor', 'ALP'],
+    ['former', 'Formerly Labor', 'Formerly Labor', 'Formerly ALP'],
+  ] as const)(
+    'a %s party reads "%s", seen and heard',
+    (status, visible, spoken, dense) => {
+      const full = <PartyLabel party="Labor" status={status} />;
+      expect(labelOf(full)).toBe(spoken);
+      expect(textOf(full)).toBe(visible);
+      const short = <PartyLabel party="Labor" status={status} dense />;
+      expect(labelOf(short)).toBe(spoken);
+      expect(textOf(short)).toBe(dense);
+    },
+  );
+  test('an undated party never reads as former', () => {
+    const label = <PartyLabel party="LNP" status="unknown" />;
+    expect(labelOf(label)).toBe('LNP');
+    expect(textOf(label)).not.toMatch(/formerly/i);
   });
   test('a changed party reads the current one, then formerly', () => {
     const label = (
-      <PartyLabel party="One Nation" current formerly="Nationals" />
+      <PartyLabel party="One Nation" status="current" formerly="Nationals" />
     );
     expect(labelOf(label)).toBe('One Nation, formerly Nationals');
-    expect(textOf(label)).toContain('One Nation');
-    expect(textOf(label)).toContain(' · formerly Nationals');
+    expect(textOf(label)).toBe('One Nation · formerly Nationals');
+    const dense = (
+      <PartyLabel
+        party="One Nation"
+        status="current"
+        formerly="Nationals"
+        dense
+      />
+    );
+    expect(labelOf(dense)).toBe('One Nation, formerly Nationals');
+    expect(textOf(dense)).toBe('ONP · formerly NAT');
   });
   test('the same party under another name is not "formerly"', () => {
     expect(
       labelOf(
-        <PartyLabel party="Labor" current formerly="Australian Labor Party" />,
+        <PartyLabel
+          party="Labor"
+          status="current"
+          formerly="Australian Labor Party"
+        />,
       ),
     ).toBe('Labor');
   });
-  test('dense rows keep the context with the short label', () => {
-    const label = <PartyLabel party="Labor" current={false} dense />;
-    expect(labelOf(label)).toBe('Formerly Labor');
-    expect(textOf(label)).toBe('Formerly ALP');
-  });
-  test('a person row reads the status in its single label', () => {
-    expect(
-      labelOf(
-        <PersonRow
-          name="Julia Gillard"
-          party="Labor"
-          partyCurrent={false}
-          onPress={noop}
-        />,
-      ),
-    ).toBe('Julia Gillard, Formerly Labor');
-  });
+  // Each person with the status the pinned data gives them.
+  test.each([
+    ['current', 'Anthony Albanese', 'Anthony Albanese, Labor'],
+    ['unknown', 'Yasmin Catley', 'Yasmin Catley, Labor'],
+    ['former', 'Julia Gillard', 'Julia Gillard, Formerly Labor'],
+  ] as const)(
+    'a %s person row reads "%s" in one label',
+    (status, name, label) => {
+      expect(
+        labelOf(
+          <PersonRow
+            name={name}
+            party="Labor"
+            partyStatus={status}
+            onPress={noop}
+          />,
+        ),
+      ).toBe(label);
+    },
+  );
   test('the party colours used by rows are all listed', () => {
     for (const hexColour of Object.values(partyColors))
       expect(listedPair(hexColour, light.raised)).toBeTruthy();

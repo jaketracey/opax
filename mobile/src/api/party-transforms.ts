@@ -25,6 +25,38 @@ export function samePartyLabel(a: string, b: string) {
       : String(party);
   return label(a) === label(b);
 }
+/**
+ * Whether a person's party is their affiliation today, a former one, or one
+ * the data does not date. Unknown is common: the roster's `current` flag comes
+ * only from the federal APH list, and the dated seat release covers federal
+ * House history plus current senators and Victorian members. Only "former"
+ * may be drawn as "Formerly X"; unknown is drawn plainly, as the web does.
+ */
+export type PartyStatus = 'current' | 'former' | 'unknown';
+// `seats` are all of the person's dated observations, current and ended.
+export function partyStatusFor(
+  seats: SeatObservation[],
+  row?: Roster['people'][number],
+): PartyStatus {
+  if (
+    seats.some((s) => s.current) ||
+    (row?.current === true && !!row.party_now)
+  )
+    return 'current';
+  if (row?.current === false) return 'former';
+  // An ended seat proves a former member only where the dated release speaks
+  // for every jurisdiction the roster records: an ended federal seat says
+  // nothing about a state seat (Janelle Saffin's Page seat ended in 2013; the
+  // roster also records her for Lismore, which no dated release covers).
+  const dated = new Set(seats.map((s) => s.jurisdiction));
+  const recorded = [
+    ...(row?.states ?? []),
+    ...(row?.representation ?? []).map((r) => r.jurisdiction),
+  ];
+  return seats.length && recorded.every((j) => dated.has(j))
+    ? 'former'
+    : 'unknown';
+}
 // Both the directory and full profile use dated seats first. Historical roster
 // affiliations remain visible, but are never labelled as a current party.
 export function personPartyFor(
@@ -32,14 +64,11 @@ export function personPartyFor(
   row?: Roster['people'][number],
   affiliationRow?: Roster['people'][number],
 ) {
-  const party = seats[0]?.party ?? row?.party_now ?? row?.party ?? null;
-  const partyCurrent =
-    seats[0]?.party != null || (row?.current === true && !!row.party_now);
-  const rosterParty = row?.party ?? null;
+  const current = seats.filter((s) => s.current);
   return {
-    party,
-    partyCurrent,
-    rosterParty,
+    party: current[0]?.party ?? row?.party_now ?? row?.party ?? null,
+    partyStatus: partyStatusFor(seats, row),
+    rosterParty: row?.party ?? null,
     // Former affiliations need a distinct, named roster party_now observation;
     // a different seat label alone does not establish a party change.
     formerly:
