@@ -1,7 +1,17 @@
-import { bills, index, roster, slugs } from './pinned';
+import { bills, catalogs, index, roster, slugs } from './pinned';
 import { nameKey } from '../src/api/ids';
-import { suggestionsFor } from '../src/api/catalogs';
-import { groupSuggestions, searchKinds } from '../src/features/search/model';
+import {
+  suggestionsFor,
+  rosterIdentityFor,
+  searchPersonFor,
+} from '../src/api/catalogs';
+import {
+  groupSuggestions,
+  searchKinds,
+  personRowContext,
+} from '../src/features/search/model';
+import { joinPerson } from '../src/api/person-identity';
+import { partyText } from '../src/design/party';
 
 test('suggestion matching folds case and whitespace and preserves source names', () => {
   const expected = suggestionsFor('Albanese', roster, index, bills);
@@ -102,3 +112,132 @@ test.each([
     }
   },
 );
+
+test('all pinned Search identities agree with the profile header', () => {
+  let resolved = 0,
+    conflicts = 0;
+  expect(Object.keys(slugs.slugs)).toHaveLength(1548);
+  for (const slug of Object.keys(slugs.slugs)) {
+    let profile;
+    try {
+      profile = joinPerson(
+        slug,
+        slugs,
+        roster,
+        catalogs.people,
+        catalogs.manifest,
+      );
+    } catch {
+      conflicts++;
+      expect(searchPersonFor(slug, catalogs)).toBeNull();
+      continue;
+    }
+    const row = personRowContext(searchPersonFor(slug, catalogs));
+    expect({
+      slug,
+      party: row.party,
+      current: row.partyCurrent,
+      formerly: row.formerly,
+    }).toEqual({
+      slug,
+      party: profile.party ?? undefined,
+      current: profile.partyCurrent,
+      formerly: profile.formerly,
+    });
+    if (profile.party)
+      expect(
+        partyText({
+          party: row.party!,
+          current: row.partyCurrent,
+          formerly: row.formerly,
+        }),
+      ).toEqual(
+        partyText({
+          party: profile.party,
+          current: profile.partyCurrent,
+          formerly: profile.formerly,
+        }),
+      );
+    resolved++;
+    const sourceRow = roster.people.find((p) => p.name === slugs.slugs[slug]);
+    if (sourceRow)
+      expect(rosterIdentityFor(sourceRow, catalogs)).toEqual(
+        searchPersonFor(slug, catalogs),
+      );
+  }
+  expect(resolved).toBe(1540);
+  expect(conflicts).toBe(8);
+});
+test('unresolved Search rows have no party or place', () => {
+  expect(personRowContext(null)).toMatchObject({
+    party: undefined,
+    place: undefined,
+  });
+});
+test('surname stubs never borrow merged chambers, and committees never describe a place', () => {
+  let stubs = 0;
+  for (const row of roster.people) {
+    const context = personRowContext(rosterIdentityFor(row, catalogs));
+    expect(context.place ?? '').not.toContain('Senate committees');
+    if (!row.name.trim().includes(' ') && !row.representation?.length) {
+      stubs++;
+      const identity = rosterIdentityFor(row, catalogs);
+      if (!identity?.representation.length)
+        expect(context.place).toBeUndefined();
+    }
+  }
+  expect(stubs).toBeGreaterThan(200);
+});
+test('dated current seats replace former seats and senator places do not repeat their state', () => {
+  const senator = personRowContext(
+    searchPersonFor('david-shoebridge', catalogs),
+  );
+  expect(senator).toMatchObject({
+    party: 'Greens',
+    partyCurrent: true,
+    place: 'New South Wales · Senate',
+  });
+  const crewther = personRowContext(
+    searchPersonFor('chris-crewther', catalogs),
+  );
+  expect(crewther.place).toContain('Mornington');
+  expect(crewther.place).not.toContain('Dunkley');
+});
+test.each([
+  ['Alex Greenwich', 'Sydney'],
+  ['Jo Haylen', 'Summer Hill'],
+  ['Mark Speakman', 'Cronulla'],
+  ["Marjorie O'Neill", 'Coogee'],
+  ['Yasmin Catley', 'Swansea'],
+])('undated roster representation is neutral for %s', (name, seat) => {
+  const slug = Object.entries(slugs.slugs).find(
+    ([, value]) => nameKey(value) === nameKey(name),
+  )![0];
+  const identity = searchPersonFor(slug, catalogs)!;
+  expect(identity.representation.length).toBeGreaterThan(0);
+  expect(identity.representation.every((r) => r.current === undefined)).toBe(
+    true,
+  );
+  expect(personRowContext(identity).place).toBe(
+    `Recorded representation: ${seat} · New South Wales Legislative Assembly`,
+  );
+});
+test('pinned representations are current or undated; undated seats use recorded wording', () => {
+  let recorded = 0;
+  for (const slug of Object.keys(slugs.slugs)) {
+    const identity = searchPersonFor(slug, catalogs);
+    expect(
+      identity?.representation.some((r) => r.current === false) ?? false,
+    ).toBe(false);
+    if (
+      identity?.representation.length &&
+      identity.representation.every((r) => r.current === undefined)
+    ) {
+      recorded++;
+      const place = personRowContext(identity).place;
+      expect(place).toContain('Recorded representation:');
+      expect(place).not.toContain('Former representation:');
+    }
+  }
+  expect(recorded).toBeGreaterThan(600);
+});

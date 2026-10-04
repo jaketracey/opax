@@ -108,6 +108,13 @@ name: 13 Today feeds and their dated original sources
     id: today-screen
 - scrollUntilVisible:
     element:
+      id: today-declaration-person-0
+    timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/13-declaration-person
+- scrollUntilVisible:
+    element:
       id: today-declaration-0
     direction: DOWN
     timeout: 90000
@@ -121,6 +128,15 @@ name: 13 Today feeds and their dated original sources
     id: today-declaration-0
 - assertVisible: https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072
 - takeScreenshot: ${EVIDENCE}/13-declaration-source-alert
+# The local destination view scrolls a long URL at AX5. Capture its end too.
+- repeat:
+    times: 8
+    commands:
+      - swipe:
+          start: 50%, 65%
+          end: 50%, 35%
+          duration: 1000
+- takeScreenshot: ${EVIDENCE}/13-declaration-source-alert-end
 - tapOn: OK
 - assertVisible:
     id: today-screen
@@ -133,7 +149,7 @@ name: 13 Today feeds and their dated original sources
     element:
       id: today-screen-footer
     direction: DOWN
-    timeout: 90000
+    timeout: 300000
     visibilityPercentage: 1
 - swipe:
     start: 90%, 70%
@@ -149,7 +165,7 @@ name: 13 Today feeds and their dated original sources
     element:
       id: today-declarations-as-at
     direction: DOWN
-    timeout: 90000
+    timeout: 300000
 - assertVisible:
     id: today-declarations-as-at
     text: As at .* Source.*

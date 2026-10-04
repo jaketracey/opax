@@ -1,7 +1,8 @@
 import { Alert, Linking } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
-import { isE2E, webOrigin } from '../design/environment';
+import { hasSourcePreview, isE2E, webOrigin } from '../design/environment';
 import { light } from '../design/tokens';
+import { presentSourceDestination } from './source-destination';
 
 // Where the Worker or the web app turns an OPAX address into a page the app
 // never sends a reader to (portal/src/page-entry.ts, portal/src/index.ts,
@@ -266,7 +267,10 @@ export function sourceUrl(raw: string): string {
  * visibly presented (guideline 5.1.1(vii)). E2E builds never open a browser:
  * they show the destination locally instead.
  */
-export async function openSource(url: string, label: string): Promise<void> {
+export async function openSource(
+  url: string,
+  citation = 'Source record',
+): Promise<void> {
   let checked: string;
   try {
     checked = sourceUrl(url);
@@ -275,8 +279,8 @@ export async function openSource(url: string, label: string): Promise<void> {
     return;
   }
   if (isE2E) {
-    // Title and URL apart, so journeys can assert the exact destination.
-    Alert.alert(`Source record: ${label}`, checked);
+    if (hasSourcePreview) presentSourceDestination({ url: checked, citation });
+    else Alert.alert(`Source record: ${citation}`, checked);
     return;
   }
   try {

@@ -15,6 +15,7 @@ export function Excerpt({ snippet }: { snippet: string }) {
         label={expanded ? 'Hide matching record' : 'Read matching record'}
         variant="quiet"
         size="compact"
+        expanded={expanded}
         onPress={() => setExpanded(!expanded)}
       />
       {expanded ? <Text variant="metadata">{snippet}</Text> : null}

@@ -3,20 +3,13 @@ import { RefreshControl } from 'react-native';
 import { router } from 'expo-router';
 import type { Block, EditionView } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
-import {
-  Group,
-  RowList,
-  Screen,
-  Section,
-  SourceLink,
-  Text,
-} from '../design/primitives';
+import { RowList, Screen, Section, Text } from '../design/primitives';
 import { formatDate } from '../design/format';
-import { chamberName, declarationKind } from '../design/parliament';
 import { CatalogState } from './CatalogState';
 import { EditionSection } from './EditionCard';
 import { RecordRow } from './RecordRow';
 import { billRoute } from '../navigation/routes';
+import { TodayDeclaration } from './today/TodayDeclaration';
 
 export default function Today() {
   const [data, setData] = useState<Awaited<
@@ -55,7 +48,12 @@ export default function Today() {
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
     >
-      <Text variant="fine" testID="today-screen-message">
+      <Text
+        variant="fine"
+        testID="today-screen-message"
+        wordSafe
+        style={{ flexShrink: 0 }}
+      >
         OPAX is independent and non-partisan. It is not a government app.
       </Text>
       <EditionSection
@@ -105,32 +103,7 @@ export default function Today() {
           {(declarations) => (
             <RowList>
               {declarations.map((item, i) => (
-                <Group key={item.id}>
-                  <Text
-                    wordSafe
-                    variant="strong"
-                    testID={`today-declaration-name-${i}`}
-                  >
-                    {item.name}
-                  </Text>
-                  <Text variant="metadata">
-                    {[
-                      chamberName(item.chamber, item.jurisdiction),
-                      declarationKind(item.kind),
-                      formatDate(item.date, 'short'),
-                    ]
-                      .filter(Boolean)
-                      .join(' · ')}
-                  </Text>
-                  {item.description ? <Text>{item.description}</Text> : null}
-                  <SourceLink
-                    citation="Register of interests"
-                    record={`${item.name}${item.page !== null ? `, page ${item.page}` : ''}`}
-                    url={item.url}
-                    kind="record"
-                    testID={`today-declaration-${i}`}
-                  />
-                </Group>
+                <TodayDeclaration key={item.id} item={item} index={i} />
               ))}
             </RowList>
           )}

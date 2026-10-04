@@ -305,38 +305,151 @@ test.each([
   expect(httpError(status as number).code).toBe(code);
 });
 
-test('a delayed 304 cannot replace a newer 200', async () => {
-  let release!: () => void;
-  const gate = new Promise<void>((resolve) => {
-    release = resolve;
-  });
-  const transport = jest
-    .fn()
-    .mockImplementationOnce(async () => {
-      await gate;
-      return new Response(null, { status: 304, headers: { etag: 'v1' } });
-    })
-    .mockResolvedValueOnce(
-      response(200, { etag: 'v2', 'cache-control': 'max-age=60' }),
+test.each([
+  [60, false],
+  [0, true],
+])(
+  'a delayed 304 cannot replace a newer 200 with TTL %s',
+  async (ttl, stale) => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const transport = jest
+      .fn()
+      .mockImplementationOnce(async () => {
+        await gate;
+        return new Response(null, { status: 304, headers: { etag: 'v1' } });
+      })
+      .mockResolvedValueOnce(
+        response(200, { etag: 'v2', 'cache-control': `max-age=${ttl}` }),
+      );
+    const { client, cache } = setup(transport, () => 5000);
+    await cache.put({
+      url: `${origin}/parliamentarians.json`,
+      body: { generated: '2026-09-01' },
+      asOf: '2026-09-01',
+      etag: 'v1',
+      savedAt: 1,
+      validatedAt: 1,
+      expiresAt: 2,
+    });
+    const slow = client.get('/parliamentarians.json', decode, true);
+    // Wait until the first request actually enters the transport.
+    while (!transport.mock.calls.length) await Promise.resolve();
+    await client.get('/parliamentarians.json', decode, true);
+    release();
+    expect(await slow).toMatchObject({
+      data: { generated: '2026-09-04' },
+      stale,
+    });
+    expect((await cache.get(`${origin}/parliamentarians.json`))?.etag).toBe(
+      'v2',
     );
-  const { client, cache } = setup(transport, () => 5000);
-  await cache.put({
-    url: `${origin}/parliamentarians.json`,
-    body: { generated: '2026-09-01' },
-    asOf: '2026-09-01',
-    etag: 'v1',
-    savedAt: 1,
-    validatedAt: 1,
-    expiresAt: 2,
-  });
-  const slow = client.get('/parliamentarians.json', decode, true);
-  // Wait until the first request actually enters the transport.
-  while (!transport.mock.calls.length) await Promise.resolve();
-  await client.get('/parliamentarians.json', decode, true);
-  release();
-  expect((await slow).data.generated).toBe('2026-09-04');
-  expect((await cache.get(`${origin}/parliamentarians.json`))?.etag).toBe('v2');
-});
+  },
+);
+test.each([200, 304])(
+  'a concurrent zero-TTL %s validation of the same ETag is online',
+  async (status) => {
+    let release!: () => void;
+    let now = 1000;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const headers = { etag: 'v1', 'cache-control': 'max-age=0' };
+    const transport = jest
+      .fn()
+      .mockImplementationOnce(async () => {
+        await gate;
+        return status === 304
+          ? new Response(null, { status, headers })
+          : response(status, headers);
+      })
+      .mockResolvedValueOnce(response(200, headers))
+      .mockRejectedValueOnce(new TypeError('connection lost'));
+    const { client, cache } = setup(transport, () => now);
+    const url = `${origin}/parliamentarians.json`;
+    await cache.put({
+      url,
+      body: { generated: '2026-09-04' },
+      asOf: '2026-09-04',
+      etag: 'v1',
+      savedAt: 1,
+      validatedAt: 1,
+      expiresAt: 2,
+    });
+    const slow = client.get('/parliamentarians.json', decode, true);
+    while (!transport.mock.calls.length) await Promise.resolve();
+    now = 2000;
+    expect(
+      (await client.get('/parliamentarians.json', decode, true)).stale,
+    ).toBe(false);
+    now = 3000;
+    release();
+    expect(await slow).toMatchObject({
+      data: { generated: '2026-09-04' },
+      stale: false,
+    });
+    // Retain the winning observation and still revalidate the next read.
+    expect(await cache.get(url)).toMatchObject({
+      validatedAt: 2000,
+      expiresAt: 2000,
+    });
+    now = 4000;
+    expect((await client.get('/parliamentarians.json', decode)).stale).toBe(
+      true,
+    );
+    expect(transport).toHaveBeenCalledTimes(3);
+  },
+);
+test.each([200, 304])(
+  'a %s response remains online when a later same-ETag validation commits first',
+  async (status) => {
+    let now = 1000,
+      release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const headers = { etag: 'v1', 'cache-control': 'max-age=0' };
+    const transport = jest
+      .fn()
+      .mockResolvedValueOnce(
+        status === 304
+          ? new Response(null, { status, headers })
+          : response(status, headers),
+      )
+      .mockResolvedValueOnce(response(200, headers));
+    const { client, cache } = setup(transport, () => now);
+    const url = `${origin}/parliamentarians.json`;
+    await cache.put({
+      url,
+      body: { generated: '2026-09-04' },
+      asOf: '2026-09-04',
+      etag: 'v1',
+      savedAt: 1,
+      validatedAt: 1,
+      expiresAt: 2,
+    });
+    const put = cache.put.bind(cache);
+    const pending = jest
+      .spyOn(cache, 'put')
+      .mockImplementationOnce(async (entry) => {
+        await gate;
+        return (await cache.get(entry.url)) ?? entry;
+      })
+      .mockImplementation(put);
+    const slow = client.get('/parliamentarians.json', decode, true);
+    while (!pending.mock.calls.length) await Promise.resolve();
+    // The first response has already been timestamped, but its cache commit waits.
+    now = 2000;
+    expect(
+      (await client.get('/parliamentarians.json', decode, true)).stale,
+    ).toBe(false);
+    release();
+    expect((await slow).stale).toBe(false);
+    expect(await cache.get(url)).toMatchObject({ validatedAt: 2000 });
+  },
+);
 test('an older as-at body cannot replace a newer observation', async () => {
   const transport = jest.fn().mockResolvedValue(
     new Response(JSON.stringify({ generated: '2026-08-01' }), {

@@ -47,7 +47,7 @@ HERMES_FIELDS = ("fileLength", "globalCodeIndex", "functionCount", "stringKindCo
 # Bytecode versions whose layout this reader knows (function header bytes).
 # Any other version fails closed: check a shipped bundle before adding one.
 HERMES_LAYOUTS = {98: {"function_header_size": 12}}
-DEVELOPMENT_ROUTE = re.compile(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype|voice-bridge-test|test-screens", re.I)
+DEVELOPMENT_ROUTE = re.compile(r"workbench|source-destination|fixture|__tests__|\(dev\)|__dev|home-prototype|voice-bridge-test|test-screens", re.I)
 DEVELOPMENT_PATHS = re.compile(rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev|voice-bridge-test|test-screens)|"
                                rb"(?:src/)?test-screens/|ui-workbench|home-prototype|/__dev(?:/|\x00)", re.I)
 SCENE_DELEGATE = "EXExpoAppSceneDelegate"

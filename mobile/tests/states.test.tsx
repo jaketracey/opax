@@ -3,6 +3,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
   ActivityIndicator,
+  Dimensions,
   StyleSheet,
   Text as NativeText,
   View,
@@ -392,6 +393,66 @@ describe('party context', () => {
 });
 
 describe('word-safe text', () => {
+  test.each([
+    { size: 'default', fontScale: 1, reserved: false },
+  ])(
+    'the $size name retains its measured lines without a font or line cap',
+    ({ fontScale, reserved }) => {
+      const originalWindow = Dimensions.get('window');
+      const originalScreen = Dimensions.get('screen');
+      let renderer!: TestRenderer.ReactTestRenderer;
+      try {
+        act(() => {
+          Dimensions.set({
+            window: { width: 390, height: 844, scale: 3, fontScale },
+            screen: { width: 390, height: 844, scale: 3, fontScale },
+          });
+          renderer = TestRenderer.create(
+            <Text wordSafe variant="strong">
+              Anthony Albanese
+            </Text>,
+          );
+        });
+        const name = () => renderer.root.findByType(NativeText);
+        act(() =>
+          name().props.onTextLayout({
+            nativeEvent: {
+              lines: [
+                { text: 'Anthony ', y: 0, height: 64.334 },
+                { text: 'Albanese', y: 64.334, height: 64.334 },
+              ],
+            },
+          }),
+        );
+        const style = StyleSheet.flatten(name().props.style);
+        if (reserved) {
+          expect(style.minHeight).toBeGreaterThan(128.668);
+        } else {
+          expect(style.minHeight).toBeUndefined();
+        }
+        // The line box must not disable horizontal shrink beside an icon.
+        expect(style.flexShrink).toBe(1);
+        expect(name().props.children).toBe('Anthony Albanese');
+        expect(name().props.maxFontSizeMultiplier).toBe(0);
+        expect(name().props.numberOfLines).toBeUndefined();
+        act(() =>
+          renderer.update(
+            <Text wordSafe variant="strong">
+              Malcolm Roberts
+            </Text>,
+          ),
+        );
+        expect(
+          StyleSheet.flatten(name().props.style).minHeight,
+        ).toBeUndefined();
+      } finally {
+        act(() => {
+          renderer?.unmount();
+          Dimensions.set({ window: originalWindow, screen: originalScreen });
+        });
+      }
+    },
+  );
   test('a field label that changes starts again from full size', () => {
     for (const required of [false, true]) {
       let renderer!: TestRenderer.ReactTestRenderer;

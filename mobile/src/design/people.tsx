@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
@@ -86,9 +87,15 @@ export function PartyLabel({
 // affiliation as if it were current.
 type PersonRowParty =
   | { party?: undefined; partyCurrent?: undefined; formerly?: undefined }
-  | { party: string | null; partyCurrent: boolean; formerly?: string | null };
+  | {
+      party: string | null | undefined;
+      partyCurrent: boolean;
+      formerly?: string | null;
+    };
 export type PersonRowProps = PersonRowParty & {
   name: string;
+  /** Reviewed portrait content; callers retain its credit and licence links. */
+  portrait?: ReactNode;
   /** "Member for Grayndler · NSW" or "Senator for Queensland". */
   place?: string;
   /** A date or extra line: "Sponsored travel, added 2 Sep 2026". */
@@ -105,6 +112,7 @@ export type PersonRowProps = PersonRowParty & {
  */
 export function PersonRow({
   name,
+  portrait,
   party,
   partyCurrent,
   formerly,
@@ -129,7 +137,7 @@ export function PersonRow({
   const body = (
     <>
       <View style={[styles.personMain, stacked ? styles.personStacked : null]}>
-        <Portrait />
+        {portrait ?? <Portrait />}
         <View
           style={[styles.personText, stacked ? null : styles.personTextInline]}
         >

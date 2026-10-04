@@ -76,7 +76,7 @@ function ProfileScreen({ slug }: { slug: string }) {
   const [profile, setProfile] = useState<ProfileView | null>(null),
     [error, setError] = useState<string | null>(null),
     [retry, setRetry] = useState(0),
-    [busy, setBusy] = useState(true),
+    [refreshing, setRefreshing] = useState(false),
     [portraitFailed, setPortraitFailed] = useState(false),
     [noNativeProfile, setNoNativeProfile] = useState(false);
   useEffect(() => {
@@ -109,14 +109,14 @@ function ProfileScreen({ slug }: { slug: string }) {
         if (active) setError(errorMessage(e));
       })
       .finally(() => {
-        if (active) setBusy(false);
+        if (active) setRefreshing(false);
       });
     return () => {
       active = false;
     };
   }, [slug, retry]);
   const refresh = () => {
-      setBusy(true);
+      setRefreshing(true);
       setError(null);
       setPortraitFailed(false);
       setRetry((v) => v + 1);
@@ -139,7 +139,7 @@ function ProfileScreen({ slug }: { slug: string }) {
       <Screen
         testID={identity ? 'person-screen' : 'person-pending-screen'}
         refreshControl={
-          <RefreshControl refreshing={busy} onRefresh={refresh} />
+          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
         }
       >
         {error ? (

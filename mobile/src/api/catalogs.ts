@@ -7,12 +7,14 @@ import {
 } from './person-identity';
 import { editionPath, type CatalogKind } from './policy';
 import * as decode from './catalog-decoders';
+import type { Decoder } from './validation';
 import type { Manifest } from './catalog-decoders';
 import { billKey, interestKey, personId, nameKey, type PersonId } from './ids';
 import {
   profileFor,
   recentBillsFor,
   recentDeclarationsFor,
+  suggestionProvenanceFor,
   yourMPFor,
   electorateFor,
   suggestionsFor,
@@ -29,6 +31,9 @@ export * from './ids';
 export * from './selectors';
 
 interface SuggestionSources {
+  manifest: decode.Manifest;
+  slugs?: decode.Slugs;
+  people?: decode.PeopleCatalog;
   roster: decode.Roster;
   electorates: decode.ElectorateIndex;
   bills: decode.BillIndex;
@@ -45,11 +50,14 @@ function cached<T>(
   return {
     ...block,
     stale: records.some((r) => r.stale),
-    savedAt: Math.min(...records.map((r) => r.savedAt)),
+    savedAt: records.length
+      ? Math.min(...records.map((r) => r.savedAt))
+      : block.savedAt,
   };
 }
 export class Catalogs {
   private suggestionData?: Promise<SuggestionSources>;
+  private suggestionIdentityRetry: 'unused' | 'available' | 'used' = 'unused';
   constructor(private client: Pick<ApiClient, 'get'>) {}
   roster() {
     return this.client.get('/parliamentarians.json', decode.decodeRoster);
@@ -156,10 +164,14 @@ export class Catalogs {
     ): Promise<Block<V>> => {
       try {
         const record = await pending;
+        const selected = select(record.data);
         return {
-          ...select(record.data),
-          stale: record.stale,
-          savedAt: record.savedAt,
+          ...selected,
+          stale: record.stale || selected.stale,
+          savedAt:
+            selected.savedAt === null
+              ? record.savedAt
+              : Math.min(record.savedAt, selected.savedAt),
         };
       } catch (e) {
         return {
@@ -176,19 +188,49 @@ export class Catalogs {
         };
       }
     };
+    const optional = async <T>(path: string, decoder: Decoder<T>) =>
+      this.client.get(path, decoder, refresh).catch(() => null);
+    const metadata = Promise.all([
+      optional('/parliamentarians.json', decode.decodeRoster),
+      optional('/photos/people.json', decode.decodePhotoPeople),
+      optional('/photos/credits.json', decode.decodePhotoCredits),
+    ]);
     const [bills, declarations] = await Promise.all([
       load(
         this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
         (data) => recentBillsFor(data, limit),
       ),
-      load(
-        this.client.get(
+      (async () => {
+        const pending = this.client.get(
           '/interests/recent.json',
           decode.decodeRecentInterests,
           refresh,
-        ),
-        (data) => recentDeclarationsFor(data, limit),
-      ),
+        );
+        // Attach the load handler immediately, including when optional metadata is slow.
+        return load(
+          pending.then(async (record) => {
+            const [roster, photoPeople, photoCredits] = await metadata;
+            return {
+              ...record,
+              data: {
+                interests: record.data,
+                roster,
+                photoPeople,
+                photoCredits,
+              },
+            };
+          }),
+          ({ interests, roster, photoPeople, photoCredits }) =>
+            cached(
+              recentDeclarationsFor(interests, limit, {
+                roster: roster?.data,
+                photoPeople: photoPeople?.data,
+                photoCredits: photoCredits?.data,
+              }),
+              [roster, photoPeople, photoCredits].filter((r) => r !== null),
+            ),
+        );
+      })(),
     ]);
     return { bills, declarations };
   }
@@ -284,7 +326,7 @@ export class Catalogs {
   suggestionSources(refresh = false): Promise<SuggestionSources> {
     if (!this.suggestionData || refresh) {
       const pending = (async () => {
-        const [manifest, roster, bills] = await Promise.all([
+        const [manifest, roster, bills, slugs] = await Promise.all([
           this.client.get(
             '/electorates/manifest.json',
             decode.decodeManifest,
@@ -296,79 +338,88 @@ export class Catalogs {
             refresh,
           ),
           this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
+          this.client
+            .get('/api/person-slugs', decode.decodeSlugs, refresh)
+            .catch(() => null),
         ]);
-        const electorates = await this.client.get(
-          manifest.data.index_url,
-          decode.decodeElectorateIndex,
-          refresh,
-        );
+        const [electorates, people] = await Promise.all([
+          this.client.get(
+            manifest.data.index_url,
+            decode.decodeElectorateIndex,
+            refresh,
+          ),
+          this.client
+            .get(manifest.data.people_url, decode.decodePeople, refresh)
+            .then((record) =>
+              record.data.meta.release_id === manifest.data.release_id
+                ? record
+                : null,
+            )
+            .catch(() => null),
+        ]);
         if (electorates.data.meta.release_id !== manifest.data.release_id)
           throw new ApiError(
             'invalid-data',
             'The seat release does not match its manifest.',
           );
+        const provenance = suggestionProvenanceFor({
+          people: roster.asOf,
+          electorates: electorates.asOf ?? manifest.asOf,
+          bills: bills.asOf,
+        });
         return {
           roster: roster.data,
+          manifest: manifest.data,
+          slugs: slugs?.data,
+          people: people?.data,
           electorates: electorates.data,
           bills: bills.data,
           provenance: {
             people: cached(
               {
-                data: null,
-                status: 'ready',
-                asAt: roster.asOf,
-                sources: [
-                  {
-                    label: 'OPAX parliamentary roster',
-                    url: '/subject/person',
-                  },
-                ],
-                stale: false,
-                savedAt: null,
+                ...provenance.people,
+                sources:
+                  slugs && people
+                    ? [
+                        ...provenance.people.sources,
+                        ...provenance.electorates.sources,
+                      ]
+                    : provenance.people.sources,
               },
-              [roster],
+              [roster, ...(slugs && people ? [slugs, people, manifest] : [])],
             ),
-            electorates: cached(
-              {
-                data: null,
-                status: 'ready',
-                asAt: electorates.asOf ?? manifest.asOf,
-                sources: [
-                  {
-                    label: 'OPAX electorate release',
-                    url: '/subject/electorate',
-                  },
-                ],
-                stale: false,
-                savedAt: null,
-              },
-              [manifest, electorates],
-            ),
-            bills: cached(
-              {
-                data: null,
-                status: 'ready',
-                asAt: bills.asOf,
-                sources: [
-                  {
-                    label: 'ParlInfo bill records',
-                    url: 'https://parlinfo.aph.gov.au/',
-                  },
-                ],
-                stale: false,
-                savedAt: null,
-              },
-              [bills],
-            ),
+            electorates: cached(provenance.electorates, [
+              manifest,
+              electorates,
+            ]),
+            bills: cached(provenance.bills, [bills]),
           },
         };
       })();
       this.suggestionData = pending;
-      void pending.catch(() => {
-        if (this.suggestionData === pending) this.suggestionData = undefined;
-      });
+      void pending.then(
+        (sources) => {
+          if (
+            this.suggestionData === pending &&
+            this.suggestionIdentityRetry !== 'used'
+          )
+            this.suggestionIdentityRetry =
+              sources.slugs && sources.people ? 'unused' : 'available';
+        },
+        () => {
+          if (this.suggestionData === pending) this.suggestionData = undefined;
+        },
+      );
     }
     return this.suggestionData;
+  }
+  /** One automatic identity recovery per session, triggered by a later focus. */
+  suggestionSourcesOnFocus(): Promise<SuggestionSources> {
+    if (this.suggestionIdentityRetry === 'available') {
+      this.suggestionIdentityRetry = 'used';
+      return this.suggestionSources(true);
+    }
+    return this.suggestionSources();
   }
   async suggestions(query: string) {
     const sources = await this.suggestionSources();
@@ -508,15 +559,22 @@ export class Catalogs {
         ...result.data,
         results: result.data.results
           .filter((row) => !row.href.startsWith('/ask'))
-          .map((row) => ({
-            ...row,
-            personSlug: personSlugForResult(
+          .map((row) => {
+            const personSlug = personSlugForResult(
               row,
               slugs.data,
               bridge?.[0].data,
               people?.data,
-            ),
-          })),
+            );
+            return {
+              ...row,
+              personSlug,
+              // The verified slug bridge also resolves formal register names.
+              profileName: personSlug
+                ? slugs.data.slugs[personSlug]
+                : undefined,
+            };
+          }),
       },
     };
   }

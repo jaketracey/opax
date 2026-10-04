@@ -5,9 +5,14 @@ import {
   canonicalUrl,
   forbiddenOpaxRoute,
   openOnWeb,
+  openSource,
   sourceUrl,
 } from '../src/navigation/external';
 import { shareRecord } from '../src/navigation/share';
+import {
+  presentSourceDestination,
+  sourceDestination,
+} from '../src/navigation/source-destination';
 import { isE2E, webOrigin } from '../src/design/environment';
 import { partyIdentity } from '../src/design/party';
 import {
@@ -15,6 +20,15 @@ import {
   isAccessibilityCategory,
   navigationTitleSizes,
 } from '../src/design/tokens';
+
+jest.mock('expo-constants', () => ({
+  __esModule: true,
+  default: {
+    expoConfig: {
+      extra: { variant: 'e2e', webOrigin: 'https://opax.invalid' },
+    },
+  },
+}));
 
 describe('canonical share links', () => {
   test('use the configured origin, with no query or app state', () => {
@@ -346,6 +360,19 @@ describe('e2e configuration and sharing', () => {
     );
     alert.mockRestore();
   });
+  test('e2e source destinations retain the complete validated URL without a native alert', async () => {
+    const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+    const url =
+      'https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072';
+    await openSource(url, 'Register of Senators’ Interests');
+    expect(sourceDestination()).toEqual({
+      url,
+      citation: 'Register of Senators’ Interests',
+    });
+    expect(alert).not.toHaveBeenCalled();
+    presentSourceDestination(null);
+    alert.mockRestore();
+  });
 });
 
 describe('party identity', () => {
@@ -412,6 +439,9 @@ describe('workbench exclusion', () => {
   test('production bundles cannot see the workbench', () => {
     const list = blockList('production');
     expect(blocked(list, '/repo/mobile/src/app/workbench.tsx')).toBe(true);
+    expect(blocked(list, '/repo/mobile/src/app/source-destination.tsx')).toBe(
+      true,
+    );
     expect(blocked(list, '/repo/mobile/src/workbench/Workbench.tsx')).toBe(
       true,
     );
@@ -420,9 +450,11 @@ describe('workbench exclusion', () => {
   });
   test('development and e2e builds include it', () => {
     for (const variant of ['development', 'e2e'])
-      expect(
-        blocked(blockList(variant), '/repo/mobile/src/app/workbench.tsx'),
-      ).toBe(false);
+      for (const path of [
+        '/repo/mobile/src/app/workbench.tsx',
+        '/repo/mobile/src/app/source-destination.tsx',
+      ])
+        expect(blocked(blockList(variant), path)).toBe(false);
   });
   test('production blocks direct imports of the native text probe implementation', () => {
     expect(
