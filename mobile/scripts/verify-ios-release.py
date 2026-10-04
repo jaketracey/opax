@@ -36,7 +36,7 @@ ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com"
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
                    "appcenter.ms", "bugsnag.com", "datadoghq.com", "graph.facebook.com"}
 ROUTE_KEYS = re.compile(rb"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
-DEVELOPMENT_ROUTE = re.compile(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype", re.I)
+DEVELOPMENT_ROUTE = re.compile(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype|voice-bridge-test|test-screens", re.I)
 
 
 def url_hosts(body):
@@ -124,10 +124,35 @@ def bundle_route_keys(body, routes):
     expected = shipping_source_keys(routes)
     require(bool(actual) and actual == expected and
         not any(DEVELOPMENT_ROUTE.search(key) for key in actual) and not re.search(
-        rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev)|"
-        rb"ui-workbench|home-prototype|/__dev(?:/|\x00)", body, re.I),
+        rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev|voice-bridge-test|test-screens)|"
+        rb"(?:src/)?test-screens/|ui-workbench|home-prototype|/__dev(?:/|\x00)", body, re.I),
         "bundle Expo route keys exactly match shipping source routes; no workbench routes")
     return sorted(actual)
+
+
+def no_voice_native_symbols(symbols):
+    return not re.search(rb"OpaxVoiceCore|OpaxVoice|requestRecordPermission", symbols, re.I)
+
+
+MACHO_HEADERS = {b"\xcf\xfa\xed\xfe": ("<", 32), b"\xce\xfa\xed\xfe": ("<", 28),
+                 b"\xfe\xed\xfa\xcf": (">", 32), b"\xfe\xed\xfa\xce": (">", 28)}
+FAT_HEADERS = {b"\xca\xfe\xba\xbe": (">", 20), b"\xbe\xba\xfe\xca": ("<", 20),
+               b"\xca\xfe\xba\xbf": (">", 32), b"\xbf\xba\xfe\xca": ("<", 32)}
+
+
+def verify_no_voice_native_code(app):
+    """Stripping removes symbols, not Swift metadata/provider registration bytes."""
+    scanned = []
+    for path in sorted(p for p in app.rglob("*") if p.is_file()):
+        with path.open("rb") as stream:
+            magic = stream.read(4)
+        if magic not in MACHO_HEADERS and magic not in FAT_HEADERS:
+            continue
+        require(no_voice_native_symbols(without_signature(path.read_bytes())),
+                f"No voice or microphone permission code in Mach-O: {path.relative_to(app)}")
+        scanned.append(str(path.relative_to(app)))
+    require(bool(scanned), "Production app contains Mach-O code to scan")
+    return scanned
 
 
 def scene_manifest_valid(info):
@@ -182,21 +207,43 @@ def command(*args):
 
 def without_signature(body):
     """Exclude only LC_CODE_SIGNATURE bytes; scan every other Mach-O byte."""
-    if body[:4] != b"\xcf\xfa\xed\xfe":
+    magic = body[:4]
+    if magic in FAT_HEADERS:
+        endian, entry_size = FAT_HEADERS[magic]
+        require(len(body) >= 8, "Valid fat Mach-O header")
+        count = struct.unpack_from(endian + "I", body, 4)[0]
+        table_end = 8 + count * entry_size
+        require(count > 0 and table_end <= len(body), "Valid fat Mach-O architecture table")
+        clean = bytearray(body)
+        ranges = []
+        for index in range(count):
+            start, length = struct.unpack_from(endian + ("II" if entry_size == 20 else "QQ"),
+                                              body, 8 + index * entry_size + 8)
+            require(start >= table_end and length >= 28 and start + length <= len(body),
+                    "Valid fat Mach-O slice boundary")
+            require(body[start:start + 4] in MACHO_HEADERS, "Valid thin Mach-O slice")
+            ranges.append((start, start + length))
+            clean[start:start + length] = without_signature(body[start:start + length])
+        ordered = sorted(ranges)
+        require(all(left[1] <= right[0] for left, right in zip(ordered, ordered[1:])),
+                "Non-overlapping fat Mach-O slices")
+        return bytes(clean)
+    if magic not in MACHO_HEADERS:
         return body
-    require(len(body) >= 32, "Valid Mach-O header")
-    count = struct.unpack_from("<I", body, 16)[0]
-    commands_end = 32 + struct.unpack_from("<I", body, 20)[0]
+    endian, header_size = MACHO_HEADERS[magic]
+    require(len(body) >= header_size, "Valid Mach-O header")
+    count = struct.unpack_from(endian + "I", body, 16)[0]
+    commands_end = header_size + struct.unpack_from(endian + "I", body, 20)[0]
     require(commands_end <= len(body), "Valid Mach-O load-command boundary")
-    offset = 32
+    offset = header_size
     clean = bytearray(body)
     for _ in range(count):
         require(offset + 8 <= commands_end, "Valid Mach-O load command")
-        kind, size = struct.unpack_from("<II", body, offset)
+        kind, size = struct.unpack_from(endian + "II", body, offset)
         require(size >= 8 and offset + size <= commands_end, "Valid Mach-O load command")
         if kind == 0x1d:
             require(size == 16, "Valid Mach-O signature command")
-            start, length = struct.unpack_from("<II", body, offset + 8)
+            start, length = struct.unpack_from(endian + "II", body, offset + 8)
             require(start >= commands_end and length > 0 and start + length <= len(body),
                     "Valid Mach-O signature boundary")
             clean[start:start + length] = b"\0" * length
@@ -312,6 +359,8 @@ def verify_app(app, args):
     check(not has_loopback(bundle), "no normalized loopback or fixture origin in shipped JS")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
     check(True, "bundle Expo route keys exactly match shipping source routes; no workbench routes")
+    verify_no_voice_native_code(app)
+    check(True, "no OpaxVoiceCore, OpaxVoice or microphone permission code in any production Mach-O")
     configs = list(app.rglob("app.config"))
     check(bool(configs), "embedded Expo config exists")
     for path in configs:

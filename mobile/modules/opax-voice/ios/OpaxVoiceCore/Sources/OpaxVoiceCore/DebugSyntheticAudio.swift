@@ -1,8 +1,8 @@
-#if DEBUG
+#if DEBUG || OPAX_VOICE_E2E
 import Foundation
 
 /// Fixture-only microphone and playback implementation. It never constructs AVAudioEngine.
-/// The Expo lane may select this with --opax-synthetic-audio in DEBUG builds only.
+/// Available to DEBUG core tests and the compile-time e2e variant, never production Release.
 public struct DebugSyntheticEngineFactory: VoiceEngineFactory {
     private let clock: any VoiceClock
     public init(clock: any VoiceClock = SystemVoiceClock()) { self.clock = clock }

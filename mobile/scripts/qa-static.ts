@@ -7,7 +7,10 @@ import { scanSecrets } from './secret-boundary';
 import { boundaryFiles } from './boundary-files';
 import { scanSwift } from './swift-boundary';
 import { scanNative } from './native-boundary';
-import { assertNoFixtureOrigin } from './release-bundle-policy';
+import {
+  assertNoFixtureOrigin,
+  assertNoVoiceFixtures,
+} from './release-bundle-policy';
 function config(variant: string) {
   return JSON.parse(
     execFileSync(
@@ -46,16 +49,25 @@ for (const variant of ['production', 'e2e']) {
       ],
     },
   });
-  if (variant === 'production')
+  if (variant === 'production') {
+    assert(
+      !native.OPAXVoiceFixturePort,
+      'Production omits native voice fixtures',
+    );
     assert(
       !native.NSAppTransportSecurity,
       'CNG must remove release ATS exceptions',
     );
-  else
+  } else {
+    assert.equal(
+      native.OPAXVoiceFixturePort,
+      Number(process.env.OPAX_FIXTURE_PORT ?? 8910),
+    );
     assert.deepEqual(
       native.NSAppTransportSecurity,
       e2e.ios.infoPlist.NSAppTransportSecurity,
     );
+  }
 }
 assert.equal(release.extra.apiOrigin, 'https://opax.com.au');
 assert.equal(
@@ -190,6 +202,7 @@ if (productionIndex !== -1) {
       !body.includes(Buffer.from('OPAX_DESIGN_WORKBENCH')),
       'Production bundle contains the design workbench',
     );
+    assertNoVoiceFixtures(body);
   }
   const bodies = bundles.map((path) => readFileSync(path));
   for (const marker of [
@@ -220,6 +233,10 @@ if (appIndex !== -1) {
   assert.equal(plist.CFBundleVersion, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert.equal(plist.MinimumOSVersion, '18.4');
   assert(!plist.NSMicrophoneUsageDescription);
+  assert.equal(
+    plist.OPAXVoiceFixturePort,
+    Number(process.env.OPAX_FIXTURE_PORT ?? 8910),
+  );
   assert.equal(plist.NSAppTransportSecurity.NSAllowsArbitraryLoads, false);
   const bundle = readFileSync(join(app, 'main.jsbundle'));
   assert(

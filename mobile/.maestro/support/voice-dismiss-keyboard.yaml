@@ -1,0 +1,10 @@
+appId: au.com.opax.app
+---
+# Scroll UP begins above the keyboard; on-drag dismissal handles offscreen headings.
+# The plain heading then dismisses an already-visible keyboard without a button tap.
+- scrollUntilVisible:
+    element:
+      id: voice-bridge-test-title
+    direction: UP
+- tapOn:
+    id: voice-bridge-test-title

@@ -52,6 +52,7 @@ public actor VoiceCallController {
     private var epoch = 0
     private var muted = false
     private var mode: CallMode?
+    private var reason: EndReason?
     private var interruptionID = 0
     private var evidence = EvidenceModel()
     private var remaining = 0
@@ -67,6 +68,11 @@ public actor VoiceCallController {
         let stream = AsyncStream<VoiceEvent>.makeStream(bufferingPolicy: .bufferingNewest(128))
         events = stream.stream; continuation = stream.continuation
     }
+    /// Reads actor-owned values atomically; does not refresh, emit or open a call.
+    public func snapshot() -> VoiceSnapshot {
+        VoiceSnapshot(state: state, reason: reason, mode: mode, playback: playbackState,
+            remaining: remaining, transcript: evidence.turns, sources: evidence.sources, status: latestStatus)
+    }
     private func observe() {
         guard lifecycleTask == nil else { return }
         let events = lifecycle.events
@@ -75,7 +81,10 @@ public actor VoiceCallController {
         }
     }
     private func change(_ state: CallState, reason: EndReason? = nil) {
-        self.state = state; continuation.yield(.state(state, reason: reason))
+        self.state = state; self.reason = reason; continuation.yield(.state(state, reason: reason))
+    }
+    private func clearStatus() {
+        latestStatus = nil; continuation.yield(.status(nil))
     }
     private func changeMode(_ value: CallMode) {
         guard value != mode else { return }; mode = value; continuation.yield(.mode(value))
@@ -101,7 +110,7 @@ public actor VoiceCallController {
             return status.bridgeValue
         } catch {
             if requestEpoch == epoch {
-                latestStatus = nil
+                clearStatus()
                 if !isBusy { change(.failed); continuation.yield(.error(Self.failure(error))) }
             }
             throw Self.failure(error)
@@ -379,7 +388,7 @@ public actor VoiceCallController {
         await end() // finish/close before deleting; never infer a budget refund
         do {
             let result = try await http.deleteAccount(challengeID: challengeID, code: code)
-            evidence = EvidenceModel(); latestStatus = nil
+            evidence = EvidenceModel(); clearStatus()
             continuation.yield(.transcript([])); continuation.yield(.sources([]))
             _ = try? await refreshStatus(); return result
         } catch { throw Self.failure(error) }
@@ -413,7 +422,7 @@ public actor VoiceCallController {
         let oldSocket = socket; socket = nil; await oldSocket?.close(code: 1000)
         await audioSession.keepAwake(false); await audioSession.deactivate()
         converter = nil; chunks = nil; sendQueue.clear(); inFlightSamples = 0
-        let finishedReservation = reservation; reservation = nil; latestStatus = nil
+        let finishedReservation = reservation; reservation = nil; clearStatus()
         let failedCredential = relayCredential; relayCredential = nil
         // A receiver/watchdog may be the task we just cancelled. Cleanup must run
         // in a fresh unstructured Task so URLSession does not immediately cancel
@@ -479,7 +488,7 @@ public actor VoiceCallController {
             }
             return true
         } catch {
-            if epoch == pollEpoch, !Task.isCancelled { latestStatus = nil; continuation.yield(.error(Self.failure(error))); pollTask = nil }
+            if epoch == pollEpoch, !Task.isCancelled { clearStatus(); continuation.yield(.error(Self.failure(error))); pollTask = nil }
             return false
         }
     }

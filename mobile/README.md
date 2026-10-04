@@ -85,7 +85,7 @@ saved data without clearing the app. Default runs include 01–04;
 
 The runner samples the selected simulator's app processes with `lsof -a -p <pid> -i`
 every nominal 250ms, writing raw `connection-samples.jsonl` and a measured
-`connection-audit.json`. Missing process coverage, collection errors or observed
+`connection-audit.json`. The sampler uses numeric socket addresses without DNS or outbound probes. Missing process coverage, collection errors or observed
 external connections fail. Polling gaps above 3,000ms also fail: the audit records
 `longestSampleGapMs` and `sampleGapLimitMs`, covering each active app process,
 startup, scheduling delays, in-flight samples and the final tail. Short connections between samples may be missed; the
