@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { catalogs } from '../../api/runtime';
 import { nameKey } from '../../api/ids';
+import { ApiError, PersonIdentityError } from '../../api/errors';
 import { personRoute } from '../../navigation/routes';
 import { openOnWeb } from '../../navigation/external';
 
@@ -16,6 +17,17 @@ export async function openSuggestedPerson(name: string) {
   const candidates = Object.entries(slugs).filter(
     ([, n]) => nameKey(n) === nameKey(name),
   );
-  if (candidates.length === 1) await openSearchPerson(candidates[0]![0]);
-  else await openOnWeb(`/subject/person/${encodeURIComponent(name)}`, name);
+  if (candidates.length === 1) {
+    try {
+      await openSearchPerson(candidates[0]![0]);
+      return;
+    } catch (error) {
+      if (
+        !(error instanceof PersonIdentityError) &&
+        !(error instanceof ApiError && error.code === 'not-found')
+      )
+        throw error;
+    }
+  }
+  await openOnWeb(`/subject/person/${encodeURIComponent(name)}`, name);
 }

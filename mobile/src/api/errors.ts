@@ -17,6 +17,12 @@ export class ApiError extends Error {
     this.name = 'ApiError';
   }
 }
+/** An ambiguous catalog identity must not choose a native profile. */
+export class PersonIdentityError extends ApiError {
+  constructor(message: string) {
+    super('invalid-data', message);
+  }
+}
 export function httpError(status: number): ApiError {
   const code: ErrorCode =
     status === 404

@@ -8,7 +8,7 @@ import {
   type LegacyPersonId,
   type RosterId,
 } from './ids';
-import { ApiError } from './errors';
+import { ApiError, PersonIdentityError } from './errors';
 import { personPartyFor } from './party-transforms';
 import type {
   Roster,
@@ -66,7 +66,7 @@ export function rosterRowFor(names: string[], roster: Roster, id?: RosterId) {
     const named = namedRosterRow(names, { ...roster, people: full });
     if (named) return named;
     if (full.length === 1) return full[0];
-    throw new ApiError('invalid-data', 'The roster identity needs review.');
+    throw new PersonIdentityError('The roster identity needs review.');
   }
   return namedRosterRow(names, roster);
 }
@@ -191,8 +191,7 @@ export function joinPerson(
     !currentByName.length &&
     currentById.some((p) => p.person_id !== release!.person_id)
   ) {
-    throw new ApiError(
-      'invalid-data',
+    throw new PersonIdentityError(
       'The person identity has conflicting roster observations.',
     );
   }
@@ -223,8 +222,7 @@ export function joinPerson(
         !seats.some((s) => s.chamber === chamber),
     );
     if (incompatibleSeat || incompatibleChamber)
-      throw new ApiError(
-        'invalid-data',
+      throw new PersonIdentityError(
         'The person identity has conflicting roster observations.',
       );
   }
@@ -252,8 +250,7 @@ export function joinPerson(
     if (current.length === 1) matches = current;
   }
   if (matches.length > 1)
-    throw new ApiError(
-      'invalid-data',
+    throw new PersonIdentityError(
       'The person identity needs review before this record can be shown.',
     );
   const person = matches[0];

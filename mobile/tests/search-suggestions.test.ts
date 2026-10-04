@@ -81,3 +81,24 @@ test.each(twinNames)(
     }
   },
 );
+
+test.each([
+  ['A.J. Example', 'Aj Example'],
+  ['José Example', 'Jose Example'],
+  ['Renée Example', 'Rene\u0301e Example'],
+  ['Jean–Example', 'Jean Example'],
+])(
+  'punctuation and accent twins %s / %s collapse to the fuller row',
+  (name, twin) => {
+    const fuller = { ...roster.people[0]!, name, speeches: 10 };
+    const sources = {
+      ...roster,
+      people: [{ ...fuller, name: twin, speeches: 1 }, fuller],
+    };
+    for (const query of [name, twin]) {
+      expect(suggestionsFor(query, sources, index, bills).people).toEqual([
+        fuller,
+      ]);
+    }
+  },
+);
