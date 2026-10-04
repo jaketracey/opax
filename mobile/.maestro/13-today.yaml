@@ -44,6 +44,13 @@ name: 13 Today feeds and their dated original sources
 - tapOn: Today
 - scrollUntilVisible:
     element:
+      id: today-declaration-person-0
+    timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
+- takeScreenshot: ${EVIDENCE}/13-declaration-person
+- scrollUntilVisible:
+    element:
       id: today-declaration-0
     timeout: 90000
 - takeScreenshot: ${EVIDENCE}/13-declaration
