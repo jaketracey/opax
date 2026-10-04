@@ -80,7 +80,7 @@ const config: ExpoConfig = {
   },
   plugins: [
     ['expo-router', { sitemap: variant !== 'production' }],
-    ['expo-build-properties', { ios: { deploymentTarget: '18.4' } }],
+    ['./plugins/withSceneLifecycle.js', { ios: { deploymentTarget: '18.4' } }],
     './plugins/withNetworkPolicy.js',
   ],
   extra: {
