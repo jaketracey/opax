@@ -1,6 +1,6 @@
 # OPAX iOS foundation
 
-Expo SDK 57 / React Native 0.86, strict TypeScript, expo-router. iOS 18.4 is
+Expo SDK 57 / React Native 0.86, strict TypeScript, expo-router. iOS 18.4 (`ios.deploymentTarget`) is
 the minimum. Light mode only; Android is possible later and is not built here.
 App identity: OPAX, `au.com.opax.app`, version `0.1.0`, build `1`.
 No push, analytics, crash reporter or microphone permission. Production release
@@ -68,24 +68,71 @@ invalid or older candidates. The selected version is saved in `java.log`.
 | `OPAX_PASTE_LOCK`         | Shared directory lock for Maestro input                                               | Skip locking, with a notice                         |
 | `OPAX_CAPACITY_CMD`       | Trusted local shell command checking host capacity                                    | Skip capacity checks, with a notice                 |
 | `OPAX_ALLOWED_UDIDS`      | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning      |
-| `OPAX_PASTE_WAIT_SECONDS` | Digit-only pasteboard lock wait (seconds)                                             | 7,200 seconds; invalid values also use this default |
+| `OPAX_PASTE_WAIT_SECONDS` | Digit-only deadline for capacity and pasteboard lock waits                            | 7,200 seconds; invalid values also use this default |
 
-Configured capacity checks run before builds and devices; load5 at or above 140
-waits until it is below 140. Capacity is checked before every pasteboard-lock
-attempt, so no capacity wait runs while that lock is held. The lock wait is
-`OPAX_PASTE_WAIT_SECONDS`, validated by `paste_lock_wait_seconds` in `qa-env.sh`
-(default 7200). Start long builds and device runs detached with `nohup` and poll
-their logs. The e2e runner starts only its own fixture, installs the Release app
+Configured capacity checks run before builds and devices; a five-minute load of
+140 or more waits until it is under 140. `OPAX_PASTE_WAIT_SECONDS` is validated as
+a decimal of at most nine digits in `qa-lock.sh`; invalid values default to 7200.
+The e2e runner starts only its own fixture, installs the Release app
 without Metro, saves Maestro/screenshots/request logs in ignored `private/qa/<run>/`,
-restores text size/appearance, shuts down, then releases the lock on success or
-failure. Never commit QA evidence. `OPAX_QA_RUN` names evidence, `OPAX_QA_APP`
-selects a prepared app. No audio flows. Journey 04 stops the fixture and checks
-saved data without clearing the app. Default runs include 01–04;
-`OPAX_VERIFY_OFFLINE=1` also adds 04 to a selected warm run.
+restores text size/appearance and shuts down on success or failure. Never commit QA evidence.
+`OPAX_QA_RUN` names evidence, `OPAX_QA_APP` selects a prepared app. No audio flows.
+Journey 04 stops the fixture and checks saved data without clearing the app. Default
+runs include 01–04; `OPAX_VERIFY_OFFLINE=1` also adds 04 to a selected warm run.
+
+The pasteboard lock (`scripts/qa-lock.sh`) is shared with other projects, so a run
+never waits on anything while holding it. Every Maestro run goes through
+`qa_paste_lock_run`: holding nothing, it waits for the lock to look free and for
+capacity, then enters the build gate with `scripts/qa-locked.sh`. Inside the gate the
+wrapper makes one non-blocking lock attempt and rechecks the load. If the lock is
+taken or the load has reached 140, it leaves the gate at once and the runner starts
+again; otherwise Maestro runs and the lock is released when it ends. The wrapper leads
+its own process group: Maestro and its children run in it, and release first stops any
+leftovers. `OPAX_PASTE_WAIT_SECONDS` covers all the waiting; every minute `lock.log`
+names the lock, the elapsed time and the holder. Never write your own lock wrapper.
+
+The lock directory appears in one atomic step with its `owner` file (pid and pgid of
+the wrapper, script, worktree name, UTC start, random token) and is released by renaming
+it aside, so a crash never leaves an OPAX lock without an owner. Other projects' plain
+`mkdir`/`rmdir` keep working: publication never replaces an existing directory, and
+OPAX never writes into a lock it did not create. A waiter retires a lock only when its
+owner's pid is dead and no process in its group is alive, and logs it. A lock with a
+live holder, a live group member or no owner file is never removed, whatever its age.
+`<lock>.opax/` holds the reap guard plus staging and retired copies from crashed runs,
+which are cleaned once their pid is dead. `scripts/test-qa-lock.sh`, part of
+`npm run qa`, tests all of this with a mocked gate in a scratch directory.
+
+If a lock stays held, read `lock.log` and `<lock>/owner`, then:
+
+- **OPAX owner, dead pid, live group** (`pgrep -g <pgid>` lists processes): the locked
+  Maestro's leftovers still run. Stop them with `kill -TERM -- -<pgid>`; the next waiter
+  then retires the lock.
+- **OPAX owner, live pid:** the run is still going. To stop it now, `kill -TERM <pid>`;
+  the wrapper stops its group and releases. A TERM to `e2e.sh` itself takes effect when
+  the current Maestro run returns.
+- **No owner file:** the lock belongs to another project or an older OPAX script. Leave
+  it. Remove it with `rmdir` only after its owner confirms nothing uses the pasteboard.
+
+Agent command runners stop long foreground commands, which can strand a simulator
+or the lock. **Start e2e and release runs detached and poll them**:
+
+```sh
+mkdir -p private/qa
+OPAX_QA_RUN=<run> nohup scripts/e2e.sh <udid> 01 02 > private/qa/<run>.out 2>&1 &
+```
+
+Its first line is `E2E pid=<pid> status=private/qa/<run>/exit-status` (the path is
+absolute). The status file holds the exit code and appears only after cleanup: lock
+released, fixture stopped, simulator shut down. If the pid is gone with no status file,
+the run was killed: read `lock.log`, then shut the simulator down yourself. Start a
+release the same way, logging under ignored `private/` so the worktree stays clean
+(`nohup scripts/release-ios.sh --build-number N > private/release-N.out 2>&1 &`).
+Poll its pid; success ends with `Verified release evidence:` and writes `release.json`.
 
 The runner samples the selected simulator's app processes with `lsof -a -p <pid> -i`
 every nominal 250ms, writing raw `connection-samples.jsonl` and a measured
-`connection-audit.json`. Missing process coverage, collection errors or observed
+`connection-audit.json`. The sampler uses numeric socket addresses without DNS or
+outbound probes. Missing process coverage, collection errors or observed
 external connections fail. Polling gaps above 3,000ms also fail: the audit records
 `longestSampleGapMs` and `sampleGapLimitMs`, covering each active app process,
 startup, scheduling delays, in-flight samples and the final tail. Short connections between samples may be missed; the

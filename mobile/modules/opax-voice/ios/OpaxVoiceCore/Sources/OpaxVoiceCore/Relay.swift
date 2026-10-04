@@ -44,7 +44,7 @@ public struct URLSessionRelayFactory: RelayFactory {
         authenticated = session; self.policy = policy
     }
     public func connect(_ request: URLRequest) async throws -> any RelayTransport {
-        #if DEBUG
+        #if DEBUG || OPAX_VOICE_E2E
         try VoiceTestSafety.validate(request)
         #endif
         guard (request.httpMethod ?? "GET") == "GET",

@@ -244,16 +244,20 @@ test('reviewed bridges still reject dynamic names and proxy access', () => {
     expect(lintBoundary(shareModule, content).length).toBeGreaterThan(0);
   }
 });
-test.each([
-  'modules/opax-voice/index.ts',
-  'modules/opax-voice/src/OpaxVoiceModule.ts',
-])('pre-registers the known voice bridge: %s', (path) => {
+test('registers only the shipped static voice loader', () => {
+  const path = 'modules/opax-voice/index.ts';
   const content = `import { requireNativeModule } from 'expo'; requireNativeModule('OpaxVoice')`;
   expect(scanSource(path, content)).toEqual([]);
   expect(lintBoundary(path, content)).toEqual([]);
   expect(
     scanSource(path, content.replace('OpaxVoice', 'Networking')),
   ).not.toEqual([]);
+});
+test('the unused voice loader path grants no native access', () => {
+  const path = 'modules/opax-voice/src/OpaxVoiceModule.ts';
+  const content = `import { requireNativeModule } from 'expo'; requireNativeModule('OpaxVoice')`;
+  expect(scanSource(path, content)).not.toEqual([]);
+  expect(lintBoundary(path, content).length).toBeGreaterThan(0);
 });
 jest.mock('expo-constants', () => ({
   __esModule: true,

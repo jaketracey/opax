@@ -533,7 +533,8 @@ class BundleAttackTests(unittest.TestCase):
 
     def test_development_routes_fail_even_when_the_source_matches_the_bundle(self):
         for key in ("./fixtures/index.tsx", "./fixture.tsx", "./__tests__/index.tsx",
-                    "./(dev)/index.tsx", "./__dev/index.tsx", "./workbench.jsx"):
+                    "./(dev)/index.tsx", "./__dev/index.tsx", "./workbench.jsx",
+                    "./voice-bridge-test.tsx", "./test-screens/index.tsx"):
             with self.subTest(key=key), tempfile.TemporaryDirectory() as d:
                 routes = Path(d)
                 path = routes / key
@@ -553,6 +554,68 @@ class BundleAttackTests(unittest.TestCase):
             with self.assertRaises(ReleaseError):
                 verify.bundle_route_keys(baseline + b"./__tests__/fixture.tsx\0", routes)
 
+    def test_compiled_bundle_test_screen_path_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            (routes / "_layout.tsx").write_text("shipping")
+            for marker in (b"src/test-screens/VoiceBridgeTestScreen.tsx", b"src/app/voice-bridge-test.tsx"):
+                with self.subTest(marker=marker), self.assertRaises(ReleaseError):
+                    verify.bundle_route_keys(b"./_layout.tsx\0" + marker, routes)
+
+    def test_voice_and_microphone_symbols_are_refused(self):
+        self.assertTrue(verify.no_voice_native_symbols(b"_OBJC_CLASS_$_EXExpoAppSceneDelegate"))
+        for symbol in (b"_$s13OpaxVoiceCore", b"_OBJC_CLASS_$_OpaxVoiceModule", b"_requestRecordPermission"):
+            self.assertFalse(verify.no_voice_native_symbols(symbol))
+
+    def test_stripped_voice_bytes_refused_in_executable_framework_and_plugin(self):
+        # No LC_SYMTAB: a symbol-table-only check has nothing to inspect.
+        header = struct.pack("<8I", 0xfeedfacf, 0, 0, 0, 0, 0, 0, 0)
+        for name in ("OPAX", "Frameworks/Test.framework/Test", "PlugIns/Test.appex/Test"):
+            for marker in (b"13OpaxVoiceCore", b"OpaxVoiceModule", b"requestRecordPermission"):
+                with self.subTest(name=name, marker=marker), tempfile.TemporaryDirectory() as d:
+                    app = Path(d)
+                    (app / "OPAX").write_bytes(header + b"shipping code")
+                    path = app / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(header + marker)
+                    with self.assertRaisesRegex(ReleaseError, "No voice or microphone permission code"):
+                        verify.verify_no_voice_native_code(app)
+
+    def test_voice_scan_excludes_only_signatures_in_thin_and_fat_macho(self):
+        for endian in ("<", ">"):
+            for words in (7, 8):
+                header_size = words * 4
+                header = struct.pack(endian + str(words) + "I", 0xfeedface if words == 7 else 0xfeedfacf,
+                                     0, 0, 0, 1, 16, *([0] * (words - 6)))
+                code = b"shipping code"
+                signature = b"OpaxVoiceCore requestRecordPermission"
+                command = struct.pack(endian + "4I", 0x1d, 16, header_size + 16 + len(code), len(signature))
+                thin = header + command + code + signature
+                for fat_magic, entry_size in ((0xcafebabe, 20), (0xcafebabf, 32)):
+                    start = 8 + entry_size
+                    entry = struct.pack(">5I", 0, 0, start, len(thin), 0) if entry_size == 20 else \
+                        struct.pack(">2I2Q2I", 0, 0, start, len(thin), 0, 0)
+                    fat = struct.pack(">2I", fat_magic, 1) + entry + thin
+                    for body in (thin, fat):
+                        with self.subTest(endian=endian, words=words, fat=fat_magic), tempfile.TemporaryDirectory() as d:
+                            app = Path(d)
+                            (app / "OPAX").write_bytes(body)
+                            self.assertEqual(verify.verify_no_voice_native_code(app), ["OPAX"])
+                            (app / "OPAX").write_bytes(body.replace(code, b"OpaxVoiceCore"))
+                            with self.assertRaises(ReleaseError):
+                                verify.verify_no_voice_native_code(app)
+
+    @unittest.skipUnless(os.environ.get("OPAX_TEST_PRODUCTION_ARCHIVE"), "Retained production archive not supplied")
+    def test_real_production_archive_has_no_voice_code(self):
+        self.assertTrue(verify.verify_no_voice_native_code(Path(os.environ["OPAX_TEST_PRODUCTION_ARCHIVE"])))
+
+    @unittest.skipUnless(os.environ.get("OPAX_TEST_STRIPPED_VOICE_BINARY"), "Stripped voice binary not supplied")
+    def test_real_stripped_voice_binary_is_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "OPAX"
+            path.write_bytes(Path(os.environ["OPAX_TEST_STRIPPED_VOICE_BINARY"]).read_bytes())
+            with self.assertRaisesRegex(ReleaseError, "No voice or microphone permission code"):
+                verify.verify_no_voice_native_code(Path(d))
     @staticmethod
     def routes_with(directory, keys):
         routes = Path(directory)
@@ -599,6 +662,18 @@ class BundleAttackTests(unittest.TestCase):
         storage = b"./talk.tsx" + long_text + "\u00e9t\u00e9".encode("utf-16-le")
         bundle = hermes_bundle(storage, [(0, 10, False), (10, 300, False), (310, 3, True)])
         self.assertEqual(verify.hermes_strings(bundle), {"./talk.tsx", "x" * 300, "\u00e9t\u00e9"})
+
+    def test_truncated_hermes_header_cannot_fall_back_to_plain_js(self):
+        magic = struct.pack("<Q", verify.HERMES_MAGIC)
+        with tempfile.TemporaryDirectory() as d:
+            routes = self.routes_with(d, ["./talk.tsx"])
+            for size in (8, 12, verify.HERMES_HEADER_SIZE - 1):
+                body = (magic + b"\0./talk.tsx\0" + bytes(verify.HERMES_HEADER_SIZE))[:size]
+                with self.subTest(size=size), self.assertRaisesRegex(ReleaseError, "Hermes.*header is truncated"):
+                    verify.hermes_strings(body)
+                with self.subTest(route_size=size), self.assertRaisesRegex(ReleaseError, "Hermes.*header is truncated"):
+                    verify.bundle_route_keys(body, routes)
+        self.assertIsNone(verify.hermes_strings(b"plain"))
 
     def test_unknown_or_malformed_hermes_bytecode_fails_closed(self):
         storage = b"./talk.tsx"

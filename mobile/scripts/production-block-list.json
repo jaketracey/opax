@@ -1,4 +1,6 @@
 [
   "[/\\\\]src[/\\\\]app[/\\\\]workbench\\.tsx$",
-  "[/\\\\]src[/\\\\]workbench[/\\\\].*"
+  "[/\\\\]src[/\\\\]workbench[/\\\\].*",
+  "[/\\\\]src[/\\\\]app[/\\\\]voice-bridge-test\\.tsx$",
+  "[/\\\\]src[/\\\\]test-screens[/\\\\].*"
 ]

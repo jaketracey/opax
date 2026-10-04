@@ -470,6 +470,36 @@ describe('word-safe text', () => {
     expect(nextWordSafeCap(30 * 1.05, 30)).toBe(1);
     expect(nextWordSafeCap(30, 30)).toBeNull();
   });
+  test('a SourceLink label is word-safe', () => {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <SourceLink
+          citation="Parliamentary Library"
+          record="Bills Digest"
+          url="https://www.aph.gov.au/"
+          kind="record"
+        />,
+      );
+    });
+    const label = () =>
+      renderer.root
+        .findAllByType(NativeText)
+        .find((node) => typeof node.props.onTextLayout === 'function')!;
+    expect(label().props.children).toBe('Parliamentary Library · Bills Digest');
+    expect(label().props.maxFontSizeMultiplier).toBe(0);
+    act(() => {
+      label().props.onTextLayout({
+        nativeEvent: {
+          lines: [
+            { text: 'Parliamentar', height: 25 * 3 },
+            { text: 'y Library · Bills Digest', height: 25 * 3 },
+          ],
+        },
+      });
+    });
+    expect(label().props.maxFontSizeMultiplier).toBe(2.7);
+  });
   test('a heading lowers its own cap after a mid-word break, and only then', () => {
     let renderer!: TestRenderer.ReactTestRenderer;
     act(() => {

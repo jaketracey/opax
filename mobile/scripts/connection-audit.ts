@@ -2,7 +2,6 @@
 // cannot see connections opened and closed between samples; keep raw evidence.
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { lookup } from 'node:dns/promises';
 import { appendFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
@@ -18,8 +17,6 @@ if (!udid || !output)
   throw new Error('Usage: connection-audit.ts <udid> <output>');
 async function main(udid: string, output: string) {
   const gaps = new SampleGaps(performance.now());
-  const addresses = await lookup('opax.com.au', { all: true }).catch(() => []);
-  const ips = new Set(addresses.map((row) => row.address));
   let stopping = false;
   for (const signal of ['SIGTERM', 'SIGINT'] as const)
     process.on(signal, () => {
@@ -88,7 +85,7 @@ async function main(udid: string, output: string) {
           if (!remote) continue;
           observedConnections++;
           const host = remote.replace(/:\d+$/, '').replace(/^\[|\]$/g, '');
-          if (ips.has(host) || host === 'opax.com.au') productionConnections++;
+          if (host === 'opax.com.au') productionConnections++;
           if (!['127.0.0.1', '::1'].includes(host)) external.add(name);
         }
         appendFileSync(
@@ -143,10 +140,9 @@ async function main(udid: string, output: string) {
     nonLoopbackConnections,
     longestSampleGapMs: gaps.longestSampleGapMs,
     sampleGapLimitMs: SAMPLE_GAP_LIMIT_MS,
-    productionAddresses: addresses,
     errors,
     basis:
-      'lsof -a -p <app-pid> -i; simulator launchctl app PIDs only, nominal 250ms interval',
+      'lsof -a -p <app-pid> -i; simulator launchctl app PIDs only, nominal 250ms interval; no DNS or outbound probes',
     limitation: 'Connections shorter than the interval may be missed.',
     pass: connectionAuditPass(proof),
   };
