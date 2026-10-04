@@ -65,5 +65,5 @@ name: 12 Search alternate kinds and native electorate suggestions
 - runFlow:
     file: review-pages.yaml
     env:
-      END: election-expand-0
+      END: electorate-end
       PREFIX: 12-native-representation
