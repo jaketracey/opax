@@ -98,10 +98,14 @@ export const catalogSources = {
 export function suggestionProvenanceFor(
   dates: Record<keyof typeof catalogSources, string | null>,
 ) {
+  const ready = (asAt: string | null, source: Provenance): Block<null> => ({
+    ...block(null, asAt, [source]),
+    status: 'ready',
+  });
   return {
-    people: block(null, dates.people, [catalogSources.people]),
-    electorates: block(null, dates.electorates, [catalogSources.electorates]),
-    bills: block(null, dates.bills, [catalogSources.bills]),
+    people: ready(dates.people, catalogSources.people),
+    electorates: ready(dates.electorates, catalogSources.electorates),
+    bills: ready(dates.bills, catalogSources.bills),
   };
 }
 /** The roster observation and its affiliation status travel together. */

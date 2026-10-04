@@ -116,6 +116,12 @@ test('suggestion and bill selectors cite the shared source object', () => {
     electorates: null,
     bills: bills.generated_at,
   });
+  expect(Object.values(sources).map((source) => source.status)).toEqual([
+    'ready',
+    'ready',
+    'ready',
+  ]);
+  expect(sources.bills.asAt).toBe(bills.generated_at);
   expect(sources.people.sources[0]).toBe(catalogSources.people);
   expect(sources.electorates.sources[0]).toBe(catalogSources.electorates);
   expect(sources.bills.sources[0]).toBe(recentBillsFor(bills).sources[0]);
