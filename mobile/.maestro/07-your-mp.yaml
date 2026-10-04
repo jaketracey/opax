@@ -28,13 +28,14 @@ name: 07 Choose an electorate by member name and restore it after relaunch
 - takeScreenshot: ${EVIDENCE}/07-seat
 - scrollUntilVisible:
     element:
-      id: your-member-anthony-albanese-name
+      id: your-member-anthony-albanese-name.*
     centerElement: true
     timeout: 300000
     visibilityPercentage: 100
 - waitForAnimationToEnd
+# The fixture-only ID checks native line bounds, beyond the full AX label.
 - assertVisible:
-    id: your-member-anthony-albanese-name
+    id: your-member-anthony-albanese-name-drawn-complete-[1-9][0-9]*
     text: Anthony Albanese
 - takeScreenshot: ${EVIDENCE}/07-member
 - scrollUntilVisible:

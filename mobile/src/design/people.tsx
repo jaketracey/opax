@@ -135,6 +135,7 @@ export function PersonRow({
           <Text
             wordSafe
             variant="strong"
+            testDrawnText
             testID={testID ? `${testID}-name` : undefined}
             style={styles.personName}
           >

@@ -1,4 +1,5 @@
-import { isValidElement, useState, type ReactNode } from 'react';
+import Constants from 'expo-constants';
+import { isValidElement, useRef, useState, type ReactNode } from 'react';
 import {
   Text as NativeText,
   useWindowDimensions,
@@ -39,18 +40,22 @@ export interface OpaxTextProps extends TextProps {
    * Headings, control labels and field labels use it.
    */
   wordSafe?: boolean;
+  /** Fixture-only native drawing check for a journey's full-name assertion. */
+  testDrawnText?: boolean;
 }
 
 /**
- * Added to every role's line height. React Native measures text, ceils the
- * height to the pixel grid, and TextKit draws into exactly that height. When
+ * Added to every role's line height. RN's text measurement ceils to the pixel
+ * grid, before Yoga rounds the final drawing frame. When
  * n lines of the scaled line height land exactly on the grid (24pt subheading
  * at AX5 on a 3x screen: 6 x 62.22 = 373.33), the ceil adds no slack and
  * floating-point noise in the frame can leave the last line "not fitting":
  * TextKit then draws the line before it with the rest of the text, clipped at
  * the edge ("party receipts a"). A thousandth of a point with a prime
  * denominator moves the total off the grid for any realistic line count, so
- * the ceil always leaves room. It is invisible on screen.
+ * the measurement has slack. It is invisible on screen. Yoga can still round
+ * the final frame below that measurement; the separate height guard below
+ * covers that shortfall. Neither protection replaces the other.
  */
 export const LINE_HEIGHT_NUDGE = 1 / 997;
 
@@ -90,6 +95,33 @@ export function nextWordSafeCap(
   return Math.max(1, Math.round(current * 90) / 100);
 }
 
+type DrawnLine = {
+  text: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+/** Native TextKit line bounds, not the element's full accessibility label. */
+export function drawnTextClipped(
+  lines: readonly DrawnLine[],
+  frame: { width: number; height: number },
+  content: string,
+): boolean {
+  const normalize = (text: string) => text.replace(/\s/g, '');
+  return (
+    !lines.length ||
+    normalize(lines.map((line) => line.text).join('')) !== normalize(content) ||
+    lines.some(
+      (line) =>
+        line.x < -0.01 ||
+        line.y < -0.01 ||
+        line.x + line.width > frame.width + 0.01 ||
+        line.y + line.height > frame.height + 0.01,
+    )
+  );
+}
+
 /**
  * All content text. Scales with its Dynamic Type ramp to AX5 with no fixed
  * cap and no line limit; never pass `numberOfLines` for names, titles, figures
@@ -100,6 +132,7 @@ export function Text({
   tone,
   style,
   wordSafe = false,
+  testDrawnText = false,
   onTextLayout,
   onLayout,
   ...props
@@ -110,17 +143,69 @@ export function Text({
   const { fontScale, width, scale } = useWindowDimensions();
   // A cap belongs to one text size, width and text (nested text included, such
   // as a field's "(required)"): any change starts again from full size.
-  const key = `${fontScale}|${width}|${textContent(props.children)}`;
+  const content = textContent(props.children);
+  const key = `${fontScale}|${width}|${content}`;
   const [capped, setCapped] = useState({ key, cap: 0 });
   const cap = capped.key === key ? capped.cap : 0;
   const heightKey = `${key}|${variant}|${bold}|${cap}|${scale}`;
+  const diagnose =
+    testDrawnText &&
+    !!props.testID &&
+    Constants.expoConfig?.extra?.variant === 'e2e';
+  const measured = useRef<{
+    key: string;
+    frame?: { width: number; height: number };
+    lines?: readonly DrawnLine[];
+  }>({ key: heightKey });
+  const currentMeasurement = () => {
+    if (measured.current.key !== heightKey)
+      measured.current = { key: heightKey };
+    return measured.current;
+  };
+  const [drawing, setDrawing] = useState({ key: '', lines: 0, clipped: true });
   const [heightGuard, setHeightGuard] = useState({
     key: '',
     width: 0,
     minimum: 0,
   });
+  const guardDrawing = () => {
+    const { frame, lines } = measured.current;
+    if (!frame || frame.height <= 0 || frame.width <= 0) return;
+    // One whole point survives Yoga rounding; a physical pixel may round away.
+    // Only the first natural frame sets the minimum, never the guarded frame.
+    // Ordinary single-line text needs no extra render. A clipped wrapped
+    // paragraph may be reported as one overflowing native line. Avoid even
+    // dispatching a no-op update once settled (React may render before bailout).
+    if (
+      !(heightGuard.key === heightKey && heightGuard.minimum > 0) &&
+      (wordSafe ||
+        (lines &&
+          (lines.length > 1 || drawnTextClipped(lines, frame, content))))
+    ) {
+      setHeightGuard({
+        key: heightKey,
+        width: frame.width,
+        minimum: Math.ceil(frame.height) + 1,
+      });
+    }
+    if (diagnose && lines) {
+      const next = {
+        key: heightKey,
+        lines: lines.length,
+        clipped: drawnTextClipped(lines, frame, content),
+      };
+      if (
+        drawing.key !== next.key ||
+        drawing.lines !== next.lines ||
+        drawing.clipped !== next.clipped
+      )
+        setDrawing(next);
+    }
+  };
   const onLayoutLines = (event: TextLayoutEvent) => {
     onTextLayout?.(event);
+    currentMeasurement().lines = event.nativeEvent.lines;
+    guardDrawing();
     if (!wordSafe) return;
     const lines = event.nativeEvent.lines;
     if (!lines.length || !breaksMidWord(lines)) return;
@@ -135,31 +220,32 @@ export function Text({
       // Names and party abbreviations are read with Australian English rules.
       accessibilityLanguage="en-AU"
       {...props}
-      onTextLayout={wordSafe || onTextLayout ? onLayoutLines : undefined}
-      onLayout={
-        wordSafe || onLayout
-          ? (event) => {
-              onLayout?.(event);
-              if (!wordSafe) return;
-              const frame = event.nativeEvent.layout;
-              if (frame.height <= 0 || frame.width <= 0) return;
-              setHeightGuard((previous) =>
-                previous.key === heightKey && previous.width === frame.width
-                  ? previous
-                  : {
-                      key: heightKey,
-                      width: frame.width,
-                      // TextKit measures with unbounded height, but draws into
-                      // Yoga's rounded frame. The fractional last line can fall
-                      // outside it (141.182pt in a 141pt AX5 frame). One whole
-                      // point survives rounding; a physical pixel may round away.
-                      // Keep this minimum stable rather than growing on each layout.
-                      minimum: Math.ceil(frame.height) + 1,
-                    },
-              );
-            }
-          : undefined
+      testID={
+        diagnose && drawing.key === heightKey
+          ? `${props.testID}-drawn-${drawing.clipped ? 'clipped' : 'complete'}-${drawing.lines}`
+          : props.testID
       }
+      onTextLayout={onLayoutLines}
+      onLayout={(event) => {
+        onLayout?.(event);
+        // This event may still include the old floor. Forget that frame and
+        // its lines before removing the floor, then wait for a fresh layout.
+        if (
+          heightGuard.key === heightKey &&
+          heightGuard.width !== event.nativeEvent.layout.width
+        ) {
+          measured.current = { key: heightKey };
+          setHeightGuard({
+            key: heightKey,
+            width: event.nativeEvent.layout.width,
+            minimum: 0,
+          });
+          if (diagnose) setDrawing({ key: '', lines: 0, clipped: true });
+          return;
+        }
+        currentMeasurement().frame = event.nativeEvent.layout;
+        guardDrawing();
+      }}
       allowFontScaling
       maxFontSizeMultiplier={wordSafe && cap ? cap : 0}
       dynamicTypeRamp={role.dynamicTypeRamp}
@@ -172,7 +258,7 @@ export function Text({
           flexShrink: 1,
         },
         tabular ? { fontVariant: ['tabular-nums'] } : null,
-        wordSafe && heightGuard.key === heightKey
+        heightGuard.key === heightKey && heightGuard.minimum > 0
           ? { minHeight: heightGuard.minimum }
           : null,
         style,

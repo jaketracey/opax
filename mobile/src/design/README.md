@@ -74,13 +74,16 @@ Design workbench) to see every component and state at the current text size.
   the word fits, never below the reader's default size, and starts again from
   full size when the text size, width or text (nested text included) changes.
   Every role's line height carries a 1/997pt nudge (`LINE_HEIGHT_NUDGE`):
-  when a text's lines add up exactly to the pixel grid, TextKit can drop the
-  last line and draw the one before it clipped. Don't set your own
-  `lineHeight` on `Text`; pick a role.
-  Word-safe text also reserves one whole point beyond its first measured height:
-  Yoga can round the frame below TextKit's fractional line height and drop the
-  final wrapped line on the iPhone 16e. This is a measured minimum, never a
-  height or line cap, and resets when the text size or content changes.
+  it keeps RN's ceiled text measurement off exact pixel boundaries. Yoga can
+  still round the final frame below that measurement, so word-safe and plain
+  multiline text also reserve a stable `ceil(naturalHeight) + 1pt` floor.
+  The nudge protects measurement; the floor protects drawing. Don't set your
+  own `lineHeight` on `Text`; pick a role. The floor is never a height or line
+  cap, and resets on text size, content and actual container-width changes.
+  A width change removes the old floor before measuring the natural height;
+  ordinary single-line text adds no settling render. E2E representative names
+  expose `drawn-complete-<lineCount>` only when all native line text and bounds
+  fit the final frame; production names retain their original IDs.
 - `Heading`: a VoiceOver header. `level` 1 (page), 2 (section), 3 (subsection).
   Always word-safe, so "representation" never breaks at AX5. Root screens take
   their title from the native large title instead.
