@@ -36,6 +36,32 @@ verify = module("verify", "verify-ios-release.py")
 step = module("step", "release-step.py")
 
 
+def packed(storage, text):
+    """The (offset, length) of text inside a packed Hermes string storage."""
+    return (storage.index(text), len(text))
+
+
+def hermes_bundle(storage, entries, version=98, kind_count=None):
+    """A minimal Hermes v98 bytecode file: no functions, one string-kind run and
+    (offset, length[, utf16]) entries into a packed storage blob."""
+    small, overflow = [], []
+    for entry in entries:
+        offset, length, utf16 = (*entry, False)[:3]
+        if length >= 0xFF:
+            small.append((len(overflow) << 1) | (0xFF << 24) | int(utf16))
+            overflow.append((offset, length))
+        else:
+            small.append((offset << 1) | (length << 24) | int(utf16))
+    count = len(entries)
+    body = struct.pack("<I", count if kind_count is None else kind_count)
+    body += struct.pack(f"<{count}I", *small)
+    body += b"".join(struct.pack("<II", *row) for row in overflow)
+    body += storage + b"\0" * (-len(storage) % 4)
+    fields = [128 + len(body), 0, 0, 1, 0, count, len(overflow), len(storage)] + [0] * 12
+    header = struct.pack("<QI", verify.HERMES_MAGIC, version) + bytes(20) + struct.pack("<20I", *fields)
+    return header + bytes(128 - len(header)) + body
+
+
 class FakeConnect:
     def __init__(self, state="VALID", group=True):
         self.state = state
@@ -527,29 +553,70 @@ class BundleAttackTests(unittest.TestCase):
             with self.assertRaises(ReleaseError):
                 verify.bundle_route_keys(baseline + b"./__tests__/fixture.tsx\0", routes)
 
-    def test_route_keys_found_when_hermes_packs_neighbouring_strings(self):
-        with tempfile.TemporaryDirectory() as d:
-            routes = Path(d)
-            keys = ["./(tabs)/(bills)/bills.tsx", "./_layout.tsx", "./account.tsx", "./talk.tsx"]
-            for key in keys:
-                path = routes / key
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text("source route")
-            # Hermes string storage has no separators: keys run into neighbours
-            # on either side and into each other.
-            bundle = (b"configurable./(tabs)/(bills)/bills.tsxFileSystem\0./talk.tsxfoo.js\0"
-                      b"no children./_layout.tsx./account.tsxBINARY")
-            self.assertEqual(verify.bundle_route_keys(bundle, routes), sorted(keys))
+    @staticmethod
+    def routes_with(directory, keys):
+        routes = Path(directory)
+        for key in keys:
+            path = routes / key
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("source route")
+        return routes
 
-    def test_unshipped_route_merged_into_a_shipping_key_is_refused(self):
+    def test_route_keys_are_whole_hermes_string_entries(self):
+        keys = ["./(tabs)/(bills)/bills.tsx", "./_layout.tsx", "./account.tsx", "./talk.tsx"]
+        # Hermes packs strings without separators and lets entries overlap.
+        storage = b"configurable./(tabs)/(bills)/bills.tsxFileSystem./talk.tsxfoo.js./_layout.tsx./account.tsx"
+        entries = [packed(storage, text) for text in
+                   (b"configurable", *(key.encode() for key in keys), b"FileSystem", b"foo.js", b"talk")]
         with tempfile.TemporaryDirectory() as d:
-            routes = Path(d)
-            (routes / "talk.tsx").write_text("source route")
+            routes = self.routes_with(d, keys)
+            bundle = hermes_bundle(storage, entries)
+            self.assertEqual(verify.hermes_strings(bundle),
+                             {"configurable", *keys, "FileSystem", "foo.js", "talk"})
+            self.assertEqual(verify.bundle_route_keys(bundle, routes), sorted(keys))
+            # A key that is only a slice of a longer entry is not shipped.
+            missing = hermes_bundle(storage, [entry for entry in entries if entry != packed(storage, b"./talk.tsx")])
+            with self.assertRaisesRegex(ReleaseError, r"missing \./talk\.tsx"):
+                verify.bundle_route_keys(missing, routes)
+
+    def test_route_suffix_entries_are_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = self.routes_with(d, ["./talk.tsx"])
+            for extra in (b"./talk.tsx.workbench.tsx", b"./secret.tsx", b"./talk.tsxfoo./workbench.tsx"):
+                with self.subTest(extra=extra):
+                    # The shipped key overlaps the start of the planted entry.
+                    storage = extra if extra.startswith(b"./talk.tsx") else b"./talk.tsx" + extra
+                    bundle = hermes_bundle(storage, [packed(storage, b"./talk.tsx"), packed(storage, extra)])
+                    with self.assertRaisesRegex(ReleaseError, "no unshipped.*found"):
+                        verify.bundle_route_keys(bundle, routes)
+            # Plain JS is compared by whole tokens, so a suffix is refused there too.
             self.assertEqual(verify.bundle_route_keys(b"\0./talk.tsx\0", routes), ["./talk.tsx"])
-            for plant in (b"\0./talk.tsx./secret.tsx\0", b"\0./talk.tsxfoo./workbench.tsx\0",
-                          b"\0./talk.tsx\0x./(dev)/index.tsx\0"):
-                with self.subTest(plant=plant), self.assertRaisesRegex(ReleaseError, "no unshipped.*found"):
-                    verify.bundle_route_keys(plant, routes)
+            with self.assertRaisesRegex(ReleaseError, "no unshipped.*found ./talk.tsx.workbench.tsx"):
+                verify.bundle_route_keys(b"\0./talk.tsx\0./talk.tsx.workbench.tsx\0", routes)
+
+    def test_hermes_overflow_and_utf16_entries_are_read(self):
+        long_text = ("x" * 300).encode()
+        storage = b"./talk.tsx" + long_text + "\u00e9t\u00e9".encode("utf-16-le")
+        bundle = hermes_bundle(storage, [(0, 10, False), (10, 300, False), (310, 3, True)])
+        self.assertEqual(verify.hermes_strings(bundle), {"./talk.tsx", "x" * 300, "\u00e9t\u00e9"})
+
+    def test_unknown_or_malformed_hermes_bytecode_fails_closed(self):
+        storage = b"./talk.tsx"
+        good = hermes_bundle(storage, [(0, 10)])
+        self.assertEqual(verify.hermes_strings(good), {"./talk.tsx"})
+        self.assertIsNone(verify.hermes_strings(b"__d(function(){})"))
+        oversized = bytearray(good)
+        struct.pack_into("<I", oversized, 32 + 4 * verify.HERMES_FIELDS.index("stringStorageSize"), 1000)
+        cases = {
+            "version 99": hermes_bundle(storage, [(0, 10)], version=99),
+            "length matches": good[:-4],
+            "kinds cover": hermes_bundle(storage, [(0, 10)], kind_count=2),
+            "within string storage": hermes_bundle(storage, [(0, 11)]),
+            "within the bytecode": bytes(oversized),
+        }
+        for label, bundle in cases.items():
+            with self.subTest(label=label), self.assertRaisesRegex(ReleaseError, label):
+                verify.hermes_strings(bundle)
 
     def test_each_missing_route_key_is_named(self):
         with tempfile.TemporaryDirectory() as d:
