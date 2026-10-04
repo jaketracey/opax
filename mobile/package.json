@@ -8,7 +8,7 @@
     "ios": "bash scripts/run-ios.sh",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "jest --runInBand",
+    "test": "bash scripts/jest-retry.sh --maxWorkers=2",
     "format": "prettier --write src scripts tests plugins app.config.ts *.js *.json .maestro README.md",
     "qa-advisories": "tsx scripts/qa-advisories.ts",
     "qa-static": "tsx scripts/qa-static.ts",

@@ -35,8 +35,25 @@ ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com"
                    "amplitude.com", "sentry.io", "appsflyer.com", "adjust.com", "google-analytics.com",
                    "app-measurement.com", "crashlytics.com", "heap.io", "heapanalytics.com",
                    "appcenter.ms", "bugsnag.com", "datadoghq.com", "graph.facebook.com"}
-ROUTE_KEYS = re.compile(rb"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
+ROUTE_KEY = re.compile(r"\./[A-Za-z0-9_(),@%.\[\]/+~-]+\.(?:tsx?|jsx?)")
+PATH_TOKENS = re.compile(rb"[A-Za-z0-9_(),@%.\[\]/+~-]+")
+HERMES_MAGIC = 0x1F1903C103BC1FC6
+HERMES_HEADER_SIZE = 128
+HERMES_FIELDS = ("fileLength", "globalCodeIndex", "functionCount", "stringKindCount", "identifierCount",
+                 "stringCount", "overflowStringCount", "stringStorageSize", "bigIntCount", "bigIntStorageSize",
+                 "regExpCount", "regExpStorageSize", "literalValueBufferSize", "objKeyBufferSize",
+                 "objShapeTableCount", "numStringSwitchImms", "segmentID", "cjsModuleCount",
+                 "functionSourceCount", "debugInfoOffset")
+# Bytecode versions whose layout this reader knows (function header bytes).
+# Any other version fails closed: check a shipped bundle before adding one.
+HERMES_LAYOUTS = {98: {"function_header_size": 12}}
 DEVELOPMENT_ROUTE = re.compile(r"workbench|fixture|__tests__|\(dev\)|__dev|home-prototype|voice-bridge-test|test-screens", re.I)
+DEVELOPMENT_PATHS = re.compile(rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev|voice-bridge-test|test-screens)|"
+                               rb"(?:src/)?test-screens/|ui-workbench|home-prototype|/__dev(?:/|\x00)", re.I)
+SCENE_DELEGATE = "EXExpoAppSceneDelegate"
+# Files under mobile/scripts/ that shape the shipped app (Metro reads the block
+# list) are application inputs, not tooling, for artifact provenance.
+APP_INPUTS_UNDER_SCRIPTS = {"mobile/scripts/production-block-list.json"}
 
 
 def url_hosts(body):
@@ -98,7 +115,11 @@ process.stdout.write(JSON.stringify(rules.map(rule => ({source: rule.source, fla
         for flag, value in (("i", re.I), ("m", re.M), ("s", re.S)):
             if flag in rule["flags"]:
                 flags |= value
-        patterns.append(re.compile(rule["source"], flags))
+        try:
+            patterns.append(re.compile(rule["source"], flags))
+        except re.error as error:
+            require(False, f"Metro exclusion expression /{rule['source']}/{rule['flags']} "
+                           f"is not Python-compatible ({error}); rewrite it in the shared syntax")
     return tuple(patterns)
 
 
@@ -119,15 +140,67 @@ def shipping_source_keys(routes):
     return keys
 
 
+def hermes_strings(body):
+    """Every entry of a Hermes bytecode string table, or None if the body is not
+    Hermes bytecode. Malformed tables and unknown versions fail closed."""
+    if len(body) < 8 or struct.unpack_from("<Q", body)[0] != HERMES_MAGIC:
+        return None
+    require(len(body) >= HERMES_HEADER_SIZE, "Hermes bytecode header is truncated")
+    version = struct.unpack_from("<I", body, 8)[0]
+    layout = HERMES_LAYOUTS.get(version)
+    require(layout is not None, f"shipped JS is Hermes bytecode version {version}; the verifier reads "
+            f"only versions {sorted(HERMES_LAYOUTS)}")
+    header = dict(zip(HERMES_FIELDS, struct.unpack_from("<20I", body, 32)))
+    require(header["fileLength"] == len(body), "Hermes bytecode length matches its header")
+
+    def align(offset):
+        return (offset + 3) & ~3
+
+    offset = align(HERMES_HEADER_SIZE + header["functionCount"] * layout["function_header_size"])
+    kinds = offset
+    offset = align(offset + 4 * header["stringKindCount"])
+    offset = align(offset + 4 * header["identifierCount"])
+    small = offset
+    offset = align(offset + 4 * header["stringCount"])
+    overflow = offset
+    storage = align(offset + 8 * header["overflowStringCount"])
+    end = storage + header["stringStorageSize"]
+    require(end <= (header["debugInfoOffset"] or len(body)) <= len(body),
+            "Hermes string storage lies within the bytecode")
+    runs = struct.unpack_from(f"<{header['stringKindCount']}I", body, kinds)
+    require(sum(run & 0x7FFFFFFF for run in runs) == header["stringCount"],
+            "Hermes string kinds cover the whole string table")
+    strings = set()
+    for index in range(header["stringCount"]):
+        entry = struct.unpack_from("<I", body, small + 4 * index)[0]
+        utf16, start, length = entry & 1, (entry >> 1) & 0x7FFFFF, entry >> 24
+        if length == 0xFF:
+            require(start < header["overflowStringCount"], "Hermes overflow string index is valid")
+            start, length = struct.unpack_from("<II", body, overflow + 8 * start)
+        size = length * (2 if utf16 else 1)
+        require(start + size <= header["stringStorageSize"], "Hermes string entries lie within string storage")
+        raw = body[storage + start:storage + start + size]
+        strings.add(raw.decode("utf-16-le", errors="replace") if utf16 else raw.decode("latin-1"))
+    return strings
+
+
 def bundle_route_keys(body, routes):
-    actual = {key.decode() for key in ROUTE_KEYS.findall(body)}
+    """Route keys are compared as whole strings: Hermes string-table entries, or
+    whole tokens for plain JS. Hermes packs and overlaps its string storage, so
+    raw bytes cannot tell "./talk.tsx" from "./talk.tsx.workbench.tsx"."""
     expected = shipping_source_keys(routes)
-    require(bool(actual) and actual == expected and
-        not any(DEVELOPMENT_ROUTE.search(key) for key in actual) and not re.search(
-        rb"(?:src/app|app)/[^\x00\s\"']*(?:workbench|__tests__|fixtures?|\(dev\)|__dev|voice-bridge-test|test-screens)|"
-        rb"(?:src/)?test-screens/|ui-workbench|home-prototype|/__dev(?:/|\x00)", body, re.I),
-        "bundle Expo route keys exactly match shipping source routes; no workbench routes")
-    return sorted(actual)
+    strings = hermes_strings(body)
+    if strings is None:
+        strings = {token.decode("latin-1") for token in PATH_TOKENS.findall(body)}
+    missing = sorted(expected - strings)
+    require(bool(expected) and not missing, "every shipping Expo route key is present in shipped JS" +
+            (f" (missing {', '.join(missing)})" if missing else ""))
+    unexpected = sorted(string for string in strings if ROUTE_KEY.fullmatch(string) and string not in expected)
+    development = sorted(key for key in expected if DEVELOPMENT_ROUTE.search(key))
+    require(not unexpected and not development and not DEVELOPMENT_PATHS.search(body),
+            "no unshipped, development or workbench route keys in shipped JS" +
+            (f" (found {', '.join(unexpected + development)})" if unexpected or development else ""))
+    return sorted(expected)
 
 
 def no_voice_native_symbols(symbols):
@@ -161,6 +234,21 @@ def scene_manifest_valid(info):
             manifest.get("UISceneConfigurations", {}).get("UIWindowSceneSessionRoleApplication") == [
                 {"UISceneConfigurationName": "Default Configuration",
                  "UISceneDelegateClassName": "EXExpoAppSceneDelegate"}])
+
+
+def scene_delegate_linked(executable):
+    """The manifest's delegate class must be defined in the app executable itself,
+    not merely named in a string or referenced from elsewhere."""
+    result = subprocess.run(["/usr/bin/otool", "-oV", str(executable)], capture_output=True, text=True)
+    require(result.returncode == 0, "otool reads the app executable's Objective-C metadata")
+    section = ""
+    for line in result.stdout.splitlines():
+        if line.startswith("Contents of ("):
+            section = line
+        elif "__objc_classlist" in section and re.fullmatch(
+                r"\s+name\s+0x[0-9a-fA-F]+\s+" + SCENE_DELEGATE + r"\s*", line):
+            return True
+    return False
 
 
 def framework_allowlist(app):
@@ -292,8 +380,9 @@ def verify_provenance(root, built_commit):
                               capture_output=True)
     require(ancestor.returncode == 0, "Artifact commit is an ancestor of the verification commit")
     changes = git("diff", "--name-only", built_commit, head).splitlines()
-    require(all(p.startswith("mobile/scripts/") or p in ("mobile/README.md", "docs/IOS-RELEASE.md")
-                for p in changes), "Application inputs unchanged since artifact commit")
+    require(all((p.startswith("mobile/scripts/") and p not in APP_INPUTS_UNDER_SCRIPTS) or
+                p in ("mobile/README.md", "docs/IOS-RELEASE.md") for p in changes),
+            "Application inputs unchanged since artifact commit")
     print("PASS artifact provenance: original commit retained; application inputs unchanged")
     return head
 
@@ -313,6 +402,8 @@ def verify_app(app, args):
     check(info.get("CFBundleVersion") == args.build, "build number")
     check(info.get("MinimumOSVersion") == "18.4", "minimum iOS 18.4")
     check(scene_manifest_valid(info), "single-window Expo scene lifecycle")
+    check(scene_delegate_linked(app / info["CFBundleExecutable"]),
+          "Expo scene delegate class linked in the app executable")
     check(info.get("ITSAppUsesNonExemptEncryption") is False, "standard HTTPS encryption compliance")
     check("NSAppTransportSecurity" not in info, "no ATS exception")
     # Current catalog app has no permission-gated features. This allow-list must
@@ -358,7 +449,8 @@ def verify_app(app, args):
     check(all(marker.encode() in bundle for marker in GUARDS), "shipped catalog/origin/redirect guards")
     check(not has_loopback(bundle), "no normalized loopback or fixture origin in shipped JS")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
-    check(True, "bundle Expo route keys exactly match shipping source routes; no workbench routes")
+    check(True, "every shipping Expo route key is present in shipped JS")
+    check(True, "no unshipped, development or workbench route keys in shipped JS")
     verify_no_voice_native_code(app)
     check(True, "no OpaxVoiceCore, OpaxVoice or microphone permission code in any production Mach-O")
     configs = list(app.rglob("app.config"))
