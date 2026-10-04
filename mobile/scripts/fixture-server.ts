@@ -84,7 +84,7 @@ const normalize = (value: string) =>
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
 const bill = JSON.parse(files.get('/bills/au-federal-r7534.json')!.toString());
-let voice: Awaited<ReturnType<typeof createVoiceFixture>>;
+let voice: Awaited<ReturnType<typeof createVoiceFixture>> | undefined;
 export const server = createServer(async (request, response) => {
   let status = 200;
   let loud = false;
@@ -107,7 +107,7 @@ export const server = createServer(async (request, response) => {
       throw new Error('Host is outside the loopback fixture boundary');
     if (request.socket.remoteAddress !== '127.0.0.1')
       throw new Error('Peer is outside the loopback boundary');
-    if (await voice.route(request, response)) {
+    if (await voice?.route(request, response)) {
       status = response.statusCode;
       return;
     }
@@ -213,22 +213,28 @@ export const server = createServer(async (request, response) => {
 });
 // Authenticated, numeric-loopback fake relay. Never proxies a provider.
 server.on('upgrade', (request, socket, head) => {
-  if (voice.upgrade(request, socket, head)) return;
+  if (voice?.upgrade(request, socket, head)) return;
   console.error(`OUTSIDE_ALLOW_LIST UPGRADE ${request.url}`);
   socket.end('HTTP/1.1 404 Not Found\r\n\r\n');
 });
 server.listen(port, '127.0.0.1', async () => {
   port = (server.address() as { port: number }).port;
-  voice = await createVoiceFixture(port, {
-    title: bill.title,
-    path: '/bill/au-federal-r7534',
-  });
+  try {
+    voice = await createVoiceFixture(port, {
+      title: bill.title,
+      path: '/bill/au-federal-r7534',
+    });
+  } catch (error) {
+    console.error(
+      `VOICE_FIXTURE_DISABLED: ${error instanceof Error ? error.message : 'contract validation failed'}`,
+    );
+  }
   console.log(
     `OPAX_FIXTURE_READY port=${port} files=${files.size} offline=true`,
   );
 });
 for (const signal of ['SIGTERM', 'SIGINT'] as const)
   process.on(signal, () => {
-    voice.close();
+    voice?.close();
     server.close(() => process.exit(0));
   });

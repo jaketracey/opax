@@ -105,7 +105,7 @@ export function mapEvent(value: unknown): VoiceEvent | null {
       case 'error':
         return { type: 'error', error: member(v.error, failures) };
       case 'status':
-        return { type: 'status', status: mapStatus(v.status) };
+        return { type: 'status', status: nullable(v.status, mapStatus) };
       case 'transcript': {
         if (!Array.isArray(v.turns) || v.turns.length > 80) return invalid();
         return {

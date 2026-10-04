@@ -8,7 +8,7 @@ const existing = config.resolver.blockList;
 config.resolver.blockList = [
   ...(Array.isArray(existing) ? existing : existing ? [existing] : []),
   ...(process.env.OPAX_VARIANT === 'production' ? productionBlockList : []),
-  ...(process.env.OPAX_VARIANT !== 'e2e'
+  ...(!['production', 'e2e'].includes(process.env.OPAX_VARIANT)
     ? productionBlockList.filter((rule) =>
         /voice-bridge-test|test-screens/.test(rule.source),
       )

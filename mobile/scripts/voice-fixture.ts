@@ -64,7 +64,8 @@ export async function createVoiceFixture(
   const random = () => randomBytes(32).toString('base64url');
   // Execute only the reviewed pure Worker message filter, pinned by its contract only.
   const worker = readFileSync(
-    new URL('../../portal/src/voice.ts', import.meta.url),
+    process.env.OPAX_VOICE_FIXTURE_WORKER_SOURCE ??
+      new URL('../../portal/src/voice.ts', import.meta.url),
     'utf8',
   );
   await assertWorkerContract(worker);

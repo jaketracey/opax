@@ -35,31 +35,17 @@ function namedFunction(file: ts.SourceFile, name: string, component: string) {
     throw new Error(
       `Voice fixture drift: ${component} extraction changed; review the contract pin`,
     );
-  return nodes[0]!.getText(file);
+  return ts
+    .createPrinter({ removeComments: true })
+    .printNode(ts.EmitHint.Unspecified, nodes[0]!, file);
 }
 export function workerMessageFilter(source: string) {
   return namedFunction(parse(source), 'voiceClientEvent', 'message filter');
-}
-function declaration(file: ts.SourceFile, name: string) {
-  const nodes = file.statements.flatMap((node) =>
-    ts.isVariableStatement(node)
-      ? node.declarationList.declarations.filter(
-          (value) => ts.isIdentifier(value.name) && value.name.text === name,
-        )
-      : [],
-  );
-  if (nodes.length !== 1)
-    throw new Error(
-      'Voice fixture drift: status response shapes declaration changed; review the contract pin',
-    );
-  return `const ${nodes[0]!.getText(file)}`;
 }
 export async function workerContract(source: string) {
   const file = parse(source);
   const filter = namedFunction(file, 'voiceClientEvent', 'message filter');
   const status = namedFunction(file, 'voiceStatus', 'status response shapes');
-  const allowance = declaration(file, 'VOICE_ALLOWANCE_SECONDS');
-  const configured = declaration(file, 'configured');
   const responses: string[] = [];
   function visit(node: ts.Node) {
     if (
@@ -147,8 +133,16 @@ export async function workerContract(source: string) {
 
   const timestamp = 1700000000;
   const evaluate = runInNewContext(
-    `${stripTypeScriptTypes(`${allowance}\n${configured}\n${status}`)}; voiceStatus`,
-    { now: () => timestamp },
+    `${stripTypeScriptTypes(status)}; voiceStatus`,
+    {
+      now: () => timestamp,
+      // Shape inputs, not pins on the location/implementation of config or SQL helpers.
+      VOICE_ALLOWANCE_SECONDS: 600,
+      configured: (env: { VOICE_ENABLED: string }) =>
+        env.VOICE_ENABLED === 'true',
+      BALANCES_SQL: 'fixture-status-balances',
+      balanceArgs: () => [],
+    },
     { timeout: 1000 },
   );
   const shapes: Record<string, unknown> = {};
@@ -160,7 +154,7 @@ export async function workerContract(source: string) {
       exhausted: { member: 'fixture', used: 600 },
       unlimited: { member: 'fixture', unlimited: true },
       openSession: { member: 'fixture', used: 600, active: true },
-      budgetClosed: { member: 'fixture', used: 120 },
+      budgetClosed: { member: 'fixture', used: 120, budgetClosed: true },
     } as Record<
       string,
       {
@@ -169,6 +163,7 @@ export async function workerContract(source: string) {
         unlimited?: boolean;
         disabled?: boolean;
         active?: boolean;
+        budgetClosed?: boolean;
       }
     >)) {
       shapes[name] = await evaluate(
@@ -185,6 +180,11 @@ export async function workerContract(source: string) {
                   return this;
                 },
                 async first() {
+                  if (sql === 'fixture-status-balances')
+                    return {
+                      personal: 600 - (spec.used ?? 0),
+                      monthly: spec.budgetClosed ? 0 : 40000,
+                    };
                   if (sql.includes('voice_access'))
                     return { unlimited: spec.unlimited ? 1 : 0 };
                   if (sql.includes('COALESCE(SUM'))

@@ -81,7 +81,7 @@ export type VoiceEvent =
   | { type: 'sources'; sources: VoiceSource[] }
   | { type: 'remainingTime'; seconds: number }
   | { type: 'error'; error: VoiceFailure }
-  | { type: 'status'; status: VoiceStatus };
+  | { type: 'status'; status: VoiceStatus | null };
 
 export type VoiceSnapshot = {
   state: CallState;

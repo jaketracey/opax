@@ -44,8 +44,8 @@ export default function VoiceBridgeTestScreen() {
           setHistory((prior) => [...prior, event.state].slice(-50));
           break;
         case 'status':
-          setSignedIn(event.status.signedIn);
-          setRemaining(event.status.remainingSeconds);
+          setSignedIn(event.status?.signedIn ?? false);
+          setRemaining(event.status?.remainingSeconds ?? 0);
           break;
         case 'error':
           setError(event.error);

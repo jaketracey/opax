@@ -21,7 +21,8 @@ keep them and the entered code transient. Native error prose is never forwarded.
 
 Events are a discriminated union: `state` (with nullable end reason), `mode`,
 `playback` (including truncation), `transcript`, `sources`, `remainingTime`,
-`status`, `error`. Transcript corrections replace the native snapshot; sources
+`status`, `error`. A cleared status emits `status: null`, matching `snapshot()`
+and invalidating any cached allowance. Transcript corrections replace the native snapshot; sources
 are validated relative OPAX record paths. No audio, token, session ID, signed URL,
 raw provider payload or account member ID crosses the bridge. JS validates and
 projects every result/event again, strips extra fields and drops malformed events.
@@ -63,7 +64,7 @@ the production policy. The release bundle check rejects the route, fixture/code 
 purpose string. The shared production block list is read by Metro and the route
 verifier. The pod policy verifies autolinking excludes both voice pods in production
 and retains both in development/e2e; the archive and IPA verifiers reject voice
-or microphone permission symbols. Signed release tooling uses a
+or microphone permission markers in every Mach-O, including stripped binaries. Signed release tooling uses a
 clean prebuild, so e2e Pods cannot be reused for an archive. The e2e fixture injects
 native in-memory credentials as specified by the core plan; production uses the
 origin-scoped Keychain store. Simulator builds need no signing identity. Test
@@ -79,9 +80,10 @@ bound to an opaque native cookie; no scenario token crosses into JS.
 The fixture uses generated real Worker status/community/deletion shapes and its
 contract-pinned pure client-message filter. `scripts/voice-worker-contract.json` pins only the filter, evaluated status response
 shapes and the evaluated start response projection. Syntax-tree extraction ignores
-adjacent comments; response key order and quote formatting do not alter the pin.
+comments inside and outside the filter; response key order and quote formatting do not alter the pin.
 Stored response fixtures must also match the pin. Unrelated Worker edits do not break
-fixture startup. Relevant drift names the changed contract component. It binds and accepts only numeric
+fixture startup. Relevant drift names the changed contract component, disables
+the voice routes, and leaves catalog journeys available. It binds and accepts only numeric
 loopback, checks Origin/cookie/convai on upgrade, enforces initiation/message limits,
 sends canned metadata, synthetic silence, transcript corrections, standard/receipt/
 clarification sources and ping/pong, and supports deadline closes and TCP aborts.

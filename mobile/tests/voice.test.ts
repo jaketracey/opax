@@ -125,6 +125,7 @@ test.each([
   { type: 'remainingTime', seconds: 4 },
   { type: 'error', error: 'deletionVerificationFailed' },
   { type: 'status', status },
+  { type: 'status', status: null },
   {
     type: 'transcript',
     turns: [{ role: 'agent', id: 1, text: 'Synthetic correction' }],
@@ -159,6 +160,7 @@ test.each([
   },
   { type: 'sources', sources: [{ title: 'bad', path: '/doc/%0A' }] },
   { type: 'status', status: { ...status, remainingSeconds: '480' } },
+  { type: 'status' },
 ])('drops malformed or non-public events', (event) =>
   expect(mapEvent(event)).toBeNull(),
 );

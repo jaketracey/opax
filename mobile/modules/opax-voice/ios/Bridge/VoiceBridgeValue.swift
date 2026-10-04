@@ -37,7 +37,7 @@ enum VoiceBridgeValue {
         case .playback(let playback): return ["type": "playback", "playback": playback.rawValue]
         case .remainingTime(let seconds): return ["type": "remainingTime", "seconds": seconds]
         case .error(let failure): return ["type": "error", "error": failure.rawValue]
-        case .status(let value): return ["type": "status", "status": status(value)]
+        case .status(let value): return ["type": "status", "status": value.map { status($0) as Any } ?? NSNull()]
         case .transcript(let turns):
             return ["type": "transcript", "turns": turns.map { ["role": $0.role.rawValue, "id": $0.id, "text": $0.text] as [String: Any] }]
         case .sources(let sources):

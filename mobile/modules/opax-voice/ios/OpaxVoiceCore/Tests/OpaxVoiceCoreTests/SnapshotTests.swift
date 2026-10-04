@@ -2,6 +2,25 @@ import XCTest
 @testable import OpaxVoiceCore
 
 final class SnapshotTests: XCTestCase, @unchecked Sendable {
+    func testFailedRefreshPublishesTheSameClearedStatusAsSnapshot() async throws {
+        let rig = try await Rig.make()
+        _ = try await rig.controller.refreshStatus()
+        await rig.http.failTransport()
+        do { _ = try await rig.controller.refreshStatus(); XCTFail("Expected failed read") } catch {}
+        try await eventually { await rig.recorder.items.contains(.status(nil)) }
+        let value = await rig.controller.snapshot()
+        XCTAssertNil(value.status)
+        await rig.close()
+    }
+    func testCallCleanupPublishesClearedStatusBeforeItsFreshRead() async throws {
+        let rig = try await Rig.make(); try await rig.live()
+        await rig.http.failTransport()
+        await rig.controller.end()
+        try await eventually { await rig.recorder.items.contains(.status(nil)) }
+        let value = await rig.controller.snapshot()
+        XCTAssertNil(value.status)
+        await rig.close()
+    }
     func testIdleSnapshotDoesNotEmitOrMakeRequests() async throws {
         let rig = try await Rig.make()
         let value = await rig.controller.snapshot()

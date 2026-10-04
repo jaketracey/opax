@@ -34,7 +34,7 @@ public enum VoiceEvent: Sendable, Equatable {
     case sources([VoiceSource])
     case remainingTime(Int)
     case error(VoiceFailure)
-    case status(VoiceStatusSnapshot)
+    case status(VoiceStatusSnapshot?)
 }
 /// Atomic read model for a screen that missed events while unmounted.
 /// No reservation, audio, credential or raw response is exposed.

@@ -6,6 +6,10 @@ const source = readFileSync(
   resolve(__dirname, '../../portal/src/voice.ts'),
   'utf8',
 );
+const mainSource = readFileSync(
+  resolve(__dirname, 'fixtures/voice-worker-origin-main.ts.txt'),
+  'utf8',
+);
 function check(worker: string) {
   const temporary = mkdtempSync(join(tmpdir(), 'opax-voice-contract-'));
   const path = join(temporary, 'worker.ts');
@@ -65,6 +69,35 @@ test('response formatting and property order do not change the contract', () => 
   );
   expect(changed).not.toBe(source);
   expect(() => check(changed)).not.toThrow();
+});
+test('moving configuration and allowance to imports does not change response shapes', () => {
+  const changed =
+    source
+      .replace(/^const configured = .*$/m, '')
+      .replace(/^export const VOICE_ALLOWANCE_SECONDS = .*$/m, '') +
+    '\nimport {configured, VOICE_ALLOWANCE_SECONDS} from "./voice-config";\n';
+  expect(changed).not.toBe(source);
+  expect(changed).not.toMatch(/^const configured = /m);
+  expect(changed).not.toMatch(/^export const VOICE_ALLOWANCE_SECONDS = /m);
+  expect(() => check(changed)).not.toThrow();
+});
+test('comments inside the message filter do not change its pin', () => {
+  const changed = source.replace(
+    '// Provider tools execute on the server.',
+    '/* Unrelated filter documentation. */\n  // Provider tools execute on the server.',
+  );
+  expect(changed).not.toBe(source);
+  expect(() => check(changed)).not.toThrow();
+});
+test('origin/main extracts imported configuration and names the real W8 shape drift', () => {
+  expect(() => check(mainSource)).toThrow();
+  try {
+    check(mainSource);
+  } catch (error) {
+    expect((error as { stderr: Buffer }).stderr.toString()).toContain(
+      'Voice fixture drift: statusResponseShapes changed',
+    );
+  }
 });
 test.each([
   [
