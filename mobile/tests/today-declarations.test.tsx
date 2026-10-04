@@ -7,9 +7,15 @@ import {
   decodeRecentInterests,
   recentDeclarationsFor,
   recentBillsFor,
+  registerSourceLabelFor,
   suggestionProvenanceFor,
 } from '../src/api/catalogs';
-import { PersonRow, Portrait, SourceLink } from '../src/design/primitives';
+import {
+  PersonRow,
+  Portrait,
+  SourceLink,
+  Text,
+} from '../src/design/primitives';
 import { TodayDeclaration } from '../src/features/today/TodayDeclaration';
 import { formatDate } from '../src/design/format';
 
@@ -46,7 +52,7 @@ test('Today names the actual category, change, party, chamber and date in its wh
   expect(label).toContain('Senate');
   expect(label).toContain('Sponsored travel or hospitality');
   expect(renderer.root.findByType(SourceLink).props.citation).toBe(
-    recent.meta.source,
+    registerSourceLabelFor(item),
   );
   act(() => renderer.unmount());
 });
@@ -87,9 +93,24 @@ test('a permitted existing portrait keeps its credit and licence, with a blank f
             : item.portrait!.sourceURL),
     ),
   ).toBe(true);
+  expect(
+    renderer.root
+      .findAllByType(Text)
+      .some((t) => t.props.children === item.portrait!.notice),
+  ).toBe(true);
   act(() => image.props.onError());
   expect(renderer.root.findAllByType(Image)).toHaveLength(0);
   expect(renderer.root.findAllByType(Portrait)).toHaveLength(1);
+  expect(
+    renderer.root
+      .findAllByType(SourceLink)
+      .some((l) => l.props.citation.startsWith('Portrait')),
+  ).toBe(false);
+  expect(
+    renderer.root
+      .findAllByType(Text)
+      .some((t) => String(t.props.children).includes('could not be loaded')),
+  ).toBe(true);
   act(() => renderer.unmount());
 });
 test('conflicting roster or photo observations never choose an invented party or portrait', () => {
@@ -108,7 +129,7 @@ test('conflicting roster or photo observations never choose an invented party or
   expect(
     recentDeclarationsFor({ ...recent, items: [item] }, 1, conflict).data![0]!
       .party,
-  ).toBeNull();
+  ).toBeUndefined();
 });
 test('suggestion and bill selectors cite the shared source object', () => {
   const sources = suggestionProvenanceFor({
@@ -125,4 +146,18 @@ test('suggestion and bill selectors cite the shared source object', () => {
   expect(sources.people.sources[0]).toBe(catalogSources.people);
   expect(sources.electorates.sources[0]).toBe(catalogSources.electorates);
   expect(sources.bills.sources[0]).toBe(recentBillsFor(bills).sources[0]);
+});
+
+test('missing Today identities leave the party line absent, including the pinned misspelling', () => {
+  expect(
+    recentDeclarationsFor(recent, 300).data!.every(
+      (item) => item.party === undefined,
+    ),
+  ).toBe(true);
+  const missing = items.filter((item) => item.name === 'Alison Brynes');
+  expect(missing).toHaveLength(5);
+  expect(missing.every((item) => item.party === undefined)).toBe(true);
+  const renderer = render(missing[0]!);
+  expect(renderer.root.findByType(PersonRow).props.party).toBeUndefined();
+  act(() => renderer.unmount());
 });

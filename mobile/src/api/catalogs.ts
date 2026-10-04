@@ -29,6 +29,9 @@ export * from './ids';
 export * from './selectors';
 
 interface SuggestionSources {
+  manifest: decode.Manifest;
+  slugs: decode.Slugs;
+  people: decode.PeopleCatalog;
   roster: decode.Roster;
   electorates: decode.ElectorateIndex;
   bills: decode.BillIndex;
@@ -282,7 +285,7 @@ export class Catalogs {
   suggestionSources(refresh = false): Promise<SuggestionSources> {
     if (!this.suggestionData || refresh) {
       const pending = (async () => {
-        const [manifest, roster, bills] = await Promise.all([
+        const [manifest, roster, bills, slugs] = await Promise.all([
           this.client.get(
             '/electorates/manifest.json',
             decode.decodeManifest,
@@ -294,13 +297,24 @@ export class Catalogs {
             refresh,
           ),
           this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
+          this.client.get('/api/person-slugs', decode.decodeSlugs, refresh),
         ]);
-        const electorates = await this.client.get(
-          manifest.data.index_url,
-          decode.decodeElectorateIndex,
-          refresh,
-        );
-        if (electorates.data.meta.release_id !== manifest.data.release_id)
+        const [electorates, people] = await Promise.all([
+          this.client.get(
+            manifest.data.index_url,
+            decode.decodeElectorateIndex,
+            refresh,
+          ),
+          this.client.get(
+            manifest.data.people_url,
+            decode.decodePeople,
+            refresh,
+          ),
+        ]);
+        if (
+          electorates.data.meta.release_id !== manifest.data.release_id ||
+          people.data.meta.release_id !== manifest.data.release_id
+        )
           throw new ApiError(
             'invalid-data',
             'The seat release does not match its manifest.',
@@ -312,10 +326,22 @@ export class Catalogs {
         });
         return {
           roster: roster.data,
+          manifest: manifest.data,
+          slugs: slugs.data,
+          people: people.data,
           electorates: electorates.data,
           bills: bills.data,
           provenance: {
-            people: cached(provenance.people, [roster]),
+            people: cached(
+              {
+                ...provenance.people,
+                sources: [
+                  ...provenance.people.sources,
+                  ...provenance.electorates.sources,
+                ],
+              },
+              [roster, slugs, people, manifest],
+            ),
             electorates: cached(provenance.electorates, [
               manifest,
               electorates,

@@ -35,24 +35,34 @@ export function personRowContext(
 ) {
   const place = person?.representation.length
     ? person.representation
-        .map((r) =>
-          [
-            r.electorate,
-            chamberName(r.chamber, r.jurisdiction),
-            jurisdictionName(r.state ?? r.jurisdiction),
-          ]
-            .filter(Boolean)
-            .join(' · '),
-        )
+        .map((r) => {
+          const seat = r.electorate.trim();
+          const chamber = chamberName(r.chamber, r.jurisdiction);
+          const state = jurisdictionName(
+            r.state ??
+              (r.jurisdiction === 'federal' ? undefined : r.jurisdiction),
+          );
+          const parts = [
+            seat,
+            chamber,
+            state && state !== seat && !chamber?.startsWith(state)
+              ? state
+              : null,
+          ].filter(Boolean);
+          const label = parts.join(' · ');
+          return r.current ? label : `Former representation: ${label}`;
+        })
         .join('; ')
-    : [
-        ...(person?.chambers.map((c) => chamberName(c)) ?? []),
-        ...(person?.states.map((s) => jurisdictionName(s)) ?? []),
-      ]
-        .filter(Boolean)
-        .join(' · ');
+    : person?.chambers.length
+      ? [
+          ...person.chambers.map((c) => chamberName(c)),
+          ...person.states.map((s) => jurisdictionName(s)),
+        ]
+          .filter(Boolean)
+          .join(' · ')
+      : undefined;
   return {
-    party: person?.party ?? null,
+    party: person?.party,
     partyCurrent: person?.partyCurrent ?? false,
     formerly: person?.formerly,
     place: place || undefined,

@@ -275,7 +275,7 @@ export default function Search() {
                 {suggestions.people.slice(0, 8).map((p) => (
                   <PersonRow
                     key={p.name}
-                    {...personRowContext(rosterIdentityFor(p))}
+                    {...personRowContext(rosterIdentityFor(p, sources!))}
                     name={p.name}
                     testID={`search-suggestion-person-${p.pid ?? p.name}`}
                     onPress={() => void open(() => openSuggestedPerson(p.name))}
@@ -394,10 +394,7 @@ export default function Search() {
                         <PersonRow
                           {...personRowContext(
                             sources
-                              ? searchPersonFor(
-                                  row.profileName ?? row.title,
-                                  sources.roster,
-                                )
+                              ? searchPersonFor(row.personSlug, sources)
                               : null,
                           )}
                           name={row.title}

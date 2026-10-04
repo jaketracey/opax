@@ -7,6 +7,7 @@ import type {
   Block,
 } from '../../api/catalogs';
 import { joinPerson, nameKey, rosterRowFor } from '../../api/catalogs';
+import { rosterChambersFor } from '../../api/person-identity';
 export type Directory = Awaited<ReturnType<Catalogs['directory']>>;
 export type YourMPView = Awaited<ReturnType<Catalogs['yourMP']>>;
 type SelectedProfile = Awaited<ReturnType<Catalogs['profileFor']>>;
@@ -189,12 +190,9 @@ export function hasParliamentaryMembership(
     identity.rosterPersonId,
   );
   return (
-    (!!row?.name.trim().includes(' ') &&
-      (!!row.pid || !row.chambers?.includes('senate_committee')) &&
-      !!row.chambers?.some(
-        (chamber) =>
-          chamber !== 'senate_committee' && !!chamberName(chamber, 'federal'),
-      )) ||
+    rosterChambersFor(row).some(
+      (chamber) => !!chamberName(chamber, 'federal'),
+    ) ||
     !!row?.representation?.some(
       (r) =>
         r.electorate.trim() &&

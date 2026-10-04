@@ -47,6 +47,8 @@ import {
 } from './ids';
 import {
   namedRosterRow,
+  joinPerson,
+  rosterChambersFor,
   rosterRowFor,
   numericPersonId,
   type PersonProfile,
@@ -108,19 +110,64 @@ export function suggestionProvenanceFor(
     bills: ready(dates.bills, catalogSources.bills),
   };
 }
-/** The roster observation and its affiliation status travel together. */
-export function rosterIdentityFor(row: Roster['people'][number]) {
-  return {
-    name: row.name,
-    ...personPartyFor([], row, row),
-    representation: row.representation ?? [],
-    chambers: row.chambers ?? [],
-    states: row.states ?? [],
-  };
+export type SearchIdentityCatalogs = Pick<
+  ProfileCatalogs,
+  'slugs' | 'roster' | 'people' | 'manifest'
+>;
+/** Search and the profile header resolve the exact same dated identity. */
+export function searchPersonFor(
+  slug: string,
+  catalogs: SearchIdentityCatalogs,
+) {
+  try {
+    const identity = joinPerson(
+      slug,
+      catalogs.slugs,
+      catalogs.roster,
+      catalogs.people,
+      catalogs.manifest,
+    );
+    const row = identity.rosterRow;
+    return {
+      name: identity.name,
+      party: identity.party ?? undefined,
+      partyCurrent: identity.partyCurrent,
+      formerly: identity.formerly,
+      representation: identity.seats.length
+        ? identity.seats.map((seat) => ({
+            electorate: seat.name,
+            chamber: seat.chamber,
+            jurisdiction: seat.jurisdiction,
+            state: row?.representation?.find(
+              (r) =>
+                nameKey(r.electorate) === nameKey(seat.name) &&
+                r.chamber === seat.chamber,
+            )?.state,
+            current: seat.current,
+          }))
+        : (row?.representation ?? [])
+            .filter((r) => r.chamber !== 'senate_committee')
+            .map((r) => ({ ...r, current: identity.partyCurrent })),
+      chambers: rosterChambersFor(
+        row ? { ...row, name: identity.name } : undefined,
+      ),
+      states: row?.states ?? [],
+    };
+  } catch {
+    // Conflicting or missing identities show a name without affiliation/place.
+    return null;
+  }
 }
-export function searchPersonFor(name: string, roster: Roster) {
-  const row = namedRosterRow([name], roster);
-  return row ? rosterIdentityFor(row) : null;
+export function rosterIdentityFor(
+  row: Roster['people'][number],
+  catalogs: SearchIdentityCatalogs,
+) {
+  const candidates = Object.entries(catalogs.slugs.slugs).filter(
+    ([, name]) => nameKey(name) === nameKey(row.name),
+  );
+  return candidates.length === 1
+    ? searchPersonFor(candidates[0]![0], catalogs)
+    : null;
 }
 export interface ProfileCatalogs {
   manifest: Manifest;
@@ -539,6 +586,16 @@ export interface DeclarationCatalogs {
   photoPeople?: PhotoPeople;
   photoCredits?: PhotoCredits;
 }
+/** The register named by this row, rather than the multi-register dataset. */
+export function registerSourceLabelFor(item: RecentInterests['items'][number]) {
+  if (item.jurisdiction === 'qld')
+    return 'Queensland Register of Members’ Interests';
+  if (item.jurisdiction === 'federal' && item.chamber === 'senate')
+    return 'Register of Senators’ Interests';
+  if (item.jurisdiction === 'federal' && item.chamber === 'representatives')
+    return 'Register of Members’ Interests';
+  return 'Register of interests';
+}
 export function recentDeclarationsFor(
   interests: RecentInterests,
   limit = 6,
@@ -578,8 +635,11 @@ export function recentDeclarationsFor(
       return {
         ...item,
         ...personPartyFor([], row, row),
+        party: row
+          ? (personPartyFor([], row, row).party ?? undefined)
+          : undefined,
         portrait,
-        sourceLabel: interests.meta.source,
+        sourceLabel: registerSourceLabelFor(item),
         category: declarationCategoryFor(item.bucket),
       };
     }),

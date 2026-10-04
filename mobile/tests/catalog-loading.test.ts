@@ -278,7 +278,9 @@ test('explicit suggestion, Today and coverage refreshes revalidate fresh cache e
     '/electorates/manifest.json',
     '/parliamentarians.json',
     '/bills/index.json',
+    '/api/person-slugs',
     data.manifest.index_url,
+    data.manifest.people_url,
     '/parliamentarians.json',
     '/photos/people.json',
     '/photos/credits.json',
@@ -301,7 +303,7 @@ test.each([
     expect(today.declarations.status).toBe('ready');
     expect(today.declarations.data).toHaveLength(6);
     if (path === '/parliamentarians.json')
-      expect(today.declarations.data?.every((d) => d.party === null)).toBe(
+      expect(today.declarations.data?.every((d) => d.party === undefined)).toBe(
         true,
       );
     else

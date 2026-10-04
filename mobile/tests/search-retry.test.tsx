@@ -15,7 +15,7 @@ import {
   PersonRow,
 } from '../src/design/primitives';
 import { ApiError } from '../src/api/errors';
-import { bills, index, roster } from './pinned';
+import { bills, index, roster, people, manifest, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
   catalogs: { suggestionSources: jest.fn(), search: jest.fn() },
@@ -31,6 +31,9 @@ beforeEach(() => {
   const source = { stale: false, savedAt: null, asAt: null, sources: [] };
   jest.mocked(catalogs.suggestionSources).mockResolvedValue({
     roster,
+    people,
+    manifest,
+    slugs,
     electorates: index,
     bills,
     provenance: { people: source, electorates: source, bills: source },

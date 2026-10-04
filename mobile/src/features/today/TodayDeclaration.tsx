@@ -46,11 +46,14 @@ export function TodayDeclaration({
         }
       />
       {item.description ? <Text>{item.description}</Text> : null}
-      {portrait ? (
+      {portrait && failedPath !== portrait.path ? (
         <Group>
           <Text variant="fine">
             {portrait.credit} · {portrait.licence}
           </Text>
+          {portrait.notice ? (
+            <Text variant="fine">{portrait.notice}</Text>
+          ) : null}
           {portrait.attribution ? (
             <Text variant="fine">{portrait.attribution}</Text>
           ) : null}
@@ -69,6 +72,11 @@ export function TodayDeclaration({
             kind="record"
           />
         </Group>
+      ) : null}
+      {portrait && failedPath === portrait.path ? (
+        <Text variant="fine">
+          The permitted portrait could not be loaded. A blank circle is shown.
+        </Text>
       ) : null}
       <SourceLink
         citation={item.sourceLabel}

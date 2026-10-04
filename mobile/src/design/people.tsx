@@ -86,7 +86,11 @@ export function PartyLabel({
 // affiliation as if it were current.
 type PersonRowParty =
   | { party?: undefined; partyCurrent?: undefined; formerly?: undefined }
-  | { party: string | null; partyCurrent: boolean; formerly?: string | null };
+  | {
+      party: string | null | undefined;
+      partyCurrent: boolean;
+      formerly?: string | null;
+    };
 export type PersonRowProps = PersonRowParty & {
   name: string;
   /** Reviewed portrait content; callers retain its credit and licence links. */
