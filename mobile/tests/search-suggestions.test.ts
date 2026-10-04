@@ -1,6 +1,6 @@
 import { bills, index, roster, slugs } from './pinned';
 import { nameKey } from '../src/api/ids';
-import { suggestionsFor } from '../src/api/catalogs';
+import { suggestionsFor, rosterIdentityFor } from '../src/api/catalogs';
 import { groupSuggestions, searchKinds } from '../src/features/search/model';
 
 test('suggestion matching folds case and whitespace and preserves source names', () => {
@@ -102,3 +102,20 @@ test.each([
     }
   },
 );
+
+test('former affiliations keep the roster status and party changes', () => {
+  const former = roster.people.find((p) => p.party && !p.current)!;
+  expect(rosterIdentityFor(former)).toMatchObject({
+    party: former.party_now ?? former.party,
+    partyCurrent: false,
+  });
+  const changed = roster.people.find(
+    (p) => p.current && p.party_now && p.party && p.party_now !== p.party,
+  )!;
+  expect(changed).toBeDefined();
+  expect(rosterIdentityFor(changed)).toMatchObject({
+    party: changed.party_now,
+    partyCurrent: true,
+    formerly: changed.party,
+  });
+});

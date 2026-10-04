@@ -7,12 +7,14 @@ import {
 } from './person-identity';
 import type { CatalogKind } from './policy';
 import * as decode from './catalog-decoders';
+import type { Decoder } from './validation';
 import type { Manifest } from './catalog-decoders';
 import { billKey, interestKey, personId, nameKey, type PersonId } from './ids';
 import {
   profileFor,
   recentBillsFor,
   recentDeclarationsFor,
+  suggestionProvenanceFor,
   yourMPFor,
   electorateFor,
   suggestionsFor,
@@ -43,7 +45,9 @@ function cached<T>(
   return {
     ...block,
     stale: records.some((r) => r.stale),
-    savedAt: Math.min(...records.map((r) => r.savedAt)),
+    savedAt: records.length
+      ? Math.min(...records.map((r) => r.savedAt))
+      : block.savedAt,
   };
 }
 export class Catalogs {
@@ -154,10 +158,14 @@ export class Catalogs {
     ): Promise<Block<V>> => {
       try {
         const record = await pending;
+        const selected = select(record.data);
         return {
-          ...select(record.data),
-          stale: record.stale,
-          savedAt: record.savedAt,
+          ...selected,
+          stale: record.stale || selected.stale,
+          savedAt:
+            selected.savedAt === null
+              ? record.savedAt
+              : Math.min(record.savedAt, selected.savedAt),
         };
       } catch (e) {
         return {
@@ -174,19 +182,49 @@ export class Catalogs {
         };
       }
     };
+    const optional = async <T>(path: string, decoder: Decoder<T>) =>
+      this.client.get(path, decoder, refresh).catch(() => null);
+    const metadata = Promise.all([
+      optional('/parliamentarians.json', decode.decodeRoster),
+      optional('/photos/people.json', decode.decodePhotoPeople),
+      optional('/photos/credits.json', decode.decodePhotoCredits),
+    ]);
     const [bills, declarations] = await Promise.all([
       load(
         this.client.get('/bills/index.json', decode.decodeBillIndex, refresh),
         (data) => recentBillsFor(data, limit),
       ),
-      load(
-        this.client.get(
+      (async () => {
+        const pending = this.client.get(
           '/interests/recent.json',
           decode.decodeRecentInterests,
           refresh,
-        ),
-        (data) => recentDeclarationsFor(data, limit),
-      ),
+        );
+        // Attach the load handler immediately, including when optional metadata is slow.
+        return load(
+          pending.then(async (record) => {
+            const [roster, photoPeople, photoCredits] = await metadata;
+            return {
+              ...record,
+              data: {
+                interests: record.data,
+                roster,
+                photoPeople,
+                photoCredits,
+              },
+            };
+          }),
+          ({ interests, roster, photoPeople, photoCredits }) =>
+            cached(
+              recentDeclarationsFor(interests, limit, {
+                roster: roster?.data,
+                photoPeople: photoPeople?.data,
+                photoCredits: photoCredits?.data,
+              }),
+              [roster, photoPeople, photoCredits].filter((r) => r !== null),
+            ),
+        );
+      })(),
     ]);
     return { bills, declarations };
   }
@@ -267,59 +305,22 @@ export class Catalogs {
             'invalid-data',
             'The seat release does not match its manifest.',
           );
+        const provenance = suggestionProvenanceFor({
+          people: roster.asOf,
+          electorates: electorates.asOf ?? manifest.asOf,
+          bills: bills.asOf,
+        });
         return {
           roster: roster.data,
           electorates: electorates.data,
           bills: bills.data,
           provenance: {
-            people: cached(
-              {
-                data: null,
-                status: 'ready',
-                asAt: roster.asOf,
-                sources: [
-                  {
-                    label: 'OPAX parliamentary roster',
-                    url: '/subject/person',
-                  },
-                ],
-                stale: false,
-                savedAt: null,
-              },
-              [roster],
-            ),
-            electorates: cached(
-              {
-                data: null,
-                status: 'ready',
-                asAt: electorates.asOf ?? manifest.asOf,
-                sources: [
-                  {
-                    label: 'OPAX electorate release',
-                    url: '/subject/electorate',
-                  },
-                ],
-                stale: false,
-                savedAt: null,
-              },
-              [manifest, electorates],
-            ),
-            bills: cached(
-              {
-                data: null,
-                status: 'ready',
-                asAt: bills.asOf,
-                sources: [
-                  {
-                    label: 'ParlInfo bill records',
-                    url: 'https://parlinfo.aph.gov.au/',
-                  },
-                ],
-                stale: false,
-                savedAt: null,
-              },
-              [bills],
-            ),
+            people: cached(provenance.people, [roster]),
+            electorates: cached(provenance.electorates, [
+              manifest,
+              electorates,
+            ]),
+            bills: cached(provenance.bills, [bills]),
           },
         };
       })();

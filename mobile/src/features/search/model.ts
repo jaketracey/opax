@@ -1,3 +1,5 @@
+import type { rosterIdentityFor } from '../../api/selectors';
+import { chamberName, jurisdictionName } from '../../design/parliament';
 import type { CatalogKind } from '../../api/policy';
 import type { suggestionsFor } from '../../api/catalogs';
 export const searchKinds: readonly {
@@ -26,3 +28,33 @@ export const groupSuggestions = (data: Suggestions) => [
 ];
 export const kindLabel = (kind: CatalogKind) =>
   searchKinds.find((k) => k.value === kind)!.label;
+
+/** Reader-facing context from the roster selector, including historical parties. */
+export function personRowContext(
+  person: ReturnType<typeof rosterIdentityFor> | null,
+) {
+  const place = person?.representation.length
+    ? person.representation
+        .map((r) =>
+          [
+            r.electorate,
+            chamberName(r.chamber, r.jurisdiction),
+            jurisdictionName(r.state ?? r.jurisdiction),
+          ]
+            .filter(Boolean)
+            .join(' · '),
+        )
+        .join('; ')
+    : [
+        ...(person?.chambers.map((c) => chamberName(c)) ?? []),
+        ...(person?.states.map((s) => jurisdictionName(s)) ?? []),
+      ]
+        .filter(Boolean)
+        .join(' · ');
+  return {
+    party: person?.party ?? null,
+    partyCurrent: person?.partyCurrent ?? false,
+    formerly: person?.formerly,
+    place: place || undefined,
+  };
+}

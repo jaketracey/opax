@@ -2,19 +2,12 @@ import { useEffect, useState } from 'react';
 import { RefreshControl } from 'react-native';
 import { router } from 'expo-router';
 import { catalogs } from '../api/runtime';
-import {
-  Group,
-  RowList,
-  Screen,
-  Section,
-  SourceLink,
-  Text,
-} from '../design/primitives';
+import { RowList, Screen, Section, Text } from '../design/primitives';
 import { formatDate } from '../design/format';
-import { chamberName, declarationKind } from '../design/parliament';
 import { CatalogState } from './CatalogState';
 import { RecordRow } from './RecordRow';
 import { billRoute } from '../navigation/routes';
+import { TodayDeclaration } from './today/TodayDeclaration';
 
 /** W13 seam: no edition request or card until the reviewed endpoint exists. */
 export const todayEdition = { enabled: false } as const;
@@ -94,26 +87,7 @@ export default function Today() {
           {(declarations) => (
             <RowList>
               {declarations.map((item, i) => (
-                <Group key={item.id}>
-                  <Text variant="strong">{item.name}</Text>
-                  <Text variant="metadata">
-                    {[
-                      chamberName(item.chamber, item.jurisdiction),
-                      declarationKind(item.kind),
-                      formatDate(item.date, 'short'),
-                    ]
-                      .filter(Boolean)
-                      .join(' · ')}
-                  </Text>
-                  {item.description ? <Text>{item.description}</Text> : null}
-                  <SourceLink
-                    citation="Register of interests"
-                    record={`${item.name}${item.page !== null ? `, page ${item.page}` : ''}`}
-                    url={item.url}
-                    kind="record"
-                    testID={`today-declaration-${i}`}
-                  />
-                </Group>
+                <TodayDeclaration key={item.id} item={item} index={i} />
               ))}
             </RowList>
           )}

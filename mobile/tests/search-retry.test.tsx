@@ -1,3 +1,7 @@
+import { router } from 'expo-router';
+import { RecordRow } from '../src/features/RecordRow';
+import { electorateRoute } from '../src/navigation/routes';
+import { KindPicker } from '../src/features/search/KindPicker';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import Search from '../src/features/Search';
@@ -110,5 +114,144 @@ test('an offline submitted search shows the uncached state while catalog suggest
     'search-error',
   );
   expect(renderer.root.findAllByType(PersonRow)).toHaveLength(0);
+  await act(async () => renderer.unmount());
+});
+
+test('people suggestions include party and place in the whole accessible row', async () => {
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(<Search />);
+  });
+  await act(async () =>
+    renderer.root.findByType(Field).props.onChangeText('Anthony Albanese'),
+  );
+  const row = renderer.root.findByType(PersonRow);
+  expect(row.props).toMatchObject({ party: 'Labor', partyCurrent: true });
+  const label = row.find(
+    (n) => typeof n.type !== 'string' && n.props.accessibilityRole === 'button',
+  ).props.accessibilityLabel;
+  expect(label).toContain('Anthony Albanese, Labor');
+  expect(label).toContain('Grayndler');
+  expect(label).toContain('House of Representatives');
+  await act(async () => renderer.unmount());
+});
+test('electorate suggestions push the native identifier route', async () => {
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(<Search />);
+  });
+  await act(async () =>
+    renderer.root.findByType(Field).props.onChangeText('Grayndler'),
+  );
+  const seat = index.electorates.find((s) => s.name === 'Grayndler')!;
+  await act(async () => renderer.root.findByType(RecordRow).props.onPress());
+  expect(router.push).toHaveBeenCalledWith(electorateRoute(seat.electorate_id));
+  expect(catalogs.search).not.toHaveBeenCalled();
+  await act(async () => renderer.unmount());
+});
+test.each(['person', 'interest', 'pay', 'expense'] as const)(
+  'empty %s results offer exactly the other kinds and submit the same query at page one',
+  async (kind) => {
+    jest.mocked(catalogs.search).mockResolvedValue({
+      data: {
+        query: 'zzzznevermatchingcatalog',
+        results: [],
+        warnings: [],
+        total: 0,
+        page: 1,
+        pages: 1,
+      },
+      stale: false,
+      savedAt: 100,
+      asOf: null,
+    } as unknown as Awaited<ReturnType<typeof catalogs.search>>);
+    let renderer!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      renderer = TestRenderer.create(<Search />);
+    });
+    await act(async () =>
+      renderer.root
+        .findByType(Field)
+        .props.onChangeText('  zzzznevermatchingcatalog  '),
+    );
+    await act(async () =>
+      renderer.root.findByType(KindPicker).props.onChange(kind),
+    );
+    await act(async () =>
+      renderer.root
+        .findAllByType(Button)
+        .find((b) => b.props.testID === 'search-submit')!
+        .props.onPress(),
+    );
+    const otherKinds = ['person', 'interest', 'pay', 'expense'].filter(
+      (k) => k !== kind,
+    );
+    const actions = renderer.root
+      .findAllByType(Button)
+      .filter((b) => b.props.testID?.startsWith('search-empty-'));
+    expect(actions.map((b) => b.props.testID)).toEqual(
+      otherKinds.map((k) => `search-empty-${k}`),
+    );
+    await act(async () => actions[0]!.props.onPress());
+    expect(catalogs.search).toHaveBeenLastCalledWith(
+      'zzzznevermatchingcatalog',
+      otherKinds[0],
+      1,
+    );
+    expect(renderer.root.findByType(KindPicker).props.value).toBe(
+      otherKinds[0],
+    );
+    await act(async () => renderer.unmount());
+  },
+);
+
+test('submitted people rows retain the selector party, place and complete accessible label', async () => {
+  jest.mocked(catalogs.search).mockResolvedValue({
+    data: {
+      query: 'Anthony Albanese',
+      results: [
+        {
+          slug: 'catalog-1',
+          title: 'Anthony Albanese',
+          personSlug: 'anthony-albanese',
+          snippet: '',
+          href: '/subject/person/anthony-albanese',
+        },
+      ],
+      warnings: [],
+      total: 1,
+      page: 1,
+      pages: 1,
+    },
+    stale: false,
+    savedAt: 100,
+    asOf: null,
+  } as unknown as Awaited<ReturnType<typeof catalogs.search>>);
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(<Search />);
+  });
+  await act(async () =>
+    renderer.root.findByType(Field).props.onChangeText('Anthony Albanese'),
+  );
+  await act(async () =>
+    renderer.root
+      .findAllByType(Button)
+      .find((b) => b.props.testID === 'search-submit')!
+      .props.onPress(),
+  );
+  const row = renderer.root.findByType(PersonRow);
+  expect(row.props).toMatchObject({
+    party: 'Labor',
+    partyCurrent: true,
+    testID: 'search-result-anthony-albanese',
+  });
+  const label = row.find(
+    (n) => typeof n.type !== 'string' && n.props.accessibilityRole === 'button',
+  ).props.accessibilityLabel;
+  expect(label).toContain('Anthony Albanese, Labor');
+  expect(label).toContain('Grayndler');
+  expect(label).toContain('House of Representatives');
+  expect(label).toContain('New South Wales');
   await act(async () => renderer.unmount());
 });

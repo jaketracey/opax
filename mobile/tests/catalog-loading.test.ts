@@ -278,8 +278,43 @@ test('explicit suggestion, Today and coverage refreshes revalidate fresh cache e
     '/parliamentarians.json',
     '/bills/index.json',
     data.manifest.index_url,
+    '/parliamentarians.json',
+    '/photos/people.json',
+    '/photos/credits.json',
     '/bills/index.json',
     '/interests/recent.json',
     '/corpus.json',
   ]);
+});
+
+test.each([
+  '/parliamentarians.json',
+  '/photos/people.json',
+  '/photos/credits.json',
+])(
+  'Today keeps declarations and bills readable when optional metadata fails: %s',
+  async (path) => {
+    const { catalogs } = loader([path]);
+    const today = await catalogs.today();
+    expect(today.bills.status).toBe('ready');
+    expect(today.declarations.status).toBe('ready');
+    expect(today.declarations.data).toHaveLength(6);
+    if (path === '/parliamentarians.json')
+      expect(today.declarations.data?.every((d) => d.party === null)).toBe(
+        true,
+      );
+    else
+      expect(today.declarations.data?.every((d) => d.portrait === null)).toBe(
+        true,
+      );
+  },
+);
+test('Today propagates optional metadata cache state without changing the declaration date', async () => {
+  const { catalogs } = loader([], ['/parliamentarians.json']);
+  const today = await catalogs.today();
+  expect(today.declarations.stale).toBe(true);
+  expect(today.declarations.asAt).toBe(
+    (pinned('/interests/recent.json') as { meta: { generated: string } }).meta
+      .generated,
+  );
 });

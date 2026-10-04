@@ -39,6 +39,7 @@ import { ApiError } from './errors';
 import {
   personId,
   personSlug,
+  rosterId,
   nameKey,
   nameValues,
   interestKey,
@@ -85,6 +86,38 @@ const block = <T>(
   stale: false,
   savedAt: null,
 });
+/** Shared catalog citations for selectors and loader provenance. */
+export const catalogSources = {
+  people: { label: 'OPAX parliamentary roster', url: '/subject/person' },
+  electorates: { label: 'OPAX electorate release', url: '/subject/electorate' },
+  bills: {
+    label: 'ParlInfo bill records',
+    url: 'https://parlinfo.aph.gov.au/',
+  },
+} satisfies Record<string, Provenance>;
+export function suggestionProvenanceFor(
+  dates: Record<keyof typeof catalogSources, string | null>,
+) {
+  return {
+    people: block(null, dates.people, [catalogSources.people]),
+    electorates: block(null, dates.electorates, [catalogSources.electorates]),
+    bills: block(null, dates.bills, [catalogSources.bills]),
+  };
+}
+/** The roster observation and its affiliation status travel together. */
+export function rosterIdentityFor(row: Roster['people'][number]) {
+  return {
+    name: row.name,
+    ...personPartyFor([], row, row),
+    representation: row.representation ?? [],
+    chambers: row.chambers ?? [],
+    states: row.states ?? [],
+  };
+}
+export function searchPersonFor(name: string, roster: Roster) {
+  const row = namedRosterRow([name], roster);
+  return row ? rosterIdentityFor(row) : null;
+}
 export interface ProfileCatalogs {
   manifest: Manifest;
   roster: Roster;
@@ -476,15 +509,76 @@ export function recentBillsFor(bills: BillIndex, limit = 6) {
       .slice(0, Math.max(0, Math.floor(limit)))
       .map(billDisplay),
     bills.generated_at,
-    [{ label: 'ParlInfo bill records', url: 'https://parlinfo.aph.gov.au/' }],
+    [catalogSources.bills],
   );
 }
-export function recentDeclarationsFor(interests: RecentInterests, limit = 6) {
+// The web register's DECLARED_BUCKET_LABELS (portal/public/app.js).
+export function declarationCategoryFor(bucket: string) {
+  return (
+    (
+      {
+        shareholdings: 'Shareholding',
+        real_estate: 'Real estate',
+        trusts: 'Trust',
+        directorships: 'Directorship',
+        gifts: 'Gift',
+        travel: 'Sponsored travel or hospitality',
+        memberships: 'Membership or office',
+        liabilities: 'Liability',
+        other: 'Other interest',
+      } as Record<string, string>
+    )[bucket] ?? 'Register category not recorded'
+  );
+}
+export interface DeclarationCatalogs {
+  roster?: Roster;
+  photoPeople?: PhotoPeople;
+  photoCredits?: PhotoCredits;
+}
+export function recentDeclarationsFor(
+  interests: RecentInterests,
+  limit = 6,
+  catalogs: DeclarationCatalogs = {},
+) {
   const items = [...interests.items]
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, Math.max(0, Math.floor(limit)));
   return block(
-    items,
+    items.map((item) => {
+      let row: Roster['people'][number] | undefined;
+      try {
+        row = catalogs.roster
+          ? rosterRowFor(
+              [item.name],
+              catalogs.roster,
+              /^\d+$/.test(item.person_id)
+                ? rosterId(item.person_id)
+                : undefined,
+            )
+          : undefined;
+      } catch {
+        /* Conflicting roster observations must not invent an affiliation. */
+      }
+      let portrait: ReturnType<typeof portraitFor> = null;
+      if (catalogs.photoPeople && catalogs.photoCredits) {
+        try {
+          portrait = portraitFor(
+            [item.name, ...(row ? [row.name] : [])],
+            catalogs.photoPeople,
+            catalogs.photoCredits,
+          );
+        } catch {
+          /* Ambiguous photo identities keep the blank circle. */
+        }
+      }
+      return {
+        ...item,
+        ...personPartyFor([], row, row),
+        portrait,
+        sourceLabel: interests.meta.source,
+        category: declarationCategoryFor(item.bucket),
+      };
+    }),
     interests.meta.generated,
     [...new Set(items.map((item) => item.url))].map((url) => ({
       label: interests.meta.source,
@@ -585,7 +679,7 @@ export function billsFor(
         (b.introduced ?? '').localeCompare(a.introduced ?? ''),
     );
   return block(rows.map(billDisplayRow), index.generated_at, [
-    { label: 'ParlInfo bill records', url: 'https://parlinfo.aph.gov.au/' },
+    catalogSources.bills,
   ]);
 }
 // Statuses in the order a reader follows a bill; anything new follows.
@@ -636,7 +730,7 @@ export function billFacetsFor(index: BillIndex) {
   return block(
     { total: index.bills.length, statuses, chambers, years },
     index.generated_at,
-    [{ label: 'ParlInfo bill records', url: 'https://parlinfo.aph.gov.au/' }],
+    [catalogSources.bills],
   );
 }
 export function billFor(bill: BillDetail, index: BillIndex) {

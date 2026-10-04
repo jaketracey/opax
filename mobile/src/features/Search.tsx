@@ -2,7 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { Keyboard, RefreshControl } from 'react-native';
 import { router } from 'expo-router';
 import { catalogs } from '../api/runtime';
-import { suggestionsFor } from '../api/catalogs';
+import {
+  suggestionsFor,
+  rosterIdentityFor,
+  searchPersonFor,
+} from '../api/catalogs';
 import type { CatalogKind } from '../api/policy';
 import {
   AsAtLine,
@@ -28,10 +32,14 @@ import { RecordRow } from './RecordRow';
 import { Excerpt } from './search/Excerpt';
 import { KindPicker } from './search/KindPicker';
 import { isOffline } from './CatalogState';
-import { groupSuggestions, kindLabel } from './search/model';
+import {
+  groupSuggestions,
+  kindLabel,
+  searchKinds,
+  personRowContext,
+} from './search/model';
 import { openSearchPerson, openSuggestedPerson } from './search/navigation';
-import { openOnWeb } from '../navigation/external';
-import { billRoute } from '../navigation/routes';
+import { billRoute, electorateRoute } from '../navigation/routes';
 
 type Sources = Awaited<ReturnType<typeof catalogs.suggestionSources>>;
 type Results = Awaited<ReturnType<typeof catalogs.search>>;
@@ -92,16 +100,20 @@ export default function Search() {
     setOpenError(null);
     setBusy(false);
   }
-  async function search(page = 1) {
+  async function search(page = 1, nextKind = kind) {
     if (!query.trim() || busy) return;
     Keyboard.dismiss();
     const token = ++request.current;
+    if (nextKind !== kind) {
+      setKind(nextKind);
+      setResult(null);
+    }
     setBusy(true);
     setError(null);
     setOpenError(null);
     setSubmitted(true);
     try {
-      const data = await catalogs.search(query.trim(), kind, page);
+      const data = await catalogs.search(query.trim(), nextKind, page);
       if (token === request.current) setResult(data);
     } catch (e) {
       if (token === request.current) setError(e);
@@ -263,6 +275,7 @@ export default function Search() {
                 {suggestions.people.slice(0, 8).map((p) => (
                   <PersonRow
                     key={p.name}
+                    {...personRowContext(rosterIdentityFor(p))}
                     name={p.name}
                     testID={`search-suggestion-person-${p.pid ?? p.name}`}
                     onPress={() => void open(() => openSuggestedPerson(p.name))}
@@ -285,7 +298,10 @@ export default function Search() {
                     detail={s.representatives
                       .map((r) => r.person.name)
                       .join('; ')}
-                    onPress={() => void open(() => openOnWeb(s.url, s.name))}
+                    testID={`search-suggestion-electorate-${s.electorate_id}`}
+                    onPress={() =>
+                      router.push(electorateRoute(s.electorate_id))
+                    }
                   />
                 ))}
               </RowList>
@@ -353,16 +369,34 @@ export default function Search() {
                 </Text>
               )}
               {!resultRows.length ? (
-                <EmptyState
-                  testID="search-empty"
-                  message={`No results for “${result.data.query}” in ${kindLabel(kind).toLowerCase()}. Choose another kind to search.`}
-                />
+                <Group>
+                  <EmptyState
+                    testID="search-empty"
+                    message={`No results for “${result.data.query}” in ${kindLabel(kind).toLowerCase()}. Choose another kind to search.`}
+                  />
+                  {searchKinds
+                    .filter((option) => option.value !== kind)
+                    .map((option) => (
+                      <Button
+                        key={option.value}
+                        label={`Search ${option.label.toLowerCase()}`}
+                        testID={`search-empty-${option.value}`}
+                        disabled={busy}
+                        onPress={() => void search(1, option.value)}
+                      />
+                    ))}
+                </Group>
               ) : (
                 <RowList>
                   {resultRows.map((row) => (
                     <Group key={row.slug}>
                       {row.personSlug ? (
                         <PersonRow
+                          {...personRowContext(
+                            sources
+                              ? searchPersonFor(row.title, sources.roster)
+                              : null,
+                          )}
                           name={row.title}
                           testID={`search-result-${row.personSlug}`}
                           onPress={() =>
