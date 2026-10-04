@@ -21,7 +21,14 @@ import type {
 import {
   billDedupeDivisions,
   billDisplay,
+  billFoldText,
+  billNoteLinks,
+  billNoteText,
+  billQuestionParts,
+  billSentenceCase,
   billSourceLabel,
+  billSplits,
+  billStage,
 } from './bill-transforms';
 import {
   personPartyFor,
@@ -495,6 +502,46 @@ export function todayFor(
     declarations: recentDeclarationsFor(interests, limit),
   };
 }
+type BillIndexRow = BillIndex['bills'][number];
+// Folded search text and display rows are computed once per decoded index
+// row, so filtering as the reader types stays cheap.
+const billSearchText = new WeakMap<BillIndexRow, string>();
+const billDisplayRows = new WeakMap<
+  BillIndexRow,
+  ReturnType<typeof billDisplay<BillIndexRow>>
+>();
+function billDisplayRow(b: BillIndexRow) {
+  let row = billDisplayRows.get(b);
+  if (!row) billDisplayRows.set(b, (row = billDisplay(b)));
+  return row;
+}
+// The web directory's search text (title, short title, sponsor, portfolio,
+// status, year), plus the readable sponsor name, folded as the web folds it.
+function searchTextFor(b: BillIndexRow) {
+  let text = billSearchText.get(b);
+  if (text === undefined) {
+    text = billFoldText(
+      [
+        b.title,
+        b.short_title,
+        b.sponsor,
+        billDisplayRow(b).sponsor,
+        b.portfolio,
+        b.status,
+        b.introduced?.slice(0, 4),
+      ]
+        .filter(Boolean)
+        .join(' '),
+    );
+    billSearchText.set(b, text);
+  }
+  return text;
+}
+/** The date a bill last moved: its status date, else when it was introduced. */
+export const billActivityDate = (b: {
+  status_as_of: string | null;
+  introduced: string | null;
+}) => b.status_as_of ?? b.introduced ?? null;
 export function billsFor(
   index: BillIndex,
   filter: {
@@ -502,10 +549,18 @@ export function billsFor(
     status?: string;
     year?: number;
     parliament?: number;
+    /** The originating house's chamber ID ("representatives", "senate"). */
+    chamber?: string;
     hasSummary?: boolean;
+    /** Every word must appear, as in the web's bill directory. */
     query?: string;
+    /** "activity": most recent status date first, then newest introduced. */
+    sort?: 'activity';
   } = {},
 ) {
+  const terms = filter.query
+    ? billFoldText(filter.query).split(' ').filter(Boolean)
+    : [];
   let rows = index.bills.filter(
     (b) =>
       (filter.view !== 'before_parliament' ||
@@ -514,29 +569,75 @@ export function billsFor(
       (filter.year === undefined ||
         Number(b.introduced?.slice(0, 4)) === filter.year) &&
       (filter.parliament === undefined || b.parliament === filter.parliament) &&
+      (!filter.chamber || b.originating_house === filter.chamber) &&
       (filter.hasSummary === undefined ||
         b.has_summary === filter.hasSummary) &&
-      (!filter.query ||
-        titleKey(
-          [
-            b.title,
-            b.short_title,
-            b.sponsor,
-            b.portfolio,
-            b.status,
-            b.introduced?.slice(0, 4),
-          ]
-            .filter(Boolean)
-            .join(' '),
-        ).includes(titleKey(filter.query))),
+      (!terms.length || terms.every((t) => searchTextFor(b).includes(t))),
   );
   if (filter.view === 'recent')
     rows = [...rows].sort((a, b) =>
       (b.introduced ?? '').localeCompare(a.introduced ?? ''),
     );
-  return block(rows.map(billDisplay), index.generated_at, [
+  else if (filter.sort === 'activity')
+    rows = [...rows].sort(
+      (a, b) =>
+        (billActivityDate(b) ?? '').localeCompare(billActivityDate(a) ?? '') ||
+        (b.introduced ?? '').localeCompare(a.introduced ?? ''),
+    );
+  return block(rows.map(billDisplayRow), index.generated_at, [
     { label: 'ParlInfo bill records', url: 'https://parlinfo.aph.gov.au/' },
   ]);
+}
+// Statuses in the order a reader follows a bill; anything new follows.
+const billStatusOrder = [
+  'before_parliament',
+  'exposure_draft',
+  'passed',
+  'lapsed',
+];
+const billChamberOrder = ['representatives', 'senate'];
+/**
+ * The values the bill list can be filtered by, each with how many bills in
+ * the whole index carry it (the web's filter counts).
+ */
+export function billFacetsFor(index: BillIndex) {
+  const tally = <K>(get: (b: BillIndexRow) => K | null | undefined) => {
+    const counts = new Map<K, number>();
+    for (const b of index.bills) {
+      const value = get(b);
+      if (value !== null && value !== undefined && value !== '')
+        counts.set(value, (counts.get(value) ?? 0) + 1);
+    }
+    return counts;
+  };
+  const rank = (order: string[], value: string) =>
+    order.includes(value) ? order.indexOf(value) : order.length;
+  const statuses = [...tally((b) => b.status)]
+    .sort(
+      ([a], [b]) =>
+        rank(billStatusOrder, a) - rank(billStatusOrder, b) ||
+        a.localeCompare(b),
+    )
+    .map(([value, count]) => ({
+      value,
+      label: billSentenceCase(value),
+      count,
+    }));
+  const chambers = [...tally((b) => b.originating_house)]
+    .sort(
+      ([a], [b]) =>
+        rank(billChamberOrder, a) - rank(billChamberOrder, b) ||
+        a.localeCompare(b),
+    )
+    .map(([value, count]) => ({ value, count }));
+  const years = [...tally((b) => Number(b.introduced?.slice(0, 4)) || null)]
+    .sort(([a], [b]) => b - a)
+    .map(([value, count]) => ({ value, count }));
+  return block(
+    { total: index.bills.length, statuses, chambers, years },
+    index.generated_at,
+    [{ label: 'ParlInfo bill records', url: 'https://parlinfo.aph.gov.au/' }],
+  );
 }
 export function billFor(bill: BillDetail, index: BillIndex) {
   const deduped = billDedupeDivisions(bill.divisions, bill);
@@ -546,7 +647,10 @@ export function billFor(bill: BillDetail, index: BillIndex) {
       {
         key: bill.key,
         title: bill.title,
+        shortTitle: bill.short_title,
         status: bill.status,
+        statusLabel: billSentenceCase(bill.status) || 'Status not recorded',
+        statusAsOf: bill.status_as_of,
         sponsor: display.sponsor,
         sponsorMembers: display.sponsorMembers,
         sponsorParty: display.sponsor_party,
@@ -554,6 +658,7 @@ export function billFor(bill: BillDetail, index: BillIndex) {
         introduced: bill.introduced,
         introducedLabel: display.introducedLabel,
         house: bill.originating_house,
+        sponsorPersonId: bill.sponsor_person_id,
       },
       bill.status_as_of,
       bill.sources.map((s) => ({
@@ -584,15 +689,26 @@ export function billFor(bill: BillDetail, index: BillIndex) {
       {
         collapsed: deduped.collapsed,
         rawRows: bill.divisions,
-        rows: deduped.divisions.map((d) => ({
-          ...d,
-          outcomeLabel:
-            d.outcome === 'affirmative'
-              ? 'Agreed to'
-              : d.outcome === 'negative'
-                ? 'Negatived'
-                : d.outcome,
-        })),
+        rows: deduped.divisions.map((d) => {
+          const { head, note } = billQuestionParts(d, bill);
+          return {
+            ...d,
+            outcomeLabel:
+              d.outcome === 'affirmative'
+                ? 'Agreed to'
+                : d.outcome === 'negative'
+                  ? 'Negatived'
+                  : billSentenceCase(d.outcome),
+            // The motion put, when the record names one; otherwise the row
+            // is named by its stage and date. The note is the record's prose.
+            head,
+            note: note ? billNoteText(note) : '',
+            // The note's own citations, which the web keeps as links.
+            noteLinks: note ? billNoteLinks(note) : [],
+            stageLabel: billStage(d.stage),
+            splits: billSplits(d),
+          };
+        }),
         partyBasisNote: index.meta.party_basis_note,
       },
       bill.status_as_of,

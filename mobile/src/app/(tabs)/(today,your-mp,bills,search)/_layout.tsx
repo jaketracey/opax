@@ -1,5 +1,9 @@
 import { Stack } from 'expo-router';
-import { rootHeaderItems, useStackChrome } from '../../../navigation/chrome';
+import {
+  closeSheetItem,
+  rootHeaderItems,
+  useStackChrome,
+} from '../../../navigation/chrome';
 
 // Each tab owns a native stack. Root screens live in their own group
 // ((today)/index, (your-mp)/your-mp, ...); detail routes in this folder are
@@ -32,6 +36,19 @@ export default function TabStack({ segment }: { segment: string }) {
         }}
       />
       <Stack.Screen name="person/[slug]" options={{ title: '' }} />
+      <Stack.Screen name="bill/[key]" options={{ title: '' }} />
+      {segment === '(bills)' ? (
+        // The bill list's filters: a sheet over the Bills stack, closed by Done.
+        <Stack.Screen
+          name="bill-filters"
+          options={{
+            title: 'Filter bills',
+            presentation: 'modal',
+            headerLargeTitleEnabled: false,
+            unstable_headerRightItems: () => [closeSheetItem()],
+          }}
+        />
+      ) : null}
     </Stack>
   );
 }

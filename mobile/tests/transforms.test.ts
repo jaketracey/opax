@@ -1,6 +1,14 @@
 import { decodeBill, decodeMoney } from '../src/api/catalogs';
 import { assertReceiptsLookup } from './receipts';
-import { billDedupeDivisions } from '../src/api/bill-transforms';
+import {
+  billDedupeDivisions,
+  billFoldText,
+  billParty,
+  billSentenceCase,
+  billSplits,
+  billStage,
+  billStageRuns,
+} from '../src/api/bill-transforms';
 import {
   samePartyLabel,
   partyReceiptsFor,
@@ -95,6 +103,8 @@ const decodeSweep = shape({
   pinnedBills: count,
   localBills: count,
   indexRows: count,
+  noteLinks: count,
+  linkedSponsors: count,
   differences: count,
 });
 let sweep: ReturnType<typeof decodeSweep> | undefined;
@@ -139,6 +149,13 @@ test('division deduplication matches the web on every local bill file', () => {
   const report = completeSweep();
   expect(report.localBills).toBeGreaterThan(0);
   expect(report.differences).toBe(0);
+}, 50000);
+test('division note citations match the web links on every local bill file', () => {
+  // The sweep compares each note's links with the web's billNoteHTML.
+  expect(completeSweep().noteLinks).toBeGreaterThan(1000);
+}, 50000);
+test('no sponsor link names anyone but the person on screen, across every local bill', () => {
+  expect(completeSweep().linkedSponsors).toBeGreaterThan(100);
 }, 50000);
 test('samePartyLabel matches the actual web rule for all roster party pairs', () => {
   const original = runInNewContext(
@@ -272,3 +289,94 @@ test.each(['au-federal-r7534', 'au-federal-r7549', 'au-federal-alrc-4437'])(
     expect(billDedupeDivisions(raw.divisions, raw)).toEqual(original);
   },
 );
+
+// The bill list's search folding, labels, stage runs and party splits, run
+// through the web's own functions on the pinned bills.
+describe('bill list and detail transforms match the web', () => {
+  const details = [
+    'au-federal-r7534',
+    'au-federal-r7549',
+    'au-federal-ed-online-safety-digital-duty-of-care-2026',
+    'au-federal-alrc-4437',
+    'au-federal-r6850',
+  ].map((key) => decodeBill(pinned(`/bills/${key}.json`)));
+  const original = runInNewContext(
+    [
+      fn('foldText'),
+      constant('sentenceCase'),
+      fn('billStage'),
+      constant('CHAMBER_NAMES'),
+      constant('billHouse'),
+      fn('billStageRuns'),
+      fn('billPartyName'),
+      constant('BILL_PARTY_LABELS'),
+      constant('billParty'),
+      constant('BILL_SPLIT_DRAWN'),
+      constant('BILL_SPLIT_SMALL'),
+      // Markup helpers: the parity check reads the words, not the HTML.
+      'const esc = (s) => String(s);',
+      'const partyDotHTML = () => "";',
+      fn('billSplitHTML'),
+      '({ foldText, sentenceCase, billStage, billStageRuns, billParty, billSplitHTML })',
+    ].join('\n'),
+  ) as {
+    foldText: (s: string) => string;
+    sentenceCase: (s: string) => string;
+    billStage: (s: string) => string;
+    billStageRuns: (
+      dates: unknown[],
+    ) => { stage: string; house: string; dates: { date: string }[] }[];
+    billParty: (p: string) => string;
+    billSplitHTML: (d: unknown) => string;
+  };
+
+  test('folding, statuses and stages read as the web reads them', () => {
+    for (const b of bills.bills) {
+      expect(billFoldText(b.title)).toBe(original.foldText(b.title));
+      expect(billSentenceCase(b.status)).toBe(original.sentenceCase(b.status));
+    }
+    for (const bill of details)
+      for (const k of bill.key_dates)
+        expect(billStage(k.stage)).toBe(original.billStage(k.stage));
+  });
+
+  test('stage runs fold the same register rows the web folds', () => {
+    for (const bill of details) {
+      const mine = billStageRuns(bill.key_dates);
+      const theirs = original.billStageRuns(
+        bill.key_dates.slice().sort((a, b) => a.date.localeCompare(b.date)),
+      );
+      expect(mine.map((r) => [r.stage, r.dates.map((x) => x.date)])).toEqual(
+        theirs.map((r) => [r.stage, r.dates.map((x) => x.date)]),
+      );
+    }
+  });
+
+  test('party splits name, order, fold and annotate as the web does', () => {
+    let checked = 0;
+    for (const bill of details)
+      for (const division of bill.divisions) {
+        const splits = billSplits(division);
+        const html = original.billSplitHTML(division);
+        const words = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+        for (const s of splits.drawn) {
+          expect(s.label).toBe(original.billParty(s.party));
+          expect(words).toContain(`${s.label} ${s.ayes} – ${s.noes}`);
+        }
+        const drawnOrder = splits.drawn.map((s) =>
+          words.indexOf(`${s.label} ${s.ayes} –`),
+        );
+        expect(drawnOrder).toEqual([...drawnOrder].sort((a, b) => a - b));
+        if (splits.folded.length)
+          expect(words).toContain(
+            `Also ${splits.folded.map((s) => `${s.label} ${s.ayes}–${s.noes}`).join(', ')}.`,
+          );
+        else expect(words).not.toContain('Also ');
+        for (const note of splits.notes) expect(words).toContain(note);
+        checked++;
+      }
+    expect(checked).toBeGreaterThan(0);
+    expect(original.billParty('PRES')).toBe(billParty('PRES'));
+    expect(billParty('')).toBe('Not recorded');
+  });
+});
