@@ -62,7 +62,7 @@ name: 13 Today feeds and their dated original sources
     centerElement: true
 - swipe:
     start: 90%, 30%
-    end: 90%, 55%
+    end: 90%, 60%
     duration: 1000
 - scrollUntilVisible:
     element:
