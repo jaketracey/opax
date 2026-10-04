@@ -19,6 +19,7 @@ async function main(udid: string, output: string) {
     });
   const pids = new Set<string>();
   let samples = 0,
+    longestSampleMs = 0,
     processSamples = 0,
     observedConnections = 0,
     productionConnections = 0;
@@ -59,7 +60,7 @@ async function main(udid: string, output: string) {
             await exec(
               '/usr/sbin/lsof',
               ['-nP', '-a', '-p', pid, '-i', '-FpcnT'],
-              { timeout: 3000 },
+              { timeout: 10000 },
             )
           ).stdout;
         } catch (error) {
@@ -87,14 +88,28 @@ async function main(udid: string, output: string) {
       }
       samples++;
     } catch (error) {
-      errors.push(String(error));
+      const failure = error as {
+        code?: unknown;
+        signal?: unknown;
+        killed?: unknown;
+      };
+      errors.push(
+        JSON.stringify({
+          message: String(error),
+          code: failure.code,
+          signal: failure.signal,
+          killed: failure.killed,
+        }),
+      );
     }
+    longestSampleMs = Math.max(longestSampleMs, Date.now() - started);
     await new Promise((resolve) =>
       setTimeout(resolve, Math.max(0, 250 - (Date.now() - started))),
     );
   }
   const audit = {
     samples,
+    longestSampleMs,
     processSamples,
     pids: [...pids],
     observedConnections,
