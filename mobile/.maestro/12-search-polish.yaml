@@ -43,6 +43,10 @@ name: 12 Search alternate kinds and native electorate suggestions
 - tapOn:
     id: search-input
 - inputText: Grayndler
+# Swipe on the content: iOS visibility checks can see rows behind the keyboard.
+- swipe:
+    start: 90%, 40%
+    end: 90%, 20%
 - scrollUntilVisible:
     element:
       id: search-suggestion-electorate-.*
