@@ -87,7 +87,9 @@ Design workbench) to see every component and state at the current text size.
   an initial empty line event is suppressed by RN, so relying on it would miss
   completely vanished text. E2E representative names
   expose `drawn-complete-<lineCount>` only when all native line text and bounds
-  fit the final frame; production names retain their original IDs.
+  fit the final frame. Metro substitutes a no-op hook and empty prop factory
+  in production and blocks the e2e implementation, so its diagnostic code
+  and strings do not ship; production names retain their original IDs.
 - `Heading`: a VoiceOver header. `level` 1 (page), 2 (section), 3 (subsection).
   Always word-safe, so "representation" never breaks at AX5. Root screens take
   their title from the native large title instead.

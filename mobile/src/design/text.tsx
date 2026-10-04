@@ -1,4 +1,3 @@
-import Constants from 'expo-constants';
 import {
   isValidElement,
   useLayoutEffect,
@@ -13,6 +12,8 @@ import {
   type TextProps,
 } from 'react-native';
 import { useBoldText } from './accessibility';
+import { useTextProbe } from './text-probe';
+import type { ProbeLine } from './text-probe.types';
 import {
   boldStep,
   colors,
@@ -46,7 +47,10 @@ export interface OpaxTextProps extends TextProps {
    * Headings, control labels and field labels use it.
    */
   wordSafe?: boolean;
-  /** Fixture-only native drawing check for a journey's full-name assertion. */
+  /**
+   * Native drawing check enabled in e2e. Production resolves a no-op module
+   * and excludes the diagnostic implementation and its prop factory.
+   */
   testDrawnText?: boolean;
 }
 
@@ -101,33 +105,6 @@ export function nextWordSafeCap(
   return Math.max(1, Math.round(current * 90) / 100);
 }
 
-type DrawnLine = {
-  text: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-/** Native TextKit line bounds, not the element's full accessibility label. */
-export function drawnTextClipped(
-  lines: readonly DrawnLine[],
-  frame: { width: number; height: number },
-  content: string,
-): boolean {
-  const normalize = (text: string) => text.replace(/\s/g, '');
-  return (
-    !lines.length ||
-    normalize(lines.map((line) => line.text).join('')) !== normalize(content) ||
-    lines.some(
-      (line) =>
-        line.x < -0.01 ||
-        line.y < -0.01 ||
-        line.x + line.width > frame.width + 0.01 ||
-        line.y + line.height > frame.height + 0.01,
-    )
-  );
-}
-
 /**
  * All content text. Scales with its Dynamic Type ramp to AX5 with no fixed
  * cap and no line limit; never pass `numberOfLines` for names, titles, figures
@@ -138,7 +115,6 @@ export function Text({
   tone,
   style,
   wordSafe = false,
-  testDrawnText = false,
   onTextLayout,
   onLayout,
   ...props
@@ -154,21 +130,17 @@ export function Text({
   const [capped, setCapped] = useState({ key, cap: 0 });
   const cap = capped.key === key ? capped.cap : 0;
   const heightKey = `${key}|${variant}|${bold}|${cap}|${scale}`;
-  const diagnose =
-    testDrawnText &&
-    !!props.testID &&
-    Constants.expoConfig?.extra?.variant === 'e2e';
+  const probe = useTextProbe(props, heightKey, content);
   const measured = useRef<{
     key: string;
     frame?: { width: number; height: number };
-    lines?: readonly DrawnLine[];
+    lines?: readonly ProbeLine[];
   }>({ key: heightKey });
   const currentMeasurement = () => {
     if (measured.current.key !== heightKey)
       measured.current = { key: heightKey };
     return measured.current;
   };
-  const [drawing, setDrawing] = useState({ key: '', lines: 0, clipped: true });
   const [heightGuard, setHeightGuard] = useState({
     key: '',
     width: 0,
@@ -227,19 +199,7 @@ export function Text({
         minimum: Math.ceil(frame.height) + 1,
       });
     }
-    if (diagnose && lines) {
-      const next = {
-        key: heightKey,
-        lines: lines.length,
-        clipped: drawnTextClipped(lines, frame, content),
-      };
-      if (
-        drawing.key !== next.key ||
-        drawing.lines !== next.lines ||
-        drawing.clipped !== next.clipped
-      )
-        setDrawing(next);
-    }
+    probe.update(lines, frame);
   };
   const onLayoutLines = (event: TextLayoutEvent) => {
     onTextLayout?.(event);
@@ -258,15 +218,10 @@ export function Text({
     <NativeText
       // Names and party abbreviations are read with Australian English rules.
       accessibilityLanguage="en-AU"
-      {...props}
+      {...probe.props}
       ref={nativeText}
-      testID={
-        diagnose && drawing.key === heightKey
-          ? `${props.testID}-drawn-${drawing.clipped ? 'clipped' : 'complete'}-${drawing.lines}`
-          : props.testID
-      }
       onTextLayout={
-        wordSafe || diagnose || onTextLayout ? onLayoutLines : undefined
+        wordSafe || probe.enabled || onTextLayout ? onLayoutLines : undefined
       }
       onLayout={(event) => {
         onLayout?.(event);
@@ -284,7 +239,7 @@ export function Text({
             width: frame.width,
             minimum: 0,
           });
-          if (diagnose) setDrawing({ key: '', lines: 0, clipped: true });
+          probe.reset();
           return;
         }
         currentMeasurement().frame = frame;

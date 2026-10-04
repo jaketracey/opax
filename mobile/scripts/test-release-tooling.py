@@ -625,6 +625,23 @@ class BundleAttackTests(unittest.TestCase):
             path.write_text("source route")
         return routes
 
+    def test_drawn_diagnostics_are_refused_in_production_string_entries(self):
+        for marker in (b"-drawn-", b"testDrawnText", b"drawnTextClipped"):
+            for entry in (marker, b"prefix" + marker + b"suffix"):
+                with self.subTest(marker=marker, entry=entry):
+                    bundle = hermes_bundle(entry, [packed(entry, entry)])
+                    with self.assertRaisesRegex(ReleaseError, "no e2e drawn-line diagnostics"):
+                        verify.verify_no_drawn_diagnostics(bundle)
+            with self.subTest(plain=marker), self.assertRaises(ReleaseError):
+                verify.verify_no_drawn_diagnostics(b"plain JS " + marker)
+
+    def test_drawn_diagnostics_check_reads_entries_and_fails_closed(self):
+        storage = b"shipping-drawn-testDrawnTextdrawnTextClipped"
+        bundle = hermes_bundle(storage, [packed(storage, b"shipping")])
+        self.assertEqual(verify.verify_no_drawn_diagnostics(bundle), 1)
+        with self.assertRaises(ReleaseError):
+            verify.verify_no_drawn_diagnostics(bundle[:-1])
+
     def test_route_keys_are_whole_hermes_string_entries(self):
         keys = ["./(tabs)/(bills)/bills.tsx", "./_layout.tsx", "./account.tsx", "./talk.tsx"]
         # Hermes packs strings without separators and lets entries overlap.

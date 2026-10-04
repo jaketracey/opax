@@ -7,7 +7,8 @@ import {
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { PersonRow } from '../src/design/people';
-import { drawnTextClipped, Text } from '../src/design/text';
+import { Text } from '../src/design/text';
+import { drawnTextClipped } from '../src/design/text-probe.e2e';
 
 jest.mock('expo-constants', () => ({
   __esModule: true,

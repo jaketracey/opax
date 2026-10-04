@@ -184,6 +184,18 @@ def hermes_strings(body):
     return strings
 
 
+def verify_no_drawn_diagnostics(body):
+    """Inspect actual Hermes entries, not overlapping raw string storage."""
+    markers = ("-drawn-", "testDrawnText", "drawnTextClipped")
+    strings = hermes_strings(body)
+    found = [marker for marker in markers if (
+        any(marker in entry for entry in strings) if strings is not None
+        else marker.encode() in body)]
+    require(not found, "no e2e drawn-line diagnostics in production JS" +
+            (f" (found {', '.join(found)})" if found else ""))
+    return len(strings) if strings is not None else None
+
+
 def bundle_route_keys(body, routes):
     """Route keys are compared as whole strings: Hermes string-table entries, or
     whole tokens for plain JS. Hermes packs and overlaps its string storage, so
@@ -448,6 +460,8 @@ def verify_app(app, args):
     bundle = (app / "main.jsbundle").read_bytes()
     check(all(marker.encode() in bundle for marker in GUARDS), "shipped catalog/origin/redirect guards")
     check(not has_loopback(bundle), "no normalized loopback or fixture origin in shipped JS")
+    verify_no_drawn_diagnostics(bundle)
+    check(True, "no e2e drawn-line diagnostics in production Hermes string entries")
     route_keys = bundle_route_keys(bundle, Path("src/app"))
     check(True, "every shipping Expo route key is present in shipped JS")
     check(True, "no unshipped, development or workbench route keys in shipped JS")

@@ -3,6 +3,7 @@ import { useAccessibilitySize } from './accessibility';
 import { Icon } from './icon';
 import { partyIdentity, partyText, type PartyContext } from './party';
 import { Text } from './text';
+import { nameProbeProps } from './text-probe';
 import { colors, hairline, layout, minimumTarget, spacing } from './tokens';
 
 const portraitSizes = { row: 44, profile: 88 } as const;
@@ -135,7 +136,7 @@ export function PersonRow({
           <Text
             wordSafe
             variant="strong"
-            testDrawnText
+            {...nameProbeProps}
             testID={testID ? `${testID}-name` : undefined}
             style={styles.personName}
           >

@@ -2,5 +2,6 @@
   "[/\\\\]src[/\\\\]app[/\\\\]workbench\\.tsx$",
   "[/\\\\]src[/\\\\]workbench[/\\\\].*",
   "[/\\\\]src[/\\\\]app[/\\\\]voice-bridge-test\\.tsx$",
-  "[/\\\\]src[/\\\\]test-screens[/\\\\].*"
+  "[/\\\\]src[/\\\\]test-screens[/\\\\].*",
+  "[/\\\\]src[/\\\\]design[/\\\\]text-probe\\.e2e\\.ts$"
 ]
