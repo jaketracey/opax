@@ -97,5 +97,15 @@
     "/interests/10368.json": 5581,
     "/electorates/releases/b56417062ccc33cf/el_8675b02bc36a5ecc9916fb12.json": 17378
   },
-  "testOnlyFiles": ["/graph/money.json", "/interests/ties-by-donor.json"]
+  "testOnlyFiles": ["/graph/money.json", "/interests/ties-by-donor.json"],
+  "responses": {
+    "/api/app/v1/edition/latest": {
+      "file": "fixtures/edition-latest.json",
+      "sha256": "07ea41c3675b24023dbe99242342851b5b8fb665c37742fe6380fc643f66fc2f",
+      "size": 4208,
+      "fetchedAt": "2026-10-04T03:24:09Z",
+      "readerContract": "origin/main d74b35d8 portal/src/app-edition.ts",
+      "cacheControl": "public, max-age=300, must-revalidate"
+    }
+  }
 }

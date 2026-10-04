@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { RefreshControl } from 'react-native';
 import { router } from 'expo-router';
+import type { Block, EditionView } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
 import {
   Group,
@@ -13,27 +14,30 @@ import {
 import { formatDate } from '../design/format';
 import { chamberName, declarationKind } from '../design/parliament';
 import { CatalogState } from './CatalogState';
+import { EditionSection } from './EditionCard';
 import { RecordRow } from './RecordRow';
 import { billRoute } from '../navigation/routes';
 
-/** W13 seam: no edition request or card until the reviewed endpoint exists. */
-export const todayEdition = { enabled: false } as const;
 export default function Today() {
   const [data, setData] = useState<Awaited<
     ReturnType<typeof catalogs.today>
   > | null>(null);
+  const [edition, setEdition] = useState<Block<EditionView> | null>(null);
   const [refreshing, setRefreshing] = useState(true);
   const [retry, setRetry] = useState(0);
   useEffect(() => {
     let active = true;
-    void catalogs
-      .today(6, retry > 0)
-      .then((result) => {
+    // Each block shows when it arrives; neither loader rejects.
+    void Promise.all([
+      catalogs.today(6, retry > 0).then((result) => {
         if (active) setData(result);
-      })
-      .finally(() => {
-        if (active) setRefreshing(false);
-      });
+      }),
+      catalogs.todayEdition(retry > 0).then((result) => {
+        if (active) setEdition(result);
+      }),
+    ]).finally(() => {
+      if (active) setRefreshing(false);
+    });
     return () => {
       active = false;
     };
@@ -52,6 +56,11 @@ export default function Today() {
       <Text variant="fine" testID="today-screen-message">
         OPAX is independent and non-partisan. It is not a government app.
       </Text>
+      <EditionSection
+        block={edition}
+        onRetry={refresh}
+        refreshing={refreshing}
+      />
       <Section title="Recently introduced bills" testID="today-bills">
         <CatalogState
           block={data?.bills ?? null}

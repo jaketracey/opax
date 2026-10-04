@@ -1,6 +1,7 @@
 // Node-only support for the fixture server and its tests; never imported by app code.
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 interface Snapshot {
   sourceCommit: string;
@@ -52,4 +53,37 @@ export function fixtureBytes(
     cached.set(path, bytes);
     return bytes;
   };
+}
+
+export interface ResponsePin {
+  file: string;
+  sha256: string;
+  size: number;
+  cacheControl: string;
+}
+/**
+ * A pinned API response (not a portal/public file): the exact bytes one
+ * public GET returned, committed under scripts/fixtures/ and checked against
+ * the snapshot's SHA-256 and size before use. To repin, fetch the route once,
+ * replace the file and update its hash, size and fetch time together.
+ */
+export function responseBytes(
+  snapshot: { responses: Record<string, ResponsePin> },
+  path: string,
+  root = resolve(__dirname, '../scripts'),
+): Buffer {
+  const pin = Object.hasOwn(snapshot.responses, path)
+    ? snapshot.responses[path]
+    : undefined;
+  if (!pin || !/^fixtures\/[a-z0-9-]+\.json$/.test(pin.file))
+    throw new Error(`Unpinned fixture response: ${path}`);
+  const bytes = readFileSync(resolve(root, pin.file));
+  if (
+    createHash('sha256').update(bytes).digest('hex') !== pin.sha256 ||
+    bytes.length !== pin.size
+  )
+    throw new Error(
+      `PIN MISMATCH: ${path}. Review the response file, hash and size together.`,
+    );
+  return bytes;
 }

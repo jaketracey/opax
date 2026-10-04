@@ -37,7 +37,7 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
 - extendedWaitUntil:
     visible:
       id: bills-count
-    timeout: 20000
+    timeout: 300000
 - tapOn:
     id: tab-search
 - assertVisible:

@@ -284,8 +284,8 @@ advisories are individually classified in the same baseline. Never run
 `npm audit fix --force`; its suggested dependency downgrades break the fixed SDK.
 
 Search has grouped on-device suggestions, explicit catalog submissions for People,
-Declared interests, Pay and Expenses, and saved/offline states. Today has dated
-bill and declaration feeds; `todayEdition` is disabled until W13 exists. About and
+Declared interests, Pay and Expenses, and saved/offline states. Today opens with the
+daily edition card, then dated bill and declaration feeds. About and
 sources pushes inside the Account sheet, with snapshot coverage, source terms,
 privacy and the build's complete font notices. Bills has a native list and detail
 stack; Today bill rows, Search bill suggestions and matched profile and Your MP
@@ -327,6 +327,30 @@ require native-use review. Exact full-name photo keys take priority over folded
 apostrophes; surname roster stubs never enter profile catalog lookups. Neither
 photo catalog supplies an as-at date.
 
+**Daily edition (W13).** `todayEdition()` reads `GET /api/app/v1/edition/latest`
+(`editionPath` in `policy.ts`; `today` and exact dates are not allowed) through the
+same client and cache as the catalogs: fresh for its max-age, then a saved copy
+stays readable offline and is marked stale. A 404 (no posted edition) is
+authoritative absence: the read opts into `absence` on `ApiClient.get`, so the
+Worker's 404 body is decoded (`decodeEditionRead`) and saved in the edition's
+place with its own time and max-age. The block is `missing` and the card absent,
+then and after a relaunch or offline, until a later 200 replaces it. Any other
+404 body is unreadable data; other routes still treat a 404 as not found.
+`decodeEdition` is strict: the envelope and edition refuse any key the contract
+does not name, the link must be an `https://opax.com.au` member, bill, grants or
+report page, and slides keep their stored type-specific fields while the reader's
+own rules (type, kicker, title, alt; cover first, source last; 3 to 10) are checked.
+`editionFor` keeps the post's text verbatim as plain text, dropping only its link
+line and a title clipped with "…" (both shown in full on the card). A bill edition
+is labelled machine-written with its own attribution: the summary slide's stored
+note (the web's bill-page wording), else the caption's "Machine-written…" line,
+else the web's "Written by a model from the explanatory memorandum; not the
+record." Other kinds are labelled only when the edition says so. `created_at`
+and a link fragment follow the Worker's own looser rules (the card shows neither). The card
+(`src/features/EditionCard.tsx`) shows the kind and date, title, attribution, text,
+the closing slide's source rows, a "Read the …" link that opens the page on the web
+through `webPageUrl`/`openOnWeb` on the build's own origin, and an as-at line.
+
 Use `billsFor(filters)`, `billFor(key)`, `today()`, `about()`, `suggestions(query)`
 and `search(query, kind)` for the remaining P0 blocks. Load `suggestionSources()`
 once on screen entry; `suggestions()` then matches that snapshot locally while
@@ -350,6 +374,22 @@ functions, and resolve all 354 current canonical people in the pinned release.
 The profile sweep compares portrait, votes, interests, pay and expenses statuses
 against both round-1 commits on those same bytes. State profiles require a matching
 numeric ID for federal pay; ID-less federal pay records still join by name.
+
+One API response is pinned beside the catalogs: `responses` in
+`fixture-snapshot.json` records the W13 edition fetched once from production
+(`scripts/fixtures/edition-latest.json`, its SHA-256, size, fetch time and the
+reader code it was checked against). The fixture serves those exact bytes with the
+Worker's validators (weak `W/"<sha256>"`; weak, strong, listed or `*` matches give
+304); prettier ignores the folder so the bytes never change. `OPAX_FIXTURE_EDITION`
+picks the journal: `absent` answers as the Worker does when none is posted (404
+`edition_not_published`), and `withdrawn` serves the edition until the app
+revalidates it (a pull to refresh), then 404s from then on. Run each edition
+variant on its own, by path:
+`OPAX_FIXTURE_EDITION=absent scripts/e2e.sh <udid> .maestro/13b-today-no-edition.yaml`
+and
+`OPAX_FIXTURE_EDITION=withdrawn scripts/e2e.sh <udid> .maestro/13c-today-edition-withdrawn.yaml`.
+The `13` shorthand runs only `13-today.yaml`. To repin, fetch the route once and
+update the file, hash, size and fetch time together.
 
 Fixture startup and tests read git blobs at `fixture-snapshot.json`'s `sourceCommit`,
 then verify SHA-256 and byte size; worktree/nightly catalog changes cannot alter

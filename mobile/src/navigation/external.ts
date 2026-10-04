@@ -292,18 +292,27 @@ export async function openSource(url: string, label: string): Promise<void> {
 }
 
 /**
+ * The address openOnWeb opens for a path on the public site, or null when the
+ * guard refuses it. The raw path is validated, then the record's query is kept
+ * for navigation; sourceUrl applies the route, query and fragment guard to it.
+ * Canonical share links still omit query state.
+ */
+export function webPageUrl(path: string): string | null {
+  try {
+    canonicalUrl(path);
+    return sourceUrl(new URL(path, webOrigin).toString());
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Opens a web-only OPAX page (community, the money map, Methods) in Safari,
  * outside the app. The control shows the "Opens on opax.com.au" cue.
  */
 export async function openOnWeb(path: string, label: string): Promise<void> {
-  let url: string;
-  try {
-    // Validate the raw path, then keep the record's query for navigation.
-    // sourceUrl applies the route/query/fragment guard to privacy links too.
-    // Canonical share links still omit query state.
-    canonicalUrl(path);
-    url = sourceUrl(new URL(path, webOrigin).toString());
-  } catch {
+  const url = webPageUrl(path);
+  if (url === null) {
     Alert.alert('opax.com.au', 'This page could not be opened.');
     return;
   }

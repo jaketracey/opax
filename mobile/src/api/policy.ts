@@ -15,6 +15,11 @@ const staticPaths = new Set([
   '/photos/credits.json',
   '/corpus.json',
 ]);
+// W13 frozen daily edition: one D1 read of the posted journal, no model,
+// preview or OG path (docs/IOS-API-CONTRACT.md, "App readers"). Only `latest`:
+// `today` has no previous-day fallback, and exact dates belong to a reader the
+// app does not have.
+export const editionPath = '/api/app/v1/edition/latest';
 const releasePath =
   /^\/electorates\/releases\/[a-f0-9]{16}\/(?:index|people|el_[a-f0-9]{24})\.json$/;
 const billPath =
@@ -74,6 +79,7 @@ export function assertAllowedPath(path: string): void {
     throw new Error('Static catalogs do not accept queries');
   if (
     pathname === '/api/person-slugs' ||
+    pathname === editionPath ||
     staticPaths.has(pathname!) ||
     releasePath.test(pathname!) ||
     billPath.test(pathname!) ||

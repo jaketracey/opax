@@ -3,11 +3,16 @@ import { createVoiceFixture } from './voice-fixture';
 import { createServer } from 'node:http';
 import { createHash } from 'node:crypto';
 import snapshot from './fixture-snapshot.json';
-import { assertAllowedPath, type CatalogKind } from '../src/api/policy';
+import {
+  assertAllowedPath,
+  editionPath,
+  type CatalogKind,
+} from '../src/api/policy';
 import { assertPortraitPath } from '../src/api/portrait-policy';
-import { fixtureBytes } from '../tests/fixture-bytes';
+import { fixtureBytes, responseBytes } from '../tests/fixture-bytes';
 import { catalogSearchRows } from '../src/api/catalog-search';
 import {
+  decodeEdition,
   decodePay,
   decodeExpenses,
   decodeInterest,
@@ -32,6 +37,21 @@ for (const path of Object.keys(snapshot.files)) {
   else assertAllowedPath(path);
   files.set(path, pinnedBytes(path));
 }
+// W13 edition reader: the pinned production response, served verbatim with
+// the Worker's validators (appRead). OPAX_FIXTURE_EDITION picks the journal:
+// - pinned: the edition is posted;
+// - absent: no edition is posted (404 edition_not_published), journey 13b;
+// - withdrawn: the edition is served until the app revalidates it (a
+//   conditional GET, as a pull to refresh sends), then 404 from then on, as
+//   when the posted edition goes, journey 13c. Unconditional launches,
+//   including e2e.sh's warm-up, cannot withdraw it early.
+const editionModes = ['pinned', 'absent', 'withdrawn'];
+const editionMode = process.env.OPAX_FIXTURE_EDITION ?? 'pinned';
+if (!editionModes.includes(editionMode))
+  throw new Error('OPAX_FIXTURE_EDITION must be pinned, absent or withdrawn');
+let editionWithdrawn = editionMode === 'absent';
+const edition = responseBytes(snapshot, editionPath);
+const editionDate = decodeEdition(JSON.parse(edition.toString())).date;
 const manifest = JSON.parse(
   files.get('/electorates/manifest.json')!.toString(),
 ) as Manifest;
@@ -117,7 +137,28 @@ export const server = createServer(async (request, response) => {
     const url = new URL(path, `http://127.0.0.1:${port}`);
     let body = files.get(url.pathname);
     let cacheControl = 'public, max-age=300';
-    if (url.pathname === '/api/person-slugs') {
+    const isEdition = url.pathname === editionPath;
+    if (
+      isEdition &&
+      editionMode === 'withdrawn' &&
+      request.headers['if-none-match'] !== undefined
+    )
+      editionWithdrawn = true;
+    if (isEdition && editionWithdrawn) {
+      status = 404;
+      response.writeHead(status, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'public, max-age=60, must-revalidate',
+      });
+      response.end(
+        JSON.stringify({ error: 'edition_not_published', date: editionDate }),
+      );
+      return;
+    }
+    if (isEdition) {
+      body = edition;
+      cacheControl = snapshot.responses[editionPath].cacheControl;
+    } else if (url.pathname === '/api/person-slugs') {
       body = Buffer.from(
         JSON.stringify({ generated: roster.meta.generated, slugs }),
       );
@@ -181,14 +222,27 @@ export const server = createServer(async (request, response) => {
       cacheControl = 'no-store';
     }
     if (!body) throw new Error('Path not in the pinned journey snapshot');
-    const etag = `"${createHash('sha256').update(body).digest('hex')}"`;
+    const opaque = `"${createHash('sha256').update(body).digest('hex')}"`;
+    // The edition answers as appRead does: a weak validator, matched in its
+    // weak or strong form, within a list, or by "*".
+    const etag = isEdition ? `W/${opaque}` : opaque;
+    const validators = String(request.headers['if-none-match'] ?? '')
+      .split(',')
+      .map((tag) => tag.trim().replace(/^W\//, ''));
+    const unchanged = isEdition
+      ? validators.includes('*') || validators.includes(opaque)
+      : request.headers['if-none-match'] === etag;
     response.setHeader(
       'Content-Type',
-      url.pathname.endsWith('.webp') ? 'image/webp' : 'application/json',
+      url.pathname.endsWith('.webp')
+        ? 'image/webp'
+        : isEdition
+          ? 'application/json; charset=utf-8'
+          : 'application/json',
     );
     response.setHeader('Cache-Control', cacheControl);
     response.setHeader('ETag', etag);
-    if (request.headers['if-none-match'] === etag) {
+    if (unchanged) {
       status = 304;
       response.writeHead(status);
       response.end();
@@ -230,7 +284,7 @@ server.listen(port, '127.0.0.1', async () => {
     );
   }
   console.log(
-    `OPAX_FIXTURE_READY port=${port} files=${files.size} offline=true`,
+    `OPAX_FIXTURE_READY port=${port} files=${files.size} edition=${editionMode} offline=true`,
   );
 });
 for (const signal of ['SIGTERM', 'SIGINT'] as const)
