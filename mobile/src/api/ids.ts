@@ -47,9 +47,26 @@ export function nameKey(name: string): NameKey {
 }
 // Apply the same folding to both the query and source keys. Decoders retain
 // source spellings; several spellings may legitimately index the same ID.
+// Decoded catalog objects are immutable snapshots. Keep source order and every
+// ambiguous spelling, so indexing does not weaken identity checks.
+const foldedIndexes = new WeakMap<
+  object,
+  Map<NameKey, { order: number; value: unknown }[]>
+>();
 export function nameValues<T>(index: Record<string, T>, names: string[]): T[] {
-  const keys = new Set(names.map(nameKey));
-  return Object.entries(index)
-    .filter(([key]) => keys.has(nameKey(key)))
-    .map(([, value]) => value);
+  let folded = foldedIndexes.get(index);
+  if (!folded) {
+    folded = new Map();
+    Object.entries(index).forEach(([key, value], order) => {
+      const name = nameKey(key);
+      const rows = folded!.get(name) ?? [];
+      rows.push({ order, value });
+      folded!.set(name, rows);
+    });
+    foldedIndexes.set(index, folded);
+  }
+  return [...new Set(names.map(nameKey))]
+    .flatMap((key) => folded!.get(key) ?? [])
+    .sort((a, b) => a.order - b.order)
+    .map((row) => row.value as T);
 }

@@ -12,12 +12,19 @@ export const payNameKey = (name: string) =>
     .trim();
 export const titleKey = (s: string) =>
   s.replace(/\s+/g, ' ').trim().toLowerCase();
+const billTitles = new WeakMap<
+  BillIndex,
+  Map<string, BillIndex['bills'][number]>
+>();
 export function billTitleIndex(index: BillIndex) {
+  const previous = billTitles.get(index);
+  if (previous) return previous;
   const map = new Map<string, BillIndex['bills'][number]>();
   for (const bill of index.bills) {
     map.set(titleKey(bill.title), bill);
     for (const alias of bill.aliases ?? []) map.set(titleKey(alias), bill);
   }
+  billTitles.set(index, map);
   return map;
 }
 export function voteTotals(records: VoteRecord[]) {
@@ -52,7 +59,17 @@ export function median(values: number[]) {
     ? sorted[middle]!
     : (sorted[middle - 1]! + sorted[middle]!) / 2;
 }
+const benchmarks = new WeakMap<
+  Expenses,
+  ReturnType<typeof buildExpenseBenchmarks>
+>();
 export function expenseBenchmarks(expenses: Expenses) {
+  let value = benchmarks.get(expenses);
+  if (!value)
+    benchmarks.set(expenses, (value = buildExpenseBenchmarks(expenses)));
+  return value;
+}
+function buildExpenseBenchmarks(expenses: Expenses) {
   const latestQuarter = expenses.meta.to;
   const latestYear =
     Number(latestQuarter.slice(0, 4)) ||
