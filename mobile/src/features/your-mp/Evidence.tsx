@@ -87,6 +87,7 @@ export function RecordBlock<T>({
   id,
   block,
   missing,
+  unlinked,
   retry,
   children,
   date = true,
@@ -95,6 +96,7 @@ export function RecordBlock<T>({
   id: string;
   block: EvidenceBlock<T>;
   missing: string;
+  unlinked?: string;
   retry: () => void;
   children: (data: T) => ReactNode;
   date?: boolean;
@@ -106,7 +108,10 @@ export function RecordBlock<T>({
       </Heading>
       {block.status === 'unlinked' ? (
         <EmptyState
-          message={`This release does not link this person's ${title.toLowerCase()}. See the record on opax.com.au.`}
+          message={
+            unlinked ??
+            `This release does not link this person's ${title.toLowerCase()}. See the record on opax.com.au.`
+          }
           testID={`${id}-unlinked`}
         />
       ) : block.status === 'error' ? (

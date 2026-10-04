@@ -84,7 +84,9 @@ saved data without clearing the app. Default runs include 01–04;
 The runner samples the selected simulator's app processes with `lsof -a -p <pid> -i`
 every nominal 250ms, writing raw `connection-samples.jsonl` and a measured
 `connection-audit.json`. Missing process coverage, collection errors or observed
-external connections fail. Short connections between samples may be missed; the
+external connections fail. Polling gaps above 3,000ms also fail: the audit records
+`longestSampleGapMs` and `sampleGapLimitMs`, covering each active app process,
+startup, scheduling delays, in-flight samples and the final tail. Short connections between samples may be missed; the
 source, variant and bundle boundaries are checked separately. Fixture request
 counts are in `request-audit.json` and do not claim to measure external traffic.
 
@@ -230,7 +232,8 @@ parsing. The current SDK has no compatible fix; review Expo patch updates. Tooli
 advisories are individually classified in the same baseline. Never run
 `npm audit fix --force`; its suggested dependency downgrades break the fixed SDK.
 
-Today and Bills remain placeholders; Search is a minimal public directory.
+Today remains a placeholder; Bills has a native list and detail stack, and Search
+is a minimal public directory.
 Your MP supports an explicit seat choice saved on the device, verified member
 and senator observations, and explicit state-seat choices where a verified
 roster exists. Historical seats are excluded from the picker; a saved historical
@@ -242,7 +245,8 @@ portrait permission, W12 voting dates, register OCR warnings, pay, expenses and
 party receipts. Roster-only former profiles explicitly say their records are not
 linked in this release and link to the web; they do not claim those records are absent.
 Electorates show dated representation, elections, Census vintage
-and sources. Journeys 07–09 cover these screens; the runner accepts 01–09.
+and sources. Matched bill votes open the native bill record. Journeys 07–09 cover
+these screens; the runner accepts 01–11 and rejects unknown numeric flows.
 Licensed postcode/location lookup, universal links and wider data coverage remain
 later work.
 

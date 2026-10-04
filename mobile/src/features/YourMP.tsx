@@ -17,7 +17,6 @@ import {
   SourceLink,
   Text,
   AsAtLine,
-  OpaxWebLink,
   errorMessage,
 } from '../design/primitives';
 import {
@@ -25,7 +24,8 @@ import {
   chamberName,
   jurisdictionName,
 } from '../design/parliament';
-import { electorateRoute } from '../navigation/routes';
+import { billRoute, electorateRoute } from '../navigation/routes';
+import { InlineLink } from './bills/parts';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import { RepresentativeRows } from './your-mp/RepresentativeRows';
 import { loadChoice, saveChoice } from './your-mp/choice-store';
@@ -350,9 +350,13 @@ export default function YourMP() {
                             {row.stage} · {formatDate(row.date!)}
                           </Text>
                           {row.billKey ? (
-                            <OpaxWebLink
+                            <InlineLink
                               label="Bill record"
-                              path={`/bill/${row.billKey}`}
+                              accessibilityLabel={`Bill record: ${row.name}`}
+                              onPress={() =>
+                                router.push(billRoute(row.billKey!))
+                              }
+                              testID={`your-mp-bill-${row.billKey}`}
                             />
                           ) : (
                             <Text wordSafe variant="fine">

@@ -160,7 +160,7 @@ function ElectorateScreen({ id }: { id: string }) {
               retry={refresh}
               missing={
                 identity.status === 'historical'
-                  ? 'Abolished; not a current seat. Historical representation is shown where recorded.'
+                  ? 'Abolished; not a current seat. Past winners are listed under Elections.'
                   : 'No verified representative is recorded for this date. This does not establish a vacancy.'
               }
             >

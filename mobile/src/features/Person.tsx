@@ -37,7 +37,8 @@ import {
   jurisdictionName,
 } from '../design/parliament';
 import { shareHeaderItem } from '../navigation/share';
-import { electorateRoute } from '../navigation/routes';
+import { billRoute, electorateRoute } from '../navigation/routes';
+import { InlineLink } from './bills/parts';
 import { EvidenceFooter, RecordBlock } from './your-mp/Evidence';
 import {
   uncoveredProfile,
@@ -315,17 +316,20 @@ function ProfileScreen({ slug }: { slug: string }) {
                                 <Text wordSafe variant="metadata">
                                   {row.stage} · {formatDate(row.date)}
                                 </Text>
-                                <Text wordSafe variant="fine">
-                                  {row.billKey
-                                    ? 'Bill record on opax.com.au'
-                                    : 'Not matched to a bill record'}
-                                </Text>
                                 {row.billKey ? (
-                                  <OpaxWebLink
+                                  <InlineLink
                                     label="Bill record"
-                                    path={`/bill/${row.billKey}`}
+                                    accessibilityLabel={`Bill record: ${row.name}`}
+                                    onPress={() =>
+                                      router.push(billRoute(row.billKey!))
+                                    }
+                                    testID={`person-bill-${side}-${i}`}
                                   />
-                                ) : null}
+                                ) : (
+                                  <Text wordSafe variant="fine">
+                                    Not matched to a bill record
+                                  </Text>
+                                )}
                               </Group>
                             ))
                           ) : (
@@ -469,6 +473,7 @@ function ProfileScreen({ slug }: { slug: string }) {
               title="Pay for the posts held"
               id="person-pay"
               block={b.pay}
+              unlinked="This release does not link this person's salary entitlements. See the record on opax.com.au."
               missing="No covered federal salary entitlement is held for this person. State pay and service before 7 December 1999 are outside this series."
               retry={refresh}
             >
@@ -670,7 +675,8 @@ function ProfileScreen({ slug }: { slug: string }) {
               title="Party receipts"
               id="person-receipts"
               block={b.partyReceipts}
-              missing="No party receipts projection is held for this person."
+              missing="No receipts projection is linked for this person's party."
+              unlinked="This release does not link party receipts for this person's party. See the record on opax.com.au."
               retry={refresh}
             >
               {(p) => (

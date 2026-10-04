@@ -1,6 +1,7 @@
 import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Image, RefreshControl } from 'react-native';
+import { router } from 'expo-router';
 import { catalogs as runtime } from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
@@ -16,6 +17,8 @@ import {
 import Person from '../src/features/Person';
 import YourMP from '../src/features/YourMP';
 import Electorate from '../src/features/Electorate';
+import { InlineLink } from '../src/features/bills/parts';
+import { billRoute } from '../src/navigation/routes';
 import {
   PersonRow,
   PartyLabel,
@@ -338,6 +341,8 @@ test.each([
       /No (voting summary|covered federal salary|expense summary|register file) is held/,
     );
     expect(text(r)).toContain('This release does not link');
+    expect(text(r)).toContain("party receipts for this person's party");
+    expect(text(r)).not.toContain("this person's party receipts");
     expect(
       r.root
         .findAllByType(OpaxWebLink)
@@ -367,6 +372,27 @@ test('Windsor is a former parliamentarian even without a representation row', as
   ).toBe(false);
   await act(async () => r.unmount());
 });
+
+test.each(['brown', 'james', 'cook'])(
+  'deep-linked roster stub %s gets no native profile or retry action',
+  async (slug) => {
+    mockParams.slug = slug;
+    mock.person.mockResolvedValue(
+      result(c.joinPerson(slug, slugs, roster, people, manifest)),
+    );
+    const r = await render(<Person />);
+    expect(text(r)).toContain('No native profile yet');
+    expect(r.root.findAllByType(PartyLabel)).toHaveLength(0);
+    expect(
+      r.root.findAll((n) => n.props.testID === 'person-votes'),
+    ).toHaveLength(0);
+    expect(
+      r.root.findAllByType(Button).some((n) => n.props.label === 'Try again'),
+    ).toBe(false);
+    expect(mock.profileFor).not.toHaveBeenCalled();
+    await act(async () => r.unmount());
+  },
+);
 
 test('a saved abolished seat is identified and can be changed', async () => {
   const seat = index.electorates.find((s) => s.name === 'Higgins')!;
@@ -399,6 +425,8 @@ test('historical electorate records retain the abolished notice', async () => {
   const r = await render(<Electorate />);
   expect(text(r)).toContain('Abolished; not a current seat');
   expect(text(r)).not.toContain('does not establish a vacancy');
+  expect(text(r)).toContain('Past winners are listed under Elections');
+  expect(text(r)).not.toContain('Historical representation is shown');
   await act(async () => r.unmount());
 });
 
@@ -561,6 +589,60 @@ test('Your MP shows six recorded bill votes in each direction', async () => {
   const r = await render(<YourMP />);
   expect(text(r).match(/Voted for ·/g)).toHaveLength(6);
   expect(text(r).match(/Voted against ·/g)).toHaveLength(6);
+  const matched = [
+    ...profile.blocks.votes.data!.for.slice(0, 6),
+    ...profile.blocks.votes.data!.against.slice(0, 6),
+  ].filter((row) => row.billKey);
+  const links = r.root.findAllByType(InlineLink);
+  expect(links).toHaveLength(matched.length);
+  expect(matched.length).toBeGreaterThan(0);
+  const first = links[0]!;
+  const key = first.props.testID.replace('your-mp-bill-', '');
+  await act(async () => first.props.onPress());
+  expect(router.push).toHaveBeenCalledWith(billRoute(key));
+  expect(
+    r.root
+      .findAllByType(OpaxWebLink)
+      .some((n) => n.props.path.startsWith('/bill/')),
+  ).toBe(false);
+  await act(async () => r.unmount());
+});
+
+test('profile bill votes push the matched native bill route and keep unmatched votes as text', async () => {
+  const identity = c.joinPerson(
+    'anthony-albanese',
+    slugs,
+    roster,
+    people,
+    manifest,
+  );
+  const profile = c.profileFor(identity.canonicalPersonId!, catalogs);
+  mock.person.mockResolvedValue(result(identity));
+  mock.profileFor.mockResolvedValue(profile);
+  const r = await render(<Person />);
+  await act(async () =>
+    r.root
+      .findAllByType(Button)
+      .find((n) => n.props.testID === 'person-bill-votes')!
+      .props.onPress(),
+  );
+  const votes = profile.blocks.votes.data!;
+  const links = r.root.findAllByType(InlineLink);
+  expect(links).toHaveLength(
+    [...votes.for, ...votes.against].filter((row) => row.billKey).length,
+  );
+  const first = links[0]!;
+  const [, , side, index] = first.props.testID.split('-');
+  const row = votes[side as 'for' | 'against'][Number(index)]!;
+  await act(async () => first.props.onPress());
+  expect(router.push).toHaveBeenCalledWith(billRoute(row.billKey!));
+  expect(text(r)).toContain('Not matched to a bill record');
+  expect(text(r)).not.toContain('Bill record on opax.com.au');
+  expect(
+    r.root
+      .findAllByType(OpaxWebLink)
+      .some((n) => n.props.path.startsWith('/bill/')),
+  ).toBe(false);
   await act(async () => r.unmount());
 });
 

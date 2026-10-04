@@ -34,8 +34,12 @@ Design workbench) to see every component and state at the current text size.
   `numberOfLines`, fixed heights or `adjustsFontSizeToFit` for names, bill
   titles, figures, labels or caveats. Side-by-side layouts stack at
   accessibility sizes: use `useAccessibilitySize()` for your own. React
-  Native has no hyphenation on iOS, so headings and control labels are
-  word-safe (below); body text wraps at spaces as usual.
+  Native has no hyphenation on iOS. Headings, control labels and shared
+  components use `wordSafe` (below), including body, metadata and fine text
+  in PersonRow, PartyLabel, AsAtLine, source links and state messages.
+  This is the shared AX5 behaviour across every screen, including Bills
+  and Search; keep it in the components rather than overriding it in screens.
+  The build-2 device gate reviews every screen at AX5.
 - **No raw IDs.** Chamber and jurisdiction IDs go through `parliament.ts`:
   `chamberName('vic_la')` is "Victorian Legislative Assembly",
   `chamberName('representatives')` "House of Representatives",

@@ -5,11 +5,19 @@ import { promisify } from 'node:util';
 import { lookup } from 'node:dns/promises';
 import { appendFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { performance } from 'node:perf_hooks';
+import {
+  connectionAuditPass,
+  SampleGaps,
+  SAMPLE_GAP_LIMIT_MS,
+  SAMPLE_INTERVAL_MS,
+} from './connection-audit-policy';
 const exec = promisify(execFile);
 const [udid, output] = process.argv.slice(2);
 if (!udid || !output)
   throw new Error('Usage: connection-audit.ts <udid> <output>');
 async function main(udid: string, output: string) {
+  const gaps = new SampleGaps(performance.now());
   const addresses = await lookup('opax.com.au', { all: true }).catch(() => []);
   const ips = new Set(addresses.map((row) => row.address));
   let stopping = false;
@@ -26,7 +34,8 @@ async function main(udid: string, output: string) {
   const external = new Set<string>();
   const errors: string[] = [];
   while (!stopping) {
-    const started = Date.now();
+    const started = performance.now();
+    gaps.sampleStarted(started);
     try {
       // launchctl is scoped to this simulator. App argv/ps executable paths
       // are not stable across simulator releases or Maestro clear-state.
@@ -51,6 +60,7 @@ async function main(udid: string, output: string) {
             .filter((pid): pid is string => !!pid && Number(pid) > 0),
         ),
       ];
+      gaps.activeProcesses(appPids);
       for (const pid of appPids) {
         pids.add(pid);
         processSamples++;
@@ -68,6 +78,7 @@ async function main(udid: string, output: string) {
           // during offline journeys and startup. Other errors fail the audit.
           if ((error as { code: unknown }).code !== 1) throw error;
         }
+        gaps.processSampled(pid, performance.now());
         const names = raw
           .split('\n')
           .filter((line) => line.startsWith('n'))
@@ -102,11 +113,26 @@ async function main(udid: string, output: string) {
         }),
       );
     }
-    longestSampleMs = Math.max(longestSampleMs, Date.now() - started);
+    const completed = performance.now();
+    longestSampleMs = Math.max(longestSampleMs, completed - started);
+    gaps.check(completed);
     await new Promise((resolve) =>
-      setTimeout(resolve, Math.max(0, 250 - (Date.now() - started))),
+      setTimeout(
+        resolve,
+        Math.max(0, SAMPLE_INTERVAL_MS - (performance.now() - started)),
+      ),
     );
   }
+  // Include a slow last sample or delayed shutdown even without another poll.
+  gaps.check(performance.now());
+  const nonLoopbackConnections = [...external];
+  const proof = {
+    processSamples,
+    errors,
+    productionConnections,
+    nonLoopbackConnections,
+    longestSampleGapMs: gaps.longestSampleGapMs,
+  };
   const audit = {
     samples,
     longestSampleMs,
@@ -114,17 +140,15 @@ async function main(udid: string, output: string) {
     pids: [...pids],
     observedConnections,
     productionConnections,
-    nonLoopbackConnections: [...external],
+    nonLoopbackConnections,
+    longestSampleGapMs: gaps.longestSampleGapMs,
+    sampleGapLimitMs: SAMPLE_GAP_LIMIT_MS,
     productionAddresses: addresses,
     errors,
     basis:
       'lsof -a -p <app-pid> -i; simulator launchctl app PIDs only, nominal 250ms interval',
     limitation: 'Connections shorter than the interval may be missed.',
-    pass:
-      processSamples > 0 &&
-      errors.length === 0 &&
-      productionConnections === 0 &&
-      external.size === 0,
+    pass: connectionAuditPass(proof),
   };
   writeFileSync(
     join(output, 'connection-audit.json'),

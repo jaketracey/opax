@@ -174,7 +174,7 @@ export function uncoveredProfile(identity: PersonProfile): ProfileView {
   };
 }
 
-/** Committee appearances alone do not establish parliamentary membership. */
+/** Chamber-only rows need a full identity; committee witnesses are not MPs. */
 export function hasParliamentaryMembership(
   identity: PersonProfile,
   directory: Directory,
@@ -189,10 +189,12 @@ export function hasParliamentaryMembership(
     identity.rosterPersonId,
   );
   return (
-    !!row?.chambers?.some(
-      (chamber) =>
-        chamber !== 'senate_committee' && !!chamberName(chamber, 'federal'),
-    ) ||
+    (!!row?.name.trim().includes(' ') &&
+      (!!row.pid || !row.chambers?.includes('senate_committee')) &&
+      !!row.chambers?.some(
+        (chamber) =>
+          chamber !== 'senate_committee' && !!chamberName(chamber, 'federal'),
+      )) ||
     !!row?.representation?.some(
       (r) =>
         r.electorate.trim() &&

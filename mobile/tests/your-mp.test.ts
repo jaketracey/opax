@@ -148,6 +148,43 @@ test('register category and alteration keys have plain labels', () => {
   expect(registerChangeLabel('amendment')).toBe('changed');
 });
 
+test.each(['brown', 'james', 'cook'])(
+  'surname-only roster stub %s cannot establish parliamentary membership',
+  (slug) => {
+    const identity = joinPerson(slug, slugs, roster, people, manifest);
+    expect(identity.canonicalPersonId).toBeUndefined();
+    expect(identity.name.trim()).not.toContain(' ');
+    expect(hasParliamentaryMembership(identity, directory)).toBe(false);
+  },
+);
+
+test('a full name mixed with committee appearances needs a person ID', () => {
+  const identity = joinPerson(
+    'antony-windsor',
+    slugs,
+    roster,
+    people,
+    manifest,
+  );
+  const row = roster.people.find((p) => p.name === identity.name)!;
+  expect(row.pid).toBeTruthy();
+  const mixed = { ...row, chambers: ['representatives', 'senate_committee'] };
+  const pinnedMember = {
+    ...directory,
+    roster: result({ ...roster, people: [mixed] }),
+  };
+  expect(hasParliamentaryMembership(identity, pinnedMember)).toBe(true);
+  expect(
+    hasParliamentaryMembership(
+      { ...identity, rosterPersonId: undefined },
+      {
+        ...directory,
+        roster: result({ ...roster, people: [{ ...mixed, pid: undefined }] }),
+      },
+    ),
+  ).toBe(false);
+});
+
 test('committee/witness identity without a membership observation never becomes a page', () => {
   const member = joinPerson('tony-abbott', slugs, roster, people, manifest);
   expect(hasParliamentaryMembership(member, directory)).toBe(true);
