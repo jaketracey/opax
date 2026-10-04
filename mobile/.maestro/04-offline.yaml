@@ -23,6 +23,10 @@ name: 04 Read saved public catalogs with the fixture stopped
     id: search-input
 - eraseText
 - inputText: Anthony Albanese
+# Swipe on content above the keyboard; visibility checks can see through it.
+- swipe:
+    start: 90%, 40%
+    end: 90%, 20%
 - scrollUntilVisible:
     element:
       text: As at .* Source.*OPAX parliamentary roster
