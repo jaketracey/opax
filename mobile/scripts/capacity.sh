@@ -8,9 +8,9 @@ fi
 bash -c "$OPAX_CAPACITY_CMD"
 load=$(/usr/sbin/sysctl -n vm.loadavg | awk '{print int($3)}')
 if [ "$load" -ge 140 ]; then
-  echo "Shared load is $load; waiting for it to fall below 100." >&2
+  echo "Shared load is $load; waiting for it to fall below 140." >&2
   deadline=$((SECONDS + 3600))
-  until [ "$load" -lt 100 ]; do
+  until [ "$load" -lt 140 ]; do
     [ "$SECONDS" -lt "$deadline" ] || { echo "Capacity wait expired; retry later." >&2; exit 1; }
     sleep 20
     load=$(/usr/sbin/sysctl -n vm.loadavg | awk '{print int($3)}')
