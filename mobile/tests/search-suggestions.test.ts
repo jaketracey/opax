@@ -222,10 +222,13 @@ test.each([
     `Recorded representation: ${seat} · New South Wales Legislative Assembly`,
   );
 });
-test('no pinned roster fallback asserts that a seat ended', () => {
+test('pinned representations are current or undated; undated seats use recorded wording', () => {
   let recorded = 0;
   for (const slug of Object.keys(slugs.slugs)) {
     const identity = searchPersonFor(slug, catalogs);
+    expect(
+      identity?.representation.some((r) => r.current === false) ?? false,
+    ).toBe(false);
     if (
       identity?.representation.length &&
       identity.representation.every((r) => r.current === undefined)

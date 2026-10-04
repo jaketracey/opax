@@ -50,11 +50,7 @@ export function personRowContext(
               : null,
           ].filter(Boolean);
           const label = parts.join(' · ');
-          return r.current === undefined
-            ? `Recorded representation: ${label}`
-            : r.current
-              ? label
-              : `Former representation: ${label}`;
+          return r.current ? label : `Recorded representation: ${label}`;
         })
         .join('; ')
     : person?.chambers.length
