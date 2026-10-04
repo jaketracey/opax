@@ -31,6 +31,11 @@ cleanup() {
     xcrun simctl ui "$UDID" appearance >> "$OUT/restore.log" 2>&1 || true
     xcrun simctl shutdown "$UDID" >> "$OUT/restore.log" 2>&1 || true
   fi
+  # Record every executed retry, including a run that subsequently fails.
+  if ! ./node_modules/.bin/tsx scripts/report-journey-retries.ts "$OUT" > "$OUT/retry-report.log" 2>&1; then
+    cat "$OUT/retry-report.log" >&2
+    [ "$rc" != 0 ] || rc=1
+  fi
   echo "E2E exit=$rc evidence=$OUT"
   printf '%s\n' "$rc" > "$STATUS_FILE.tmp" && /bin/mv -f "$STATUS_FILE.tmp" "$STATUS_FILE"
   exit "$rc"

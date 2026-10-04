@@ -18,6 +18,8 @@ appId: au.com.opax.app
         id: your-register-toggle
         text: Show register changes
     commands:
+      # JsConsole records only executed markers; the harness counts these.
+      - evalScript: ${console.log('OPAX_REGISTER_RETRY ' + JSON.stringify({registerPrefix:REGISTER_PREFIX}))}
       - swipe:
           start: 90%,35%
           end: 90%,55%
