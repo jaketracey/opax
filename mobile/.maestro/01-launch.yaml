@@ -34,6 +34,8 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     element:
       id: today-screen-message
     direction: UP
+    timeout: 90000
+    centerElement: true
 - assertVisible:
     id: today-screen-message
 # Talk and Account and about are navigation-bar buttons on every root screen.
