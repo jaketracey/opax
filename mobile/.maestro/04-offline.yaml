@@ -29,7 +29,7 @@ name: 04 Read saved public catalogs with the fixture stopped
     end: 90%, 20%
 - scrollUntilVisible:
     element:
-      text: As at .* Source.*OPAX parliamentary roster
+      text: As at .* Source.*OPAX parliamentary roster.*
     timeout: 60000
 - scrollUntilVisible:
     element:
