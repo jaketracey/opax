@@ -1,11 +1,18 @@
 import { act } from 'react';
 import { Alert, Text as NativeText } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SourceLink } from '../src/design/primitives';
 
 const url =
   'https://raw.githubusercontent.com/openaustralia/openaustralia-parser/master/data/representatives.csv';
 const label = 'OpenAustralia parliamentary service records';
+
+// As in app/_layout.tsx: the page's own provider starts from these insets.
+const metrics = {
+  frame: { x: 0, y: 0, width: 390, height: 844 },
+  insets: { top: 47, left: 0, right: 0, bottom: 34 },
+};
 
 const hosts = (root: ReactTestInstance, testID: string) =>
   root.findAll(
@@ -35,12 +42,14 @@ describe('source links in e2e builds', () => {
     let renderer!: TestRenderer.ReactTestRenderer;
     act(() => {
       renderer = TestRenderer.create(
-        <SourceLink
-          citation={label}
-          url={url}
-          kind="record"
-          testID="person-source"
-        />,
+        <SafeAreaProvider initialMetrics={metrics}>
+          <SourceLink
+            citation={label}
+            url={url}
+            kind="record"
+            testID="person-source"
+          />
+        </SafeAreaProvider>,
       );
     });
     expect(hosts(renderer.root, 'source-destination')).toHaveLength(0);

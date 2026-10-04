@@ -1,5 +1,5 @@
 import { Modal, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from './controls';
 import { Heading, Text } from './text';
 import { colors, hairline, layout, spacing } from './tokens';
@@ -27,23 +27,27 @@ export function SourceDestination({
       presentationStyle="fullScreen"
       onRequestClose={onDismiss}
     >
-      <SafeAreaView style={styles.page} testID="source-destination">
-        <ScrollView contentContainerStyle={styles.content}>
-          <Heading level={2}>{`Source record: ${label}`}</Heading>
-          {/* Title and URL apart, so journeys can assert the exact destination. */}
-          <Text selectable testID="source-destination-url">
-            {url}
-          </Text>
-        </ScrollView>
-        <View style={styles.actions}>
-          <Button
-            label="OK"
-            onPress={onDismiss}
-            fullWidth
-            testID="source-destination-ok"
-          />
-        </View>
-      </SafeAreaView>
+      {/* A modal is its own native hierarchy: SafeAreaView finds its insets
+          from the nearest provider view, so the page needs one of its own. */}
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.page} testID="source-destination">
+          <ScrollView contentContainerStyle={styles.content}>
+            <Heading level={2}>{`Source record: ${label}`}</Heading>
+            {/* Title and URL apart, so journeys can assert the exact destination. */}
+            <Text selectable testID="source-destination-url">
+              {url}
+            </Text>
+          </ScrollView>
+          <View style={styles.actions}>
+            <Button
+              label="OK"
+              onPress={onDismiss}
+              fullWidth
+              testID="source-destination-ok"
+            />
+          </View>
+        </SafeAreaView>
+      </SafeAreaProvider>
     </Modal>
   );
 }
