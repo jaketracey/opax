@@ -1,39 +1,27 @@
-import { useSyncExternalStore } from 'react';
-import { Modal, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '../design/controls';
 import { Heading, Text } from '../design/text';
 import { colors, layout, spacing } from '../design/tokens';
-import {
-  presentSourceDestination,
-  sourceDestination,
-  subscribeSourceDestination,
-} from './source-destination';
 
 /** UIKit alerts truncate long URL messages even after scrolling at AX5. */
-export function SourceDestination() {
-  const url = useSyncExternalStore(
-    subscribeSourceDestination,
-    sourceDestination,
-    sourceDestination,
-  );
-  if (url === null) return null;
-  const dismiss = () => presentSourceDestination(null);
+export function SourceDestination({
+  url,
+  dismiss,
+}: {
+  url: string | null;
+  dismiss: () => void;
+}) {
   return (
-    <Modal
-      visible
-      animationType="none"
-      presentationStyle="fullScreen"
-      onRequestClose={dismiss}
-    >
-      <SafeAreaProvider>
-        <SafeAreaView style={styles.screen} accessibilityViewIsModal>
-          <ScrollView
-            style={styles.scroll}
-            contentContainerStyle={styles.content}
-            testID="source-destination-scroll"
-          >
-            <Heading level={1}>Source record</Heading>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.screen} accessibilityViewIsModal>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.content}
+          testID="source-destination-scroll"
+        >
+          <Heading level={1}>Source record</Heading>
+          {url ? (
             <Text
               accessibilityLabel={url}
               testID="source-destination-url"
@@ -41,13 +29,15 @@ export function SourceDestination() {
             >
               {url}
             </Text>
-          </ScrollView>
-          <View style={styles.dismiss}>
-            <Button label="OK" onPress={dismiss} />
-          </View>
-        </SafeAreaView>
-      </SafeAreaProvider>
-    </Modal>
+          ) : (
+            <Text>This source link could not be opened.</Text>
+          )}
+        </ScrollView>
+        <View style={styles.dismiss}>
+          <Button label="OK" onPress={dismiss} />
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 const styles = StyleSheet.create({

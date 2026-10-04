@@ -1,4 +1,5 @@
 [
   "[/\\\\]src[/\\\\]app[/\\\\]workbench\\.tsx$",
-  "[/\\\\]src[/\\\\]workbench[/\\\\].*"
+  "[/\\\\]src[/\\\\]workbench[/\\\\].*",
+  "[/\\\\]src[/\\\\]app[/\\\\]source-destination\\.tsx$"
 ]

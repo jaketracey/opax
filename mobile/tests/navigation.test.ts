@@ -427,6 +427,9 @@ describe('workbench exclusion', () => {
   test('production bundles cannot see the workbench', () => {
     const list = blockList('production');
     expect(blocked(list, '/repo/mobile/src/app/workbench.tsx')).toBe(true);
+    expect(blocked(list, '/repo/mobile/src/app/source-destination.tsx')).toBe(
+      true,
+    );
     expect(blocked(list, '/repo/mobile/src/workbench/Workbench.tsx')).toBe(
       true,
     );
@@ -435,9 +438,11 @@ describe('workbench exclusion', () => {
   });
   test('development and e2e builds include it', () => {
     for (const variant of ['development', 'e2e'])
-      expect(
-        blocked(blockList(variant), '/repo/mobile/src/app/workbench.tsx'),
-      ).toBe(false);
+      for (const path of [
+        '/repo/mobile/src/app/workbench.tsx',
+        '/repo/mobile/src/app/source-destination.tsx',
+      ])
+        expect(blocked(blockList(variant), path)).toBe(false);
   });
 });
 

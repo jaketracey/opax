@@ -1,33 +1,24 @@
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import { act } from 'react';
-import { Modal, ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '../src/design/controls';
 import { Text } from '../src/design/text';
 import { SourceDestination } from '../src/navigation/SourceDestination';
-import { presentSourceDestination } from '../src/navigation/source-destination';
 
-// Native presentation is covered by the device journey. Keep this unit test
-// on the modal boundary; RN's actual bridge requires the Hermes WASM parser.
-jest.mock('react-native/Libraries/Modal/Modal', () => ({
-  __esModule: true,
-  default: 'Modal',
-}));
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 
 test('the local destination keeps the complete URL in bounded scrolling content and dismisses independently', () => {
   const url =
     'https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072';
   let renderer!: TestRenderer.ReactTestRenderer;
+  const dismiss = jest.fn();
   act(() => {
-    renderer = TestRenderer.create(<SourceDestination />);
+    renderer = TestRenderer.create(
+      <SourceDestination url={url} dismiss={dismiss} />,
+    );
   });
-  expect(renderer.toJSON()).toBeNull();
-  act(() => presentSourceDestination(url));
-  expect(renderer.root.findByType(Modal).props.presentationStyle).toBe(
-    'fullScreen',
-  );
   expect(
     renderer.root.findByType(SafeAreaView).props.accessibilityViewIsModal,
   ).toBe(true);
@@ -41,6 +32,6 @@ test('the local destination keeps the complete URL in bounded scrolling content 
   expect(destination.props.accessibilityLabel).toBe(url);
   expect(destination.props.numberOfLines).toBeUndefined();
   act(() => renderer.root.findByType(Button).props.onPress());
-  expect(renderer.toJSON()).toBeNull();
+  expect(dismiss).toHaveBeenCalledTimes(1);
   act(() => renderer.unmount());
 });
