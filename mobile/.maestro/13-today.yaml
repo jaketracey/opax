@@ -52,9 +52,12 @@ name: 13 Today feeds and their dated original sources
 - assertVisible: https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Senators_Interests/Senators_Interests_Register/123072
 - takeScreenshot: ${EVIDENCE}/13-declaration-source-alert
 - tapOn: OK
+# AX5 swipes can overshoot this tall block. Center it before asserting its text.
 - scrollUntilVisible:
     element:
       id: today-declarations-as-at
     timeout: 90000
+    visibilityPercentage: 1
+    centerElement: true
 - assertVisible: As at .* Source.*
 - takeScreenshot: ${EVIDENCE}/13-declarations-as-at
