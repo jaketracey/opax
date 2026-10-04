@@ -59,8 +59,10 @@ done
 scripts/capacity.sh | tee -a "$OUT/capacity.log"
 # Maestro inputText may use iOS pasteboard internally. Serialize all input flows.
 if [ -n "${OPAX_PASTE_LOCK:-}" ]; then
-  deadline=$((SECONDS + 600))
-  until mkdir "$OPAX_PASTE_LOCK" 2>/dev/null; do
+  deadline=$((SECONDS + $(paste_lock_wait_seconds)))
+  # Capacity may change during a long lock wait. Check immediately before
+  # every acquisition attempt; never wait for load while holding the lock.
+  until /usr/sbin/sysctl -n vm.loadavg | awk 'NF == 5 && $3 ~ /^[0-9]+([.][0-9]+)?$/ && $3 < 140 { ok=1 } END { exit !ok }' && mkdir "$OPAX_PASTE_LOCK" 2>/dev/null; do
     [ "$SECONDS" -lt "$deadline" ] || { echo "Pasteboard lock wait expired" >&2; exit 1; }
     sleep 5
   done
