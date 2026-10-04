@@ -240,7 +240,7 @@ export default function About() {
           url="https://www.ipea.gov.au/"
           kind="register"
         />
-        <Text>IPEA expenditure reports on data.gov.au: CC BY 4.0.</Text>
+        <Text>IPEA expenditure reports on data.gov.au: CC BY 3.0 AU.</Text>
         <SourceLink
           citation="Remuneration Tribunal"
           url="https://www.remtribunal.gov.au/"
@@ -303,8 +303,10 @@ export default function About() {
           Public reading needs no account and sends no account or device
           identifier. Requests reach OPAX’s servers with this iPhone’s IP
           address, which rate limiters read. IP log retention is not yet
-          confirmed. Voice uses an email address, member ID, audio and words;
-          its consent and privacy information must be checked before use.
+          confirmed. Search queries and their results stay in memory during this
+          app session and are not saved to disk. Other public catalogs are saved
+          on this phone for offline reading. Voice uses an email address, member
+          ID, audio and words.
         </Text>
         <OpaxWebLink
           label="Privacy policy"
