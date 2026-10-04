@@ -303,10 +303,11 @@ export default function About() {
           Public reading needs no account and sends no account or device
           identifier. Requests reach OPAX’s servers with this iPhone’s IP
           address, which rate limiters read. IP log retention is not yet
-          confirmed. Search queries and their results stay in memory during this
-          app session and are not saved to disk. Other public catalogs are saved
-          on this phone for offline reading. Voice uses an email address, member
-          ID, audio and words.
+          confirmed. Submitted searches are sent only to OPAX’s servers. Search
+          queries and their results stay in memory during this app session and
+          are not saved on this phone. Other public catalogs are saved on this
+          phone for offline reading. Voice uses an email address, member ID,
+          audio and words.
         </Text>
         <OpaxWebLink
           label="Privacy policy"
