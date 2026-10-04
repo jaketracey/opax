@@ -39,6 +39,7 @@ name: 12 Local suggestions and the four catalog search kinds
       id: search-kind-menu
     timeout: 90000
     direction: UP
+    centerElement: true
 - tapOn:
     id: search-kind-menu
 - takeScreenshot: ${EVIDENCE}/12-kind-menu
@@ -61,6 +62,7 @@ name: 12 Local suggestions and the four catalog search kinds
       id: search-kind-menu
     timeout: 90000
     direction: UP
+    centerElement: true
 - tapOn:
     id: search-kind-menu
 - tapOn: Pay
@@ -97,6 +99,7 @@ name: 12 Local suggestions and the four catalog search kinds
       id: search-kind-menu
     timeout: 90000
     direction: UP
+    centerElement: true
 - tapOn:
     id: search-kind-menu
 - tapOn: Expenses
